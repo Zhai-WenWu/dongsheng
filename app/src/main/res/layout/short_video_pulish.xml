@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/title_all_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_top_bg">
+
+        <include
+            android:id="@+id/top_bar"
+            layout="@layout/a_common_post_new_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_below="@+id/title_all_rela"
+        android:background="#FFFFFE"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15">
+
+        <EditText
+            android:id="@+id/subject_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_toLeftOf="@+id/video_preview_image"
+            android:background="#00FFFFFF"
+            android:hint="标题"
+            android:lineSpacingExtra="@dimen/dp_3"
+            android:lineSpacingMultiplier="1"
+            android:paddingRight="@dimen/dp_10"
+            android:textColor="#333"
+            android:maxLength="40"
+            android:textColorHint="#999"
+            android:textSize="@dimen/sp_20"/>
+
+        <amodule.quan.view.CircleLocationView
+            android:id="@+id/location_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_12"/>
+
+        <ImageView
+            android:id="@+id/video_preview_image"
+            android:layout_width="@dimen/dp_105"
+            android:layout_height="@dimen/dp_79"
+            android:layout_marginTop="@dimen/dp_21"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
+
+        <VideoView
+            android:id="@+id/video_preview_videoview"
+            android:layout_marginTop="@dimen/dp_21"
+            android:layout_width="@dimen/dp_105"
+            android:layout_height="@dimen/dp_79"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#F1EEE4">
+
+        <ImageView
+            android:id="@+id/at_user_image"
+            android:layout_width="@dimen/dp_52"
+            android:layout_height="@dimen/dp_52"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:src="@drawable/at_user"/>
+
+
+        <RelativeLayout
+            android:id="@+id/at_user_count_layout"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_15"
+            android:layout_alignRight="@+id/at_user_image"
+            android:layout_marginRight="@dimen/dp_4"
+            android:layout_marginTop="@dimen/dp_8"
+            android:background="@drawable/bg_at_user"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/at_user_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp__0.5"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textSize="@dimen/sp_11"/>
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/select_video"
+            android:layout_width="@dimen/dp_52"
+            android:layout_height="@dimen/dp_52"
+            android:layout_toRightOf="@+id/at_user_image"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:src="@drawable/video_select"/>
+
+    </RelativeLayout>
+    
+</RelativeLayout>

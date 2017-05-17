@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/grid_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <GridView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:numColumns="4"
+        android:padding="@dimen/dp_3"
+        android:scrollbars="none"
+        android:scrollbarStyle="outsideOverlay"
+        android:listSelector="@null"
+        android:verticalSpacing="@dimen/dp_3"
+        android:horizontalSpacing="@dimen/dp_3"
+        android:overScrollMode="never"/>
+
+    <TextView
+        android:id="@+id/timeline_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#cc000000"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10sp"
+        android:paddingTop="5dp"
+        android:textColor="#CDCECE"
+        android:textSize="14sp"
+        tools:text="2015年4月1日" />
+
+</RelativeLayout>

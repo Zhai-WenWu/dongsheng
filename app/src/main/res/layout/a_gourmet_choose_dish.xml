@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:clickable="false" >
+
+    <include
+        android:id="@+id/dish_search"
+        layout="@layout/c_view_bar_search" />
+
+    <RelativeLayout
+        android:id="@+id/dish_choose_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_50"
+        android:background="#FFFAC6"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_11"
+        android:paddingTop="@dimen/dp_13" >
+
+        <TextView
+            android:id="@+id/dish_choose_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/dp_4"
+            android:text="已选作品"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_9" />
+
+        <acore.widget.FlowLayout
+            android:id="@+id/dish_choose_flow_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/dish_choose_title" />
+    </RelativeLayout>
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/dish_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/dish_choose_layout"
+        android:background="@android:color/transparent"
+        android:divider="#F1F1F1"
+        android:dividerHeight="@dimen/dp_0.5"
+        android:listSelector="#F8F8F8"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone" >
+    </acore.widget.DownRefreshList>
+
+</RelativeLayout>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5" >
+
+    <ListView
+        android:id="@+id/feed_back_reply_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/feed_back_input"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/dp_2"
+        android:layout_marginTop="@dimen/dp_2"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:choiceMode="none"
+        android:divider="@null"
+        android:headerDividersEnabled="false"
+        android:listSelector="@android:color/transparent"
+        android:transcriptMode="alwaysScroll" >
+    </ListView>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/feed_back_input"
+        android:background="#C4C4C4" />
+
+    <RelativeLayout
+        android:id="@+id/feed_back_input"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:layout_alignParentBottom="true"
+        android:background="@color/c_gray_e8e8e8"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dp_10" >
+
+        <ImageView
+            android:id="@+id/feed_back_send_img"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_launcher" />
+
+        <EditText
+            android:id="@+id/feed_back_reply_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/feed_back_send_tv"
+            android:layout_toRightOf="@+id/feed_back_send_img"
+            android:background="@drawable/bg_round_grey_feed_back"
+            android:hint="欢迎您！"
+            android:paddingBottom="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_8"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:id="@+id/feed_back_send_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/umeng_fb_btn_bg_selector"
+            android:gravity="center"
+            android:padding="@dimen/dp_3"
+            android:text="发送"
+            android:textColor="@color/comment_color" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/feed_back_input"
+        android:background="#C4C4C4" />
+
+</RelativeLayout>

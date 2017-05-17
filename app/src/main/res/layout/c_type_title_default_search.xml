@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_45"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="#ffffff"
+                android:clickable="true"
+                android:focusable="true">
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="@dimen/dp_15"
+        android:layout_height="@dimen/dp_15"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:src="@drawable/z_quanso_body_ico_so"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/tv_type_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/iv_to_search"
+        android:layout_toRightOf="@+id/btn_back"
+        android:gravity="left|center_vertical"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/dp_8"
+        android:paddingRight="@dimen/dp_8"
+        android:text="搜菜谱"
+        android:textColor="#333333"
+        android:textSize="@dimen/sp_14"/>
+
+    <View
+        android:id="@+id/tv_sub_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_alignLeft="@+id/tv_type_search"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_alignParentBottom="true"
+        android:background="#EAE8E0"/>
+
+
+    <View
+        android:id="@+id/item_sub_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="#EAE8E0"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/iv_to_search"
+        android:layout_width="@dimen/dp_9"
+        android:layout_height="@dimen/dp_14"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_15"
+        android:clickable="false"
+        android:src="@drawable/enter_matchwords_item"
+        android:visibility="invisible"/>
+
+</RelativeLayout>

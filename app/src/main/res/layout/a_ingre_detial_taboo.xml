@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ingre_taboo_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <acore.widget.ScrollviewDish
+        android:id="@+id/ingre_taboo_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:overScrollMode="never" >
+
+        <LinearLayout
+            android:id="@+id/ingre_taboo_data_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_20" >
+
+            <RelativeLayout
+                android:id="@+id/ingre_taboo_xiangke_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_0.5"
+                    android:layout_centerVertical="true"
+                    android:background="@color/c_gray_dddddd" />
+
+                <acore.widget.TagTextView
+                    xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+                    tagTextView:backgroundColor="@color/comment_color"
+                    tagTextView:radius="@dimen/dp_15"
+                    android:layout_width="@dimen/dp_70"
+                    android:layout_height="@dimen/dp_25"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="相克"
+                    android:textColor="#FFFFFF" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ingre_taboo_xiangke"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dp_25"
+                android:orientation="vertical"
+                android:visibility="gone" >
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/ingre_taboo_yida_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_0.5"
+                    android:layout_centerVertical="true"
+                    android:background="@color/c_gray_dddddd" />
+
+                <acore.widget.TagTextView
+                    xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+                    tagTextView:radius="@dimen/dp_15"
+                    tagTextView:backgroundColor="@color/c_green_51a011"
+                    android:layout_width="@dimen/dp_70"
+                    android:layout_height="@dimen/dp_25"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="宜搭"
+                    android:textColor="#FFFFFF" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ingre_taboo_yida"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:orientation="vertical"
+                android:visibility="gone" >
+            </LinearLayout>
+
+            <acore.widget.TagTextView
+                xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+                tagTextView:radius="@dimen/dp_5"
+                tagTextView:backgroundColor="@color/c_gray_dddddd"
+                android:id="@+id/ingre_about_caipu_taboo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                android:layout_marginTop="@dimen/dp_10"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="bottomClick"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/fankui_taboo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:onClick="bottomClick"
+                android:padding="@dimen/dp_15"
+                android:text="纠错"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone" />
+        </LinearLayout>
+    </acore.widget.ScrollviewDish>
+
+    <TextView
+        android:id="@+id/ingre_taboo_noData"
+        style="@style/noDataText"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_100"
+        android:text="暂无相克内容~" />
+
+    <TextView
+        android:id="@+id/fankui_taboo_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
+        android:clickable="true"
+        android:gravity="center_horizontal"
+        android:onClick="bottomClick"
+        android:padding="@dimen/dp_15"
+        android:text="纠错"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone" />
+
+</RelativeLayout>

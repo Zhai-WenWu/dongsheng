@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@android:color/transparent" >
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/video_dish_list"
+        style="@style/listView"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

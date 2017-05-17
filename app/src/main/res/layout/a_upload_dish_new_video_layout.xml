@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/title_all_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000">
+    <include
+        android:id="@+id/dish_upload_title"
+        layout="@layout/c_view_bar_title_up_dish" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/a_dish_upload_new_video_layout_listview"
+        style="@style/listNoDivider"
+        android:layout_below="@+id/title_all_rela"
+        android:padding="0dp"/>
+
+</RelativeLayout>

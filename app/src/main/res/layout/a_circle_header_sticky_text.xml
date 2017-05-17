@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#FFFFFE"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/image_header"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_11"
+        android:layout_marginRight="@dimen/dp_11"
+        android:background="@drawable/main_circle_image_header"/>
+
+    <acore.widget.AdvTextSwitcher
+        android:id="@+id/circle_advTextSwitcher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/image_header"
+        android:textColor="#66BCBB"  />
+
+    <TextView
+        android:id="@+id/circle_sticky_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/image_header"
+        android:textSize="@dimen/sp_14"/>
+
+</RelativeLayout>

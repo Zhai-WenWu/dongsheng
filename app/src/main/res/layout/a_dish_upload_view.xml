@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/a_upload_dish_new_item_header" />
+
+    <!-- 步骤 -->
+
+    <include
+        android:id="@+id/a_dish_make_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/a_dish_make_view" />
+
+    <include
+        layout="@layout/a_upload_dish_new_item_footer" />
+
+</LinearLayout>

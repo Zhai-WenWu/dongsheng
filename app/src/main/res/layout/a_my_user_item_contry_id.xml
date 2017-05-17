@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_user_register_one_contry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/user_register_one_title"
+    android:background="@drawable/bg_round_white5" >
+
+    <TextView
+        android:id="@+id/user_contryId"
+        style="@style/login_left_round_editText"
+        android:layout_width="@dimen/dp_60"
+        android:clickable="true"
+        android:gravity="center"
+        android:padding="@dimen/dp_3"
+        android:textSize="@dimen/sp_12"
+        android:text="+86" />
+    
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0.5dp"
+        android:layout_height="@dimen/dp_13"
+        android:layout_marginTop="@dimen/dp_17"
+        android:layout_toRightOf="@+id/user_contryId"
+        android:background="#dfdfdf" />
+
+    <EditText
+        android:id="@+id/user_phone_number"
+        style="@style/login_right_round_editText"
+        android:layout_toRightOf="@+id/view2"
+        android:gravity="center_vertical"
+        android:digits="1234567890"
+        android:textSize="@dimen/sp_12"
+	    android:hint="手机号" />
+
+</RelativeLayout>

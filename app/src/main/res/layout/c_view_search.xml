@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
+
+    <LinearLayout
+        android:id="@+id/all_title_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/relativeLayout_global"
+            layout="@layout/c_view_top_bar_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_46"
+            android:clickable="false" />
+    </LinearLayout>
+
+
+    <amodule.search.view.DefaultSearchView
+        android:id="@+id/v_default_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_rela"
+
+        />
+
+
+    <amodule.search.view.MatchWordsView
+        android:id="@+id/v_matchwords_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_rela"
+
+        />
+
+    <amodule.search.view.CaipuSearchResultView
+        android:id="@+id/v_result_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_rela" />
+
+    <amodule.search.view.HaYouSearchResultView
+        android:id="@+id/v_hayou_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_rela" />
+
+    <amodule.search.view.TieZiSearchResultView
+        android:id="@+id/v_tiezi_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_rela" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_rela"
+        android:gravity="bottom|right">
+
+        <ImageView
+            android:id="@+id/history"
+            android:layout_width="@dimen/dp_44"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginBottom="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_10"
+            android:src="@drawable/i_history"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

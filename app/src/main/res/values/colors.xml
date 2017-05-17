@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="common_bg">#F7F7F7</color>
+    <color name="common_top_bg">#1B1B1F</color>
+    <color name="common_top_text">#FFFFFE</color>
+    <color name="common_top_search_text">#000000</color>
+    <color name="common_top_button_text">#000000</color>
+    <color name="common_top_shoping_bg">#ffffff</color>
+    <color name="common_top_search_hint_text">#666666</color>
+
+
+
+    <!-- common color -->
+    <color name="comment_color">#ff533c</color>
+    <color name="comment_back_color">#F1EEE4</color>
+    <color name="comment_back_color_new">#f7f7f7</color>
+    <color name="backgroup_color">#fefefe</color>
+    <color name="classify_health_titlecolor">#1f1f22</color>
+
+    <color name="transparent">#00ffffff</color>
+    <color name="c_title_text_color">@color/comment_color</color>
+    <color name="c_white_bg_title">#FFFFFF</color>
+    <color name="c_white_text">#FFFFFF</color>
+    <color name="c_back_transparent_30">#30000000</color>
+    <color name="c_back_transparent_80">#80000000</color>
+    <color name="c_white_transparent_30">#30FFFFFF</color>
+    <color name="c_white_transparent_40">#40FFFFFF</color>
+    <color name="c_white_transparent_EE">#EEFFFFFF</color>
+    <color name="c_white_transparent_F8">#F8FFFFFF</color>
+    <color name="text_color_696969">#696969</color>
+    <color name="c_black_text">#000000</color>
+    <color name="c_black_515151">#515151</color>
+
+    <color name="c_gray_dddddd">#DDDDDD</color>
+    <color name="c_gray_myselft_line">#ecede8</color>
+    <color name="c_gray_eeebeb">#EEEBEB</color>
+    <color name="c_gray_e8e8e8">#E8E8E8</color>
+    <color name="c_gray_999999">#999999</color>
+    <color name="c_gray_a1a1a1">#A1A1A1</color>
+    <color name="c_gray_img_e0e0e0">#E0E0E0</color>
+    <color name="c_gray_515151">#F1EFE3</color>
+
+    <color name="umeng_fb_color_btn_pressed">#eeeeee</color>
+
+    <color name="c_green_51a011">#51A011</color>
+     <color name="c_green_579601">#579601</color>
+
+    <color name="ingre_yellow_bg_title">#EF8113</color>
+
+    <color name="c_trans_parent">#cc333333</color> <!--透明度-->
+
+    <!-- quan color -->
+    <color name="quan_green_bg_bartitle_select">#ffffff</color>
+    <color name="quan_green_bg_bartitle_text">#000000</color>
+    <color name="quan_gray_bg">#F5F5F5</color>
+    <color name="quan_text">#cccccc</color>
+    <color name="quan_blue_report">#0033CC</color>
+
+    <!-- dish color -->
+    <color name="dish_gray_bg_list">#F5F5F5</color>
+    <color name="dish_brown_bg_btn">#BAA8A8</color>
+    <color name="dish_gray_bg_btn">#D7D7D7</color>
+    <color name="dish_gray_bg_title">#f5f5f5</color>
+    <color name="dish_yellow_bg_title">#FFBB00</color>
+    <color name="dish_graly_bg_title">#A5A5A5</color>
+
+    <!-- health color -->
+    <color name="health_green_text_btn">#51a011</color>
+
+    <!-- myself color -->
+    <color name="myself_gray_bg">#F5F5F5</color>
+    <color name="myself_gray_bg_title">#F6F1EA</color>
+    <color name="my_text">#000000</color>
+    <color name="my_line">#999999</color>
+    <!-- activity color -->
+    <color name="activity_bg2">#0FBC81</color>
+    <!-- 发现页面的颜色值 -->
+    <color name="c_gray_line_DDDDDD">#DDDDDD</color>
+    <color name="c_gray_line_EEEBEB">#EEEBEB</color>
+    <color name="bg_classify_right_color">#B6B6B6</color>
+    <color name="invite_friend_text_color">#8D8D8D</color>
+    <color name="invite_friend_s_backgroup">#F9F9F9</color>
+    <color name="invite_friend_linear_backgroup_color">#FFFDE9</color>
+    <color name="invite_friend_linear_line_color">#E5E5E5</color>
+    <color name="invite_friend_linear_red_color">@color/comment_color</color>
+    <color name="greed">#4BC059</color>
+    <color name="invite_friend_text_textcolor">#3D3D3D</color>
+    <color name="quan_tab">#111111</color>
+    <color name="quan_tab_red">@color/comment_color</color>
+    <color name="quan_text_blue_color">#0fab37</color>
+    <color name="quan_text_red_color">@color/comment_color</color>
+    <color name="nous_item_text_color">#333</color>
+    <color name="quan_style_text_blue">#0fab37</color>
+
+    <color name="title_backgroup">@color/comment_color</color>
+
+    <!-- PagerSlidingTabStrip color -->
+    <color name="psts_background_tab_pressed">#FFFFFF</color>
+    <color name="psts_background_tab_pressed_ripple">#FFFFFF</color>
+    <color name="psts_tab_text">#333333</color>
+
+    <!--shortVideo-->
+    <color name="camera_bg">#2c2c2c</color>
+    <color name="title_background_color">#fcb840</color>
+    <color name="camera_progress_split">#005084</color>
+    <color name="camera_progress_three">#24ff00</color>
+    <color name="camera_progress_overflow">#1b5d89</color>
+    <color name="camera_progress_delete">#f68b2b</color>
+</resources>

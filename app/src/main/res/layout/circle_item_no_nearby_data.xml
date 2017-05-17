@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/dp_75"
+        android:layout_height="@dimen/dp_75"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_75"
+        android:background="@drawable/bg_circle_no_nearby_data"/>
+
+    <LinearLayout
+        android:id="@+id/tv_login_notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_25"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_23"
+            android:text="你周边还没有小伙伴"
+            android:textColor="#333333"
+            android:textSize="@dimen/dp_16"/>
+
+        <acore.widget.TagTextView
+            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+            tagTextView:radius="@dimen/dp_4"
+            tagTextView:sideWidth="@dimen/dp_0.5"
+            tagTextView:sideColor="#666666"
+            tagTextView:backgroundColor="#ffffff"
+            android:id="@+id/share_pepole_tv"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_39"
+            android:gravity="center"
+            android:text="邀请好友"
+            android:textColor="#666666"
+            android:textSize="@dimen/dp_14"/>
+    </LinearLayout>
+
+</LinearLayout>

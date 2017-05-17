@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barTitle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/common_top_bg">
+
+    <include
+        android:id="@+id/ll_back"
+        layout="@layout/a_bar_item_back"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/top_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/dp_45"
+        android:paddingRight="@dimen/dp_45"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/a_fanli_mall_fanxian"
+        style="@style/top_text_other"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_2"
+        android:paddingRight="@dimen/dp_15"
+        android:text="返现规则"/>
+
+</RelativeLayout>

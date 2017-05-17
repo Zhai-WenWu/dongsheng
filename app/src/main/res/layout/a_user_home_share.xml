@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/a_user_home_share_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#70000000"
+    android:paddingLeft="@dimen/dp_30"
+    android:paddingRight="@dimen/dp_30"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:gravity="center_horizontal"
+        android:paddingTop="@dimen/dp_52"
+        android:paddingBottom="@dimen/dp_23"
+        android:background="@drawable/round_circle10_ffffff"
+        android:orientation="vertical">
+        <GridView
+            android:id="@+id/d_popwindow_share_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:layout_alignParentBottom="true"
+            android:background="#fffffffe"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="4"
+            android:stretchMode="columnWidth" />
+        <ImageView
+            android:id="@+id/a_user_home_share_close"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:layout_marginTop="@dimen/dp_21"
+            android:src="@drawable/i_user_home_close"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+    
+    <ListView
+        android:id="@+id/offLine_List"
+      	android:layout_width="match_parent"
+        android:layout_height="match_parent"
+		android:background="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+		android:scrollbars="none"
+		android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:visibility="gone"/>
+
+    <TextView 
+	    android:id="@+id/title_hint"
+	    android:layout_width="match_parent"
+	    android:layout_height="@dimen/dp_35"
+	    android:clickable="true"
+	    android:gravity="center"
+	    android:background="#fffac1"
+	    android:textColor="@color/comment_color"
+	    android:textSize="@dimen/sp_12"
+	    android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/dish_offline_noData"
+        style="@style/noDataText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="还没有离线菜谱哦~\n\n加入清单的菜谱可离线查看"
+        android:textColor="#777"
+        android:textSize="@dimen/sp_15"
+        android:visibility="gone" />
+
+</RelativeLayout>

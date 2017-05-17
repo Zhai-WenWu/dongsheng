@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+<!--         android:layout_height="@dimen/dp_170" -->
+    <GridView
+        android:id="@+id/gv_emoji"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F7F7F7"
+        android:scrollbars="none"
+        android:listSelector="@android:color/transparent">
+        <!-- android:numColumns="7" 
+        android:verticalSpacing="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_7" -->
+    </GridView>
+
+</LinearLayout>

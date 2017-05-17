@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_all_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_top_bg">
+
+        <RelativeLayout
+            android:id="@+id/title_rela"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            android:background="@color/common_top_bg">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/top_title_singleText"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:paddingLeft="@dimen/dp_50"
+                android:paddingRight="@dimen/dp_50"
+                android:visibility="visible"/>
+
+            <include
+                android:id="@+id/ll_back"
+                layout="@layout/a_bar_item_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentBottom="true"
+                android:background="#e1e2e4"/>
+
+            <LinearLayout
+                android:id="@+id/feedbak_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_18"
+                android:paddingRight="@dimen/dp_18">
+
+                <ImageView
+                    android:id="@+id/mall_order_favorable_img"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_15"
+                    android:src="@drawable/z_home_feedback_ico"/>
+
+                <TextView
+                    android:id="@+id/mall_order_favorable_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/dp_1"
+                    android:text="反馈"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/sp_9"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_all_rela"
+        android:orientation="vertical">
+
+        <acore.widget.LayoutScroll
+            android:id="@+id/scroll_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/psts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <acore.widget.PagerSlidingTabStrip
+                        android:id="@+id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:layout_gravity="center_horizontal"
+                        android:background="#fffffe"
+                        android:visibility="visible"
+                        app:pstsIndicatorColor="@color/comment_color"
+                        app:pstsIndicatorWidthFollowText="true"
+                        app:pstsTabColumn="5"
+                        app:pstsTabTextColor="@color/tab_text_color"
+                        app:pstsTabTextSize="@dimen/sp_14"
+                        app:pstsUnderlineColor="#DFDFDF"
+                        app:pstsUnderlineHeight="@dimen/dp_0.5"/>
+                </RelativeLayout>
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/psts"/>
+            </RelativeLayout>
+        </acore.widget.LayoutScroll>
+    </LinearLayout>
+
+</RelativeLayout>

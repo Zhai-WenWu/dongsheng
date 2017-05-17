@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_71">
+
+    <ImageView
+        android:id="@+id/user_img"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:src="@drawable/bg_round_zannum"/>
+
+    <ImageView
+        android:id="@+id/user_icon"
+        android:layout_width="@dimen/dp_13"
+        android:layout_height="@dimen/dp_13"
+        android:layout_alignBottom="@+id/user_img"
+        android:layout_alignRight="@+id/user_img"
+        android:layout_marginRight="@dimen/dp__1"
+        android:src="@drawable/z_user_gourmet_ico"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_toRightOf="@+id/user_img"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_4"
+            android:paddingLeft="@dimen/dp_2"
+            android:text="这是我的名字你看鸡毛"
+            android:textColor="#FF533C"
+            android:textSize="@dimen/sp_15"/>
+
+        <TextView
+            android:id="@+id/user_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我是他的描述"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/follow_rela"
+        android:layout_width="@dimen/dp_52"
+        android:layout_height="@dimen/dp_23"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/rela_1_user"
+        android:layout_alignTop="@+id/rela_1_user"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_15"
+        android:background="@drawable/bg_circle_follow_5">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/follow_img"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/dish_follow_a"/>
+
+            <TextView
+                android:id="@+id/follow_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp_1.5"
+                android:text="关注"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/sp_12"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

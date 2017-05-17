@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="#cccccc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="#e9e9e9"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/subject_camera"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:padding="@dimen/dp_8"
+            android:scaleType="centerInside"
+            android:src="@drawable/z_quan_tie_menu_ico_camera_comment_subject" />
+        <LinearLayout
+            android:id="@+id/subject_ping_ll"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_29"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edittext_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@drawable/z_quan_home_body_ico_message" />
+
+            <acore.widget.TextViewShow
+                android:id="@+id/subject_pinglun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_5"
+                android:textColor="#666666"
+                android:textSize="@dimen/sp_13" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/subject_zan_ll"
+            android:layout_width="@dimen/dp_75"
+            android:layout_height="@dimen/dp_27"
+            android:layout_margin="@dimen/dp_8"
+            android:background="@drawable/bg_round_grey20"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:src="@drawable/z_quan_body_input_ico_good" />
+
+            <TextView
+                android:id="@+id/subject_zan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_3"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_11" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

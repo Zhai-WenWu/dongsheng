@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingRight="@dimen/dp_7.5" >
+
+    <acore.widget.TagTextView
+        xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+        tagTextView:radius="@dimen/dp_25"
+        tagTextView:backgroundColor="#FFFFFF"
+        tagTextView:sideColor="#D3D1D1"
+        tagTextView:sideWidth="@dimen/dp_0.5"
+        android:id="@+id/hot_word_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_24"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_14"
+        android:paddingRight="@dimen/dp_14"
+        android:textColor="#333333"
+        android:textSize="@dimen/sp_12" />
+
+</LinearLayout>

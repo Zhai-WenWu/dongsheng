@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_nocolor"
+    android:paddingTop="@dimen/dp_12" >
+
+    <TextView
+        android:id="@+id/item_search_taboo_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_12"
+        android:textSize="@dimen/sp_15" />
+
+    <TextView
+        android:id="@+id/item_search_taboo_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/item_search_taboo_info"
+        android:layout_marginTop="@dimen/dp_1"
+        android:background="@drawable/bg_round_green_type1"
+        android:paddingBottom="@dimen/dp_1"
+        android:paddingLeft="@dimen/dp_2"
+        android:paddingRight="@dimen/dp_2"
+        android:paddingTop="@dimen/dp_1"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_11" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_alignParentBottom="true"
+        android:background="#CCCCCC" />
+
+</RelativeLayout>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/view_promotion_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:background="#eeeeee" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:layout_gravity="center_vertical" >
+        <TextView
+            android:id="@+id/tv_favorable"
+            android:layout_width="@dimen/dp_34"
+            android:layout_height="@dimen/dp_16"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/dp_11"
+            android:background="@drawable/bg_mall_view_reduce_red"
+            android:text="领券"/>
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/logistics_back"
+            android:layout_toRightOf="@+id/tv_favorable"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_favorable_item_1" 
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_18"
+                android:textSize="@dimen/dp_12"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5"
+                android:layout_marginLeft="@dimen/dp_10"
+                 android:background="@drawable/detail_view_favorable"
+                android:textColor="#fffffe"/>
+            <TextView
+                android:id="@+id/tv_favorable_item_2" 
+                android:layout_width="wrap_content"
+               android:layout_height="@dimen/dp_18"
+                android:textSize="@dimen/dp_12"
+                android:gravity="center_vertical"
+                
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/detail_view_favorable"
+                android:textColor="#fffffe"/>
+            <TextView
+                android:id="@+id/tv_favorable_item_3" 
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_18"
+                android:textSize="@dimen/dp_12"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/detail_view_favorable"
+                android:textColor="#fffffe"/>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/logistics_back"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_6"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/detail_view_favorable_more" />
+    </RelativeLayout>
+
+</LinearLayout>

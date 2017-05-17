@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout">
+
+    <RelativeLayout
+        android:id="@+id/title_rela_all"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/common_top_bg">
+
+        <include
+            android:id="@+id/user_setting_title"
+            layout="@layout/c_view_bar_title" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/accout_setting_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title_rela_all"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_accout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/backgroup_color"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_20">
+
+                <RelativeLayout
+                    android:id="@+id/rl_phone_accout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_50"
+                    android:paddingRight="@dimen/dp_20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="手机号"
+                        android:textColor="@color/my_text"
+                        android:textSize="@dimen/sp_15" />
+
+                    <Button
+                        android:id="@+id/btn_bind_phone"
+                        android:layout_width="@dimen/dp_85"
+                        android:layout_height="@dimen/dp_26"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/bg_round_red_identify"
+                        android:clickable="false"
+                        android:ellipsize="end"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:lines="1"
+                        android:padding="@dimen/dp_3"
+                        android:text="绑定手机号"
+                        android:textColor="@color/comment_color"
+                        android:textSize="@dimen/sp_13"
+                        android:visibility="visible" />
+                </RelativeLayout>
+
+
+                <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_phone_accout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/view_accout_below"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_0.5"
+                    android:background="#ededed"
+                    android:visibility="gone" />
+
+                <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_email_accout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_bind_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/backgroup_color"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_20">
+
+                <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_weixin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_qq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_weibo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_meizu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/backgroup_color"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_20">
+
+                <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_modify_secret"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_help"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_120"
+                    android:text="遇到问题?"
+                    android:textColor="#737272"
+                    android:textSize="@dimen/sp_14" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

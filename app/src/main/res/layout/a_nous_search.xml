@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <ListView
+        android:id="@+id/nous_list_search"
+        style="@style/listView"
+        android:background="@android:color/transparent"
+        android:divider="#DED9D1"
+        android:overScrollMode="never"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_5"
+        android:visibility="gone" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/nous_list_search_noData"
+        style="@style/noDataText"
+        android:text="没有找到您想要的香哈头条哦~"
+        android:textColor="#777"
+        android:textSize="@dimen/sp_20" />
+
+</RelativeLayout>

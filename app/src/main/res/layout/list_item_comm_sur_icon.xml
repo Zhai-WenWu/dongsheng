@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_53"
+    android:layout_height="wrap_content"
+    android:gravity="center" >
+
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="@dimen/dp_42"
+        android:layout_height="@dimen/dp_42"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/z_surp_cup" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_icon"
+        android:layout_marginTop="@dimen/dp_6"
+        android:gravity="center"
+        android:textColor="#696969"
+        android:text="有奖征集"
+        android:textSize="@dimen/sp_13" />
+    
+    <!-- <ImageView
+        android:id="@+id/point_red_activity"
+        android:layout_width="@dimen/dp_8"
+        android:layout_height="@dimen/dp_8"
+        android:layout_toRightOf="@+id/iv_icon"
+        android:layout_marginTop="@dimen/dp_6"
+        android:src="@drawable/bg_round_red"
+        android:visibility="gone"/> -->
+
+    <ImageView
+        android:id="@+id/point_red_activity"
+        android:layout_width="@dimen/dp_8"
+        android:layout_height="@dimen/dp_8"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/iv_icon"
+        android:layout_marginTop="@dimen/dp_6"
+        android:layout_marginRight="@dimen/dp_7"
+        android:src="@drawable/bg_round_red"
+        android:visibility="gone"/>
+
+</RelativeLayout>

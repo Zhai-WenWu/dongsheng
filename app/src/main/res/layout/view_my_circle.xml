@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dp_1"
+    android:paddingRight="@dimen/dp_1" >
+
+    <TextView
+        android:id="@+id/view_my_cicle_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_7"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="我的圈子"
+        android:textColor="#878787"
+        android:textSize="@dimen/sp_14" />
+
+    <TableLayout
+        android:id="@+id/view_my_circle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dp_8"
+        android:paddingRight="@dimen/dp_8"
+        android:scrollbars="none"/>
+
+    <LinearLayout
+        android:id="@+id/view_my_circle_show_all_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10" >
+
+        <ImageView
+            android:id="@+id/view_my_circle_show_all"
+            android:layout_width="@dimen/dp_26"
+            android:layout_height="@dimen/dp_20"
+            android:padding="@dimen/dp_6"
+            android:scaleType="fitXY"
+            android:src="@drawable/i_view_circle_down" />
+    </LinearLayout>
+
+</LinearLayout>

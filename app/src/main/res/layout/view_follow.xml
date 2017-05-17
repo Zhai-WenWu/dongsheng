@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/view_follow_tv"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:layout_gravity="center"
+android:padding="@dimen/dp_2"
+android:background="@drawable/bg_round_white8"
+android:focusable="false"
+android:gravity="center"
+android:text="已关注"
+android:textColor="@color/comment_color"
+android:textSize="@dimen/sp_12" />
+

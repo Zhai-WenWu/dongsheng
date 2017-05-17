@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom">
+    <RelativeLayout
+        android:id="@+id/a_user_home_head_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+        <LinearLayout
+            android:id="@+id/a_user_home_dish_draft_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_14"
+            android:layout_marginBottom="@dimen/dp_14"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_9"
+            android:background="@drawable/bg_user_round2_000"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/a_user_home_dish_draft_name"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_35"
+                android:gravity="center"
+                android:textSize="@dimen/sp_14"
+                android:textColor="#ffffff"
+                android:text="草稿箱"/>
+
+            <ImageView
+                android:layout_width="@dimen/dp_13"
+                android:layout_height="@dimen/dp_12"
+                android:scaleType="centerInside"
+                android:layout_marginTop="@dimen/dp_1"
+                android:src="@drawable/icon_draf_enter"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

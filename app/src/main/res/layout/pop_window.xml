@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <acore.widget.TagTextView
+        xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+        tagTextView:backgroundColor="@color/comment_color"
+        tagTextView:radius="@dimen/dp_15"
+        android:id="@+id/pop_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5"
+        android:text="发贴成功    +5"
+        android:clickable="true"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:gravity="center" />
+
+</LinearLayout>

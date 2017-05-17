@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@color/transparent">
+
+    <TextView
+        android:id="@+id/tv_noData"
+        style="@style/noDataText"
+        android:text="暂无相关内容"
+        android:textColor="#777"
+        android:textSize="@dimen/sp_20"
+        android:visibility="invisible" />
+
+
+    <amodule.search.view.GlobalSearchView
+        android:id="@+id/bar_search_global"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+
+</RelativeLayout>

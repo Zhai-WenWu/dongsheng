@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/btn_nocolor"
+    android:paddingTop="@dimen/dp_9" >
+
+    <TextView
+        android:id="@+id/search_home_nous_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/search_home_nous_img"
+        android:ellipsize="end"
+        android:lines="1"
+        android:paddingBottom="@dimen/dp_6"
+        android:textSize="@dimen/dp_16" />
+
+    <TextView
+        android:id="@+id/search_home_nous_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_home_nous_title"
+        android:layout_toLeftOf="@+id/search_home_nous_img"
+        android:ellipsize="end"
+        android:lines="2"
+        android:textColor="#999999"
+        android:textSize="@dimen/dp_14" />
+
+    <TextView
+        android:id="@+id/search_home_nous_classifyName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_home_nous_content"
+        android:ellipsize="end"
+        android:paddingBottom="@dimen/dp_9"
+        android:paddingRight="@dimen/dp_25"
+        android:paddingTop="@dimen/dp_9"
+        android:textColor="#C8C8C8"
+        android:textSize="@dimen/dp_10" />
+
+    <TextView
+        android:id="@+id/search_home_nous_allClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/search_home_nous_classifyName"
+        android:layout_toRightOf="@+id/search_home_nous_classifyName"
+        android:paddingTop="@dimen/dp_10"
+        android:textColor="#C8C8C8"
+        android:textSize="@dimen/sp_12" />
+
+    <ImageView
+        android:id="@+id/search_home_nous_img"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:src="@drawable/i_nopic" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_below="@+id/search_home_nous_classifyName"
+        android:background="#E7E7E7"
+        android:visibility="visible" />
+
+</RelativeLayout>

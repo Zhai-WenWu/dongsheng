@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_noData"
+        style="@style/noDataText"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:text="暂时还没有粉丝哦~"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_13"
+        android:visibility="gone"/>
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/my_list_fans_follower"
+        style="@style/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:visibility="gone"/>
+
+</LinearLayout>

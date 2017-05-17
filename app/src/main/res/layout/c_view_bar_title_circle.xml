@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bar_title"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/comment_color" >
+
+    <ImageView
+        android:id="@+id/circle_add_my_circle"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:clickable="true"
+        android:src="@drawable/z_circle_join_ico" />
+
+    <TextView
+        android:id="@+id/circle_title"
+        style="@style/singleText"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="生活圈"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/sp_18" />
+
+    <ImageView
+        android:id="@+id/circle_message"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:clickable="true"
+        android:src="@drawable/z_circle_message_ico" />
+
+    <TextView
+        android:id="@+id/circle_message_count"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_16"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="@dimen/dp_4.5"
+        android:paddingRight="@dimen/dp_4.5"
+        android:minWidth="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_5.5"
+        android:layout_marginRight="@dimen/dp_23"
+        android:background="@drawable/bg_circle_black_20"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:textSize="@dimen/sp_10"
+        android:textColor="#FFFFFF" />
+
+</RelativeLayout>

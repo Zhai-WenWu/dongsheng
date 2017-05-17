@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@color/transparent">
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="#fffffe"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:scrollbars="none"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/title_rela_all_dish"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45">
+
+        <include
+            android:id="@+id/dish_title_dish"
+            layout="@layout/a_dish_detail_bar_title"/>
+    </RelativeLayout>
+
+</RelativeLayout>

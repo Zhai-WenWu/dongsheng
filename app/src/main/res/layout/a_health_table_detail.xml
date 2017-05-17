@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/detail_classify_tv"
+        android:layout_width="@dimen/dp_15"
+        android:layout_height="@dimen/dp_50"
+        android:background="#000000"
+        android:gravity="center"
+        android:text="肉类"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="@dimen/dp_1"
+        android:textSize="@dimen/sp_11" />
+
+    <TableLayout
+        android:id="@+id/table_detail_health"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:paddingRight="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_10"
+        >
+    </TableLayout>
+
+</LinearLayout>

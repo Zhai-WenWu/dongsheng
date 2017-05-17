@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/activityLayout"
+                style="@style/layout"
+                android:background="@color/backgroup_color">
+
+    <RelativeLayout android:id="@+id/rl_topbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/dp_20"
+                    android:paddingLeft="@dimen/dp_20"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_21"
+    >
+        <TextView
+            android:id="@+id/tv_top_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="跳过"
+            android:textColor="#c3c3c3"
+            android:textSize="@dimen/sp_16"
+        />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_topbar"
+        android:layout_marginTop="@dimen/dp_18"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+
+                      android:orientation="vertical">
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center"
+                      android:text="Hi,绑定手机号吧~"
+                      android:textColor="@color/c_black_text"
+                      android:textSize="@dimen/sp_26"
+                      android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_identify_info"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_3"
+                android:gravity="center"
+                android:text="绑定手机号可以使用全部功能哦"
+                android:textColor="@color/c_gray_999999"
+                android:textSize="@dimen/sp_14"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+
+        <amodule.user.view.PhoneNumInputView
+            android:id="@+id/phone_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_48"/>
+
+        <amodule.user.view.IdentifyInputView
+            android:id="@+id/phone_identify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_11">
+
+        </amodule.user.view.IdentifyInputView>
+
+        <amodule.user.view.SecretInputView
+            android:id="@+id/user_secret"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_11"/>
+
+        <amodule.user.view.NextStepView
+            android:id="@+id/btn_next_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_43">
+        </amodule.user.view.NextStepView>
+
+    </LinearLayout>
+
+</RelativeLayout>

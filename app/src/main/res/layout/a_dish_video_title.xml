@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barTitle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/common_top_bg" >
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/top_title_singleText"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/dp_55"
+        android:paddingRight="@dimen/dp_55"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:clickable="true" />
+
+    <View
+        android:id="@+id/title_dian"
+        android:layout_width="@dimen/dp_2"
+        android:layout_height="@dimen/dp_2"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/title"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/ll_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        layout="@layout/a_bar_item_back" />
+
+    <Button
+        android:id="@+id/leftBtn1"
+        style="@style/top_titleBarView"
+        android:layout_toRightOf="@+id/ll_back"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_5"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="@dimen/dp_100"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" >
+
+        <ImageButton
+            android:id="@+id/rightImgBtn1"
+            style="@style/top_titleBarView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:gravity="left|center_vertical"
+            android:paddingBottom="@dimen/dp_13"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:paddingTop="@dimen/dp_13"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/rightImgBtnText"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="@dimen/dp_13"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/bg_round_red20"
+            android:clickable="true"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/rightImgBtn3"
+            style="@style/top_titleBarView"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5"
+            android:scaleType="centerInside" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/rightBtn1"
+        style="@style/top_titleBarView"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="false"
+        android:gravity="left|center_vertical"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_5"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/rightText"
+        style="@style/top_text_other"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="false"
+        android:clickable="true"
+        android:gravity="left|center_vertical"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_5"/>
+
+    <ImageView
+        android:id="@+id/rightImgBtn2"
+        style="@style/rightBtn"
+        android:layout_width="@dimen/dp_42"
+        android:layout_alignParentRight="true" />
+
+    <ImageView
+        android:id="@+id/rightImgBtn4"
+        style="@style/rightBtn"
+        android:layout_toLeftOf="@+id/rightImgBtn2" />
+
+    <ImageView
+        android:id="@+id/rightImgBtn5"
+        style="@style/rightBtn"
+        android:layout_toLeftOf="@+id/rightImgBtn4" />
+
+
+</RelativeLayout>

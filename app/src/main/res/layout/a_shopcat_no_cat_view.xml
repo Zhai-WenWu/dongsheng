@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@+id/shoppingcat_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_33"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="@dimen/dp_74"
+            android:layout_height="@dimen/dp_74"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/z_mall_shopcat_no_data" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_18"
+            android:text="您的购物车空空如也"
+            android:textColor="#696969"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_9"
+            android:text="快去挑点宝贝吧~"
+            android:textColor="#9e9e9e"
+            android:textSize="@dimen/sp_13" />
+
+        <acore.widget.TagTextView
+            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+            tagTextView:sideWidth="@dimen/dp_0.5"
+            tagTextView:sideColor="#9e9e9e"
+            tagTextView:radius="@dimen/dp_2.5"
+            android:id="@+id/shoppingcat_go"
+            android:layout_width="@dimen/dp_103"
+            android:layout_height="@dimen/dp_33"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_15"
+            android:gravity="center"
+            android:text="去逛逛"
+            android:textColor="#696969"
+            android:textSize="@dimen/sp_15" />
+    </LinearLayout>
+
+</RelativeLayout>

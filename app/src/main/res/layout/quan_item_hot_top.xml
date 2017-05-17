@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFE"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/rela_heard"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_36"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_8">
+
+        <LinearLayout
+            android:id="@+id/linear_item_type"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp__1"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dp__1"
+            android:visibility="visible">
+
+            <acore.widget.TagTextView
+                android:id="@+id/tv_item_style"
+                style="@style/btn_white_hot_top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="公告"
+                android:textColor="@color/quan_text_red_color"
+                android:textScaleX="0"
+                android:textSize="@dimen/sp_10"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_item_sub_title"
+            style="@style/singleText"
+            android:layout_width="wrap_content"
+            android:paddingLeft="@dimen/dp_6"
+            android:text="标题"
+            android:textColor="#111111"
+            android:textSize="@dimen/sp_13.5"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_item_sub_online"
+        style="@style/singleText"
+        android:layout_width="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:layout_toRightOf="@+id/rela_heard"
+        android:text="在线"
+        android:textColor="#111111"
+        android:textSize="@dimen/sp_13.5"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_item_unread_message"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_14"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="@drawable/tv_circle_red_20"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_5"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone"/>
+
+</RelativeLayout>

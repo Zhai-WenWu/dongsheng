@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 登录小标题 -->
+    <style name="login_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:paddingLeft">@dimen/dp_8</item>
+        <item name="android:paddingRight">@dimen/dp_8</item>
+    </style>
+    <!-- 登录返回键 -->
+    <style name="login_back">
+        <item name="android:layout_width">@dimen/dp_45</item>
+        <item name="android:layout_height">@dimen/dp_30</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:paddingLeft">@dimen/dp_5</item>
+        <item name="android:paddingRight">@dimen/dp_5</item>
+        <item name="android:paddingTop">@dimen/dp_3</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:clickable">true</item>
+        <item name="android:src">@drawable/z_me_mypage_ico_back</item>
+    </style>
+    <!-- 登录边线 -->
+    <style name="login_line">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/dp_0.5</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@color/c_white_transparent_40</item>
+    </style>
+    <!-- 登录选项btn文字 -->
+    <style name="login_opt_btn_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/dp_55</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+    </style>
+    <!-- 登录选项btn ico -->
+    <style name="login_opt_btn_ico">
+        <item name="android:layout_width">@dimen/dp_25</item>
+        <item name="android:layout_height">@dimen/dp_25</item>
+        <item name="android:layout_marginLeft">@dimen/dp_20</item>
+    </style>
+    <!-- 登录文本框 -->
+    <style name="login_editText" parent="singleText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_46</item>
+        <item name="android:paddingLeft">@dimen/dp_10</item>
+        <item name="android:background">@drawable/bg_round_white5</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textColorHint">#999</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+    <!-- 显示国家的文本框 -->
+    <style name="login_left_round_editText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_46</item>
+        <item name="android:paddingLeft">@dimen/dp_10</item>
+        <item name="android:background">@drawable/bg_left_round_white</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColorHint">#999</item>
+        <item name="android:textColor">#232323</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+    <style name="login_right_round_editText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_46</item>
+        <item name="android:paddingLeft">@dimen/dp_10</item>
+        <item name="android:background">@drawable/bg_right_round_white</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColorHint">#999</item>
+        <item name="android:textColor">#232323</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+    </style>
+
+    <style name="login_right_round_input">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_46</item>
+        <item name="android:paddingLeft">@dimen/dp_10</item>
+        <item name="android:background">@drawable/bg_right_round_white</item>
+        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColorHint">#bfbebe</item>
+        <item name="android:textColor">@color/c_black_text</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+    </style>
+    <!-- 登陆查看密码 -->
+    <style name="login_lookPassword">
+        <item name="android:layout_width">@dimen/dp_46</item>
+        <item name="android:layout_height">@dimen/dp_46</item>
+        <item name="android:padding">@dimen/dp_12</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:src">@drawable/z_user_icon_unlook_pass</item>
+    </style>
+    
+    <!-- 功能文字 -->
+    <style name="login_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/c_white_transparent_40</item>
+        <item name="android:textSize">@dimen/dp_12</item>
+    </style>
+
+    <!-- big btn -->
+    <style name="login_big_btn">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_40</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+    </style>
+
+    <!-- 第三方登陆 ico -->
+    <style name="login_3_ico">
+        <item name="android:layout_width">@dimen/dp_44</item>
+        <item name="android:layout_height">@dimen/dp_44</item>
+        <item name="android:layout_marginLeft">@dimen/dp_5</item>
+        <item name="android:layout_marginRight">@dimen/dp_5</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+</resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroup_color"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/tv_left_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_14"
+        android:layout_marginTop="@dimen/dp_12"
+        android:gravity="left"
+        android:minWidth="@dimen/dp_66"
+        android:text="今天"
+        android:textSize="@dimen/sp_19" />
+
+    <LinearLayout
+        android:id="@+id/linear_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp_52"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14" >
+
+        <TextView
+            android:id="@+id/tv_right_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/rela_camera"
+            android:layout_width="@dimen/dp_67"
+            android:layout_height="@dimen/dp_67"
+            android:background="@drawable/btn_gray" >
+
+            <ImageView
+                android:id="@+id/iv_camera"
+                android:layout_width="@dimen/dp_27"
+                android:layout_height="@dimen/dp_27"
+				android:layout_marginTop="@dimen/dp_16"      
+				android:layout_centerHorizontal="true"          
+                android:scaleType="centerInside"
+                android:src="@drawable/i_ico_upload_camera" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_camera"
+                android:paddingTop="@dimen/dp_3"
+                android:gravity="center_horizontal"
+                android:text="发美食帖"
+                android:textColor="#A0A0A0"
+                android:textSize="@dimen/sp_11" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

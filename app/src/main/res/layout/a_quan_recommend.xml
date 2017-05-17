@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:clickable="false">
+
+    <acore.widget.MsgScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_39"
+                android:paddingLeft="@dimen/dp_15">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="请选择方式"
+                    android:textColor="#8E8E8E"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/user_recommend_collection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/c_white_text"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/user_recommend_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_47"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_30"
+                        android:layout_toRightOf="@+id/img_1"
+                        android:text="推荐到首页"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_0.5"
+                        android:layout_alignLeft="@+id/tv_1"
+                        android:layout_alignParentBottom="true"
+                        android:background="#DDDDDD"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/user_recommend_cream"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_47"
+                    android:paddingLeft="@dimen/dp_15">
+
+                    <TextView
+                        android:id="@+id/tv_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_30"
+                        android:text="加精"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/admin_recommend_tv_item"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_47"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_15"
+                android:text="移动到其他圈子"
+                android:textColor="#8E8E8E"/>
+
+            <LinearLayout
+                android:id="@+id/admin_recommend_conlection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_quan_recommend_commit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_47"
+                android:layout_marginBottom="@dimen/dp_15"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_47"
+                android:background="@drawable/bg_btn_report_quan"
+                android:gravity="center"
+                android:text="提交"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+    </acore.widget.MsgScrollView>
+</RelativeLayout>

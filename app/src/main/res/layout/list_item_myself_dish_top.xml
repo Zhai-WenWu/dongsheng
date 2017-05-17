@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:layout_centerInParent="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/dp_12"
+    android:paddingTop="@dimen/dp_15" >
+
+    <ImageView
+        android:layout_width="@dimen/dp_55"
+        android:layout_height="@dimen/dp_55"
+        android:src="@drawable/z_caipu_icon_upload"
+        android:paddingLeft="5dp"
+    	android:paddingRight="@dimen/dp_5"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingLeft="5dp"
+    	android:paddingRight="@dimen/dp_5"
+        android:text="发布菜谱"
+        android:textSize="@dimen/sp_15" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingLeft="5dp"
+    	android:paddingRight="@dimen/dp_5"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/dp_2" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="得积分换奖品，"
+            android:textSize="@dimen/sp_13" />
+
+        <TextView
+            android:id="@+id/tv_integralInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="积分规则"
+            android:textColor="#F55555"
+            android:textSize="@dimen/sp_13" />
+    </LinearLayout>
+</LinearLayout>

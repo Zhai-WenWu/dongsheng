@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#f1eee4"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/title_rela"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/comment_color" >
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/singleText"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/dp_50"
+            android:paddingRight="@dimen/dp_50"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/sp_18"
+            android:visibility="visible" />
+
+        <include
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            layout="@layout/a_bar_item_back" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_alignParentBottom="true"
+            android:background="#e1e2e4" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/psts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_rela"
+        android:orientation="vertical" >
+
+        <acore.widget.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            android:layout_gravity="center_horizontal"
+            android:background="#fffffe"
+            android:visibility="visible"
+            app:pstsIndicatorColor="@color/comment_color"
+            app:pstsIndicatorWidthFollowText="true"
+            app:pstsTabColumn="3"
+            app:pstsTabTextColor="@color/tab_text_color"
+            app:pstsTabTextSize="@dimen/sp_14"
+            app:pstsUnderlineColor="#DFDFDF"
+            app:pstsUnderlineHeight="@dimen/dp_0.5" />
+        
+    </RelativeLayout>
+
+     <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/psts"/>
+
+</RelativeLayout>

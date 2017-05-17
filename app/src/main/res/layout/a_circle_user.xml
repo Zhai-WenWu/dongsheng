@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:gravity="center">
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/a_circle_user_list"
+        style="@style/listNoDivider"
+        android:background="@android:color/transparent"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:scrollbars="none"/>
+
+</RelativeLayout>

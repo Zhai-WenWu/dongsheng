@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/dp_61"
+    android:paddingBottom="@dimen/dp_10" >
+
+    <TextView
+        android:id="@+id/element_classify_tv"
+        android:layout_width="@dimen/dp_15"
+        android:layout_height="@dimen/dp_40"
+        android:background="#000000"
+        android:gravity="center"
+        android:text="肉类"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_11" />
+
+    <RelativeLayout
+        android:id="@+id/element_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/dp_16" >
+
+        <ImageView
+            android:id="@+id/element_img"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/dp_15"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_nopic" />
+
+        <TextView
+            android:id="@+id/element_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_toRightOf="@+id/element_img"
+            android:gravity="center_vertical"
+            android:text="肉类"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:id="@+id/element_content"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:layout_toLeftOf="@+id/element_img_click"
+            android:gravity="center_vertical|left"
+            android:text="655/100克"
+            android:textSize="@dimen/sp_12" />
+
+        <ImageView
+            android:id="@+id/element_img_click"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/dp_26"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_12"
+            android:src="@drawable/z_xiangke_ico_so" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_alignLeft="@+id/element_name_tv"
+            android:layout_below="@+id/element_img"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="#CCCCCC" />
+    </RelativeLayout>
+
+</RelativeLayout>

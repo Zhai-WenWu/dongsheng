@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#222222"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_all_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#222222">
+
+        <RelativeLayout
+            android:id="@+id/title_rela"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            android:background="#222222">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/singleText"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:paddingLeft="@dimen/dp_50"
+                android:paddingRight="@dimen/dp_50"
+                android:text="裁剪"
+                android:textColor="#fffffe"
+                android:textSize="@dimen/sp_19"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/ll_back"
+                layout="@layout/a_bar_item_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true" />
+
+            <TextView
+                android:id="@+id/tv_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_15"
+                android:scaleType="centerInside"
+                android:text="完成"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/sp_17" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_all_rela"
+        android:layout_marginBottom="@dimen/dp_50"
+        android:layout_marginTop="@dimen/dp_50"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/all_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="总时长：89"
+            android:textColor="#7c7c7c"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/time_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="(不能超过6分钟)"
+            android:textColor="#7c7c7c"
+            android:textSize="@dimen/sp_14" />
+    </LinearLayout>
+    <!--播放器控件-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_200"
+        android:layout_below="@+id/linear_time"
+        android:layout_centerInParent="true" />
+    <!--时间-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/viewpager"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8">
+
+            <TextView
+                android:id="@+id/pager_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="时间"
+                android:textColor="#fffffe"
+                android:textSize="@dimen/sp_15" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_25"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/pager_index_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="时间"
+                    android:textColor="#fffffe"
+                    android:textSize="@dimen/sp_15" />
+
+                <TextView
+                    android:id="@+id/pager_index_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="时间"
+                    android:textColor="#fffffe"
+                    android:textSize="@dimen/sp_11" />
+            </LinearLayout>
+        </RelativeLayout>
+        <!--进度条-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_50"
+            android:background="#222222"
+            android:orientation="vertical">
+
+            <amodule.dish.video.View.RangeSeekBarView
+                android:id="@+id/rangseekbarview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewpager"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

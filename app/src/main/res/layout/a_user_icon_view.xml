@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+    
+     <ImageView
+        android:id="@+id/a_user_icon_leve"
+        android:layout_width="@dimen/dp_16.5"
+        android:layout_height="@dimen/dp_16.5"
+         android:layout_marginRight="@dimen/dp_1"
+        android:background="@drawable/z_z_ico_level_01"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+     
+     <ImageView
+        android:id="@+id/a_user_icon_sex"
+        android:layout_width="@dimen/dp_12"
+        android:layout_height="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_2"
+        android:src="@drawable/z_z_ico_girl"
+        android:scaleType="fitCenter"
+        android:visibility="gone"/>
+
+     <include
+          layout="@layout/circle_invitationcontent_location"
+         android:layout_marginLeft="@dimen/dp_4"
+         />
+    
+</LinearLayout>

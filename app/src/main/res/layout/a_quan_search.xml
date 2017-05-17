@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <ListView
+        android:id="@+id/list_quansearch"
+        style="@style/listView"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+    </ListView>
+    
+     <TextView
+        android:id="@+id/quan_list_search_noData"
+        style="@style/noDataText"
+        android:text="没有找到您想要的美食帖哦~"
+        android:textColor="#777"
+        android:textSize="@dimen/sp_20" />
+
+</RelativeLayout>

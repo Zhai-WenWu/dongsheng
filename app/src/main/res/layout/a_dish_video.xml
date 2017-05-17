@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activityLayout"
+    android:orientation="vertical">
+    
+    <!-- <acore.widget.PagerSlidingTabStrip
+        android:draftId="@+draftId/a_dish_video_title_sliding"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        app:pstsIndicatorColor="@color/comment_color"
+        app:pstsIndicatorHeight="@dimen/dp_1.5"
+        app:pstsIndicatorWidthFollowText="true"
+        app:pstsUnderlineColor="#F0F0F0"
+        app:pstsUnderlineHeight="@dimen/dp_2"
+        app:pstsTabColumn="5"
+        app:pstsShouldExpand="true"
+        app:pstsTabTextColor="@color/tab_text_color"
+        app:pstsTabTextSize="@dimen/sp_14" /> -->
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/a_dish_video_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    
+    <HorizontalScrollView 
+        android:id="@+id/a_dish_video_title_sh"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_65"
+        android:background="@color/common_bg"
+        android:scrollbars="none">
+        <LinearLayout 
+            android:id="@+id/a_dish_video_hs_ll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"/>
+   </HorizontalScrollView>
+
+</RelativeLayout>

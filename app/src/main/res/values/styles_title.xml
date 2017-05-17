@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--状态栏正标题字体-->
+    <style name="top_text">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/common_top_text</item>
+    </style>
+
+    <!--状态栏正标题字体-->
+    <style name="top_text_other">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/common_top_text</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!--状态栏按钮的字体-->
+    <style name="top_text_button">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/common_top_button_text</item>
+        <item name="android:background">@drawable/bg_round3_white</item>
+    </style>
+
+    <!--状态栏上边是按钮底部是字-->
+    <style name="top_text_button_bottom">
+        <item name="android:textSize">@dimen/sp_8</item>
+        <item name="android:textColor">@color/common_top_text</item>
+    </style>
+
+    <!-- 单行text -->
+    <style name="top_title_singleText" parent="top_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <!-- 单行text -->
+    <style name="top_title_other_singleText" parent="top_text_other">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <!-- 头部titleBar内部样式 -->
+    <style name="top_titleBarView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@drawable/btn_nocolor</item>
+        <item name="android:textColor">@color/common_top_text</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    <!-- 头部titleBar -->
+    <style name="top_titleBarLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_45</item>
+        <item name="android:background">#F0EEEE</item>
+    </style>
+</resources>

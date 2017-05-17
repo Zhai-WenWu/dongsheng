@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/dp_30"
+    android:focusable="true"
+    android:paddingBottom="@dimen/dp_5"
+    android:paddingRight="@dimen/dp_14" >
+
+    <acore.widget.TagTextView
+        xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+        tagTextView:radius="@dimen/dp_20"
+        tagTextView:backgroundColor="#00FFFFFF"
+        tagTextView:sideColor="#BDBA98"
+        tagTextView:sideWidth="@dimen/dp_0.5"
+        android:id="@+id/choose_dish_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_22.5"
+        android:layout_marginTop="@dimen/dp_3"
+        android:clickable="true"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:gravity="center"
+        android:textColor="#BDBA98"
+        android:textSize="@dimen/sp_13" />
+
+    <ImageView
+        android:id="@+id/choose_dish_del"
+        android:layout_width="@dimen/dp_10"
+        android:layout_height="@dimen/dp_10"
+        android:layout_toRightOf="@+id/choose_dish_name"
+        android:layout_marginLeft="@dimen/dp__1"
+        android:background="@drawable/z_choose_dish_del"
+        android:clickable="true" />
+
+</RelativeLayout>

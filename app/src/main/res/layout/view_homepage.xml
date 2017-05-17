@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+
+    <acore.widget.ImageViewVideo
+        android:id="@+id/imageView_item"
+        style="@style/backgroundColor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true" />
+
+    <acore.widget.TagTextView
+		xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+		tagTextView:radius="@dimen/dp_30"
+		tagTextView:backgroundColor="#80000000"
+        android:id="@+id/textView_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="午餐食谱"
+        android:visibility="gone"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:textSize="@dimen/sp_13"
+        android:textColor="#ffffff" />
+    <ImageView 
+        android:id="@+id/iv_sancan_item"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_127"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dp_36"
+        android:layout_marginRight="@dimen/dp_52"
+        android:src="@drawable/i_ico_homepage_sancan_zao"
+        />
+    <LinearLayout 
+        android:id="@+id/tv_data_item_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/iv_sancan_item"
+	    android:layout_alignTop="@+id/iv_sancan_item"
+	    android:layout_marginRight="@dimen/dp_10"
+	    android:paddingLeft="@dimen/dp_3"
+	    android:paddingRight="@dimen/dp_1"
+	    android:paddingBottom="@dimen/dp_3"
+	    android:paddingTop="@dimen/dp_3"
+	    android:background="#99FFFFFF"
+        >
+		<TextView 
+		    android:id="@+id/tv_data_item"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="@dimen/sp_13"
+		    android:ems="1"
+		    android:text="四月二十五日"/>
+    </LinearLayout>
+</RelativeLayout>

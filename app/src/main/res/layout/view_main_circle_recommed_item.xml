@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_my_circle_item_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_54"
+        android:background="@drawable/bg_my_circle_item"
+        android:paddingLeft="@dimen/dp_11"
+        android:paddingRight="@dimen/dp_12.5" >
+
+        <TextView
+            android:id="@+id/view_my_circle_item_title"
+            style="@style/singleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="秀美食"
+            android:textColor="#666666"
+            android:textSize="@dimen/dp_15" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

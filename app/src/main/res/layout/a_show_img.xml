@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000">
+
+    <com.github.chrisbanes.photoview.PhotoView
+    android:id="@+id/a_show_img"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    />
+
+    <ImageView
+        android:id="@+id/a_show_img_close"
+        android:layout_width="@dimen/dp_38"
+        android:layout_height="@dimen/dp_38"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_20"
+        android:src="@drawable/i_dish_more_img_close" />
+
+</RelativeLayout>

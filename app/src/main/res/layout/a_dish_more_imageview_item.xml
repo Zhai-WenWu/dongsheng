@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/a_dish_more_img_item_parent_rl"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/a_dish_more_img_item_img_parent_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/view_ad_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/a_dish_more_img_item_content_parent_sc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/a_dish_more_img_item_scroll_bottom_view"
+        android:paddingTop="@dimen/dp_6"
+        android:background="#8f000000"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:id="@+id/a_dish_more_img_item_content_parent_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20">
+
+            <RelativeLayout
+                android:id="@+id/a_dish_more_img_hint_num"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/a_dish_more_img_item_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/a_dish_more_img_item_num_he"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/dp_16" />
+
+                <TextView
+                    android:id="@+id/a_dish_more_img_item_num_he"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/dp_3.5"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/dp_12" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/view_ad_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/a_dish_more_img_hint_num"
+                android:lineSpacingExtra="@dimen/dp_5"
+                android:minLines="4"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/dp_19" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <View
+        android:id="@+id/a_dish_more_img_item_scroll_bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_22"
+        android:layout_alignParentBottom="true"
+        android:background="#8f000000" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#8f000000"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/a_dish_more_img_item_num_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/a_dish_more_img_item_num__he_hint"
+            android:gravity="right"
+            android:paddingBottom="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_15"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/dp_16"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/a_dish_more_img_item_num__he_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/a_dish_more_img_item_num_hint"
+            android:gravity="right"
+            android:paddingBottom="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_15"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/dp_12"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/a_dish_more_img_item_close"
+        android:layout_width="@dimen/dp_38"
+        android:layout_height="@dimen/dp_38"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_20"
+        android:src="@drawable/i_dish_more_img_close" />
+
+</RelativeLayout>

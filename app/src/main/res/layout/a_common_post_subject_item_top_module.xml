@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/common_post_item_moudle_name" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_25"
+        android:clickable="true"
+    	android:gravity="center"
+    	android:textColor="#e7e7e7"
+    	android:textSize="@dimen/sp_17"
+        android:text="秀美食"/>
+
+</LinearLayout>

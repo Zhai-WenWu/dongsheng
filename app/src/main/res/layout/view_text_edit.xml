@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal">
+    
+    <TextView
+        android:id="@+id/view_text_edit_tv" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_4"
+        android:paddingRight="@dimen/dp_4"
+        android:singleLine="true"
+        android:enabled="false"
+        android:maxEms="15"
+        android:background="@null"
+        android:textSize="@dimen/sp_12"
+        android:textColorHint="#FFFFFF"
+        android:textColor="#FFFFFF"/>
+    
+    <ImageView
+        android:id="@+id/view_text_edit_iv"
+        android:layout_width="@dimen/dp_15"
+        android:layout_height="@dimen/dp_15"
+        android:padding="@dimen/dp_2"
+        android:src="@drawable/i_pen"
+        android:visibility="gone"/>
+
+</LinearLayout>

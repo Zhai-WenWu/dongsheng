@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fefefe"
+    android:orientation="horizontal">
+    <acore.widget.ScrollviewEdit
+	    android:id="@+id/scrollviewedit"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_toLeftOf="@+id/a_dish_upload_item_speech_iv"
+	    android:minHeight="@dimen/dp_40"
+	    android:overScrollMode="never"
+	    android:scrollbars="none" > 
+		<acore.widget.EditTextNoEmoji 
+		     android:id="@+id/a_dish_upload_item_speech_et"
+		     style="@style/d_uploadDishText"
+		     android:maxLength="800"
+		     android:layout_marginTop="0dp"
+		     android:paddingRight="@dimen/dp_15"/>
+	 </acore.widget.ScrollviewEdit>
+	 <ImageView
+	     android:id="@+id/a_dish_upload_item_speech_iv" 
+	     android:layout_width="@dimen/dp_18"
+	     android:layout_height="@dimen/dp_18"
+		 android:background="#fefefe"
+	     android:layout_alignParentRight="true"
+	     android:layout_marginRight="@dimen/dp_15"
+	     android:layout_centerVertical="true"
+	     android:src="@drawable/i_dish_speeach"/>
+</RelativeLayout>

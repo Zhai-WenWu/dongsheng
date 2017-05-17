@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_70"
+    android:layout_height="@dimen/dp_49" >
+    <ImageView
+        android:id="@+id/Index_backgroup"
+        android:layout_width="@dimen/dp_59"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/tab_linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:addStatesFromChildren="true"
+        android:background="@color/backgroup_color"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_5" >
+
+        <ImageView
+            android:id="@+id/iv_itemIsFine"
+            android:layout_width="@dimen/dp_22"
+            android:layout_height="@dimen/dp_22"
+            android:layout_gravity="center"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="#929292"
+            android:textSize="@dimen/sp_10" />
+    </LinearLayout>
+    
+    <ImageView
+        android:id="@+id/activity_tabhost_redhot"
+        android:layout_width="@dimen/dp_8"
+        android:layout_height="@dimen/dp_8"
+         android:layout_marginLeft="@dimen/dp_9"
+        android:layout_alignLeft="@+id/tab_center"
+        android:layout_marginTop="@dimen/dp_5"
+        android:src="@drawable/tv_circle_red_20"
+		android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_tab_msg_num"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/bar_tab_marginright"
+        android:layout_marginTop="@dimen/dp_2"
+        android:background="@drawable/tv_circle_red_20"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="1"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_tab_msg_tow_num"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_16"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/bar_tab_marginright"
+        android:layout_marginTop="@dimen/dp_2"
+        android:background="@drawable/tv_circle_red_20"
+        android:gravity="center_horizontal|center_vertical"
+        android:minWidth="@dimen/dp_18"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_5"
+        android:text="12+"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/tab_center"
+        android:layout_centerInParent="true"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+</RelativeLayout>

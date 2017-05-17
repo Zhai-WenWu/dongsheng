@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/video_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></RelativeLayout>
+    <include
+        android:id="@+id/tip_root"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        layout="@layout/tip_layout"/>
+    <ImageView
+        android:id="@+id/image_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E0E0E0"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/image_btn_play"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerInParent="true"
+        android:background="@drawable/z_icon_play"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/load_progress"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:src="@drawable/image_progress" />
+</RelativeLayout>

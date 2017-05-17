@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="67dp" 
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="#E9E9E9">
+
+        <ImageView
+            android:id="@+id/iv_userImg"
+            android:layout_width="65dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/singleText"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/tv_care"
+            android:layout_toRightOf="@+id/iv_userImg"
+            android:text="名字"
+            android:textColor="#D4454E"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_renqi"
+            style="@style/singleText"
+            android:layout_below="@+id/tv_name"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/tv_care"
+            android:layout_toRightOf="@+id/iv_userImg"
+            android:text="人气"
+            android:textColor="#666666"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_care"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btn_gray_bbb"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onIsCareBtnClick"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:text="已关注"
+            android:textColor="#ffffff"
+            android:textSize="13sp"
+            android:visibility="visible" />
+    </RelativeLayout>
+ 	<View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#D5D5D5" />
+</LinearLayout>

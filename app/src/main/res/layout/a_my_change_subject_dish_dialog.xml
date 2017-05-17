@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_rela"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_choose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_close"
+        android:layout_marginBottom="@dimen/dp_30">
+
+        <View
+            android:id="@+id/v_line"
+            android:layout_width="@dimen/dp_0.5"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true"
+            android:background="#fff"/>
+
+        <LinearLayout
+            android:id="@+id/iv_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_30"
+            android:onClick="onSendSubject"
+            android:layout_toLeftOf="@+id/v_line"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/dp_73"
+                android:layout_height="@dimen/dp_73"
+                android:background="@drawable/pulish_subject"
+                android:scaleType="centerInside"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="@dimen/dp_7"
+                android:text="发贴"
+                android:textColor="#333"
+                android:textSize="@dimen/sp_14"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/iv_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:onClick="onSendDish"
+            android:layout_toRightOf="@+id/v_line"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/dp_73"
+                android:layout_height="@dimen/dp_73"
+                android:background="@drawable/pulish_video"
+                android:scaleType="centerInside"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="@dimen/dp_7"
+                android:text="小视频"
+                android:textColor="#333"
+                android:textSize="@dimen/sp_14"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_chooseSubjectType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_close"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/gv_uploadSubject"
+            android:background="#fff"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dp_24.5"
+            android:paddingTop="@dimen/dp_26"
+            android:text="请选择帖子类型"
+            android:textColor="#505050"
+            android:textSize="@dimen/sp_12"/>
+
+        <GridView
+            android:id="@+id/gv_uploadSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#fff"
+            android:gravity="center_horizontal|center_vertical"
+            android:horizontalSpacing="@dimen/dp_11"
+            android:listSelector="@drawable/item_nocolor"
+            android:numColumns="3"
+            android:paddingBottom="@dimen/dp_30"
+            android:paddingLeft="@dimen/dp_28"
+            android:paddingRight="@dimen/dp_28"
+            android:scrollbarStyle="outsideOverlay"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="@dimen/dp_11"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:visibility="gone"
+        android:layout_above="@+id/rl_close"
+        android:background="#ddd"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_close"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_49"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onCloseThis">
+
+        <ImageView
+            android:id="@+id/but_close_back"
+            android:layout_width="@dimen/dp_53"
+            android:layout_height="@dimen/dp_33"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"/>
+
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_16"
+            android:layout_centerInParent="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/close"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/btn_open"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:layout_centerInParent="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/z_home_center_btn_open"
+            android:visibility="gone"/>
+        <!--             android:rotation="45" -->
+        <!-- android:layout_centerInParent="true" -->
+
+    </RelativeLayout>
+
+</RelativeLayout>

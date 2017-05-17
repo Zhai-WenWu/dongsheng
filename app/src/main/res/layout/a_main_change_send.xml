@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:onClick="onCloseThis"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/change_send_tast"
+        android:layout_width="@dimen/dp_185"
+        android:layout_height="@dimen/dp_65"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_49"
+        android:layout_marginBottom="@dimen/dp_49"
+        android:layout_alignParentRight="true"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/change_send_tast"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom">
+        <GridView
+            android:id="@+id/change_send_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/close_layout"
+            android:numColumns="3"
+            android:layout_marginLeft="@dimen/dp_27"
+            android:layout_marginRight="@dimen/dp_27"
+            android:layout_marginBottom="@dimen/dp_57"
+            />
+
+        <RelativeLayout
+            android:id="@+id/close_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_49"
+            android:layout_alignParentBottom="true"
+            android:background="#fefefe"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onCloseThis">
+            <ImageView
+                android:id="@+id/close_image"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
+                android:layout_centerInParent="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/i_changesend"
+                android:visibility="visible"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

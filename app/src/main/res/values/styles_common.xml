@@ -1,0 +1,21 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- 首页小标题 -->
+    <style name="common_index_Title" parent="tableTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:paddingTop">@dimen/dp_10</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+    </style>
+   <!-- 半透明效果,例如:下面会弹出三个按钮，上面是半透明的效果 -->
+    <style name="common_TransParentTheme">
+        <item name="android:windowBackground">@color/c_trans_parent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <!--Activity切换动画效果-->
+    </style>
+
+    <!-- 半透明效果,例如:下面会弹出三个按钮，上面是半透明的效果 -->
+    <style name="common_TransParentThemeNew">
+        <item name="android:windowBackground">@color/c_white_transparent_F8</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <!--Activity切换动画效果-->
+    </style>
+</resources>

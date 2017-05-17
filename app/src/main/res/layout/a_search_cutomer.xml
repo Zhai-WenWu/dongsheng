@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <TextView
+        android:id="@+id/customer_tv_noData"
+        style="@style/noDataText"
+        android:text="没有搜索到相关用户~" />
+
+    <ListView
+        android:id="@+id/customer_lv_showResult"
+        style="@style/listView"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:visibility="gone" >
+    </ListView>
+
+</RelativeLayout>

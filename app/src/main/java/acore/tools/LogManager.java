@@ -1,0 +1,92 @@
+package acore.tools;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import xh.basic.internet.UtilInternet;
+import xh.basic.tool.UtilFile;
+import xh.basic.tool.UtilLog;
+import acore.override.XHApplication;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqInternet;
+
+public class LogManager extends UtilLog {
+	/**
+	 * 获取要上报的日志信息
+	 * @param type
+	 * @param status
+	 * @param addTime
+	 * @param content
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static LinkedHashMap<String, String> getReportLog(String type,String status,String addTime,Object content){
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("type", type);
+		map.put("status", status);
+		map.put("addTime", addTime);
+		if(content instanceof Map){
+			JSONArray jsonArray = new JSONArray();
+			Map<String,Object> contentMap = (Map<String, Object>) content;
+			for(String key : contentMap.keySet()){
+				Object value = contentMap.get(key);
+				if(value instanceof Map){
+					Map<String,String> valueMap = (Map<String, String>) value;
+					JSONObject jsonObject = new JSONObject();
+					JSONObject jsonObject2 = new JSONObject(valueMap);
+					try {
+						jsonObject.put(key, jsonObject2.toString());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					jsonArray.put(jsonObject);
+				}else{
+					JSONObject jsonObject = new JSONObject();
+					try {
+						jsonObject.put(key, value);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					jsonArray.put(jsonObject);
+				}
+			}
+			map.put("content", jsonArray.toString());
+		}else if(content instanceof JSONArray){
+			map.put("content", content.toString());
+		}else if(content instanceof JSONObject){
+			JSONArray jsonArray = new JSONArray();
+			jsonArray.put(content);
+			map.put("content", jsonArray.toString());
+		}else{
+			JSONArray jsonArray = new JSONArray();
+			JSONObject jsonObj = new JSONObject();
+			try {
+				jsonObj.put("content", content.toString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			jsonArray.put(jsonObj);
+			map.put("content", jsonArray.toString());
+		}
+		return map;
+	}
+	public static void sendWornLog(){
+		final String wornLog=UtilFile.getSDDir() + "warn_log.txt";
+		String content = FileManager.readFile(wornLog);
+		if(content.length()>10){
+			LinkedHashMap<String, String> map = LogManager.getReportLog("loadImg","图片加载过程",Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0),content);
+			ReqInternet.in().doPost("http://crash.xiangha.com/crash/report2", map , new InternetCallback(XHApplication.in()) {
+				@Override
+				public void loaded(int flag, String url, Object returnObj) {
+					if(flag >= UtilInternet.REQ_OK_STRING) { //成功,回调成功
+						FileManager.delDirectoryOrFile(wornLog);
+					}
+				}
+			});
+		}
+	}
+}

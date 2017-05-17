@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dp_15"
+    android:paddingRight="@dimen/dp_15"
+    android:background="#FEFFFF">
+
+    <RelativeLayout
+        android:id="@+id/ad_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
+
+    <acore.widget.ImageViewVideo
+        android:id="@+id/itemImg1"
+        android:layout_width="@dimen/dp_120"
+        android:layout_height="@dimen/dp_85"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/ad_layout"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_11"
+        android:scaleType="fitXY"
+        android:src="@drawable/i_nopic"/>
+
+    <RelativeLayout
+        android:id="@+id/tag_exclusive_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/itemImg1"
+        android:visibility="gone">
+
+        <acore.widget.TagTextView
+            android:id="@+id/tag_exclusive"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_15"
+            android:layout_margin="@dimen/dp_2"
+            app:backgroundColor="#FBBE03"
+            app:radius="@dimen/dp_1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_1"
+            android:text="独家"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_11"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ad_layout"
+        android:layout_marginTop="@dimen/dp_14"
+        android:layout_toRightOf="@+id/itemImg1"
+        android:paddingTop="0dp">
+
+        <TextView
+            android:id="@+id/tv_item_hasVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_5"
+            android:gravity="center_vertical"
+            android:text="[视频]"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_11"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_itemDishName"
+            style="@style/singleText"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tv_item_hasVideo"
+            android:text="菜谱名"
+            android:textColor="#000"
+            android:textSize="@dimen/sp_19"/>
+
+        <acore.widget.TagTextView
+            android:id="@+id/tv_item_make"
+            style="@style/d_tv_item_make"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_toRightOf="@+id/tv_itemDishName"
+            android:gravity="center_vertical"
+            android:visibility="gone"/>
+
+        <acore.widget.TagTextView
+            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_itemIsFine"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_15"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_4"
+            android:layout_toRightOf="@+id/tv_item_make"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp_2"
+            android:paddingRight="@dimen/dp_2"
+            android:text="精"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_10.5"
+            android:visibility="gone"
+            tagTextView:radius="@dimen/dp_2"
+            tagTextView:sideColor="@color/comment_color"
+            tagTextView:sideWidth="@dimen/dp_0.5"/>
+
+        <acore.widget.TagTextView
+            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_itemIsGood"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_toRightOf="@+id/iv_itemIsFine"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp_2"
+            android:paddingRight="@dimen/dp_2"
+            android:text="优"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_11"
+            android:visibility="gone"
+            tagTextView:backgroundColor="#8EDD98"
+            tagTextView:radius="@dimen/dp_2"/>
+
+        <TextView
+            android:id="@+id/tv_isUp"
+            style="@style/singleText"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_toRightOf="@+id/iv_itemIsGood"
+            android:background="@drawable/round_red2"
+            android:paddingLeft="@dimen/dp_2"
+            android:paddingRight="@dimen/dp_2"
+            android:text="发布中"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_11"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/dish_delete_iv"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_15"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:src="@drawable/mall_search_history_del"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_itemBurden"
+        style="@style/singleText"
+        android:layout_below="@+id/text_layout"
+        android:layout_toRightOf="@+id/itemImg1"
+        android:gravity="center_vertical|left"
+        android:paddingRight="@dimen/dp_5"
+        android:paddingTop="@dimen/dp_9"
+        android:text="用料"
+        android:textColor="#666666"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="normal"/>
+
+    <TextView
+        android:id="@+id/allclick"
+        style="@style/singleText"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/tv_itemBurden"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_toRightOf="@+id/itemImg1"
+        android:text="浏览"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_collect"
+        style="@style/singleText"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/tv_itemBurden"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_toLeftOf="@+id/tv_delete"
+        android:layout_toRightOf="@+id/allclick"
+        android:text="收藏"
+        android:textColor="#999"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_itemBurden"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_3"
+        android:text="审核中"
+        android:textColor="#999"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/ad_tuiguang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_line"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/dp_2"
+        android:text="@string/ad_hint_text"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_below="@+id/itemImg1"
+        android:layout_marginTop="@dimen/dp_11"
+        android:background="#ECECEC"/>
+
+</RelativeLayout>

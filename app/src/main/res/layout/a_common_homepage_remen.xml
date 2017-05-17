@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/ll_recommend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7" >
+
+            <TextView
+                android:id="@+id/ll_banner_tv"
+                style="@style/singleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:text="#快来人啊#"
+                android:textColor="#000000"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ll_count_tv"
+                style="@style/singleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_below="@+id/ll_banner_tv"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_3"
+                android:text="1000作品"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_10" />
+        </RelativeLayout>
+
+        <acore.widget.ImageViewVideo
+            android:id="@+id/ll_banner_iv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_nopic" />
+        <acore.widget.ImageViewVideo
+            android:id="@+id/ll_banner_iv2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:scaleType="centerCrop"
+            android:layout_marginLeft="@dimen/dp_1"
+            android:visibility="gone"
+            android:src="@drawable/i_nopic" />
+    </LinearLayout>
+    
+    <acore.widget.ImageViewVideo 
+        android:id="@+id/hot_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:id="@+id/hot_textview"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_12"
+        android:background="@drawable/z_home_other_bg_zhishi"
+        android:gravity="center"
+        android:text="每日小知识"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_8"
+        android:visibility="gone" />
+
+</FrameLayout>

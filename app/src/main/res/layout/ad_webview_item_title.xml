@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barTitle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/common_top_bg" >
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/top_title_singleText"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_55"
+        android:paddingRight="@dimen/dp_55"
+        android:text="title"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_17" />
+
+    <include
+        android:id="@+id/ll_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        layout="@layout/a_bar_item_back" />
+    
+    <ImageButton
+        android:id="@+id/rightImgBtn"
+        style="@style/top_titleBarView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:gravity="left|center_vertical"
+        android:paddingTop="@dimen/dp_13"
+        android:paddingBottom="@dimen/dp_13"
+        android:paddingLeft="@dimen/dp_8"
+        android:paddingRight="@dimen/dp_8"
+        android:src="@drawable/i_ad_more"
+        android:scaleType="centerInside"
+        android:visibility="visible"/>
+
+</RelativeLayout>

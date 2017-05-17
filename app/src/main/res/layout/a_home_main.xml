@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null">
+
+    <acore.widget.ScrollLinearListLayout
+        android:id="@+id/a_home_stick_list"
+        android:layout_width="fill_parent"
+        android:scrollbars="none"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <acore.widget.ZoomLayout
+                android:id="@+id/a_home_zoom_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_257.5" >
+
+                <acore.widget.GalleryViewPager
+                    android:id="@+id/a_home_gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_70"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/shadow_w2g" />
+
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_42"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    layout="@layout/a_home_search_fake_layout" />
+
+                <LinearLayout
+                    android:id="@+id/a_home_gallery_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_5"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dp_5"
+                    android:orientation="horizontal" />
+            </acore.widget.ZoomLayout>
+
+            <LinearLayout
+                android:id="@+id/a_home_main_ll_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_15"
+                android:background="#fffffe"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dp_19"
+                android:paddingLeft="@dimen/dp_33"
+                android:paddingRight="@dimen/dp_33"
+                android:paddingTop="@dimen/dp_25" >
+
+                <include
+                    android:id="@+id/a_home_main_item_icon1"
+                    android:layout_width="@dimen/dp_56"
+                    android:layout_height="wrap_content"
+                    layout="@layout/a_home_main_item_navigation" />
+
+                <include
+                    android:id="@+id/a_home_main_item_icon2"
+                    android:layout_width="@dimen/dp_56"
+                    android:layout_height="wrap_content"
+                    layout="@layout/a_home_main_item_navigation" />
+
+                <include
+                    android:id="@+id/a_home_main_item_icon3"
+                    android:layout_width="@dimen/dp_56"
+                    android:layout_height="wrap_content"
+                    layout="@layout/a_home_main_item_navigation" />
+
+                <include
+                    android:id="@+id/a_home_main_item_icon4"
+                    android:layout_width="@dimen/dp_56"
+                    android:layout_height="wrap_content"
+                    layout="@layout/a_home_main_item_navigation" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/a_home_main_gallery_layout_huati"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:visibility="gone">
+
+                <acore.widget.GalleryViewPager
+                    android:id="@+id/a_home_main_gallery_huati"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true" >
+                </acore.widget.GalleryViewPager>
+
+                <LinearLayout
+                    android:id="@+id/a_home_main_ll_gallery_huati"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_5" />
+            </RelativeLayout>
+            
+            <amodule.main.view.home.HomeTitle
+                android:id="@+id/a_home_main_item_nous_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fffffe"
+                android:paddingBottom="@dimen/dp_7"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_12"
+                android:paddingTop="@dimen/dp_13"
+                android:visibility="gone"
+                app:htTitle="香哈头条" />
+
+            <include
+                android:id="@+id/a_home_main_item_nous1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/a_home_main_item_nous"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/a_home_main_item_nous_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fffffe"
+                android:visibility="gone" >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:background="#dfdfdf" />
+            </LinearLayout>
+            
+            <RelativeLayout 
+               android:id="@+id/a_home_main_ad_layout_nouse_bottom"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:background="#FEFEFE"/>
+            <RelativeLayout 
+               android:id="@+id/a_home_main_ad_gdt_nouse_bottom"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:background="#FEFEFE"/>
+
+            <include
+                android:id="@+id/a_home_main_item_nous2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/a_home_main_item_nous"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_6"
+                android:layout_marginBottom="@dimen/dp_15"
+                android:background="#ffffff" />
+
+            <include
+                android:id="@+id/a_home_main_ad"
+                layout="@layout/ad_banner_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_15" />
+
+            <amodule.main.view.home.HomeTitle
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fffffe"
+                android:paddingBottom="@dimen/dp_14"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_12"
+                android:paddingTop="@dimen/dp_13"
+                app:htTitle="人气推荐" />
+
+            <acore.widget.ScrollLinearHorizontalView
+                android:id="@+id/a_home_main_hsv_expert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fffffe"
+                android:overScrollMode="never"
+                android:scrollbars="none" >
+
+                <LinearLayout
+                    android:id="@+id/a_home_main_ll_expert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_14"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingRight="@dimen/dp_15" >
+                </LinearLayout>
+            </acore.widget.ScrollLinearHorizontalView>
+
+            <LinearLayout
+                android:id="@+id/a_home_main_special"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginBottom="@dimen/dp_13"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </LinearLayout>
+    </acore.widget.ScrollLinearListLayout>
+
+    <RelativeLayout
+        android:id="@+id/all_title_home"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/comment_color">
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/a_home_search_real_layout" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barTitle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/common_top_bg" >
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/singleText"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/dp_55"
+        android:paddingRight="@dimen/dp_55"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="圈子成员"
+        android:textColor="@color/common_top_text"
+        android:textSize="@dimen/sp_19" />
+    
+    <TextView
+        android:id="@+id/c_circle_bar_num"
+        style="@style/singleText"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/dp_6"
+        android:gravity="center"
+        android:clickable="true"
+        android:textColor="@color/common_top_text"
+        android:textSize="@dimen/sp_9" />
+
+    <include
+        android:id="@+id/ll_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        layout="@layout/a_bar_item_back" />
+
+    <ImageView
+        android:id="@+id/c_circle_bar_so"
+        android:layout_width="@dimen/dp_21"
+        android:layout_height="@dimen/dp_21"
+        android:padding="@dimen/dp_1"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/dp_14"
+        android:scaleType="centerInside"
+        android:src="@drawable/i_circle_user_so" 
+        android:visibility="visible"/>
+
+</RelativeLayout>

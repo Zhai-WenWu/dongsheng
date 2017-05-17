@@ -1,0 +1,14 @@
+#gradlew clean assembleRelease -PchannelFile=channel_ceshi
+#gradlew clean assembleRelease -PchannelList=ceshi
+#---------------------测试------------------------
+ceshi
+#---------------------百度要单独加百度自动更新sdk的aar------------------------
+#baidu
+#---------------------首发-----360和应用宝  需要加固-------------------
+#developer.huawei
+#open.letv.com
+#xiaomi
+#appdev.yunos.com
+#360
+#open.lenovo.com
+#open.letv.com

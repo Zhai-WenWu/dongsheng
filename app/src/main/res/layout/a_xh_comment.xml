@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+    
+    <View
+        android:id="@+id/v_title_line"
+        style="@style/lineBetween" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_213"
+        android:layout_marginTop="@dimen/dp_18"
+        android:layout_below="@+id/v_title_line"
+        android:background="#FFFFFF">
+
+        <View
+            android:id="@+id/v_line"
+            style="@style/lineBetween" 
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/tv_text"
+            style="@style/singleText"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/v_line"
+            android:layout_marginTop="@dimen/dp_29"
+            android:gravity="center"
+            android:text="您觉得香哈做的如何?"
+            android:textColor="#4A4A4A"
+            android:textSize="@dimen/sp_17" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_153"
+            android:layout_below="@+id/tv_text"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <LinearLayout 
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:id="@+id/ll_comment"
+		        android:gravity="center"
+		        android:orientation="vertical">
+		        
+                <ImageView 
+                    android:layout_width="@dimen/dp_65"
+                    android:layout_height="@dimen/dp_65"
+                    android:background="@drawable/z_comment_good"/>
+                <TextView
+		            style="@style/singleText"
+		            android:layout_width="match_parent"
+		            android:layout_marginTop="@dimen/dp_25"
+		            android:gravity="center"
+		            android:text="我很喜欢"
+		            android:textColor="#4A4A4A"
+		            android:textSize="@dimen/sp_17" />
+		        
+	        </LinearLayout>
+	        
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/z_comment_line"/>
+            
+            <LinearLayout 
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:id="@+id/ll_feekback"
+		        android:gravity="center"
+		        android:orientation="vertical">
+		        
+                <ImageView 
+                    android:layout_width="@dimen/dp_65"
+                    android:layout_height="@dimen/dp_65"
+                    android:background="@drawable/z_comment_feekback"/>
+                <TextView
+		            style="@style/singleText"
+		            android:layout_width="match_parent"
+		            android:layout_marginTop="@dimen/dp_25"
+		            android:gravity="center"
+		            android:text="我有建议"
+		            android:textColor="#4A4A4A"
+		            android:textSize="@dimen/sp_17" />
+		        
+	        </LinearLayout>
+            
+        </LinearLayout>
+        
+   		<View style="@style/lineBetween"
+   		    android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+</RelativeLayout>

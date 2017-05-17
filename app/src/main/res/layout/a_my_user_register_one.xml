@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <ImageView
+        android:id="@+id/img_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ScrollView
+        android:id="@+id/user_register_one_ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/linear_title_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_30" >
+
+            <RelativeLayout
+                android:id="@+id/user_register_one_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_35"
+                android:paddingRight="@dimen/dp_35" >
+
+                <ImageView
+                    android:id="@+id/user_login_logo"
+                    android:layout_width="@dimen/dp_90"
+                    android:layout_height="@dimen/dp_90"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/user_register_one_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_login_logo"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_22"
+                    android:paddingTop="@dimen/dp_20" >
+
+                    <View style="@style/login_line" />
+
+                    <TextView
+                        style="@style/login_title"
+                        android:text="输入手机号" />
+
+                    <View style="@style/login_line" />
+                </LinearLayout>
+                
+                <include 
+                    android:id="@+id/ll_user_register_one_contry" 
+                    layout="@layout/a_my_user_item_contry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_round_white5"
+                    android:layout_below="@+id/user_register_one_title"
+                    android:layout_marginBottom="@dimen/dp_30"
+                    />
+                
+                <include 
+                    android:id="@+id/ll_user_register_one_phone" 
+                    layout="@layout/a_my_user_item_contry_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_round_white5"
+                    android:layout_below="@+id/ll_user_register_one_contry"
+                    android:layout_marginBottom="@dimen/dp_30"/>
+
+                <Button
+                    android:id="@+id/user_register_one_btn"
+                    style="@style/login_big_btn"
+                    android:layout_below="@+id/ll_user_register_one_phone"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:background="@drawable/bg_round_red_find_pwd"
+                    android:clickable="false"
+                    android:text="获取验证码" />
+
+                <TextView
+                    android:id="@+id/user_register_one_notice"
+                    style="@style/login_text"
+                    android:layout_below="@+id/user_register_one_btn"
+                    android:lineSpacingExtra="1dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:paddingBottom="@dimen/dp_80"
+                    android:text="香哈不会泄漏您的手机号，不会发短信给您。\n仅用于您登录或找回密码。"
+                    android:textColor="@color/c_white_transparent_30"
+                    android:textSize="@dimen/sp_12" />
+
+                <LinearLayout
+                    android:id="@+id/user_register_one_footer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_register_one_notice"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_20"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <View
+                            style="@style/login_line"
+                            android:background="@color/c_white_transparent_30" />
+
+                        <TextView
+                            style="@style/login_title"
+                            android:text="或用以下账号登录"
+                            android:textColor="@color/c_white_transparent_30" />
+
+                        <View
+                            style="@style/login_line"
+                            android:background="@color/c_white_transparent_30" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/user_register_one_login_options"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/user_register_one_footer"
+                        android:layout_marginBottom="@dimen/dp_15"
+                        android:gravity="center"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            style="@style/login_3_ico"
+                            android:onClick="goQQLogin"
+                            android:src="@drawable/z_reg_ico_qq" />
+
+                        <ImageView
+                            style="@style/login_3_ico"
+                            android:onClick="goWeiXinLogin"
+                            android:src="@drawable/z_reg_ico_weixin" />
+
+                        <ImageView
+                            style="@style/login_3_ico"
+                            android:onClick="goSinaLogin"
+                            android:src="@drawable/z_reg_ico_weibo" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/user_login_leftImgBtn1"
+        style="@style/login_back" />
+
+</RelativeLayout>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroup_color"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tablelayout_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="123"
+        android:textColor="#333333"
+        android:textSize="@dimen/sp_14" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="#f1f1f1" />
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="#f1f1f1" />
+    <!--
+     由于分类菜谱的更多改成点点点的样子所以就把这个复用了，以防以后改动，故保留一份
+	<ImageView
+	    android:id="@+id/tablelayout_imageview"
+	    android:layout_width="17dp"
+	    android:layout_height="12dp"
+	    android:scaleType="centerCrop"
+	    android:layout_marginBottom="-3dp"
+	    android:layout_marginLeft="-3dp"
+	    android:layout_above="@+id/tablelayout_textview"
+	    android:layout_toRightOf="@+id/tablelayout_textview"
+	    android:src="@drawable/z_homepage_hot" />    -->
+
+    <ImageView
+        android:id="@+id/tablelayout_imageview"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_5"
+        android:layout_centerInParent="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/i_ico_homepage_caipufenlei_more"
+        android:visibility="gone" />
+
+</RelativeLayout>

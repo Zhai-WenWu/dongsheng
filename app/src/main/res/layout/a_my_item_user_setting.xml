@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_46" >
+
+    <ImageView
+        android:id="@+id/item_user_setting_item_img"
+        android:layout_width="@dimen/dp_17"
+        android:layout_height="@dimen/dp_17"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/item_user_setting_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/item_user_setting_item_img"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_10"
+        android:text="昵称"
+        android:textSize="@dimen/sp_15"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/item_user_setting_content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/item_user_setting_title"
+        android:gravity="center_vertical"
+        android:text="设置"
+        android:textSize="@dimen/sp_13"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/item_user_setting_bind_img"
+        android:layout_width="@dimen/dp_22"
+        android:layout_height="@dimen/dp_22"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/item_user_setting_bind_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/item_user_setting_bind_img"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_8"
+        android:text="绑定QQ"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/item_user_setting_bind"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_13"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" 
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/item_user_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginRight="@dimen/dp_8"
+            android:background="@color/transparent"
+            android:gravity="center"
+            android:text="立即绑定"
+            android:textColor="#999999"
+            android:textSize="@dimen/dp_12"
+            android:visibility="gone" />
+        
+        <acore.widget.TagTextView
+            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+            tagTextView:radius="@dimen/dp_3"
+            tagTextView:backgroundColor="#00C95A"
+            android:id="@+id/item_user_setting_modify_pwd"
+            android:layout_width="@dimen/dp_78"
+            android:layout_height="@dimen/dp_24"
+            android:layout_marginRight="@dimen/dp_8"
+            android:gravity="center"
+            android:text="立即绑定"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/dp_12"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/item_user_setting_ico_arrow"
+            android:layout_width="@dimen/dp_14"
+            android:layout_height="@dimen/dp_14"
+            android:src="@drawable/z_find_home_ico_go" />
+
+        <ImageView
+            android:id="@+id/item_user_setting_ico_select"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_23"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/item_user_setting_binded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_15"
+        android:text="已绑定"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <ListView
+        android:id="@+id/dish_lv_showResult"
+        style="@style/listView"
+        android:scrollbars="none"
+        android:background="#FEFFFF"
+        android:listSelector="@drawable/btn_nocolor"
+        android:layout_width="match_parent"
+        android:visibility="gone" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/dish_tv_noData"
+        style="@style/noDataText"
+        android:text="没有搜索到结果~" />
+
+</RelativeLayout>

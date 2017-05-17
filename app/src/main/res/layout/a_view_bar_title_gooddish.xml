@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bar_title"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/common_top_bg" >
+
+    <include
+        android:id="@+id/ll_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_4"
+        layout="@layout/a_bar_item_back" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/top_title_singleText"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="今日佳作"/>
+
+    <RelativeLayout
+        android:id="@+id/share_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_5"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:visibility="visible" >
+
+        <ImageView
+            android:id="@+id/img_share"
+            style="@style/rightBtn"
+            android:clickable="false"
+            android:src="@drawable/z_z_topbar_ico_share"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_share"
+            style="@style/top_text_button_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_share"
+            android:layout_centerHorizontal="true"
+            android:text="分享"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

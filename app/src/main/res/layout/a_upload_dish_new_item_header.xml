@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/a_dish_score_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/rule_tv"
+            style="@style/singleText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_35"
+            android:background="#fbf5cf"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="发原创菜谱可获20~120积分,查看积分规则 ->"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:id="@+id/a_dish_score_hint_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_6"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingBottom="@dimen/dp_4"
+            android:paddingLeft="@dimen/dp_4"
+            android:paddingRight="@dimen/dp_4"
+            android:text="x"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_16" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/linear_dishImg"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dp_220"
+        android:background="#fefefe" >
+
+        <ImageView
+            android:layout_width="@dimen/dp_85"
+            android:layout_height="@dimen/dp_85"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_55"
+            android:background="@drawable/z_caipu_upload_up_bigpic"
+            android:scaleType="centerInside" />
+
+        <TextView
+            style="@style/d_uploadDishAddText"
+            android:layout_marginTop="@dimen/dp_146"
+            android:gravity="center"
+            android:text="添加菜谱效果图(必填)"
+            android:textColor="#919191"
+            android:textSize="@dimen/sp_14" />
+
+        <ImageView
+            android:id="@+id/dishImage_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:tag="0" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/d_uploadDishHeadText"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_15"
+            android:text="菜谱名" />
+
+        <TextView
+            style="@style/d_uploadDishHeadText"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_3"
+            android:paddingRight="@dimen/dp_15"
+            android:text="(必填)"
+            android:textColor="#999999" />
+    </LinearLayout>
+
+    <acore.widget.ScrollviewEdit
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/a_dish_upload_title"
+            style="@style/d_uploadDishText"
+            android:layout_marginTop="0dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:paddingRight="@dimen/dp_15" />
+    </acore.widget.ScrollviewEdit>
+
+    <!--
+         <include
+        android:id="@+id/a_dish_name_layout"
+        layout="@layout/a_dish_upload_speech_edit_item"/>
+    -->
+
+    <TextView
+        style="@style/d_uploadDishHeadText"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:text="心得" />
+
+    <include
+        android:id="@+id/a_dish_head_layout"
+        layout="@layout/a_dish_upload_speech_edit_item" />
+
+    <!-- 食材和辅料 -->
+    <include
+        android:id="@+id/a_dish_ingredient_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/a_dish_ingredient_view" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20">
+
+        <TextView
+            android:id="@+id/dish_upload_item_make_hint"
+            style="@style/d_uploadDishHeadText"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="@dimen/dp_15"
+            android:text="做法步骤" />
+
+        <TextView
+            style="@style/d_uploadDishHeadText"
+            android:layout_toLeftOf="@+id/dish_upload_item_make_add_max"
+            android:layout_toRightOf="@+id/dish_upload_item_make_hint"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_3"
+            android:paddingRight="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:textColor="#999999"
+            android:text="(至少3步)" />
+
+        <acore.widget.TagTextView
+            app:radius="@dimen/dp_2.5"
+            app:backgroundColor="@color/comment_color"
+            android:id="@+id/dish_upload_item_make_add_max"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_16"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:gravity="center"
+            android:text="批量添加步骤图"
+            android:textColor="#fff"
+            android:textSize="@dimen/dp_12"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

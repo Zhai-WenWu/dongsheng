@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/login_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/backgroup_color"></RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/login_content"
+        android:padding="@dimen/dp_20"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/login_title"
+        android:layout_height="match_parent"></RelativeLayout>
+
+</LinearLayout>

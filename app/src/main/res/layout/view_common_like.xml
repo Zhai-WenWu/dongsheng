@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/view_common_iv"
+        android:layout_width="@dimen/dp_13"
+        android:layout_height="@dimen/dp_13"
+        android:clickable="false"
+        android:src="@drawable/z_quan_home_body_ico_message" />
+
+    <TextView
+        android:id="@+id/view_common_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_3"
+        android:text="0"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12" />
+
+    <ImageView
+        android:id="@+id/view_like_iv"
+        android:layout_width="@dimen/dp_17"
+        android:layout_height="@dimen/dp_17"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:clickable="false"
+        android:src="@drawable/z_quan_home_body_ico_good" />
+
+    <TextView
+        android:id="@+id/view_like_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:paddingLeft="@dimen/dp_1"
+        android:text="0"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12" />
+
+</LinearLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_65"
+    android:paddingTop="@dimen/dp_10"
+     >
+
+    <ImageView
+        android:id="@+id/search_user_img"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="@dimen/dp_45"
+        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:id="@+id/search_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_toRightOf="@+id/search_user_img"
+		android:layout_centerVertical="true"
+		android:layout_marginRight="@dimen/dp_5"
+		android:paddingLeft="@dimen/dp_10"
+        android:text="名字"
+        android:textColor="#333333"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/search_user_lv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/search_user_name"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/dp_5"
+        android:text="1"
+        android:visibility="gone"
+        android:textColor="#333"
+        android:textSize="@dimen/sp_12" />
+
+    <TextView
+        android:id="@+id/search_user_item_choose"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="@dimen/dp_30"
+        android:background="@drawable/bg_round_white8"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:text="已关注" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_below="@+id/search_user_img"
+        android:layout_marginTop="@dimen/dp_9"
+        android:background="#D3D1D1" />
+
+</RelativeLayout>

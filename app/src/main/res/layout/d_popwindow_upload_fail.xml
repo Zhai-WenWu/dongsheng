@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#c0000000"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/dp_30"
+              android:paddingRight="@dimen/dp_30"
+              android:paddingTop="@dimen/dp_80">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_60"
+        android:background="#00000000"
+        android:gravity="right|bottom"
+        android:paddingBottom="@dimen/dp_8">
+
+        <ImageView
+            android:id="@+id/d_popwindow_close"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:src="@drawable/i_icon_pop_close"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_circle10_ffffff"
+        android:clickable="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_43">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_72"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_28"
+            android:paddingRight="@dimen/dp_28">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_19"
+                android:layout_marginTop="@dimen/dp_9"
+                android:layout_weight="6"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/d_popwindow_img"
+                    android:layout_width="@dimen/dp_18"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:background="@drawable/icon_dishvideo_upload_fail"
+                    android:clickable="false"/>
+
+                <TextView
+                    android:id="@+id/d_popwindow_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_toRightOf="@+id/d_popwindow_img"
+                    android:clickable="false"
+                    android:gravity="top"
+                    android:text="发布失败"
+                    android:textColor="#ff0000"
+                    android:textSize="@dimen/sp_18"/>
+
+                <TextView
+                    android:id="@+id/tv_dish_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:clickable="false"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:text="鱼香肉丝"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp_16"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_dish_cover"
+                android:layout_width="@dimen/dp_95"
+                android:layout_height="@dimen/dp_72"
+                android:layout_gravity="right|top"
+                android:clickable="false"
+                android:scaleType="centerCrop"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="@dimen/dp_35"
+            android:background="#f1eee4"/>
+
+        <LinearLayout
+            android:id="@+id/ll_more_info"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_47"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="点击查看"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_16"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

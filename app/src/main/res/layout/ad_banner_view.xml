@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ad_banner_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
+
+    <acore.widget.ImageViewVideo
+        android:id="@+id/ad_banner_item_iv_single"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop" />
+    
+    <!-- <acore.widget.ImageViewVideo0
+        android:id="@+id/ad_banner_item_iv"
+        android:layout_width="@dimen/dp_100"
+        android:layout_height="@dimen/dp_100"
+        android:scaleType="centerCrop" 
+        android:visibility="gone"/>
+    
+    <TextView 
+        android:id="@+id/ad_banner_item_title"
+        style="@style/singleText"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_toRightOf="@+id/ad_banner_item_iv"
+        android:textColor="#666666"
+        android:textSize="@dimen/sp_13"
+        android:visibility="gone"/>
+    
+    <TextView 
+        android:id="@+id/ad_banner_item_content"
+        style="@style/singleText"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ad_banner_item_title"
+        android:layout_below="@+id/ad_banner_item_title"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="content"
+        android:gravity="center_vertical"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_11" 
+        android:visibility="gone"/> -->
+
+</RelativeLayout>

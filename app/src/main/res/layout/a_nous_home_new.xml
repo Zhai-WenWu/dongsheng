@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activityLayout"
+    style="@style/layout">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <acore.widget.LayoutScroll
+            android:id="@+id/scroll_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/nous_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/psts"/>
+
+                <RelativeLayout
+                    android:id="@+id/psts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+                    <acore.widget.PagerSlidingTabStrip
+                        android:id="@+id/tabs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_41"
+                        android:layout_gravity="center_horizontal"
+                        android:background="#FFFFFF"
+                        android:visibility="invisible"
+                        app:pstsIndicatorColor="@color/comment_color"
+                        app:pstsIndicatorWidthFollowText="true"
+                        app:pstsTabColumn="4"
+                        app:pstsTabTextColor="@color/tab_text_color"
+                        app:pstsTabTextSize="@dimen/sp_15"
+                        app:pstsUnderlineColor="#DFDFDF"
+                        app:pstsUnderlineHeight="@dimen/dp_0.5" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </acore.widget.LayoutScroll>
+    </LinearLayout>
+
+</RelativeLayout>

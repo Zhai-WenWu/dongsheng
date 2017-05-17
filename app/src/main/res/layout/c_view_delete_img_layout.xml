@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/img_edit_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99000000"
+    android:clickable="true"
+    android:visibility="visible" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_57"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="要删除这张照片吗？"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:background="#E1E1E1" />
+
+        <TextView
+            android:id="@+id/img_delete"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_57"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="#F84445"
+            android:textSize="@dimen/sp_18" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_12"
+            android:background="#EFEFEF" />
+
+        <TextView
+            android:id="@+id/img_delele_cannle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_57"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_18" />
+    </LinearLayout>
+
+</RelativeLayout>

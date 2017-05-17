@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/health_item_select_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15" >
+
+        <RelativeLayout
+            android:id="@+id/health_item_select_classify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_40"
+            android:visibility="visible" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_centerVertical="true"
+                android:background="#E5E5E5" />
+
+            <acore.widget.TagTextView
+                xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+                tagTextView:radius="@dimen/dp_25"
+                tagTextView:backgroundColor="@color/c_gray_e8e8e8"
+                android:id="@+id/health_item_select_classify_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dp_5"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_5"
+                android:textColor="@color/c_green_51a011"
+                android:textSize="@dimen/sp_13" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/health_item_select_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/health_item_select_classify" >
+
+            <TextView
+                android:id="@+id/health_item_select_question_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_15"
+                android:textColor="#333"
+                android:textSize="@dimen/sp_14" />
+
+            <RelativeLayout
+                android:id="@+id/health_item_select_question_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/health_item_select_question_num"
+                android:clickable="true" >
+
+                <TextView
+                    android:id="@+id/health_item_select_question_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/health_item_select_answer"
+                    android:paddingBottom="@dimen/dp_13"
+                    android:paddingTop="@dimen/dp_13"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:id="@+id/health_item_select_answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="@dimen/dp_13"
+                    android:paddingRight="@dimen/dp_15"
+                    android:paddingTop="@dimen/dp_13"
+                    android:textColor="@color/c_green_51a011"
+                    android:textSize="@dimen/sp_14"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/health_selection_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/health_item_select_question_text"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_15"
+                    android:paddingRight="@dimen/dp_15"
+                    android:visibility="gone" >
+
+                    <LinearLayout
+                        android:id="@+id/health_item_selection_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_2.5"
+                        android:layout_marginRight="@dimen/dp_2.5"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_test_selection"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:paddingTop="@dimen/dp_4" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="没有"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp_13" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="（根本不）"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/sp_9" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/health_item_selection_2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_2.5"
+                        android:layout_marginRight="@dimen/dp_2.5"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_test_selection"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:paddingTop="@dimen/dp_4" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="很少"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp_13" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="（有一点）"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/sp_9" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/health_item_selection_3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_2.5"
+                        android:layout_marginRight="@dimen/dp_2.5"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_test_selection"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:paddingTop="@dimen/dp_4" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="有时"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp_13" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="（有些）"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/sp_9" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/health_item_selection_4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_2.5"
+                        android:layout_marginRight="@dimen/dp_2.5"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_test_selection"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:paddingTop="@dimen/dp_4" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="经常"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp_13" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="（相当）"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/sp_9" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/health_item_selection_5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_2.5"
+                        android:layout_marginRight="@dimen/dp_2.5"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_btn_test_selection"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:paddingTop="@dimen/dp_4" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="总是"
+                            android:textColor="#333333"
+                            android:textSize="@dimen/sp_13" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="（总是）"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/sp_9" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_0.5"
+                    android:layout_below="@+id/health_selection_layout"
+                    android:background="#CCCCCC" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,729 @@
+/**
+ * @author Jerry
+ * 2013-4-24 上午10:31:01
+ * Copyright: Copyright (c) xiangha.com 2011
+ */
+
+package amodule.main;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.LocalActivityManager;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.lansosdk.videoeditor.LoadLanSongSdk;
+import com.tencent.smtt.sdk.QbSdk;
+import com.xiangha.R;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import acore.dialogManager.DialogControler;
+import acore.dialogManager.GoodCommentManager;
+import acore.dialogManager.PushManager;
+import acore.dialogManager.VersionOp;
+import acore.logic.AppCommon;
+import acore.logic.LoginManager;
+import acore.logic.XHClick;
+import acore.override.XHApplication;
+import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.FileManager;
+import acore.tools.LogManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.widget.XiangHaTabHost;
+import amodule.dish.tools.UploadDishControl;
+import amodule.main.Tools.MainInitDataControl;
+import amodule.main.activity.MainChangeSend;
+import amodule.main.activity.MainCircle;
+import amodule.main.activity.MainHome;
+import amodule.main.activity.MainMyself;
+import amodule.main.view.MainBuoy;
+import amodule.main.view.WelcomeDialog;
+import amodule.quan.tool.MyQuanDataControl;
+import amodule.user.activity.MyMessage;
+import aplug.basic.ReqInternet;
+import aplug.shortvideo.ShortVideoInit;
+import third.ad.control.AdControlHomeDish;
+import third.mall.MainMall;
+import third.mall.alipay.MallPayActivity;
+import third.push.xg.XGLocalPushServer;
+import xh.basic.tool.UtilFile;
+import xh.basic.tool.UtilLog;
+
+import static acore.tools.Tools.getApiSurTime;
+import static com.xiangha.R.id.iv_itemIsFine;
+
+
+@SuppressWarnings("deprecation")
+public class Main extends Activity implements OnClickListener {
+    public static Main allMain;
+    public static Timer timer;
+    /**
+     * 把层级>=close_level的层级关闭
+     */
+    public static int colse_level = 1000;
+    public static MainBaseActivity mainActivity;
+
+    public Map<String, MainBaseActivity> allTab = new HashMap<>();
+
+    private View[] tabViews;
+    private XiangHaTabHost tabHost;
+    private LinearLayout linear_item;
+    private RelativeLayout mRootLayout;
+    private RelativeLayout changeSendLayout;
+    private MainBuoy mBuoy;
+    // 页面关闭层级
+    private LocalActivityManager mLocalActivityManager;
+
+    private Class<?>[] classes = new Class<?>[]{MainHome.class, MainMall.class,
+            MainCircle.class, MyMessage.class, MainMyself.class};
+    private String[] tabTitle = {"首页", "商城", "社区", "消息", "我的"};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall,
+            R.drawable.tab_found, R.drawable.tab_four, R.drawable.tab_myself};
+    private int doExit = 0;
+    private int defaultTab = 0;
+    private String url = null;
+    // 每过everyReq请求一次，runTime+1
+    private int runTime = 100, everyReq = 4 * 60;
+    private boolean quanRefreshState= false;
+
+    private boolean WelcomeDialogstate=false;//false表示当前无显示,true已经显示
+    private boolean mainOnResumeState=false;//false 无焦点，true 获取焦点
+    private MainInitDataControl mainInitDataControl;
+
+    private long homebackTime;
+    private boolean isForeground = true;
+    private int nowTab=0;//当前选中tab
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        allMain = this;
+        AdControlHomeDish.getInstance();
+//        openFromOther();
+        mLocalActivityManager = new LocalActivityManager(this, true);
+        mLocalActivityManager.dispatchCreate(savedInstanceState);
+        String[] times = FileManager.getSharedPreference(XHApplication.in(),FileManager.xmlKey_appKillTime);
+        if(times != null && times.length > 1 && !TextUtils.isEmpty(times[1])){
+            Tools.getApiSurTime("killback",Long.parseLong(times[1]),System.currentTimeMillis());
+        }
+        initUI();
+        initData();
+        LogManager.print("i", "Main -------- onCreate");
+        // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
+        if (savedInstanceState != null) {
+            defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
+            if (defaultTab == 0 && "1".equals(mBuoy.getFloatIndex())
+                    || defaultTab == 1 && "1".equals(mBuoy.getFloatSubjectList())
+                    || defaultTab == 2
+                    || defaultTab == 3) {
+                mBuoy.clearAnimation();
+                mBuoy.hide();
+                mBuoy.setClosed(true);
+                mBuoy.setMove(true);
+            }
+        }
+        mainInitDataControl= new MainInitDataControl();
+        WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
+                new WelcomeDialog(this) : new WelcomeDialog(this,3);
+        welcomeDialog.setDialogShowCallBack(new WelcomeDialog.DialogShowCallBack() {
+            @Override
+            public void dialogState(boolean show) {
+                if(!show){//展示后关闭
+                    if(mainInitDataControl!=null)mainInitDataControl.initMainOnResume(Main.this);
+                    showIndexActivity();
+                    WelcomeDialogstate=true;
+                    openUri();
+                    new DialogControler().showDialog();
+                    PushManager.tongjiPush();
+                }
+            }
+
+            @Override
+            public void dialogOnLayout() {
+                setCurrentTabByIndex(defaultTab);
+                init();
+                initRunTime();
+                mainInitDataControl.initWelcomeBefore(Main.this);
+                mainInitDataControl.initWelcomeOncreate();
+                mainInitDataControl.initWelcomeAfter(Main.this);
+                mainInitDataControl.iniMainAfter(Main.this);
+            }
+        });
+        welcomeDialog.show();
+    }
+
+    /**
+     * 外部传递参数
+     */
+    private void openFromOther(){
+        // 获取外部参数;
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            defaultTab = bundle.getInt("tab");
+            if ("notify".equals(bundle.getString("from"))) {
+                url = bundle.getString("url");
+                this.getIntent().removeExtra("url");
+                this.getIntent().removeExtra("from");
+                return;
+            }
+        }
+        //外部知道吊起app
+        if(this.getIntent().getData() != null){
+//            if(Main.allMain != null){
+//                Main.allMain.doExitMain();
+//            }
+            url = this.getIntent().getData().toString();
+            this.getIntent().setData(null);
+        }
+    }
+    /**
+     * 初始化第三方控件
+     */
+    private void init() {
+        //初始化短视频拍摄
+        //从Welcome方法
+        ShortVideoInit.init(Main.this);
+        //从Welcome方法
+        QbSdk.initX5Environment(Main.this,null);
+        //视频合成so初始化，单独列出
+        LoadLanSongSdk.initVideoSdk(getApplicationContext());
+    }
+    
+    /**
+     * 初始化布局
+     */
+    @SuppressLint("HandlerLeak")
+    private void initUI() {
+        Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
+        setContentView(R.layout.xh_main);
+//        ToolsDevice.modifyStateTextColor(this);//StatusBar 背景色为深色，不需要修改文字颜色
+        if (Tools.isShowTitle()) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
+        //实例化有用到mRootLayout，必须按着顺序执行
+        mBuoy = new MainBuoy(this);
+        tabHost = (XiangHaTabHost) findViewById(R.id.xiangha_tabhost);
+        tabHost.setup(mLocalActivityManager);
+        linear_item = (LinearLayout) findViewById(R.id.linear_item);
+        ImageView btn_changeSend = (ImageView) findViewById(R.id.btn_changeSend);
+        changeSendLayout = (RelativeLayout) findViewById(R.id.btn_changeSend_layout);
+        changeSendLayout.setVisibility(View.GONE);
+        int btn_width = ToolsDevice.getWindowPx(this).widthPixels / 5;
+        int padding = (btn_width - Tools.getDimen(this, R.dimen.dp_55)) / 2;
+        int cha = padding / 4;
+        cha = 0;
+        changeSendLayout.getLayoutParams().width = btn_width;
+        btn_changeSend.getLayoutParams().width = btn_width;
+        btn_changeSend.setPadding(padding + cha, 0, padding - cha, 0);
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData() {
+        tabViews = new View[classes.length];
+        for (int i = 0; i < tabTitle.length; i++) {
+            tabViews[i] = linear_item.getChildAt(i);
+            LinearLayout layout = (LinearLayout) tabViews[i].findViewById(R.id.tab_linearLayout);
+            layout.setOnClickListener(this);
+
+            TextView tv = ((TextView) tabViews[i].findViewById(R.id.textView1));
+            tv.setText(tabTitle[i]);
+
+            ImageView imgView = (ImageView) tabViews[i].findViewById(iv_itemIsFine);
+            imgView.setImageResource(tabImgs[i]);
+
+//			if (i == 2) {
+//				tv.setVisibility(View.GONE);
+//				imgView.setVisibility(View.GONE);
+//			}
+            if (url != null && i == 0) {
+                Intent homePage = new Intent(this, classes[i]);
+                homePage.putExtra("url", url);
+                tabHost.addContent(i + "", homePage);
+                this.getIntent().removeExtra("url");
+            } else {
+                tabHost.addContent(i + "", new Intent(this, classes[i]));
+            }
+        }
+        //处理布局margin
+        int margin = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this, R.dimen.dp_5) * 2
+                - Tools.getDimen(this, R.dimen.dp_70) * 5) / 4 / 2;
+        int length = linear_item.getChildCount();
+        for (int i = 0; i < length; i++) {
+            setTabItemMargins(linear_item, i, margin, margin);
+        }
+        setTabItemMargins(linear_item, 0, 0, margin);
+        setTabItemMargins(linear_item, length - 1, margin, 0);
+    }
+
+    public void setTabItemMargins(ViewGroup viewGroup, int index, int leftMargin, int rightMargin) {
+        RelativeLayout child = (RelativeLayout) viewGroup.getChildAt(index);
+        LinearLayout.LayoutParams params_child = (LinearLayout.LayoutParams) child.getLayoutParams();
+        params_child.setMargins(leftMargin, 0, leftMargin, 0);
+    }
+
+    // 时刻取得导航提醒
+    private void initRunTime() {
+        timer = new Timer();
+        final Handler handler = new Handler();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        runTime++;
+                        AppCommon.getCommonData(null);
+                    }
+                });
+            }
+        };
+        timer.schedule(tt, everyReq * 1000, everyReq * 1000);
+    }
+
+    public void onChangeSend(View v) {
+        MyQuanDataControl.getNewMyQuanData(this, null);
+        XHClick.mapStat(this, "a_index530", "底部导航栏", "点击底部发布按钮");
+        XHClick.mapStat(this, MainCircle.STATISTICS_ID, "发帖", null);
+        XHClick.mapStat(this, "a_down", "+", "");
+        Intent intent = new Intent(this, MainChangeSend.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mainOnResumeState=true;
+        mLocalActivityManager.dispatchResume();
+        if (colse_level == 0) {
+            System.exit(0);
+        }
+        if(!isForeground){
+            long newHomebackTime = System.currentTimeMillis();
+            getApiSurTime("homeback",homebackTime,newHomebackTime);
+        }
+        isForeground = true;
+        //设置未读消息数
+        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage);
+        //去我的页面
+        if (MallPayActivity.pay_state) {
+            onClick(tabViews[4].findViewById(R.id.tab_linearLayout));
+        }
+        //去商城页面
+//        if (MallPayActivity.mall_state) {
+//            onClick(tabViews[1].findViewById(R.id.tab_linearLayout));
+//        }
+        GoodCommentManager.setStictis(Main.this);
+        openUri();
+    }
+
+    /**
+     * 外部吊起app
+     */
+    private void openUri(){
+        if(mainOnResumeState&&WelcomeDialogstate){
+            //这个问题待验证
+//        Intent intent = this.getIntent();
+//        if (intent != null) {
+//            url = intent.getStringExtra("url");
+//            if (url != null) {
+//                AppCommon.openUrl(this, url, true);
+//                intent.removeExtra("url");
+//                url = null;
+//            }
+//        }
+            openFromOther();
+            //外部开启页面
+            if(!TextUtils.isEmpty(url)){
+                AppCommon.openUrl(this, url, true);
+                url = null;
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mainOnResumeState=false;
+        try {
+            mLocalActivityManager.dispatchPause(isFinishing());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(!Tools.isAppOnForeground()){
+            isForeground = false;
+            homebackTime = System.currentTimeMillis();
+        }
+    }
+
+    @Override
+    public void finish() {
+        FileManager.setSharedPreference(XHApplication.in(),FileManager.xmlKey_appKillTime,String.valueOf(System.currentTimeMillis()));
+        super.finish();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        // 设置切换动画，从下边进入，上边退出
+        overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("currentTab", defaultTab + "");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+//		super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mainActivity.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        doExit(mainActivity, true);
+    }
+
+    /**
+     * 准备退出 goBack为true代表只退到首页
+     *
+     * @param act
+     * @param goBack
+     */
+    public void doExit(Activity act, boolean goBack) {
+        // 如果是返回键则退出到首页
+        AppCommon.clearCache();
+        // 退出的弹框
+        if (tabHost.getCurrentTab() == 0 || !goBack) {
+            if (doExit < 1) {
+                doExit++;
+                Tools.showToast(this, "再点击一次退出应用");
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        doExit = 0;
+                    }
+                }, 1000 * 5);
+            } else {
+                if(timer!=null) {
+                    timer.cancel();
+                    timer.purge();
+                }
+                colse_level = 0;
+                UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
+                // 开启自我唤醒
+                if(act!=null)new XGLocalPushServer(act).initLocalPush();
+                // 关闭时发送页面停留时间统计
+                if(act!=null)XHClick.finishToSendPath(act);
+                // 关闭页面停留时间统计计时器
+                XHClick.closeHandler();
+                ReqInternet.in().finish();
+                VersionOp.getInstance().onDesotry();
+                finish();
+                System.exit(1);
+                UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
+            }
+        } else {
+            // 先设置MainIndex界面的搜索列表不显示
+            setCurrentTabByIndex(0);
+        }
+    }
+
+    public void setCurrentTabByClass(Class<?> cls) {
+        for (int index = 0; index < classes.length; index++) {
+            if (classes[index].equals(cls)) {
+                setCurrentTabByIndex(index);
+                break;
+            }
+        }
+    }
+
+    private void setCurrentTabByIndex(int index) {
+        if (index > -1 && index < 5) {
+            tabHost.setCurrentTab(index);
+            setCurrentText(index);
+            nowTab=index;
+        }
+    }
+
+    /**
+     * 处理页面切换按钮图片文字的变化
+     *
+     * @param index
+     */
+    public void setCurrentText(int index) {
+        for (int j = 0; j < tabViews.length; j++)
+            if (j == index) {
+                ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#ff533c"));
+                tabViews[j].findViewById(iv_itemIsFine).setSelected(true);
+                tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
+                if(j == 2){
+                    MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
+                    mainCircle.setQuanmCurrentPage();
+                }
+            } else {
+                TextView textView = (TextView) tabViews[j].findViewById(R.id.textView1);
+                textView.setTextColor(Color.parseColor("#1b1b1f"));
+                if(j == 1) textView.setText(tabTitle[j]);
+                tabViews[j].findViewById(iv_itemIsFine).setSelected(false);
+                tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
+            }
+            if(index==2){//特殊美食圈的逻辑
+                changeSendLayout.setVisibility(View.VISIBLE);
+            }else{
+                changeSendLayout.setVisibility(View.GONE);
+            }
+        //特殊逻辑
+//        changeSendLayout.setVisibility(View.VISIBLE);
+    }
+
+    public int getCurrentTab() {
+        if (tabHost != null) {
+            return tabHost.getCurrentTab();
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * 解决外部吊起时，应用已经在后台运行，不跳转问题
+     */
+    public void doExitMain() {
+        if (mainActivity != null)
+            mainActivity.finish();
+    }
+
+    /**
+     * 设置消息数
+     */
+    public static void setNewMsgNum(int tabIndex, int messageNum) {
+        if (Main.allMain == null)
+            return;
+//		MainCircle.notifyMessageCount();
+        int currentTab = Main.allMain.getCurrentTab();
+        // 更新系统消息数,
+        View view = Main.allMain.getTabView(tabIndex);
+        if (view != null && currentTab != -1) {
+            if (messageNum > 0) {
+                TextView textMsgNum;
+                String messageNumStr = messageNum + "";
+                if (messageNum < 10) {
+                    textMsgNum = ((TextView) view.findViewById(R.id.tv_tab_msg_num));
+                    view.findViewById(R.id.tv_tab_msg_tow_num).setVisibility(View.GONE);
+                } else {
+                    textMsgNum = ((TextView) view.findViewById(R.id.tv_tab_msg_tow_num));
+                    view.findViewById(R.id.tv_tab_msg_num).setVisibility(View.GONE);
+                }
+                UtilLog.print("d", "------------有新消息啦: " + messageNum);
+                textMsgNum.setVisibility(View.VISIBLE);
+                if (messageNum > 99) {
+                    messageNumStr = 99 + "+";
+                }
+                textMsgNum.setText(messageNumStr);
+                MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, "");
+            } else {
+                view.findViewById(R.id.tv_tab_msg_num).setVisibility(View.GONE);
+                view.findViewById(R.id.tv_tab_msg_tow_num).setVisibility(View.GONE);
+            }
+        }
+    }
+
+
+    /**
+     * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
+     */
+    @Override
+    public void onClick(View v) {
+        for (int i = 0; i < tabViews.length; i++) {
+            if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
+                if (i == 2 && allTab.containsKey("MainCircle")&&i==nowTab) {
+                    MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
+//					mainCircle.setCurrentList(0);
+                    mainCircle.refresh();
+                } else if (i == 0 && allTab.containsKey("MainIndex")&&i==nowTab) {
+                    MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+                    mainIndex.refreshContentView(true);
+                } else if (i == 1 && allTab.containsKey("MainMall") && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
+                    MainMall mall = (MainMall) allTab.get("MainMall");
+                    mall.scrollTop();
+//                    if (MallCommon.click_state)
+//                        mall.refresh();
+//                    MainCircle nous = (MainCircle) allTab.get("MainCircle");
+//                    nous.refresh();
+//                    if(quanRefreshState)
+//                        setRoteAnimation(tabViews[1].findViewById(iv_itemIsFine));
+                } else if (i == 4 && allTab.containsKey("MainMyself")) {
+                    //在onResume方法添加了刷新方法
+//                    MainMyself mainMyself = (MainMyself) allTab.get("MainMyself");
+//                    mainMyself.scrollToTop();
+                } else if (i == 3 && allTab.containsKey("MyMessage")&&i==nowTab) {
+                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                    myMessage.onRefresh();
+                }
+                // 当软件所在页面正式你要刷新的页面,就直接刷新,不在跳了
+//				if (tabHost.getCurrentTab() == i && i == 2) {
+//					setCurrentTabByIndex(1);
+//					return;
+//				}
+//				if (i == 2) {
+//					setCurrentTabByIndex(1);
+//					return;
+//				} else {
+                try {
+                    setCurrentTabByIndex(i);
+                } catch (Exception e) {
+                    UtilLog.reportError("", e);
+                }
+//				}
+                XHClick.mapStat(Main.this, "a_index530", "底部导航栏", "点击" + tabTitle[i]);
+                XHClick.mapStat(Main.this, "a_down420", tabTitle[i] + "", "");
+            }
+        }
+    }
+
+    public static void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
+    }
+
+    public RelativeLayout getRootLayout() {
+        return mRootLayout;
+    }
+
+    public MainBuoy getBuoy() {
+        return mBuoy;
+    }
+
+    public View getTabView(int index) {
+        if (tabViews != null
+                && tabViews.length == 5
+                && index < 5
+                && index > -1) {
+            return tabViews[index];
+        }
+        return null;
+    }
+
+    /**
+     * 执行一个旋转动画
+     * @param view
+     */
+    private void setRoteAnimation(View view){
+        RotateAnimation animation= new RotateAnimation(0,360, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        animation.setDuration(800);
+        view.clearAnimation();
+        view.startAnimation(animation);
+    }
+
+    /**
+     * 设置导航美食圈按钮显示刷新状态
+     * @param state
+     */
+    public void setQuanRefreshState(boolean state){
+        quanRefreshState=state;
+        if(state) {
+            ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found_refresh);
+            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("刷新");
+        }else{
+            ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found);
+            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
+        }
+    }
+
+    public int getDoExit() {
+        return doExit;
+    }
+
+    public void setDoExit(int doExit) {
+        this.doExit = doExit;
+    }
+
+    public int getRunTime() {
+        return runTime;
+    }
+
+    public void setRunTime(int runTime) {
+        this.runTime = runTime;
+    }
+
+    public LocalActivityManager getLocalActivityManager() {
+        return mLocalActivityManager;
+    }
+
+    public MainBaseActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setMainActivity(MainBaseActivity mainActivity) {
+        Main.mainActivity = mainActivity;
+    }
+
+    /**
+     *welcome处理当前view
+     */
+    public void showIndexActivity(){
+        if(allTab.containsKey("MainIndex")){
+            MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+            mainIndex.onActivityshow();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        //此处可以进行分级处理:暂时无需要
+    }
+
+    /**
+     * 处理首页统计
+     */
+    public void handlerHomeStatistics(){
+        if(allTab.containsKey("MainIndex")){
+            MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+            mainIndex.saveNowStatictis();
+        }
+    }
+}

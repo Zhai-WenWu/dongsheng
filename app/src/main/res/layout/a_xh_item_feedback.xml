@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent"
+    android:paddingBottom="@dimen/dp_15" >
+
+    <RelativeLayout
+        android:id="@+id/feekback_reply_date_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_10"
+        android:visibility="gone" >
+
+        <acore.widget.TagTextView
+            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+            tagTextView:radius="@dimen/dp_10"
+            tagTextView:backgroundColor="#D1D1D1"
+            android:id="@+id/feekback_reply_date"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_15"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp_7"
+            android:paddingRight="@dimen/dp_7"
+            android:textColor="#FFFFFF"
+            android:textScaleX="0.8"
+            android:textSize="@dimen/sp_9" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/feekback_admin_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/feekback_reply_date_layout"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_5"
+        android:visibility="visible" >
+
+        <ImageView
+            android:id="@+id/feekback_admin_ico"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:src="@drawable/z_home_nav_ico_caipu" />
+        
+        <RelativeLayout
+            android:id="@+id/feekback_admin_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_55"
+            android:layout_toRightOf="@+id/feekback_admin_ico"
+            android:background="@drawable/z_home_ico_comment"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_21"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_10"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/feekback_admin_reply_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_5"
+                android:visibility="gone"
+                />
+            
+            <TextView
+                android:id="@+id/feekback_admin_reply_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/feekback_admin_reply_img"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingBottom="@dimen/dp_5"
+                android:text="title"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="bold"
+                android:clickable="false"
+                 />
+
+	        <TextView
+	            android:id="@+id/feekback_admin_reply_content"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@+id/feekback_admin_reply_title"
+                android:layout_toRightOf="@+id/feekback_admin_reply_img"
+                android:autoLink="web"
+	            android:textColor="#737373"
+                android:text="content"
+	            android:textIsSelectable="true"
+	            android:textSize="@dimen/sp_12"/>
+        </RelativeLayout>
+
+        <!--type == 2 时的样式，例如菜谱审核失败的通知-->
+        <RelativeLayout
+            android:id="@+id/feekback_admin_reply_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_55"
+            android:layout_toRightOf="@+id/feekback_admin_ico"
+            android:background="@drawable/z_home_ico_comment"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_21"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_10"
+            android:clickable="true"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/feekback_admin_activity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingBottom="@dimen/dp_5"
+                android:textStyle="bold"
+                android:textSize="@dimen/sp_13"
+                android:clickable="false" />
+
+            <ImageView
+                android:id="@+id/feekback_admin_activity_img"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:layout_below="@+id/feekback_admin_activity_title"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="@dimen/dp_5"
+                android:src="@drawable/i_nopic"
+                android:clickable="false"/>
+
+            <TextView
+                android:id="@+id/feekback_admin_activity_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/feekback_admin_activity_img"
+                android:layout_toRightOf="@+id/feekback_admin_activity_img"
+                android:layout_below="@+id/feekback_admin_activity_title"
+                android:layout_marginTop="@dimen/dp__1"
+                android:ellipsize="end"
+                android:textColor="#737373"
+                android:textSize="@dimen/sp_12"
+                android:clickable="false" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/feekback_user_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/feekback_reply_date_layout"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_15"
+        android:visibility="gone" >
+
+        <acore.widget.TagTextView
+            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+            tagTextView:radius="@dimen/dp_50"
+            tagTextView:backgroundColor="#D1D1D1"
+            android:id="@+id/feekback_user_tv"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="我"
+            android:textSize="@dimen/sp_13" />
+
+        <ImageView
+            android:id="@+id/feekback_user_ico"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:layout_alignBottom="@+id/feekback_user_tv"
+            android:layout_alignLeft="@+id/feekback_user_tv" />
+
+        <TextView
+            android:id="@+id/feekback_user_reply_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_55"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_toLeftOf="@+id/feekback_user_tv"
+            android:background="@drawable/z_home_ico_comment_me"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/dp_5"
+            android:textColor="#000000"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/feekback_progress_text"
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp__15"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_alignLeft="@+id/feekback_user_reply_content"
+            android:src="@drawable/feekback_progress"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/feekback_user_send_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_toLeftOf="@+id/feekback_user_tv"
+            android:background="@drawable/z_home_ico_comment_me"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/feekback_progress_img"
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_toLeftOf="@+id/feekback_user_send_img"
+            android:src="@drawable/feekback_progress"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/feekback_resend_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/feekback_user_layout"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/feekback_resend_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="重新发送" />
+    </RelativeLayout>
+
+</RelativeLayout>

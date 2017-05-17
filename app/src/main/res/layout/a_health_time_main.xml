@@ -1,0 +1,183 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <acore.widget.LayoutScroll
+            android:id="@+id/scroll_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:background="#F5F5F5" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <HorizontalScrollView
+                    android:id="@+id/health_time_HScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" >
+
+                    <LinearLayout
+                        android:id="@+id/ll_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/c_gray_e8e8e8"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/dp_2"
+                        android:paddingTop="@dimen/dp_1" >
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <ScrollView
+                    android:id="@+id/scrollView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/health_time_HScrollView"
+                    android:overScrollMode="never"
+                    android:visibility="visible" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="@dimen/dp_15"
+                            android:paddingRight="@dimen/dp_15" >
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/dp_140"
+                                android:layout_marginBottom="@dimen/dp_15"
+                                android:layout_marginTop="@dimen/dp_25" >
+
+                                <ImageView
+                                    android:id="@+id/health_time_img"
+                                    android:layout_width="@dimen/dp_125"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:paddingTop="@dimen/dp_12"
+                                    android:src="@drawable/z_yangs_daily_bg_01" />
+
+                                <TextView
+                                    android:id="@+id/health_time_tv"
+                                    android:layout_width="@dimen/dp_25"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignLeft="@+id/health_time_img"
+                                    android:layout_marginLeft="@dimen/dp_35"
+                                    android:lineSpacingExtra="@dimen/dp_0.5"
+                                    android:lineSpacingMultiplier="0.8"
+                                    android:textSize="@dimen/sp_20" />
+
+                                <TextView
+                                    android:id="@+id/health_time_state"
+                                    android:layout_width="@dimen/dp_28"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignLeft="@+id/health_time_img"
+                                    android:layout_alignTop="@+id/health_time_img"
+                                    android:layout_marginBottom="@dimen/dp_20"
+                                    android:layout_marginLeft="@dimen/dp_50"
+                                    android:layout_marginTop="@dimen/dp_38"
+                                    android:gravity="center_vertical"
+                                    android:lineSpacingExtra="@dimen/dp_1"
+                                    android:lineSpacingMultiplier="0.8"
+                                    android:textColor="@color/c_green_51a011"
+                                    android:textSize="@dimen/sp_25" />
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:id="@+id/tv_info"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" >
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" >
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/dp_0.5"
+                                    android:layout_centerVertical="true"
+                                    android:background="#E8E8E8" />
+
+                                <acore.widget.TagTextView
+                                    xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+                                    tagTextView:radius="@dimen/dp_25"
+                                    tagTextView:backgroundColor="@color/c_gray_e8e8e8"
+                                    android:id="@+id/tv_food"
+                                    android:layout_width="@dimen/dp_135"
+                                    android:layout_height="@dimen/dp_25"
+                                    android:layout_centerHorizontal="true"
+                                    android:gravity="center"
+                                    android:textColor="@color/c_green_51a011"
+                                    android:textSize="@dimen/sp_15" />
+                            </RelativeLayout>
+
+                            <TableLayout
+                                android:id="@+id/tb_ingredish"
+                                style="@style/tableLayout"
+                                android:layout_marginTop="@dimen/dp_12.5"
+                                android:background="@android:color/transparent" />
+
+                            <RelativeLayout
+                                android:id="@+id/ad"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_20"
+                                android:paddingLeft="@dimen/dp_10"
+                                android:paddingRight="@dimen/dp_10"
+                                android:visibility="gone" >
+
+                                <!--
+                <ListView
+                    android:id="@+id/ad_list"
+                    style="@style/listView"
+                    android:paddingLeft="10dp"
+			        android:paddingRight="10dp"
+                    android:layout_height="70dp"
+                    android:scrollbars="none" >
+                </ListView>  -->
+
+                                <View
+                                    android:id="@+id/ad_list_click"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="@dimen/dp_70"
+                                    android:background="@android:color/transparent"
+                                    android:clickable="true" />
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/health_time_fankui"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/dp_5"
+                                android:layout_marginTop="@dimen/dp_20"
+                                android:clickable="true"
+                                android:gravity="center_horizontal"
+                                android:onClick="clickFeekback"
+                                android:padding="@dimen/dp_15"
+                                android:text="纠错"
+                                android:textColor="#999999"
+                                android:textSize="@dimen/sp_14" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </ScrollView>
+            </RelativeLayout>
+        </acore.widget.LayoutScroll>
+    </LinearLayout>
+
+</RelativeLayout>

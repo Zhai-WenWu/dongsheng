@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@android:color/transparent" >
+
+    <aplug.web.view.XHWebView
+        android:id="@+id/XHWebview"
+        style="@style/layout"
+        android:background="@android:color/transparent"
+        android:scrollbars="none"/>
+
+</RelativeLayout>

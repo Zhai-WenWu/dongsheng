@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barTitle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/comment_color" >
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/singleText"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_15"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/sp_18" />
+
+    <View
+        android:id="@+id/title_dian"
+        android:layout_width="@dimen/dp_2"
+        android:layout_height="@dimen/dp_2"
+        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@+id/title"
+        android:visibility="visible" />
+
+    <include
+        android:id="@+id/ll_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        layout="@layout/a_bar_item_back" />
+
+
+    <LinearLayout
+        android:id="@+id/title_bar_right_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+</RelativeLayout>

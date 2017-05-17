@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/a_dish_more_img_item_parent_rl"
+    android:background="#000000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/view_ad_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"/>
+
+    <RelativeLayout
+        android:id="@+id/a_dish_more_img_item_content_parent_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20">
+
+        <TextView
+            android:id="@+id/view_ad_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ad_hint"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:minLines="4"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/dp_19" />
+
+        <include
+            android:id="@+id/ad_hint"
+            layout="@layout/ad_hint_view"
+            style="@style/adHint"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dp_3.5"
+            />
+
+        <!--<acore.widget.TagTextView
+            android:id="@+id/a_dish_more_img_item_ad"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_20"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dp_3.5"
+            android:gravity="center"
+            android:text="@string/ad_hint_text"
+            android:textColor="#b5b5b5"
+            android:textSize="@dimen/dp_14"
+            app:sideColor="#ffffff"
+            app:sideWidth="0.5dp" />-->
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/a_dish_more_img_item_close"
+        android:layout_width="@dimen/dp_38"
+        android:layout_height="@dimen/dp_38"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_20"
+        android:src="@drawable/i_dish_more_img_close" />
+
+</RelativeLayout>

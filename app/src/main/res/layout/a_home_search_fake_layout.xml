@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/a_home_search_fake_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@drawable/bg_round_alpan_white5"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:visibility="visible" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+        <ImageView
+            android:id="@+id/a_home_search_fake_ico_cover"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_1"
+            android:padding="@dimen/dp_8"
+            android:scaleType="centerCrop"
+            android:src="@drawable/z_home_search_icon" />
+
+        <TextView
+            android:id="@+id/a_home_search_fake_text_cover"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/a_home_search_fake_ico_cover"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="搜菜谱、食材等"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_13" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/activityLayout"
+                style="@style/layout"
+                android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <acore.widget.LayoutScroll
+            android:id="@+id/scroll_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F5F5F5"
+            android:scrollbars="none"
+            android:paddingTop="@dimen/dp_46">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <HorizontalScrollView
+                    android:id="@+id/hsv_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_35.5"
+                    android:background="#FFFFFF"
+                    android:overScrollMode="never"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/ll_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <ScrollView
+                    android:id="@+id/scroll_search_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/hsv_type"
+                    android:overScrollMode="never"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/search_result_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/dp_35"
+                        android:paddingTop="@dimen/dp_10">
+
+                    </LinearLayout>
+                </ScrollView>
+
+                <RelativeLayout
+                    android:id="@+id/search_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/hsv_type"
+                    android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/frist_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_0.5"
+                    android:layout_below="@+id/hsv_type"
+                    android:background="#CCCCCC"/>
+            </RelativeLayout>
+        </acore.widget.LayoutScroll>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_noData"
+        style="@style/noDataText"
+        android:text="暂无相关内容"
+        android:textColor="#777"
+        android:textSize="@dimen/sp_20"/>
+
+    <ImageView
+        android:id="@+id/history"
+        android:layout_width="@dimen/dp_44"
+        android:layout_height="@dimen/dp_44"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/dp_30"
+        android:layout_marginRight="@dimen/dp_10"
+        android:src="@drawable/i_history"/>
+
+    <amodule.search.view.MainBarSearch
+        android:id="@+id/bar_search_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"/>
+
+
+</RelativeLayout>

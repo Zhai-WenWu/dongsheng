@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/manager_wrapper" >
+
+        <TableLayout
+            android:id="@+id/tl_manager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerPadding="@dimen/dp_10" />
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/manager_wrapper"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dp_50"
+        android:layout_alignParentBottom="true"
+        android:background="#F8F8F8"
+        android:gravity="center_vertical"
+        android:visibility="visible" >
+
+        <Button
+            android:id="@+id/otherUser_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_10"
+            android:text="登录"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_15" />
+
+        <EditText
+            android:id="@+id/otherUser_code"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_toLeftOf="@+id/otherUser_login"
+            android:background="@drawable/bg_round_f5"
+            android:hint="特殊情况使用UserCode模拟登录"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:textColorHint="#FF0000"
+            android:textSize="@dimen/sp_13" />
+    </RelativeLayout>
+
+</RelativeLayout>

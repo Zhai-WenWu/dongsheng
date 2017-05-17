@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/head_rootLayout"
+    android:layout_width="fill_parent"
+    android:background="@color/common_bg"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+        android:id="@+id/head_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_65"
+        android:orientation="vertical"
+        android:visibility="gone"/>
+
+    <!-- 内容 -->
+
+    <RelativeLayout
+        android:id="@+id/head_contentLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView
+            android:id="@+id/iv_hint" 
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_13"
+            android:layout_marginTop="@dimen/dp_7"
+            android:scaleType="centerInside"
+            android:src="@drawable/z_down_refresh"/>
+
+        <!-- 箭头图像、进度条 -->
+
+        <FrameLayout
+            android:id="@+id/framelayout_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_hint"
+            android:layout_marginTop="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_10"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true" >
+
+            <!-- 箭头 -->
+
+            <ImageView
+                android:id="@+id/head_arrowImageView"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:src="@drawable/z_ico_refresh" />
+            
+            <!-- 进度条 -->
+            <ImageView
+                android:id="@+id/head_progressBar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:src="@drawable/z_ico_refresh_active"
+                android:visibility="gone" />
+        </FrameLayout>
+        <!-- 提示、最近更新 -->
+
+        <LinearLayout
+            android:id="@+id/linear_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/dp_10"
+            android:visibility="gone"
+            android:orientation="vertical" >
+
+            <!-- 提示 -->
+
+            <TextView
+                android:id="@+id/head_tipsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下拉刷新"
+                android:textColor="#333"
+                android:textSize="@dimen/sp_14" />
+            <!-- 最近更新 -->
+
+            <TextView
+                android:id="@+id/head_lastUpdatedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#cc6600"
+                android:textSize="@dimen/sp_10" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

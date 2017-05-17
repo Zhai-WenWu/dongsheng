@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_73"
+    android:background="@drawable/bg_round_white5">
+    <ImageView 
+        android:id="@+id/a_circle_find_item_iv" 
+        android:layout_width="@dimen/dp_43"
+        android:layout_height="@dimen/dp_43"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_centerVertical="true"
+        android:src="@drawable/z_me_ico_mypage"/>
+    
+    <TextView
+        android:id="@+id/a_circle_find_item_title" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/a_circle_find_item_iv"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:textSize="@dimen/sp_16"
+        android:textColor="#000000"
+        android:text="秀美食"/>
+    
+    <TextView 
+        android:id="@+id/a_circle_find_item_content" 
+        style="@style/singleText"
+        android:layout_below="@+id/a_circle_find_item_title"
+        android:layout_alignLeft="@+id/a_circle_find_item_title"
+        android:layout_toLeftOf="@+id/a_circle_find_item_follow"
+        android:layout_marginRight="@dimen/dp_3"
+        android:layout_marginTop="@dimen/dp_4"
+        android:textSize="@dimen/sp_12"
+        android:textColor="#878787"
+        android:text="让每一道菜做起来都很简单"/>
+    
+    <amodule.user.view.FollowView
+        android:id="@+id/a_circle_find_item_follow" 
+        android:layout_width="@dimen/dp_61"
+        android:layout_height="@dimen/dp_31"
+        android:paddingLeft="@dimen/dp_2"
+        android:paddingRight="@dimen/dp_2"
+        android:paddingTop="@dimen/dp_4"
+        android:paddingBottom="@dimen/dp_4"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+       	android:layout_marginRight="@dimen/dp_15"
+        android:visibility="gone"
+        android:gravity="center"/>
+    
+</RelativeLayout>

@@ -1,0 +1,87 @@
+package third.ad.option;
+
+import android.text.TextUtils;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+import acore.tools.StringManager;
+import third.ad.scrollerAd.XHScrollerAdParent;
+
+/**
+ * Created by Fang Ruijiao on 2017/4/25.
+ */
+public abstract class AdOptionList extends AdOptionParent {
+
+    public AdOptionList(String[] adPlayIds, Integer[] adIndexs) {
+        super(adPlayIds, adIndexs);
+    }
+
+    @Override
+    protected ArrayList<Map<String, String>> getBdData(ArrayList<Map<String, String>> old_list,boolean isBack) {
+        Log("getBdData adArray.size():" + adArray.size() + "    adIdList.size():" + adIdList.size());
+        if (adArray.size() > 0) {
+            Map<String,String> adMap;
+            if(!isBack){ //向上加载时添加广告数据
+                cunrrentIndex = 0;
+            }
+            for (int idIndex = 0,size = adArray.size(),adIdListSize = adIdList.size(); cunrrentIndex < size && idIndex < adIdListSize; cunrrentIndex++,idIndex++) {
+                int index = adIdList.get(idIndex);
+                if (index > 0 && index < old_list.size()) {
+                    Map<String, String> dataMap = old_list.get(index);
+                    String adstyle = isBack ? old_list.get(index - 1).get("adstyle") : dataMap.get("adstyle");
+                    //判断此广告位是否添加广告，如果此广告位已添加广告，则不添加
+                    if(!"ad".equals(adstyle)){
+                        adMap = adArray.get(cunrrentIndex);
+                        boolean dataIsOk = getDataIsOk(adMap);
+                        if(dataIsOk) {
+                            //腾讯api广告不用根据上一个item样式变;101:表示返回的是一张小图、202:一个大图、301:3张小图
+                            if (XHScrollerAdParent.ADKEY_API.equals(adMap.get("adClass"))) {
+                                Log.i("FRJ","stype:" + adMap.get("stype"));
+                                if ("101".equals(adMap.get("stype"))) {
+                                    adMap.put("type", "3");
+                                } else if ("202".equals(adMap.get("stype"))) {
+                                    adMap.put("type", "1");
+                                } else if ("301".equals(adMap.get("stype"))) {
+                                    adMap.put("type", "5");
+                                }
+                            } else {
+                                int aboveIndex = index - 1; //广告要跟上一个样式保持一致
+                                if(aboveIndex < 0) aboveIndex = index;
+                                String imgs = old_list.get(aboveIndex).get("imgs");
+                                ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(imgs);
+                                String type = old_list.get(aboveIndex).get("type");
+                                if ("5".equals(type)) {
+                                    JSONArray jsonArray = new JSONArray();
+                                    JSONObject jsonObject = new JSONObject();
+                                    try {
+                                        jsonObject.put("", adMap.get("img"));
+                                        jsonArray.put(jsonObject);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    adMap.put("imgs", jsonArray.toString());
+                                    adMap.put("type", arrayList.size() > 1 && "5".equals(type) ? "3" : old_list.get(aboveIndex).get("type"));
+                                }else if("4".equals(type)){
+                                    adMap.put("type","1");
+                                }else
+                                    adMap.put("type",old_list.get(aboveIndex).get("type"));
+                            }
+                            Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   type:" + adMap.get("type"));
+                            if(!TextUtils.isEmpty(adMap.get("type")))
+                                old_list.add(index, adMap);
+                        }
+                    }
+                }else{
+                    break;
+                }
+            }
+        }
+        return old_list;
+    }
+}

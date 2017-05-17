@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dp_10"
+    android:paddingRight="@dimen/dp_10" 
+    android:background="@color/backgroup_color">
+    
+    <TextView 
+        android:id="@+id/a_circle_user_so_item_head_name" 
+        style="@style/singleText"
+        android:layout_width="match_parent"
+    	android:layout_height="@dimen/dp_50"
+    	android:paddingTop="@dimen/dp_20"
+        android:paddingLeft="@dimen/dp_3"
+        android:paddingRight="@dimen/dp_3"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_15"
+        android:text="圈子成员"/>
+    <View
+	  android:id="@+id/a_circle_user_item_line" 
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_alignParentBottom="true"
+      android:background="#dfdfdf"/>
+
+</RelativeLayout>

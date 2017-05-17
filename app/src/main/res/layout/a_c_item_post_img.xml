@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+    <FrameLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true">
+        
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="fill_parent"
+        	android:layout_height="@dimen/dp_60"
+        	android:maxWidth="@dimen/dp_60"
+        	android:layout_gravity="center"
+			android:text="ssssss"
+        	android:background="@drawable/bg_white_gray"
+        	android:visibility="visible"/>
+        
+	    <ImageView
+	        android:id="@+id/iv_oneImgItem"
+	        android:layout_width="@dimen/dp_60"
+	        android:layout_height="@dimen/dp_60"
+	        android:layout_gravity="center"
+	        android:scaleType="centerInside" />
+    
+    </FrameLayout>
+
+</RelativeLayout>

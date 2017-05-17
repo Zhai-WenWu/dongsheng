@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88000000"
+    android:paddingLeft="@dimen/dp_30"
+    android:paddingRight="@dimen/dp_30"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+	    android:layout_height="@dimen/dp_60"
+	    android:gravity="right|bottom"
+	    android:paddingBottom="@dimen/dp_8"
+        android:background="#00000000">
+	    <ImageView
+	        android:id="@+id/d_popwindow_close" 
+	        android:layout_width="@dimen/dp_32"
+	        android:layout_height="@dimen/dp_32"
+	        android:src="@drawable/i_icon_pop_close"/>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+	    android:gravity="center_horizontal"
+	    android:paddingTop="@dimen/dp_32"
+	    android:paddingBottom="@dimen/dp_10"
+        android:background="@drawable/round_circle10_ffffff"
+        android:orientation="vertical">
+    
+	    <ImageView
+	        android:id="@+id/d_popwindow_img" 
+	        android:layout_width="@dimen/dp_48"
+	        android:layout_height="@dimen/dp_48"
+	        android:clickable="false"
+	        android:src="@drawable/i_icon_pop_success"/>
+	    
+	    <TextView 
+	        android:id="@+id/d_popwindow_title" 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:clickable="false"
+	        android:layout_marginTop="@dimen/dp_9"
+	        android:gravity="center"
+	        android:textSize="@dimen/sp_19"
+	        android:textColor="#00c847"
+	        android:text="操作成功"/>
+	    
+	    <TextView 
+	        android:id="@+id/d_popwindow_share_hint" 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="@dimen/dp_29"
+	        android:layout_marginLeft="@dimen/dp_17"
+	        android:textSize="@dimen/sp_15"
+	        android:textColor="#333333"
+	        android:text="分享给你的朋友们："/>
+	    
+	    <View android:layout_width="match_parent"
+	        android:layout_height="0.5dp"
+	        android:layout_marginTop="@dimen/dp_11"
+	        android:layout_marginBottom="@dimen/dp_12"
+	        android:background="#f1eee4" />
+	    
+	    <GridView
+	        android:id="@+id/d_popwindow_share_gridview"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/dp_15"
+    		android:paddingRight="@dimen/dp_15"
+	        android:layout_alignParentBottom="true"
+	        android:background="#fffffffe"
+	        android:listSelector="@android:color/transparent"
+	        android:numColumns="4"
+	        android:stretchMode="columnWidth" />
+    </LinearLayout>
+</LinearLayout>

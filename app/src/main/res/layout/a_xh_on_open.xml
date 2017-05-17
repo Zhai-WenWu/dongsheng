@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="#EFEFEF" >
+
+    <ImageView
+        android:id="@+id/no_open_img"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="@dimen/dp_180"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/dp_45" />
+
+    <TextView
+        android:id="@+id/no_open_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/no_open_img"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_35"
+        android:text="该功能正在研发，尽请期待~~"
+        android:textColor="#B5B5B5" />
+
+</RelativeLayout>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <acore.widget.ScrollviewDish
+        android:id="@+id/ingre_info_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:overScrollMode="never" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_25" >
+
+            <TextView
+                android:id="@+id/ingre_info_noData"
+                style="@style/noDataText"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_100"
+                android:text="暂无数据~" />
+
+            <ImageView
+                android:id="@+id/inger_detail_image"
+                android:layout_width="@dimen/dp_103"
+                android:layout_height="@dimen/dp_103"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:background="@drawable/round_circle60_ccc"
+                android:padding="@dimen/dp_3"
+                android:scaleType="fitXY"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/inger_detail_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <include
+                android:id="@+id/ingre_detial_ad_layout"
+                layout="@layout/ad_banner_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/dp_15"/>
+            <RelativeLayout
+                android:id="@+id/ingre_detial_banner_ad_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/dp_15"/>
+
+            <TableLayout
+                android:id="@+id/ingre_calorie"
+                style="@style/tableLayout"
+                android:layout_marginBottom="@dimen/dp_30"
+                android:background="@android:color/transparent"
+                android:visibility="gone" >
+
+                <TableRow style="@style/backgroundColor" >
+
+                    <TextView
+                        style="@style/d_showDishTitle"
+                        android:paddingBottom="@dimen/dp_7.5"
+                        android:paddingTop="0dp"
+                        android:text="热量表（每100克）"
+                        android:textSize="@dimen/sp_16" />
+                </TableRow>
+            </TableLayout>
+
+            <acore.widget.TagTextView
+                xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+                tagTextView:radius="@dimen/dp_5"
+                tagTextView:backgroundColor="@color/c_gray_dddddd"
+                android:id="@+id/ingre_about_caipu_info"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="bottomClick"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/fankui_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:onClick="bottomClick"
+                android:padding="@dimen/dp_15"
+                android:text="纠错"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone" />
+        </LinearLayout>
+    </acore.widget.ScrollviewDish>
+
+</LinearLayout>

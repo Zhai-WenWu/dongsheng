@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dish_recom_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dp_15"
+    android:paddingRight="@dimen/dp_15"
+    android:paddingTop="@dimen/dp_15">
+
+    <LinearLayout
+        android:id="@+id/dish_recom_item_today_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_15"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="1"
+            android:background="#DCDCDC"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/dish_recom_item_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:text="往期推荐"
+            android:textSize="@dimen/sp_14"
+            android:visibility="gone"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="1"
+            android:background="#DCDCDC"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+    <acore.widget.ImageViewVideo
+        android:id="@+id/iv_video_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/dish_recom_item_today_layout"
+        android:scaleType="centerInside"
+        android:src="@drawable/i_nopic"/>
+
+    <TextView
+        android:id="@+id/iv_itemIsFine"
+        android:layout_width="@dimen/dp_32"
+        android:layout_height="@dimen/dp_18"
+        android:layout_alignTop="@+id/iv_video_img"
+        android:background="@drawable/bg_round_red_type2"
+        android:gravity="center"
+        android:text="精"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_11"
+        android:visibility="gone"/>
+
+    <acore.widget.TagTextView
+        xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/iv_itemIsGood"
+        android:layout_width="@dimen/dp_32"
+        android:layout_height="@dimen/dp_18"
+        android:layout_alignTop="@+id/iv_video_img"
+        android:gravity="center"
+        android:text="优"
+        android:textColor="#fff"
+        android:textSize="@dimen/sp_11"
+        android:visibility="visible"
+        tagTextView:backgroundColor="#f43b3b"
+        tagTextView:radius="@dimen/dp_2"/>
+
+    <ImageView
+        android:id="@+id/dish_recom_item_isFav"
+        android:layout_width="@dimen/dp_25"
+        android:layout_height="@dimen/dp_25"
+        android:layout_alignRight="@+id/iv_video_img"
+        android:layout_alignTop="@+id/iv_video_img"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:clickable="true"
+        android:src="@drawable/z_caipu_today_ico_fav"/>
+
+    <RelativeLayout
+        android:id="@+id/dish_recom_body"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shadow_w2g"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_12">
+
+        <TextView
+            android:id="@+id/dish_recom_tv_name"
+            style="@style/shadowTextBlack"
+            android:layout_above="@+id/dish_recom_tv_allClick"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:text="name"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_18"/>
+
+        <TextView
+            android:id="@+id/dish_recom_tv_allClick"
+            style="@style/shadowTextBlack"
+            android:layout_width="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_6"
+            android:text="browse"
+            android:textColor="#F0F0F0"
+            android:textSize="@dimen/sp_10"/>
+
+        <TextView
+            android:id="@+id/dish_recom_tv_favorites"
+            style="@style/shadowTextBlack"
+            android:layout_width="wrap_content"
+            android:layout_alignBottom="@+id/dish_recom_tv_allClick"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_toRightOf="@+id/dish_recom_tv_allClick"
+            android:text="collect"
+            android:textColor="#F0F0F0"
+            android:textSize="@dimen/sp_10"/>
+
+        <TextView
+            android:id="@+id/dish_recom_tv_nickName"
+            style="@style/shadowTextBlack"
+            android:layout_width="wrap_content"
+            android:layout_alignBottom="@+id/dish_recom_tv_allClick"
+            android:layout_alignParentRight="true"
+            android:text="author"
+            android:textColor="#F0F0F0"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/dish_recom_item_isDel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/dish_recom_tv_allClick"
+            android:layout_alignParentRight="true"
+            android:text="删除"
+            android:textColor="#F0F0F0"
+            android:textSize="@dimen/sp_12"
+            android:visibility="visible"/>
+    </RelativeLayout>
+
+</RelativeLayout>

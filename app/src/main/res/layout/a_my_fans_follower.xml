@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:clickable="false">
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:background="@color/common_top_bg"
+        android:layout_height="@dimen/dp_45">
+
+        <RelativeLayout
+            android:id="@+id/ll_foot"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            android:background="@color/common_top_bg">
+
+            <include
+                android:id="@+id/ll_back"
+                layout="@layout/a_bar_item_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"/>
+
+            <LinearLayout
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/bg_round_e8_20"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_0.5">
+
+                <Button
+                    android:id="@+id/fans_btnLeftChannel"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_25"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_bar_title_change_left"
+                    android:gravity="center"
+                    android:text="粉丝"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/sp_14"/>
+
+                <Button
+                    android:id="@+id/fans_btnRightChannel"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_25"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_bar_title_change_left"
+                    android:gravity="center"
+                    android:text="关注"
+                    android:textColor="#999999"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/title_line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/my_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_bar">
+    </android.support.v4.view.ViewPager>
+
+</RelativeLayout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/preview_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <VideoView
+        android:id="@+id/preview_video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/select_tip_parent_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/select_tip"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_43"
+            android:gravity="center_horizontal|bottom"
+            android:paddingBottom="@dimen/dp_11"
+            android:background="@drawable/video_select_shadow"
+            android:text="轻触选择"
+            android:textColor="#FFF"
+            android:textSize="@dimen/sp_13"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/choose_video_item_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_43"
+        android:paddingRight="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/video_select_shadow"
+        android:gravity="right|bottom"
+        android:text="0:35"
+        android:textColor="#FFF"
+        android:textSize="@dimen/sp_13"/>
+
+    <View
+        android:id="@+id/shadow_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_6"
+        android:background="@drawable/bg_video_select_item_shadow"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/fake_image_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_video_item_2"
+        android:padding="@dimen/dp_2"
+        android:src="@drawable/bg_video_item_1"
+        android:visibility="visible"/>
+
+    <RelativeLayout
+        android:id="@+id/fake_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@drawable/bg_video_item_selected_2">
+
+        <ImageView
+            android:id="@+id/fake_image_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_video_item_selected_1"
+            android:padding="@dimen/dp_2.5"
+            android:src="@drawable/bg_video_item_selected_3"/>
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/delete_image"
+        android:layout_width="@dimen/dp_23"
+        android:layout_height="@dimen/dp_23"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_1.5"
+        android:background="@drawable/video_delete"
+        android:visibility="gone"/>
+</RelativeLayout>

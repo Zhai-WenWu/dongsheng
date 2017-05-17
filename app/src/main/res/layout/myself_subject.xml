@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                style="@style/layout">
+
+    <TextView
+        android:id="@+id/tv_noData"
+        style="@style/noDataText"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_100"
+        android:text="还没有发过美食帖哦~" />
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/list_myself_subject"
+        style="@style/listNoDivider"
+        android:background="@android:color/transparent"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp" />
+
+</RelativeLayout>

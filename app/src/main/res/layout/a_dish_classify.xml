@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <acore.widget.DownRefreshList
+        android:id="@+id/lv_sur"
+        style="@style/listNoDivider"
+        android:background="@color/common_bg"
+        android:paddingTop="@dimen/dp_13"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:visibility="gone" >
+    </acore.widget.DownRefreshList>
+
+</RelativeLayout>

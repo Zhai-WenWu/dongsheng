@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ad_parent_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#f1f1f1"
+    android:orientation="horizontal"
+    android:visibility="visible">
+
+    <ImageView
+        android:id="@+id/view_ad_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/i_nopic"/>
+
+    <RelativeLayout
+        android:id="@+id/view_ad_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/view_ad_img">
+
+        <TextView
+            android:id="@+id/view_ad_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view_ad_space_view"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_4"
+            android:paddingRight="@dimen/dp_4"
+            android:text="title"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_15"/>
+
+        <View
+            android:id="@+id/view_ad_space_view"
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_centerInParent="true"/>
+
+        <acore.widget.TagTextView
+            app:backgroundColor="#aa51bf9a"
+            app:radius="@dimen/dp_2"
+            android:id="@+id/view_ad_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_ad_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_3"
+            android:paddingLeft="@dimen/dp_11"
+            android:paddingRight="@dimen/dp_11"
+            android:paddingTop="@dimen/dp_3"
+            android:text="查看详情"
+            android:textColor="#fefefe"
+            android:textSize="@dimen/sp_12"/>
+
+        <acore.widget.TagTextView
+            style="@style/view_ad"
+            android:id="@+id/view_ad"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_12"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="广告"
+            android:textColor="#fefefe"
+            android:textSize="@dimen/sp_8"/>
+
+    </RelativeLayout>
+</RelativeLayout>

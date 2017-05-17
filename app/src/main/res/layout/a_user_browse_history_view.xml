@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg">
+
+    <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refresh_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="500"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
+        cube_ptr:ptr_resistance="1.7">
+
+        <ListView
+            android:id="@+id/list_view"
+            style="@style/listNoDivider"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"/>
+
+    </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+    <LinearLayout
+        android:id="@+id/noData_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_58"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_150"
+            android:src="@drawable/z_favo_no_data"/>
+
+        <TextView
+            android:id="@+id/no_data_text"
+            style="@style/noDataText"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_50"
+            android:textSize="@dimen/sp_13"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/btn_no_data"
+            android:layout_width="@dimen/dp_126"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginTop="@dimen/dp_30"
+            android:background="@drawable/btn_round_read_submit"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_14"/>
+    </LinearLayout>
+
+</RelativeLayout>

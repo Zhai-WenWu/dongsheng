@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_nocolor"
+    android:paddingLeft="@dimen/dp_15"
+    android:paddingRight="@dimen/dp_15"
+    android:paddingTop="@dimen/dp_12" >
+
+    <acore.widget.ImageViewVideo
+        android:id="@+id/iv_video_img"
+        android:layout_width="@dimen/dp_100"
+        android:layout_height="@dimen/dp_75"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/dp_10"
+        android:scaleType="fitXY"
+        android:src="@drawable/i_nopic" />
+
+    <TextView
+        android:id="@+id/quansearch_title"
+        style="@style/singleText"
+        android:layout_width="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/dp_3"
+        android:layout_toRightOf="@+id/iv_video_img"
+        android:text="菜谱名"
+        android:textColor="#000"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:id="@+id/quansearch_content"
+        style="@style/singleText"
+        android:layout_below="@+id/quansearch_title"
+        android:layout_toRightOf="@+id/iv_video_img"
+        android:gravity="center_vertical|left"
+        android:paddingRight="@dimen/dp_5"
+        android:paddingTop="@dimen/dp_7.5"
+        android:text="用料"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/quansearch_userName"
+        style="@style/singleText"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/quansearch_content"
+        android:layout_marginTop="@dimen/dp_3"
+        android:layout_toRightOf="@+id/iv_video_img"
+        android:text="用户"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_12"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/ping_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/quansearch_userName"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/quansearch_ping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#999"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:id="@+id/quansearch_zan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#999"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_below="@+id/iv_video_img"
+        android:layout_marginTop="@dimen/dp_12"
+        android:background="#E0E0E0" />
+
+</RelativeLayout>

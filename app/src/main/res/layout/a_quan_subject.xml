@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@color/transparent">
+
+    <RelativeLayout
+        android:id="@+id/all_title_home"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/common_top_bg">
+
+        <include
+            android:id="@+id/ll_title"
+            layout="@layout/c_view_bar_quan_title" />
+
+    </RelativeLayout>
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/lv_showSubjectInfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_home"
+        android:dividerHeight="0dp"
+        android:scrollbars="none"
+        android:background="@color/common_bg"
+        android:headerDividersEnabled="false"
+        android:visibility="visible"/>
+
+    <!-- 写自定义布局 -->
+
+    <amodule.quan.view.BarSubjectReply1
+        android:id="@+id/bar_subject_reply1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+
+    <amodule.quan.view.BarSubjectReply2
+        android:id="@+id/bar_subject_reply2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_subjectVidio"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+    <!--
+        <core.view.BarSubjectReport
+            android:id="@+id/bar_subject_report"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </core.view.BarSubjectReport>
+     -->
+
+    <RelativeLayout
+        android:id="@+id/fullscreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</RelativeLayout>

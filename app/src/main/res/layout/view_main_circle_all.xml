@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+        <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refresh_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/circle_view_bar_title"
+        android:background="#F1EEE4"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="500"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
+        cube_ptr:ptr_resistance="1.7" >
+
+        <ScrollView
+            android:id="@+id/main_circle_all_scroll"
+            android:layout_width="match_parent"
+            android:scrollbars="none"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dp_40" >
+
+                <RelativeLayout
+                    android:id="@+id/advert_rela_baidu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:id="@+id/advert_rela_gdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/advert_rela_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/ad_banner_view" />
+
+                <third.mall.widget.MyGridView
+                    android:id="@+id/gridview_module"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroup_color"
+                    android:cacheColorHint="#00000000"
+                    android:listSelector="#00000000"
+                    android:numColumns="3"
+                    android:scrollbars="none"
+                    android:verticalSpacing="@dimen/dp_11"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:id="@+id/rela_headerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_43"
+                    android:layout_marginLeft="@dimen/dp_11"
+                    android:layout_marginRight="@dimen/dp_11"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/bg_main_circle_item"
+                    android:visibility="gone" >
+
+                    <ImageView
+                        android:id="@+id/image_header"
+                        android:layout_width="@dimen/dp_16"
+                        android:layout_height="@dimen/dp_16"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_11"
+                        android:layout_marginRight="@dimen/dp_11"
+                        android:background="@drawable/main_circle_image_header" />
+
+                    <acore.widget.TextSwitchView
+                        android:id="@+id/textSwitcher"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/image_header"
+                        android:textAlignment="center" />
+                    <acore.widget.AdvTextSwitcher
+                        android:id="@+id/circle_advTextSwitcher"
+                        android:textColor="#66BCBB"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/image_header"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        />
+                     <TextView
+                        android:id="@+id/textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:textSize="@dimen/sp_14"
+                        android:layout_toRightOf="@+id/image_header"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rela_circle_my"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_11"
+                    android:layout_marginRight="@dimen/dp_11"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/tv_my"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_14"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:text="我的圈子"
+                        android:textColor="#878787"
+                        android:textSize="@dimen/sp_14" />
+
+                    <third.mall.widget.MyGridView
+                        android:id="@+id/gridview_circle_my"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_my"
+                        android:cacheColorHint="#00000000"
+                        android:horizontalSpacing="@dimen/dp_5"
+                        android:listSelector="#00000000"
+                        android:numColumns="2"
+                        android:scrollbars="none"
+                        android:verticalSpacing="@dimen/dp_5" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rela_circle_recommed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_11"
+                    android:layout_marginRight="@dimen/dp_11"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/tv_recommed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_14"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:text="推荐圈子"
+                        android:textColor="#878787"
+                        android:textSize="@dimen/sp_14" />
+
+                    <third.mall.widget.MyGridView
+                        android:id="@+id/gridview_circle_recommed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_recommed"
+                        android:cacheColorHint="#00000000"
+                        android:horizontalSpacing="@dimen/dp_5"
+                        android:listSelector="#00000000"
+                        android:numColumns="2"
+                        android:scrollbars="none"
+                        android:verticalSpacing="@dimen/dp_5" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+</RelativeLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/all_title_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_top_bg">
+
+        <include
+            android:id="@+id/relativeLayout_global"
+            layout="@layout/c_view_top_bar_home"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_46"
+            android:clickable="false" />
+
+    </RelativeLayout>
+
+    <acore.widget.PagerSlidingTabStrip
+        android:id="@+id/home_tab"
+        android:layout_below="@+id/all_title_rela"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_36"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/transparent"
+        android:visibility="visible"
+        app:pstsIndicatorColor="@color/comment_color"
+        app:pstsIndicatorWidthFollowText="true"
+        app:pstsTabTextColor="@color/tab_home_text_color"
+        app:pstsTabTextSize="@dimen/sp_14"
+        app:pstsShouldExpand="false"
+        app:pstsTabPaddingLeftRight="@dimen/dp_13"
+        app:pstsUnderlineColor="#e9e9e9"
+        app:pstsUnderlineHeight="1px" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/home_tab"/>
+
+    <SurfaceView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>

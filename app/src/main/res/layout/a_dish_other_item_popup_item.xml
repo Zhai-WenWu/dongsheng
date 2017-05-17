@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dish_other_item_popup_iten_text"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/dp_33.5"
+    android:paddingLeft="@dimen/dp_3"
+    android:paddingRight="@dimen/dp_3"
+    android:paddingTop="@dimen/dp_9"
+    android:paddingBottom="@dimen/dp_5"
+    android:gravity="center"
+    android:textSize="@dimen/sp_16"
+    android:textColor="@color/dish_popup_text" />

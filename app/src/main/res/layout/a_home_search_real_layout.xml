@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/a_home_search_real_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/comment_color"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:visibility="visible" >
+
+    <ImageView
+        android:id="@+id/z_home_logo"
+        android:layout_width="@dimen/dp_59"
+        android:layout_height="@dimen/dp_30"
+        android:layout_centerVertical="true"
+        android:paddingBottom="@dimen/dp_7"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_12"
+        android:paddingTop="@dimen/dp_7"
+        android:src="@drawable/z_home_logo_ico" />
+
+    <RelativeLayout
+        android:id="@+id/a_home_search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/z_home_feedbak_layout"
+        android:layout_toRightOf="@+id/z_home_logo"
+        android:background="@drawable/bg_round_e1412d_2_5"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:visibility="visible" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" >
+
+            <ImageView
+                android:id="@+id/a_home_search_fake_ico_cover"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_14"
+                android:layout_marginRight="@dimen/dp_8"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop"
+                android:src="@drawable/z_home_real_search_icon" />
+
+            <TextView
+                android:id="@+id/a_home_search_fake_text_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/a_home_search_fake_ico_cover"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="搜菜谱、食材等"
+                android:textColor="#F09992"
+                android:textSize="@dimen/sp_13" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/z_home_feedbak_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_18"
+        android:paddingRight="@dimen/dp_18" >
+
+        <ImageView
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_15"
+            android:src="@drawable/z_home_feedback_ico" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_1"
+            android:text="反馈"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_9" />
+    </LinearLayout>
+
+</RelativeLayout>

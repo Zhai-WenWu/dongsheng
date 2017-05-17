@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/comment_back_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_191"
+        android:layout_marginBottom="@dimen/dp_3">
+
+        <ImageView
+            android:id="@+id/a_home_main_item_special_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:background="#48000000"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/a_home_main_item_special_title"
+                style="@style/singleText"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_22"
+                android:paddingRight="@dimen/dp_22"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_23" />
+
+            <TextView
+                android:id="@+id/a_home_main_item_special_content"
+                style="@style/singleText"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dp_5"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_22"
+                android:paddingRight="@dimen/dp_22"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/rela_item_model"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:id="@+id/item_model_author_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <acore.widget.TextViewShow
+                android:id="@+id/tv_item_model_author"
+                style="@style/singleText"
+                android:layout_width="wrap_content"
+                android:maxWidth="@dimen/dp_110"
+                android:paddingBottom="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_20"
+                android:text="作者"
+                android:textColor="#a9a9a9"
+                android:textSize="@dimen/sp_11" >
+            </acore.widget.TextViewShow>
+
+            <TextView
+                android:id="@+id/quan_tv_item_model_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时间"
+                android:textColor="#a9a9a9"
+                android:textSize="@dimen/sp_11" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_ping_model"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/item_model_author_ll"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_10" >
+
+            <ImageView
+                android:id="@+id/iv_item_model_pinglun"
+                android:layout_width="@dimen/dp_11.5"
+                android:layout_height="@dimen/dp_11.5"
+                android:layout_marginTop="@dimen/dp_1.5"
+                android:background="@drawable/i_ico_comm_new"
+                android:clickable="false" />
+
+            <TextView
+                android:id="@+id/quan_tv_item_model_ping"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_3"
+                android:clickable="false"
+                android:text="评"
+                android:textColor="#a9a9a9"
+                android:textSize="@dimen/sp_11" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_show_no_content_model"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:background="#EEEDED" />
+
+</RelativeLayout>

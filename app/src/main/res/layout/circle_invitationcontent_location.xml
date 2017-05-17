@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<acore.widget.TagTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/a_user_icon_location"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/dp_11"
+    android:gravity="center"
+    android:paddingLeft="@dimen/dp_2"
+    android:paddingRight="@dimen/dp_2"
+    android:textColor="#ffffff"
+    android:textSize="@dimen/sp_8"
+    android:visibility="visible"
+    tagTextView:backgroundColor="#DFA79F"
+    tagTextView:radius="@dimen/dp_2"/>

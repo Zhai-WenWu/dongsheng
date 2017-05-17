@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#222222"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/media_rela"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_left"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_25"
+            android:padding="@dimen/dp_2"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_centerVertical="true"
+            android:src="@drawable/media_paper_left" />
+
+        <amodule.dish.video.View.MediaSurfaceVideoView
+            android:id="@+id/item_surfaceVideoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@+id/image_right"
+            android:layout_toRightOf="@+id/image_left"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5" />
+
+        <ImageView
+            android:id="@+id/image_right"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_25"
+            android:padding="@dimen/dp_2"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/media_paper_right" />
+    </RelativeLayout>
+
+
+
+</LinearLayout>

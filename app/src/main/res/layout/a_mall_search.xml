@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:layerType="hardware"
+    android:orientation="vertical" >
+
+    <third.mall.view.MallSearchTitle
+        android:id="@+id/search_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <third.mall.view.SearchHotView
+        android:id="@+id/hot_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_title" />
+
+    <third.mall.view.SearchHistoryView
+        android:id="@+id/history_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hot_view" />
+
+     <aplug.web.view.XHWebView
+        android:id="@+id/XHWebview"
+        android:overScrollMode="never"
+        android:layerType="software"
+        android:layout_below="@+id/search_title"
+        style="@style/layout"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout"
+    android:background="@android:color/transparent" >
+
+    <RelativeLayout
+        android:id="@+id/bar_subject_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.5dp"
+            android:layout_above="@+id/linearLayout2"
+            android:background="#A2A2A2" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/ll_emojiBar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:background="#F1F0F1" >
+
+                <ImageButton
+                    android:id="@+id/ib_addEmoji"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_nocolor"
+                    android:paddingLeft="@dimen/dp_7"
+                    android:paddingRight="@dimen/dp_7"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/z_quan_tie_menu_ico_face" />
+
+                <ImageButton
+                    android:id="@+id/ib_addFrend"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/btn_nocolor"
+                    android:paddingLeft="@dimen/dp_8"
+                    android:paddingRight="@dimen/dp_8"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/z_quan_tie_menu_ico_to" />
+
+                <core.xiangha.emj.view.EditTextShow
+                    android:id="@+id/et_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_white3"
+                    android:focusable="true"
+                    android:hint=""
+                    android:inputType="textMultiLine"
+                    android:maxHeight="@dimen/dp_70"
+                    android:minHeight="@dimen/dp_32"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:textColorHint="#ccc"
+                    android:textSize="@dimen/sp_15" >
+                </core.xiangha.emj.view.EditTextShow>
+
+                <Button
+                    android:id="@+id/btn_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_4"
+                    android:text="发送"
+                    android:textAlignment="center"
+                    android:textColor="@color/comment_color"
+                    android:textSize="@dimen/sp_18" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_emoji"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/dp_170"
+                android:visibility="gone" >
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center" >
+                </android.support.v4.view.ViewPager>
+
+                <LinearLayout
+                    android:id="@+id/viewGroup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_152"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

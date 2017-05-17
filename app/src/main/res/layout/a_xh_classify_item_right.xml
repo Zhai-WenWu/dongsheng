@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/classify_right_title_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="@dimen/dp_6.5"
+        android:layout_marginLeft="@dimen/dp_5.5"
+        android:layout_marginRight="@dimen/dp_5.5"
+        android:layout_marginTop="@dimen/dp_16.5"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_2.5"
+        android:paddingRight="@dimen/dp_2.5" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/view1"
+            android:background="#E7E7E7" />
+
+        <TextView
+            android:id="@+id/classify_right_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="牛肉"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_13" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="@dimen/dp_2"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_toLeftOf="@id/classify_right_title"
+            android:background="@drawable/bg_newclassify_linear_point_shape" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="@dimen/dp_2"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_toRightOf="@+id/classify_right_title"
+            android:background="@drawable/bg_newclassify_linear_point_shape" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/view2"
+            android:background="#E7E7E7" />
+    </RelativeLayout>
+
+    <TableLayout
+        android:id="@+id/classify_right_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_6"
+        android:background="@android:color/transparent" >
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/classify_right_my_tizhi"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_marginLeft="@dimen/dp_2.5"
+        android:layout_marginRight="@dimen/dp_2.5"
+        android:layout_marginTop="@dimen/dp_15"
+        android:background="@drawable/bg_btn_tizhiceshi"
+        android:gravity="center"
+        android:text="我的体质"
+        android:textColor="@color/health_green_text_btn"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/classify_right_btn_ceshi"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_marginLeft="@dimen/dp_2.5"
+        android:layout_marginRight="@dimen/dp_2.5"
+        android:layout_marginTop="@dimen/dp_15"
+        android:background="@drawable/bg_btn_tizhiceshi"
+        android:text="快速体质测试"
+        android:textColor="@color/health_green_text_btn"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone" />
+
+</LinearLayout>

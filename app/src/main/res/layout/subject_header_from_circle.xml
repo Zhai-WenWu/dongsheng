@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rela_circle_from"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_38">
+
+    <TextView
+        android:id="@+id/tv_subFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_12"
+        android:text="来自：秀美食"
+        android:textColor="#969696"
+        android:textSize="@dimen/sp_12"/>
+
+    <ImageView
+        android:id="@+id/subject_ico_right_myself"
+        android:layout_width="@dimen/dp_12"
+        android:layout_height="@dimen/dp_12"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_10"
+        android:src="@drawable/z_find_home_ico_go"/>
+</merge>

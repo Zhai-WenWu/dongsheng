@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_nocolor" >
+
+    <ImageView
+        android:id="@+id/search_list_ingre_img"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="@dimen/dp_45"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:src="@drawable/i_loading" />
+
+    <TextView
+        android:id="@+id/search_list_ingre_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_toRightOf="@+id/search_list_ingre_img"
+        android:text="ingre"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:id="@+id/search_list_ingre_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/search_list_ingre_name"
+        android:layout_below="@+id/search_list_ingre_name"
+        android:layout_marginTop="@dimen/dp_7"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="ingre_desc"
+        android:textColor="#666666"
+        android:textSize="@dimen/sp_14" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_below="@+id/search_list_ingre_img"
+        android:background="#DDD" />
+
+</RelativeLayout>

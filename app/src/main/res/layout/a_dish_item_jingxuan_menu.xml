@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_nocolor"
+    android:paddingTop="@dimen/dp_15"
+    >
+
+    <LinearLayout
+        android:id="@+id/item_jingxuan_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_toLeftOf="@+id/dish_jingxuan_menuItem"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dish_jingxuan_menuName"
+            style="@style/singleText"
+            android:layout_marginTop="@dimen/dp_5"
+            android:text="菜谱名"
+            android:textColor="#000"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:id="@+id/dish_jingxuan_hote"
+            style="@style/singleText"
+            android:gravity="center_vertical|left"
+            android:layout_marginTop="@dimen/dp_6"
+            android:text="热度"
+            android:textColor="#888"
+            android:textSize="@dimen/sp_10"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dish_jingxuan_menuItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/dish_jingxuan_iv_left"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:src="#F0F0F0" />
+        <ImageView
+            android:id="@+id/dish_jingxuan_iv_middle"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:layout_marginLeft="@dimen/dp_1"
+            android:src="#F0F0F0" />
+        <ImageView
+            android:id="@+id/dish_jingxuan_iv_right"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:layout_marginLeft="@dimen/dp_1"
+            android:src="#F0F0F0" />
+    </LinearLayout>
+    
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_below="@+id/dish_jingxuan_menuItem"
+        android:background="#DED9D1"
+        />
+
+</RelativeLayout>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/dp_18"
+    android:paddingBottom="@dimen/dp_10" >
+
+    <RelativeLayout
+        android:id="@+id/dish_up_content_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_makeDele">
+
+        <RelativeLayout
+            android:id="@+id/dish_up_make_title_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fefefe"
+            android:orientation="horizontal">
+            <acore.widget.EditTextNoEmoji
+                android:id="@+id/dish_up_make_title"
+                style="@style/d_uploadDishText"
+                android:layout_marginTop="0dp"
+                android:paddingLeft="@dimen/dp_30"
+                android:layout_toLeftOf="@+id/dish_up_speech_make_title"
+                android:paddingRight="@dimen/dp_15"
+                android:gravity="center_vertical"
+                android:textColorHint="#d3d3d3"
+                android:textSize="@dimen/sp_14"
+                android:hint="不需要填写步骤序号 1、2、3…"/>
+            <TextView
+                android:id="@+id/dish_up_make_title_show"
+                style="@style/d_uploadDishText"
+                android:layout_marginTop="0dp"
+                android:background="@null"
+                android:paddingLeft="@dimen/dp_30"
+                android:layout_toLeftOf="@+id/dish_up_speech_make_title"
+                android:paddingRight="@dimen/dp_15"
+                android:gravity="center_vertical"
+                android:textColorHint="#d3d3d3"
+                android:textSize="@dimen/sp_15"
+                android:hint=""
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/dish_up_speech_make_title"
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:background="#fefefe"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_15"
+                android:layout_centerVertical="true"
+                android:src="@drawable/i_dish_speeach"/>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/tv_makeStep"
+            style="@style/d_uploadDishAddText"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/dp_40"
+            android:layout_marginLeft="0dp"
+            android:paddingRight="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_5"
+            android:background="#fefefe"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="#000"
+            android:textSize="@dimen/sp_18" />
+
+        <RelativeLayout
+            android:id="@+id/dish_make_video_title_hint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/dish_up_make_title_rl"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_below="@+id/dish_up_make_title_rl">
+
+            <TextView
+                android:id="@+id/dish_make_video_title_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/sp_12"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/dish_make_video_video_parent_rl"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_169"
+            android:layout_alignLeft="@+id/dish_up_make_title_rl"
+            android:layout_below="@+id/dish_make_video_title_hint_layout"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_marginLeft="@dimen/dp_30">
+            <RelativeLayout
+                android:id="@+id/iv_makes_back0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#fefefe"
+                android:orientation="vertical" >
+                <ImageView
+                    android:id="@+id/iv_makes_back1"
+                    android:layout_width="@dimen/dp_27"
+                    android:layout_height="@dimen/dp_31"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:background="@drawable/z_caipu_upload_video_bigpic"
+                    android:scaleType="centerCrop"
+                    android:tag="0" />
+
+                <TextView
+                    android:id="@+id/iv_makes_back2"
+                    style="@style/d_uploadDishAddText"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_below="@+id/iv_makes_back1"
+                    android:layout_marginTop="@dimen/dp_7"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:gravity="center"
+                    android:text="添加步骤视频"
+                    android:textColor="#999999"
+                    android:textSize="@dimen/sp_13" />
+
+                <acore.widget.ImageViewVideo
+                    android:id="@+id/video_makes_item_video_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/video_makes_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/dish_make_opration"
+                android:layout_width="@dimen/dp_45"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_15"
+                android:background="#83000000"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/dish_make_video_relase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_18"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/i_dish_video_relace"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_6"
+                        android:gravity="center"
+                        android:textSize="@dimen/dp_12"
+                        android:textColor="#fefefe"
+                        android:text="更换"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dish_make_video_cut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_alignParentBottom="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_18"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/i_dish_video_cut"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_6"
+                        android:gravity="center"
+                        android:textSize="@dimen/dp_12"
+                        android:textColor="#fefefe"
+                        android:text="裁剪"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_makeMove"
+        style="@style/d_uploadDishAddIcon"
+        android:layout_width="@dimen/dp_15"
+        android:layout_height="@dimen/dp_25"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/dp_2"
+        android:layout_marginRight="@dimen/dp_13"
+        android:layout_centerVertical="true"
+        android:background="@drawable/z_caipu_upload_up_ico_move"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/tv_make_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="gone"/>
+
+</RelativeLayout>

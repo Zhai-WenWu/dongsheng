@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout" >
+
+    <ImageView
+        android:id="@+id/img_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/linear_title_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_35"
+            android:paddingRight="@dimen/dp_35"
+            android:paddingTop="@dimen/dp_30" >
+
+            <ImageView
+                android:id="@+id/user_login_logo"
+                android:layout_width="@dimen/dp_90"
+                android:layout_height="@dimen/dp_90"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/user_login_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dp_20"
+                android:paddingTop="@dimen/dp_16" >
+
+                <View
+                    style="@style/login_line"
+                    android:background="#80FFFFFF" />
+
+                <TextView
+                    style="@style/login_title"
+                    android:text="登录香哈" />
+
+                <View
+                    style="@style/login_line"
+                    android:background="#80FFFFFF" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/user_login_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RelativeLayout
+                    android:id="@+id/qq_login_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:background="@drawable/bg_round_qq_login"
+                    android:clickable="true"
+                    android:onClick="goQQLogin"
+                    android:paddingBottom="@dimen/dp_7.5"
+                    android:paddingTop="@dimen/dp_7.5" >
+
+                    <ImageView
+                        style="@style/login_opt_btn_ico"
+                        android:src="@drawable/z_login_ico_qq" />
+
+                    <TextView
+                        style="@style/login_opt_btn_text"
+                        android:text="使用QQ登录" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/weixin_login_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_below="@+id/qq_login_layout"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:background="@drawable/bg_round_weixin_login"
+                    android:clickable="true"
+                    android:onClick="goWeiXinLogin"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_7.5"
+                    android:paddingTop="@dimen/dp_7.5" >
+
+                    <ImageView
+                        style="@style/login_opt_btn_ico"
+                        android:src="@drawable/z_login_ico_weixin" />
+
+                    <TextView
+                        style="@style/login_opt_btn_text"
+                        android:text="使用微信登录" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sina_login_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_below="@+id/weixin_login_layout"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:background="@drawable/bg_round_red_login"
+                    android:clickable="true"
+                    android:onClick="goSinaLogin"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_7.5"
+                    android:paddingTop="@dimen/dp_7.5" >
+
+                    <ImageView
+                        style="@style/login_opt_btn_ico"
+                        android:src="@drawable/z_login_ico_weibo" />
+
+                    <TextView
+                        style="@style/login_opt_btn_text"
+                        android:text="使用微博登录" />
+                </RelativeLayout>
+                
+                <RelativeLayout
+                    android:id="@+id/mz_login_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_below="@+id/sina_login_layout"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:background="@drawable/bg_round_1788e7"
+                    android:clickable="true"
+                    android:onClick="goMzLogin"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_8"
+                    android:visibility="gone" >
+
+                    <ImageView
+                        style="@style/login_opt_btn_ico"
+                        android:src="@drawable/z_reg_login_logo_flyme" />
+
+                    <TextView
+                        style="@style/login_opt_btn_text"
+                        android:text="使用Flyme帐号登录" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/xm_login_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_below="@+id/mz_login_layout"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:background="@drawable/bg_round_1788e7"
+                    android:clickable="true"
+                    android:onClick="goXMLogin"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_8"
+                    android:visibility="gone" >
+
+                    <ImageView
+                        style="@style/login_opt_btn_ico"
+                        android:src="@drawable/z_reg_login_logo_flyme" />
+
+                    <TextView
+                        style="@style/login_opt_btn_text"
+                        android:text="使用小米帐号登录" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/xiangha_login_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_below="@+id/xm_login_layout"
+                    android:background="@drawable/bg_round_grey_d1d1d_5"
+                    android:clickable="true"
+                    android:onClick="goXianghaLogin"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_8" >
+
+                    <ImageView
+                        style="@style/login_opt_btn_ico"
+                        android:src="@drawable/z_reg_login_logo_xiangha" />
+
+                    <TextView
+                        style="@style/login_opt_btn_text"
+                        android:textColor="#666666"
+                        android:text="香哈帐号登录" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/user_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/xiangha_login_layout"
+                    android:clickable="true"
+                    android:onClick="userRegister"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_30"
+                    android:text="注册香哈帐号"
+                    android:textColor="#CCCCCC"
+                    android:textSize="@dimen/sp_16" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/user_login_leftImgBtn1"
+        style="@style/login_back" />
+
+</RelativeLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/user_next_step_btn"
+        style="@style/login_big_btn"
+        android:layout_below="@+id/rl_user_login_password"
+        android:layout_marginBottom="@dimen/dp_17"
+        android:background="@drawable/bg_next_step_gray"
+        android:textColor="@color/c_white_bg_title"
+        android:textStyle="bold"
+        android:text="登录"/>
+
+
+    <TextView
+        android:id="@+id/tv_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/user_next_step_btn"
+        android:layout_below="@+id/user_next_step_btn"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/user_next_step_btn"
+        android:layout_below="@+id/user_next_step_btn"
+        android:visibility="gone"/>
+
+</RelativeLayout>

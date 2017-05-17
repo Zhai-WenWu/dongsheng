@@ -1,0 +1,97 @@
+package amodule.search.view;
+
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import acore.tools.StringManager;
+import third.ad.scrollerAd.XHAllAdControl;
+import third.ad.tools.AdPlayIdConfig;
+
+/**
+ * Created by ：fei_teng on 2017/3/28 17:29.
+ */
+
+public class SearchResultAdDataProvider {
+
+    private static final String[] AD_IDS = new String[]{
+            AdPlayIdConfig.SEARCH_LIST_TOP,
+            AdPlayIdConfig.SEARCH_LIST_1,
+            AdPlayIdConfig.SEARCH_LIST_2,
+            AdPlayIdConfig.SEARCH_LIST_3,
+            AdPlayIdConfig.SEARCH_LIST_4,
+            AdPlayIdConfig.SEARCH_LIST_5,
+            AdPlayIdConfig.SEARCH_LIST_6,
+    };
+
+    private XHAllAdControl xhAllAdControl;
+    private ArrayList<Map<String, String>> list = new ArrayList<>();
+
+    private SearchResultAdDataProvider() {
+    }
+
+    private static SearchResultAdDataProvider instance;
+    private AtomicBoolean topItemHasData = new AtomicBoolean(false);
+
+    public static SearchResultAdDataProvider getInstance() {
+
+        if (instance == null) {
+            synchronized (SearchResultAdDataProvider.class) {
+                if (instance == null) {
+                    instance = new SearchResultAdDataProvider();
+                }
+            }
+        }
+        return instance;
+    }
+
+
+    public void getAdData(){
+
+        final ArrayList<String> adPosList = new ArrayList<>();
+        for (String posStr : AD_IDS) {
+            adPosList.add(posStr);
+        }
+
+        xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
+            @Override
+            public void callBack(Map<String, String> map) {
+                list.clear();
+                if (map != null && map.size() > 0) {
+                    for (int i = 0;i<adPosList.size();i++) {
+                        String adStr = map.get(adPosList.get(i));
+                        if (!TextUtils.isEmpty(adStr)) {
+                            ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
+                            if (adList != null && adList.size() > 0) {
+                                Map<String, String> adDataMap = adList.get(0);
+                                list.add(adDataMap);
+                            }
+                        }
+
+                        //处理搜索列表顶部广告
+                        if (i == 0) {
+                            if (list.size() > 0)
+                            topItemHasData.set(list.size() > 0);
+                        }
+
+                    }
+                }
+            }
+        }, "search_list");
+    }
+
+    public ArrayList<Map<String,String>> getAdDataList(){
+        return list;
+    }
+
+    public XHAllAdControl getXhAllAdControl(){
+        return xhAllAdControl;
+    }
+
+    public AtomicBoolean HasTopAdData(){
+        return topItemHasData;
+    }
+
+}

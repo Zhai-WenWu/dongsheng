@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityLayout"
+    style="@style/layout">
+
+    <LinearLayout
+        android:id="@+id/tabs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FEFFFF"
+        android:orientation="vertical">
+
+        <acore.widget.PagerSlidingTabStrip
+            android:id="@+id/circle_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_45"
+            android:background="#FEFFFF"
+            android:visibility="invisible"
+            app:pstsIndicatorColor="@color/comment_color"
+            app:pstsIndicatorWidthFollowText="true"
+            app:pstsTabColumn="5"
+            app:pstsTabTextColor="@color/tab_text_color"
+            app:pstsTabTextSize="@dimen/sp_14"
+            app:pstsUnderlineColor="#DFDFDF"
+            app:pstsUnderlineHeight="@dimen/dp_0.5"/>
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/circle_viewpager"
+        android:layout_below="@+id/tabs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+    <SurfaceView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroup_color"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_25">
+
+        <TextView
+            android:id="@+id/sb_header_tv_likeNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:text="0赞"
+            android:textColor="#9F9F9F"
+            android:textSize="@dimen/sp_11"/>
+
+        <ImageView
+            android:id="@+id/zan_num_sanjiao"
+            android:layout_width="@dimen/dp_5"
+            android:layout_height="@dimen/dp_3"
+            android:layout_alignLeft="@+id/sb_header_tv_likeNum"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:src="@drawable/z_quan_ico_arrow_top"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/sb_header_tv_commentNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_toRightOf="@+id/sb_header_tv_likeNum"
+            android:text="0评论"
+            android:textColor="#9F9F9F"
+            android:textSize="@dimen/sp_11"/>
+
+        <TextView
+            android:id="@+id/sb_header_tv_clickNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_15"
+            android:text="0浏览"
+            android:textColor="#9F9F9F"
+            android:textSize="@dimen/sp_11"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/sb_header_ll_tongjizantouxiang"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_61"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/sb_header_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:background="#dddddd"/>
+
+        <RelativeLayout
+            android:id="@+id/sb_header_tv_tongjizantouxiang"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img1"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img2"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img1"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img3"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img2"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img4"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img3"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img5"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img4"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img6"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img5"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img7"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img6"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img8"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img7"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img9"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img8"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img10"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img9"/>
+
+            <ImageView
+                android:id="@+id/sb_header_iv_tongji_img11"
+                style="@style/quan_item_linear_body_tongji_imgs"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img10"/>
+
+            <TextView
+                android:id="@+id/sb_header_tv_likeNum_round"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/sb_header_iv_tongji_img10"
+                android:background="@drawable/bg_round_zannum"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#fffffe"
+                android:textSize="@dimen/sp_11"/>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

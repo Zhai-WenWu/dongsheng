@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="copyright" content="Copyright © 2013 XiangHa.com" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0;"/>
+<meta name="HandheldFriendly" content="true"/>
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta name="format-detection" content="telephone=no">
+<title>访问错误</title>
+<style type="text/css">
+/* rest */
+*{margin:0; padding:0; -webkit-appearance:none; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; font:14px/16px STHeitiSC,STHeiti,Droid Sans Fallback,'微软雅黑'; color:#000000; font-weight:normal;}
+body{-webkit-user-select:none;}
+.content{width:100%;}
+table{border-collapse:collapse;border-spacing:0;}
+ul,li{list-style:none;}
+h1,h2,h3,h4{font-size:16px; line-height:18px;}
+::-webkit-input-placeholder{color:#bebebe;}
+::-webkit-search-cancel-button{-webkit-appearance: none;}
+::-webkit-search-results-button{-webkit-appearance: none;}
+::-webkit-scrollbar{width:0;}
+a{outline:none; text-decoration:none; color:#333333;}
+/*nav*/
+nav.user{position:fixed; top:0; left:0; width:100%; box-sizing:border-box; -webkit-box-sizing:border-box; border-bottom:1px solid #c9c9c9; padding:9px 0; background:#f0eeee; z-index:990;}
+nav.list{position:relative;}
+nav.user h1{margin:0 42px; padding:5px 0; line-height:20px; font-size:18px; color:#333333; text-align:center; white-space:nowrap; word-break:keep-all; overflow:hidden; text-overflow:ellipsis;}
+/*error*/
+.error_page{margin-top:100px;}
+.error_page h2{padding-top:60px; background:url(images/failure.png) no-repeat center 0; background-size:50px 50px; line-height:25px; color:#666666; text-align:center;}
+.error_page p{padding-top:35px; color:#666666; text-align:center;}
+.error_page p a{color:#cc0000;}
+</style>
+</head>
+<body style="background:#E9E9E9;">
+<div class="content">
+	<div class="error_page">
+		<h2>网络出了点儿问题<br />请重试…</h2>
+		<p><a onclick="window.appCommon.goBack('no');">关闭</a>&nbsp;&nbsp;或&nbsp;&nbsp;<a onclick="window.appCommon.refresh();">刷新</a></p>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_location"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:id="@+id/pb_location"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/dp_5"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/iv_location"
+        android:layout_width="@dimen/dp_14"
+        android:layout_height="@dimen/dp_14"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/pb_location"
+        android:background="@drawable/z_quan_location_off"/>
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:layout_toRightOf="@+id/iv_location"
+        android:clickable="false"
+        android:text="显示定位"
+        android:textColor="@color/comment_color"
+        android:textSize="@dimen/sp_13"/>
+</RelativeLayout>

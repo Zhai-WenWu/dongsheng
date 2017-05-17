@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_rela"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/transparent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/ll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#fffffe"
+        android:clickable="false"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/title_rela"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:background="#fffffe" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="领取优惠券"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_16" />
+            <ImageView 
+                android:id="@+id/dialog_close"
+                android:layout_width="@dimen/dp_45"
+                android:layout_height="@dimen/dp_45"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/dp_16.5"
+                android:src="@drawable/mall_favorable_dialog_colse"/>
+        </RelativeLayout>
+
+      <!--   <View
+            android:id="@+id/line_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_below="@+id/title_rela"
+            android:background="#e1e2e4" /> -->
+
+        <ListView
+            android:id="@+id/listview_dialog"
+            style="@style/listNoDivider"
+            android:layout_below="@+id/title_rela"
+            android:background="#fffffe"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp" >
+        </ListView>
+    </RelativeLayout>
+
+</RelativeLayout>

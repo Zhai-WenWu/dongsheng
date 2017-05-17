@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_57"
+     >
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_57"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:text="111"
+        android:textColor="#157efb"
+        android:textSize="@dimen/dp_18" />
+
+
+</RelativeLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/a_common_subject_ll" 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_35"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+	     <TextView
+	         android:layout_width="wrap_content"
+	         android:layout_height="match_parent"
+	         android:clickable="false"
+	         android:gravity="center"
+	         android:text="发布到:"
+	         android:textColor="#666"
+	         android:textSize="@dimen/sp_15"/>
+	     
+	     <TextView
+	         android:id="@+id/upload_item"
+	         android:layout_width="wrap_content"
+	         android:layout_height="match_parent"
+	         android:clickable="false"
+	         android:gravity="center"
+	         android:layout_marginLeft="@dimen/dp_7"
+	         android:text="晒商品"
+	         android:textColor="@color/comment_color"
+	         android:textSize="@dimen/sp_15" />
+	     
+	     <ImageView 
+	         android:id="@+id/post_sub_item_top_arrow"
+	         android:layout_width="@dimen/dp_29"
+	         android:layout_height="@dimen/dp_29"
+	         android:scaleType="centerInside"
+	         android:padding="@dimen/dp_7"
+	         android:src="@drawable/i_arrow_down"
+	         android:visibility="gone"/>
+     </LinearLayout>
+
+</LinearLayout>

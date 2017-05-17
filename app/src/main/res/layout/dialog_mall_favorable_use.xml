@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_rela"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/transparent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/ll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#f2f2f2"
+        android:clickable="false" >
+
+        <RelativeLayout
+            android:id="@+id/title_rela"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_47"
+            android:background="#f2f2f2" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="使用优惠券"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_16" />
+            
+            <ImageView 
+                android:id="@+id/dialog_close"
+                android:layout_width="@dimen/dp_45"
+                android:layout_height="@dimen/dp_45"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/dp_16.5"
+                android:src="@drawable/mall_favorable_dialog_colse"/>
+        </RelativeLayout>
+        <ListView
+            android:id="@+id/listview_dialog"
+            style="@style/listNoDivider"
+            android:layout_above="@+id/save_ll"
+            android:layout_below="@+id/title_rela"
+            android:background="#fffffe"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp" >
+        </ListView>
+
+        <LinearLayout
+            android:id="@+id/save_ll"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_100"
+            android:layout_marginRight="@dimen/dp_100"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/rong_red_but_nologin"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

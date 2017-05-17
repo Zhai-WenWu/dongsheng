@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/btn_nocolor"
+    android:orientation="vertical"
+    android:paddingRight="@dimen/dp_9" >
+
+   <RelativeLayout 
+       android:layout_width="@dimen/dp_125"
+       android:layout_height="@dimen/dp_90">
+       
+	   <acore.widget.ImageViewVideo
+	        android:id="@+id/iv_video_img"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:scaleType="fitCenter"
+	        android:src="@drawable/i_nopic" />
+	   
+	   <View 
+	       android:layout_width="match_parent"
+	       android:layout_height="@dimen/dp_40"
+            android:layout_alignParentBottom="true"
+	       android:background="@drawable/bg_gradient_black2alpha100"/>
+	   
+	   <TextView
+            android:id="@+id/itemText1"
+            style="@style/singleText"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_2"
+            android:paddingLeft="@dimen/dp_9"
+            android:paddingRight="@dimen/dp_9"
+            android:textColor="#fefefe"
+            android:text="Content"
+            android:textSize="@dimen/sp_13" />
+	   
+   </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_47"
+        android:paddingLeft="@dimen/dp_9"
+        android:gravity="center_vertical"
+        android:background="#fbfbfb"
+        android:orientation="horizontal" >
+        
+        <ImageView 
+            android:id="@+id/a_common_item_index_quan_user_img"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_18"/>
+
+        <TextView
+            android:id="@+id/itemText2"
+            style="@style/singleText"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/dp_4"
+            android:paddingTop="@dimen/dp_2"
+            android:paddingBottom="@dimen/dp_2"
+            android:paddingRight="@dimen/dp_9"
+            android:text="UserName"
+            android:textColor="#808080"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+</LinearLayout>

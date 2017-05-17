@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_allstart"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_star"
+            android:layout_width="@dimen/dp_22.5"
+            android:layout_height="@dimen/dp_22.5"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:background="@drawable/iv_allstart_upload"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:text="全部开始"
+            android:textSize="@dimen/sp_16"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_allstop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:gravity="center_vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_stop"
+            android:layout_width="@dimen/dp_22.5"
+            android:layout_height="@dimen/dp_22.5"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:background="@drawable/iv_allstop_upload"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:text="全部暂停"
+            android:textSize="@dimen/sp_16"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:background="#dfdfdf"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_5"
+        android:orientation="horizontal"
+        android:background="@color/transparent">
+
+    </LinearLayout>
+</LinearLayout>
+

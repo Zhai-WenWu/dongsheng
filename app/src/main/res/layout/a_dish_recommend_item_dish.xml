@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/dp_3"
+    android:paddingRight="@dimen/dp_3"
+    android:paddingBottom="@dimen/dp_7"
+    android:orientation="vertical" >
+
+    <acore.widget.ImageViewVideo
+        android:id="@+id/iv_video_img"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_110"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tv_dish_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_10"
+        android:background="#fff"
+        android:gravity="center"
+        android:textColor="#000"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/tv_dish_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_1"
+        android:paddingBottom="@dimen/dp_16"
+        android:background="#fff"
+        android:gravity="center"
+        android:textColor="#8d8d8d"
+        android:textSize="@dimen/sp_12" />
+
+</LinearLayout>

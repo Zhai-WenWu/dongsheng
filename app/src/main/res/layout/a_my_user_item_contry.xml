@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_user_register_one_contry"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_40"
+    android:layout_below="@+id/user_register_one_title"
+    android:background="@drawable/bg_round_white5" >
+
+    <TextView
+        android:id="@+id/tv_login_contry_hint"
+        style="@style/login_left_round_editText"
+        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:onClick="onCountryClick"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_11"
+        android:paddingRight="@dimen/dp_13"
+        android:textSize="@dimen/sp_12"
+        android:text="选择国家和地区" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="0.5dp"
+        android:layout_height="@dimen/dp_13"
+        android:layout_marginTop="@dimen/dp_17"
+        android:layout_toRightOf="@+id/tv_login_contry_hint"
+        android:background="#dfdfdf" />
+
+    <ImageView
+        android:layout_width="@dimen/dp_7"
+        android:layout_height="@dimen/dp_11"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dp_18"
+        android:layout_marginRight="@dimen/dp_12"
+        android:clickable="true"
+        android:onClick="onCountryClick"
+        android:src="@drawable/i_ico_homepage_right_more" />
+    <TextView
+        android:id="@+id/user_contry"
+        style="@style/login_right_round_editText"
+        android:clickable="true"
+        android:onClick="onCountryClick"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/sp_12"
+        android:text="中国" android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

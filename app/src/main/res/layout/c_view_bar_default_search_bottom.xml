@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bar_search_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/search_header_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/circle_view_bar_title"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="500"
+        cube_ptr:ptr_pull_to_fresh="false"
+        android:background="@color/common_bg"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
+        cube_ptr:ptr_resistance="1.7">
+
+        <ScrollView
+            android:id="@+id/scrollview_search_no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:background="#FFFFFF"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/rl_no_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_hot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginTop="@dimen/dp_16"
+                        android:gravity="bottom"
+                        android:paddingBottom="@dimen/dp_5.5"
+                        android:paddingTop="@dimen/dp_5"
+                        android:text="热搜:"
+                        android:textColor="@color/c_gray_999999"
+                        android:textSize="@dimen/sp_15" />
+
+
+                    <amodule.search.view.MultiTagView
+                        android:id="@+id/search_hot_table"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_hot"
+                        android:paddingLeft="@dimen/dp_13"
+                        android:paddingTop="@dimen/dp_2" />
+
+                    <RelativeLayout android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/search_hot_table">
+
+                        <RelativeLayout
+                            android:id="@+id/rl_search_ad_tencent_no_history"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_15"/>
+
+                        <include
+                            android:id="@+id/rl_search_ad_gdt_no_history"
+                            layout="@layout/ad_banner_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_15"/>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_has_his"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:id="@+id/his_search_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_65"
+                        android:visibility="visible"
+                        android:orientation="vertical">
+
+                        <amodule.search.view.ObservableHorizontalScrollView
+                            android:id="@+id/hor_hotwords"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_28"
+                            android:layout_marginBottom="@dimen/dp_11"
+                            android:layout_marginTop="@dimen/dp_11"
+                            android:overScrollMode="never"
+                            android:scrollbars="none"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:id="@+id/ll_hottag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="horizontal"></LinearLayout>
+                        </amodule.search.view.ObservableHorizontalScrollView>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_15"
+                            android:background="@color/common_bg"
+                            android:layout_below="@+id/hor_hotwords" />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_search_ad_tencet_has_history"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </RelativeLayout>
+
+                    <include
+                        android:id="@+id/rl_search_ad_gdt_has_history"
+                        layout="@layout/ad_banner_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/ll_recent_search_head"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_42"
+                        android:background="#fefefe">
+
+                        <TextView
+                            android:id="@+id/tv_recent_search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_11"
+                            android:layout_marginLeft="@dimen/dp_13"
+                            android:layout_marginTop="@dimen/dp_13"
+                            android:text="最近搜索:"
+                            android:textColor="@color/c_gray_999999"
+                            android:textSize="@dimen/sp_14" />
+
+                        <ImageView
+                            android:id="@+id/search_his_clean_img"
+                            android:layout_width="@dimen/dp_29"
+                            android:layout_height="@dimen/dp_29"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:clickable="true"
+                            android:padding="@dimen/dp_10"
+                            android:src="@drawable/search_his_close" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_0.5"
+                            android:layout_alignLeft="@+id/tv_recent_search"
+                            android:layout_alignParentBottom="true"
+                            android:background="#EAE8E0"
+                            android:paddingLeft="@dimen/dp_13" />
+
+                    </RelativeLayout>
+
+
+                    <TableLayout
+                        android:id="@+id/search_his_table"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_recent_search_head"
+                        android:background="#fefefe"
+                        android:paddingLeft="@dimen/dp_13"
+                        android:paddingTop="@dimen/dp_0.5" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+</LinearLayout>

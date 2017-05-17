@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barTitle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_50"
+    android:background="@color/comment_color"
+    android:visibility="gone" >
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/singleText"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_55"
+        android:paddingRight="@dimen/dp_55"
+        android:textColor="#000000"
+        android:textSize="@dimen/sp_17" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="false"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/rightText1"
+            style="@style/top_titleBarView"
+            android:clickable="true"
+            android:gravity="left|center_vertical"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_5"
+            android:visibility="visible"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+            android:id="@+id/rightText2"
+            style="@style/top_titleBarView"
+            android:clickable="true"
+            android:gravity="left|center_vertical"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_5"
+            android:visibility="visible"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_16" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@android:color/transparent" >
+
+    <RelativeLayout
+        android:id="@+id/classify_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/dp_50"
+        android:visibility="visible" >
+
+        <ListView
+            android:id="@+id/classify_left_list"
+            android:layout_width="@dimen/dp_90"
+            android:layout_height="match_parent"
+            android:background="#F2F2F2"
+            android:choiceMode="singleChoice"
+            android:fadeScrollbars="false"
+            android:listSelector="#F2F2F2"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+
+        <ListView
+            android:id="@+id/classify_right_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/classify_left_list"
+            android:choiceMode="singleChoice"
+            android:fadeScrollbars="false"
+            android:listSelector="#F1F1F1"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/noData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/classify_right_list"
+            android:layout_alignLeft="@+id/classify_right_list"
+            android:layout_alignRight="@+id/classify_right_list"
+            android:layout_alignTop="@+id/classify_right_list"
+            android:gravity="center"
+            android:text="暂时还没有该类美食家\n欢迎申请认证~"
+            android:lineSpacingMultiplier="1"
+            android:lineSpacingExtra="@dimen/dp_4"
+            android:textColor="#C9C9C9"
+            android:textSize="@dimen/sp_14"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/include_layout"
+        layout="@layout/a_c_home_search_layout" />
+
+</RelativeLayout>
