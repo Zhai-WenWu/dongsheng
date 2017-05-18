@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,11 +24,11 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiNative;
 import com.xiangha.R;
+import com.xiangha.Welcome;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ import third.ad.scrollerAd.XHScrollerAdParent;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.GdtAdTools;
+import third.ad.tools.WelcomeAdTools;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
@@ -54,40 +56,31 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  * 欢迎页弹框
  */
 public class WelcomeDialog extends Dialog {
-    private final static int DEFAULT_TIME = 4;
     private Activity activity;
     protected View view;
     protected int height;
 
     private ImageView imageView;
-    private TextView textSkip, textLead;
-    private RelativeLayout adHintLayout;
+    private TextView textSkip;
     private RelativeLayout mADSkipContainer;
     private RelativeLayout mADLayout;
-    //广告处理
-    private ArrayList<String> list_ad = new ArrayList<>();//存储广告类型的集合
-    private ArrayList<String> ad_data = new ArrayList<>();//存储对应数据的集合
-    private int index_ad = 0;
-    private InMobiNative nativeAd;
     private boolean isAdLoadOk = false;
-    private boolean isAdLeadClick = false;
     private Handler mMainHandler = null;
-    private String tongjiId = "a_ad";
 
-    private int mAdTime = DEFAULT_TIME;
+    private int mAdTime = 4;
     private final long mAdIntervalTime = 1000;
     private boolean isOnGlobalLayout = false;//是否渲染完成;
     private boolean isInit = false;//是否加载过
     private int num = 0;//绘制被调用的次数
 
     public WelcomeDialog(@NonNull Activity act) {
-        this(act, DEFAULT_TIME);
+        this(act, 4);
     }
 
-    public WelcomeDialog(@NonNull Activity act, int adTime) {
+    public WelcomeDialog(@NonNull Activity act, int adShowTime) {
         super(act, R.style.welcomeDialog);
         this.activity = act;
-        this.mAdTime = adTime;
+        this.mAdTime = adShowTime;
         Window window = this.getWindow();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -132,31 +125,13 @@ public class WelcomeDialog extends Dialog {
         });
         mADSkipContainer = (RelativeLayout) view.findViewById(R.id.skip_container);
         mADLayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
-        textLead = (TextView) findViewById(R.id.ad_vip_lead);
         textSkip = (TextView) view.findViewById(R.id.ad_skip);
-        textLead.setOnClickListener(new View.OnClickListener() {
+        mADSkipContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                XHClick.mapStat(activity, tongjiId, "点击会员去广告", "");
-                endCountDown();
-                AppCommon.openUrl(activity, StringManager.api_vip, true);
                 closeDialog();
             }
         });
-        textSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(activity, tongjiId, "点击跳过", "");
-                endCountDown();
-                closeDialog();
-            }
-        });
-//        mADSkipContainer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                closeDialog();
-//            }
-//        });
 
         ImageView image = (ImageView) view.findViewById(R.id.image);
         Glide.with(activity).load(R.drawable.welcome_big).into(image);
@@ -165,108 +140,57 @@ public class WelcomeDialog extends Dialog {
         image.getLayoutParams().width = imageWidth;
         image.setVisibility(View.VISIBLE);
 
+        initAd();
     }
 
-    private Runnable mCountDownRun = new Runnable() {
-        @Override
-        public void run() {
-            endCountDown();
-            if (mAdTime <= 0) {
-                closeDialog();
-                return;
-            }
-            if (textSkip != null)
-                textSkip.setText("跳过 " + String.valueOf(mAdTime));
-            mAdTime--;
-            startCountDown(true);
-        }
-    };
-
-    private void endCountDown() {
-        if (mMainHandler == null) {
-            mMainHandler = new Handler(getMainLooper());
-        }
-        mMainHandler.removeCallbacksAndMessages(null);
-    }
-
-    private void startCountDown(boolean delayed) {
-        if (mMainHandler == null) {
-            mMainHandler = new Handler(getMainLooper());
-        }
-        mMainHandler.postDelayed(mCountDownRun, delayed ? mAdIntervalTime : 0);
-    }
-
-    /**
-     * 处理AD服务端数据
-     */
-    private void handlerAdData() {
-        list_ad.clear();
-        ad_data.clear();
-        index_ad = 0;
-        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-        if (TextUtils.isEmpty(data)) return;
-        ArrayList<Map<String, String>> list = getListMapByJson(data);
-        Map<String, String> map = list.get(0);
-        if (map.containsKey(AdPlayIdConfig.WELCOME)) {
-
-            ArrayList<Map<String, String>> listTemp = getListMapByJson(map.get(AdPlayIdConfig.WELCOME));
-            if (!listTemp.get(0).containsKey("adConfig")) {
-                return;
-            }
-            ArrayList<Map<String, String>> listTemp_config = getListMapByJson(listTemp.get(0).get("adConfig"));
-            if (listTemp_config.get(0).containsKey("1")) {
-                String temp_1 = listTemp_config.get(0).get("1");
-                handlerData(temp_1, list_ad);
-            }
-            if (listTemp_config.get(0).containsKey("2")) {
-                String temp_1 = listTemp_config.get(0).get("2");
-                handlerData(temp_1, list_ad);
-            }
-            if (listTemp_config.get(0).containsKey("3")) {
-                String temp_1 = listTemp_config.get(0).get("3");
-                handlerData(temp_1, list_ad);
-            }
-            if (listTemp_config.get(0).containsKey("4")) {
-                String temp_1 = listTemp_config.get(0).get("4");
-                handlerData(temp_1, list_ad);
-            }
-            nextAd();
-        }
-    }
-
-    private void handlerData(String temp, ArrayList<String> list_ad) {
-        Map<String, String> map_ad = StringManager.getFirstMap(temp);
-        if (map_ad.get("open").equals("2")) {
-            list_ad.add(map_ad.get("type"));
-            ad_data.add(map_ad.get("data"));
-        }
-    }
-
-    /**
-     * 下一个广告数据
-     */
-    private void nextAd() {
-        if (list_ad.size() > index_ad) {
-            if (XHScrollerAdParent.TAG_GDT.equals(list_ad.get(index_ad))) {//gdt
-                if (LoginManager.isShowAd())
-                    displayGdtAD();
-            } else if (XHScrollerAdParent.TAG_INMOBI.equals(list_ad.get(index_ad))) {//inmobi
-                if (LoginManager.isShowAd())
-                    getInMobi();
-            }
-        }
-    }
-
-    /**
-     * 处理inmobi广告
-     */
-    private void getInMobi() {
-        String adid = analysData(ad_data.get(index_ad));
-        if (TextUtils.isEmpty(adid)) return;
-        nativeAd = new InMobiNative(activity, Long.parseLong(adid),
-                new InMobiNative.NativeAdListener() {
+    private void initAd() {
+        //设置广点通广告回调
+        WelcomeAdTools.getInstance().setmGdtCallback(
+                new WelcomeAdTools.GdtCallback() {
                     @Override
-                    public void onAdLoadSucceeded(InMobiNative inMobiNative) {
+                    public void onAdPresent() {
+                        mADSkipContainer.setVisibility(View.VISIBLE);
+                        isAdLoadOk = true;
+                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "show", "开屏广告位");
+                        XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_gdt");
+                    }
+
+                    @Override
+                    public void onAdFailed(String reason) {
+
+                    }
+
+                    @Override
+                    public void onAdDismissed() {
+                        closeDialog();
+                    }
+
+                    @Override
+                    public void onAdClick() {
+                        closeDialog();
+                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "click", "开屏广告位");
+                        XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
+                    }
+
+                    @Override
+                    public void onADTick(long millisUntilFinished) {
+                    }
+
+                    @Override
+                    public ViewGroup getADLayout() {
+                        return mADLayout;
+                    }
+
+                    @Override
+                    public View getTextSikp() {
+                        return textSkip;
+                    }
+                });
+        //设置Inmobi广告回调
+        WelcomeAdTools.getInstance().setmInMobiNativeCallback(
+                new WelcomeAdTools.InMobiNativeCallback() {
+                    @Override
+                    public void onAdLoadSucceeded(final InMobiNative inMobiNative) {
                         try {
                             isAdLoadOk = true;
                             //成功
@@ -292,7 +216,7 @@ public class WelcomeDialog extends Dialog {
                                             UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(activity).widthPixels, 0, false);
                                             mADSkipContainer.setVisibility(View.VISIBLE);
                                             //曝光
-                                            InMobiNative.bind(imageView, nativeAd);
+                                            InMobiNative.bind(imageView, inMobiNative);
                                             XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_inmobi");
                                         }
                                     }
@@ -303,7 +227,7 @@ public class WelcomeDialog extends Dialog {
                                 @Override
                                 public void onClick(View v) {
                                     //点击统计
-                                    nativeAd.reportAdClick(null); //此方法参数通常传null}
+                                    inMobiNative.reportAdClick(null); //此方法参数通常传null}
 
                                     //友盟统计
                                     XHClick.track(activity, "点击启动页广告");
@@ -317,8 +241,6 @@ public class WelcomeDialog extends Dialog {
                                                 AppCommon.openUrl(activity, landingURL, true);
                                             }
                                         });
-
-
                                     }
                                     closeDialog();
                                 }
@@ -332,8 +254,7 @@ public class WelcomeDialog extends Dialog {
                     @Override
                     public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
                         //失败
-                        index_ad++;
-                        nextAd();
+
                     }
 
                     @Override
@@ -350,72 +271,97 @@ public class WelcomeDialog extends Dialog {
                     public void onUserLeftApplication(InMobiNative inMobiNative) {
                     }
                 });
-        //加载广告
-        nativeAd.load();
-        Map<String, String> map = new HashMap<>();
-        map.put("x-forwarded-for", "8.8.8.8");
-        nativeAd.setExtras(map);
-    }
-
-    //展示AD
-    private void displayGdtAD() {
-        String adid = analysData(ad_data.get(index_ad));
-        if (TextUtils.isEmpty(adid)) return;
-        GdtAdTools.newInstance().showSplashAD(activity, mADLayout, textSkip, adid,
-                new third.ad.tools.GdtAdTools.GdtSplashAdListener() {
+        //设置XHBanner回调
+        WelcomeAdTools.getInstance().setmXHBannerCallback(
+                new WelcomeAdTools.XHBannerCallback() {
                     @Override
-                    public void onAdPresent() {
-                        mADSkipContainer.setVisibility(View.VISIBLE);
-                        isAdLoadOk = true;
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "show", "开屏广告位");
-                        XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_gdt");
-                    }
+                    public void onAdLoadSucceeded(final String url, final String loadingUrl) {
+                        //处理view
+                        mADLayout.removeAllViews();
+                        View view = LayoutInflater.from(activity).inflate(R.layout.view_ad_inmobi, null);
+                        final ImageView imageView = (ImageView) view.findViewById(R.id.image);
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        mADLayout.addView(view);
 
-                    @Override
-                    public void onAdFailed(String reason) {
-                        index_ad++;
-                        nextAd();
-                    }
+                        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
+                                .load(url)
+                                .build();
+                        if (bitmapRequest != null)
+                            bitmapRequest.into(new SubBitmapTarget() {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                                    if (bitmap != null) {
+                                        UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(activity).widthPixels, 0, false);
+                                        mADSkipContainer.setVisibility(View.VISIBLE);
+                                        XHClick.mapStat(activity, "ad_show_index", "开屏", "xh");
+                                    }
+                                }
+                            });
 
-                    @Override
-                    public void onAdDismissed() {
-                        closeDialog();
-                    }
+                        //点击
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //友盟统计
+                                XHClick.track(activity, "点击启动页广告");
+                                XHClick.mapStat(activity, "ad_click_index", "开屏", "xh");
 
-                    @Override
-                    public void onAdClick() {
-                        closeDialog();
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "click", "开屏广告位");
-                        XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
-                    }
-
-                    @Override
-                    public void onADTick(long millisUntilFinished) {
+                                if (!TextUtils.isEmpty(loadingUrl)) {
+                                    Handler handler = new Handler(getMainLooper());
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            AppCommon.openUrl(activity, loadingUrl, true);
+                                        }
+                                    });
+                                }
+                            }
+                        });
                     }
                 });
     }
 
-    private String analysData(String data) {
-        LinkedHashMap<String, String> map_link = UtilString.getMapByString(data, "&", "=");
-        String adid = "";
-        if (map_link.containsKey("adid"))
-            adid = map_link.get("adid");
-        return adid;
+    private Runnable mCountDownRun = new Runnable() {
+        @Override
+        public void run() {
+            endCountDown();
+            if (mAdTime <= 0) {
+                closeDialog();
+                return;
+            }
+            if (textSkip != null)
+                textSkip.setText(activity.getResources().getString(R.string.skip) + String.valueOf(mAdTime));
+            mAdTime--;
+            startCountDown(true);
+        }
+    };
+
+    private void endCountDown() {
+        if (mMainHandler == null) {
+            mMainHandler = new Handler(getMainLooper());
+        }
+        mMainHandler.removeCallbacksAndMessages(null);
+    }
+
+    private void startCountDown(boolean delayed) {
+        if (mMainHandler == null) {
+            mMainHandler = new Handler(getMainLooper());
+        }
+        mMainHandler.postDelayed(mCountDownRun, delayed ? mAdIntervalTime : 0);
     }
 
     @Override
     public void show() {
         super.show();
-        if (dialogShowCallBack != null) dialogShowCallBack.dialogState(true);
+        if (dialogShowCallBack != null)
+            dialogShowCallBack.dialogState(true);
     }
 
     /**
      * 关闭dialog
      */
     public void closeDialog() {
-
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 WelcomeDialog.this.dismiss();
@@ -458,12 +404,14 @@ public class WelcomeDialog extends Dialog {
         if (hasFocus && !isInit) {
             isInit = true;
             startCountDown(false);
-            handlerAdData();
+            //
+            WelcomeAdTools.getInstance().handlerAdData(false);
         }
     }
 
     @Override
-    public void onBackPressed() {//关闭dialog的返回键
-//        if (isOnGlobalLayout) super.onBackPressed();
+    public void onBackPressed() {
+        if (isOnGlobalLayout)
+            super.onBackPressed();
     }
 }
