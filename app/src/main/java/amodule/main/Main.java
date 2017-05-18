@@ -116,16 +116,12 @@ public class Main extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         allMain = this;
-        AdControlHomeDish.getInstance();
-//        openFromOther();
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
         String[] times = FileManager.getSharedPreference(XHApplication.in(),FileManager.xmlKey_appKillTime);
         if(times != null && times.length > 1 && !TextUtils.isEmpty(times[1])){
             Tools.getApiSurTime("killback",Long.parseLong(times[1]),System.currentTimeMillis());
         }
-        initUI();
-        initData();
         LogManager.print("i", "Main -------- onCreate");
         // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
         if (savedInstanceState != null) {
@@ -142,34 +138,48 @@ public class Main extends Activity implements OnClickListener {
         }
         mainInitDataControl= new MainInitDataControl();
         WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(this) : new WelcomeDialog(this,3);
-        welcomeDialog.setDialogShowCallBack(new WelcomeDialog.DialogShowCallBack() {
-            @Override
-            public void dialogState(boolean show) {
-                if(!show){//展示后关闭
-                    if(mainInitDataControl!=null)mainInitDataControl.initMainOnResume(Main.this);
-                    showIndexActivity();
-                    WelcomeDialogstate=true;
-                    openUri();
-                    new DialogControler().showDialog();
-                    PushManager.tongjiPush();
-                }
-            }
-
-            @Override
-            public void dialogOnLayout() {
-                setCurrentTabByIndex(defaultTab);
-                init();
-                initRunTime();
-                mainInitDataControl.initWelcomeBefore(Main.this);
-                mainInitDataControl.initWelcomeOncreate();
-                mainInitDataControl.initWelcomeAfter(Main.this);
-                mainInitDataControl.iniMainAfter(Main.this);
-            }
-        });
+                new WelcomeDialog(this,dialogShowCallBack) : new WelcomeDialog(this,3,dialogShowCallBack);
         welcomeDialog.show();
     }
 
+    /**
+     * welcomeDialog的回调封装
+     */
+    private WelcomeDialog.DialogShowCallBack dialogShowCallBack=new WelcomeDialog.DialogShowCallBack() {
+        @Override
+        public void dialogState(boolean show) {
+            if(!show){//展示后关闭
+                if(mainInitDataControl!=null)mainInitDataControl.initMainOnResume(Main.this);
+                showIndexActivity();
+                WelcomeDialogstate=true;
+                openUri();
+                new DialogControler().showDialog();
+                PushManager.tongjiPush();
+            }
+        }
+
+        @Override
+        public void dialogOnLayout() {
+            AdControlHomeDish.getInstance();
+            setCurrentTabByIndex(defaultTab);
+            init();
+            initRunTime();
+            mainInitDataControl.initWelcomeBefore(Main.this);
+            mainInitDataControl.initWelcomeOncreate();
+            mainInitDataControl.initWelcomeAfter(Main.this);
+            mainInitDataControl.iniMainAfter(Main.this);
+        }
+
+        @Override
+        public void dialogOnCreate() {
+            initUI();
+            initData();
+        }
+
+        @Override
+        public void dialogAdComplete() {
+        }
+    };
     /**
      * 外部传递参数
      */
@@ -187,9 +197,6 @@ public class Main extends Activity implements OnClickListener {
         }
         //外部知道吊起app
         if(this.getIntent().getData() != null){
-//            if(Main.allMain != null){
-//                Main.allMain.doExitMain();
-//            }
             url = this.getIntent().getData().toString();
             this.getIntent().setData(null);
         }

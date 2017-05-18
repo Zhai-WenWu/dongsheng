@@ -24,38 +24,27 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiNative;
 import com.xiangha.R;
-import com.xiangha.Welcome;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import acore.logic.AppCommon;
-import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
-import acore.tools.FileManager;
-import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import third.ad.scrollerAd.XHScrollerAdParent;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
-import third.ad.tools.GdtAdTools;
 import third.ad.tools.WelcomeAdTools;
 import xh.basic.tool.UtilImage;
-import xh.basic.tool.UtilString;
 
 import static android.os.Looper.getMainLooper;
-import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 欢迎页弹框
  */
 public class WelcomeDialog extends Dialog {
+    private final static int DEFAULT_TIME = 4;
     private Activity activity;
     protected View view;
     protected int height;
@@ -66,6 +55,7 @@ public class WelcomeDialog extends Dialog {
     private RelativeLayout mADLayout;
     private boolean isAdLoadOk = false;
     private Handler mMainHandler = null;
+    private boolean isAdComplete=true;
 
     private int mAdTime = 4;
     private final long mAdIntervalTime = 1000;
@@ -73,34 +63,45 @@ public class WelcomeDialog extends Dialog {
     private boolean isInit = false;//是否加载过
     private int num = 0;//绘制被调用的次数
 
-    public WelcomeDialog(@NonNull Activity act) {
-        this(act, 4);
-    }
 
-    public WelcomeDialog(@NonNull Activity act, int adShowTime) {
+    public WelcomeDialog(@NonNull Activity act) {
+        this(act, DEFAULT_TIME,null);
+    }
+    public WelcomeDialog(@NonNull Activity act, int adTime) {
+        this(act, adTime,null);
+    }
+    public WelcomeDialog(@NonNull Activity act, DialogShowCallBack callBack) {this(act, DEFAULT_TIME,callBack);}
+    /**
+     * 初始化dialog
+     * @param act
+     * @param adShowTime
+     * @param callBack
+     */
+    public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
         this.activity = act;
         this.mAdTime = adShowTime;
+        this.dialogShowCallBack=callBack;
         Window window = this.getWindow();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         this.view = this.getLayoutInflater().inflate(R.layout.xh_welcome, null);
         setContentView(view);
-
+        init();
         // 对话框设置监听
         this.setOnDismissListener(onDismissListener);
         this.view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (!isOnGlobalLayout && num == 2) {
+                if (!isOnGlobalLayout &&((!isAdLoadOk && num>=3)||(isAdLoadOk &&num >= 5))) {
                     isOnGlobalLayout = true;
                     if (dialogShowCallBack != null) dialogShowCallBack.dialogOnLayout();
                 }
                 ++num;
             }
         });
-        init();
+        if(dialogShowCallBack!=null)dialogShowCallBack.dialogOnCreate();
     }
 
     /**
@@ -132,15 +133,18 @@ public class WelcomeDialog extends Dialog {
                 closeDialog();
             }
         });
-
+        initAd();
+    }
+    /**
+     * 处理图片
+     */
+    private void ViewImageWelcome(){
         ImageView image = (ImageView) view.findViewById(R.id.image);
         Glide.with(activity).load(R.drawable.welcome_big).into(image);
         int imageWidth = ToolsDevice.getWindowPx(activity).widthPixels / 3;
         image.setPadding(0, imageWidth - 6, 0, 0);
         image.getLayoutParams().width = imageWidth;
         image.setVisibility(View.VISIBLE);
-
-        initAd();
     }
 
     private void initAd() {
@@ -361,6 +365,9 @@ public class WelcomeDialog extends Dialog {
      * 关闭dialog
      */
     public void closeDialog() {
+        if(!isOnGlobalLayout&&dialogShowCallBack!=null){
+            dialogShowCallBack.dialogOnLayout();
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -390,6 +397,15 @@ public class WelcomeDialog extends Dialog {
          * dialog渲染完成
          */
         public void dialogOnLayout();
+        /**
+         * dialog oncreate方法执行
+         */
+        public void dialogOnCreate();
+
+        /**
+         * dialog 加载完成
+         */
+        public void dialogAdComplete();
     }
 
     public DialogShowCallBack dialogShowCallBack;
@@ -405,13 +421,21 @@ public class WelcomeDialog extends Dialog {
             isInit = true;
             startCountDown(false);
             //
-            WelcomeAdTools.getInstance().handlerAdData(false);
+            WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdDataCallBack() {
+                @Override
+                public void noAdData() {
+                    if(isAdComplete){
+                        ViewImageWelcome();
+                        isAdComplete=false;
+                    }
+                }
+            });
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (isOnGlobalLayout)
-            super.onBackPressed();
+//        if (isOnGlobalLayout)
+//            super.onBackPressed();
     }
 }
