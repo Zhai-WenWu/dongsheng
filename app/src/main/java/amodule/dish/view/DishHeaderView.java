@@ -132,7 +132,9 @@ public class DishHeaderView extends LinearLayout {
         String title = list.get(0).get("name");
 
         try {
-            if(list.get(0).containsKey("selfVideo")&&!TextUtils.isEmpty(list.get(0).get("selfVideo"))){
+            String selfVideo = list.get(0).get("selfVideo");
+            if(!TextUtils.isEmpty(selfVideo)
+                    && !"[]".equals(selfVideo)){
                 boolean urlValid = setSelfVideo(title, list.get(0).get("selfVideo"), list.get(0).get("img"));
                 if (!urlValid) {
                     setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
@@ -164,7 +166,9 @@ public class DishHeaderView extends LinearLayout {
             public void callBack(Map<String, String> maps) {
                 String temp = maps.get(AdPlayIdConfig.DISH_MEDIA);
                 mapAd= StringManager.getFirstMap(temp);
-                if(mapAd != null && mapAd.size()>0){
+                Log.i("tzy","needVideoControl time = " + System.currentTimeMillis());
+                if(mapAd != null && mapAd.size()>0
+                        && mVideoPlayerController != null){
                     mVideoPlayerController.setShowAd(true);
                 }
                 if(isAutoPaly)
@@ -371,6 +375,7 @@ public class DishHeaderView extends LinearLayout {
                 });
                 dishvideo_img.setVisibility(View.GONE);
                 callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, view_oneImage);
+                Log.i("tzy","getVideoControl time = " + System.currentTimeMillis());
                 callBack.videoImageOnClick();
 
             }else{
