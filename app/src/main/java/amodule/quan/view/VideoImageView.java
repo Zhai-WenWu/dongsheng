@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
+import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.xiangha.R;
 
@@ -144,17 +145,27 @@ public class VideoImageView extends RelativeLayout{
      * 处理video的监听
      */
     private void handlerListener(){
+
+        VDVideoViewController controller = VDVideoViewController.getInstance(context);
+        if (controller != null) {
+            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
+                @Override
+                public void onCompletion() {
+                    if (mOnPlayingCompletionListener != null) {
+                        mOnPlayingCompletionListener.onPlayingCompletion();
+                    }
+                }
+            });
+        }
+
         vdVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
             @Override
             public void onVDVideoCompletion(VDVideoInfo info, int status) {
-                if (mOnPlayingCompletionListener != null) {
-                    mOnPlayingCompletionListener.onPlayingCompletion(info, status);
+                if (mIsCycle) {
+                    vdVideoView.play(0);
+                    onResume();
+                    onStart();
                 }
-               if (mIsCycle) {
-                   vdVideoView.play(0);
-                   onResume();
-                   onStart();
-               }
             }
         });
         image_bg.setOnClickListener(new OnClickListener() {
@@ -296,7 +307,7 @@ public class VideoImageView extends RelativeLayout{
     public void onStart(){
         if (vdVideoView != null)
             vdVideoView.onStart();
-        
+
     }
     public void onPause() {
         if (vdVideoView != null)
@@ -342,7 +353,7 @@ public class VideoImageView extends RelativeLayout{
     }
 
     public interface OnPlayingCompletionListener {
-        void onPlayingCompletion(VDVideoInfo info, int status);
+        void onPlayingCompletion();
     }
     private OnPlayingCompletionListener mOnPlayingCompletionListener;
     public void setOnPlayingCompletionListener(OnPlayingCompletionListener playingCompletionListener) {
