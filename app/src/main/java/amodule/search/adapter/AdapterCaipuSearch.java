@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -548,7 +549,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
     private View createAdView(int pos) {
-
+        Log.i("tzy","searchAD position = " + pos);
         View view = null;
         if (pos == 0) {
             if (adDdata.get(0) != null)
@@ -562,8 +563,10 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 }
             }
             if (adIndex > -1 && adDdata != null && adIndex < adDdata.size()) {
-                if (adDdata.get(0) != null) {
+                if (adDdata.get(adIndex) != null) {
                     final Map<String, String> dataMap = adDdata.get(adIndex);
+                    Log.i("tzy","searchAD adIndex = " + adIndex);
+                    Log.i("tzy","searchAD adDdata = " + adDdata.get(adIndex).toString());
                     view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
                     if (listPosUsed.contains(pos + 1)) {
                         view.findViewById(R.id.v_ad_item_tail).setVisibility(View.VISIBLE);
@@ -594,18 +597,17 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
 
+    /**
+     * 计算能插入几个广告&初始化
+     * @return
+     */
     private int generateAdPos() {
         adPosList.clear();
          int adPos[];
         if ((mListShicaiData == null || mListShicaiData.size() == 0) && topAdHasData.get()) {
-            if (adDdata.size() > 1) {
-                adDdata.remove(1);
-            }
-
             adPos = new int[]{0, 8, 15, 23, 32, 42};
         } else {
             if (topAdHasData.get()) {
-                adDdata.remove(0);
                 topAdHasData.set(false);
             }
             adPos = new int[]{2, 8, 15, 23, 32, 42};
@@ -644,8 +646,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
     private void getAdDataInfo() {
-        adDdata.clear();
-        adDdata.addAll(SearchResultAdDataProvider.getInstance().getAdDataList());
+        if(adDdata.isEmpty()){
+            adDdata.addAll(SearchResultAdDataProvider.getInstance().getAdDataList());
+        }
         xhAllAdControl = SearchResultAdDataProvider.getInstance().getXhAllAdControl();
         topAdHasData = SearchResultAdDataProvider.getInstance().HasTopAdData();
     }
