@@ -32,6 +32,7 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.tools.AdConfigTools;
@@ -80,6 +81,7 @@ public class WelcomeDialog extends Dialog {
      */
     public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
+        Main.allMain.isShowWelcomeDialog=true;//至当前dialog状态
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime));
         this.activity = act;
@@ -431,8 +433,12 @@ public class WelcomeDialog extends Dialog {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
+            long endTime1=System.currentTimeMillis();
+            Log.i("zhangyujian","dialog::onWindowFocusChanged:222:"+(endTime1-XHApplication.in().startTime));
             isInit = true;
             startCountDown(false);
+            long endTime2=System.currentTimeMillis();
+            Log.i("zhangyujian","dialog::onWindowFocusChanged:333:"+(endTime2-XHApplication.in().startTime));
             //
             WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdDataCallBack() {
                 @Override
