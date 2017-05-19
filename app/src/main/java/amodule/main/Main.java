@@ -114,6 +114,7 @@ public class Main extends Activity implements OnClickListener {
     private boolean isForeground = true;
     private int nowTab=0;//当前选中tab
     private boolean isInit=false;
+    public boolean isShowWelcomeDialog=false;//是否welcomedialog在展示，false未展示，true正常展示
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +165,7 @@ public class Main extends Activity implements OnClickListener {
                 openUri();
                 new DialogControler().showDialog();
                 PushManager.tongjiPush();
+                isShowWelcomeDialog=false;
             }
         }
 
