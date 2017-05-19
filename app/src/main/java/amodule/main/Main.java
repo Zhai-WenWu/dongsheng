@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -112,9 +113,12 @@ public class Main extends Activity implements OnClickListener {
     private long homebackTime;
     private boolean isForeground = true;
     private int nowTab=0;//当前选中tab
+    private boolean isInit=false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long endTime=System.currentTimeMillis();
+        Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
@@ -140,6 +144,8 @@ public class Main extends Activity implements OnClickListener {
         WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
                 new WelcomeDialog(this,dialogShowCallBack) : new WelcomeDialog(this,3,dialogShowCallBack);
         welcomeDialog.show();
+        long endTime1=System.currentTimeMillis();
+        Log.i("zhangyujian","main::oncreate::"+(endTime1-XHApplication.in().startTime));
     }
 
     /**
@@ -149,7 +155,10 @@ public class Main extends Activity implements OnClickListener {
         @Override
         public void dialogState(boolean show) {
             if(!show){//展示后关闭
-                if(mainInitDataControl!=null)mainInitDataControl.initMainOnResume(Main.this);
+                Log.i("zhangyujian","________________________________________________________");
+                if(mainInitDataControl!=null){
+                    mainInitDataControl.initMainOnResume(Main.this);
+                    mainInitDataControl.iniMainAfter(Main.this);}
                 showIndexActivity();
                 WelcomeDialogstate=true;
                 openUri();
@@ -160,14 +169,14 @@ public class Main extends Activity implements OnClickListener {
 
         @Override
         public void dialogOnLayout() {
+            Log.i("zhangyujian","++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             AdControlHomeDish.getInstance();
             setCurrentTabByIndex(defaultTab);
             init();
             initRunTime();
-            mainInitDataControl.initWelcomeBefore(Main.this);
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
-            mainInitDataControl.iniMainAfter(Main.this);
+
         }
 
         @Override
@@ -326,6 +335,8 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        long endTime=System.currentTimeMillis();
+        Log.i("zhangyujian","main::onResume::"+(endTime-XHApplication.in().startTime));
         mainOnResumeState=true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
@@ -721,7 +732,12 @@ public class Main extends Activity implements OnClickListener {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && !isInit) {
+            isInit=true;
+//            mainInitDataControl.iniMainAfter(Main.this);
+        }
         //此处可以进行分级处理:暂时无需要
+        Log.i("zhangyujian","main::onWindowFocusChanged");
     }
 
     /**
