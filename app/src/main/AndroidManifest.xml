@@ -247,12 +247,12 @@
             android:value="8487000"/>
 
         <activity
-        android:name="amodule.main.Main"
-        android:configChanges="orientation|keyboardHidden"
-        android:launchMode="singleTask"
-        android:screenOrientation="portrait"
-        android:theme="@style/AppMainTheme"
-        android:windowSoftInputMode="adjustPan"/>
+            android:name="amodule.main.Main"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.main.activity.MainChangeSend"
             android:configChanges="orientation|keyboardHidden"
@@ -404,6 +404,28 @@
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentTheme"
             android:windowSoftInputMode="adjustPan"/>
+
+        <!--article start-->
+
+        <activity
+            android:name="amodule.article.activity.ArticleEidtActiivty"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.article.activity.SelectClassicfyActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.article.activity.ArticleDetailActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <!--article end-->
 
         <!-- health start -->
         <activity
