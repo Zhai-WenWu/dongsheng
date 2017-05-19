@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,8 @@ public class WelcomeDialog extends Dialog {
      */
     public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
+        long endTime=System.currentTimeMillis();
+        Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime));
         this.activity = act;
         this.mAdTime = adShowTime;
         this.dialogShowCallBack=callBack;
@@ -101,7 +104,10 @@ public class WelcomeDialog extends Dialog {
                 ++num;
             }
         });
+
         if(dialogShowCallBack!=null)dialogShowCallBack.dialogOnCreate();
+        long endTime3=System.currentTimeMillis();
+        Log.i("zhangyujian","dialog::oncreate::"+(endTime3-XHApplication.in().startTime));
     }
 
     /**
@@ -141,10 +147,17 @@ public class WelcomeDialog extends Dialog {
     private void ViewImageWelcome(){
         ImageView image = (ImageView) view.findViewById(R.id.image);
         Glide.with(activity).load(R.drawable.welcome_big).into(image);
+//        image.setBackgroundResource(R.drawable.welcome_big);
         int imageWidth = ToolsDevice.getWindowPx(activity).widthPixels / 3;
         image.setPadding(0, imageWidth - 6, 0, 0);
         image.getLayoutParams().width = imageWidth;
         image.setVisibility(View.VISIBLE);
+        image.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("zhangyujian","");
+            }
+        });
     }
 
     private void initAd() {
@@ -430,6 +443,8 @@ public class WelcomeDialog extends Dialog {
                     }
                 }
             });
+            long endTime=System.currentTimeMillis();
+            Log.i("zhangyujian","dialog::onWindowFocusChanged::"+(endTime-XHApplication.in().startTime));
         }
     }
 

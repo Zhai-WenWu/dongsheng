@@ -43,55 +43,62 @@ public abstract class AdOptionParent {
         getAdData(context,statisticKey,"");
     }
 
-    public void getAdData(final Context context, String statisticKey, final String controlTag) {
+    public void getAdData(final Context context, final String statisticKey, final String controlTag) {
         Log.i("FRJ","开始获取  广告  数据-------------:" + controlTag);
         adArray.clear();
-        ArrayList<String> adPosList = new ArrayList<>();
-        for (String posStr : AD_IDS) {
-            adPosList.add(posStr);
-        }
-        xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
+        //子线程中执行
+        new Thread(new Runnable() {
             @Override
-            public void callBack(Map<String, String> map) {
-                if (map != null && map.size() > 0) {
-                    Log("getAdData size:" + map.size());
-                    for (int i = 0; i < AD_IDS.length; i++) {
-                        String homeAdStr = map.get(AD_IDS[i]);
-                        Log("ad——ids:" + AD_IDS[i]);
-                        if(!TextUtils.isEmpty(homeAdStr)) {
-                            ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(homeAdStr);
-                            Map<String, String> adMap = adList.get(0);
-                            if (adMap != null && adMap.size() > 0) {
-                                //广告为自己的类型
-                                if(XHScrollerAdParent.ADKEY_BANNER.equals(adMap.get("adClass")) && !TextUtils.isEmpty(adMap.get("imgUrl2"))){
-                                    adMap.put("imgUrl",adMap.get("imgUrl2"));
-                                }
-                                Map<String, String> newMap = getAdListItemData(adMap.get("title"), adMap.get("desc"),
-                                                                        adMap.get("iconUrl"), adMap.get("imgUrl"), adMap.get("type"));
-                                if(newMap != null) {
-                                    if(!newMap.containsKey("adClass")) newMap.put("adClass",adMap.get("type"));
-                                    newMap.put("imgs", adMap.get("imgs")); //api广告图片集合
-                                    newMap.put("adType", adMap.get("adType")); //自由广告时，1：活动 2:广告
-                                    newMap.put("stype", adMap.get("stype")); //腾讯api广告的样式类型
-                                    newMap.put("indexOnData", adMap.get("index")); //数据角标位
-                                    newMap.put("index", String.valueOf(i + 1)); //在数据源中的位置
-                                    newMap.put("adstyle", "ad");
-                                    newMap.put("isShow", "1");
-                                    newMap.put("controlTag",controlTag); //给当前广告Control添加标记
-                                    newMap.put("timeTag",String.valueOf(System.currentTimeMillis()));
+            public void run() {
+                ArrayList<String> adPosList = new ArrayList<>();
+                for (String posStr : AD_IDS) {
+                    adPosList.add(posStr);
+                }
+                xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
+                    @Override
+                    public void callBack(Map<String, String> map) {
+                        if (map != null && map.size() > 0) {
+                            Log("getAdData size:" + map.size());
+                            for (int i = 0; i < AD_IDS.length; i++) {
+                                String homeAdStr = map.get(AD_IDS[i]);
+                                Log("ad——ids:" + AD_IDS[i]);
+                                if(!TextUtils.isEmpty(homeAdStr)) {
+                                    ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(homeAdStr);
+                                    Map<String, String> adMap = adList.get(0);
+                                    if (adMap != null && adMap.size() > 0) {
+                                        //广告为自己的类型
+                                        if(XHScrollerAdParent.ADKEY_BANNER.equals(adMap.get("adClass")) && !TextUtils.isEmpty(adMap.get("imgUrl2"))){
+                                            adMap.put("imgUrl",adMap.get("imgUrl2"));
+                                        }
+                                        Map<String, String> newMap = getAdListItemData(adMap.get("title"), adMap.get("desc"),
+                                                adMap.get("iconUrl"), adMap.get("imgUrl"), adMap.get("type"));
+                                        if(newMap != null) {
+                                            if(!newMap.containsKey("adClass")) newMap.put("adClass",adMap.get("type"));
+                                            newMap.put("imgs", adMap.get("imgs")); //api广告图片集合
+                                            newMap.put("adType", adMap.get("adType")); //自由广告时，1：活动 2:广告
+                                            newMap.put("stype", adMap.get("stype")); //腾讯api广告的样式类型
+                                            newMap.put("indexOnData", adMap.get("index")); //数据角标位
+                                            newMap.put("index", String.valueOf(i + 1)); //在数据源中的位置
+                                            newMap.put("adstyle", "ad");
+                                            newMap.put("isShow", "1");
+                                            newMap.put("controlTag",controlTag); //给当前广告Control添加标记
+                                            newMap.put("timeTag",String.valueOf(System.currentTimeMillis()));
+                                            adArray.add(newMap);
+                                            Log("adArray.add  ad——ids:" + AD_IDS[i]);
+                                        }
+                                    }
+                                }else{
+                                    Log("---------------广告位没有数据----------");
+                                    Map<String, String> newMap = new HashMap<>();
                                     adArray.add(newMap);
-                                    Log("adArray.add  ad——ids:" + AD_IDS[i]);
                                 }
                             }
-                        }else{
-                            Log("---------------广告位没有数据----------");
-                            Map<String, String> newMap = new HashMap<>();
-                            adArray.add(newMap);
                         }
                     }
-                }
+                }, (Activity) context,statisticKey);
             }
-        }, (Activity) context,statisticKey);
+        }).start();
+
     }
 
     public void refrush(){

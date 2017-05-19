@@ -848,9 +848,10 @@ public class XHClick {
 		}else {
 			String devices="";
 			devices += "system=and";
-			String mtype = android.os.Build.MODEL; // 手机型号
-			mtype = mtype.replace("#", "_");
-			devices += "&model=" + mtype;
+//			String mtype = android.os.Build.MODEL; // 手机型号---出现中文不使用该字段
+//			mtype = mtype.replace("#", "_");
+//			devices += "&model=" + mtype;
+			devices += "&model=";
 			String mVersion = android.os.Build.VERSION.RELEASE; // android版本号
 			devices += "&system_version=" + mVersion;
 			devices += "&app_version=" + VersionOp.getVerName(XHApplication.in());
