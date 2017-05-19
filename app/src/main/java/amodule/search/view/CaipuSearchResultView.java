@@ -391,7 +391,7 @@ public class CaipuSearchResultView extends LinearLayout{
 
         adapterCaipuSearch.clearAdList();
         adNum = 0;
-        adNum = adapterCaipuSearch.refresh(false,mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+        adNum = adapterCaipuSearch.refresh(true,mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
         currentCaipuPage = loadManager.changeMoreBtn(list_search_result, firstCaipuLoadFlag, LoadManager.FOOTTIME_PAGE,
                 mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum, currentCaipuPage, true);
         if (mListCaipuData.size() < 1)

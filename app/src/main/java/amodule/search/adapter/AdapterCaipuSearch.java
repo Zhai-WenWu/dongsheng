@@ -84,7 +84,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
         listPosUsed = new InsertPosList();
     }
 
-    public synchronized int refresh(boolean isRefresh,CopyOnWriteArrayList<Map<String, String>> listCaipuData,
+    public synchronized int refresh(boolean isRefresh, CopyOnWriteArrayList<Map<String, String>> listCaipuData,
                                     CopyOnWriteArrayList<Map<String, String>> listShicaiData,
                                     CopyOnWriteArrayList<Map<String, String>> listCaidanData,
                                     CopyOnWriteArrayList<Map<String, String>> listZhishiData) {
@@ -100,7 +100,8 @@ public class AdapterCaipuSearch extends BaseAdapter {
         mListZhishiData.addAll(listZhishiData);
 
         getAdDataInfo(isRefresh);
-        if (adDdata != null && adDdata.size() > 0) {
+        if ((adDdata != null && adDdata.size() > 0)
+                || isRefresh) {
             adCanInsert = generateAdPos(isRefresh);
         }
 
@@ -214,7 +215,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     public View getView(int pos, View convertView, ViewGroup parent) {
 
         View view;
-        if (adDdata.size()>0 && adPosList.contains(pos)) {
+        if (adDdata.size() > 0 && adPosList.contains(pos)) {
             view = createAdView(pos);
         } else if (shicaiInsertPos > -1 && pos == shicaiInsertPos) {
             view = createShicaiView();
@@ -549,7 +550,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
     private View createAdView(int pos) {
-        Log.i("tzy","searchAD position = " + pos);
+        Log.i("tzy", "searchAD position = " + pos);
         View view = null;
         if (pos == 0) {
             if (adDdata.get(0) != null)
@@ -565,8 +566,8 @@ public class AdapterCaipuSearch extends BaseAdapter {
             if (adIndex > -1 && adDdata != null && adIndex < adDdata.size()) {
                 if (adDdata.get(adIndex) != null) {
                     final Map<String, String> dataMap = adDdata.get(adIndex);
-                    Log.i("tzy","searchAD adIndex = " + adIndex);
-                    Log.i("tzy","searchAD adDdata = " + adDdata.get(adIndex).toString());
+                    Log.i("tzy", "searchAD adIndex = " + adIndex);
+                    Log.i("tzy", "searchAD adDdata = " + adDdata.get(adIndex).toString());
                     view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
                     if (listPosUsed.contains(pos + 1)) {
                         view.findViewById(R.id.v_ad_item_tail).setVisibility(View.VISIBLE);
@@ -599,21 +600,22 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     /**
      * 计算能插入几个广告&初始化
+     *
      * @return
      */
     private int generateAdPos(boolean isRefresh) {
         adPosList.clear();
-         int adPos[];
+        int adPos[];
         if ((mListShicaiData == null || mListShicaiData.size() == 0) && topAdHasData.get()) {
-            if(isRefresh)
+            if (isRefresh)
                 adDdata.remove(1);
             adPos = new int[]{0, 8, 15, 23, 32, 42};
         } else {
             if (topAdHasData.get()) {
-                if(isRefresh)
-                    adDdata.remove(0);
                 topAdHasData.set(false);
             }
+            if (isRefresh)
+                adDdata.remove(0);
             adPos = new int[]{2, 8, 15, 23, 32, 42};
         }
         for (int i = 0; i < adDdata.size() && i < adPos.length; i++) {
@@ -650,14 +652,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
     private void getAdDataInfo(boolean isRefresh) {
-        if(adDdata.isEmpty() || isRefresh){
+        if (adDdata.isEmpty() || isRefresh) {
             adDdata.clear();
             adDdata.addAll(SearchResultAdDataProvider.getInstance().getAdDataList());
-        }
-        Log.i("tzy","=============================================");
-        for(int index = 0;index < adDdata.size() ;index ++){
-            Log.i("tzy","index = " + index);
-            Log.i("tzy","adDdata = " + adDdata.get(index));
         }
         xhAllAdControl = SearchResultAdDataProvider.getInstance().getXhAllAdControl();
         topAdHasData = SearchResultAdDataProvider.getInstance().HasTopAdData();
