@@ -26,6 +26,7 @@ import android.text.style.CharacterStyle;
 import android.text.style.ImageSpan;
 import android.text.style.ParagraphStyle;
 import android.text.style.QuoteSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
@@ -168,6 +169,11 @@ public class RichParser {
                     out.append("<u>");
                 }
 
+                // Use standard strikethrough tag <del> rather than <s> or <strike>
+                if (spans[j] instanceof StrikethroughSpan) {
+                    out.append("<del>");
+                }
+
                 if (spans[j] instanceof URLSpan) {
                     out.append("<a href=\"");
                     out.append(((URLSpan) spans[j]).getURL());
@@ -188,6 +194,10 @@ public class RichParser {
             for (int j = spans.length - 1; j >= 0; j--) {
                 if (spans[j] instanceof URLSpan) {
                     out.append("</a>");
+                }
+
+                if (spans[j] instanceof StrikethroughSpan) {
+                    out.append("</del>");
                 }
 
                 if (spans[j] instanceof UnderlineSpan) {
