@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="article_bottom_select">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">@dimen/dp_17</item>
+        <item name="android:background">@drawable/article_select_img</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="article_bottom_select_bottom">
+        <item name="android:layout_width">@dimen/dp_52</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">@dimen/dp_11</item>
+        <item name="android:background">@drawable/article_select_bottom_round</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+</resources>
