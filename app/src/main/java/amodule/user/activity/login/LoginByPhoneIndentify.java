@@ -3,6 +3,7 @@ package amodule.user.activity.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
+import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
 
@@ -99,6 +101,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                 if (TextUtils.isEmpty(zoneCode) || TextUtils.isEmpty(phoneNum)) {
                     XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录", "输入手机号，点击获取验证码");
                     Toast.makeText(LoginByPhoneIndentify.this, "请输入手机号", Toast.LENGTH_SHORT).show();
+                    login_identify.btnClickTrue();
                     return;
                 }
 
@@ -118,6 +121,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                                 @Override
                                 public void onSendFalse() {
                                     loadManager.hideProgressBar();
+                                    login_identify.btnClickTrue();
                                     XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
                                             "失败原因：验证码超限");
                                 }
@@ -126,32 +130,36 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                         }
 
                         @Override
-                        public void onFalse() {
-
-                            final XhDialog xhDialog = new XhDialog(LoginByPhoneIndentify.this);
-                            xhDialog.setTitle("该手机号尚未注册，" + "\n是否注册新账号？")
-                                    .setCanselButton("不注册", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
-                                                    "失败原因：弹框未注册，选择不注册");
-                                            xhDialog.cancel();
-                                        }
-                                    })
-                                    .setSureButton("注册", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            register(LoginByPhoneIndentify.this, phone_info.getZoneCode(), phone_info.getPhoneNum());
-                                            XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
-                                                    "失败原因：弹框未注册，选择注册");
-                                            xhDialog.cancel();
-                                        }
-                                    })
-                                    .setSureButtonTextColor("#007aff")
-                                    .setCancelButtonTextColor("#007aff");
-                            xhDialog.show();
+                        public void onFalse(int flag) {
+                            login_identify.btnClickTrue();
+                            if(flag>= UtilInternet.REQ_OK_STRING) {
+                                final XhDialog xhDialog = new XhDialog(LoginByPhoneIndentify.this);
+                                xhDialog.setTitle("该手机号尚未注册，" + "\n是否注册新账号？")
+                                        .setCanselButton("不注册", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
+                                                        "失败原因：弹框未注册，选择不注册");
+                                                xhDialog.cancel();
+                                            }
+                                        })
+                                        .setSureButton("注册", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                register(LoginByPhoneIndentify.this, phone_info.getZoneCode(), phone_info.getPhoneNum());
+                                                XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
+                                                        "失败原因：弹框未注册，选择注册");
+                                                xhDialog.cancel();
+                                            }
+                                        })
+                                        .setSureButtonTextColor("#007aff")
+                                        .setCancelButtonTextColor("#007aff");
+                                xhDialog.show();
+                            }
                         }
                     });
+                }else{
+                    login_identify.btnClickTrue();
                 }
             }
         });
@@ -173,7 +181,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
                                             "失败原因：验证码错误");
                                     XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",

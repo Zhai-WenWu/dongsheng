@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -750,5 +751,11 @@ public class Main extends Activity implements OnClickListener {
             MainHome mainIndex = (MainHome) allTab.get("MainIndex");
             mainIndex.saveNowStatictis();
         }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        Log.i("zhangyujian","main::onPostCreate");
     }
 }
