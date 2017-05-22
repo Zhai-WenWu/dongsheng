@@ -33,6 +33,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;
+import amodule.article.activity.ArticleEidtActiivty;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
@@ -136,6 +137,9 @@ public class ChangeSendDialog extends Dialog{
 			addButton("5", R.drawable.pulish_video_dish,"发视频菜谱");
 			itemNum++;
 		}
+		//TODO 暂时添加
+		addButton("6", R.drawable.pulish_video_dish,"发文章");
+		itemNum++;
 		if(dishVideoMap != null && dishVideoMap.size() > 0){
 			String img = dishVideoMap.get("img");
 			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(activity)
@@ -241,6 +245,11 @@ public class ChangeSendDialog extends Dialog{
 				Intent videoDish = new Intent(activity, UploadDishActivity.class);
 				videoDish.putExtra(UploadDishActivity.DISH_TYPE_KEY, UploadDishActivity.DISH_TYPE_VIDEO);
 				activity.startActivity(videoDish);
+				break;
+			case "6":
+				closeDialog();
+				Intent article = new Intent(activity, ArticleEidtActiivty.class);
+				activity.startActivity(article);
 				break;
 		}
 	}

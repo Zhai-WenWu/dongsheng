@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
+    <declare-styleable name="RichText">
+        <attr name="historyEnable" format="reference|boolean" />
+        <attr name="historySize" format="reference|integer" />
+        <attr name="linkColor" format="reference|color" />
+        <attr name="linkUnderline" format="reference|boolean" />
+    </declare-styleable>
+
     <declare-styleable name="OverScrollView">
         <attr name="defaultPaddingTop" format="dimension"></attr>
         <attr name="defaultPaddingBottom" format="dimension"></attr>

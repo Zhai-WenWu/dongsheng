@@ -132,7 +132,8 @@ public class DishHeaderView extends LinearLayout {
         String title = list.get(0).get("name");
 
         try {
-            if(list.get(0).containsKey("selfVideo")&&!TextUtils.isEmpty(list.get(0).get("selfVideo"))){
+            if(list.get(0).containsKey("selfVideo")&&!TextUtils.isEmpty(list.get(0).get("selfVideo"))
+                    && !"[]".equals(list.get(0).get("selfVideo"))){
                 boolean urlValid = setSelfVideo(title, list.get(0).get("selfVideo"), list.get(0).get("img"));
                 if (!urlValid) {
                     setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));

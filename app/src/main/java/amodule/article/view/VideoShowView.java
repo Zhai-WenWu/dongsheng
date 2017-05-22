@@ -2,6 +2,12 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import com.xiangha.R;
 
 import org.json.JSONArray;
 
@@ -11,7 +17,14 @@ import org.json.JSONArray;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class VideoShowView extends BaseView {
+public class VideoShowView extends BaseView implements View.OnClickListener {
+    private ImageView coverImage;
+    private ImageView deleteImage;
+    private RelativeLayout videoLayout;
+
+    private String coverImageUrl;
+    private String videoUrl;
+
     public VideoShowView(Context context) {
         super(context);
     }
@@ -26,11 +39,43 @@ public class VideoShowView extends BaseView {
 
     @Override
     public void init() {
+        LayoutInflater.from(getContext()).inflate(R.layout.a_article_view_video, this);
+        coverImage = (ImageView) findViewById(R.id.video_cover_image);
+        deleteImage = (ImageView) findViewById(R.id.delete_image);
+
+        coverImage.setOnClickListener(this);
+        deleteImage.setOnClickListener(this);
 
     }
 
+    /**
+     * [video src="videoUrl" poster="coverUrl"][video]
+     *
+     * @return
+     */
     @Override
-    public JSONArray getOutputData() {
-        return null;
+    public String getOutputData() {
+        return "[video src=\"" + videoUrl + "\" poster=\"" + coverImageUrl + "\"][video]";
+    }
+
+    public void setVideoData(String coverImageUrl, String videoUrl) {
+        this.coverImageUrl = coverImageUrl;
+        this.videoUrl = videoUrl;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.video_cover_image:
+                if (null != mOnClickImageListener) {
+                    mOnClickImageListener.onClick(v);
+                }
+                break;
+            case R.id.delete_image:
+                if (null != mOnRemoveCallback) {
+                    mOnRemoveCallback.onRemove(this);
+                }
+                break;
+        }
     }
 }
