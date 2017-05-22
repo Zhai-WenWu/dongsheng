@@ -34,6 +34,8 @@ import android.util.AttributeSet;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.xiangha.R;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

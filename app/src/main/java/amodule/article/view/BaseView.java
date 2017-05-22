@@ -33,7 +33,7 @@ public abstract class BaseView extends RelativeLayout {
     public abstract String getOutputData();
 
     public interface OnClickImageListener{
-        public void onClick(View v);
+        public void onClick(View v,String url);
     }
     public interface OnRemoveCallback{
         public void onRemove(BaseView view);

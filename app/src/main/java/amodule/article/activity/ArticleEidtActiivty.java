@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +27,7 @@ import amodule.article.view.InputUrlDialog;
 import amodule.article.view.TextAndImageMixLayout;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
+import aplug.recordervideo.db.RecorderVideoData;
 
 /**
  * PackageName : amodule.article.activity
@@ -48,13 +51,13 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         initActivity("发文章", 2, 0, 0, R.layout.a_article_edit_activity);
 
         initView();
-        initData();
     }
 
     private void initView() {
         initTopBar();
         //初始化底部编辑控制
         initEditBottomControler();
+
         initMixLayout();
     }
 
@@ -106,12 +109,15 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnAddLinkCallback() {
                     @Override
                     public void onAddLink() {
+                        final int start = mixLayout.getSelectionStart();
+                        final int end = mixLayout.getSelectionEnd();
                         InputUrlDialog dialog = new InputUrlDialog(ArticleEidtActiivty.this);
+                        dialog.setDescDefault(mixLayout.getSelectionText());
                         dialog.setOnReturnResultCallback(
                                 new InputUrlDialog.OnReturnResultCallback() {
                                     @Override
                                     public void onSure(String url, String desc) {
-                                        mixLayout.addLink(url, desc);
+                                        mixLayout.addLink(url, desc,start,end);
                                     }
 
                                     @Override
@@ -177,7 +183,9 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                     mixLayout.addImageArray(imagePathArray);
                     break;
                 case REQUEST_SELECT_VIDEO:
-
+                    String videoPath = data.getStringExtra(MediaStore.Video.Media.DATA);
+                    String coverPath = data.getStringExtra(RecorderVideoData.video_img_path);
+                    mixLayout.addVideo(coverPath,videoPath);
                     break;
             }
         }

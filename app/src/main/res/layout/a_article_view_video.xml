@@ -11,6 +11,12 @@
         android:layout_height="wrap_content"
         android:src="@drawable/i_nopic"/>
 
+    <ImageView
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerInParent="true"
+        android:src="@drawable/iv_video_play"/>
+
     <RelativeLayout
         android:id="@+id/video_layout"
         android:layout_width="match_parent"

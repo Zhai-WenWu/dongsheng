@@ -3,6 +3,7 @@ package amodule.article.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
@@ -30,6 +31,12 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener{
         findViewById(R.id.sure).setOnClickListener(this);
         findViewById(R.id.cannel).setOnClickListener(this);
         findViewById(R.id.dialog_root).setOnClickListener(this);
+    }
+
+    public void setDescDefault(String desc){
+        if(!TextUtils.isEmpty(desc)){
+            descEdit.setText(desc);
+        }
     }
 
     @Override

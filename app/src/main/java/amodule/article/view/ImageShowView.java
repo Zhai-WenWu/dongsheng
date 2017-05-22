@@ -78,7 +78,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.image:
                 if (null != mOnClickImageListener) {
-                    mOnClickImageListener.onClick(v);
+                    mOnClickImageListener.onClick(v,imageUrl);
                 }
                 break;
             case R.id.delete_image:

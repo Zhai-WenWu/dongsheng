@@ -46,9 +46,7 @@ public class RichTagHandler implements Html.TagHandler {
                     output.append("\n");
                 }
                 start(output, new Li());
-            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S)
-                    || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE)
-                    || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
+            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S) || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE) || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
                 start(output, new Strike());
             }
         } else {
@@ -57,9 +55,7 @@ public class RichTagHandler implements Html.TagHandler {
                     output.append("\n");
                 }
                 end(output, Li.class, new BulletSpan());
-            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S)
-                    || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE)
-                    || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
+            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S) || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE) || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
                 end(output, Strike.class, new StrikethroughSpan());
             }
         }

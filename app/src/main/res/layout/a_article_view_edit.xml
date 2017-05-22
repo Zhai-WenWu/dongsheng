@@ -14,7 +14,6 @@
         android:hint="添加内容"
         app:historyEnable="true"
         app:historySize="99"
-        app:linkColor="#500"
         app:linkUnderline="true"/>
 
 </RelativeLayout>

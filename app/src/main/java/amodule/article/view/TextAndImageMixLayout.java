@@ -1,6 +1,7 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import acore.tools.Tools;
 import amodule.article.view.richtext.RichText;
+import aplug.shortvideo.activity.VideoFullScreenActivity;
 
 /**
  * PackageName : amodule.article.view
@@ -21,7 +23,7 @@ import amodule.article.view.richtext.RichText;
  */
 
 public class TextAndImageMixLayout extends LinearLayout
-        implements BaseView.OnRemoveCallback {
+        implements BaseView.OnRemoveCallback ,BaseView.OnClickImageListener{
 
     private boolean isSingleVideo = true;
     private EditTextView currentEditText = null;
@@ -143,10 +145,23 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setEnabled(true);
         view.setVideoData(coverImageUrl, videoUrl);
         view.setmOnRemoveCallback(this);
+        view.setmOnClickImageListener(this);
     }
 
-    public void addLink(String url,String desc){
-        currentEditText.setupTextLink(url, desc);
+    public void addLink(String url,String desc,int start,int end){
+        currentEditText.setupTextLink(url, desc,start,end);
+    }
+
+    public String getSelectionText(){
+        return currentEditText.getSelectionText();
+    }
+
+    public int getSelectionStart(){
+        return currentEditText.getSelectionStart();
+    }
+
+    public int getSelectionEnd(){
+        return currentEditText.getSelectionEnd();
     }
 
     /**
@@ -188,5 +203,13 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setSingleVideo(boolean singleVideo) {
         isSingleVideo = singleVideo;
+    }
+
+    @Override
+    public void onClick(View v,String url) {
+        Intent intent = new Intent(getContext(),VideoFullScreenActivity.class);
+        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_TYPE,VideoFullScreenActivity.LOCAL_VIDEO);
+        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL,url);
+        getContext().startActivity(intent);
     }
 }

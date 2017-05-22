@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -61,6 +62,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void setVideoData(String coverImageUrl, String videoUrl) {
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
+        Glide.with(getContext())
+                .load(coverImageUrl)
+                .into(coverImage);
     }
 
     @Override
@@ -68,7 +72,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.video_cover_image:
                 if (null != mOnClickImageListener) {
-                    mOnClickImageListener.onClick(v);
+                    mOnClickImageListener.onClick(v,videoUrl);
                 }
                 break;
             case R.id.delete_image:
