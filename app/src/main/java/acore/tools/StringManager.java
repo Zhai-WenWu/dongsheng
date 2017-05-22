@@ -262,6 +262,9 @@ public class StringManager extends UtilString {
 	/*** 推荐列表的统计*/
 	public final static String API_STATISTIC_S6 ="http://stat.xiangha.com/s6.gif"; //新首页统计
 
+	/*文章*/
+	public final static String api_getArticleClass = apiUrl +urlSection.get("user6") +"modifyPhone"; //注册手机号
+
 
 	//替换url
 	public final static String replaceUrl(String url) {

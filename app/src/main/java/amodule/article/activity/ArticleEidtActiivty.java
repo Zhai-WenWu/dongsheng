@@ -48,13 +48,13 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         initActivity("发文章", 2, 0, 0, R.layout.a_article_edit_activity);
 
         initView();
+        initData();
     }
 
     private void initView() {
         initTopBar();
         //初始化底部编辑控制
         initEditBottomControler();
-
         initMixLayout();
     }
 
@@ -148,6 +148,25 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 });
     }
 
+    private void initData(){
+
+    }
+
+    private void onNextSetp(){
+        String data = mixLayout.getData();
+        String checkStr = checkData();
+        if(TextUtils.isEmpty(checkStr)){
+            Intent intent = new Intent(this,ArticleSelectActiivty.class);
+            startActivity(intent);
+        }else{
+            Tools.showToast(this,checkStr);
+        }
+    }
+
+    private String checkData(){
+        return null;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -168,8 +187,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.nextStep:
-                String data = mixLayout.getData();
-                Toast.makeText(this, TextUtils.isEmpty(data) ? "下一步" : data, Toast.LENGTH_SHORT).show();
+                onNextSetp();
                 break;
             default:
                 break;
