@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment{
         }
         if("recom".equals(type)){ //推荐
             isRecoment = true;
-            return AdControlHomeDish.getInstance();
+            return AdControlHomeDish.getInstance().getTwoLoadAdData();
         }else{
             AdOptionParent adControlParent = null;
             String[] adPlayIds = new String[0];

@@ -383,6 +383,11 @@ public class WelcomeDialog extends Dialog {
         if(!isOnGlobalLayout&&dialogShowCallBack!=null){
             dialogShowCallBack.dialogOnLayout();
         }
+        if(mMainHandler!=null) {
+            mMainHandler.removeCallbacksAndMessages(null);
+            mMainHandler=null;
+        }
+        Log.i("zhangyujian","closeDialog");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
