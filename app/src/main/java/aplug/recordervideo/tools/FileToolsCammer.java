@@ -2,6 +2,7 @@ package aplug.recordervideo.tools;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -284,4 +286,44 @@ public class FileToolsCammer {
     public interface OnCammerFileListener{
         public void loadOver(ArrayList<Map<String,String>> orderArrayLis);
     }
+
+    /**
+     * 获取本地所有视频
+     */
+    public static ArrayList<Map<String, String>> getLocalMedias() {
+        ArrayList<Map<String, String>> videos = new ArrayList<Map<String, String>>();
+        Cursor cursor = XHApplication.in().getApplicationContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
+        try {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                Map<String, String> map = new HashMap<String, String>();
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)); // id
+                String title =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+                String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM)); // 专辑
+                String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST)); // 艺术家
+                String displayName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)); // 显示名称
+                String mimeType =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
+                String data = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)); // 路径
+                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)); // 时长
+                long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)); // 大小
+                String resolution =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION));//分辨率
+                map.put(MediaStore.Video.Media._ID, String.valueOf(id));
+                map.put(MediaStore.Video.Media.TITLE, title);
+                map.put(MediaStore.Video.Media.ALBUM, album);
+                map.put(MediaStore.Video.Media.ARTIST, artist);
+                map.put(MediaStore.Video.Media.DISPLAY_NAME, displayName);
+                map.put(MediaStore.Video.Media.MIME_TYPE, mimeType);
+                map.put(MediaStore.Video.Media.DATA, data);
+                map.put(MediaStore.Video.Media.DURATION, String.valueOf(duration));
+                map.put(MediaStore.Video.Media.SIZE, String.valueOf(size));
+                map.put(MediaStore.Video.Media.RESOLUTION, resolution);
+                videos.add(map);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+            return videos;
+        }
+    }
+
 }

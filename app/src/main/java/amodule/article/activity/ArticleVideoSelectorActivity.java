@@ -2,8 +2,8 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -153,13 +152,14 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private void contentLoad(final boolean isDelete,boolean isReload){
         loadManager.showProgressBar();
         if(!isReload && getInstans().getDataSize() == 0) isReload = true;
-        FileToolsCammer.loadCammerAllData(new FileToolsCammer.OnCammerFileListener() {
+        new Thread(new Runnable() {
             @Override
-            public void loadOver(final ArrayList<Map<String, String>> orderArrayLis) {
-                if (orderArrayLis != null && orderArrayLis.size() > 0) {
-                    for (Map<String, String> map : orderArrayLis) {
+            public void run() {
+                final ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMedias();
+                if (videos != null && videos.size() > 0) {
+                    for (Map<String, String> map : videos) {
                         if (map != null) {
-                            String videoPath = map.get(RecorderVideoData.video_path);
+                            String videoPath = map.get(MediaStore.Video.Media.DATA);
                             File videoFile = new File(videoPath);
                             File parentFile = videoFile.getParentFile();
                             String parentName = parentFile.getName();
@@ -176,14 +176,15 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                     }
                 }
 
+
                 ArticleVideoSelectorActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        onDataReady(orderArrayLis);
+                        onDataReady(videos);
                     }
                 });
             }
-        },isDelete,isReload);
+        }).start();
     }
 
     /**
@@ -296,8 +297,9 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private Intent getSingleResult(Map<String, String> videoData) {
         Intent intent = new Intent();
         if (videoData != null && videoData.size() > 0) {
-            intent.putExtra(RecorderVideoData.video_path, videoData.get(RecorderVideoData.video_path));
-            intent.putExtra(RecorderVideoData.video_img_path, videoData.get(RecorderVideoData.video_img_path));
+            String videoPath = videoData.get(MediaStore.Video.Media.DATA);
+            intent.putExtra(MediaStore.Video.Media.DATA, videoPath);
+            intent.putExtra(RecorderVideoData.video_img_path, FileToolsCammer.getImgPath(videoPath));
         }
         return intent;
     }
@@ -305,7 +307,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private void showVideo(Map<String, String> videoData) {
         if (videoData == null || videoData.size() < 0 || mVideoView == null || mVideoContainer == null)
             return;
-        String videoPath = videoData.get(RecorderVideoData.video_path);
+        String videoPath = videoData.get(MediaStore.Video.Media.DATA);
         if (TextUtils.isEmpty(videoPath))
             return;
         mVideoView.setTag(videoData);

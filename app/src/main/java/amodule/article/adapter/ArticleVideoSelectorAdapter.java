@@ -1,7 +1,7 @@
 package amodule.article.adapter;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +17,6 @@ import java.util.Map;
 
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.article.activity.ArticleVideoSelectorActivity;
-import aplug.recordervideo.db.RecorderVideoData;
 import aplug.recordervideo.tools.FileToolsCammer;
 
 public class ArticleVideoSelectorAdapter extends BaseAdapter {
@@ -85,8 +83,8 @@ public class ArticleVideoSelectorAdapter extends BaseAdapter {
             if(mapData == null) return;
             data = mapData;
             position = pos;
-            String path = mapData.get(RecorderVideoData.video_path);
-            String videoShowTime = mapData.get(RecorderVideoData.video_show_time);
+            String path = mapData.get(MediaStore.Video.Media.DATA);
+            String videoShowTime = mapData.get(MediaStore.Video.Media.DURATION);
             if (!TextUtils.isEmpty(path))
                 image.setImageBitmap(FileToolsCammer.getBitmapByImgPath(path));
             if (!TextUtils.isEmpty(videoShowTime))
