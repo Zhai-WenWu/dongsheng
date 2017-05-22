@@ -296,7 +296,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private Intent getSingleResult(Map<String, String> videoData) {
         Intent intent = new Intent();
         if (videoData != null && videoData.size() > 0) {
-            intent.putExtra(RecorderVideoData.video_path, videoData.get(RecorderVideoData.video_img_path));
+            intent.putExtra(RecorderVideoData.video_path, videoData.get(RecorderVideoData.video_path));
+            intent.putExtra(RecorderVideoData.video_img_path, videoData.get(RecorderVideoData.video_img_path));
         }
         return intent;
     }
