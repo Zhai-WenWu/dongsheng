@@ -4,8 +4,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangha.R;
@@ -55,9 +61,19 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     private void initTopBar() {
         String color = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(color));
-
         findViewById(R.id.nextStep).setVisibility(View.VISIBLE);
         findViewById(R.id.nextStep).setOnClickListener(this);
+        TextView title= (TextView)findViewById(R.id.title);
+        title.setText("写文章");
+        ImageView close = (ImageView) findViewById(R.id.leftImgBtn);
+//        close.setImageResource();
+        SpannableString ss = new SpannableString("标题（64字以内）");
+        int titleSize = Tools.getDimen(this,R.dimen.dp_25);
+        int hintSize = Tools.getDimen(this,R.dimen.dp_14);
+        ss.setSpan(new AbsoluteSizeSpan(titleSize), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new AbsoluteSizeSpan(hintSize), 2, 9, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        EditText editTitle = (EditText) findViewById(R.id.edit_title);
+        editTitle.setHint(ss);
     }
 
     private void initMixLayout() {

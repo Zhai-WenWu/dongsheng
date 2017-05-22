@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#f9f9f9"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/edit_controler_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="#000">
+        android:layout_height="@dimen/dp_50"
+        android:layout_marginLeft="@dimen/dp_3"
+        android:layout_marginRight="@dimen/dp_3">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -21,71 +19,85 @@
 
             <ImageView
                 android:id="@+id/select_image"
-                android:layout_width="@dimen/dp_45"
+                style="@style/article_bottom_select"
+                android:layout_width="@dimen/dp_79"
                 android:layout_height="match_parent"
-                android:src="#00F"
-                android:visibility="gone"/>
+                android:src="@drawable/i_article_eidt_img" />
 
             <ImageView
                 android:id="@+id/select_video"
-                android:layout_width="@dimen/dp_45"
+                style="@style/article_bottom_select"
+                android:layout_width="@dimen/dp_82"
                 android:layout_height="match_parent"
-                android:src="#0FF"
-                android:visibility="gone"/>
+                android:src="@drawable/i_article_eidt_video" />
 
             <ImageView
                 android:id="@+id/edit_text"
-                android:layout_width="@dimen/dp_45"
+                style="@style/article_bottom_select"
+                android:layout_width="@dimen/dp_50"
                 android:layout_height="match_parent"
-                android:src="#F0F"
-                android:visibility="gone"/>
+                android:src="@drawable/i_article_eidt_fount" />
 
             <ImageView
                 android:id="@+id/add_link"
-                android:layout_width="@dimen/dp_45"
+                style="@style/article_bottom_select"
+                android:layout_width="@dimen/dp_54"
                 android:layout_height="match_parent"
-                android:src="#FF0"
-                android:visibility="gone"/>
+                android:src="@drawable/i_article_eidt_link" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/keyboard_control"
-            android:layout_width="@dimen/dp_45"
+            style="@style/article_bottom_select"
+            android:layout_width="@dimen/dp_59"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:src="#F0F"
-            android:visibility="gone"/>
+            android:src="@drawable/i_article_eidt_keyboard" />
 
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/text_edit_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
+        android:layout_height="@dimen/dp_71"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:paddingBottom="@dimen/dp_18"
+        android:paddingTop="@dimen/dp_18"
+        android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/text_bold"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="#F00"/>
+            android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/text_underline"
+            <ImageView
+                android:id="@+id/text_bold"
+                style="@style/article_bottom_select_bottom"
+                android:src="@drawable/i_article_eidt_bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="#0F0"/>
+            android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/text_center"
+            <ImageView
+                android:id="@+id/text_underline"
+                style="@style/article_bottom_select_bottom"
+                android:src="@drawable/i_article_eidt_underline" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="#00F"/>
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/text_center"
+                style="@style/article_bottom_select_bottom"
+                android:src="@drawable/i_article_eidt_text_center" />
+        </RelativeLayout>
 
     </LinearLayout>
 
