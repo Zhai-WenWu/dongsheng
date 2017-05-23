@@ -33,14 +33,12 @@ import amodule.dish.db.ShowBuyData;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishControl;
-import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
 import aplug.service.alarm.PushAlarm;
 import aplug.service.base.ServiceManager;
 import third.ad.tools.AdConfigTools;
-import third.ad.tools.InMobiAdTools;
 import third.ad.tools.TencenApiAdTools;
 import third.andfix.AndFixTools;
 import third.mall.aplug.MallCommon;
@@ -96,7 +94,7 @@ public class MainInitDataControl {
 
                 CookieManager.getInstance().removeAllCookie();
                 //待处理问题。
-                HomeToutiaoAdControl.getInstance().getAdData(activity);
+//                HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
             }
         }.start();

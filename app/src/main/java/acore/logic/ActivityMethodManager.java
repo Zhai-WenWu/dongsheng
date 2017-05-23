@@ -83,6 +83,7 @@ public class ActivityMethodManager {
                     Log.i("tzy","启动MAX次数 ： " + showCount);
                     if (0 >= showCount || currentCount <= showCount) {
                         int adShowTime = WelcomeAdTools.getInstance().getDuretimes();
+                        if(!Main.allMain.isShowWelcomeDialog)
                         new WelcomeDialog(mAct, adShowTime).show();
                         //清空切换时间
                         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", "");

@@ -274,11 +274,11 @@ public class BaseLoginActivity extends BaseActivity {
 
                     } else {
                         onSercretError(loginType, zoneCode, phoneNum);
-                        callback.onFalse();
+                        callback.onFalse(flag);
                     }
                 } else {
                     onSercretError(loginType, zoneCode, phoneNum);
-                    callback.onFalse();
+                    callback.onFalse(flag);
                 }
             }
         });
@@ -355,7 +355,7 @@ public class BaseLoginActivity extends BaseActivity {
                             countryCode, phoneNum, "");
 
                 } else {
-                    callback.onFalse();
+                    callback.onFalse(flag);
                 }
             }
         });
@@ -377,7 +377,7 @@ public class BaseLoginActivity extends BaseActivity {
                         if ("2".equals(result)) {
                             callback.onSuccess();
                         } else {
-                            callback.onFalse();
+                            callback.onFalse(flag);
                             Log.e("checkRegisted", map.get("reason"));
                         }
                     }
@@ -412,10 +412,11 @@ public class BaseLoginActivity extends BaseActivity {
                         if (registed) {
                             callback.onSuccess();
                         } else {
-                            callback.onFalse();
+                            callback.onFalse(flag);
                         }
                     }
                 } else {
+                    callback.onFalse(flag);
                     toastFaildRes(flag, true, msg);
                 }
             }
@@ -456,7 +457,7 @@ public class BaseLoginActivity extends BaseActivity {
                     callback.onSuccess();
                     LoginManager.loginSuccess((Activity) context, returnObj);
                 } else {
-                    callback.onFalse();
+                    callback.onFalse(flag);
                     Log.e("modifySecret", returnObj.toString());
                 }
 
@@ -480,7 +481,7 @@ public class BaseLoginActivity extends BaseActivity {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     callback.onSuccess();
                 } else {
-                    callback.onFalse();
+                    callback.onFalse(flag);
                 }
             }
         });
@@ -510,11 +511,11 @@ public class BaseLoginActivity extends BaseActivity {
                     if (success) {
                         callback.onSuccess();
                     } else {
-                        callback.onFalse();
+                        callback.onFalse(flag);
                     }
                 } else {
 
-                    callback.onFalse();
+                    callback.onFalse(flag);
                 }
             }
         });
@@ -536,7 +537,7 @@ public class BaseLoginActivity extends BaseActivity {
                     LoginManager.userInfo.put("tel", phoneNum);
                     callback.onSuccess();
                 } else {
-                    callback.onFalse();
+                    callback.onFalse(flag);
                 }
             }
         });
@@ -659,7 +660,7 @@ public class BaseLoginActivity extends BaseActivity {
 
         void onSuccess();
 
-        void onFalse();
+        void onFalse(int flag);
     }
 
     protected String hidePhoneNum(String phoneNum) {

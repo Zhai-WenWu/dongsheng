@@ -55,6 +55,7 @@ public class WelcomeDialog extends Dialog {
     private TextView textSkip;
     private RelativeLayout mADSkipContainer;
     private RelativeLayout mADLayout;
+//    private WelcomeRelativeLayout welcomeRelativeLayout;
     private boolean isAdLoadOk = false;
     private Handler mMainHandler = null;
     private boolean isAdComplete=true;
@@ -106,10 +107,19 @@ public class WelcomeDialog extends Dialog {
                 ++num;
             }
         });
-
         if(dialogShowCallBack!=null)dialogShowCallBack.dialogOnCreate();
         long endTime3=System.currentTimeMillis();
         Log.i("zhangyujian","dialog::oncreate::"+(endTime3-XHApplication.in().startTime));
+//        welcomeRelativeLayout.setViewCallBack(new WelcomeRelativeLayout.ViewCallBack() {
+//            @Override
+//            public void viewOndraw(int onDrawNum) {
+//                Log.i("zhangyujian","dialog::setViewCallBack::"+onDrawNum);
+//                if (!isOnGlobalLayout &&((!isAdLoadOk && onDrawNum>=2)||(isAdLoadOk &&onDrawNum >= 3))) {
+//                    isOnGlobalLayout = true;
+//                    if (dialogShowCallBack != null) dialogShowCallBack.dialogOnLayout();
+//                }
+//            }
+//        });
     }
 
     /**
@@ -126,6 +136,7 @@ public class WelcomeDialog extends Dialog {
     private void initWelcome() {
         // 初始化
         imageView = (ImageView) view.findViewById(R.id.iv_welcome);
+//        welcomeRelativeLayout= (WelcomeRelativeLayout) view.findViewById(R.id.activityLayout);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -464,4 +475,5 @@ public class WelcomeDialog extends Dialog {
 //        if (isOnGlobalLayout)
 //            super.onBackPressed();
     }
+
 }

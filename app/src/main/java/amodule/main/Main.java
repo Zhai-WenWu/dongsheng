@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -63,6 +64,7 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.tools.InMobiAdTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
@@ -119,6 +121,8 @@ public class Main extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long endTime=System.currentTimeMillis();
+        //初始化
+        InMobiAdTools.getInstance().initSdk(this);
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
@@ -513,27 +517,41 @@ public class Main extends Activity implements OnClickListener {
      * @param index
      */
     public void setCurrentText(int index) {
-        for (int j = 0; j < tabViews.length; j++)
+        for (int j = 0; j < tabViews.length; j++) {
             if (j == index) {
                 ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#ff533c"));
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(true);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
-                if(j == 2){
+                if (j == 2) {
                     MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
                     mainCircle.setQuanmCurrentPage();
                 }
             } else {
                 TextView textView = (TextView) tabViews[j].findViewById(R.id.textView1);
                 textView.setTextColor(Color.parseColor("#1b1b1f"));
-                if(j == 1) textView.setText(tabTitle[j]);
+                if (j == 1) textView.setText(tabTitle[j]);
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(false);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
             }
+        }
             if(index==2){//特殊美食圈的逻辑
                 changeSendLayout.setVisibility(View.VISIBLE);
             }else{
                 changeSendLayout.setVisibility(View.GONE);
             }
+        if(nowTab==0&&index!=0){//当前是首页，切换到其他页面
+            if(allTab.containsKey("MainIndex")) {
+                MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+                mainIndex.saveNowStatictis();
+                XHClick.newHomeStatictis(true,"");
+            }
+
+        }else if(nowTab!=0&&index==0){//当前是其他页面，切换到首页
+            if(allTab.containsKey("MainIndex")) {
+                MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+                mainIndex.setRecommedTime(System.currentTimeMillis());
+            }
+        }
         //特殊逻辑
 //        changeSendLayout.setVisibility(View.VISIBLE);
     }
@@ -750,5 +768,11 @@ public class Main extends Activity implements OnClickListener {
             MainHome mainIndex = (MainHome) allTab.get("MainIndex");
             mainIndex.saveNowStatictis();
         }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        Log.i("zhangyujian","main::onPostCreate");
     }
 }

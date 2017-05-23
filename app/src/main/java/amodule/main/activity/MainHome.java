@@ -409,7 +409,7 @@ public class MainHome extends MainBaseActivity {
     /**
      * 推荐列表设置开始时间
      */
-    private void setRecommedTime(long time){
+    public void setRecommedTime(long time){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments != null && fragments.size() > 0) {
             for (Fragment fragment : fragments) {
