@@ -263,7 +263,8 @@ public class StringManager extends UtilString {
 	public final static String API_STATISTIC_S6 ="http://stat.xiangha.com/s6.gif"; //新首页统计
 
 	/*文章*/
-	public final static String api_getArticleClass = apiUrl +urlSection.get("user6") +"modifyPhone"; //注册手机号
+	public final static String api_getArticleClass = apiUrl + "Main7/Article/getArticleClass"; //文章分类
+	public final static String api_getArticleInfo = apiUrl + "Main7/Article/articleInfo"; //文章详情
 
 
 	//替换url

@@ -60,7 +60,6 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         adapterSimple = new AdapterSimple(gridView,data,R.layout.a_article_select_activity_item,
                 new String[]{"name"},
                 new int[]{R.id.article_select_classify_text});
-        gridView.setAdapter(adapterSimple);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -105,7 +104,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     arrayList.add(map);
                 }
                 data.addAll(arrayList);
-                adapterSimple.notifyDataSetChanged();
+                gridView.setAdapter(adapterSimple);
             }
         },500);
     }
