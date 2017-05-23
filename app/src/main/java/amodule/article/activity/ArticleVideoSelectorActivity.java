@@ -221,7 +221,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
             case R.id.btn_cancel:
                 if (mCategoryPopup != null && mCategoryPopup.isShowing()) {
                     mCategoryText.setVisibility(View.VISIBLE);
-                    mTitle.setText("香哈视频");
+                    mTitle.setText("全部视频");
 
                     if (mAllDatas != null && mAllDatas.size() > 0) {
                         mAdapter.setData(mAllDatas);
@@ -241,7 +241,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                 mBackImg.setVisibility(View.GONE);
                 mCancelBtn.setVisibility(View.VISIBLE);
                 mTitle.setText("相册");
-                showCategoryPopup();
+                showCategoryPopup(false);
                 break;
             case R.id.category_btn:
                 mTitle.setText("相册");
@@ -252,14 +252,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                 }
                 if (mCategoryPopup == null)
                     createPopupFolderList();
-                showCategoryPopup();
+                showCategoryPopup(true);
                 break;
         }
     }
 
-    private void showCategoryPopup() {
+    private void showCategoryPopup(boolean fromCategory) {
         if (mCategoryPopup == null)
             return;
+        if (fromCategory)
+            mCategoryAdapter.resetSelected();
         if(mCategoryPopup.isShowing())
             mCategoryPopup.dismiss();
         else
@@ -277,15 +279,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mFolderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mCategoryPopup.dismiss();
+                mCategoryAdapter.onItemSelected(view);
                 mIsPreview = true;
                 String parentPath = mCategoryAdapter.getParentPathByPos(position);
-                mTitle.setText(TextUtils.isEmpty(parentPath) ? "香哈视频" : parentPath);
+                mTitle.setText(TextUtils.isEmpty(parentPath) ? "全部视频" : parentPath);
                 mCategoryText.setVisibility(View.GONE);
                 mCancelBtn.setVisibility(View.GONE);
                 mBackImg.setVisibility(View.VISIBLE);
                 mAdapter.setData((ArrayList<Map<String, String>>) mCategoryAdapter.getItem(position));
                 mGridView.smoothScrollToPosition(0);
+                mCategoryPopup.dismiss();
             }
         });
         mCategoryPopup.setContentView(mView);

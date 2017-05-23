@@ -287,6 +287,32 @@ public class FileToolsCammer {
         public void loadOver(ArrayList<Map<String,String>> orderArrayLis);
     }
 
+    public static String formatVideoTimeByMills(long mills) {
+        if (mills <= 0)
+            return "00:00";
+        int hours = (int) (mills / (1000 * 60 * 60));
+        int mins = (int) ((mills - hours * 60 * 60 * 1000) / (1000 * 60));
+        int secos = (int) ((mills - hours * 60 * 60 * 1000 - mins * 60 * 1000) / 1000);
+        StringBuffer buffer = new StringBuffer();
+        if (hours >= 10)
+            buffer.append(hours + ":");
+        else if (hours > 0)
+            buffer.append("0" + hours + ":");
+        if (mins >= 10)
+            buffer.append(mins + ":");
+        else if (mins > 0)
+            buffer.append("0" + mins + ":");
+        else
+            buffer.append("00:");
+        if (secos >= 10)
+            buffer.append(secos);
+        else if (secos > 0)
+            buffer.append("0" + secos);
+        else
+            buffer.append("00");
+        return buffer.toString();
+    }
+
     /**
      * 获取本地所有视频
      */

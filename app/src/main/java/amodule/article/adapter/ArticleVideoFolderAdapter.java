@@ -1,9 +1,7 @@
 package amodule.article.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +15,11 @@ import com.xiangha.R;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import aplug.imageselector.bean.Folder;
-import aplug.recordervideo.db.RecorderVideoData;
 import aplug.recordervideo.tools.FileToolsCammer;
 
 /**
@@ -36,11 +31,12 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
     private Map<String, List<Map<String, String>>> mVideos;
     private List<String> mParentPaths = new ArrayList<String>();
 
-    int imageSize;
+    private int mImageSize;
+    private ViewHolder mLastSelectedHolder = null;
 
     public ArticleVideoFolderAdapter(Context context) {
         mContext = context;
-        imageSize = mContext.getResources().getDimensionPixelOffset(R.dimen.dp_72);
+        mImageSize = mContext.getResources().getDimensionPixelOffset(R.dimen.dp_72);
     }
 
     /**
@@ -60,6 +56,23 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
             }
         }
         notifyDataSetChanged();
+    }
+
+    public void resetSelected() {
+        mLastSelectedHolder = null;
+    }
+
+    public void onItemSelected(View itemView) {
+        if (itemView == null)
+            return;
+        ViewHolder selectedHolder = (ViewHolder) itemView.getTag();
+        if (selectedHolder == mLastSelectedHolder)
+            return;
+        if (mLastSelectedHolder != null) {
+            mLastSelectedHolder.indicator.setVisibility(View.INVISIBLE);
+            selectedHolder.indicator.setVisibility(View.VISIBLE);
+            mLastSelectedHolder = selectedHolder;
+        }
     }
 
     @Override
@@ -88,7 +101,7 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.article_video_list_item_folder, viewGroup, false);
+            convertView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.image_seletor_list_item_folder, viewGroup, false);
             holder = new ViewHolder(convertView);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -98,18 +111,29 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+        int position;
         ImageView cover;
         TextView name;
-
-        ViewHolder(View view) {
-            cover = (ImageView) view.findViewById(R.id.cover);
+        TextView size;
+        ImageView indicator;
+        View itemView;
+        ViewHolder(View view){
+            itemView = view;
+            cover = (ImageView)view.findViewById(R.id.cover);
             name = (TextView) view.findViewById(R.id.name);
+            size = (TextView) view.findViewById(R.id.size);
+            indicator = (ImageView) view.findViewById(R.id.indicator);
             view.setTag(this);
         }
 
         void bindData(int position) {
             if (mParentPaths == null || mParentPaths.size() <= 0)
                 return;
+            this.position = position;
+            if (position == 0 && mLastSelectedHolder == null) {
+                mLastSelectedHolder = this;
+            }
+            indicator.setVisibility(mLastSelectedHolder == this ? View.VISIBLE : View.INVISIBLE);
             String parentPath = mParentPaths.get(position);
             String videoPath = null;
             List<Map<String, String>> videos = new ArrayList<Map<String, String>>();
@@ -117,8 +141,8 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
                 videos = mVideos.get(parentPath);
                 if (videos != null && videos.size() > 0) {
                     Map<String, String> firstVideo = videos.get(0);
-                    if (firstVideo != null && firstVideo.containsKey(RecorderVideoData.video_path)) {
-                        videoPath = firstVideo.get(RecorderVideoData.video_path);
+                    if (firstVideo != null && firstVideo.containsKey(MediaStore.Video.Media.DATA)) {
+                        videoPath = firstVideo.get(MediaStore.Video.Media.DATA);
                     }
                 }
             }
@@ -127,11 +151,20 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
             } else {
                 cover.setImageDrawable(cover.getResources().getDrawable(R.drawable.default_error));
             }
-            if (!TextUtils.isEmpty(parentPath) && videos != null && videos.size() > 0) {
-                name.setText(parentPath + "(" + videos.size() + ")");
+            if (!TextUtils.isEmpty(parentPath)) {
+                name.setText(parentPath);
             } else {
                 name.setText("");
             }
+            if (videos != null && videos.size() > 0) {
+                size.setText(videos.size()+"张");
+            }
+            Glide.with(itemView.getContext()).load(new File(FileToolsCammer.getImgPath(videoPath)))
+                    .error(R.drawable.default_error)
+                    .placeholder(R.drawable.mall_recommed_product_backgroup)
+                    .override(mImageSize, mImageSize)
+                    .centerCrop()
+                    .into(cover);
         }
     }
 

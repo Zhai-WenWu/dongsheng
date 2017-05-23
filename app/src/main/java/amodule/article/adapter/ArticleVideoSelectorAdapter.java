@@ -88,7 +88,9 @@ public class ArticleVideoSelectorAdapter extends BaseAdapter {
             if (!TextUtils.isEmpty(path))
                 image.setImageBitmap(FileToolsCammer.getBitmapByImgPath(path));
             if (!TextUtils.isEmpty(videoShowTime))
-                timeTag.setText(videoShowTime);
+                timeTag.setText(FileToolsCammer.formatVideoTimeByMills(Long.parseLong(videoShowTime)));
+            else
+                timeTag.setText("");
         }
     }
 }
