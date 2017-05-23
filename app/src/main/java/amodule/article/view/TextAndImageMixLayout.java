@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import acore.tools.Tools;
 import amodule.article.view.richtext.RichText;
@@ -26,8 +30,13 @@ import aplug.shortvideo.activity.VideoFullScreenActivity;
 public class TextAndImageMixLayout extends LinearLayout
         implements BaseView.OnRemoveCallback, BaseView.OnClickImageListener {
 
-    private boolean isSingleVideo = true;
     private EditTextView currentEditText = null;
+
+    private boolean isSingleVideo = true;
+
+    /**图片集合*/
+    //path:url
+    private Map<String,String> imageMap = new HashMap<>();
 
     public TextAndImageMixLayout(Context context) {
         this(context, null);
@@ -112,12 +121,20 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setImageUrl(imageUrl);
         view.setmOnRemoveCallback(this);
 
-
         addView(view, insertIndex, getChildLayoutParams());
+
+        addImagePath(imageUrl);
         //默认插入edit
         addRichText(insertIndex + 1);
     }
 
+    private void addImagePath(String imageUrl){
+        setupImagePath(imageUrl,"");
+    }
+
+    public void setupImagePath(String imagePath,String imageUrl){
+        imageMap.put(imagePath,imageUrl);
+    }
 
     /**
      * 添加视频
@@ -142,8 +159,11 @@ public class TextAndImageMixLayout extends LinearLayout
         if (null == view) {
             view = new VideoShowView(getContext());
             addView(view, insertIndex, getChildLayoutParams());
+            addImagePath(coverImageUrl);
             //默认插入edit
             addRichText(insertIndex + 1);
+        }else{
+            addImagePath(coverImageUrl);
         }
         view.setEnabled(true);
         view.setVideoData(coverImageUrl, videoUrl);
@@ -199,7 +219,21 @@ public class TextAndImageMixLayout extends LinearLayout
         if (index + 1 < getChildCount()) {
             removeViewAt(index + 1);
         }
+        //同时维护图片集合
+        removeImagePath(view);
         removeView(view);
+    }
+
+    /**
+     *
+     * @param view
+     */
+    private void removeImagePath(BaseView view){
+        if(view instanceof ImageShowView){
+            imageMap.remove(((ImageShowView)view).getImageUrl());
+        }else if(view instanceof VideoShowView){
+            imageMap.remove(((VideoShowView)view).getCoverImageUrl());
+        }
     }
 
     /**
@@ -313,6 +347,21 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setSingleVideo(boolean singleVideo) {
         isSingleVideo = singleVideo;
+    }
+
+    public ArrayList<String> getImageArray(){
+        ArrayList<String> imageUrlArray = new ArrayList<>();
+        VideoShowView videoShowView = getFirstVideoView();
+        String coverImage = "";
+        if(videoShowView != null){
+            coverImage = videoShowView.getCoverImageUrl();
+        }
+        Set<Map.Entry<String,String>> entries = imageMap.entrySet();
+        for(Map.Entry entry:entries){
+            imageUrlArray.add(entry.getKey().toString());
+        }
+        imageUrlArray.remove(coverImage);
+        return imageUrlArray;
     }
 
     @Override

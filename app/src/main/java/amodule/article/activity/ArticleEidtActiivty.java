@@ -132,7 +132,8 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                     public void onSelectImage() {
                         Intent intent = new Intent(ArticleEidtActiivty.this, ImageSelectorActivity.class);
                         intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
-                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 8);
+                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 10);
+                        intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, mixLayout.getImageArray());
                         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
                     }
                 });
