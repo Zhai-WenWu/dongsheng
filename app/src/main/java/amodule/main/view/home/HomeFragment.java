@@ -334,9 +334,9 @@ public class HomeFragment extends Fragment{
                 mLoadManager.setLoading(refreshLayout, mListview, adapterListView, true, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!TextUtils.isEmpty(statisticKey)){
-                            mAdControl.getAdData(mActivity,statisticKey);
-                        }
+//                        if(!TextUtils.isEmpty(statisticKey)){
+//                            mAdControl.getAdData(mActivity,statisticKey);
+//                        }
                         EntryptData(true);
                     }
                 }, new View.OnClickListener() {
