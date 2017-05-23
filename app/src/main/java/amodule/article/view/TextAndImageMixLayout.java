@@ -3,6 +3,7 @@ package amodule.article.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,7 +24,7 @@ import aplug.shortvideo.activity.VideoFullScreenActivity;
  */
 
 public class TextAndImageMixLayout extends LinearLayout
-        implements BaseView.OnRemoveCallback ,BaseView.OnClickImageListener{
+        implements BaseView.OnRemoveCallback, BaseView.OnClickImageListener {
 
     private boolean isSingleVideo = true;
     private EditTextView currentEditText = null;
@@ -46,28 +47,28 @@ public class TextAndImageMixLayout extends LinearLayout
         addRichText(0);
     }
 
-    public void setupTextBold(){
-        if(currentEditText != null){
+    public void setupTextBold() {
+        if (currentEditText != null) {
             currentEditText.setupTextBold();
         }
     }
 
-    public void setupUnderline(){
-        if(currentEditText != null){
+    public void setupUnderline() {
+        if (currentEditText != null) {
             currentEditText.setupUnderline();
         }
     }
 
-    public void setupTextCenter(){
-        if(currentEditText != null){
+    public void setupTextCenter() {
+        if (currentEditText != null) {
             currentEditText.setupTextCenter();
         }
     }
 
-    public String getData(){
+    public String getData() {
         StringBuilder builder = new StringBuilder();
         final int length = getChildCount();
-        for(int index = 0; index < length ; index ++){
+        for (int index = 0; index < length; index++) {
             BaseView baseView = (BaseView) getChildAt(index);
             builder.append(baseView.getOutputData());
         }
@@ -76,13 +77,13 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private void addRichText(int insertIndex) {
         EditTextView view = new EditTextView(getContext());
-        addView(view, insertIndex,getChildLayoutParams());
+        addView(view, insertIndex, getChildLayoutParams());
         currentEditText = view;
         currentEditText.setEditTextFocus(true);
         view.setOnFocusChangeCallback(new EditTextView.OnFocusChangeCallback() {
             @Override
             public void onFocusChange(EditTextView v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     currentEditText = v;
                 }
             }
@@ -100,6 +101,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 添加图片
+     *
      * @param imageUrl
      */
     public void addImage(String imageUrl) {
@@ -111,7 +113,7 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setmOnRemoveCallback(this);
 
 
-        addView(view, insertIndex,getChildLayoutParams());
+        addView(view, insertIndex, getChildLayoutParams());
         //默认插入edit
         addRichText(insertIndex + 1);
     }
@@ -119,6 +121,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 添加视频
+     *
      * @param coverImageUrl
      * @param videoUrl
      */
@@ -138,7 +141,7 @@ public class TextAndImageMixLayout extends LinearLayout
         }
         if (null == view) {
             view = new VideoShowView(getContext());
-            addView(view, insertIndex,getChildLayoutParams());
+            addView(view, insertIndex, getChildLayoutParams());
             //默认插入edit
             addRichText(insertIndex + 1);
         }
@@ -148,24 +151,25 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setmOnClickImageListener(this);
     }
 
-    public void addLink(String url,String desc,int start,int end){
-        currentEditText.setupTextLink(url, desc,start,end);
+    public void addLink(String url, String desc, int start, int end) {
+        currentEditText.setupTextLink(url, desc, start, end);
     }
 
-    public String getSelectionText(){
+    public String getSelectionText() {
         return currentEditText.getSelectionText();
     }
 
-    public int getSelectionStart(){
+    public int getSelectionStart() {
         return currentEditText.getSelectionStart();
     }
 
-    public int getSelectionEnd(){
+    public int getSelectionEnd() {
         return currentEditText.getSelectionEnd();
     }
 
     /**
      * 获取当前聚焦的view位置
+     *
      * @return
      */
     public int getFoucsIndex() {
@@ -181,10 +185,11 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 获取childview的layoutParams
+     *
      * @return
      */
-    private LayoutParams getChildLayoutParams(){
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+    private LayoutParams getChildLayoutParams() {
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         return params;
     }
 
@@ -197,6 +202,111 @@ public class TextAndImageMixLayout extends LinearLayout
         removeView(view);
     }
 
+    /**
+     * 获取第一个张图片
+     * @return
+     */
+    public String getFirstImage() {
+        String imageUrl = "";
+        ImageShowView view = getFirstImageView();
+        if(view != null){
+            imageUrl = view.getImageUrl();
+        }
+        return imageUrl;
+    }
+
+
+    /**
+     * 获取第一个Video封面图
+     * @return
+     */
+    public String getFirstCoverImage() {
+        String coverImageUrl = "";
+        VideoShowView view = getFirstVideoView();
+        if(view != null){
+            coverImageUrl = view.getCoverImageUrl();
+        }
+        return coverImageUrl;
+    }
+
+    /**
+     * 获取第一个视频url
+     * @return
+     */
+    public String getFirstVideoUrl() {
+        String videoUrl = "";
+        VideoShowView view = getFirstVideoView();
+        if(view != null){
+            videoUrl = view.getVideoUrl();
+        }
+        return videoUrl;
+    }
+
+    /**
+     * 是否有图片
+     * @return
+     */
+    public boolean hasImage() {
+        ImageShowView view = getFirstImageView();
+        return view != null;
+    }
+
+    /**
+     * 是否有视频
+     * @return
+     */
+    public boolean hasVideo() {
+        VideoShowView view = getFirstVideoView();
+        return view != null;
+    }
+
+    /**
+     * 是否有文本内容
+     * @return
+     */
+    public boolean hasText() {
+        boolean hasText = false;
+        for (int index = 0; index < getChildCount(); index++) {
+            View view = getChildAt(index);
+            if (view instanceof EditTextView) {
+                String text = ((EditTextView) view).getOutputData();
+                if (!TextUtils.isEmpty(text)) {
+                    hasText = true;
+                    return hasText;
+                }
+            }
+        }
+        return hasText;
+    }
+
+    /**
+     * 获取第一个图片组件
+     * @return
+     */
+    private ImageShowView getFirstImageView() {
+        for (int index = 0; index < getChildCount(); index++) {
+            View view = getChildAt(index);
+            if (view instanceof ImageShowView) {
+                return (ImageShowView) view;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取第一个Video组件
+     * @return
+     */
+    private VideoShowView getFirstVideoView() {
+        for (int index = 0; index < getChildCount(); index++) {
+            View view = getChildAt(index);
+            if (view instanceof VideoShowView) {
+                return (VideoShowView) view;
+            }
+        }
+        return null;
+    }
+
     public boolean isSingleVideo() {
         return isSingleVideo;
     }
@@ -206,10 +316,12 @@ public class TextAndImageMixLayout extends LinearLayout
     }
 
     @Override
-    public void onClick(View v,String url) {
-        Intent intent = new Intent(getContext(),VideoFullScreenActivity.class);
-        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_TYPE,VideoFullScreenActivity.LOCAL_VIDEO);
-        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL,url);
+    public void onClick(View v, String url) {
+        Intent intent = new Intent(getContext(), VideoFullScreenActivity.class);
+        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_TYPE, VideoFullScreenActivity.LOCAL_VIDEO);
+        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, url);
         getContext().startActivity(intent);
     }
+
+
 }
