@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!-- 前贴广告父容器 高度不要写死，否则竖屏旋转到横屏之后可能无法铺满全屏 -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="top">
@@ -129,4 +129,4 @@
         android:text="广告"
         android:textSize="@dimen/sp_10" />-->
 
-</merge>
+</FrameLayout>
