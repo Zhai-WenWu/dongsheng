@@ -64,6 +64,7 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.tools.InMobiAdTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
@@ -120,6 +121,8 @@ public class Main extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long endTime=System.currentTimeMillis();
+        //初始化
+        InMobiAdTools.getInstance().initSdk(this);
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
