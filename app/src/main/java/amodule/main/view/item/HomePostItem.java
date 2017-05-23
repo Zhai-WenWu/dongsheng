@@ -227,6 +227,8 @@ public class HomePostItem extends HomeItem {
         super.resetView();
         if (viewIsVisible(mTitle)) {
             mTitle.setVisibility(View.GONE);
+        }
+        if (mTitle != null) {
             mTitle.setLines(1);
             mTitle.setMaxLines(2);
         }
