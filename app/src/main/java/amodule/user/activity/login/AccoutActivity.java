@@ -687,4 +687,12 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             return "1";
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(handler!=null){
+            handler.removeCallbacksAndMessages(null);
+            handler=null;
+        }
+    }
 }

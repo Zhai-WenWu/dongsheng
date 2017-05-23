@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/itemText1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:lineSpacingExtra="@dimen/dp_4"
             android:lineSpacingMultiplier="1"
