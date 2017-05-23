@@ -158,19 +158,13 @@ public class WelcomeDialog extends Dialog {
      * 处理图片
      */
     private void ViewImageWelcome(){
-        ImageView image = (ImageView) view.findViewById(R.id.image);
+        final ImageView image = (ImageView) view.findViewById(R.id.image);
         Glide.with(activity).load(R.drawable.welcome_big).into(image);
 //        image.setBackgroundResource(R.drawable.welcome_big);
         int imageWidth = ToolsDevice.getWindowPx(activity).widthPixels / 3;
         image.setPadding(0, imageWidth - 6, 0, 0);
         image.getLayoutParams().width = imageWidth;
         image.setVisibility(View.VISIBLE);
-        image.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.i("zhangyujian","");
-            }
-        });
     }
 
     private void initAd() {
@@ -459,12 +453,12 @@ public class WelcomeDialog extends Dialog {
             WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdDataCallBack() {
                 @Override
                 public void noAdData() {
-                    if(isAdComplete){
-                        ViewImageWelcome();
-                        isAdComplete=false;
-                    }
                 }
             });
+//            if(isAdComplete){
+//                ViewImageWelcome();
+//                isAdComplete=false;
+//            }
             long endTime=System.currentTimeMillis();
             Log.i("zhangyujian","dialog::onWindowFocusChanged::"+(endTime-XHApplication.in().startTime));
         }
