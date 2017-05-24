@@ -287,6 +287,24 @@ public class TextAndImageMixLayout extends LinearLayout
     }
 
     /**
+     * 有序输出图片array
+     * @return
+     */
+    public ArrayList<Map<String,String>> getImageMapArray(){
+        ArrayList<Map<String,String>> arrayList = new ArrayList<>();
+        for(int index = 0;index < getChildCount();index ++){
+            View view = getChildAt(index);
+            if(view instanceof ImageShowView){
+                Map<String,String> map = new HashMap<>();
+                String path = ((ImageShowView)view).getImageUrl();
+                map.put(path,imageMap.get(path));
+                arrayList.add(map);
+            }
+        }
+        return arrayList;
+    }
+
+    /**
      * 添加视频
      *
      * @param coverImageUrl
