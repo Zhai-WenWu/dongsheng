@@ -67,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_87.5"
             android:orientation="horizontal"
+            android:baselineAligned="false"
             android:layout_below="@+id/title"
             android:layout_alignParentLeft="true"
             android:visibility="gone">

@@ -13,7 +13,6 @@
         android:id="@+id/login_content"
         android:padding="@dimen/dp_20"
         android:layout_width="match_parent"
-        android:layout_below="@+id/login_title"
         android:layout_height="match_parent"></RelativeLayout>
 
 </LinearLayout>

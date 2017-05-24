@@ -22,6 +22,7 @@
                     android:id="@+id/title_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_35"
+                    android:baselineAligned="false"
                     android:background="@color/c_gray_e8e8e8"
                     android:orientation="horizontal" >
 

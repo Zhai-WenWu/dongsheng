@@ -46,6 +46,8 @@ public class XHAllAdControl {
     private String ad_click;//点击一级统一
     private String twoData;//二级统计
     private boolean isQuanList = false;//是否是生活圈列表结构。
+    private int getCountGdtData = 6;//获取广点通数据个数，默认6个
+
 
     /**
      * 初始化
@@ -60,6 +62,7 @@ public class XHAllAdControl {
         this.act = act;
         this.xhBackIdsDataCallBack = xhBackIdsDataCallBack;
         this.StatisticKey = StatisticKey;
+        if(listIds.size()>0)getCountGdtData=listIds.size();
         getStiaticsData();
         getAllAdData();
     }
@@ -68,6 +71,7 @@ public class XHAllAdControl {
         this.listIds = listIds;
         this.xhBackIdsDataCallBack = xhBackIdsDataCallBack;
         this.StatisticKey = StatisticKey;
+        if(listIds.size()>0)getCountGdtData=listIds.size();
         getStiaticsData();
         getAllAdData();
     }
@@ -169,7 +173,7 @@ public class XHAllAdControl {
      * GDT广告获取
      */
     private void getAllGdtData() {
-        GdtAdTools.newInstance().loadNativeAD(XHApplication.in(), GDT_ID, 6,
+        GdtAdTools.newInstance().loadNativeAD(XHApplication.in(), GDT_ID, getCountGdtData,
                 new GdtAdTools.GdtNativeCallback() {
 
                     @Override

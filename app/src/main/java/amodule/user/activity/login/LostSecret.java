@@ -78,7 +78,7 @@ public class LostSecret extends BaseLoginActivity {
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
 
                                     final XhDialog xhDialog = new XhDialog(LostSecret.this);
                                     xhDialog.setTitle("该手机号尚未注册，"+"\n是否注册新账号？")

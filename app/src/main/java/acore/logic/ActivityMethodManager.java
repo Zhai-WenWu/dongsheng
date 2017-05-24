@@ -65,6 +65,9 @@ public class ActivityMethodManager {
             String switchTimeStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "switchTime").toString();
         Log.i("tzy","switchTimeStr");
             if (!TextUtils.isEmpty(switchTimeStr)) {
+                //清空切换时间
+                FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", "");
+
                 long switchTime = Long.parseLong(switchTimeStr);
                 long currentTime = System.currentTimeMillis();
                 final long MIN = WelcomeAdTools.getInstance().getSplashmins() * 1000;
@@ -83,9 +86,8 @@ public class ActivityMethodManager {
                     Log.i("tzy","启动MAX次数 ： " + showCount);
                     if (0 >= showCount || currentCount <= showCount) {
                         int adShowTime = WelcomeAdTools.getInstance().getDuretimes();
-                        new WelcomeDialog(mAct, adShowTime).show();
-                        //清空切换时间
-                        FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", "");
+                        if(!Main.isShowWelcomeDialog)
+                            new WelcomeDialog(mAct, adShowTime).show();
                         //更新开启次数
                         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "splashOpenSecond", String.valueOf(++currentCount));
                     }

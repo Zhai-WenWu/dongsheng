@@ -87,6 +87,7 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
                     @Override
                     public void onSendFalse() {
                         loadManager.hideProgressBar();
+                        phone_identify.btnClickTrue();
                     }
                 });
 
@@ -106,7 +107,7 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
                             }
 
                             @Override
-                            public void onFalse() {
+                            public void onFalse(int flag) {
                                 Toast.makeText(ChangePhone.this, "验证码错误", Toast.LENGTH_SHORT).show();
                             }
                         });

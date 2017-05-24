@@ -118,6 +118,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                     @Override
                     public void onSendFalse() {
                         loadManager.hideProgressBar();
+                        phone_identify.btnClickTrue();
                         if (ORIGIN_FIND_PSW.equals(origin)) {
                             XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "忘记密码", "失败原因：验证码超限");
                         } else if (ORIGIN_REGISTER.equals(origin)) {
@@ -158,7 +159,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     if (ORIGIN_REGISTER.equals(origin)) {
                                         XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "验证码失败：验证码错误");
                                         XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "注册失败");
@@ -181,7 +182,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
 
                                     if(ORIGIN_BIND_PHONE_NUM.equals(origin)){
                                         XHClick.mapStat(InputIdentifyCode.this, TAG_ACCOCUT, "绑定手机号", "失败原因：验证码错误");
@@ -202,7 +203,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     if (ORIGIN_FIND_PSW.equals(origin)) {
                                         XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "忘记密码", "失败原因：验证码错误");
                                     }

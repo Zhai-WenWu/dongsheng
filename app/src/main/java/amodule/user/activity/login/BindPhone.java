@@ -84,11 +84,12 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                             @Override
                             public void onSuccess() {
                                 dataStatistics("绑定失败：手机号已被绑定");
+                                phone_identify.btnClickTrue();
                                 Toast.makeText(BindPhone.this, "已被其他账号绑定，不能重复绑定", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
-                            public void onFalse() {
+                            public void onFalse(int flag) {
                                 dataStatistics("绑定手机号页，获取验证码");
                                 loadManager.showProgressBar();
                                 phone_identify.startCountDown();
@@ -103,6 +104,7 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                                             @Override
                                             public void onSendFalse() {
                                                 loadManager.hideProgressBar();
+                                                phone_identify.btnClickTrue();
                                                 dataStatistics("绑定失败：验证码超限");
                                             }
                                         });
@@ -149,7 +151,7 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     dataStatistics("绑定手机号失败");
                                     dataStatistics("绑定失败：验证码错误");
                                 }

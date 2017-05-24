@@ -112,7 +112,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     if (ShareTools.QQ_NAME.equals(platform)) {
                                         XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "QQ登录", "登录失败");
                                     } else if (ShareTools.WEI_XIN.equals(platform)) {
@@ -322,7 +322,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                                         }
 
                                         @Override
-                                        public void onFalse() {
+                                        public void onFalse(int flag) {
                                             XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录", "登录失败");
                                             XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录",
                                                     "失败原因：账号或密码错");
@@ -332,7 +332,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                         }
 
                         @Override
-                        public void onFalse() {
+                        public void onFalse(int flag) {
 //
                             final XhDialog xhDialog = new XhDialog(LoginByAccout.this);
                             xhDialog.setTitle("该手机号尚未注册，\n是否注册新账号？")
