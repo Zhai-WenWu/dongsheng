@@ -1,85 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialog_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#45000000"
-    android:gravity="center"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="添加连接"/>
+    android:background="#66000000"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/dp_32"
+        android:background="@drawable/bg_article_input_dialog"
+        android:orientation="vertical">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="链接"/>
+            android:layout_gravity="center"
+            android:paddingBottom="@dimen/dp_18"
+            android:paddingTop="@dimen/dp_25"
+            android:text="添加连接"
+            android:textColor="#333"
+            android:textSize="@dimen/sp_17"/>
+
 
         <EditText
             android:id="@+id/url_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
-            android:hint="Http(s)://"
-            android:singleLine="true"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="描述"/>
+            android:layout_height="@dimen/dp_35"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_30"
+            android:background="#F1F1F1"
+            android:hint="http(s)://"
+            android:paddingLeft="@dimen/dp_13"
+            android:paddingRight="@dimen/dp_13"
+            android:singleLine="true"
+            android:textSize="@dimen/sp_13"/>
 
         <EditText
             android:id="@+id/desc_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
-            android:singleLine="true"/>
+            android:layout_height="@dimen/dp_35"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="#F1F1F1"
+            android:hint="连接名称（选填）"
+            android:paddingLeft="@dimen/dp_13"
+            android:paddingRight="@dimen/dp_13"
+            android:singleLine="true"
+            android:textSize="@dimen/sp_13"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="#DCDCDC"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cannel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:textSize="@dimen/sp_17"
+                android:textColor="#999"
+                android:gravity="center"
+                android:text="取消"/>
+
+            <View
+                android:layout_width="@dimen/dp_0.5"
+                android:layout_height="match_parent"
+                android:background="#DCDCDC"/>
+
+            <TextView
+                android:id="@+id/sure"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:textSize="@dimen/sp_17"
+                android:textColor="#999"
+                android:gravity="center"
+                android:text="确定"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/cannel"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_30"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="取消"/>
-
-        <TextView
-            android:id="@+id/sure"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_30"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="确定"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

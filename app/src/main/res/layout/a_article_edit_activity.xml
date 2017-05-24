@@ -26,21 +26,20 @@
                 android:id="@+id/edit_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/dp_73"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
-                android:textCursorDrawable="@null"
                 android:background="@null"
+                android:minHeight="@dimen/dp_73"
                 android:textColorHint="#bbbbbb"
-                android:textSize="@dimen/sp_25"
-                />
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_25"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="#e1e1e1"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
-                />
+                android:background="#e1e1e1"/>
 
             <amodule.article.view.TextAndImageMixLayout
                 android:id="@+id/text_image_mix_ayout"

@@ -61,12 +61,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private void init() {
         setOrientation(VERTICAL);
-//        addRichText(-1);
-        //TODO test
-        String htmlTest = "<p align=\\\"center\\\" style=\\\" \\\">" +
-                "<a href=\"www.baidu.com\">6.1998～2007.</a>" +
-                "国内的网络书屋大致是在1997后出现的，网<u>易等公司提供的免费空间，为初期书站的发展提供了物质基础。在那个全民</u>办网的时代，有很多喜欢读书的网民都开办了自己的个人网站。</p>";
-        handlerTextData(htmlTest);
+        addRichText(-1,"");
     }
 
     /** 设置上传需要数据 */

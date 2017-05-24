@@ -123,30 +123,32 @@ public class EditTextView extends BaseView {
         return jsonObject;
     }
 
-    public void setTextFrormHtml(String html){
-        if(mRichText != null){
+    public void setTextFrormHtml(String html) {
+        if (mRichText != null) {
             mRichText.fromHtml(html);
         }
     }
 
-    public void appendText(Editable text){
-        if(mRichText != null){
+    public void appendText(Editable text) {
+        if (mRichText != null) {
             SpannableStringBuilder builder = new SpannableStringBuilder();
             builder.append(mRichText.getText()).append(text);
             mRichText.setText(builder);
         }
     }
 
-    public void setText(CharSequence text){
-        if(mRichText != null){
+    public void setText(CharSequence text) {
+        if (mRichText != null) {
             mRichText.setText(text);
         }
     }
-public String getTextHtml(){
-    return mRichText.toHtml();
-}
-    public Editable getText(){
-        if(mRichText != null){
+
+    public String getTextHtml() {
+        return mRichText.toHtml();
+    }
+
+    public Editable getText() {
+        if (mRichText != null) {
             return mRichText.getEditableText();
         }
         return null;
@@ -175,7 +177,7 @@ public String getTextHtml(){
         mRichText.link(url, start, end);
     }
 
-    public void addLinkToData(String url, String desc){
+    public void addLinkToData(String url, String desc) {
         mRichText.addLinkMapToArray(url, desc);
     }
 
@@ -188,7 +190,7 @@ public String getTextHtml(){
         mRichText.underline(!mRichText.contains(RichText.FORMAT_UNDERLINED));
     }
 
-    public void setCenterHorizontal(boolean isCenterHorizontal){
+    public void setCenterHorizontal(boolean isCenterHorizontal) {
         this.isCenterHorizontal = isCenterHorizontal;
         mRichText.setGravity(isCenterHorizontal ?
                 Gravity.TOP | Gravity.START : Gravity.CENTER_HORIZONTAL);
@@ -224,10 +226,10 @@ public String getTextHtml(){
                 .toString();
     }
 
-    public CharSequence getSelectionEndContent(){
+    public CharSequence getSelectionEndContent() {
         Editable editable = mRichText.getText();
-        CharSequence text = editable.subSequence(getSelectionEnd(),editable.length());
-        setText(editable.subSequence(0,getSelectionEnd()));
+        CharSequence text = editable.subSequence(getSelectionEnd(), editable.length());
+        setText(editable.subSequence(0, getSelectionEnd()));
         return text;
     }
 
@@ -246,53 +248,53 @@ public String getTextHtml(){
 
     /**
      * @param htmlStr
-     * @return
-     *  删除Html标签
+     *
+     * @return 删除Html标签
      */
     private Editable delHTMLTag(Editable htmlStr) {
         Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
         Matcher m_script = p_script.matcher(htmlStr);
         // 过滤script标签
-        while(m_script.find()){
+        while (m_script.find()) {
             int start = m_script.start();
             int end = m_script.end();
-            htmlStr.replace(start,end,"");
+            htmlStr.replace(start, end, "");
             m_script = p_script.matcher(htmlStr);
         }
 
         Pattern p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
         Matcher m_style = p_style.matcher(htmlStr);
         // 过滤style标签
-        while(m_style.find()){
+        while (m_style.find()) {
             int start = m_style.start();
             int end = m_style.end();
-            htmlStr.replace(start,end,"");
+            htmlStr.replace(start, end, "");
             m_style = p_script.matcher(htmlStr);
         }
 
         Pattern p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
         Matcher m_html = p_html.matcher(htmlStr);
         // 过滤html标签
-        while(m_html.find()){
+        while (m_html.find()) {
             int start = m_html.start();
             int end = m_html.end();
-            htmlStr.replace(start,end,"");
+            htmlStr.replace(start, end, "");
             m_html = p_script.matcher(htmlStr);
         }
 
         Pattern p_space = Pattern.compile(regEx_space, Pattern.CASE_INSENSITIVE);
         Matcher m_space = p_space.matcher(htmlStr);
         // 过滤空格回车标签
-        while(m_space.find()){
+        while (m_space.find()) {
             int start = m_space.start();
             int end = m_space.end();
-            htmlStr.replace(start,end,"");
+            htmlStr.replace(start, end, "");
             m_space = p_script.matcher(htmlStr);
         }
         return htmlStr; // 返回文本字符串
     }
 
-    private Editable getTextFromHtml(Editable htmlStr){
+    private Editable getTextFromHtml(Editable htmlStr) {
         htmlStr = delHTMLTag(htmlStr);
         return htmlStr;
     }
