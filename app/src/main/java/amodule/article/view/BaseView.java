@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * PackageName : amodule.article.view
@@ -14,6 +15,10 @@ import org.json.JSONArray;
  */
 
 public abstract class BaseView extends RelativeLayout {
+    protected static final String TEXT = "text";
+    protected static final String IMAGE = "image";
+    protected static final String VIDEO = "video";
+    protected static final String URLS = "urls";
     protected OnClickImageListener mOnClickImageListener;
     protected OnRemoveCallback mOnRemoveCallback;
 
@@ -30,7 +35,7 @@ public abstract class BaseView extends RelativeLayout {
     }
 
     public abstract void init();
-    public abstract String getOutputData();
+    public abstract JSONObject getOutputData();
 
     public interface OnClickImageListener{
         public void onClick(View v,String url);

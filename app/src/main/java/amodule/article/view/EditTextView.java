@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Selection;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -20,7 +21,11 @@ import android.widget.Toast;
 import com.xiangha.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +56,7 @@ public class EditTextView extends BaseView {
                                    Spanned dest, int dstart, int dend) {
             Matcher emojiMatcher = emoji.matcher(source);
             if (emojiMatcher.find()) {
-                return dest.toString().substring(dstart,dend);
+                return dest.toString().substring(dstart, dend);
             }
             return null;
         }
@@ -60,6 +65,7 @@ public class EditTextView extends BaseView {
     private InputFilter htmlFilter = new InputFilter() {
         Pattern html = Pattern.compile("<(\\S*?) [^>]*>.*?</\\1>|<.*? />",
                 Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
+
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             Matcher htmlMatcher = html.matcher(source);
@@ -95,12 +101,55 @@ public class EditTextView extends BaseView {
                 }
             }
         });
-        mRichText.setFilters(new InputFilter[]{emojiFilter,htmlFilter});
+        mRichText.setFilters(new InputFilter[]{emojiFilter, htmlFilter});
     }
 
     @Override
-    public String getOutputData() {
-        return mRichText.toHtml();
+    public JSONObject getOutputData() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            //正则处理html标签
+            mRichText.setText(getTextFromHtml(mRichText.getText()));
+            //拼接正式数据
+            StringBuilder builder = new StringBuilder();
+            builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
+                    .append(mRichText.toHtml())
+                    .append("</p>");
+            jsonObject.put("html", builder.toString());
+            jsonObject.put("type", TEXT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public void setTextFrormHtml(String html){
+        if(mRichText != null){
+            mRichText.fromHtml(html);
+        }
+    }
+
+    public void appendText(Editable text){
+        if(mRichText != null){
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(mRichText.getText()).append(text);
+            mRichText.setText(builder);
+        }
+    }
+
+    public void setText(CharSequence text){
+        if(mRichText != null){
+            mRichText.setText(text);
+        }
+    }
+public String getTextHtml(){
+    return mRichText.toHtml();
+}
+    public Editable getText(){
+        if(mRichText != null){
+            return mRichText.getEditableText();
+        }
+        return null;
     }
 
     /**
@@ -124,8 +173,12 @@ public class EditTextView extends BaseView {
         }
         // When KnifeText lose focus, use this method
         mRichText.link(url, start, end);
-
     }
+
+    public void addLinkToData(String url, String desc){
+        mRichText.addLinkMapToArray(url, desc);
+    }
+
 
     public void setupTextBold() {
         mRichText.bold(!mRichText.contains(RichText.FORMAT_BOLD));
@@ -133,6 +186,12 @@ public class EditTextView extends BaseView {
 
     public void setupUnderline() {
         mRichText.underline(!mRichText.contains(RichText.FORMAT_UNDERLINED));
+    }
+
+    public void setCenterHorizontal(boolean isCenterHorizontal){
+        this.isCenterHorizontal = isCenterHorizontal;
+        mRichText.setGravity(isCenterHorizontal ?
+                Gravity.TOP | Gravity.START : Gravity.CENTER_HORIZONTAL);
     }
 
     public void setupTextCenter() {
@@ -165,39 +224,76 @@ public class EditTextView extends BaseView {
                 .toString();
     }
 
-    /**
-     * 检测是否有emoji表情
-     *
-     * @param source
-     *
-     * @return
-     */
-    public boolean containsEmoji(String source) {
-        int len = source.length();
-        for (int i = 0; i < len; i++) {
-            char codePoint = source.charAt(i);
-            if (!isEmojiCharacter(codePoint)) { //如果不能匹配,则该字符是Emoji表情
-                return true;
-            }
-        }
-        return false;
+    public CharSequence getSelectionEndContent(){
+        Editable editable = mRichText.getText();
+        CharSequence text = editable.subSequence(getSelectionEnd(),editable.length());
+        setText(editable.subSequence(0,getSelectionEnd()));
+        return text;
     }
 
-    /**
-     * 判断是否是Emoji
-     *
-     * @param codePoint 比较的单个字符
-     *
-     * @return
-     */
-    private boolean isEmojiCharacter(char codePoint) {
-        return (codePoint == 0x0) || (codePoint == 0x9) || (codePoint == 0xA) ||
-                (codePoint == 0xD) || ((codePoint >= 0x20) && (codePoint <= 0xD7FF)) ||
-                ((codePoint >= 0xE000) && (codePoint <= 0xFFFD)) || ((codePoint >= 0x10000)
-                && (codePoint <= 0x10FFFF));
+    public List<Map<String, String>> getLinkMapArray() {
+        return mRichText.getLinkMapArray();
     }
 
     public interface OnFocusChangeCallback {
         public void onFocusChange(EditTextView v, boolean hasFocus);
+    }
+
+    private static final String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
+    private static final String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // 定义style的正则表达式
+    private static final String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
+    private static final String regEx_space = "\\s*|\t|\r|\n";//定义空格回车换行符
+
+    /**
+     * @param htmlStr
+     * @return
+     *  删除Html标签
+     */
+    private Editable delHTMLTag(Editable htmlStr) {
+        Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
+        Matcher m_script = p_script.matcher(htmlStr);
+        // 过滤script标签
+        while(m_script.find()){
+            int start = m_script.start();
+            int end = m_script.end();
+            htmlStr.replace(start,end,"");
+            m_script = p_script.matcher(htmlStr);
+        }
+
+        Pattern p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
+        Matcher m_style = p_style.matcher(htmlStr);
+        // 过滤style标签
+        while(m_style.find()){
+            int start = m_style.start();
+            int end = m_style.end();
+            htmlStr.replace(start,end,"");
+            m_style = p_script.matcher(htmlStr);
+        }
+
+        Pattern p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
+        Matcher m_html = p_html.matcher(htmlStr);
+        // 过滤html标签
+        while(m_html.find()){
+            int start = m_html.start();
+            int end = m_html.end();
+            htmlStr.replace(start,end,"");
+            m_html = p_script.matcher(htmlStr);
+        }
+
+        Pattern p_space = Pattern.compile(regEx_space, Pattern.CASE_INSENSITIVE);
+        Matcher m_space = p_space.matcher(htmlStr);
+        // 过滤空格回车标签
+        while(m_space.find()){
+            int start = m_space.start();
+            int end = m_space.end();
+            htmlStr.replace(start,end,"");
+            m_space = p_script.matcher(htmlStr);
+        }
+        return htmlStr; // 返回文本字符串
+    }
+
+    private Editable getTextFromHtml(Editable htmlStr){
+        htmlStr = delHTMLTag(htmlStr);
+        return htmlStr;
     }
 }

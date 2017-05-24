@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * PackageName : amodule.article.view
@@ -55,8 +57,15 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
      * @return
      */
     @Override
-    public String getOutputData() {
-        return "<a href=\"" + imageUrl +"\"><img src=\"" + imageUrl +"\"></a>";
+    public JSONObject getOutputData() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("type",IMAGE);
+            jsonObject.put("imageurl",imageUrl);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     public void setImageUrl(String imageUrl) {

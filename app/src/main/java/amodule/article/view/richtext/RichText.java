@@ -32,7 +32,6 @@ import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -40,14 +39,9 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import amodule.article.view.EditTextView;
-import core.xiangha.emj.tools.EmjStringUtil;
 
 public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_BOLD = 0x01;
@@ -58,8 +52,8 @@ public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_QUOTE = 0x06;
     public static final int FORMAT_LINK = 0x07;
 
-    private final String KEY_LINK = "link";
-    private final String KEY_DESC = "desc";
+    private final String KEY_URL = "link";
+    private final String KEY_TITLE = "title";
 
     private int bulletColor = 0;
     private int bulletRadius = 0;
@@ -685,10 +679,10 @@ public class RichText extends EditText implements TextWatcher {
      * @param link
      * @param desc
      */
-    protected void addLinkMapToArray(String link,String desc){
+    public void addLinkMapToArray(String link,String desc){
         Map linkMap = new HashMap();
-        linkMap.put(KEY_LINK, link);
-        linkMap.put(KEY_DESC, desc);
+        linkMap.put(KEY_URL, link);
+        linkMap.put(KEY_TITLE, desc);
         linkMapArray.add(linkMap);
     }
 
@@ -746,8 +740,8 @@ public class RichText extends EditText implements TextWatcher {
             //遍历link的array
             for(int index = 0 ; index < linkMapArray.size() ; index ++){
                 Map<String,String> linkMap = linkMapArray.get(index);
-                String desc = linkMap.get(KEY_DESC);
-                int startIndex = textStr.indexOf(linkMap.get(KEY_DESC));
+                String desc = linkMap.get(KEY_TITLE);
+                int startIndex = textStr.indexOf(linkMap.get(KEY_TITLE));
                 //找不到则remove
                 if(startIndex < 0){
                     linkMapArray.remove(linkMap);
@@ -950,8 +944,8 @@ public class RichText extends EditText implements TextWatcher {
             //遍历link的array
             for(int index = 0 ; index < linkMapArray.size() ; index ++){
                 Map<String,String> linkMap = linkMapArray.get(index);
-                String desc = linkMap.get(KEY_DESC);
-                int startIndex = text.indexOf(linkMap.get(KEY_DESC));
+                String desc = linkMap.get(KEY_TITLE);
+                int startIndex = text.indexOf(linkMap.get(KEY_TITLE));
                 //找不到则remove
                 if(startIndex < 0){
                     linkMapArray.remove(linkMap);
@@ -972,6 +966,10 @@ public class RichText extends EditText implements TextWatcher {
                 }
             }
         }
+    }
+
+    public List<Map<String, String>> getLinkMapArray() {
+        return linkMapArray;
     }
 
 }

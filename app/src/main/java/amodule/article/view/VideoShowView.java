@@ -11,6 +11,8 @@ import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * PackageName : amodule.article.view
@@ -56,8 +58,16 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
      * @return
      */
     @Override
-    public String getOutputData() {
-        return "[video src=\"" + videoUrl + "\" poster=\"" + coverImageUrl + "\"][video]";
+    public JSONObject getOutputData() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("type",VIDEO);
+            jsonObject.put("videosimageurl",coverImageUrl);
+            jsonObject.put("videourl",videoUrl);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     public void setVideoData(String coverImageUrl, String videoUrl) {

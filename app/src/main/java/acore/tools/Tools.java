@@ -269,8 +269,7 @@ public class Tools {
         }
     }
 
-    public static String list2Json(List<Map<String, String>> data) {
-        //添加JS回调代码
+    public static JSONArray list2JsonArray(List<Map<String, String>> data){
         JSONArray jsonArray = new JSONArray();
         for (Map<String, String> map : data) {
             JSONObject jsonObject = new JSONObject();
@@ -285,6 +284,12 @@ public class Tools {
             }
             jsonArray.put(jsonObject);
         }
+        return jsonArray;
+    }
+
+    public static String list2Json(List<Map<String, String>> data) {
+        //添加JS回调代码
+        JSONArray jsonArray = list2JsonArray(data);
         return jsonArray.toString();
     }
 

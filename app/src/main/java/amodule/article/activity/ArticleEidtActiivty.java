@@ -13,6 +13,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -87,7 +89,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         findViewById(R.id.nextStep).setVisibility(View.VISIBLE);
         findViewById(R.id.nextStep).setOnClickListener(this);
         ImageView close = (ImageView) findViewById(R.id.leftImgBtn);
-//        close.setImageResource();
+        close.setImageResource(R.drawable.i_close);
         close.setOnClickListener(this);
 
         SpannableString ss = new SpannableString("标题（64字以内）");
@@ -132,8 +134,9 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                     public void onSelectImage() {
                         Intent intent = new Intent(ArticleEidtActiivty.this, ImageSelectorActivity.class);
                         intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
-                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 10);
-                        intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, mixLayout.getImageArray());
+                        ArrayList<String> imageArray = mixLayout.getImageArray();
+                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 10 - imageArray.size());
+                        intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imageArray);
                         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
                     }
                 });
@@ -141,7 +144,8 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnSelectVideoCallback() {
                     @Override
                     public void onSelectVideo() {
-                        Toast.makeText(ArticleEidtActiivty.this, "选择视频", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ArticleEidtActiivty.this,ArticleVideoSelectorActivity.class);
+                        startActivityForResult(intent, REQUEST_SELECT_VIDEO);
                     }
                 });
         editBottomControler.setOnAddLinkCallback(
@@ -230,6 +234,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     }
 
     private void onNextSetp() {
+        Log.i("tzy",mixLayout.getXHServiceData());
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
             Intent intent = new Intent(this, ArticleSelectActiivty.class);
@@ -300,7 +305,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     private int saveDraft() {
         int id;
         uploadArticleData.setTitle(String.valueOf(editTitle.getText()));
-        uploadArticleData.setContent(mixLayout.getData());
+        uploadArticleData.setContent(mixLayout.getXHServiceData());
         uploadArticleData.setVideo(mixLayout.getFirstVideoUrl());
         uploadArticleData.setImg(mixLayout.getFirstImage());
         uploadArticleData.setVideoImg(mixLayout.getFirstCoverImage());
@@ -331,7 +336,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 case REQUEST_SELECT_VIDEO:
                     String videoPath = data.getStringExtra(MediaStore.Video.Media.DATA);
                     String coverPath = data.getStringExtra(RecorderVideoData.video_img_path);
-                    mixLayout.addVideo(coverPath, videoPath);
+                    mixLayout.addVideo(coverPath, videoPath,true,mixLayout.getCurrentEditText().getSelectionEndContent());
                     break;
             }
         }
