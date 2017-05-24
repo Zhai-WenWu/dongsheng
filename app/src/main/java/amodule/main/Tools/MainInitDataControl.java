@@ -33,14 +33,12 @@ import amodule.dish.db.ShowBuyData;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishControl;
-import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
 import aplug.service.alarm.PushAlarm;
 import aplug.service.base.ServiceManager;
 import third.ad.tools.AdConfigTools;
-import third.ad.tools.InMobiAdTools;
 import third.ad.tools.TencenApiAdTools;
 import third.andfix.AndFixTools;
 import third.mall.aplug.MallCommon;
@@ -67,6 +65,8 @@ public class MainInitDataControl {
      * welcome oncreate初始化
      */
     public void initWelcomeOncreate(){
+        Log.i("zhangyujian","initWelcomeOncreate");
+        long startTime= System.currentTimeMillis();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -74,12 +74,16 @@ public class MainInitDataControl {
                 XHClick.registerMonthSuperProperty(XHApplication.in());
             }
         }).start();
+        long endTime=System.currentTimeMillis();
+        Log.i("zhangyujian","initWelcomeOncreate::时间:"+(endTime-startTime));
 
     }
     /**
      * welcome之后初始化
      */
     public void initWelcomeAfter(final Activity activity){
+        Log.i("zhangyujian","initWelcomeAfter");
+        long startTime= System.currentTimeMillis();
         initWelcome(activity);
         new Thread() {
             @Override
@@ -89,14 +93,15 @@ public class MainInitDataControl {
                 OnlineConfigAgent.getInstance().updateOnlineConfig(activity);
 
                 CookieManager.getInstance().removeAllCookie();
-                Log.i("zhangyujian","initWelcomeAfter");
                 //待处理问题。
-                HomeToutiaoAdControl.getInstance().getAdData(activity);
+//                HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
             }
         }.start();
         AdConfigTools.getInstance().setRequest(XHApplication.in());
         AppCommon.saveConfigData(XHApplication.in());
+        long endTime2=System.currentTimeMillis();
+        Log.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));
 
     }
     /**
@@ -115,6 +120,8 @@ public class MainInitDataControl {
      * Main之后初始化
      */
     public void iniMainAfter(Activity act){
+        Log.i("zhangyujian","iniMainAfter");
+        long startTime= System.currentTimeMillis();
         ToolsDevice.sendCrashAndAppInfoToServer(act.getApplicationContext(), LoginManager.userInfo.get("code"));
         // 发送页面存活时间
         XHClick.sendLiveTime(act);
@@ -139,6 +146,8 @@ public class MainInitDataControl {
         AppCommon.saveCircleStaticData(act);
 
         AdConfigTools.getInstance().getAdConfigInfo();
+        long endTime=System.currentTimeMillis();
+        Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
     }
 
     /**
@@ -146,6 +155,13 @@ public class MainInitDataControl {
      * @param act
      */
     public void initMainOnResume(final Activity act){
+        Log.i("zhangyujian","initMainOnResume");
+        long startTime= System.currentTimeMillis();
+        //讯飞语音： 将“12345678”替换成您申请的 APPID，申请地址：http://www.xfyun.cn
+        // 请勿在“=”与 appid 之间添加任务空字符或者转义符
+        SpeechUtility.createUtility(act, SpeechConstant.APPID +"=56ce9191");
+
+        TencenApiAdTools.getTencenApiAdTools().getLocation();
         UploadDishSqlite sqlite = new UploadDishSqlite(act);
         final int draftId = sqlite.getFailNeedHintId();
         if (draftId > 0) {
@@ -167,27 +183,29 @@ public class MainInitDataControl {
             }).show();
         }
         UploadDishControl.getInstance().updataAllUploadingDish(act.getApplicationContext());
+        long endTime2=System.currentTimeMillis();
+        Log.i("zhangyujian","initMainOnResume::时间::3::"+(endTime2-startTime));
     }
 
     /**
      * Welcome应用数据初始化
      */
     private void initWelcome(final Context context) {
-        //讯飞语音： 将“12345678”替换成您申请的 APPID，申请地址：http://www.xfyun.cn
-        // 请勿在“=”与 appid 之间添加任务空字符或者转义符
-        SpeechUtility.createUtility(context, SpeechConstant.APPID +"=56ce9191");
+        Log.i("zhangyujian","initWelcome");
+        long startTime= System.currentTimeMillis();
 
         // 取消自我唤醒
         XGPushManager.clearLocalNotifications(context);
         PushAlarm.closeTimingWake(context);
-
         // 自动登录
         AppCommon.getCommonData(null);
         AppCommon.saveAppData();
         compatibleData(context);
 
         AppCommon.clearCache();
-        TencenApiAdTools.getTencenApiAdTools().getLocation();
+
+        long endTime4=System.currentTimeMillis();
+        Log.i("zhangyujian","initWelcome::时间:::3:"+(endTime4-startTime));
 
         new Thread(){
             @Override

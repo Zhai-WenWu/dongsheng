@@ -82,17 +82,22 @@ public class WelcomeAdTools {
         }
         return mInstance;
     }
-
+    public void handlerAdData(final boolean isCache){
+        this.handlerAdData(isCache,null);
+    }
     /**
      * 广告入口
      */
-    public void handlerAdData(final boolean isCache) {
+    public void handlerAdData(final boolean isCache,AdDataCallBack CallBack) {
         list_ad.clear();
         ad_data.clear();
         index_ad = 0;
+        this.adDataCallBack= CallBack;
         String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-        if (TextUtils.isEmpty(data))
+        if (TextUtils.isEmpty(data)) {
+            if(adDataCallBack!=null)adDataCallBack.noAdData();
             return;
+        }
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
         Map<String, String> map = list.get(0);
         if (map.containsKey(AdPlayIdConfig.WELCOME)) {
@@ -109,7 +114,7 @@ public class WelcomeAdTools {
             }
             //开启广告
             nextAd(isCache);
-        }
+        }else{if(adDataCallBack!=null)adDataCallBack.noAdData();}
     }
 
     private void handlerData(String temp, ArrayList<String> list_ad, String banner) {
@@ -143,14 +148,19 @@ public class WelcomeAdTools {
                 if (LoginManager.isShowAd())
                     getXHBanner();
             }
+        }else{
+            if(adDataCallBack!=null)adDataCallBack.noAdData();
         }
     }
 
     //展示AD
     private void displayGdtAD() {
         final String adid = analysData(ad_data.get(index_ad));
-        if (TextUtils.isEmpty(adid) || null == mGdtCallback)
+        if (TextUtils.isEmpty(adid) || null == mGdtCallback) {
+            index_ad++;
+            nextAd(false);
             return;
+        }
         GdtAdTools.newInstance().showSplashAD(
                 XHActivityManager.getInstance().getCurrentActivity(),
                 mGdtCallback.getADLayout(),
@@ -191,8 +201,11 @@ public class WelcomeAdTools {
      */
     private void getInMobi(final boolean isCache) {
         String adid = analysData(ad_data.get(index_ad));
-        if (TextUtils.isEmpty(adid))
+        if (TextUtils.isEmpty(adid)) {
+            index_ad++;
+            nextAd(false);
             return;
+        }
         if (isCache) {
             welcomeNative = null;
         }
@@ -261,6 +274,7 @@ public class WelcomeAdTools {
      */
     private void getXHBanner() {
         if (TextUtils.isEmpty(ad_data.get(index_ad))) {
+            index_ad++;
             nextAd(false);
             return;
         }
@@ -271,10 +285,12 @@ public class WelcomeAdTools {
             if (mapImgs != null && !TextUtils.isEmpty(mapImgs.get("indexImg1"))) {
                 url = mapImgs.get("indexImg1");
             } else {
+                index_ad++;
                 nextAd(false);
                 return;
             }
         } else {
+            index_ad++;
             nextAd(false);
             return;
         }
@@ -365,4 +381,10 @@ public class WelcomeAdTools {
     public int getShownum() {
         return shownum;
     }
+
+    public interface AdDataCallBack{
+        /*** 没有广告数据*/
+        public void noAdData();
+    }
+    private AdDataCallBack adDataCallBack;
 }

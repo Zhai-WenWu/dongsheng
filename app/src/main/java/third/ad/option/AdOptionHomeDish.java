@@ -32,7 +32,7 @@ public class AdOptionHomeDish extends AdOptionList {
     public Map<String, String> getAdListItemData(final String title, final String desc, final String iconUrl,
                                                  String imageUrl, String adTag) {
         Map<String, String> map = new HashMap<>();
-        map.put("name", title + (++index));
+        map.put("name", title );
         map.put("img", imageUrl);
         map.put("content", desc);
         map.put("allClick", String.valueOf(Tools.getRandom(6000, 20000)));

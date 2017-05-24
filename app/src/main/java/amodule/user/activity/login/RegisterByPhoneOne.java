@@ -123,7 +123,7 @@ public class RegisterByPhoneOne extends BaseLoginActivity implements View.OnClic
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     gotoInputIdentify(RegisterByPhoneOne.this, phone_info.getZoneCode(),
                                             phone_info.getPhoneNum(), ORIGIN_REGISTER);
                                 }

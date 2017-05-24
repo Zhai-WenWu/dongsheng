@@ -71,7 +71,8 @@ public class DetailDish extends BaseActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
-
+        adDishContorl= new ADDishContorl();
+        adDishContorl.getAdData(DetailDish.this);
     }
 
     private long startTime= 0;
@@ -103,9 +104,7 @@ public class DetailDish extends BaseActivity {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        adDishContorl= new ADDishContorl();
         dishActivityViewControl.setAdDishControl(adDishContorl);
-        adDishContorl.getAdData(DetailDish.this);
         startTime= System.currentTimeMillis();
 
     }

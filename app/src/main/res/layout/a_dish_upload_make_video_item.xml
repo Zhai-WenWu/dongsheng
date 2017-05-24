@@ -160,7 +160,6 @@
                     <ImageView
                         android:layout_width="@dimen/dp_20"
                         android:layout_height="@dimen/dp_18"
-                        android:layout_centerHorizontal="true"
                         android:src="@drawable/i_dish_video_relace"/>
 
                     <TextView
@@ -185,7 +184,6 @@
                     <ImageView
                         android:layout_width="@dimen/dp_20"
                         android:layout_height="@dimen/dp_18"
-                        android:layout_centerHorizontal="true"
                         android:src="@drawable/i_dish_video_cut"/>
 
                     <TextView

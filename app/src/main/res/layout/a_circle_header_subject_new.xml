@@ -51,7 +51,6 @@
         android:id="@+id/address"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sb_header_tv_content"
         android:layout_marginTop="@dimen/dp_10" />
 
     <amodule.quan.view.SubjectHeaderMore
