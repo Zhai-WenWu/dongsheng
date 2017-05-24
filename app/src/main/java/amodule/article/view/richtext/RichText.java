@@ -25,20 +25,29 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.BulletSpan;
+import android.text.style.CharacterStyle;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import amodule.article.view.EditTextView;
+import core.xiangha.emj.tools.EmjStringUtil;
 
 public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_BOLD = 0x01;
@@ -48,6 +57,9 @@ public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_BULLET = 0x05;
     public static final int FORMAT_QUOTE = 0x06;
     public static final int FORMAT_LINK = 0x07;
+
+    private final String KEY_LINK = "link";
+    private final String KEY_DESC = "desc";
 
     private int bulletColor = 0;
     private int bulletRadius = 0;
@@ -66,6 +78,8 @@ public class RichText extends EditText implements TextWatcher {
 
     private SpannableStringBuilder inputBefore;
     private Editable inputLast;
+
+    private List<Map<String, String>> linkMapArray = new ArrayList<>();
 
     public RichText(Context context) {
         super(context);
@@ -659,9 +673,23 @@ public class RichText extends EditText implements TextWatcher {
         if (start >= end) {
             return;
         }
+        //此处确定需要添加link操作
+        addLinkMapToArray(link,getText().subSequence(start, end).toString());
 
         linkInvalid(start, end);
         getEditableText().setSpan(new RichURLSpan(link, linkColor, linkUnderline), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    /**
+     *
+     * @param link
+     * @param desc
+     */
+    protected void addLinkMapToArray(String link,String desc){
+        Map linkMap = new HashMap();
+        linkMap.put(KEY_LINK, link);
+        linkMap.put(KEY_DESC, desc);
+        linkMapArray.add(linkMap);
     }
 
     // Remove all span in selection, not like the boldInvalid()
@@ -711,11 +739,46 @@ public class RichText extends EditText implements TextWatcher {
         }
 
         inputBefore = new SpannableStringBuilder(text);
+
+        if(count > 0){
+            int seletionIndex = getSelectionStart();
+            String textStr = getText().toString();
+            //遍历link的array
+            for(int index = 0 ; index < linkMapArray.size() ; index ++){
+                Map<String,String> linkMap = linkMapArray.get(index);
+                String desc = linkMap.get(KEY_DESC);
+                int startIndex = textStr.indexOf(linkMap.get(KEY_DESC));
+                //找不到则remove
+                if(startIndex < 0){
+                    linkMapArray.remove(linkMap);
+                    index -- ;
+                    continue;
+                }
+                int endIdex = startIndex + desc.length();
+                //判断当前光标位置
+                if(seletionIndex > startIndex && seletionIndex <= endIdex){
+                    CharacterStyle[] spans = getText().getSpans(startIndex, endIdex, CharacterStyle.class);
+                    for(CharacterStyle span:spans){
+                        if(span instanceof RichURLSpan){
+                            URLSpan[] urlSpens = getEditableText().getSpans(startIndex, endIdex, URLSpan.class);
+                            for (URLSpan urlSpan : urlSpens) {
+                                getEditableText().removeSpan(urlSpan);
+                            }
+                            setText(text);
+                            setSelection(seletionIndex);
+                            linkMapArray.remove(linkMap);
+                            index -- ;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onTextChanged(CharSequence text, int start, int before, int count) {
-        // DO NOTHING HERE
+
     }
 
     @Override
@@ -874,4 +937,41 @@ public class RichText extends EditText implements TextWatcher {
             editable.setSpan(new RichURLSpan(span.getURL(), linkColor, linkUnderline), spanStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
+
+    @Override
+    protected void onSelectionChanged(int selStart, int selEnd) {
+        super.onSelectionChanged(selStart, selEnd);
+        final String text = getText().toString();
+        if(TextUtils.isEmpty(text)){
+            return;
+        }
+        int textLength = text.length();
+        if(selStart > 0 && selStart < textLength){
+            //遍历link的array
+            for(int index = 0 ; index < linkMapArray.size() ; index ++){
+                Map<String,String> linkMap = linkMapArray.get(index);
+                String desc = linkMap.get(KEY_DESC);
+                int startIndex = text.indexOf(linkMap.get(KEY_DESC));
+                //找不到则remove
+                if(startIndex < 0){
+                    linkMapArray.remove(linkMap);
+                    index -- ;
+                    continue;
+                }
+                int endIndesc = startIndex + desc.length();
+                //判断当前光标位置
+                if(selStart > startIndex && selStart < endIndesc
+                        && selEnd > startIndex && selEnd < endIndesc){
+                    CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
+                    for(CharacterStyle span:spans){
+                        if(span instanceof RichURLSpan){
+                            this.setSelection(textLength);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -27,15 +27,16 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private String videoUrl;
 
     public VideoShowView(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public VideoShowView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public VideoShowView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @Override
