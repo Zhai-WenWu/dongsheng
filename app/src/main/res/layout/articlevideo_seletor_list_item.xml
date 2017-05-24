@@ -10,10 +10,20 @@
         android:scaleType="centerCrop"
         android:src="@drawable/default_error" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_gradient_black_alpha40"/>
+
     <TextView
         android:id="@+id/time_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal" />
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_marginRight="@dimen/dp_5"
+        android:textColor="@color/c_white_text"
+        android:textSize="@dimen/sp_12"/>
 
 </FrameLayout>

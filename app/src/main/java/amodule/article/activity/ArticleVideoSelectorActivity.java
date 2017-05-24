@@ -5,9 +5,9 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -33,12 +33,12 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.article.adapter.ArticleVideoFolderAdapter;
 import amodule.article.adapter.ArticleVideoSelectorAdapter;
 import aplug.recordervideo.db.RecorderVideoData;
 import aplug.recordervideo.tools.FileToolsCammer;
 
-import static aplug.recordervideo.db.RecorderVideoSqlite.getInstans;
 
 public class ArticleVideoSelectorActivity extends BaseActivity implements View.OnClickListener{
 
@@ -63,8 +63,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
     private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
 
-    private boolean mIsPreview = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,15 +73,23 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mCategoryAdapter = new ArticleVideoFolderAdapter(this);
         initView();
         addListener();
-        contentLoad(false, false);
+        contentLoad();
     }
 
     private void addListener() {
-        mVideoContainer.setOnClickListener(this);
-        mVideoView.setOnClickListener(this);
         mCancelBtn.setOnClickListener(this);
+        mVideoContainer.setOnClickListener(this);
         mBackImg.setOnClickListener(this);
         mCategoryText.setOnClickListener(this);
+        mVideoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Map<String, String> videoData = (Map<String, String>) v.getTag();
+                setResult(RESULT_OK, getSingleResult(videoData));
+                finish();
+                return true;
+            }
+        });
         mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int state) {
@@ -103,14 +109,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO Item的点击事件
                 Map<String, String> video = mAdapter.getItem(position);
-                if (mIsPreview) {
-                    showVideo(video);
-                } else {
-                    ArticleVideoSelectorActivity.this.setResult(RESULT_OK, getSingleResult(video));
-                    ArticleVideoSelectorActivity.this.finish();
-                }
+                showVideo(video);
             }
         });
     }
@@ -144,14 +144,20 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mVideoContainer.getVisibility() == View.VISIBLE) {
+            mVideoView.resume();
+            mVideoView.start();
+        }
+    }
+
     /**
-     *
-     * @param isDelete
-     * @param isReload
+     *加载数据
      */
-    private void contentLoad(final boolean isDelete,boolean isReload){
+    private void contentLoad(){
         loadManager.showProgressBar();
-        if(!isReload && getInstans().getDataSize() == 0) isReload = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -213,39 +219,29 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
             case R.id.video_container:
                 hideVideo();
                 break;
-            case R.id.article_pre_videoview:
-                Map<String, String> videoData = (Map<String, String>) v.getTag();
-                setResult(RESULT_OK, getSingleResult(videoData));
-                finish();
-                break;
             case R.id.btn_cancel:
-                if (mCategoryPopup != null && mCategoryPopup.isShowing()) {
-                    mCategoryText.setVisibility(View.VISIBLE);
-                    mTitle.setText("全部视频");
-
-                    if (mAllDatas != null && mAllDatas.size() > 0) {
-                        mAdapter.setData(mAllDatas);
-                    } else {
-                        mGridViewLayout.setVisibility(View.GONE);
-                        mVideoEmptyView.setVisibility(View.VISIBLE);
-                    }
-                    mCategoryPopup.dismiss();
-                    return;
-                }
-                //TODO 取消、清除数据
                 setResult(RESULT_CANCELED);
                 finish();
                 break;
             case R.id.btn_back:
-                mIsPreview = false;
-                mBackImg.setVisibility(View.GONE);
-                mCancelBtn.setVisibility(View.VISIBLE);
-                mTitle.setText("相册");
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBackImg.setVisibility(View.GONE);
+                        mCancelBtn.setVisibility(View.VISIBLE);
+                        mTitle.setText("相册");
+                    }
+                }, 100);
                 showCategoryPopup(false);
                 break;
             case R.id.category_btn:
-                mTitle.setText("相册");
-                mCategoryText.setVisibility(View.GONE);
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTitle.setText("相册");
+                        mCategoryText.setVisibility(View.GONE);
+                    }
+                }, 100);
                 if (mVideoParentFiles.size() <= 0) {
                     Tools.showToast(this, "本地没有视频哦");
                     return;
@@ -257,6 +253,10 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         }
     }
 
+    /**
+     *显示视频相册
+     * @param fromCategory
+     */
     private void showCategoryPopup(boolean fromCategory) {
         if (mCategoryPopup == null)
             return;
@@ -278,17 +278,22 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mFolderListView.setAdapter(mCategoryAdapter);
         mFolderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 mCategoryAdapter.onItemSelected(view);
-                mIsPreview = true;
-                String parentPath = mCategoryAdapter.getParentPathByPos(position);
-                mTitle.setText(TextUtils.isEmpty(parentPath) ? "全部视频" : parentPath);
-                mCategoryText.setVisibility(View.GONE);
-                mCancelBtn.setVisibility(View.GONE);
-                mBackImg.setVisibility(View.VISIBLE);
-                mAdapter.setData((ArrayList<Map<String, String>>) mCategoryAdapter.getItem(position));
                 mGridView.smoothScrollToPosition(0);
-                mCategoryPopup.dismiss();
+                mAdapter.setData((ArrayList<Map<String, String>>) mCategoryAdapter.getItem(position));
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        String parentPath = mCategoryAdapter.getParentPathByPos(position);
+                        mTitle.setText(TextUtils.isEmpty(parentPath) ? "全部视频" : parentPath);
+                        mCategoryText.setVisibility(View.GONE);
+                        mCancelBtn.setVisibility(View.GONE);
+                        mBackImg.setVisibility(View.VISIBLE);
+                        mCategoryPopup.dismiss();
+                    }
+                }, 100);
+
             }
         });
         mCategoryPopup.setContentView(mView);
@@ -297,6 +302,11 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mCategoryPopup.setAnimationStyle(R.style.PopupAnimation);
     }
 
+    /**
+     * 封装选择的视频
+     * @param videoData
+     * @return
+     */
     private Intent getSingleResult(Map<String, String> videoData) {
         Intent intent = new Intent();
         if (videoData != null && videoData.size() > 0) {
@@ -307,22 +317,36 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         return intent;
     }
 
+    /**
+     * 显示预览
+     * @param videoData
+     */
     private void showVideo(Map<String, String> videoData) {
         if (videoData == null || videoData.size() < 0 || mVideoView == null || mVideoContainer == null)
             return;
         String videoPath = videoData.get(MediaStore.Video.Media.DATA);
         if (TextUtils.isEmpty(videoPath))
             return;
+        int fixedWidth = getResources().getDimensionPixelSize(R.dimen.dp_375);
+        int fixedHeight = getResources().getDimensionPixelSize(R.dimen.dp_213);
+        int screenWidth = ToolsDevice.getWindowPx(this).widthPixels;
+        int newHeight =  fixedHeight * screenWidth / fixedWidth;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(screenWidth, newHeight);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        mVideoView.setLayoutParams(params);
         mVideoView.setTag(videoData);
         mVideoView.setVideoPath(videoPath);
         mVideoView.start();
         mVideoContainer.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 关闭预览
+     */
     private void hideVideo() {
         if (mVideoView == null || mVideoContainer == null)
             return;
-        mVideoView.pause();
-        mVideoContainer.setVisibility(View.GONE);
+        mVideoView.stopPlayback();
+        mVideoContainer.setVisibility(View.INVISIBLE);
     }
 }
