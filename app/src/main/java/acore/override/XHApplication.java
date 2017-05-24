@@ -95,7 +95,8 @@ public class XHApplication extends Application {
             @Override
             public void onActivityResumed(Activity activity) {
                 //记录当前activity
-                if (!XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName().equals(activity.getComponentName().getClassName())) {
+                if (XHActivityManager.getInstance().getCurrentActivity().getComponentName()==null ||activity.getComponentName()==null
+                ||!XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName().equals(activity.getComponentName().getClassName())) {
                     XHActivityManager.getInstance().setCurrentActivity(activity);
                 }
 

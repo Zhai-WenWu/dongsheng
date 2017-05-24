@@ -82,7 +82,7 @@ public class WelcomeDialog extends Dialog {
      */
     public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
-        Main.allMain.isShowWelcomeDialog=true;//至当前dialog状态
+        Main.isShowWelcomeDialog=true;//至当前dialog状态
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime));
         this.activity = act;

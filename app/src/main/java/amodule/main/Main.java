@@ -116,7 +116,7 @@ public class Main extends Activity implements OnClickListener {
     private boolean isForeground = true;
     private int nowTab=0;//当前选中tab
     private boolean isInit=false;
-    public boolean isShowWelcomeDialog=false;//是否welcomedialog在展示，false未展示，true正常展示
+    public static boolean isShowWelcomeDialog=false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,14 +135,16 @@ public class Main extends Activity implements OnClickListener {
         // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
         if (savedInstanceState != null) {
             defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
-            if (defaultTab == 0 && "1".equals(mBuoy.getFloatIndex())
-                    || defaultTab == 1 && "1".equals(mBuoy.getFloatSubjectList())
+            if (defaultTab == 0 && mBuoy!=null&&!TextUtils.isEmpty(mBuoy.getFloatIndex()) &&"1".equals(mBuoy.getFloatIndex())
+                    || defaultTab == 1 && mBuoy!=null&&!TextUtils.isEmpty(mBuoy.getFloatSubjectList())&& "1".equals(mBuoy.getFloatSubjectList())
                     || defaultTab == 2
                     || defaultTab == 3) {
-                mBuoy.clearAnimation();
-                mBuoy.hide();
-                mBuoy.setClosed(true);
-                mBuoy.setMove(true);
+                if(mBuoy!=null) {
+                    mBuoy.clearAnimation();
+                    mBuoy.hide();
+                    mBuoy.setClosed(true);
+                    mBuoy.setMove(true);
+                }
             }
         }
         mainInitDataControl= new MainInitDataControl();

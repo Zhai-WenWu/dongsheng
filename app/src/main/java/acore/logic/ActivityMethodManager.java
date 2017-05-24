@@ -86,7 +86,7 @@ public class ActivityMethodManager {
                     Log.i("tzy","启动MAX次数 ： " + showCount);
                     if (0 >= showCount || currentCount <= showCount) {
                         int adShowTime = WelcomeAdTools.getInstance().getDuretimes();
-                        if(!Main.allMain.isShowWelcomeDialog)
+                        if(!Main.isShowWelcomeDialog)
                             new WelcomeDialog(mAct, adShowTime).show();
                         //更新开启次数
                         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "splashOpenSecond", String.valueOf(++currentCount));
