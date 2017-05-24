@@ -471,21 +471,6 @@ public class TextAndImageMixLayout extends LinearLayout
     }
 
     /**
-     * 获取第一个张图片
-     *
-     * @return
-     */
-    public String getFirstImage() {
-        String imageUrl = "";
-        ImageShowView view = getFirstImageView();
-        if (view != null) {
-            imageUrl = view.getImageUrl();
-        }
-        return imageUrl;
-    }
-
-
-    /**
      * 获取第一个Video封面图
      *
      * @return
@@ -493,7 +478,7 @@ public class TextAndImageMixLayout extends LinearLayout
     public String getFirstCoverImage() {
         String coverImageUrl = "";
         VideoShowView view = getFirstVideoView();
-        if (view != null) {
+        if(view != null){
             coverImageUrl = view.getCoverImageUrl();
         }
         return coverImageUrl;
@@ -507,7 +492,7 @@ public class TextAndImageMixLayout extends LinearLayout
     public String getFirstVideoUrl() {
         String videoUrl = "";
         VideoShowView view = getFirstVideoView();
-        if (view != null) {
+        if(view != null){
             videoUrl = view.getVideoUrl();
         }
         return videoUrl;

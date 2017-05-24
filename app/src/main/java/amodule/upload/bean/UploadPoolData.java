@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import amodule.article.db.UploadArticleData;
 import amodule.dish.db.UploadDishData;
 import amodule.upload.callback.UploadListNetCallBack;
 import amodule.upload.callback.UploadListUICallBack;
@@ -29,6 +30,7 @@ public class UploadPoolData {
     private List<UploadItemData> tailDataList;
     private List<UploadItemData> totalDataList;
     private UploadDishData uploadDishData;
+    private UploadArticleData uploadArticleData;
     private UploadListNetCallBack netCallback;
     private UploadListUICallBack uiCallback;
 
@@ -127,6 +129,14 @@ public class UploadPoolData {
         this.uploadDishData = uploadDishData;
     }
 
+    public UploadArticleData getUploadArticleData() {
+        return uploadArticleData;
+    }
+
+    public void setUploadArticleData(UploadArticleData uploadArticleData) {
+        this.uploadArticleData = uploadArticleData;
+    }
+
     public List<UploadItemData> getTotalDataList() {
         return totalDataList;
     }
@@ -150,7 +160,6 @@ public class UploadPoolData {
 
 
     public void loopPoolData(List<UploadItemData> list, LoopCallback callback) {
-
         boolean needStop = false;
         for (UploadItemData itemData : list) {
             if(needStop)
@@ -161,10 +170,8 @@ public class UploadPoolData {
 
 
     public interface LoopCallback {
-
         boolean onLoop(UploadItemData itemData);
     }
-
 
     public ArrayList<Map<String, String>> getListData() {
         ArrayList<Map<String, String>> list = new ArrayList<>();

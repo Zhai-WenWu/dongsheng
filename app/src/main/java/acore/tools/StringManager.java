@@ -265,6 +265,7 @@ public class StringManager extends UtilString {
 	/*文章*/
 	public final static String api_getArticleClass = apiUrl + "Main7/Article/getArticleClass"; //文章分类
 	public final static String api_getArticleInfo = apiUrl + "Main7/Article/articleInfo"; //文章详情
+	public final static String api_articleAdd = apiUrl + "Main7/Article/articleAdd"; //发布文章
 
 
 	//替换url
@@ -274,7 +275,7 @@ public class StringManager extends UtilString {
 			String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl};
 			for (int i = 0; i < find.length; i++) {
 				String findStr = find[i] + defaultDomain + "/";
-				if (url.indexOf(findStr) == 0) {
+				if (url.indexOf(findStr) == 0 && url.indexOf(api_uploadImg) != 0) {
 					return url.replace(findStr, replace[i]);
 				}
 			}

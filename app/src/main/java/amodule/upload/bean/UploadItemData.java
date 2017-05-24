@@ -40,6 +40,7 @@ public class UploadItemData {
     public static final int POS_BODY = 2;
     public static final int POS_TAIL = 3;
 
+    private String uploadUrl; //最终上传的url
     private String name;
     private int type;
     private String path;
@@ -56,6 +57,18 @@ public class UploadItemData {
     private String videoInfo;
     private String hashCode;
     private String uniqueId;
+
+    public void setUploadUrl(String uploadUrl) {
+        this.uploadUrl = uploadUrl;
+    }
+
+    public String getUploadUrl() {
+        return uploadUrl;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
     public String getName() {
         return name;

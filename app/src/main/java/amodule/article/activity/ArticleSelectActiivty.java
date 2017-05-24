@@ -1,12 +1,13 @@
 package amodule.article.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,12 +15,17 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
+import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.article.db.UploadArticleData;
+import amodule.article.db.UploadArticleSQLite;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
+import aplug.basic.ReqInternet;
 
 /**
  * Created by Fang Ruijiao on 2017/5/22.
@@ -31,13 +37,17 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     private AdapterSimple adapterSimple;
 
     private ImageView reprintImg,originalImg;
+    private EditText reprintLink;
     private String checkCode;
     private int isCheck = 0; //1:转载内容   2：原创内容
+
+    private UploadArticleSQLite sqLite;
+    private UploadArticleData uploadArticleData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("发文章", 2, 0, R.layout.a_common_post_new_title, R.layout.a_article_select_activity);
+        initActivity("发文章", 5, 0, R.layout.a_common_post_new_title, R.layout.a_article_select_activity);
         initView();
         getClassifyData();
     }
@@ -54,6 +64,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         reprintImg.setOnClickListener(this);
         originalImg = (ImageView) findViewById(R.id.article_select_check_original);
         originalImg.setOnClickListener(this);
+        reprintLink = (EditText) findViewById(R.id.article_select_check_reprint_link);
 
         data = new ArrayList<>();
         gridView = (GridView) findViewById(R.id.article_select_gridview);
@@ -78,39 +89,55 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         });
     }
 
-
     private void getClassifyData(){
-//        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleClass, "", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleClass, "", new InternetCallback(this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if(i >= ReqInternet.REQ_OK_STRING){
+                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
+                    if(arrayList.size() > 0){
+                        data.addAll(arrayList);
+                        gridView.setAdapter(adapterSimple);
+                    }
+                }
+            }
+        });
+
+//        new Handler().postDelayed(new Runnable() {
 //            @Override
-//            public void loaded(int i, String s, Object o) {
-//                if(i == ReqInternet.REQ_OK_STRING){
-//                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
-//                    if(arrayList.size() > 0){
-//                        data.addAll(arrayList);
-//                        adapterSimple.notifyDataSetChanged();
-//                    }
+//            public void run() {
+//                Map<String,String> map;
+//                for(int i = 1; i < 5; i ++){
+//                    map = new HashMap<String, String>();
+//                    map.put("code","2332");
+//                    map.put("name","健康+" + i);
+//                    data.add(map);
 //                }
 //            }
-//        });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<Map<String,String>> arrayList = new ArrayList<>();
-                Map<String, String> map;
-                for(int i = 0; i < 5; i ++){
-                    map = new HashMap<>();
-                    map.put("code","" + i);
-                    map.put("name","技巧：" + i);
-                    arrayList.add(map);
-                }
-                data.addAll(arrayList);
-                gridView.setAdapter(adapterSimple);
-            }
-        },500);
+//        },500);
     }
 
     private void upload(){
+        int draftId = getIntent().getIntExtra("draftId",-1);
+        sqLite = new UploadArticleSQLite(this);
+        uploadArticleData = sqLite.selectById(draftId);
+        uploadArticleData.setClassCode(checkCode);
+        uploadArticleData.setIsOriginal(isCheck);
+        uploadArticleData.setRepAddress(String.valueOf(reprintLink.getText()));
+        sqLite.update(draftId,uploadArticleData);
+        Intent intent = new Intent(this,UploadArticleListActivity.class);
+        intent.putExtra("draftId",draftId);
+        intent.putExtra("coverPath",uploadArticleData.getImg());
+        intent.putExtra("finalVideoPath",uploadArticleData.getVideo());
+        startActivity(intent);
+        finish();
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this,ArticleEidtActiivty.class);
+        startActivity(intent);
     }
 
     @Override

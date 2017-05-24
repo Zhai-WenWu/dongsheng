@@ -1,5 +1,7 @@
 package amodule.upload;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 import java.util.List;
@@ -91,6 +93,7 @@ public class UploadListPool {
             @Override
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getState() != UploadItemData.STATE_SUCCESS) {
+                    Log.i("articleUpload","allStartOrStop " + itemData.getPos() + "   " + itemData.getPath());
                     startOrStop(itemData.getPos(), itemData.getIndex(), operation);
                 }
                 return false;
@@ -115,7 +118,6 @@ public class UploadListPool {
      * @param operation TYPE_START 开始，TYPE_PAUSE 停止
      */
     public void oneStartOrStop(int pos, int index, int operation) {
-
         startOrStop(pos, index, operation);
         if (operation == TYPE_PAUSE) {
             UploadListControl.getUploadListControlInstance().startWaitingUpload();
@@ -131,17 +133,15 @@ public class UploadListPool {
      * @param operation TYPE_START 开始，TYPE_PAUSE 停止
      */
     public void startOrStop(int pos, int index, int operation) {
-
         List<UploadItemData> itemDatas = uploadPoolData.getUploadItemDataList(pos);
         UploadItemData itemData = itemDatas.get(index);
+        Log.i("articleUpload","startOrStop() pos:" + pos + "   path:" + itemData.getPath());
+        Log.i("articleUpload","startOrStop() operation:" + operation + "   itemData.getType():" + itemData.getType());
         if (operation == TYPE_START) {
             if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
                 uploadLast();
-            } else if (itemData.getType() == UploadItemData.TYPE_IMG
-                    || itemData.getType() == UploadItemData.TYPE_VIDEO) {
-
-                int state = UploadListControl.getUploadListControlInstance()
-                        .startUpload(itemData, uploadPoolData.getNetCallback());
+            } else if (itemData.getType() == UploadItemData.TYPE_IMG || itemData.getType() == UploadItemData.TYPE_VIDEO) {
+                int state = UploadListControl.getUploadListControlInstance().startUpload(itemData, uploadPoolData.getNetCallback());
                 itemData.setState(state);
             }
         } else {
@@ -173,7 +173,6 @@ public class UploadListPool {
      * @param jsonObject
      */
     protected void uploadThingOver(boolean flag, final String uniquId, String responseStr, JSONObject jsonObject) {
-
         UploadListControl.getUploadListControlInstance().startWaitingUpload();
     }
 
@@ -270,12 +269,22 @@ public class UploadListPool {
 
             @Override
             public void onSuccess(String responseStr, String uniquId, JSONObject jsonObject) {
+//                Log.i("articleUpload","getUploadListNetCallBack() onSuccess()" + responseStr);
+//                UploadItemData speciaItem = uploadPoolData.getSpeciaItem(uniquId);
+//                if (speciaItem != null) {
+//                    speciaItem.setState(UploadItemData.STATE_SUCCESS);
+//                }
                 uploadThingOver(true, uniquId, responseStr, jsonObject);
             }
 
 
             @Override
             public void onFaild(String faild, String uniqueId) {
+//                Log.i("articleUpload","getUploadListNetCallBack() onFaild()");
+//                UploadItemData speciaItem = uploadPoolData.getSpeciaItem(uniqueId);
+//                if (speciaItem != null) {
+//                    speciaItem.setState(UploadItemData.STATE_FAILD);
+//                }
                 uploadThingOver(false, uniqueId, faild, null);
             }
 

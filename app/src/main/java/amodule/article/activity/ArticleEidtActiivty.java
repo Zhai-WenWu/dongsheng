@@ -74,7 +74,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        initActivity("发文章", 2, 0, 0, R.layout.a_article_edit_activity);
+        initActivity("发文章", 5, 0, 0, R.layout.a_article_edit_activity);
 
         initView();
         initData();
@@ -237,8 +237,12 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         Log.i("tzy",mixLayout.getXHServiceData());
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
+            saveDraft();
+            timer.cancel();
             Intent intent = new Intent(this, ArticleSelectActiivty.class);
+            intent.putExtra("draftId",uploadArticleData.getId());
             startActivity(intent);
+            finish();
         } else {
             Tools.showToast(this, checkStr);
         }
@@ -307,8 +311,8 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         uploadArticleData.setTitle(String.valueOf(editTitle.getText()));
         uploadArticleData.setContent(mixLayout.getXHServiceData());
         uploadArticleData.setVideo(mixLayout.getFirstVideoUrl());
-        uploadArticleData.setImg(mixLayout.getFirstImage());
         uploadArticleData.setVideoImg(mixLayout.getFirstCoverImage());
+        uploadArticleData.setImgArray(mixLayout.getImageMapArray());
 
         if (uploadArticleData.getId() > 0) {
             id = sqLite.update(uploadArticleData.getId(), uploadArticleData);
@@ -385,7 +389,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 }
             }).show();
         } else {
-            ArticleEidtActiivty.this.finish();
+            finish();
         }
     }
 }

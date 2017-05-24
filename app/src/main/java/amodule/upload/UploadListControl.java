@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import acore.override.XHApplication;
-import acore.tools.StringManager;
 import acore.tools.UploadImg;
 import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
@@ -169,7 +168,6 @@ public class UploadListControl {
      * @return state 上传状态
      */
     public int startUpload(UploadItemData data, UploadListNetCallBack callback) {
-
         int state = 0;
         if (!TextUtils.isEmpty(data.getRecMsg())) {
             state = UploadItemData.STATE_SUCCESS;
@@ -202,6 +200,12 @@ public class UploadListControl {
 
     }
 
+    /**
+     * 上传视频，以断点续传方式上传
+     * @param data
+     * @param callback
+     * @return
+     */
     private int startUploadVideo(UploadItemData data, UploadListNetCallBack callback) {
 
         int state = 0;
@@ -210,6 +214,7 @@ public class UploadListControl {
         } else {
             BreakPointControl uploader = uploaderMap.get(data.getUniqueId());
             if (uploader != null) {
+                //------断点开始上传
                 uploader.start(callback);
                 state = UploadItemData.STATE_RUNNING;
             }
@@ -237,13 +242,16 @@ public class UploadListControl {
      * @return
      */
     private int startUploadImg(final UploadItemData itemData, final UploadListNetCallBack callback) {
+        Log.i("articleUpload","startUploadImg() path:" + itemData.getPath());
         new UploadImg("", itemData.getPath(), new InternetCallback(XHApplication.in().getApplicationContext()) {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
+                    Log.i("articleUpload","startUploadImg() onSuccess()" + url);
                     callback.onSuccess((String) msg, itemData.getUniqueId(), null);
                 } else {
                     callback.onFaild((String) msg, itemData.getUniqueId());
+                    Log.i("articleUpload","startUploadImg() onFaild()" + url);
                 }
             }
         }).uploadImg();
@@ -295,7 +303,6 @@ public class UploadListControl {
      * 开启等待中的上传
      */
     public void startWaitingUpload() {
-
         for (final Map<String, UploadListPool> poolMap : uploadPoolList) {
             for (final UploadListPool pool : poolMap.values()) {
                 UploadPoolData uploadPoolData = pool.getUploadPoolData();
@@ -326,7 +333,6 @@ public class UploadListControl {
 
 
     public int startUploadLast(final Class<? extends UploadListPool> poolType, final int draftId) {
-
         retryNum = 0;
         uploadLastInfo(poolType, draftId);
         return UploadItemData.STATE_RUNNING;
@@ -334,7 +340,7 @@ public class UploadListControl {
 
 
     private void uploadLastInfo(final Class<? extends UploadListPool> poolType, final int draftId) {
-
+        Log.i("articleUpload","uploadLastInfo() draftId:" + draftId);
         final UploadListPool pool = getPool(poolType.getSimpleName() + draftId);
         if(pool == null){
             Log.e("uploadLastInfo","数据丢失");
@@ -347,24 +353,37 @@ public class UploadListControl {
             @Override
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
-                    ReqInternet.in().doPost(StringManager.api_uploadDish,
-                            itemData.getUploadMsg(), new InternetCallback(XHApplication.in()) {
+                    if(TextUtils.isEmpty(itemData.getUploadUrl())){
+                        Log.e("uploadLastInfo","数据丢失");
+                        Toast.makeText(XHApplication.in(),"上传最后一步，数据丢失",Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
 
-                                @Override
-                                public void loaded(int flag, String url, Object msg) {
-                                    if (flag >= UtilInternet.REQ_OK_STRING) {
-                                        retryNum = 0;
-                                        pool.getUploadPoolData().getNetCallback().onLastUploadOver(true, (String) msg);
+                    String path = itemData.getUploadUrl();
+                    if(TextUtils.isEmpty(path)){
+                        InternetCallback internetCallback = new InternetCallback(XHApplication.in()) {
+                            @Override
+                            public void loaded(int flag, String url, Object msg) {
+                                if (flag >= UtilInternet.REQ_OK_STRING) {
+                                    retryNum = 0;
+                                    pool.getUploadPoolData().getNetCallback().onLastUploadOver(true, (String) msg);
+                                } else {
+                                    if (retryNum < MAX_RETRY_NUM) {
+                                        retryNum++;
+                                        uploadLastInfo(poolType, draftId);
                                     } else {
-                                        if (retryNum < MAX_RETRY_NUM) {
-                                            retryNum++;
-                                            uploadLastInfo(poolType, draftId);
-                                        } else {
-                                            pool.getUploadPoolData().getNetCallback().onLastUploadOver(false, (String) msg);
-                                        }
+                                        pool.getUploadPoolData().getNetCallback().onLastUploadOver(false, (String) msg);
                                     }
                                 }
-                            });
+                            }
+                        };
+//                        if(path.contains("Main7")){
+//                            ReqEncyptInternet.in().doEncypt(path,itemData.getUploadMsg(),internetCallback);
+//                        }else{
+                            ReqInternet.in().doPost(path,itemData.getUploadMsg(),internetCallback);
+//                        }
+
+                    }
                     return true;
                 }
                 return false;
