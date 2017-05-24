@@ -607,14 +607,14 @@ public class AdapterCaipuSearch extends BaseAdapter {
         adPosList.clear();
         int adPos[];
         if ((mListShicaiData == null || mListShicaiData.size() == 0) && topAdHasData.get()) {
-            if (isRefresh)
+            if (isRefresh && adDdata.size()>1)
                 adDdata.remove(1);
             adPos = new int[]{0, 8, 15, 23, 32, 42};
         } else {
             if (topAdHasData.get()) {
                 topAdHasData.set(false);
             }
-            if (isRefresh)
+            if (isRefresh && adDdata.size()>0)
                 adDdata.remove(0);
             adPos = new int[]{2, 8, 15, 23, 32, 42};
         }
