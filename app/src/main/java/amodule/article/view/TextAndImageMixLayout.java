@@ -156,6 +156,7 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int index = 0; index < length; index++) {
             BaseView baseView = (BaseView) getChildAt(index);
             jsonArray.put(baseView.getOutputData());
+            Log.i("tzy",jsonArray.toString());
         }
         jsonArray.put(getUrlsJsonObj());
         return jsonArray.toString();

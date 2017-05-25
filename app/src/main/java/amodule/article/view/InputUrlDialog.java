@@ -6,9 +6,12 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangha.R;
+
+import org.w3c.dom.Text;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +25,6 @@ import java.util.regex.Pattern;
 public class InputUrlDialog extends Dialog implements View.OnClickListener {
 
     private Pattern WEB_URL;
-
 
     private void initWebUrPatternl() {
         // all domain names
@@ -51,6 +53,7 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
         WEB_URL = Pattern.compile(pattern);
     }
 
+    private TextView title;
     private EditText urlEdit;
     private EditText descEdit;
 
@@ -61,6 +64,7 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.a_article_view_link);
         urlEdit = (EditText) findViewById(R.id.url_edit);
         descEdit = (EditText) findViewById(R.id.desc_edit);
+        title = (TextView) findViewById(R.id.title);
 
         findViewById(R.id.sure).setOnClickListener(this);
         findViewById(R.id.cannel).setOnClickListener(this);
@@ -69,10 +73,16 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
         initWebUrPatternl();
     }
 
-    public void setDescDefault(String desc) {
-        if (!TextUtils.isEmpty(desc)) {
-            descEdit.setText(desc);
+    public void setUrl(String url){
+        if (!TextUtils.isEmpty(url)){
+            urlEdit.setText(url);
+            title.setText("编辑链接");
         }
+    }
+
+    public void setDescDefault(String desc) {
+        if (!TextUtils.isEmpty(desc))
+            descEdit.setText(desc);
     }
 
     @Override
@@ -92,6 +102,9 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
                 if (htmlUrl.matches()) {
                     dismiss();
                     String desc = descEdit.getText().toString().trim();
+                    if(TextUtils.isEmpty(desc)){
+                        desc = url;
+                    }
                     if (mOnReturnResultCallback != null) {
                         mOnReturnResultCallback.onSure(url, desc);
                     }
