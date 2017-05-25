@@ -142,7 +142,7 @@ public class DishHeaderView extends LinearLayout {
             } else {
                 setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
             }
-        } catch (Exception e){
+        }catch (Exception e){
             Toast.makeText(context,"视频播放失败",Toast.LENGTH_SHORT).show();
         }
         dishAboutView.setData(list.get(0), activity);

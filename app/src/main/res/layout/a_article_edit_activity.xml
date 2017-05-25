@@ -13,7 +13,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/edit_controler"
         android:layout_below="@+id/title_rela"
         android:scrollbars="none">
 
@@ -51,10 +50,18 @@
 
     </ScrollView>
 
-    <amodule.article.view.EditBottomControler
-        android:id="@+id/edit_controler"
+    <RelativeLayout
+        android:id="@+id/edit_controler_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:background="@android:color/transparent"
+        android:layout_height="wrap_content">
+
+        <amodule.article.view.EditBottomControler
+            android:id="@+id/edit_controler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

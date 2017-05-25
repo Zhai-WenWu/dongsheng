@@ -7,7 +7,12 @@
         android:id="@+id/quan_bar_subject_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent">
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="14dp"
+        android:layout_marginEnd="14dp">
 
         <LinearLayout
             android:id="@+id/linearLayout2"

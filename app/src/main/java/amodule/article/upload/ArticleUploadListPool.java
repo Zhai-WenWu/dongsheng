@@ -97,7 +97,7 @@ public class ArticleUploadListPool extends UploadListPool {
                             } else {
                                 hasDoUploadLastInfo.set(false);
                                 itemData.setState(UploadItemData.STATE_FAILD);
-                                UploadArticleData uploadArticleData = modifyUploadDishData();
+                                UploadArticleData uploadArticleData = modifyUploadArticleData();
                                 uploadArticleData.setUploadType(UploadDishData.UPLOAD_FAIL);
                                 saveDataToSqlit(uploadArticleData);
                                 XHClick.mapStat(XHApplication.in(), tongjiId, "上传状态", "上传失败");
@@ -184,7 +184,9 @@ public class ArticleUploadListPool extends UploadListPool {
                                     itemData.setState(UploadItemData.STATE_SUCCESS);
                                     itemData.setRecMsg(responseStr);
                                 }
-                                saveDataToSqlit(modifyUploadDishData());
+                                UploadArticleData uploadArticleData = modifyUploadArticleData();
+                                uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING);
+                                saveDataToSqlit(uploadArticleData);
                             } else {
                                 itemData.setState(UploadItemData.STATE_FAILD);
                             }
@@ -214,7 +216,7 @@ public class ArticleUploadListPool extends UploadListPool {
         dishSqlite.deleteById(uploadPoolData.getDraftId());
     }
 
-    private UploadArticleData modifyUploadDishData() {
+    private UploadArticleData modifyUploadArticleData() {
         return modifyUploadArticleData(false);
     }
 

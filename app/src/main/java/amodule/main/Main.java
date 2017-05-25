@@ -51,6 +51,9 @@ import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.XiangHaTabHost;
+import amodule.article.activity.ArticleUploadListActivity;
+import amodule.article.db.UploadArticleData;
+import amodule.article.db.UploadArticleSQLite;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
 import amodule.main.activity.MainChangeSend;
@@ -70,6 +73,7 @@ import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
+import xh.windowview.XhDialog;
 
 import static acore.tools.Tools.getApiSurTime;
 import static com.xiangha.R.id.iv_itemIsFine;
@@ -172,6 +176,29 @@ public class Main extends Activity implements OnClickListener {
                 new DialogControler().showDialog();
                 PushManager.tongjiPush();
                 isShowWelcomeDialog=false;
+
+                UploadArticleSQLite uploadArticleSQLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
+                final UploadArticleData uploadArticleData = uploadArticleSQLite.getUploadIngData();
+                if(uploadArticleData != null){
+                    final XhDialog xhDialog = new XhDialog(Main.this);
+                    xhDialog.setTitle("您的文章还未上传完毕，是否继续上传？")
+                            .setCanselButton("取消", new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    xhDialog.cancel();
+                                }
+                            }).setSureButton(" 继续", new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Main.this,ArticleUploadListActivity.class);
+                            intent.putExtra("draftId",uploadArticleData.getId());
+                            intent.putExtra("coverPath",uploadArticleData.getImg());
+                            intent.putExtra("finalVideoPath",uploadArticleData.getVideo());
+                            startActivity(intent);
+                            xhDialog.cancel();
+                        }
+                    }).show();
+                }
             }
         }
 
