@@ -44,6 +44,7 @@ public class CommodityItemView extends ItemBaseView implements View.OnClickListe
         init();
     }
 
+    @Override
     public void init(){
         commodityImage = (ImageView) findViewById(R.id.commodity_image);
         commodityTitle = (TextView) findViewById(R.id.commodity_title);

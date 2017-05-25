@@ -42,6 +42,7 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
         init();
     }
 
+    @Override
     public void init(){
 
         articleRepintSource = (TextView) findViewById(R.id.artilce_repint_source);

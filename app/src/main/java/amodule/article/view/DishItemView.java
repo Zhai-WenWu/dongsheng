@@ -27,19 +27,17 @@ public class DishItemView extends ItemBaseView {
 
     public DishItemView(Context context) {
         super(context,R.layout.a_article_dish_item);
-        init();
     }
 
     public DishItemView(Context context, AttributeSet attrs) {
         super(context, attrs,R.layout.a_article_dish_item);
-        init();
     }
 
     public DishItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr,R.layout.a_article_dish_item);
-        init();
     }
 
+    @Override
     public void init(){
         LayoutInflater.from(getContext()).inflate(R.layout.a_article_dish_item,this);
         dishImage = (ImageView) findViewById(R.id.dish_image);
