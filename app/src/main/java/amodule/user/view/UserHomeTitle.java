@@ -263,7 +263,7 @@ public class UserHomeTitle {
     private void changeFollow(String folState) {
         switch (Integer.parseInt(folState)) {
             case 1:
-                tv_follow.setText("个人信息");
+                tv_follow.setText("编辑资料");
                 tv_follow.setTextColor(Color.parseColor("#FFFFFF"));
                 tv_follow.setBackgroundResource(R.drawable.user_home_btn_folow);
                 break;

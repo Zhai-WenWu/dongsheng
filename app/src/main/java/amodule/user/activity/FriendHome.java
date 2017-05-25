@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -29,10 +33,14 @@ import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.view.TabContentView;
+import amodule.user.view.UserHomeAnswer;
 import amodule.user.view.UserHomeDish;
 import amodule.user.view.UserHomeSubject;
 import amodule.user.view.UserHomeTitle;
+import amodule.user.view.UserHomeTxt;
+import amodule.user.view.UserHomeVideo;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -43,13 +51,12 @@ public class FriendHome extends BaseActivity {
 	private TabHost tabHost;
 	private LinearLayout activityLayout_show, tabMainMyself;
 
-	private View[] tabViews, tabViewsFloat;
-	private TabContentView[] tabContent = {null, null};
-
-	private boolean loadTabs[] = {false, false};
+	private ArrayList<View> mTabViews = new ArrayList<View>();
+	private ArrayList<View> mTabViewsFloat = new ArrayList<View>();
+	private ArrayList<TabContentView> mTabContentViews = new ArrayList<TabContentView>();
+	private boolean[] mIsLoadeds = null;
 	private String userCode = "";
 	private CommonBottomView mCommonBottomView;
-	private String subjectNum,dishNum;
 
 	private UserHomeTitle mUserHomeTitle;
 	public LayoutScroll scrollLayout;
@@ -137,7 +144,24 @@ public class FriendHome extends BaseActivity {
 		registerBrocaster();
 	}
 
+	private boolean mFirstDataReady;
+	private boolean mFirstLoaded;
+	private boolean mSecondDataReady;
+	private boolean mSecondLoaded;
+	private boolean mShowErrorMsg = true;
+	private ArrayList<Map<String, String>> mTabs;
 	private void getData() {
+		mTabs = new ArrayList<Map<String, String>>();
+		Map<String, String> subjectMap = new HashMap<String, String>();
+		subjectMap.put("title", "晒美食");
+		subjectMap.put("num", "");
+		subjectMap.put("type", "4");
+		mTabs.add(subjectMap);
+		Map<String, String> dishMap = new HashMap<String, String>();
+		dishMap.put("title", "菜谱");
+		dishMap.put("num","");
+		dishMap.put("type", "5");
+		mTabs.add(dishMap);
 		String getUrl = StringManager.api_getUserInfoByCode + "?code=" + userCode;
 		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
 			@Override
@@ -146,17 +170,70 @@ public class FriendHome extends BaseActivity {
 				if (flag >= UtilInternet.REQ_OK_STRING){
 					ArrayList<Map<String, String>> list = UtilString.getListMapByJson(returnObj);
 					userinfo_map = UtilString.getListMapByJson(list.get(0).get("userinfo")).get(0);
-					subjectNum = userinfo_map.get("subjectCount");
-					dishNum = userinfo_map.get("dishCount");
+					mTabs.get(0).put("num", userinfo_map.get("subjectCount"));
+					mTabs.get(1).put("num", userinfo_map.get("dishCount"));
 					mUserHomeTitle.setUserData(list.get(0).get("userinfo"));
-					setTabHost();
+					mFirstDataReady = true;
+					onDataReady();
 				}else {
-					toastFaildRes(flag, true, returnObj);
-					finish();
+					onDataFailure(this, flag, returnObj);
 				}
-				loadManager.loadOver(flag, 1, userinfo_map == null || userinfo_map.size() == 0);
+				mFirstLoaded = true;
+				onLoaded(flag);
 			}
 		});
+		String getSecondUrl = StringManager.API_USERMAIN_LEVEL + "?code=" + userCode;
+		ReqEncyptInternet.in().doEncypt(getSecondUrl, "", new InternetCallback(this) {
+			@Override
+			public void loaded(int i, String s, Object o) {
+				if (i >= UtilInternet.REQ_OK_STRING) {
+					ArrayList<Map<String, String>> list = StringManager.getListMapByJson(o);
+                    mTabs.addAll(list);
+					mSecondDataReady = true;
+					onDataReady();
+				} else {
+					onDataFailure(this, i, o);
+				}
+				mSecondLoaded = true;
+				onLoaded(i);
+			}
+		});
+	}
+
+	private void onLoaded(int flag) {
+		if (mFirstLoaded && mSecondLoaded)
+			loadManager.loadOver(flag, 1, mTabs == null || mTabs.size() == 0);
+	}
+
+	private void onDataFailure(InternetCallback callback, int flag, Object returnObj) {
+		if (callback == null || !mShowErrorMsg)
+			return;
+		mShowErrorMsg = false;
+		callback.toastFaildRes(flag, true, returnObj);
+		callback.finish();
+	}
+
+	private void onDataReady() {
+		if (!mFirstDataReady || !mSecondDataReady) {
+			return;
+		}
+		handleTabsData();
+		setTabHost();
+	}
+
+	private void handleTabsData() {
+		if (mTabs == null)
+			return;
+		Iterator<Map<String, String>> iterator = mTabs.iterator();
+		while (iterator.hasNext()) {
+			Map<String, String> map = iterator.next();
+			if (map != null && map.size() > 0 && map.containsKey("num")) {
+				String num = map.get("num");
+				if (TextUtils.isEmpty(num) || (Integer.parseInt(num) <= 0) && (!TextUtils.isEmpty(LoginManager.userInfo.get("code")) && !LoginManager.userInfo.get("code").equals(userCode))) {
+					iterator.remove();
+				}
+			}
+		}
 	}
 
 	//加载完数据后调用显示界面
@@ -166,6 +243,8 @@ public class FriendHome extends BaseActivity {
 	}
 
 	private void setTabHost() {
+		if (mTabs == null || mTabs.size() <= 0)
+			return;
 		//获取控件高度
 		tabHost = (TabHost) findViewById(R.id.tabhost);
 		if (Main.allMain == null || Main.allMain.getLocalActivityManager() == null) {
@@ -174,20 +253,52 @@ public class FriendHome extends BaseActivity {
 			return;
 		}
 		tabHost.setup(Main.allMain.getLocalActivityManager());
-		String[] tabTitle = {"美食帖", "菜谱"};
-		String[] tabNum = {subjectNum, dishNum};
 		tabMainMyself = (LinearLayout) findViewById(R.id.a_user_home_title_tab);
 		LinearLayout tabMainMyselfFloat = (LinearLayout) findViewById(R.id.tab_float_mainMyself);
-		tabContent[0] = new UserHomeSubject(this,userCode);
-		tabContent[1] = new UserHomeDish(this, userCode);
-		tabViews = new View[tabContent.length];
-		tabViewsFloat = new View[tabContent.length];
-		for (int i = 0; i < tabContent.length; i++) {
-			tabHost.addTab(tabHost.newTabSpec(i + "").setIndicator(tabTitle[i]).setContent(tabContent[i]));
-			tabViews[i] = getTabWidget(tabTitle[i], tabNum[i],getTabClicker(i));
-			tabViewsFloat[i] = getTabWidget(tabTitle[i], tabNum[i],getTabClicker(i));
-			tabMainMyself.addView(tabViews[i]);
-			tabMainMyselfFloat.addView(tabViewsFloat[i]);
+		if (mIsLoadeds == null)
+			mIsLoadeds = new boolean[mTabs.size()];
+		for (int i = 0; i < mTabs.size(); i++) {
+			Map<String, String> tabMap = mTabs.get(i);
+			if (tabMap != null && tabMap.size() > 0 && tabMap.containsKey("type")) {
+				String title = tabMap.get("title");
+				String num = tabMap.get("num");
+				String url = tabMap.get("url");
+				View tabView = getTabWidget(title, num, getTabClicker(i));
+				View tabViewFloat = getTabWidget(title, num, getTabClicker(i));
+				TabContentView tabContentView = null;
+				String type = tabMap.get("type");
+				switch (type) {
+					case "1"://视频
+						tabContentView = new UserHomeVideo(this, userCode);
+						break;
+					case "2"://文章
+						tabContentView = new UserHomeTxt(this, userCode);
+						break;
+					case "3"://问答
+						tabContentView = new UserHomeAnswer(this, userCode);
+						break;
+					case "4"://晒美食
+						tabContentView = new UserHomeSubject(this, userCode);
+						break;
+					case "5"://菜谱
+						tabContentView = new UserHomeDish(this, userCode);
+						break;
+
+				}
+				if (!TextUtils.isEmpty(url) && tabContentView != null) {
+					if (url.startsWith("/") && url.length() > 1)
+						url = url.substring(1);
+					url = StringManager.apiUrl + url;
+					tabContentView.setLoadUrl(url);
+				}
+				mIsLoadeds[i] = false;
+				mTabViews.add(tabView);
+				mTabViewsFloat.add(tabViewFloat);
+				mTabContentViews.add(tabContentView);
+				tabHost.addTab(tabHost.newTabSpec(i + "").setIndicator(title).setContent(tabContentView));
+				tabMainMyself.addView(tabView);
+				tabMainMyselfFloat.addView(tabViewFloat);
+			}
 		}
 		tabChanged(tabIndex);
 	}
@@ -227,18 +338,18 @@ public class FriendHome extends BaseActivity {
 				XHClick.mapStat(this, tongjiId, "导航", "菜谱");
 				break;
 		}
-		String tag = tabContent[tabHost.getCurrentTab()].onPause();
+		String tag = mTabContentViews.get(tabHost.getCurrentTab()).onPause();
 		tabHost.setCurrentTab(tabIndex);
 		int tabNum = tabHost.getTabWidget().getChildCount();
 		for (int i = 0; i < tabNum; i++) {
-			tabSelectStyle(tabViews[i], i == tabHost.getCurrentTab());
-			tabSelectStyle(tabViewsFloat[i], i == tabHost.getCurrentTab());
+			tabSelectStyle(mTabViews.get(i), i == tabHost.getCurrentTab());
+			tabSelectStyle(mTabViewsFloat.get(i), i == tabHost.getCurrentTab());
 		}
-		if (!loadTabs[tabIndex]) {
-			tabContent[tabIndex].initLoad();
-			loadTabs[tabIndex] = true;
+		if (!mIsLoadeds[tabIndex]) {
+			mTabContentViews.get(tabIndex).initLoad();
+			mIsLoadeds[tabIndex] = true;
 		}
-		tabContent[tabIndex].onResume(tag);
+		mTabContentViews.get(tabIndex).onResume(tag);
 	}
 
 	// 设置tab选中的样式
@@ -253,8 +364,8 @@ public class FriendHome extends BaseActivity {
 
 	// 重载
 	public void doReload() {
-		for (int i = 0; i < loadTabs.length; i++)
-			loadTabs[i] = false;
+		for (int i = 0; i < mIsLoadeds.length; i++)
+			mIsLoadeds[i] = false;
 		tabChanged(tabHost.getCurrentTab());
 	}
 
@@ -262,8 +373,8 @@ public class FriendHome extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
-		if(isRefresh && tabContent != null && tabContent.length > tabIndex && tabContent[tabIndex] != null)
-			tabContent[tabIndex].onResume("resume");
+		if(isRefresh && mTabContentViews != null && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null)
+			mTabContentViews.get(tabIndex).onResume("resume");
 	}
 
 	@Override
@@ -271,17 +382,17 @@ public class FriendHome extends BaseActivity {
 		super.onPause();
 		isRefresh = false;
 		//view失焦点
-		for(int i=0;i<tabContent.length;i++){
-			if(tabContent[i] instanceof UserHomeSubject){
-				((UserHomeSubject)tabContent[i]).onViewPause();
+		for(int i=0;i<mTabContentViews.size();i++){
+			if(mTabContentViews.get(i) instanceof UserHomeSubject){
+				((UserHomeSubject)mTabContentViews.get(i)).onViewPause();
 			}
 		}
 	}
 
 	@Override
 	public void finish() {
-		for (int i = 0; i < tabContent.length; i++){
-			if(tabContent[i] != null)tabContent[i].finish();
+		for (int i = 0; i < mTabContentViews.size(); i++){
+			if(mTabContentViews.get(i) != null)mTabContentViews.get(i).finish();
 		}
 		super.finish();
 		isAlive = false;
@@ -293,8 +404,8 @@ public class FriendHome extends BaseActivity {
 					@Override
 					public void onGetReceive(String state) {
 						CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
-						if(tabContent != null && tabContent.length > tabIndex && tabContent[tabIndex] != null)
-							tabContent[tabIndex].onResume("resume");
+						if(mTabContentViews != null && mTabContentViews.size()> tabIndex && mTabContentViews.get(tabIndex) != null)
+							mTabContentViews.get(tabIndex).onResume("resume");
 					}
 				}
 		);

@@ -1,9 +1,12 @@
 package amodule.main.view.item;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -39,5 +42,19 @@ public class BaseItemView extends RelativeLayout {
 
     public interface OnItemClickListener{
         void onItemClick();
+    }
+
+    protected String handleNumber(String num) {
+        if (TextUtils.isEmpty(num))
+            return "";
+        if (Integer.parseInt(num) < 10000)
+            return num;
+        BigDecimal bd = new BigDecimal(Integer.parseInt(num) * 1.0 / 10000);
+        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+        return bd + "万";
+    }
+
+    protected boolean viewIsVisible(View view) {
+        return view == null ? false : view.getVisibility() == View.VISIBLE;
     }
 }

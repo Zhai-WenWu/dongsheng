@@ -182,8 +182,7 @@
         android:id="@+id/a_user_home_title_tab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_51"
-        android:paddingLeft="@dimen/dp_72"
-        android:paddingRight="@dimen/dp_72"
+        android:gravity="center"
         android:background="@color/common_bg"
         android:orientation="horizontal"/>
 
