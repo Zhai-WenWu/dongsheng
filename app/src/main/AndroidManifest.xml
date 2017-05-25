@@ -408,7 +408,7 @@
 
         <activity
             android:name="amodule.article.activity.ArticleEidtActiivty"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>

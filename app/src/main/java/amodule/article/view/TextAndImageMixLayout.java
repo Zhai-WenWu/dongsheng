@@ -34,7 +34,6 @@ import xh.windowview.XhDialog;
  * Created by MrTrying on 2017/5/19 09:34.
  * E_mail : ztanzeyu@gmail.com
  */
-
 public class TextAndImageMixLayout extends LinearLayout
         implements BaseView.OnRemoveCallback, BaseView.OnClickImageListener {
 
@@ -61,7 +60,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private void init() {
         setOrientation(VERTICAL);
-        addRichText(-1,"");
+        addRichText(-1, "");
     }
 
     /** 设置上传需要数据 */
@@ -136,9 +135,8 @@ public class TextAndImageMixLayout extends LinearLayout
                     }
                 }
                 if (!TextUtils.isEmpty(title)
-                        && !TextUtils.isEmpty(url)) {
+                        && !TextUtils.isEmpty(url))
                     editTextView.addLinkToData(url, title);
-                }
                 htmlTmep = htmlTmep.replaceFirst(aTagData, "");
             }
         }
@@ -176,9 +174,8 @@ public class TextAndImageMixLayout extends LinearLayout
             final int length = getChildCount();
             for (int index = 0; index < length; index++) {
                 View view = getChildAt(index);
-                if (view instanceof EditTextView) {
+                if (view instanceof EditTextView)
                     arrayList.addAll(((EditTextView) view).getLinkMapArray());
-                }
             }
             JSONArray jsonArray = Tools.list2JsonArray(arrayList);
             jsonObject.put("urls", jsonArray);
@@ -193,24 +190,21 @@ public class TextAndImageMixLayout extends LinearLayout
      */
     private EditTextView addRichText(int insertIndex, CharSequence content) {
         EditTextView view = new EditTextView(getContext());
-        if (insertIndex == -1) {
+        if (insertIndex == -1)
             addView(view, getChildLayoutParams());
-        } else {
+        else
             addView(view, insertIndex, getChildLayoutParams());
-        }
         currentEditText = view;
         currentEditText.setEditTextFocus(true);
         view.setOnFocusChangeCallback(new EditTextView.OnFocusChangeCallback() {
             @Override
             public void onFocusChange(EditTextView v, boolean hasFocus) {
-                if (hasFocus) {
+                if (hasFocus)
                     currentEditText = v;
-                }
             }
         });
-        if (!TextUtils.isEmpty(content)) {
+        if (!TextUtils.isEmpty(content))
             view.setText(content);
-        }
         return view;
     }
 
@@ -218,9 +212,8 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param imageUrlArray
      */
     public void addImageArray(List<String> imageUrlArray) {
-        if (imageUrlArray == null) {
+        if (imageUrlArray == null)
             return;
-        }
         CharSequence content = currentEditText.getSelectionEndContent();
         for (int index = 0; index < imageUrlArray.size(); index++) {
             String imageUrl = imageUrlArray.get(index);
@@ -235,17 +228,21 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param imagePath
      */
     public void uploadImage(final String imagePath) {
-        UploadImg uploadImg = new UploadImg("", imagePath,
+        //为空或者为服务器链接则忽略
+        if (TextUtils.isEmpty(imagePath)
+                || imagePath.startsWith("http://"))
+            return;
+        //上传图片
+        new UploadImg("", imagePath,
                 new InternetCallback(getContext()) {
                     @Override
                     public void loaded(int i, String s, Object o) {
                         if (i >= ReqInternet.REQ_OK_STRING) {
                             String imageUrl = (String) o;
-                            setupImagePath(imagePath, imageUrl);
+                            imageMap.put(imagePath, imageUrl);
                         }
                     }
-                });
-        uploadImg.uploadImg();
+                }).uploadImg();
     }
 
     /**
@@ -254,9 +251,8 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param imageUrl
      */
     public void addImage(String imageUrl, boolean ifAddText, CharSequence content) {
-        if (TextUtils.isEmpty(imageUrl)) {
+        if (TextUtils.isEmpty(imageUrl))
             return;
-        }
         final int insertIndex = getFoucsIndex() + 1;
 
         ImageShowView view = new ImageShowView(getContext());
@@ -266,38 +262,25 @@ public class TextAndImageMixLayout extends LinearLayout
 
         addView(view, insertIndex, getChildLayoutParams());
 
-        addImagePath(imageUrl);
+        imageMap.put(imageUrl, "");
         //默认插入edit
-        if (ifAddText) {
+        if (ifAddText)
             addRichText(insertIndex + 1, content);
-        }
-    }
-
-    /**
-     * 添加imgurl
-     *
-     * @param imageUrl
-     */
-    private void addImagePath(String imageUrl) {
-        setupImagePath(imageUrl, "");
-    }
-
-    public void setupImagePath(String imagePath, String imageUrl) {
-        imageMap.put(imagePath, imageUrl);
     }
 
     /**
      * 有序输出图片array
+     *
      * @return
      */
-    public ArrayList<Map<String,String>> getImageMapArray(){
-        ArrayList<Map<String,String>> arrayList = new ArrayList<>();
-        for(int index = 0;index < getChildCount();index ++){
+    public ArrayList<Map<String, String>> getImageMapArray() {
+        ArrayList<Map<String, String>> arrayList = new ArrayList<>();
+        for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
-            if(view instanceof ImageShowView){
-                Map<String,String> map = new HashMap<>();
-                String path = ((ImageShowView)view).getImageUrl();
-                map.put(path,imageMap.get(path));
+            if (view instanceof ImageShowView) {
+                Map<String, String> map = new HashMap<>();
+                String path = ((ImageShowView) view).getImageUrl();
+                map.put(path, imageMap.get(path));
                 arrayList.add(map);
             }
         }
@@ -312,7 +295,6 @@ public class TextAndImageMixLayout extends LinearLayout
      */
     public void addVideo(String coverImageUrl, String videoUrl, boolean ifAddText, CharSequence content) {
         final int insertIndex = getFoucsIndex() + 1;
-
         VideoShowView view = null;
         //如果单个视频，则先遍历parent中是否存在
         if (isSingleVideo) {
@@ -327,13 +309,9 @@ public class TextAndImageMixLayout extends LinearLayout
         if (null == view) {
             view = new VideoShowView(getContext());
             addView(view, insertIndex, getChildLayoutParams());
-            addImagePath(coverImageUrl);
-            if (ifAddText) {
-                //默认插入edit
+            //默认插入edit
+            if (ifAddText)
                 addRichText(insertIndex + 1, content);
-            }
-        } else {
-            addImagePath(coverImageUrl);
         }
         view.setEnabled(true);
         view.setVideoData(coverImageUrl, videoUrl);
@@ -352,26 +330,24 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param end
      */
     public void addLink(String url, String desc, int start, int end) {
-        currentEditText.setupTextLink(url, desc, start, end);
+        if (currentEditText != null)
+            currentEditText.setupTextLink(url, desc, start, end);
     }
 
     /** 加粗 */
     public void setupTextBold() {
-        if (currentEditText != null) {
+        if (currentEditText != null)
             currentEditText.setupTextBold();
-        }
     }
 
     public void setupUnderline() {
-        if (currentEditText != null) {
+        if (currentEditText != null)
             currentEditText.setupUnderline();
-        }
     }
 
     public void setupTextCenter() {
-        if (currentEditText != null) {
+        if (currentEditText != null)
             currentEditText.setupTextCenter();
-        }
     }
 
     public String getSelectionText() {
@@ -408,8 +384,7 @@ public class TextAndImageMixLayout extends LinearLayout
      * @return
      */
     private LayoutParams getChildLayoutParams() {
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        return params;
+        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -434,16 +409,16 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 执行remove操作
+     *
      * @param view
      */
-    private void removeBaseView(BaseView view){
+    private void removeBaseView(BaseView view) {
         final int index = indexOfChild(view);
         String text = null;
         if (index + 1 < getChildCount()) {
             View removeView = getChildAt(index + 1);
-            if (removeView instanceof EditTextView) {
+            if (removeView instanceof EditTextView)
                 text = ((EditTextView) removeView).getTextHtml();
-            }
             removeViewAt(index + 1);
         }
         //同时维护图片集合
@@ -463,11 +438,8 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param view
      */
     private void removeImagePath(BaseView view) {
-        if (view instanceof ImageShowView) {
+        if (view instanceof ImageShowView)
             imageMap.remove(((ImageShowView) view).getImageUrl());
-        } else if (view instanceof VideoShowView) {
-            imageMap.remove(((VideoShowView) view).getCoverImageUrl());
-        }
     }
 
     /**
@@ -478,9 +450,8 @@ public class TextAndImageMixLayout extends LinearLayout
     public String getFirstCoverImage() {
         String coverImageUrl = "";
         VideoShowView view = getFirstVideoView();
-        if(view != null){
+        if (view != null)
             coverImageUrl = view.getCoverImageUrl();
-        }
         return coverImageUrl;
     }
 
@@ -492,9 +463,8 @@ public class TextAndImageMixLayout extends LinearLayout
     public String getFirstVideoUrl() {
         String videoUrl = "";
         VideoShowView view = getFirstVideoView();
-        if(view != null){
+        if (view != null)
             videoUrl = view.getVideoUrl();
-        }
         return videoUrl;
     }
 
@@ -504,8 +474,7 @@ public class TextAndImageMixLayout extends LinearLayout
      * @return
      */
     public boolean hasImage() {
-        ImageShowView view = getFirstImageView();
-        return view != null;
+        return !imageMap.isEmpty();
     }
 
     /**
@@ -539,21 +508,6 @@ public class TextAndImageMixLayout extends LinearLayout
     }
 
     /**
-     * 获取第一个图片组件
-     *
-     * @return
-     */
-    private ImageShowView getFirstImageView() {
-        for (int index = 0; index < getChildCount(); index++) {
-            View view = getChildAt(index);
-            if (view instanceof ImageShowView) {
-                return (ImageShowView) view;
-            }
-        }
-        return null;
-    }
-
-    /**
      * 获取第一个Video组件
      *
      * @return
@@ -561,15 +515,10 @@ public class TextAndImageMixLayout extends LinearLayout
     private VideoShowView getFirstVideoView() {
         for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
-            if (view instanceof VideoShowView) {
+            if (view instanceof VideoShowView)
                 return (VideoShowView) view;
-            }
         }
         return null;
-    }
-
-    public boolean isSingleVideo() {
-        return isSingleVideo;
     }
 
     /** 设置显示单个视频 */
@@ -581,13 +530,11 @@ public class TextAndImageMixLayout extends LinearLayout
         ArrayList<String> imageUrlArray = new ArrayList<>();
         VideoShowView videoShowView = getFirstVideoView();
         String coverImage = "";
-        if (videoShowView != null) {
+        if (videoShowView != null)
             coverImage = videoShowView.getCoverImageUrl();
-        }
         Set<Map.Entry<String, String>> entries = imageMap.entrySet();
-        for (Map.Entry entry : entries) {
+        for (Map.Entry entry : entries)
             imageUrlArray.add(entry.getKey().toString());
-        }
         imageUrlArray.remove(coverImage);
         return imageUrlArray;
     }
@@ -603,6 +550,4 @@ public class TextAndImageMixLayout extends LinearLayout
         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, url);
         getContext().startActivity(intent);
     }
-
-
 }

@@ -3,6 +3,7 @@ package amodule.article.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,10 +16,11 @@ import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -30,6 +32,7 @@ import java.util.TimerTask;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.article.view.EditBottomControler;
@@ -48,7 +51,6 @@ import xh.windowview.XhDialog;
  * Created by MrTrying on 2017/5/19 09:19.
  * E_mail : ztanzeyu@gmail.com
  */
-
 public class ArticleEidtActiivty extends BaseActivity implements View.OnClickListener {
 
     private final int REQUEST_SELECT_IMAGE = 0x01;
@@ -62,6 +64,8 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     private EditText editTitle;
     private UploadArticleData uploadArticleData;
     private String code;
+
+    private boolean isKeyboradShow = false;
 
     /**
      * 定时存草稿
@@ -81,6 +85,23 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     }
 
     private void initView() {
+        //处理状态栏引发的问题
+        if (Tools.isShowTitle()) {
+            final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
+            rl.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        public void onGlobalLayout() {
+                            int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+                            Rect r = new Rect();
+                            rl.getWindowVisibleDisplayFrame(r);
+                            int screenHeight = rl.getRootView().getHeight();
+                            int heightDifference = screenHeight - (r.bottom - r.top);
+                            isKeyboradShow = heightDifference > 200;
+                            heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
+                            bottomBarLayout.setPadding(0, 0, 0, heightDifference);
+                        }
+                    });
+        }
         String color = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(color));
 
@@ -110,10 +131,8 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    if (s.length() > 59) {
-                        editTitle.setText(s.subSequence(0, 59));
-                    }
+                if (s.length() > 0 && s.length() > 59) {
+                    editTitle.setText(s.subSequence(0, 59));
                 }
             }
         });
@@ -144,7 +163,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnSelectVideoCallback() {
                     @Override
                     public void onSelectVideo() {
-                        Intent intent = new Intent(ArticleEidtActiivty.this,ArticleVideoSelectorActivity.class);
+                        Intent intent = new Intent(ArticleEidtActiivty.this, ArticleVideoSelectorActivity.class);
                         startActivityForResult(intent, REQUEST_SELECT_VIDEO);
                     }
                 });
@@ -165,7 +184,6 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
 
                                     @Override
                                     public void onCannel() {
-
                                     }
                                 });
                         dialog.show();
@@ -175,7 +193,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnKeyboardControlCallback() {
                     @Override
                     public void onKeyboardControlSwitch() {
-                        Toast.makeText(ArticleEidtActiivty.this, "onKeyboardControlSwitch", Toast.LENGTH_SHORT).show();
+                        ToolsDevice.keyboardControl(!isKeyboradShow, ArticleEidtActiivty.this, mixLayout.getCurrentEditText().getRichText());
                     }
                 });
         editBottomControler.setOnTextEidtCallback(
@@ -234,13 +252,13 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     }
 
     private void onNextSetp() {
-        Log.i("tzy",mixLayout.getXHServiceData());
+        Log.i("tzy", mixLayout.getXHServiceData());
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
             saveDraft();
             timer.cancel();
             Intent intent = new Intent(this, ArticleSelectActiivty.class);
-            intent.putExtra("draftId",uploadArticleData.getId());
+            intent.putExtra("draftId", uploadArticleData.getId());
             startActivity(intent);
             finish();
         } else {
@@ -255,10 +273,10 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         boolean isHasText = mixLayout.hasText();
         boolean isHasImg = mixLayout.hasImage();
         boolean isHasVideo = mixLayout.hasVideo();
-        if(!isHasText && !isHasImg && !isHasVideo){
+        if (!isHasText && !isHasImg && !isHasVideo) {
             return "内容不能为空";
         }
-        if(!isHasText){
+        if (!isHasText) {
             return "内容文字不能为空";
         }
         return null;
@@ -282,7 +300,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                         xhDialog.cancel();
                     }
                 }).show();
-            }else{
+            } else {
                 saveDraft();
             }
         }
@@ -340,7 +358,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 case REQUEST_SELECT_VIDEO:
                     String videoPath = data.getStringExtra(MediaStore.Video.Media.DATA);
                     String coverPath = data.getStringExtra(RecorderVideoData.video_img_path);
-                    mixLayout.addVideo(coverPath, videoPath,true,mixLayout.getCurrentEditText().getSelectionEndContent());
+                    mixLayout.addVideo(coverPath, videoPath, true, mixLayout.getCurrentEditText().getSelectionEndContent());
                     break;
             }
         }
