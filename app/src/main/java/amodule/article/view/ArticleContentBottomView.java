@@ -12,13 +12,15 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.override.view.ItemBaseView;
+
 /**
  * PackageName : amodule.article.view
  * Created by MrTrying on 2017/5/25 11:56.
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class ArticleContentBottomView extends LinearLayout implements View.OnClickListener{
+public class ArticleContentBottomView extends ItemBaseView implements View.OnClickListener{
 
     private RelativeLayout adLayout;
     private TextView articleRepintSource;
@@ -26,22 +28,21 @@ public class ArticleContentBottomView extends LinearLayout implements View.OnCli
     private TextView articleBrowse;
 
     public ArticleContentBottomView(Context context) {
-        super(context);
+        super(context,R.layout.a_article_content_bottom);
         init();
     }
 
     public ArticleContentBottomView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs,R.layout.a_article_content_bottom);
         init();
     }
 
     public ArticleContentBottomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs, defStyleAttr,R.layout.a_article_content_bottom);
         init();
     }
 
-    private void init(){
-        LayoutInflater.from(getContext()).inflate(R.layout.a_article_content_bottom,this);
+    public void init(){
 
         articleRepintSource = (TextView) findViewById(R.id.artilce_repint_source);
         articlePublishDate = (TextView) findViewById(R.id.article_publish_date);

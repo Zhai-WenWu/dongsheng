@@ -11,6 +11,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import amodule.dish.tools.ADDishContorl;
 import amodule.quan.view.NormalContentView;
@@ -23,7 +24,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
  * 精彩推荐
  */
 
-public class DishWonderfulView extends DishBaseView {
+public class DishWonderfulView extends ItemBaseView {
 
     public static String DISH_STYLE_WONDERFUL = "DISH_STYLE_WONDERFUL";
     private Map<String, String> map;

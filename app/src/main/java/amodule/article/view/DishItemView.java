@@ -9,13 +9,15 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.override.view.ItemBaseView;
+
 /**
  * PackageName : amodule.article.view.richtext
  * Created by MrTrying on 2017/5/25 11:38.
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class DishItemView extends RelativeLayout {
+public class DishItemView extends ItemBaseView {
 
     private ImageView dishImage;
     private TextView dishName;
@@ -24,21 +26,21 @@ public class DishItemView extends RelativeLayout {
     private TextView dishCustomerName;
 
     public DishItemView(Context context) {
-        super(context);
+        super(context,R.layout.a_article_dish_item);
         init();
     }
 
     public DishItemView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs,R.layout.a_article_dish_item);
         init();
     }
 
     public DishItemView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs, defStyleAttr,R.layout.a_article_dish_item);
         init();
     }
 
-    private void init(){
+    public void init(){
         LayoutInflater.from(getContext()).inflate(R.layout.a_article_dish_item,this);
         dishImage = (ImageView) findViewById(R.id.dish_image);
         dishName= (TextView) findViewById(R.id.dish_name);

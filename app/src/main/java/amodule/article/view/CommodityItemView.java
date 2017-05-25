@@ -12,13 +12,15 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
+
 /**
  * PackageName : amodule.article.view
  * Created by MrTrying on 2017/5/25 10:28.
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class CommodityItemView extends RelativeLayout implements View.OnClickListener{
+public class CommodityItemView extends ItemBaseView implements View.OnClickListener{
 
     private ImageView commodityImage;
     private TextView commodityTitle;
@@ -28,22 +30,21 @@ public class CommodityItemView extends RelativeLayout implements View.OnClickLis
     private TextView commodityStatus;
 
     public CommodityItemView(Context context) {
-        super(context);
+        super(context,R.layout.a_article_commodity_item);
         init();
     }
 
     public CommodityItemView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs,R.layout.a_article_commodity_item);
         init();
     }
 
     public CommodityItemView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs, defStyleAttr,R.layout.a_article_commodity_item);
         init();
     }
 
-    private void init(){
-        LayoutInflater.from(getContext()).inflate(R.layout.a_article_commodity_item,this);
+    public void init(){
         commodityImage = (ImageView) findViewById(R.id.commodity_image);
         commodityTitle = (TextView) findViewById(R.id.commodity_title);
         commodityStatus = (TextView) findViewById(R.id.commodity_status);

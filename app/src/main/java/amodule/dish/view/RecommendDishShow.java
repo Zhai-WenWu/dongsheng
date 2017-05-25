@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.override.adapter.AdapterSimple;
 import third.mall.view.HorizontalListView;
 import xh.basic.tool.UtilString;
@@ -19,7 +20,7 @@ import xh.basic.tool.UtilString;
  * 推荐标签
  */
 
-public class RecommendDishShow extends DishBaseView {
+public class RecommendDishShow extends ItemBaseView {
     private HorizontalListView horizontalListView;
     private AdapterSimple adapterSimple;
     private ListView listview;

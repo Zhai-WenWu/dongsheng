@@ -25,6 +25,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
@@ -34,7 +35,7 @@ import aplug.basic.SubBitmapTarget;
 /**
  * adapter菜谱详情页
  */
-public class DishStepView extends DishBaseView {
+public class DishStepView extends ItemBaseView {
     public static String DISH_STYLE_STEP="dish_style_step";
     public static final  int DISH_STYLE_STEP_INDEX=1;
     private TextView itemText1;

@@ -18,6 +18,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.Tools;
@@ -32,7 +33,7 @@ import xh.basic.tool.UtilString;
  * 精彩评论标签
  */
 
-public class CommentDishShow extends DishBaseView{
+public class CommentDishShow extends ItemBaseView {
     private LinearLayout ll_pinglun;
     private final int viewUser = 1;
     private final int viewSubject = 2;

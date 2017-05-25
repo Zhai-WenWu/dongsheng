@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.override.view.ItemBaseView;
+
 /**
  * Created by Administrator on 2016/8/15.
  */
 
-public class DishVideoImageView extends DishBaseView{
+public class DishVideoImageView extends ItemBaseView {
     private ImageView imageview_rela;
     private TextView time_tv;
     public DishVideoImageView(Context context) {

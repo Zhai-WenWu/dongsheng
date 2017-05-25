@@ -4,36 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
-import acore.tools.FileManager;
-import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.tools.Tools;
-import acore.widget.ImageViewVideo;
 import amodule.dish.activity.DetailDish;
-import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.scrollerAd.XHScrollerAdParent;
-import third.ad.tools.AdPlayIdConfig;
 
 /**
  * Created by ：fei_teng on 2017/1/12 17:47.
  */
 
-public class DishCommendView_New extends DishBaseView {
+public class DishCommendView_New extends ItemBaseView {
 
     public static String DISH_STYLE_COMMEND = "dish_style_commend";
     public Activity activity;

@@ -12,6 +12,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 
@@ -21,7 +22,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
  * 菜谱推荐
  */
 
-public class  DishMenuRecommend  extends DishBaseView{
+public class  DishMenuRecommend  extends ItemBaseView {
     public static String DISH_STYLE_MENU="dish_style_menu";
     private Activity activity;
 
