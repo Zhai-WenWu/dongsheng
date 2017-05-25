@@ -18,8 +18,10 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
+import xh.basic.tool.UtilString;
 
 /**
  * Created by ：fei_teng on 2016/10/27 20:43.
@@ -377,11 +379,11 @@ public class UploadListControl {
                                 }
                             }
                         };
-//                        if(path.contains("Main7")){
-//                            ReqEncyptInternet.in().doEncypt(path,itemData.getUploadMsg(),internetCallback);
-//                        }else{
+                        if(path.contains("Main7")){
+                            ReqEncyptInternet.in().doEncypt(path, UtilString.getStringByMap(itemData.getUploadMsg(), "&", "="),internetCallback);
+                        }else{
                             ReqInternet.in().doPost(path,itemData.getUploadMsg(),internetCallback);
-//                        }
+                        }
 
                     }
                     return true;

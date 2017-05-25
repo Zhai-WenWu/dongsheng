@@ -328,6 +328,7 @@ public class ArticleUploadListPool extends UploadListPool {
             ArrayList<UploadItemData> headItemDatas = new ArrayList<>();
             String videoImgPath = uploadArticleData.getVideoImg();
             String videoImgUrl = uploadArticleData.getVideoImgUrl();
+            Log.i("articleUpload","从草稿箱添加到上传池  videoImgPath:" + videoImgPath + "   videoImgUrl:" + videoImgUrl);
             if (!TextUtils.isEmpty(videoImgPath)) {
                 if (videoImgPath.startsWith("http")) {
                     videoImgUrl = videoImgPath;
