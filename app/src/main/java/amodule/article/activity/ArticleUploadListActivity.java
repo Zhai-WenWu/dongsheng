@@ -1,8 +1,6 @@
 package amodule.article.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +18,6 @@ import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -31,8 +27,6 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.ToolsDevice;
 import amodule.article.upload.ArticleUploadListPool;
-import amodule.dish.activity.upload.UploadDishActivity;
-import amodule.dish.video.activity.MediaPreviewActivity;
 import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
 import amodule.upload.UploadListControl;
@@ -47,7 +41,7 @@ import aplug.basic.ReqInternet;
  * 文章上传列表页
  * Created by Fang Ruijiao on 2017/5/23.
  */
-public class UploadArticleListActivity extends BaseActivity {
+public class ArticleUploadListActivity extends BaseActivity {
     private ListView mListview;
     private int draftId;
     private String dishName;
@@ -59,10 +53,6 @@ public class UploadArticleListActivity extends BaseActivity {
     private LinearLayout rl_allstop;
     private TextView tv_upload_statis;
 
-    //获取到的视频第一帧
-    private List<String> bitmapPaths;
-    //正在获取第一帧图片的路径
-    private HashMap<String, Bitmap> bitmaps;
     private TextView tv_title;
     private TextView tv_cancel_upload;
     private ImageView iv_back;
@@ -89,21 +79,12 @@ public class UploadArticleListActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        closePreActivity();
-    }
-
-
     private void initData() {
         Intent intent = getIntent();
         draftId = intent.getIntExtra("draftId", 0);
         timesStamp = intent.getStringExtra("time");
         coverPath = intent.getStringExtra("coverPath");
         finalVideoPath = intent.getStringExtra("finalVideoPath");
-        bitmapPaths = new ArrayList<String>();
-        bitmaps = new HashMap<String, Bitmap>();
         isStopUpload = false;
     }
 
@@ -180,32 +161,15 @@ public class UploadArticleListActivity extends BaseActivity {
 
     }
 
-    private void closePreActivity() {
-        if (MediaPreviewActivity.mediaPreWeakRe != null) {
-            Activity mediaPreAct = MediaPreviewActivity.mediaPreWeakRe.get();
-            MediaPreviewActivity.mediaPreWeakRe = null;
-            if (mediaPreAct != null)
-                mediaPreAct.finish();
-        }
-
-        if(UploadDishActivity.uploaDishWeakRef !=null){
-            Activity dishActivity =UploadDishActivity.uploaDishWeakRef.get();
-            UploadDishActivity.uploaDishWeakRef = null;
-            if (dishActivity != null)
-                dishActivity.finish();
-        }
-    }
-
-
     private void addListener() {
         tv_cancel_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String showInfo = "确定取消上传视频吗？";
+                String showInfo = "确定取消上传文章吗？";
                 String btnMsg1 = "确定";
                 String btnMsg2 = "取消";
 
-                final CommonDialog dialog = new CommonDialog(UploadArticleListActivity.this);
+                final CommonDialog dialog = new CommonDialog(ArticleUploadListActivity.this);
                 dialog.setMessage(showInfo).setSureButton(btnMsg1, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -214,11 +178,8 @@ public class UploadArticleListActivity extends BaseActivity {
                         FriendHome.isRefresh = true;
                         isStopUpload = true;
 
-                        Intent intent = new Intent();
-                        intent.setClass(UploadArticleListActivity.this,UploadDishActivity.class);
-                        intent.putExtra(UploadDishActivity.DISH_TYPE_KEY,UploadDishActivity.DISH_TYPE_VIDEO);
-                        intent.putExtra("id",draftId);
-                        intent.putExtra("state", UploadDishActivity.UPLOAD_DISH_DRAFT);
+                        Intent intent = new Intent(ArticleUploadListActivity.this,ArticleEidtActiivty.class);
+                        intent.putExtra("draftId",draftId);
                         startActivity(intent);
                         finish();
 
@@ -305,7 +266,7 @@ public class UploadArticleListActivity extends BaseActivity {
                         newPosition = 0;
                     view.findViewById(R.id.iv_cover_dish).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.iv_cover_dish_last).setVisibility(View.GONE);
-                    Glide.with(UploadArticleListActivity.this).load(arrayList.get(newPosition).get("path"))
+                    Glide.with(ArticleUploadListActivity.this).load(arrayList.get(newPosition).get("path"))
                             .into(((ImageView) view.findViewById(R.id.iv_cover_dish)));
                 }
                 ((ProgressBar) view.findViewById(R.id.pb_progress)).setProgress(Integer.parseInt(itemMap.get("progress")));
@@ -316,7 +277,7 @@ public class UploadArticleListActivity extends BaseActivity {
                         if (UploadItemData.STATE_FAILD == Integer.valueOf(itemMap.get("state"))) {
                             listPool.oneStartOrStop(Integer.valueOf(itemMap.get("pos")),
                                     Integer.valueOf(itemMap.get("index")), UploadListPool.TYPE_START);
-                            XHClick.mapStat(UploadArticleListActivity.this, TAG, "点击重试", "");
+                            XHClick.mapStat(ArticleUploadListActivity.this, TAG, "点击重试", "");
                         }
                     }
                 });
@@ -333,7 +294,7 @@ public class UploadArticleListActivity extends BaseActivity {
     }
 
     private View getHeaderView() {
-        View view = LayoutInflater.from(UploadArticleListActivity.this)
+        View view = LayoutInflater.from(ArticleUploadListActivity.this)
                 .inflate(R.layout.c_upload_list_header_item, null);
         rl_allstart = (LinearLayout) view.findViewById(R.id.ll_allstart);
         rl_allstop = (LinearLayout) view.findViewById(R.id.ll_allstop);
@@ -355,7 +316,7 @@ public class UploadArticleListActivity extends BaseActivity {
     }
 
     public View getFooterView() {
-        return LayoutInflater.from(UploadArticleListActivity.this)
+        return LayoutInflater.from(ArticleUploadListActivity.this)
                 .inflate(R.layout.c_upload_footer_item, null);
 
     }

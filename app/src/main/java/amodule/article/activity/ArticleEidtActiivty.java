@@ -35,6 +35,7 @@ import amodule.article.db.UploadArticleSQLite;
 import amodule.article.view.EditBottomControler;
 import amodule.article.view.InputUrlDialog;
 import amodule.article.view.TextAndImageMixLayout;
+import amodule.dish.db.UploadDishData;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -214,7 +215,13 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    uploadArticleData = sqLite.getDraftData();
+                    int draftId = getIntent().getIntExtra("draftId",0);
+                    if(draftId > 0){
+                        uploadArticleData = sqLite.selectById(draftId);
+                    }else {
+                        uploadArticleData = sqLite.getDraftData();
+                    }
+                    saveDraft();
                     handler.sendEmptyMessage(0);
                 }
             }).start();
@@ -313,6 +320,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         uploadArticleData.setVideo(mixLayout.getFirstVideoUrl());
         uploadArticleData.setVideoImg(mixLayout.getFirstCoverImage());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());
+        uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
 
         if (uploadArticleData.getId() > 0) {
             id = sqLite.update(uploadArticleData.getId(), uploadArticleData);

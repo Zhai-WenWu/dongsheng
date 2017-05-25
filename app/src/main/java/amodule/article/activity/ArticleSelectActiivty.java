@@ -125,7 +125,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         uploadArticleData.setIsOriginal(isCheck);
         uploadArticleData.setRepAddress(String.valueOf(reprintLink.getText()));
         sqLite.update(draftId,uploadArticleData);
-        Intent intent = new Intent(this,UploadArticleListActivity.class);
+        Intent intent = new Intent(this,ArticleUploadListActivity.class);
         intent.putExtra("draftId",draftId);
         intent.putExtra("coverPath",uploadArticleData.getImg());
         intent.putExtra("finalVideoPath",uploadArticleData.getVideo());

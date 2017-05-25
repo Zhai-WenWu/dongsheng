@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import acore.override.XHApplication;
 import acore.tools.Tools;
+import amodule.dish.db.UploadDishData;
 
 
 /**
@@ -32,30 +34,77 @@ public class UploadArticleSQLite extends SQLiteOpenHelper {
     }
 
     public UploadArticleData getDraftData(){
+        Log.i("articleUpload","获取草稿数据()");
         Cursor cur = null;
         SQLiteDatabase readableDatabase = null;
         try {
             readableDatabase = getReadableDatabase();
             UploadArticleData upData = new UploadArticleData();
-            cur = readableDatabase.query(TB_NAME, null,"", null, null, null, null);// 查询并获得游标
+            cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
+            Log.i("articleUpload","获取草稿数据() size:" + cur.getCount());
+            if (cur.moveToFirst()) {// 判断游标是否为空
+                do {
+                    String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
+                    if(UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
+                        Log.i("articleUpload","获取草稿数据() 是草稿");
+                        upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
+                        upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
+                        upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
+                        upData.setContent(cur.getString(cur.getColumnIndex(UploadArticleData.article_content)));
+                        upData.setIsOriginal(cur.getInt(cur.getColumnIndex(UploadArticleData.article_isOriginal)));
+                        upData.setRepAddress(cur.getString(cur.getColumnIndex(UploadArticleData.article_repAddress)));
+                        upData.setImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_img)));
+                        upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
+                        upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
+                        upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
+                        upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
+                        upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
+                        upData.setUploadType(uploadType);
+                        upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
+                        upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+                        break;
+                    }
+                }while (cur.moveToNext());
+            }
+            return upData;
+        } finally {
+            close(cur, readableDatabase);
+        }
+    }
 
-            int count = cur.getCount();
-            if (cur.moveToLast()) {// 判断游标是否为空
-                upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
-                upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
-                upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
-                upData.setContent(cur.getString(cur.getColumnIndex(UploadArticleData.article_content)));
-                upData.setIsOriginal(cur.getInt(cur.getColumnIndex(UploadArticleData.article_isOriginal)));
-                upData.setRepAddress(cur.getString(cur.getColumnIndex(UploadArticleData.article_repAddress)));
-                upData.setImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_img)));
-                upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
-                upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
-                upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
-                upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
-                upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
-                upData.setUploadType(cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType)));
-                upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
-                upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+    public UploadArticleData getUploadIngData(){
+        Cursor cur = null;
+        SQLiteDatabase readableDatabase = null;
+        try {
+            readableDatabase = getReadableDatabase();
+            UploadArticleData upData = null;
+            cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
+            Log.i("articleUpload","获取上传中数据() size:" + cur.getCount());
+            if (cur.moveToFirst()) {// 判断游标是否为空
+                do {
+                    String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
+                    Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
+                    if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
+                        Log.i("articleUpload","获取上传中数据() 不是草稿");
+                        upData = new UploadArticleData();
+                        upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
+                        upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
+                        upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
+                        upData.setContent(cur.getString(cur.getColumnIndex(UploadArticleData.article_content)));
+                        upData.setIsOriginal(cur.getInt(cur.getColumnIndex(UploadArticleData.article_isOriginal)));
+                        upData.setRepAddress(cur.getString(cur.getColumnIndex(UploadArticleData.article_repAddress)));
+                        upData.setImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_img)));
+                        upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
+                        upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
+                        upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
+                        upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
+                        upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
+                        upData.setUploadType(uploadType);
+                        upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
+                        upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+                        break;
+                    }
+                }while (cur.moveToNext());
             }
             return upData;
         } finally {
