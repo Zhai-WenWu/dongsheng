@@ -264,8 +264,10 @@ public class StringManager extends UtilString {
 
 	/*文章*/
 	public final static String api_getArticleClass = apiUrl + "Main7/Article/getArticleClass"; //文章分类
+	public final static String api_getRelated = apiUrl + "Main7/Article/getRelated"; //文章详情中的相关推荐
 	public final static String api_getArticleInfo = apiUrl + "Main7/Article/articleInfo"; //文章详情
 	public final static String api_articleAdd = apiUrl + "Main7/Article/articleAdd"; //发布文章
+	public final static String api_forumList = apiUrl + "Main7/Forum/forumList"; //评论列表
 
 
 	//替换url

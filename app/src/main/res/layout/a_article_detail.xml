@@ -4,8 +4,6 @@
     android:orientation="vertical"
     android:id="@+id/activityLayout"
     style="@style/layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
     <RelativeLayout
@@ -16,16 +14,22 @@
 
         <include
             android:id="@+id/relativeLayout_global"
-            layout="@layout/c_view_top_bar_home"
+            layout="@layout/c_view_bar_title_time"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_46"
             android:clickable="false" />
 
     </RelativeLayout>
-    <android.support.v7.widget.RecyclerView
+    <ListView
+        android:id="@+id/listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="fill_parent"
+        android:background="#fffffe"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:scrollbars="none"
+        android:visibility="gone"/>
 
 </RelativeLayout>
