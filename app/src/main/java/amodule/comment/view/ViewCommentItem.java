@@ -78,6 +78,7 @@ public class ViewCommentItem extends LinearLayout {
         initUserInfo();
         initContent();
         initReplay();
+        initOther();
     }
 
     private void initUserInfo(){
@@ -142,7 +143,7 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     replayContentShow.setVisibility(View.GONE);
                     if(mListener != null){
-                        mListener.onShowReplayClick();;
+                        mListener.onShowAllReplayClick(dataMap.get("comment_id"));;
                     }
                 }
             });
@@ -155,7 +156,7 @@ public class ViewCommentItem extends LinearLayout {
         ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
         View view;
         MultifunctionTextView replayTv;
-        for(Map<String, String> replayMap:replayArray) {
+        for(final Map<String, String> replayMap:replayArray) {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
             String content = replayMap.get("content");
@@ -201,8 +202,35 @@ public class ViewCommentItem extends LinearLayout {
             contentBuilder.parse(null);
             multifunctionText.addStyle(contentBuilder.getContent(), contentBuilder.build());
             replayTv.setText(multifunctionText);
+            replayTv.setRightClicker(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onReportClick(dataMap.get("comment_id"),replayMap.get("replay_id"));
+                }
+            });
             commentReplay.addView(view);
         }
+    }
+
+    private void initOther(){
+        commentTime.setText(dataMap.get("create_time"));
+        commentPraiseNum.setText(dataMap.get("fabulous_num"));
+        commentPraise.setImageResource("2".equals(dataMap.get("is_fabulous")) ? R.drawable.i_comment_praise_ok : R.drawable.i_comment_praise);
+        commentPraise.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onPraiseClick(dataMap.get("comment_id"));
+            }
+        });
+        String is_del_report = dataMap.get("is_del_report");
+        final boolean isDelete = "2".equals(is_del_report);
+        commentDelete.setText(isDelete ? "删除":"举报");
+        commentDelete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onDeleteOrReportClick(dataMap.get("comment_id"), isDelete);
+            }
+        });
     }
 
     private void setImg(ImageView imageView, String url){
@@ -222,7 +250,10 @@ public class ViewCommentItem extends LinearLayout {
     }
 
     public interface OnCommentItenListener{
-        public void onShowReplayClick();
+        public void onShowAllReplayClick(String comment_id);
+        public void onReportClick(String comment_id,String replay_id);
+        public void onDeleteOrReportClick(String comment_id,boolean isDelete);
+        public void onPraiseClick(String comment_id);
     }
 
 

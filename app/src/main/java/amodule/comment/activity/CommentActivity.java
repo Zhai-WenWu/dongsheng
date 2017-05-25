@@ -4,6 +4,7 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.xiangha.R;
 
@@ -15,6 +16,7 @@ import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
+import amodule.comment.view.ViewCommentItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
@@ -44,7 +46,15 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private void initView(){
         findViewById(R.id.commend_hind).setOnClickListener(this);
         downRefreshList = (DownRefreshList) findViewById(R.id.commend_listview);
-        adapterSimple = new AdapterSimple(downRefreshList,listArray,R.layout.a_comment_item,new String[]{},new int[]{});
+        adapterSimple = new AdapterSimple(downRefreshList,listArray,R.layout.a_comment_item,new String[]{},new int[]{}){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                ViewCommentItem viewCommentItem = (ViewCommentItem) view.findViewById(R.id.comment_item);
+                viewCommentItem.setData(listArray.get(position));
+                return view;
+            }
+        };
         downRefreshList.setAdapter(adapterSimple);
     }
 
