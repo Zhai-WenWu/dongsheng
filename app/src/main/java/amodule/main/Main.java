@@ -149,7 +149,7 @@ public class Main extends Activity implements OnClickListener {
         }
         mainInitDataControl= new MainInitDataControl();
         WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(this,dialogShowCallBack) : new WelcomeDialog(this,3,dialogShowCallBack);
+                new WelcomeDialog(this,dialogShowCallBack) : new WelcomeDialog(this,1,dialogShowCallBack);
         welcomeDialog.show();
         long endTime1=System.currentTimeMillis();
         Log.i("zhangyujian","main::oncreate::"+(endTime1-XHApplication.in().startTime));
