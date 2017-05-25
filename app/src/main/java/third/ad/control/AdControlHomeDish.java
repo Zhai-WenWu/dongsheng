@@ -34,15 +34,9 @@ public class AdControlHomeDish extends AdControlParent{
     private AdControlHomeDish(){
         adControlMap = new HashMap<>();
         AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0, AD_INSTERT_INDEX_0);
-        downLoadAdControl0.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0");
+        downLoadAdControl0.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0");
         adControlMap.put(0,downLoadAdControl0);
-        AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST, AD_INSTERT_INDEX);
-        downLoadAdControl1.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1");
-        adControlMap.put(1,downLoadAdControl1);
 
-        AdOptionHomeDish adControlParent = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST, AD_INSTERT_INDEX);
-        adControlParent.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++adControlNum));
-        adControlMap.put(adControlNum,adControlParent);
         Log.i("FRJ","首页加载数据");
     }
 
@@ -53,6 +47,19 @@ public class AdControlHomeDish extends AdControlParent{
         return mAdControlHomeDishUnload;
     }
 
+    /**
+     * 第二次加载广告数据
+     */
+    public AdControlHomeDish getTwoLoadAdData(){
+        AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST, AD_INSTERT_INDEX);
+        downLoadAdControl1.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1");
+        adControlMap.put(1,downLoadAdControl1);
+
+        AdOptionHomeDish adControlParent = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST, AD_INSTERT_INDEX);
+        adControlParent.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++adControlNum));
+        adControlMap.put(adControlNum,adControlParent);
+        return mAdControlHomeDishUnload;
+    }
     /**
      * 加载g广告数据
      * @param old_list ：原数据体

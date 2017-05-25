@@ -123,7 +123,7 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
                                         }
 
                                         @Override
-                                        public void onFalse() {
+                                        public void onFalse(int flag) {
                                             XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "登录失败");
                                             XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "失败原因：账号或密码错");
                                         }
@@ -131,7 +131,7 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
                         }
 
                         @Override
-                        public void onFalse() {
+                        public void onFalse(int flag) {
 
                             final XhDialog xhDialog = new XhDialog(LoginbyEmail.this);
                             xhDialog.setTitle("该邮箱尚未注册，"+"\n是否注册新账号？")

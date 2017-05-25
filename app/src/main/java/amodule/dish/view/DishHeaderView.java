@@ -171,7 +171,7 @@ public class DishHeaderView extends LinearLayout {
                         && mVideoPlayerController != null){
                     mVideoPlayerController.setShowAd(true);
                 }
-                if(isAutoPaly)
+                if(isAutoPaly && mVideoPlayerController != null)
                     mVideoPlayerController.setOnClick();
             }
         },activity,"result_media");

@@ -32,6 +32,7 @@
                 android:id="@+id/linear_item"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_49"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dp_5"
                 android:paddingRight="@dimen/dp_5">

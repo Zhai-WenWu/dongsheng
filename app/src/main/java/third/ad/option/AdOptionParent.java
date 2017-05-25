@@ -39,6 +39,20 @@ public abstract class AdOptionParent {
         }
     }
 
+    /**
+     * 子线程去请求数据广告
+     * @param context
+     * @param statisticKey
+     * @param controlTag
+     */
+    public void newRunableGetAdData(final Context context, final String statisticKey, final String controlTag){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getAdData(context,statisticKey,controlTag);
+            }
+        }).start();
+    }
     public void getAdData(final Context context, String statisticKey) {
         getAdData(context,statisticKey,"");
     }
@@ -46,10 +60,6 @@ public abstract class AdOptionParent {
     public void getAdData(final Context context, final String statisticKey, final String controlTag) {
         Log.i("FRJ","开始获取  广告  数据-------------:" + controlTag);
         adArray.clear();
-        //子线程中执行
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
                 ArrayList<String> adPosList = new ArrayList<>();
                 for (String posStr : AD_IDS) {
                     adPosList.add(posStr);
@@ -96,8 +106,6 @@ public abstract class AdOptionParent {
                         }
                     }
                 }, (Activity) context,statisticKey);
-            }
-        }).start();
 
     }
 

@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -103,6 +104,7 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
 
         switch (v.getId()) {
             case R.id.btn_identify_request:
+                btn_identify_request.setClickable(false);
                 callback.onCliclSendIdentify();
                 break;
             default:
@@ -112,6 +114,11 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
 
     public void startCountDown(){
         countDownTimer.start();
+    }
+
+    /*** 设置获取验证码可点击*/
+    public void btnClickTrue(){
+        btn_identify_request.setClickable(true);
     }
 
     public String getIdentify() {
