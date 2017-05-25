@@ -33,7 +33,7 @@ public class ArticleHeaderView extends ItemBaseView{
     private RelativeLayout exp_user_rela,follow_rela;
     private ImageView auther_userImg;
     private Map<String,String> mapUser;
-    public ArticleHeaderView(Context context, int layoutId) {
+    public ArticleHeaderView(Context context) {
         super(context, R.layout.view_article_header);
     }
 
@@ -61,7 +61,7 @@ public class ArticleHeaderView extends ItemBaseView{
 //                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), tongjiId, "用户点击", "头像点击量");
                 if(mapUser!=null&&!mapUser.isEmpty()){
                     AppCommon.onAttentionClick(mapUser.get("code"), "follow");
-                    mapUser.put("inFollow","2");
+                    mapUser.put("isFollow","2");
                     setMapFollowSate();
                 }
             }
@@ -89,11 +89,11 @@ public class ArticleHeaderView extends ItemBaseView{
             if(mapUser.containsKey("isGourment")&&"2".equals(mapUser.get("isGourment"))){
                 findViewById(R.id.cusType).setVisibility(VISIBLE);
             }else findViewById(R.id.cusType).setVisibility(GONE);
-            if(mapUser.containsKey("nickName")&&"2".equals(mapUser.get("nickName"))){
+            if(mapUser.containsKey("nickName")&&!TextUtils.isEmpty(mapUser.get("nickName"))){
                 user_name.setVisibility(VISIBLE);
                 user_name.setText(mapUser.get("nickName"));
             }else user_name.setVisibility(GONE);
-            if(mapUser.containsKey("info")&&"2".equals(mapUser.get("info"))){
+            if(mapUser.containsKey("info")&&!TextUtils.isEmpty(mapUser.get("info"))){
                 user_about.setVisibility(VISIBLE);
                 user_about.setText(mapUser.get("info"));
             }else user_about.setVisibility(GONE);
@@ -122,9 +122,9 @@ public class ArticleHeaderView extends ItemBaseView{
      */
     private void setMapFollowSate(){
         //关注
-        if(mapUser.containsKey("inFollow")&&!"3".equals(mapUser.get("inFollow"))){//1，未关注，2，已关注，3自己
+        if(mapUser.containsKey("isFollow")&&!"3".equals(mapUser.get("isFollow"))){//1，未关注，2，已关注，3自己
             follow_rela.setVisibility(VISIBLE);
-            if("1".equals(mapUser.get("inFollow"))){//未关注
+            if("1".equals(mapUser.get("isFollow"))){//未关注
                 follow_rela.setBackgroundResource(R.drawable.bg_circle_red_5);
                 follow_rela.setClickable(true);
                 follow_tv.setText("关注");

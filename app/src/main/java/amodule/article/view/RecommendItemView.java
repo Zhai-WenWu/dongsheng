@@ -10,6 +10,8 @@ import com.xiangha.R;
 
 import org.w3c.dom.Text;
 
+import java.util.Map;
+
 import acore.override.view.ItemBaseView;
 
 /**
@@ -47,4 +49,7 @@ public class RecommendItemView extends ItemBaseView {
         recComment = (TextView) findViewById(R.id.rec_comment);
     }
 
+    public void setData(Map<String,String> map){
+
+    }
 }
