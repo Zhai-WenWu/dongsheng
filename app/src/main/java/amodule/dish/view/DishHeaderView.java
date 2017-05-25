@@ -132,19 +132,17 @@ public class DishHeaderView extends LinearLayout {
         String title = list.get(0).get("name");
 
         try {
-            if(list.get(0).containsKey("selfVideo")&&!TextUtils.isEmpty(list.get(0).get("selfVideo"))
-                    && !"[]".equals(list.get(0).get("selfVideo"))){
             String selfVideo = list.get(0).get("selfVideo");
-            if(!TextUtils.isEmpty(selfVideo)
-                    && !"[]".equals(selfVideo)){
-                boolean urlValid = setSelfVideo(title, list.get(0).get("selfVideo"), list.get(0).get("img"));
+            if (!TextUtils.isEmpty(selfVideo)
+                    && !"[]".equals(selfVideo)) {
+                boolean urlValid = setSelfVideo(title, selfVideo, list.get(0).get("img"));
                 if (!urlValid) {
                     setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
                 }
-            }else{
+            } else {
                 setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
             }
-        }catch (Exception e){
+        } catch (Exception e){
             Toast.makeText(context,"视频播放失败",Toast.LENGTH_SHORT).show();
         }
         dishAboutView.setData(list.get(0), activity);
