@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import acore.override.XHApplication;
 import acore.tools.Tools;
 import amodule.dish.db.UploadDishData;
@@ -107,6 +109,47 @@ public class UploadArticleSQLite extends SQLiteOpenHelper {
                 }while (cur.moveToNext());
             }
             return upData;
+        } finally {
+            close(cur, readableDatabase);
+        }
+    }
+
+    public ArrayList<UploadArticleData> getAllUploadIngData(){
+        Cursor cur = null;
+        SQLiteDatabase readableDatabase = null;
+        try {
+            readableDatabase = getReadableDatabase();
+            ArrayList<UploadArticleData> articleDatas = new ArrayList<>();
+            UploadArticleData upData;
+            cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
+            Log.i("articleUpload","获取上传中数据() size:" + cur.getCount());
+            if (cur.moveToFirst()) {// 判断游标是否为空
+                do {
+                    String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
+                    Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
+                    if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
+                        Log.i("articleUpload","获取上传中数据() 不是草稿");
+                        upData = new UploadArticleData();
+                        upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
+                        upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
+                        upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
+                        upData.setContent(cur.getString(cur.getColumnIndex(UploadArticleData.article_content)));
+                        upData.setIsOriginal(cur.getInt(cur.getColumnIndex(UploadArticleData.article_isOriginal)));
+                        upData.setRepAddress(cur.getString(cur.getColumnIndex(UploadArticleData.article_repAddress)));
+                        upData.setImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_img)));
+                        upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
+                        upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
+                        upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
+                        upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
+                        upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
+                        upData.setUploadType(uploadType);
+                        upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
+                        upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+                        articleDatas.add(upData);
+                    }
+                }while (cur.moveToNext());
+            }
+            return articleDatas;
         } finally {
             close(cur, readableDatabase);
         }
