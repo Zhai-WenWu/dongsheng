@@ -105,7 +105,8 @@ public class XHOneAdControl {
     public void releaseView(){
         if(listAdParent!=null&&listAdParent.size()>0){
             for(int i=0;i<listAdParent.size();i++){
-                listAdParent.get(i).realseView();
+                if(listAdParent.get(i)!=null)
+                    listAdParent.get(i).realseView();
             }
         }
     }

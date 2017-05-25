@@ -370,7 +370,8 @@ public class XHAllAdControl {
     public void releaseView() {
         if (listAdContrls != null && listAdContrls.size() > 0) {
             for (int i = 0; i < listAdContrls.size(); i++) {
-                listAdContrls.get(i).releaseView();
+                if( listAdContrls.get(i)!=null)
+                    listAdContrls.get(i).releaseView();
             }
         }
     }

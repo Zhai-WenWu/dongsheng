@@ -85,7 +85,7 @@ public class XHApplication extends Application {
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                XHActivityManager.getInstance().setCurrentActivity(activity);
+//                XHActivityManager.getInstance().setCurrentActivity(activity);
             }
 
             @Override
@@ -95,10 +95,7 @@ public class XHApplication extends Application {
             @Override
             public void onActivityResumed(Activity activity) {
                 //记录当前activity
-                if (XHActivityManager.getInstance().getCurrentActivity().getComponentName()==null ||activity.getComponentName()==null
-                ||!XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName().equals(activity.getComponentName().getClassName())) {
-                    XHActivityManager.getInstance().setCurrentActivity(activity);
-                }
+                XHActivityManager.getInstance().setCurrentActivity(activity);
 
             }
 
