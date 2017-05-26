@@ -2,11 +2,13 @@ package acore.override.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -14,6 +16,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import acore.tools.FileManager;
 import aplug.basic.LoadImage;
@@ -138,6 +141,17 @@ public class ItemBaseView extends RelativeLayout {
                 }
             }
         };
+    }
+
+    public void setViewText(TextView textView, Map<String,String> map,String key){
+        setViewText(textView, map, key,View.GONE);
+    }
+
+    public void setViewText(TextView textView, Map<String,String> map,String key,int visibility){
+        if(map.containsKey(key) && !TextUtils.isEmpty(map.get(key))){
+            textView.setText(map.get(key));
+            textView.setVisibility(View.VISIBLE);
+        }else textView.setVisibility( View.INVISIBLE == visibility ? View.INVISIBLE:View.GONE);
     }
 
 }

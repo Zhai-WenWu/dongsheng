@@ -25,6 +25,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private ImageView deleteImage;
     private RelativeLayout videoLayout;
 
+    private boolean enableEdit = false;
     private String coverImageUrl;
     private String videoUrl;
 
@@ -78,6 +79,11 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 .into(coverImage);
     }
 
+    public void setEnableEdit(boolean enable) {
+        this.enableEdit = enable;
+        deleteImage.setVisibility(enableEdit ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -108,5 +114,14 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+
+    public RelativeLayout getVideoLayout() {
+        return videoLayout;
+    }
+
+    public void setVideoLayout(RelativeLayout videoLayout) {
+        this.videoLayout = videoLayout;
     }
 }

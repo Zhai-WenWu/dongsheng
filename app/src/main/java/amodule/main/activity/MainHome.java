@@ -29,6 +29,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -278,6 +279,7 @@ public class MainHome extends MainBaseActivity {
         if(isRefresh){
             refreshFragment(itemPosition);
         }
+                startActivity(new Intent(this,ArticleDetailActivity.class));
     }
 
     @Override

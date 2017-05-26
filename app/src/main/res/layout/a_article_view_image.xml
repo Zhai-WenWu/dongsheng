@@ -12,12 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/dp_160"
+        android:scaleType="centerCrop"
         android:background="#E0E0E0"/>
 
     <ImageButton
         android:id="@+id/delete_image"
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
+        android:visibility="gone"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/dp_6"
         android:background="@drawable/z_common_post_imag_del"/>

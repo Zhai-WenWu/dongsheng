@@ -314,7 +314,7 @@ public class TextAndImageMixLayout extends LinearLayout
             if (ifAddText)
                 addRichText(insertIndex + 1, content);
         }
-        view.setEnabled(true);
+        view.setEnableEdit(true);
         view.setVideoData(coverImageUrl, videoUrl);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);
