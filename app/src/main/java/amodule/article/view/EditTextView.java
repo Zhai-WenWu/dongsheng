@@ -3,14 +3,17 @@ package amodule.article.view;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -54,20 +57,6 @@ public class EditTextView extends BaseView {
         }
     };
 
-    private InputFilter htmlFilter = new InputFilter() {
-        Pattern html = Pattern.compile("<(\\S*?) [^>]*>.*?</\\1>|<.*? />",
-                Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            Matcher htmlMatcher = html.matcher(source);
-            if (htmlMatcher.find()) {
-                return "";
-            }
-            return null;
-        }
-    };
-
     public EditTextView(Context context) {
         this(context, null);
     }
@@ -93,15 +82,44 @@ public class EditTextView extends BaseView {
                 }
             }
         });
-        mRichText.setFilters(new InputFilter[]{emojiFilter, htmlFilter});
+        mRichText.setFilters(new InputFilter[]{emojiFilter});
+        mRichText.setOnSelectLinkCallback(new RichText.OnSelectLinkCallback() {
+            @Override
+            public void onSelectLink(String url, String desc) {
+                final int start = mRichText.getSelectionStart();
+                final int end = mRichText.getSelectionEnd();
+                InputUrlDialog dialog = new InputUrlDialog(getContext());
+                dialog.setDescDefault(desc);
+                dialog.setUrl(url);
+                dialog.setOnReturnResultCallback(
+                        new InputUrlDialog.OnReturnResultCallback() {
+                            @Override
+                            public void onSure(String url, String desc) {
+                                mRichText.link(url, start, end);
+                            }
+
+                            @Override
+                            public void onCannel() {
+                            }
+                        });
+                dialog.show();
+            }
+        });
     }
 
     @Override
     public JSONObject getOutputData() {
         JSONObject jsonObject = new JSONObject();
         try {
+            Log.i("tzy", "getOutputData");
+            Log.i("tzy", getLinkMapArray().toString());
+
             //正则处理html标签
-            mRichText.setText(delHTMLTag(mRichText.getText()));
+            SpannableStringBuilder ssbuilder = new SpannableStringBuilder();
+            ssbuilder.append(delHTMLTag(mRichText.getText()));
+            Log.i("tzy", getLinkMapArray().toString());
+            mRichText.setText(ssbuilder);
+            Log.i("tzy", getLinkMapArray().toString());
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
@@ -172,10 +190,18 @@ public class EditTextView extends BaseView {
 
 
     public void setupTextBold() {
+        if (mRichText.containLink()) {
+            Toast.makeText(getContext(), "不能包含链接", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mRichText.bold(!mRichText.contains(RichText.FORMAT_BOLD));
     }
 
     public void setupUnderline() {
+        if (mRichText.containLink()) {
+            Toast.makeText(getContext(), "不能包含链接", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mRichText.underline(!mRichText.contains(RichText.FORMAT_UNDERLINED));
     }
 
@@ -241,14 +267,19 @@ public class EditTextView extends BaseView {
      * @return 删除Html标签
      */
     private Editable delHTMLTag(Editable htmlStr) {
+        Log.i("tzy",htmlStr.toString());
         // 过滤script标签
         htmlStr = delTag(htmlStr, regEx_script);
+        Log.i("tzy",htmlStr.toString());
         // 过滤style标签
         htmlStr = delTag(htmlStr, regEx_style);
+        Log.i("tzy",htmlStr.toString());
         // 过滤html标签
         htmlStr = delTag(htmlStr, regEx_html);
+        Log.i("tzy",htmlStr.toString());
         // 过滤空格回车标签
         htmlStr = delTag(htmlStr, regEx_space);
+        Log.i("tzy",htmlStr.toString());
         // 返回文本字符串
         return htmlStr;
     }
@@ -258,9 +289,19 @@ public class EditTextView extends BaseView {
         Matcher matcher = pattern.matcher(htmlStr);
         // 过滤script标签
         while (matcher.find()) {
+            Log.i("tzy", "find");
             int start = matcher.start();
+            Log.i("tzy", "start = " + start);
             int end = matcher.end();
-            htmlStr.replace(start, end, "");
+            Log.i("tzy", "end = " + end);
+            if (start == end
+                    || start < 0 || start > htmlStr.length()
+                    || end < 0 || end > htmlStr.length()) {
+                break;
+            }
+            Log.i("tzy", "htmlStr = " + htmlStr);
+            htmlStr = htmlStr.replace(start, end, "");
+            Log.i("tzy", "htmlStr = " + htmlStr);
             matcher = pattern.matcher(htmlStr);
         }
         return htmlStr;

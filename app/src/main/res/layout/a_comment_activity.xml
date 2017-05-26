@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activitylayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/commend_listview"
+        style="@style/listView"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:divider="@null"
+        android:visibility="gone" >
+    </acore.widget.DownRefreshList>
+
+    <TextView
+        android:id="@+id/commend_hind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_213"
+        android:gravity="center"
+        android:text="暂无评论，抢沙发~"
+        android:textColor="#333"
+        android:textSize="@dimen/sp_15"
+        android:visibility="gone"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/common_bg"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        >
+        
+        <ImageView
+            android:id="@+id/commend_write_pen"
+            android:layout_width="@dimen/dp_11"
+            android:layout_height="@dimen/dp_11"
+            android:layout_marginLeft="@dimen/dp_11"
+            android:src="@drawable/i_comment_pen"
+            android:layout_centerVertical="true"
+            />
+
+        <acore.widget.TagTextView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/commend_write_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/dp_28"
+            android:gravity="center_vertical"
+            android:hint="写评论"
+            app:radius="@dimen/dp_40"
+            app:sideColor="#dbdbdb"
+            app:sideWidth="@dimen/dp_0.5"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

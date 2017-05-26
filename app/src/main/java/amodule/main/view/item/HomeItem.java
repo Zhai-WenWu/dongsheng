@@ -342,21 +342,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mType = null;
     }
 
-    protected boolean viewIsVisible(View view) {
-        return view == null ? false : view.getVisibility() == View.VISIBLE;
-    }
-
-    protected String handleNumber(String num) {
-        if (TextUtils.isEmpty(num))
-            return "";
-        if (Integer.parseInt(num) < 10000)
-            return num;
-        BigDecimal bd = new BigDecimal(Integer.parseInt(num) * 1.0 / 10000);
-        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-        return bd + "万";
-    }
-
-
     public void setHomeModuleBean(HomeModuleBean bean) {
         mModuleBean = bean;
     }

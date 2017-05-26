@@ -259,6 +259,9 @@ public class StringManager extends UtilString {
 	public final static String API_LOGIN_APP = apiUrl +"Main7/public/loginApp"; //获取首页数据
 	public final static String API_RECOMMEND_TOP = apiUrl +"Main7/Recommend/top"; //获取推荐置顶数据
 
+	/*** 个人主页：（视频、文章、问答）接口*/
+	public final static String API_USERMAIN_LEVEL = apiUrl + "Main7/Article/getClassList";//获取个人主页导航数据
+
 	/*** 推荐列表的统计*/
 	public final static String API_STATISTIC_S6 ="http://stat.xiangha.com/s6.gif"; //新首页统计
 
@@ -267,7 +270,11 @@ public class StringManager extends UtilString {
 	public final static String api_getRelated = apiUrl + "Main7/Article/getRelated"; //文章详情中的相关推荐
 	public final static String api_getArticleInfo = apiUrl + "Main7/Article/articleInfo"; //文章详情
 	public final static String api_articleAdd = apiUrl + "Main7/Article/articleAdd"; //发布文章
-	public final static String api_forumList = apiUrl + "Main7/Forum/forumList"; //评论列表
+
+	/*评论*/
+	public final static String api_forumList = apiUrl + "Main7/Forum/forumList"; //发布文章
+
+
 
 
 	//替换url

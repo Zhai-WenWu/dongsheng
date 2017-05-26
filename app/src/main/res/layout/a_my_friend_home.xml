@@ -62,8 +62,6 @@
             android:id="@+id/tab_float_mainMyself"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_48"
-            android:paddingLeft="@dimen/dp_72"
-            android:paddingRight="@dimen/dp_72"
             android:background="#f3f1e9"
             android:orientation="horizontal" >
         </LinearLayout>
