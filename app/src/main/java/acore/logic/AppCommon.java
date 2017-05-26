@@ -989,11 +989,15 @@ public class AppCommon {
         boolean isVip = false;
         if(TextUtils.isEmpty(data))
             return false;
-        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(data);
-        if(arrayList.size() > 0) {
-            Map<String, String> map = arrayList.get(0);
-            if ("2".equals(map.get("isVip"))) {
-                isVip = true;
+        if("2".equals(data)){
+            isVip = true;
+        }else {
+            ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(data);
+            if (arrayList.size() > 0) {
+                Map<String, String> map = arrayList.get(0);
+                if ("2".equals(map.get("isVip"))) {
+                    isVip = true;
+                }
             }
         }
         return isVip;

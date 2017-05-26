@@ -1,6 +1,5 @@
 package acore.widget.multifunction.linstener;
 
-import acore.tools.Tools;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -20,6 +19,8 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.tools.Tools;
+
 @SuppressWarnings("deprecation")
 public class TextViewTagLongClick implements OnLongClickListener{
 	private Context mCon;
@@ -33,7 +34,9 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	private OnClickListener mUserClicker;//中间数据
 	private String mRightBtnName = "投诉";
 	private String mCopyText="";
-	
+
+	private int normBackColor;
+
 	//是否删除掉star和end时前面添加@后面添加 <空格>
 	public boolean isHaveAt = true,nIsHaveCopy=true;
 	
@@ -41,6 +44,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 		mCon = con;
 		mTv = tv;
 		mTv.setOnLongClickListener(this);
+		normBackColor = Color.parseColor("#ffffff");
 	}
 	
 	@Override
@@ -156,7 +160,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 		mPopupWindow.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				mTv.setBackgroundColor(Color.parseColor("#ffffff"));
+				mTv.setBackgroundColor(normBackColor);
 			}
 		});
 	}
@@ -177,9 +181,15 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	private void dismissPopupWindowInstance() {
 		if (null != mPopupWindow) {
 			mPopupWindow.dismiss();
-			mTv.setBackgroundColor(Color.parseColor("#FFFFFF"));
+			mTv.setBackgroundColor(normBackColor);
 		}
 	}
+
+	public void setNormBackColor(int color){
+		normBackColor = color;
+	}
+
+
 	
 	private class CustomPopupWindow extends PopupWindow {
 		public CustomPopupWindow(View contentView, int width, int height) {

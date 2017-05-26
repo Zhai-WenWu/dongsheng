@@ -1,5 +1,6 @@
 package acore.widget.multifunction;
 
+import android.text.TextUtils;
 import android.view.View;
 
 import acore.widget.multifunction.base.StyleConfig;
@@ -13,7 +14,7 @@ public class CommentBuilder extends StyleConfigBuilder {
 
     private String text;
     private String textColor = "#535353";
-    private String backgroundColor = "#efefef";
+    private String backgroundColor ;
     private int textSize;
 
     public CommentBuilder(String text) {
@@ -43,7 +44,8 @@ public class CommentBuilder extends StyleConfigBuilder {
         config.setTextColor(textColor);
         if(textSize > 0)
             config.setTextSize(textSize);
-        config.setBackgroudColor(backgroundColor);
+        if(!TextUtils.isEmpty(backgroundColor))
+            config.setBackgroudColor(backgroundColor);
         config.setStart(0);
         config.setEnd(text.length());
         config.setClickListener(new View.OnClickListener() {

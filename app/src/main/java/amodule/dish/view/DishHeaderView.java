@@ -403,6 +403,7 @@ public class DishHeaderView extends LinearLayout {
 
                     Intent intent = new Intent(activity, MoreImageShow.class);
                     intent.putExtra("data", listmap);
+                    intent.putExtra("from", "dish");
                     intent.putExtra("index", 0);
                     intent.putExtra("isShowAd", false);
                     dishVidioLayout.setClickable(true);

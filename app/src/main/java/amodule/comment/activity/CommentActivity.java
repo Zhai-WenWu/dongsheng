@@ -28,6 +28,7 @@ import amodule.comment.view.ViewCommentItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import xh.windowview.XhDialog;
 
 /**
  * Created by Fang Ruijiao on 2017/5/25.
@@ -41,6 +42,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private EditText commend_write_et;
     private TextView sendTv;
+    private View sendProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.commend_hind).setOnClickListener(this);
         sendTv = (TextView) findViewById(R.id.comment_send);
         sendTv.setOnClickListener(this);
+        sendProgress = findViewById(R.id.comment_send_progress);
         commend_write_et = (EditText) findViewById(R.id.commend_write_et);
         downRefreshList = (DownRefreshList) findViewById(R.id.comment_listview);
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
@@ -71,7 +74,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         });
         adapterSimple = new AdapterSimple(downRefreshList, listArray, R.layout.a_comment_item, new String[]{}, new int[]{}) {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(final int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 final ViewCommentItem viewCommentItem = (ViewCommentItem) view.findViewById(R.id.comment_item);
                 viewCommentItem.setData(listArray.get(position));
@@ -116,20 +119,32 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     }
 
                     @Override
-                    public void onDeleteCommentClick(String comment_id) {
+                    public void onDeleteCommentClick(final String comment_id) {
                         Tools.showToast(CommentActivity.this,"删除评论" + comment_id);
-                        requstInternet(StringManager.api_delForum,"type=" + type + "&code=" + code + "&commentId="+comment_id);
+                        final XhDialog xhDialog = new XhDialog(CommentActivity.this);
+                        xhDialog.setTitle("确认删除我的评论？").setCanselButton("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                xhDialog.cancel();
+                            }
+                        }).setSureButton("确认", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requstInternet(StringManager.api_delForum,"type=" + type + "&code=" + code + "&commentId="+comment_id);
+                                xhDialog.cancel();
+                            }
+                        }).show();
                     }
 
                     @Override
                     public void onPraiseClick(String comment_id) {
-                        Tools.showToast(CommentActivity.this,"点赞 " + comment_id);
-                        requstInternet(StringManager.api_likeForum,"");
+                        Map<String,String> map = listArray.get(position);
+                        map.put("is_fabulous","2");
+                        requstInternet(StringManager.api_likeForum,"type=" + type + "&code=" + code + "&commentId=" + comment_id);
                     }
 
                     @Override
                     public void onContentReplayClick(String comment_id,String replay_code, String replay_name) {
-                        Tools.showToast(CommentActivity.this,"回复 回复" + replay_name);
                         commend_write_et.setHint("回复 " + replay_name);
                         ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
                         sendTv.setVisibility(View.VISIBLE);
@@ -194,7 +209,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         JSONArray jsonArray = new JSONArray();
                         for (int k = 0; k < 2; k++) {
                             JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("text", "附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了");
+                            jsonObject.put("text", "附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了,附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了,附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了,附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了");
                             JSONArray jsonArray2 = new JSONArray();
                             JSONObject jsonObject2 = new JSONObject();
                             jsonObject2.put("","http://s1.cdn.xiangha.com/quan/201705/2510/59263e464df1c.jpg/MjUwX2MxXzE4MA.webp");
@@ -272,7 +287,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private String currentUrl,currentParams;
     private void sendData(){
+        sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
+        if(content.length() > 2000){
+            Tools.showToast(this,"发送内容不能超过2000字");
+            return;
+        }
+        commend_write_et.setText("");
         String newParams;
         if(StringManager.api_addForum.equals(currentUrl)){
             JSONArray jsonArray = new JSONArray();
@@ -291,7 +312,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void loaded(int i, String s, Object o) {
-
+                sendProgress.setVisibility(View.GONE);
             }
         });
     }

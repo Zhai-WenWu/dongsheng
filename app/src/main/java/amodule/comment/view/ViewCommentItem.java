@@ -24,10 +24,10 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.multifunction.CommentBuilder;
 import acore.widget.multifunction.view.MultifunctionTextView;
+import amodule.dish.activity.MoreImageShow;
 import amodule.user.activity.FriendHome;
 import aplug.basic.LoadImage;
 
@@ -97,7 +97,9 @@ public class ViewCommentItem extends LinearLayout {
                 }
             });
             AppCommon.setUserTypeImage(Integer.valueOf(cusstomMap.get("is_gourmet")), userType);
-            userName.setText(cusstomMap.get("nick_name"));
+            String nickName = cusstomMap.get("nick_name");
+            if(TextUtils.isEmpty(nickName)) nickName = "";
+            userName.setText(nickName.length() < 6 ? nickName : nickName.subSequence(0,5) + "...");
             userName.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -117,15 +119,40 @@ public class ViewCommentItem extends LinearLayout {
         }
     }
 
-    private void initCotentView(Map<String, String> contentMap){
+    private boolean isShowContentClick = false;
+    private void initCotentView(final Map<String, String> contentMap){
         commentContent.removeAllViews();
         View view = layoutInflater.inflate(R.layout.a_comment_item_content,null);
-        MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
-        contentText.setText(contentMap.get("text"));
+        final MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
+        contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+        final String text = contentMap.get("text");
+        int maxNum = 100;
+        if(TextUtils.isEmpty(text) || text.length() <= maxNum){
+            contentText.setText(text);
+        }else{
+            String newText = text.substring(0,maxNum);
+            MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
+            CommentBuilder textBuilder = new CommentBuilder(newText).setTextColor("#535353");
+            textBuilder.parse(null);
+            multifunctionText.addStyle(textBuilder.getContent(), textBuilder.build());
+            CommentBuilder showBuilder = new CommentBuilder("...>").setTextColor("#bcbcbc");
+            showBuilder.parse(new CommentBuilder.CommentClickCallback() {
+                @Override
+                public void onCommentClick(View v, String userCode) {
+                    isShowContentClick = true;
+                    contentText.setText(text);
+                    contentText.setCopyText(text);
+                }
+            });
+            multifunctionText.addStyle(showBuilder.getContent(), showBuilder.build());
+            contentText.setText(multifunctionText);
+            contentText.setCopyText(newText + "...>");
+        }
         contentText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mListener != null) mListener.onContentReplayClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                if(mListener != null && !isShowContentClick) mListener.onContentReplayClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                isShowContentClick = false;
             }
         });
         String ucode = cusstomMap.get("ucode");
@@ -141,21 +168,54 @@ public class ViewCommentItem extends LinearLayout {
                 }
             }
         });
-        String imgs = contentMap.get("imgs");
+        final String imgs = contentMap.get("imgs");
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(imgs);
         switch (contentArray.size()){
             case 3:
                 ImageView imageView3 = (ImageView) view.findViewById(R.id.commend_cotent_img3);
                 setImg(imageView3,contentArray.get(2).get(""));
+                imageView3.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showImg(imgs,2);
+                    }
+                });
             case 2:
                 ImageView imageView2 = (ImageView) view.findViewById(R.id.commend_cotent_img2);
                 setImg(imageView2,contentArray.get(1).get(""));
+                imageView2.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showImg(imgs,1);
+                    }
+                });
             case 1:
                 ImageView imageView1 = (ImageView) view.findViewById(R.id.commend_cotent_img1);
                 setImg(imageView1,contentArray.get(0).get(""));
+                imageView1.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showImg(imgs,0);
+                    }
+                });
                 break;
         }
         commentContent.addView(view);
+    }
+
+    private void showImg(String imgs,int index){
+        ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(imgs);
+        for(int i = 0; i < contentArray.size(); i++){
+            Map<String,String> map = contentArray.get(i);
+            map.put("img", map.get(""));
+            map.put("info", "");
+            map.put("num", "" + (i+1));
+        }
+        Intent intent = new Intent(mContext, MoreImageShow.class);
+        intent.putExtra("data",contentArray);
+        intent.putExtra("index", index);
+        intent.putExtra("isShowAd", false);
+        mContext.startActivity(intent);
     }
 
     private OnCommentItenListener mListener;
@@ -192,6 +252,7 @@ public class ViewCommentItem extends LinearLayout {
         for(final Map<String, String> replayMap:replayArray) {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
+            replayTv.setNormBackColor(Color.parseColor("#efefef"));
             String content = replayMap.get("content");
             String uName = replayMap.get("uname");
             final String ucode = replayMap.get("ucode");
@@ -213,8 +274,7 @@ public class ViewCommentItem extends LinearLayout {
             multifunctionText.addStyle(uNameBuilder.getContent(), uNameBuilder.build());
             if("2".equals(is_author)) {
                 authoCode = ucode;
-                CommentBuilder authorBuilder = new CommentBuilder("作者")
-                        .setTextColor("#ffffff").setBackgroudColor("#cccccc").setTextSize(Tools.getDimen(mContext,R.dimen.dp_11));
+                CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                 authorBuilder.parse(null);
                 multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
             }
@@ -233,8 +293,7 @@ public class ViewCommentItem extends LinearLayout {
                 multifunctionText.addStyle(replayNameBuilder.getContent(), replayNameBuilder.build());
                 if ("2".equals(is_replay_author)) {
                     authoCode = replay_ucode;
-                    CommentBuilder authorBuilder = new CommentBuilder("作者")
-                            .setTextColor("#ffffff").setBackgroudColor("#cccccc").setTextSize(Tools.getDimen(mContext,R.dimen.dp_11));
+                    CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                     authorBuilder.parse(null);
                     multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
                 }
@@ -280,6 +339,7 @@ public class ViewCommentItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if(mListener != null) mListener.onPraiseClick(dataMap.get("comment_id"));
+                commentPraise.setImageResource(R.drawable.i_comment_praise_ok);
             }
         });
         String is_del_report = dataMap.get("is_del_report");

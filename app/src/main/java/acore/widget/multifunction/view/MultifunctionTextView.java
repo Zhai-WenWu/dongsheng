@@ -218,6 +218,10 @@ public class MultifunctionTextView extends TextView {
 		mTextViewTagLongClick.setCopyText(copyText);
 	}
 
+	public void setNormBackColor(int color){
+		mTextViewTagLongClick.setNormBackColor(color);
+	}
+
 	/**
 	 * 设置
 	 *
