@@ -279,8 +279,9 @@ public class StringManager extends UtilString {
 	public final static String api_addReplay = apiUrl + "Main7/Forum/addReplay"; //添加回复
 	public final static String api_delReplay = apiUrl + "Main7/Forum/delReplay"; //删除回复
 
-
-
+	/*评论举报列表*/
+	public final static String API_COMMENTS_REPORT = apiUrl + "Main7/Forum/reportList";
+	public final static String API_COMMIT_REPORT = apiUrl + "Main7/Forum/addReport";
 
 	//替换url
 	public final static String replaceUrl(String url) {
