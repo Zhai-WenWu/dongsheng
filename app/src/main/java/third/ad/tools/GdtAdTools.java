@@ -49,7 +49,7 @@ public class GdtAdTools {
      */
     public void showSplashAD(Activity act, ViewGroup parent, View skipContainer, String adid,
                              final GdtSplashAdListener gdtListener) {
-        new SplashAD(act, parent, skipContainer, APPID, adid,
+        SplashAD splashAD = new SplashAD(act, parent, skipContainer, APPID, adid,
                 new SplashADListener() {
                     @Override
                     public void onADDismissed() {

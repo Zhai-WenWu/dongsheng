@@ -3,12 +3,10 @@ package amodule.article.view;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,15 +109,11 @@ public class EditTextView extends BaseView {
     public JSONObject getOutputData() {
         JSONObject jsonObject = new JSONObject();
         try {
-            Log.i("tzy", "getOutputData");
-            Log.i("tzy", getLinkMapArray().toString());
-
             //正则处理html标签
             SpannableStringBuilder ssbuilder = new SpannableStringBuilder();
             ssbuilder.append(delHTMLTag(mRichText.getText()));
-            Log.i("tzy", getLinkMapArray().toString());
             mRichText.setText(ssbuilder);
-            Log.i("tzy", getLinkMapArray().toString());
+            mRichText.setSelection(ssbuilder.length());
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
@@ -267,19 +261,14 @@ public class EditTextView extends BaseView {
      * @return 删除Html标签
      */
     private Editable delHTMLTag(Editable htmlStr) {
-        Log.i("tzy",htmlStr.toString());
         // 过滤script标签
         htmlStr = delTag(htmlStr, regEx_script);
-        Log.i("tzy",htmlStr.toString());
         // 过滤style标签
         htmlStr = delTag(htmlStr, regEx_style);
-        Log.i("tzy",htmlStr.toString());
         // 过滤html标签
         htmlStr = delTag(htmlStr, regEx_html);
-        Log.i("tzy",htmlStr.toString());
         // 过滤空格回车标签
         htmlStr = delTag(htmlStr, regEx_space);
-        Log.i("tzy",htmlStr.toString());
         // 返回文本字符串
         return htmlStr;
     }
@@ -289,19 +278,14 @@ public class EditTextView extends BaseView {
         Matcher matcher = pattern.matcher(htmlStr);
         // 过滤script标签
         while (matcher.find()) {
-            Log.i("tzy", "find");
             int start = matcher.start();
-            Log.i("tzy", "start = " + start);
             int end = matcher.end();
-            Log.i("tzy", "end = " + end);
             if (start == end
                     || start < 0 || start > htmlStr.length()
                     || end < 0 || end > htmlStr.length()) {
                 break;
             }
-            Log.i("tzy", "htmlStr = " + htmlStr);
             htmlStr = htmlStr.replace(start, end, "");
-            Log.i("tzy", "htmlStr = " + htmlStr);
             matcher = pattern.matcher(htmlStr);
         }
         return htmlStr;

@@ -19,11 +19,8 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
-import amodule.main.Main;
-import xh.basic.tool.UtilString;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
-import static android.R.attr.onClick;
 
 /**
  * 文章header头view
