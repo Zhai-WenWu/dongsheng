@@ -229,7 +229,7 @@ public class Welcome extends BaseActivity {
                     loadIndex(ONCLICK_MODE);
             }
         });
-        mADSkipContainer = (RelativeLayout) findViewById(R.id.skip_container);
+//        mADSkipContainer = (RelativeLayout) findViewById(R.id.skip_container);
         mADLayout = (RelativeLayout) findViewById(R.id.ad_layout);
         textLead = (TextView) findViewById(R.id.ad_vip_lead);
         textSkip = (TextView) findViewById(R.id.ad_skip);

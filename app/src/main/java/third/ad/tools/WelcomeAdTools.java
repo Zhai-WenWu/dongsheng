@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiNative;
 
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,6 +17,7 @@ import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import amodule.main.view.WelcomeDialog;
 import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilString;
 
@@ -43,8 +43,8 @@ public class WelcomeAdTools {
     private int splashmaxs = 5 * 60;
     /** 是否二次开启 */
     private int open = OPEN;
-    /** 开启时间 */
-    private int duretimes = 4;
+   /** 开启时间 */
+    private int duretimes = WelcomeDialog.DEFAULT_TIME;
     /** 展示次数，0表示无限次 */
     private int shownum = 0;
 

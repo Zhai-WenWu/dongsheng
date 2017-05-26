@@ -14,12 +14,12 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.inmobi.ads.InMobiAdRequestStatus;
@@ -29,8 +29,11 @@ import com.xiangha.R;
 import org.json.JSONObject;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
+import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import aplug.basic.LoadImage;
@@ -46,26 +49,26 @@ import static android.os.Looper.getMainLooper;
  * 欢迎页弹框
  */
 public class WelcomeDialog extends Dialog {
-    private final static int DEFAULT_TIME = 4;
+    public final static int DEFAULT_TIME = 8;
     private Activity activity;
     protected View view;
     protected int height;
 
-    private ImageView imageView;
-    private TextView textSkip;
+    private TextView textSkip,textLead;
     private RelativeLayout mADSkipContainer;
     private RelativeLayout mADLayout;
 //    private WelcomeRelativeLayout welcomeRelativeLayout;
     private boolean isAdLoadOk = false;
     private Handler mMainHandler = null;
     private boolean isAdComplete=true;
+    private boolean isAdLeadClick = false;
+//    private WelcomeRelativeLayout welcomeRelativeLayout;
 
-    private int mAdTime = 4;
+    private int mAdTime = 8;//默认时间
     private final long mAdIntervalTime = 1000;
     private boolean isOnGlobalLayout = false;//是否渲染完成;
     private boolean isInit = false;//是否加载过
     private int num = 0;//绘制被调用的次数
-
 
     public WelcomeDialog(@NonNull Activity act) {
         this(act, DEFAULT_TIME,null);
@@ -84,7 +87,7 @@ public class WelcomeDialog extends Dialog {
         super(act, R.style.welcomeDialog);
         Main.isShowWelcomeDialog=true;//至当前dialog状态
         long endTime=System.currentTimeMillis();
-        Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime));
+        Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime)+"::::"+adShowTime);
         this.activity = act;
         this.mAdTime = adShowTime;
         this.dialogShowCallBack=callBack;
@@ -100,28 +103,22 @@ public class WelcomeDialog extends Dialog {
         this.view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (!isOnGlobalLayout &&((!isAdLoadOk && num>=3)||(isAdLoadOk &&num >= 5))) {
-                    isOnGlobalLayout = true;
-                    if (dialogShowCallBack != null) dialogShowCallBack.dialogOnLayout();
-                }
+                Log.i("zhangyujian","num:::::::::::::::::::::::"+num);
+                layoutCallBack();
                 ++num;
             }
         });
         if(dialogShowCallBack!=null)dialogShowCallBack.dialogOnCreate();
         long endTime3=System.currentTimeMillis();
         Log.i("zhangyujian","dialog::oncreate::"+(endTime3-XHApplication.in().startTime));
-//        welcomeRelativeLayout.setViewCallBack(new WelcomeRelativeLayout.ViewCallBack() {
-//            @Override
-//            public void viewOndraw(int onDrawNum) {
-//                Log.i("zhangyujian","dialog::setViewCallBack::"+onDrawNum);
-//                if (!isOnGlobalLayout &&((!isAdLoadOk && onDrawNum>=2)||(isAdLoadOk &&onDrawNum >= 3))) {
-//                    isOnGlobalLayout = true;
-//                    if (dialogShowCallBack != null) dialogShowCallBack.dialogOnLayout();
-//                }
-//            }
-//        });
     }
 
+    private void layoutCallBack(){
+        if (!isOnGlobalLayout &&mAdTime<=5 &&((!isAdLoadOk && num>=2)||(isAdLoadOk &&num >= 4))) {
+            isOnGlobalLayout = true;
+            if (dialogShowCallBack != null) dialogShowCallBack.dialogOnLayout();
+        }
+    }
     /**
      * 初始化view
      */
@@ -135,17 +132,16 @@ public class WelcomeDialog extends Dialog {
      */
     private void initWelcome() {
         // 初始化
-        imageView = (ImageView) view.findViewById(R.id.iv_welcome);
-//        welcomeRelativeLayout= (WelcomeRelativeLayout) view.findViewById(R.id.activityLayout);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeDialog();
-            }
-        });
         mADSkipContainer = (RelativeLayout) view.findViewById(R.id.skip_container);
         mADLayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
         textSkip = (TextView) view.findViewById(R.id.ad_skip);
+        textLead = (TextView) findViewById(R.id.ad_vip_lead);
+        textLead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAdLeadClick=true;
+            }
+        });
         mADSkipContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,18 +150,6 @@ public class WelcomeDialog extends Dialog {
         });
         initAd();
     }
-    /**
-     * 处理图片
-     */
-    private void ViewImageWelcome(){
-        final ImageView image = (ImageView) view.findViewById(R.id.image);
-        Glide.with(activity).load(R.drawable.welcome_big).into(image);
-//        image.setBackgroundResource(R.drawable.welcome_big);
-        int imageWidth = ToolsDevice.getWindowPx(activity).widthPixels / 3;
-        image.setPadding(0, imageWidth - 6, 0, 0);
-        image.getLayoutParams().width = imageWidth;
-        image.setVisibility(View.VISIBLE);
-    }
 
     private void initAd() {
         //设置广点通广告回调
@@ -173,7 +157,15 @@ public class WelcomeDialog extends Dialog {
                 new WelcomeAdTools.GdtCallback() {
                     @Override
                     public void onAdPresent() {
-                        mADSkipContainer.setVisibility(View.VISIBLE);
+                        if(mAdTime>5){
+                            endCountDown();
+                            mAdTime=5;
+                            startCountDown(false);
+                        }else if(mAdTime<3){
+                            closeDialog();
+                            return;
+                        }
+                        showSkipContainer();
                         isAdLoadOk = true;
                         AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "show", "开屏广告位");
                         XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_gdt");
@@ -181,7 +173,6 @@ public class WelcomeDialog extends Dialog {
 
                     @Override
                     public void onAdFailed(String reason) {
-
                     }
 
                     @Override
@@ -237,8 +228,16 @@ public class WelcomeDialog extends Dialog {
                                     @Override
                                     public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
                                         if (bitmap != null) {
+                                            if(mAdTime>5){
+                                                endCountDown();
+                                                mAdTime=5;
+                                                startCountDown(false);
+                                            }else if(mAdTime<3){
+                                                closeDialog();
+                                                return;
+                                            }
+                                            showSkipContainer();
                                             UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(activity).widthPixels, 0, false);
-                                            mADSkipContainer.setVisibility(View.VISIBLE);
                                             //曝光
                                             InMobiNative.bind(imageView, inMobiNative);
                                             XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_inmobi");
@@ -278,7 +277,6 @@ public class WelcomeDialog extends Dialog {
                     @Override
                     public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
                         //失败
-
                     }
 
                     @Override
@@ -302,6 +300,7 @@ public class WelcomeDialog extends Dialog {
                     public void onAdLoadSucceeded(final String url, final String loadingUrl) {
                         //处理view
                         mADLayout.removeAllViews();
+                        isAdLoadOk = true;
                         View view = LayoutInflater.from(activity).inflate(R.layout.view_ad_inmobi, null);
                         final ImageView imageView = (ImageView) view.findViewById(R.id.image);
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -315,8 +314,16 @@ public class WelcomeDialog extends Dialog {
                                 @Override
                                 public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
                                     if (bitmap != null) {
+                                        if(mAdTime>5){
+                                            endCountDown();
+                                            mAdTime=5;
+                                            startCountDown(false);
+                                        }else if(mAdTime<3){
+                                            closeDialog();
+                                            return;
+                                        }
+                                        showSkipContainer();
                                         UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(activity).widthPixels, 0, false);
-                                        mADSkipContainer.setVisibility(View.VISIBLE);
                                         XHClick.mapStat(activity, "ad_show_index", "开屏", "xh");
                                     }
                                 }
@@ -344,17 +351,24 @@ public class WelcomeDialog extends Dialog {
                     }
                 });
     }
+    private void showSkipContainer(){
+        mADSkipContainer.setVisibility(View.VISIBLE);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        alphaAnimation.setDuration(500);
+        alphaAnimation.setFillAfter(true);
+        mADSkipContainer.startAnimation(alphaAnimation);
+    }
 
     private Runnable mCountDownRun = new Runnable() {
         @Override
         public void run() {
             endCountDown();
-            if (mAdTime <= 0) {
+            if (mAdTime <= 0||(mAdTime<=2&&!isAdLoadOk&& LoginManager.isShowAd())) {
                 closeDialog();
                 return;
             }
-            if (textSkip != null)
-                textSkip.setText(activity.getResources().getString(R.string.skip) + String.valueOf(mAdTime));
+            layoutCallBack();
+            Log.i("zhangyujian","mAdTime:::"+mAdTime);
             mAdTime--;
             startCountDown(true);
         }
@@ -397,9 +411,11 @@ public class WelcomeDialog extends Dialog {
             @Override
             public void run() {
                 WelcomeDialog.this.dismiss();
+                if(isAdLeadClick)
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.api_vip, true);
                 activity.overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
             }
-        }, 280);
+        }, 200);
     }
 
     private OnDismissListener onDismissListener = new OnDismissListener() {
@@ -450,15 +466,7 @@ public class WelcomeDialog extends Dialog {
             long endTime2=System.currentTimeMillis();
             Log.i("zhangyujian","dialog::onWindowFocusChanged:333:"+(endTime2-XHApplication.in().startTime));
             //
-            WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdDataCallBack() {
-                @Override
-                public void noAdData() {
-                }
-            });
-//            if(isAdComplete){
-//                ViewImageWelcome();
-//                isAdComplete=false;
-//            }
+            WelcomeAdTools.getInstance().handlerAdData(false, null);
             long endTime=System.currentTimeMillis();
             Log.i("zhangyujian","dialog::onWindowFocusChanged::"+(endTime-XHApplication.in().startTime));
         }
