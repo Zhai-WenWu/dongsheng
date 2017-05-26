@@ -18,6 +18,11 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.view.ArticleHeaderView;
+import amodule.article.view.CommodityItemView;
+import amodule.article.view.DishItemView;
+import amodule.article.view.ImageShowView;
+import amodule.article.view.VideoShowView;
+import amodule.article.view.richtext.RichParser;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -73,6 +78,7 @@ public class ArticleDetailActivity extends BaseActivity {
         linearLayoutOne.setOrientation(LinearLayout.VERTICAL);
         linearLayoutTwo= new LinearLayout(this);
         linearLayoutTwo.setOrientation(LinearLayout.VERTICAL);
+        linearLayoutTwo.setPadding(Tools.getDimen(this,R.dimen.dp_20),0,Tools.getDimen(this,R.dimen.dp_20),0);
         linearLayoutThree= new LinearLayout(this);
         linearLayoutThree.setOrientation(LinearLayout.VERTICAL);
         linearLayoutOne.setVisibility(View.GONE);
@@ -126,6 +132,62 @@ public class ArticleDetailActivity extends BaseActivity {
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
         listview.setVisibility(View.VISIBLE);
+        String content = mapArticle.get("content");
+        analysArticleContent(content);
+    }
+
+    /**
+     * 解析图文混排数据
+     * @param content
+     */
+    private void analysArticleContent(String content){
+        if(TextUtils.isEmpty(content))return;
+        ArrayList<Map<String,String>> listContent = StringManager.getListMapByJson(content);
+        int size= listContent.size();
+        if(size>0)linearLayoutTwo.setVisibility(View.VISIBLE);
+        for(int i=0;i<size;i++){
+            String type= listContent.get(i).get("type");
+            if("text".equals(type)){//文章
+                String html= listContent.get(i).get("html");
+                if(!TextUtils.isEmpty(html)){
+                    TextView textView = new TextView(this);
+                    textView.setText(RichParser.fromHtml(html));
+                    linearLayoutTwo.addView(textView);
+                }
+            }else if("image".equals(type)){//图片
+                String imageUrl= listContent.get(i).get("imageurl");
+                if(!TextUtils.isEmpty(imageUrl)) {
+                    ImageShowView imageShowView = new ImageShowView(this);
+                    imageShowView.setImageUrl(imageUrl);
+                    linearLayoutTwo.addView(imageShowView);
+                }
+            }else if("video".equals(type)){//视频
+                String videoUrl= listContent.get(i).get("videourl");
+                String videoimageurl= listContent.get(i).get("videosimageurl");
+                if(!TextUtils.isEmpty(videoUrl)&&!TextUtils.isEmpty(videoimageurl)){
+                    VideoShowView videoShowView= new VideoShowView(this);
+                    videoShowView.setVideoData(videoimageurl,videoUrl);
+                    linearLayoutTwo.addView(videoShowView);
+                }
+
+            }else if("xiangha".equals(type)){//自定义演示。ds，电商，caipu，菜谱
+                String json = listContent.get(i).get("json");
+                if(!TextUtils.isEmpty(json)){
+                    Map<String,String> jsonMap=  StringManager.getFirstMap(json);
+                    if(jsonMap.containsKey("type")&&!TextUtils.isEmpty(jsonMap.get("type"))){
+                        String datatype= jsonMap.get("type");
+                        if("ds".equals(datatype)){
+                            CommodityItemView commodityItemView= new CommodityItemView(this);
+                            linearLayoutTwo.addView(commodityItemView);
+                        }else if("caipu".equals(datatype)){
+                            DishItemView dishItemView= new DishItemView(this);
+                            linearLayoutTwo.addView(dishItemView);
+                        }
+                    }
+                }
+            }
+        }
+        detailAdapter.notifyDataSetChanged();
     }
 
 
