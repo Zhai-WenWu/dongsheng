@@ -13,7 +13,8 @@ public class CommentBuilder extends StyleConfigBuilder {
 
     private String text;
     private String textColor = "#535353";
-    private String backgroundColor = "#535353";
+    private String backgroundColor = "#efefef";
+    private int textSize;
 
     public CommentBuilder(String text) {
         super();
@@ -32,9 +33,16 @@ public class CommentBuilder extends StyleConfigBuilder {
         return this;
     }
 
+    public CommentBuilder setTextSize(int px){
+        textSize = px;
+        return this;
+    }
+
     public void parse(final CommentClickCallback callback) {
         StyleConfig config = new StyleConfig(text);
         config.setTextColor(textColor);
+        if(textSize > 0)
+            config.setTextSize(textSize);
         config.setBackgroudColor(backgroundColor);
         config.setStart(0);
         config.setEnd(text.length());

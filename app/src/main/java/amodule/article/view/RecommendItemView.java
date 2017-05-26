@@ -3,12 +3,11 @@ package amodule.article.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
-import org.w3c.dom.Text;
+import java.util.Map;
 
 import java.util.Map;
 

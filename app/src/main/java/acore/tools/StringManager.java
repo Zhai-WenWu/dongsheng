@@ -273,7 +273,14 @@ public class StringManager extends UtilString {
 
 	/*评论*/
 	public final static String api_forumList = apiUrl + "Main7/Forum/forumList"; //发布文章
-	public final static String api_addForum = apiUrl + "/Main7/Forum/addForum"; //发布评论
+	public final static String api_likeForum = apiUrl + "Main7/Forum/likeForum"; //评论点赞
+	public final static String api_addForum = apiUrl + "Main7/Forum/addForum"; //删除回复
+	public final static String api_delForum = apiUrl + "Main7/Forum/delForum"; //删除评论
+	public final static String api_addReplay = apiUrl + "Main7/Forum/addReplay"; //添加回复
+	public final static String api_delReplay = apiUrl + "Main7/Forum/delReplay"; //删除回复
+
+
+
 
 	//替换url
 	public final static String replaceUrl(String url) {

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/dp_3"
+    >
 
     <acore.widget.multifunction.view.MultifunctionTextView
         android:id="@+id/comment_item_replay_item_tv"
@@ -9,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="米西"
         android:textSize="@dimen/sp_13"
-        android:textColor="#bcbcbc"
+        android:lineSpacingExtra="@dimen/dp_2"
         />
 
 </LinearLayout>

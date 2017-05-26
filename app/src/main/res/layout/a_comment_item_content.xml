@@ -4,11 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <acore.widget.multifunction.view.MultifunctionTextView
         android:id="@+id/commend_cotent_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_17"
         android:text="天干气躁，小心火烛"
         android:textSize="@dimen/sp_16"
         android:textColor="#535353"
@@ -16,7 +15,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/sp_17"
+        >
         <ImageView
             android:id="@+id/commend_cotent_img1"
             android:layout_width="0dp"
