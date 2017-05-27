@@ -106,12 +106,14 @@ public class ViewCommentItem extends LinearLayout {
                     goFriendHome(cusstomMap.get("ucode"));
                 }
             });
-            userName.setTextColor(Color.parseColor(cusstomMap.get("name_color")));
+            if(!TextUtils.isEmpty(cusstomMap.get("name_color")))
+                userName.setTextColor(Color.parseColor(cusstomMap.get("name_color")));
             AppCommon.setVip((Activity) mContext,userVip,cusstomMap.get("is_member"));
         }
     }
 
     private void initContent(){
+        commentContent.removeAllViews();
         String content = dataMap.get("content");
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
         for(Map<String, String> contentMap:contentArray) {
@@ -121,53 +123,58 @@ public class ViewCommentItem extends LinearLayout {
 
     private boolean isShowContentClick = false;
     private void initCotentView(final Map<String, String> contentMap){
-        commentContent.removeAllViews();
         View view = layoutInflater.inflate(R.layout.a_comment_item_content,null);
-        final MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
-        contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
         final String text = contentMap.get("text");
-        int maxNum = 100;
-        if(TextUtils.isEmpty(text) || text.length() <= maxNum){
-            contentText.setText(text);
-        }else{
-            String newText = text.substring(0,maxNum);
-            MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
-            CommentBuilder textBuilder = new CommentBuilder(newText).setTextColor("#535353");
-            textBuilder.parse(null);
-            multifunctionText.addStyle(textBuilder.getContent(), textBuilder.build());
-            CommentBuilder showBuilder = new CommentBuilder("...>").setTextColor("#bcbcbc");
-            showBuilder.parse(new CommentBuilder.CommentClickCallback() {
+        final MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
+        if(TextUtils.isEmpty(text)){
+            contentText.setVisibility(View.GONE);
+        }else {
+            contentText.setVisibility(View.VISIBLE);
+            contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+            int maxNum = 100;
+            if (TextUtils.isEmpty(text) || text.length() <= maxNum) {
+                contentText.setText(text);
+            } else {
+                String newText = text.substring(0, maxNum);
+                MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
+                CommentBuilder textBuilder = new CommentBuilder(newText).setTextColor("#535353");
+                textBuilder.parse(null);
+                multifunctionText.addStyle(textBuilder.getContent(), textBuilder.build());
+                CommentBuilder showBuilder = new CommentBuilder("...>").setTextColor("#bcbcbc");
+                showBuilder.parse(new CommentBuilder.CommentClickCallback() {
+                    @Override
+                    public void onCommentClick(View v, String userCode) {
+                        isShowContentClick = true;
+                        contentText.setText(text);
+                        contentText.setCopyText(text);
+                    }
+                });
+                multifunctionText.addStyle(showBuilder.getContent(), showBuilder.build());
+                contentText.setText(multifunctionText);
+                contentText.setCopyText(newText + "...>");
+            }
+            contentText.setOnClickListener(new OnClickListener() {
                 @Override
-                public void onCommentClick(View v, String userCode) {
-                    isShowContentClick = true;
-                    contentText.setText(text);
-                    contentText.setCopyText(text);
+                public void onClick(View v) {
+                    if (mListener != null && !isShowContentClick)
+                        mListener.onContentReplayClick(dataMap.get("comment_id"), cusstomMap.get("ucode"), cusstomMap.get("nick_name"));
+                    isShowContentClick = false;
                 }
             });
-            multifunctionText.addStyle(showBuilder.getContent(), showBuilder.build());
-            contentText.setText(multifunctionText);
-            contentText.setCopyText(newText + "...>");
-        }
-        contentText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mListener != null && !isShowContentClick) mListener.onContentReplayClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
-                isShowContentClick = false;
-            }
-        });
-        String ucode = cusstomMap.get("ucode");
-        final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-        contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mListener != null){
-                    if(isReport)
-                        mListener.onReportCommentClick(dataMap.get("comment_id"));
-                    else
-                        mListener.onDeleteCommentClick(dataMap.get("comment_id"));
+            String ucode = cusstomMap.get("ucode");
+            final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
+            contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        if (isReport)
+                            mListener.onReportCommentClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                        else
+                            mListener.onDeleteCommentClick(dataMap.get("comment_id"));
+                    }
                 }
-            }
-        });
+            });
+        }
         final String imgs = contentMap.get("imgs");
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(imgs);
         switch (contentArray.size()){
@@ -198,6 +205,9 @@ public class ViewCommentItem extends LinearLayout {
                         showImg(imgs,0);
                     }
                 });
+                break;
+            default:
+                view.findViewById(R.id.comment_content_imglayout).setVisibility(View.GONE);
                 break;
         }
         commentContent.addView(view);
@@ -315,7 +325,7 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     if(mListener != null) {
                         if(isReport)
-                            mListener.onReportReplayClick(dataMap.get("comment_id"),replayMap.get("replay_id"));
+                            mListener.onReportReplayClick(dataMap.get("comment_id"),replayMap.get("replay_id"),replay_ucode,replay_uname);
                         else
                             mListener.onDeleteReplayClick(dataMap.get("comment_id"),replayMap.get("replay_id"));
                     }
@@ -361,7 +371,7 @@ public class ViewCommentItem extends LinearLayout {
                     if (isDelete)
                         mListener.onDeleteCommentClick(dataMap.get("comment_id"));
                     else
-                        mListener.onReportCommentClick(dataMap.get("comment_id"));
+                        mListener.onReportCommentClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
                 }
             }
         });
@@ -385,9 +395,9 @@ public class ViewCommentItem extends LinearLayout {
 
     public interface OnCommentItenListener{
         public void onShowAllReplayClick(String comment_id);
-        public void onReportCommentClick(String comment_id);
+        public void onReportCommentClick(String comment_id,String comment_user_code,String comment_user_name);
         public void onDeleteCommentClick(String comment_id);
-        public void onReportReplayClick(String comment_id, String replay_id);
+        public void onReportReplayClick(String comment_id, String replay_id,String replay_user_code,String replay_user_name);
         public void onDeleteReplayClick(String comment_id, String replay_id);
         public void onPraiseClick(String comment_id);
         public void onContentReplayClick(String comment_id,String replay_user_code, String replay_user_name);

@@ -37,6 +37,8 @@ public class TextViewTagLongClick implements OnLongClickListener{
 
 	private int normBackColor;
 
+	private OnLongClickListener longClickListener;
+
 	//是否删除掉star和end时前面添加@后面添加 <空格>
 	public boolean isHaveAt = true,nIsHaveCopy=true;
 	
@@ -46,10 +48,15 @@ public class TextViewTagLongClick implements OnLongClickListener{
 		mTv.setOnLongClickListener(this);
 		normBackColor = Color.parseColor("#ffffff");
 	}
+
+	public void setOnLongClickListener(OnLongClickListener listener){
+		longClickListener = listener;
+	}
 	
 	@Override
 	public boolean onLongClick(View v) {
 		if(nIsHaveCopy){
+			if(longClickListener != null) longClickListener.onLongClick();
 			mTv.setBackgroundColor(Color.parseColor("#E3E3E3"));
 			getPopupWindowsInstance();
 			mPopupWindow.showAsPullUp(mTv, 0, -20);
@@ -217,5 +224,9 @@ public class TextViewTagLongClick implements OnLongClickListener{
 			super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] - mPopupWindow.getHeight() + yoff);
 			// anchor.getContext().getResources().getDimensionPixelSize(R.dimen.popup_upload_height)
 		}
+	}
+
+	public interface OnLongClickListener{
+		public void onLongClick();
 	}
 }

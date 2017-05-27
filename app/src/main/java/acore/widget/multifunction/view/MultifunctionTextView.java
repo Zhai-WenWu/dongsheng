@@ -32,6 +32,9 @@ import acore.widget.multifunction.base.StyleConfig;
  * E_mail : ztanzeyu@gmail.com
  */
 public class MultifunctionTextView extends TextView {
+
+	private boolean isLongClick = false;
+
 	/** 长按事件 */
 	protected TextViewTagLongClick mTextViewTagLongClick;
 
@@ -52,6 +55,12 @@ public class MultifunctionTextView extends TextView {
 
 		//初始化长按监听
 		mTextViewTagLongClick = new TextViewTagLongClick(context, this);
+		mTextViewTagLongClick.setOnLongClickListener(new TextViewTagLongClick.OnLongClickListener() {
+			@Override
+			public void onLongClick() {
+				isLongClick = true;
+			}
+		});
 	}
 
 	public void setText(SpannableStringBuilder style) {
@@ -73,6 +82,15 @@ public class MultifunctionTextView extends TextView {
 			style = parseTextStyle(style, mMultifunctionText.getConfigs());
 			super.setText(style, BufferType.NORMAL);
 		}
+	}
+
+	@Override
+	public void setOnClickListener(OnClickListener l) {
+		if(isLongClick){
+			isLongClick = false;
+			return;
+		}
+		super.setOnClickListener(l);
 	}
 
 	/** 解析 */

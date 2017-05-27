@@ -28,7 +28,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
+        android:layout_height="wrap_content"
         android:background="@color/common_bg"
         android:paddingTop="@dimen/dp_8"
         android:paddingBottom="@dimen/dp_8"
@@ -49,10 +49,13 @@
         <EditText
             android:id="@+id/commend_write_et"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="5"
             android:layout_toLeftOf="@+id/comment_send_parent"
             android:background="@drawable/bg_round40_dbdbdb"
             android:paddingLeft="@dimen/dp_28"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
             android:gravity="center_vertical"
             android:hint="写评论"
             />
@@ -60,8 +63,9 @@
         <LinearLayout
             android:id="@+id/comment_send_parent"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical"
             >
            <TextView

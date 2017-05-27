@@ -278,6 +278,7 @@ public class StringManager extends UtilString {
 	public final static String api_delForum = apiUrl + "Main7/Forum/delForum"; //删除评论
 	public final static String api_addReplay = apiUrl + "Main7/Forum/addReplay"; //添加回复
 	public final static String api_delReplay = apiUrl + "Main7/Forum/delReplay"; //删除回复
+	public final static String api_replayList = apiUrl + "Main7/Forum/replayList"; //剩余的回复列表
 
 	/*评论举报列表*/
 	public final static String API_COMMENTS_REPORT = apiUrl + "Main7/Forum/reportList";

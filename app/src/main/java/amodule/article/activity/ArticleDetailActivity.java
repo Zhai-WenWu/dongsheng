@@ -3,7 +3,6 @@ package amodule.article.activity;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +10,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
-import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -35,12 +32,10 @@ import amodule.article.view.ImageShowView;
 import amodule.article.view.VideoShowView;
 import amodule.article.view.richtext.RichParser;
 import amodule.comment.view.ViewCommentItem;
-import amodule.dish.activity.MenuDish;
 import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import third.ad.AdsShow;
 import third.share.BarShare;
 import third.video.VideoPlayerController;
 
@@ -351,7 +346,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
 
                 @Override
-                public void onReportCommentClick(String comment_id) {
+                public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name) {
 
                 }
 
@@ -361,7 +356,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
 
                 @Override
-                public void onReportReplayClick(String comment_id, String replay_id) {
+                public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name) {
 
                 }
 

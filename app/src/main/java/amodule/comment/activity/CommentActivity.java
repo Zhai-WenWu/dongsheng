@@ -1,7 +1,7 @@
 package amodule.comment.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
@@ -24,11 +23,15 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
+import amodule.article.activity.ReportActivity;
 import amodule.comment.view.ViewCommentItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
+
+import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * Created by Fang Ruijiao on 2017/5/25.
@@ -60,15 +63,14 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         sendTv.setOnClickListener(this);
         sendProgress = findViewById(R.id.comment_send_progress);
         commend_write_et = (EditText) findViewById(R.id.commend_write_et);
+        commend_write_et.setOnClickListener(this);
         downRefreshList = (DownRefreshList) findViewById(R.id.comment_listview);
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 sendTv.setVisibility(View.GONE);
-                commend_write_et.setHint("写评论");
                 currentUrl = StringManager.api_addForum;
-
-                ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);
+                changeKeyboard(false);
                 return false;
             }
         });
@@ -81,35 +83,46 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 viewCommentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
                     @Override
                     public void onShowAllReplayClick(String comment_id) {
-                        try {
-                            JSONArray jsonArrayReplay = new JSONArray();
-                            for (int k = 0; k < 3; k++) {
-                                JSONObject jsonObject = new JSONObject();
-                                jsonObject.put("replay_id", "1");
-                                jsonObject.put("content", "哈哈哈哈哈哈哈或暗室逢灯辣椒粉啦");
-                                jsonObject.put("ucode", "123");
-                                jsonObject.put("uname", "米西");
-                                jsonObject.put("is_author", "2");
-                                jsonObject.put("replay_ucode", "343");
-                                jsonObject.put("replay_uname", "雨季不来");
-                                jsonObject.put("is_replay_author", "1");
-                                jsonObject.put("create_time", "2017-05-24 10:34:27");
-                                jsonArrayReplay.put(jsonObject);
+                        ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, "type=" + type + "&code=" + code + "&commentId=" + comment_id , new InternetCallback(CommentActivity.this) {
+                            @Override
+                            public void loaded(int flag, String s, Object o) {
+                                if(flag >= ReqInternet.REQ_OK_STRING){
+//                                    ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
+//                                    Map<String,String> oldCommentMap = listArray.get(position);
+//                                    oldCommentMap.put("replay_num","0");
+//                                    String oldReplay = oldCommentMap.get("replay");
+//                                    ArrayList<Map<String,String>> oldReplayArray = StringManager.getListMapByJson(oldReplay);
+//                                    oldReplayArray.addAll(arrayList);
+//                                    adapterSimple.notifyDataSetChanged();
+                                    viewCommentItem.addReplayView(o.toString());
+                                }
                             }
-                            viewCommentItem.addReplayView(jsonArrayReplay.toString());
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        });
                     }
 
                     @Override
-                    public void onReportReplayClick(String comment_id, String replay_id) {
-                        Tools.showToast(CommentActivity.this,"举报回复 " + comment_id + "  " +replay_id);
-                    }
-
-                    @Override
-                    public void onReportCommentClick(String comment_id) {
+                    public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name) {
                         Tools.showToast(CommentActivity.this,"举报评论 " + comment_id);
+                        Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
+                        intent.putExtra("type",type);
+                        intent.putExtra("code",code);
+                        intent.putExtra("commendId",comment_id);
+                        intent.putExtra("userCode",comment_user_code);
+                        intent.putExtra("reportName",comment_user_name);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name) {
+                        Tools.showToast(CommentActivity.this,"举报回复 " + comment_id + "  " +replay_id);
+                        Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
+                        intent.putExtra("type",type);
+                        intent.putExtra("code",code);
+                        intent.putExtra("commendId",comment_id);
+                        intent.putExtra("replayId",replay_id);
+                        intent.putExtra("userCode",replay_user_code);
+                        intent.putExtra("reportName",replay_user_name);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -146,8 +159,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onContentReplayClick(String comment_id,String replay_code, String replay_name) {
                         commend_write_et.setHint("回复 " + replay_name);
-                        ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
-                        sendTv.setVisibility(View.VISIBLE);
+                        changeKeyboard(true);
                         currentUrl = StringManager.api_addReplay;
                         currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
                     }
@@ -169,6 +181,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private void initData() {
         type = getIntent().getStringExtra("type");
         code = getIntent().getStringExtra("code");
+
+        type = "1";
+        code = "2";
 //        if (TextUtils.isEmpty(type) || TextUtils.isEmpty(code)) {
 //            Tools.showToast(this, "缺少 类型 或 主题");
 //            finish();
@@ -194,98 +209,29 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         } else
             currentPage++;
 
-        new Handler().postDelayed(new Runnable() {
+        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listArray.size() == 0);
+        String params = "type=" + type + "&code=" + code + "&page=" + currentPage;
+        ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback(this) {
             @Override
-            public void run() {
-//                ArrayList<Map<String, String>> arrayList = new ArrayList<Map<String, String>>();
-                Map<String, String> map;
-                try {
-                    for (int i = 0; i < 20; i++) {
-                        map = new HashMap<>();
-                        map.put("comment_id", "1");
-                        map.put("fabulous_num", "100");
-                        map.put("replay_num", "3");
-                        map.put("is_del_report", "1");
-                        JSONArray jsonArray = new JSONArray();
-                        for (int k = 0; k < 2; k++) {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("text", "附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了,附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了,附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了,附近一小镇的有名小吃，据说还申报了非遗。老板边做边卖边和你说笑，去了几次，基本看会了");
-                            JSONArray jsonArray2 = new JSONArray();
-                            JSONObject jsonObject2 = new JSONObject();
-                            jsonObject2.put("","http://s1.cdn.xiangha.com/quan/201705/2510/59263e464df1c.jpg/MjUwX2MxXzE4MA.webp");
-                            jsonArray2.put(jsonObject2);
-                            JSONObject jsonObject3 = new JSONObject();
-                            jsonObject3.put("","http://s1.cdn.xiangha.com/quan/201705/2510/59263e464df1c.jpg/MjUwX2MxXzE4MA.webp");
-                            jsonArray2.put(jsonObject3);
-                            jsonObject.put("imgs",jsonArray2);
-                            jsonArray.put(jsonObject);
-                        }
-                        map.put("content",jsonArray.toString());
-                        map.put("create_time","刚刚");
-                        map.put("is_fabulous","1");
-                        JSONArray jsonArrayCustomer = new JSONArray();
-                        for (int k = 0; k < 2; k++) {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("ucode", "111");
-                            jsonObject.put("nick_name", "米西");
-                            jsonObject.put("header_img", "http://s1.cdn.xiangha.com/i/201704/1819/58f5fd32928c7.jpg/MTAweDEwMA");
-                            jsonObject.put("is_gourmet", "2");
-                            jsonObject.put("is_member", "2");
-                            jsonObject.put("name_color", "#ff533c");
-                            jsonObject.put("is_author", "2");
-                            jsonArrayCustomer.put(jsonObject);
-                        }
-                        map.put("customer",jsonArrayCustomer.toString());
-
-                        JSONArray jsonArrayReplay = new JSONArray();
-                        for (int k = 0; k < 3; k++) {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("replay_id", "1");
-                            jsonObject.put("content", "哈哈哈哈哈哈哈或暗室逢灯辣椒粉啦");
-                            jsonObject.put("ucode", "123");
-                            jsonObject.put("uname", "米西");
-                            jsonObject.put("is_author", "2");
-                            jsonObject.put("replay_ucode", "343");
-                            jsonObject.put("replay_uname", "雨季不来");
-                            jsonObject.put("is_replay_author", "1");
-                            jsonObject.put("create_time", "2017-05-24 10:34:27");
-                            jsonArrayReplay.put(jsonObject);
-                        }
-                        map.put("replay",jsonArrayReplay.toString());
-                        listArray.add(map);
-                        adapterSimple.notifyDataSetChanged();
-                        loadManager.hideProgressBar();
-                        downRefreshList.setVisibility(View.VISIBLE);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
+            public void loaded(int flag, String s, Object o) {
+                int loadCount;
+                if (flag >= UtilInternet.REQ_OK_STRING) {
+                    if (isForward) listArray.clear();
+                    ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
+                    listArray.addAll(arrayList);
+                    adapterSimple.notifyDataSetChanged();
+                    loadCount = arrayList.size();;
+                    if (everyPage == 0)
+                        everyPage = loadCount;
+                    downRefreshList.setVisibility(View.VISIBLE);
+                    currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0);
+                    downRefreshList.onRefreshComplete();
                 }
             }
-        }, 500);
-
-//        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listArray.size() == 0);
-//        String params = "?type=" + type + "&code=" + code + "&page=" + currentPage;
-//        ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback(this) {
-//            @Override
-//            public void loaded(int flag, String s, Object o) {
-//                int loadCount = 0;
-//                if (flag >= UtilInternet.REQ_OK_STRING) {
-//                    if (isForward) listArray.clear();
-//                    ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
-//
-//
-//                    loadCount = arrayList.size();;
-//                    if (everyPage == 0)
-//                        everyPage = loadCount;
-//                    currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0);
-//                    downRefreshList.setVisibility(View.VISIBLE);
-//                    adapterSimple.notifyDataSetChanged();
-//                }
-//            }
-//        });
+        });
     }
 
-    private String currentUrl,currentParams;
+    private String currentUrl = StringManager.api_addForum,currentParams;
     private void sendData(){
         sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
@@ -293,7 +239,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             Tools.showToast(this,"发送内容不能超过2000字");
             return;
         }
-        commend_write_et.setText("");
+
         String newParams;
         if(StringManager.api_addForum.equals(currentUrl)){
             JSONArray jsonArray = new JSONArray();
@@ -308,13 +254,28 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }else{
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }
-        ReqInternet.in().doPost(currentUrl,newParams,new InternetCallback(this){
+        ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
 
             @Override
-            public void loaded(int i, String s, Object o) {
-                sendProgress.setVisibility(View.GONE);
+            public void loaded(int flag, String s, Object o) {
+                if(flag >= ReqInternet.REQ_OK_STRING) {
+                    changeKeyboard(false);
+                }
             }
         });
+    }
+
+    private void changeKeyboard(boolean isShow){
+        if(isShow){
+            ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
+            sendTv.setVisibility(View.VISIBLE);
+        }else{
+            sendTv.setVisibility(View.GONE);
+            commend_write_et.setHint("写评论");
+            commend_write_et.setText("");
+            sendProgress.setVisibility(View.GONE);
+            ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);
+        }
     }
 
     @Override
@@ -326,6 +287,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 sendData();
                 break;
             case R.id.commend_write_et:
+                changeKeyboard(true);
                 break;
         }
     }

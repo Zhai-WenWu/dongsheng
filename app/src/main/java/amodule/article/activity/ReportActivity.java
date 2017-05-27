@@ -57,11 +57,11 @@ public class ReportActivity extends BaseActivity {
         initActivity("举报", 2, 0, R.layout.c_view_bar_title, R.layout.report_layout);
         Intent intent = getIntent();
         mType = intent.getStringExtra("type");
-        mUserCode = intent.getStringExtra("userCode");
-        mCode = intent.getStringExtra("code");
+        mCode = intent.getStringExtra("code"); //主题code
+        mUserCode = intent.getStringExtra("userCode"); //被举报人的code
+        mReportName = intent.getStringExtra("reportName");//被举报人的名字
         mCommendId = intent.getStringExtra("commendId");
         mReplayId = intent.getStringExtra("replayId");
-        mReportName = intent.getStringExtra("reportName");
         initView();
         addListener();
 
