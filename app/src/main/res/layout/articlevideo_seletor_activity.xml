@@ -70,20 +70,32 @@
         android:layout_above="@+id/footer_bar"
         android:layout_below="@+id/title_rela_all">
 
-        <GridView
-            android:id="@+id/grid"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/video_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp_7"
-            android:clipToPadding="false"
-            android:numColumns="4"
-            android:padding="@dimen/dp_3"
-            android:scrollbars="none"
-            android:scrollbarStyle="outsideOverlay"
-            android:listSelector="@null"
-            android:verticalSpacing="@dimen/dp_3"
-            android:horizontalSpacing="@dimen/dp_3"
-            android:overScrollMode="never"/>
+            android:layout_marginTop="@dimen/dp_9"
+            android:layout_marginLeft="@dimen/dp_3"
+            android:layout_marginRight="@dimen/dp_3"/>
+
+        <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+            android:id="@+id/video_recyclerview_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/header_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_5"
+                android:gravity="center"
+                android:background="#fbf5cf"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/sp_12"
+                android:text="本列表只支持MOV或MP4格式视频"/>
+
+        </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
     </RelativeLayout>
 
     <RelativeLayout

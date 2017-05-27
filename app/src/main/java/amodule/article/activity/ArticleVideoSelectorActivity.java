@@ -2,8 +2,12 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,10 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -22,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
@@ -47,7 +49,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private TextView mCategoryText;
     private TextView mTitle;
 
-    private GridView mGridView;
+    private RecyclerView mVideoRecyclerView;
+    private RecyclerViewHeader mRecyclerViewHeader;
     private RelativeLayout mVideoEmptyView;
     private RelativeLayout mGridViewLayout;
     private ArticleVideoSelectorAdapter mAdapter;
@@ -59,7 +62,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private RelativeLayout mVideoContainer;
     private VideoView mVideoView;
 
-    private ArrayList<Map<String, String>> mAllDatas;
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
     private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
 
@@ -90,27 +92,56 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                 return true;
             }
         });
-        mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mVideoRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int state) {
-                //根据滑动状态设置图片的加载状态
-                if (state == SCROLL_STATE_IDLE || state == SCROLL_STATE_TOUCH_SCROLL) {
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int space = getResources().getDimensionPixelSize(R.dimen.dp_3);
+                outRect.left = space;
+                outRect.top = space;
+                outRect.right = space;
+                outRect.bottom = space;
+            }
+        });
+        mVideoRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE || newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     Glide.with(ArticleVideoSelectorActivity.this).resumeRequests();
                 } else {
                     Glide.with(ArticleVideoSelectorActivity.this).pauseRequests();
                 }
             }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
         });
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        mCategoryAdapter.setOnItemClickListener(new ArticleVideoFolderAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Map<String, String> video = mAdapter.getItem(position);
-                showVideo(video);
+            public void onItemClick(final int position) {
+                mCategoryAdapter.onItemSelected(position);
+                if (mRecyclerViewHeader.getVisibility() != View.GONE) {
+                    mRecyclerViewHeader.setVisibility(View.GONE);
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoRecyclerView.getLayoutParams();
+                    params.topMargin = -(mRecyclerViewHeader.getHeight() - params.topMargin);
+                    mVideoRecyclerView.setLayoutParams(params);
+                }
+                mVideoRecyclerView.smoothScrollToPosition(0);
+                mAdapter.setData((ArrayList<Map<String, String>>) mCategoryAdapter.getItem(position));
+                mVideoRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        String parentPath = mCategoryAdapter.getParentPathByPos(position);
+                        mTitle.setText(TextUtils.isEmpty(parentPath) ? "全部视频" : parentPath);
+                        mCategoryText.setVisibility(View.GONE);
+                        mCancelBtn.setVisibility(View.GONE);
+                        mBackImg.setVisibility(View.VISIBLE);
+                        mCategoryPopup.dismiss();
+                    }
+                }, 100);
             }
         });
     }
@@ -122,7 +153,11 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mTitle = (TextView) findViewById(R.id.title);
         mBackImg = (ImageView) findViewById(R.id.btn_back);
 
-        mGridView = (GridView) findViewById(R.id.grid);
+        mVideoRecyclerView = (RecyclerView) findViewById(R.id.video_recyclerview);
+        mVideoRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        mRecyclerViewHeader = (RecyclerViewHeader) findViewById(R.id.video_recyclerview_header);
+        mRecyclerViewHeader.attachTo(mVideoRecyclerView, true);
+
         mGridViewLayout = (RelativeLayout) findViewById(R.id.grid_layout);
         mVideoEmptyView = (RelativeLayout) findViewById(R.id.video_emptyview);
 
@@ -161,7 +196,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMedias();
+                ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMedias();
                 if (videos != null && videos.size() > 0) {
                     for (Map<String, String> map : videos) {
                         if (map != null) {
@@ -181,14 +216,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                         }
                     }
                 }
-
-
-                ArticleVideoSelectorActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onDataReady(videos);
-                    }
-                });
+                onDataReady(videos);
             }
         }).start();
     }
@@ -197,20 +225,32 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
      * 数据加载完成
      * @param datas
      */
-    private void onDataReady(ArrayList<Map<String, String>> datas) {
-        loadManager.hideProgressBar();
-        if (datas == null || datas.size() <= 0) {
-            mGridViewLayout.setVisibility(View.GONE);
-            mVideoEmptyView.setVisibility(View.VISIBLE);
-            Tools.showToast(this, "本地没有视频哦");
-            return;
-        }
-        mAllDatas = datas;
-        mGridViewLayout.setVisibility(View.VISIBLE);
-        if (mAdapter == null)
-            mAdapter = new ArticleVideoSelectorAdapter();
-        mAdapter.setData(datas);
-        mGridView.setAdapter(mAdapter);
+    private void onDataReady(final ArrayList<Map<String, String>> datas) {
+        ArticleVideoSelectorActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadManager.hideProgressBar();
+                if (datas == null || datas.size() <= 0) {
+                    mGridViewLayout.setVisibility(View.GONE);
+                    mVideoEmptyView.setVisibility(View.VISIBLE);
+                    Tools.showToast(ArticleVideoSelectorActivity.this, "本地没有视频哦");
+                    return;
+                }
+                mGridViewLayout.setVisibility(View.VISIBLE);
+                if (mAdapter == null) {
+                    mAdapter = new ArticleVideoSelectorAdapter();
+                    mAdapter.setOnItemClickListener(new ArticleVideoSelectorAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            Map<String, String> video = mAdapter.getData(position);
+                            showVideo(video);
+                        }
+                    });
+                }
+                mAdapter.setData(datas);
+                mVideoRecyclerView.setAdapter(mAdapter);
+            }
+        });
     }
 
     @Override
@@ -264,8 +304,10 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
             mCategoryAdapter.resetSelected();
         if(mCategoryPopup.isShowing())
             mCategoryPopup.dismiss();
-        else
+        else {
+            getWindow().setFormat(PixelFormat.UNKNOWN);
             mCategoryPopup.showAtLocation(mGridViewLayout, Gravity.BOTTOM, 0, 0);
+        }
     }
 
     /** 初始化相册列表的PopuWindow */
@@ -276,30 +318,17 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mFolderListView = (ListView) mView.findViewById(R.id.country_list);
         mCategoryAdapter.setData(mVideoParentFiles);
         mFolderListView.setAdapter(mCategoryAdapter);
-        mFolderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                mCategoryAdapter.onItemSelected(view);
-                mGridView.smoothScrollToPosition(0);
-                mAdapter.setData((ArrayList<Map<String, String>>) mCategoryAdapter.getItem(position));
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        String parentPath = mCategoryAdapter.getParentPathByPos(position);
-                        mTitle.setText(TextUtils.isEmpty(parentPath) ? "全部视频" : parentPath);
-                        mCategoryText.setVisibility(View.GONE);
-                        mCancelBtn.setVisibility(View.GONE);
-                        mBackImg.setVisibility(View.VISIBLE);
-                        mCategoryPopup.dismiss();
-                    }
-                }, 100);
-
-            }
-        });
         mCategoryPopup.setContentView(mView);
+        mCategoryPopup.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.common_bg)));
         mCategoryPopup.setWidth(mGridViewLayout.getWidth());
         mCategoryPopup.setHeight(mGridViewLayout.getHeight());
         mCategoryPopup.setAnimationStyle(R.style.PopupAnimation);
+        mCategoryPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                getWindow().setFormat(PixelFormat.TRANSLUCENT);
+            }
+        });
     }
 
     /**
