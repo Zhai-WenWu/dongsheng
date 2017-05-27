@@ -267,18 +267,23 @@ public class StringManager extends UtilString {
 
 	/*文章*/
 	public final static String api_getArticleClass = apiUrl + "Main7/Article/getArticleClass"; //文章分类
-	public final static String api_getRelated = apiUrl + "Main7/Article/getRelated"; //文章详情中的相关推荐
+	public final static String api_getArticleRelated = apiUrl + "Main7/Article/getRelated"; //文章详情中的相关推荐
 	public final static String api_getArticleInfo = apiUrl + "Main7/Article/articleInfo"; //文章详情
 	public final static String api_articleAdd = apiUrl + "Main7/Article/articleAdd"; //发布文章
+
+	/*视频*/
+	public final static String api_getVideoInfo = apiUrl + "/Main7/Video/videoInfo"; //视频详情
+	public final static String api_getVideoRelated = apiUrl + "/Main7/Video/getRelated"; //视频详情
+	public final static String api_likeVideo = apiUrl + "/Main7/Video/likeVideo"; //视频详情
 
 	/*评论*/
 	public final static String api_forumList = apiUrl + "Main7/Forum/forumList"; //发布文章
 	public final static String api_likeForum = apiUrl + "Main7/Forum/likeForum"; //评论点赞
+	public final static String api_replayList = apiUrl + "Main7/Forum/replayList"; //评论点赞
 	public final static String api_addForum = apiUrl + "Main7/Forum/addForum"; //删除回复
 	public final static String api_delForum = apiUrl + "Main7/Forum/delForum"; //删除评论
 	public final static String api_addReplay = apiUrl + "Main7/Forum/addReplay"; //添加回复
 	public final static String api_delReplay = apiUrl + "Main7/Forum/delReplay"; //删除回复
-	public final static String api_replayList = apiUrl + "Main7/Forum/replayList"; //剩余的回复列表
 
 	/*评论举报列表*/
 	public final static String API_COMMENTS_REPORT = apiUrl + "Main7/Forum/reportList";

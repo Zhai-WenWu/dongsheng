@@ -24,10 +24,14 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.UploadImg;
 import amodule.article.view.richtext.RichParser;
+import amodule.upload.callback.UploadListNetCallBack;
+import aplug.basic.BreakPointControl;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
 import xh.windowview.XhDialog;
+
+import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
 
 /**
  * PackageName : amodule.article.view
@@ -75,6 +79,9 @@ public class TextAndImageMixLayout extends LinearLayout
                     break;
                 case BaseView.IMAGE:
                     addImage(map.get("imageurl"), false, "");
+                    break;
+                case BaseView.IMAGE_GIF:
+                    addImage(map.get("gifurl"), false, "");
                     break;
                 case BaseView.VIDEO:
                     addVideo(map.get("videosimageurl"), map.get("videourl"), false, "");
@@ -245,6 +252,33 @@ public class TextAndImageMixLayout extends LinearLayout
                         }
                     }
                 }).uploadImg();
+
+        new BreakPointControl(getContext(),"",imagePath,TYPE_IMG).start(new UploadListNetCallBack() {
+            @Override
+            public void onProgress(double progress, String uniqueId) {
+
+            }
+
+            @Override
+            public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
+                imageMap.put(imagePath, url);
+            }
+
+            @Override
+            public void onFaild(String faild, String uniqueId) {
+
+            }
+
+            @Override
+            public void onLastUploadOver(boolean flag, String responseStr) {
+
+            }
+
+            @Override
+            public void onProgressSpeed(String uniqueId, long speed) {
+
+            }
+        });
     }
 
     /**

@@ -28,11 +28,24 @@
         android:layout_below="@+id/all_title_rela"
         android:background="#fffffe"
         android:divider="@android:color/transparent"
+        android:layout_marginBottom="@dimen/dp_50"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:scrollbars="none"
         android:visibility="visible"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_controler_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <amodule.article.view.ArticleCommentBar
+            android:id="@+id/acticle_comment_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
 </RelativeLayout>

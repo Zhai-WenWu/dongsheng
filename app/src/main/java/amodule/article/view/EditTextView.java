@@ -182,7 +182,6 @@ public class EditTextView extends BaseView {
         mRichText.addLinkMapToArray(url, desc);
     }
 
-
     public void setupTextBold() {
         if (mRichText.containLink()) {
             Toast.makeText(getContext(), "不能包含链接", Toast.LENGTH_SHORT).show();
@@ -202,7 +201,7 @@ public class EditTextView extends BaseView {
     public void setCenterHorizontal(boolean isCenterHorizontal) {
         this.isCenterHorizontal = isCenterHorizontal;
         mRichText.setGravity(isCenterHorizontal ?
-                Gravity.TOP | Gravity.START : Gravity.CENTER_HORIZONTAL);
+                 Gravity.CENTER_HORIZONTAL : Gravity.TOP | Gravity.START);
     }
 
     public void setupTextCenter() {

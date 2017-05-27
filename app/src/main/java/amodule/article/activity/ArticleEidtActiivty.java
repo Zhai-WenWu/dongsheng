@@ -6,6 +6,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -172,6 +173,9 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnAddLinkCallback() {
                     @Override
                     public void onAddLink() {
+                        //收起键盘
+                        if (isKeyboradShow)
+                            ToolsDevice.keyboardControl(!isKeyboradShow, ArticleEidtActiivty.this, mixLayout.getCurrentEditText().getRichText());
                         final int start = mixLayout.getSelectionStart();
                         final int end = mixLayout.getSelectionEnd();
                         InputUrlDialog dialog = new InputUrlDialog(ArticleEidtActiivty.this);
@@ -199,18 +203,13 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 });
         editBottomControler.setOnTextEidtCallback(
                 new EditBottomControler.OnTextEidtCallback() {
-                    @Override
-                    public void onTextBold() {
+                    @Override public void onTextBold() {
                         mixLayout.setupTextBold();
                     }
-
-                    @Override
-                    public void onTextUnderLine() {
+                    @Override public void onTextUnderLine() {
                         mixLayout.setupUnderline();
                     }
-
-                    @Override
-                    public void onTextCenter() {
+                    @Override public void onTextCenter() {
                         mixLayout.setupTextCenter();
                     }
                 });
@@ -234,10 +233,10 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int draftId = getIntent().getIntExtra("draftId",0);
-                    if(draftId > 0){
+                    int draftId = getIntent().getIntExtra("draftId", 0);
+                    if (draftId > 0) {
                         uploadArticleData = sqLite.selectById(draftId);
-                    }else {
+                    } else {
                         uploadArticleData = sqLite.getDraftData();
                     }
                     handler.sendEmptyMessage(0);
@@ -259,7 +258,6 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
     }
 
     private void onNextSetp() {
-        Log.i("tzy", mixLayout.getXHServiceData());
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
             saveDraft();
@@ -299,14 +297,15 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 timer.cancel();
                 timer = null;
                 final XhDialog xhDialog = new XhDialog(ArticleEidtActiivty.this);
-                xhDialog.setTitle("系统将自动为你保存最后1篇为草稿").setSureButton("我知道了", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        saveDraft();
-                        timingSave();
-                        xhDialog.cancel();
-                    }
-                }).show();
+                xhDialog.setTitle("系统将自动为你保存最后1篇为草稿")
+                        .setSureButton("我知道了", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                saveDraft();
+                                timingSave();
+                                xhDialog.cancel();
+                            }
+                        }).show();
             } else {
                 saveDraft();
             }
@@ -315,7 +314,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
 
     private void timingSave() {
         timer = new Timer();
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(Looper.getMainLooper());
         TimerTask tt = new TimerTask() {
 
             @Override
@@ -349,7 +348,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
             }
         }
         if (id > 0) {
-//            Tools.showToast(ArticleEidtActiivty.this, "保存成功");
+            Tools.showToast(ArticleEidtActiivty.this, "保存成功");
         }
         return id;
     }

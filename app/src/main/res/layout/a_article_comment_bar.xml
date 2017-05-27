@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#FFFFFE"
+    android:layout_height="@dimen/dp_50">
+
+    <RelativeLayout
+        android:id="@+id/comment_bar_fake"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_49"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/comment_edit_fake"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_33"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_16"
+            android:layout_toLeftOf="@+id/praise_button"
+            android:background="@drawable/bg_article_comment"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15">
+
+            <ImageView
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_12"
+                android:src="@drawable/i_comment_pen"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_5"
+                android:text="写评论"
+                android:textColor="#666"
+                android:textSize="@dimen/sp_14"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/praise_button"
+            android:layout_width="@dimen/dp_94"
+            android:layout_height="@dimen/dp_33"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_article_praise"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:src="@drawable/z_quan_body_input_ico_good"/>
+
+            <TextView
+                android:id="@+id/subject_zan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_3"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_12"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/comment_bar_real"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:visibility="invisible"
+        android:paddingBottom="@dimen/dp_8"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_8">
+
+        <ImageView
+            android:id="@+id/commend_write_pen"
+            android:layout_width="@dimen/dp_11"
+            android:layout_height="@dimen/dp_11"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:layout_marginLeft="@dimen/dp_11"
+            android:src="@drawable/i_comment_pen"/>
+
+        <EditText
+            android:id="@+id/commend_write_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/comment_send_parent"
+            android:background="@drawable/bg_round40_dbdbdb"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/sp_14"
+            android:hint="回复"
+            android:paddingLeft="@dimen/dp_15"/>
+
+        <LinearLayout
+            android:id="@+id/comment_send_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/comment_send"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_13"
+                android:text="发送"
+                android:visibility="visible"/>
+
+            <ProgressBar
+                android:id="@+id/comment_send_progress"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="@dimen/dp_13"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,18 +1,18 @@
 package amodule.article.activity;
 
-import android.content.IntentFilter;
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -20,24 +20,24 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.broadcast.ConnectionChangeReceiver;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.adapter.ArticleDetailAdapter;
+import amodule.article.view.ArticleCommentBar;
 import amodule.article.view.ArticleHeaderView;
 import amodule.article.view.CommodityItemView;
 import amodule.article.view.DishItemView;
 import amodule.article.view.ImageShowView;
 import amodule.article.view.VideoShowView;
 import amodule.article.view.richtext.RichParser;
+import amodule.comment.activity.CommentActivity;
 import amodule.comment.view.ViewCommentItem;
 import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.share.BarShare;
-import third.video.VideoPlayerController;
 
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 
@@ -45,20 +45,22 @@ import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
  * 文章详情
  */
 public class ArticleDetailActivity extends BaseActivity {
+    public static final String TYPE_ARTICLE = "1";
+    public static final String TYPE_VIDEO = "2";
     private boolean initUiSuccess = false;//ui初始化完成
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
     private ArticleDetailAdapter detailAdapter;
-    private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private ArrayList<Map<String, String>> otherListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
-    private ConnectionChangeReceiver connectionChangeReceiver;
+    private ArticleCommentBar mArticleCommentBar;
     private VideoImageView videoImageView;
-    private boolean isAutoPaly = false;
+    private boolean isKeyboradShow = false;
     private ListView listview;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;//头部view
     private TextView title;
+    private String type = "1";
 
-    private String commentNum = "";
+    private String commentNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class ArticleDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             code = bundle.getString("code");
+            type = bundle.getString("type");
         }
         //TODO 测试
         code = "175";
@@ -73,31 +76,11 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     //**********************************************Activity生命周期方法**************************************************
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mVideoPlayerController != null && !mVideoPlayerController.isError) {
-            return mVideoPlayerController.onVDKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (mVideoPlayerController != null) {
-            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                mVideoPlayerController.setIsFullScreen(true);
-            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                mVideoPlayerController.setIsFullScreen(false);
-            }
-        }
-    }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(videoImageView != null){
+        if (videoImageView != null) {
             videoImageView.onResume();
         }
     }
@@ -105,7 +88,7 @@ public class ArticleDetailActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if(videoImageView != null){
+        if (videoImageView != null) {
             videoImageView.onPause();
         }
     }
@@ -113,7 +96,7 @@ public class ArticleDetailActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(videoImageView != null){
+        if (videoImageView != null) {
             videoImageView.onStop();
         }
     }
@@ -121,7 +104,7 @@ public class ArticleDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(videoImageView != null){
+        if (videoImageView != null) {
             videoImageView.onDestroy();
         }
     }
@@ -143,13 +126,30 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** View部分初始化 **/
     private void initView() {
+        //处理状态栏引发的问题
+        if (Tools.isShowTitle()) {
+            final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
+            rl.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        public void onGlobalLayout() {
+                            int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+                            Rect r = new Rect();
+                            rl.getWindowVisibleDisplayFrame(r);
+                            int screenHeight = rl.getRootView().getHeight();
+                            int heightDifference = screenHeight - (r.bottom - r.top);
+                            isKeyboradShow = heightDifference > 200;
+                            heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
+                            bottomBarLayout.setPadding(0, 0, 0, heightDifference);
+                        }
+                    });
+        }
         String color = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(color));
         ImageView share = (ImageView) findViewById(R.id.rightImgBtn2);
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                barShare = new BarShare(ArticleDetailActivity.this, "精选菜单","菜单");
+                barShare = new BarShare(ArticleDetailActivity.this, "精选菜单", "菜单");
                 String type = BarShare.IMG_TYPE_RES;
                 String shareImg = "" + R.drawable.umen_share_launch;
                 String title = "精选菜单大全，强烈推荐！";
@@ -163,6 +163,8 @@ public class ArticleDetailActivity extends BaseActivity {
         listview = (ListView) findViewById(R.id.listview);
         initHeaderView();
         listview.addHeaderView(layout);
+        mArticleCommentBar = (ArticleCommentBar) findViewById(R.id.acticle_comment_bar);
+        mArticleCommentBar.setType(type);
     }
 
     /**
@@ -197,13 +199,31 @@ public class ArticleDetailActivity extends BaseActivity {
             return;
         }
         detailAdapter = new ArticleDetailAdapter(otherListMap);
-        listview.setAdapter(detailAdapter);
+        loadManager.setLoading(listview, detailAdapter, true,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (page >= 1) {
+                            requestRelateData();
+                        }
+                    }
+                });
         requestArticleData();
     }
 
     /** 请求网络 **/
     private void requestArticleData() {
-        String url = StringManager.api_getArticleInfo;
+        String url = "";
+        switch (type){
+            case TYPE_ARTICLE:
+                url = StringManager.api_getArticleInfo;
+                break;
+            case TYPE_VIDEO:
+                url = StringManager.api_getVideoInfo;
+                break;
+            default:
+                return;
+        }
         String params = TextUtils.isEmpty(code) ? "" : "code=" + code;
         loadManager.showProgressBar();
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(this) {
@@ -239,6 +259,7 @@ public class ArticleDetailActivity extends BaseActivity {
         commentNum = mapArticle.get("commentNumber");
         String content = mapArticle.get("content");
         analysArticleContent(content);
+        mArticleCommentBar.setData(mapArticle);
     }
 
     /**
@@ -262,8 +283,8 @@ public class ArticleDetailActivity extends BaseActivity {
                     textView.setText(RichParser.fromHtml(html));
                     linearLayoutTwo.addView(textView);
                 }
-            } else if ("image".equals(type)) {//图片
-                String imageUrl = listContent.get(i).get("imageurl");
+            } else if ("image".equals(type) || "gif".equals(type)) {//图片
+                String imageUrl = listContent.get(i).get("gif".equals(type) ? "gifurl" : "imageurl");
                 if (!TextUtils.isEmpty(imageUrl)) {
                     ImageShowView imageShowView = new ImageShowView(this);
                     imageShowView.setImageUrl(imageUrl);
@@ -275,7 +296,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(videoUrl) && !TextUtils.isEmpty(videoimageurl)) {
                     VideoShowView videoShowView = new VideoShowView(this);
                     videoShowView.setVideoData(videoimageurl, videoUrl);
-                    videoImageView = new VideoImageView(this,false);
+                    videoImageView = new VideoImageView(this, false);
                     videoImageView.setImageBg(videoimageurl);
                     videoImageView.setVideoData(videoUrl);
                     videoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
@@ -328,21 +349,36 @@ public class ArticleDetailActivity extends BaseActivity {
         });
     }
 
-    private void analysForumData(@NonNull ArrayList<Map<String, String>> arrayFourm){
-        if(arrayFourm.isEmpty()) return;
+    private void analysForumData(@NonNull ArrayList<Map<String, String>> arrayFourm) {
+        if (arrayFourm.isEmpty()) return;
         addLineView();
-        int dp_20 = Tools.getDimen(this,R.dimen.dp_20);
+        int dp_20 = Tools.getDimen(this, R.dimen.dp_20);
         TextView textView = new TextView(this);
         textView.setTextColor(Color.parseColor("#535353"));
-        textView.setPadding(dp_20,0,dp_20,0);
-        textView.setText("评论("+commentNum+")");
-        for(Map<String,String> map:arrayFourm){
-            ViewCommentItem commentItem = new ViewCommentItem(this);
+        textView.setPadding(dp_20, 0, dp_20, 0);
+        textView.setText("评论(" + commentNum + ")");
+        linearLayoutThree.addView(textView);
+        for (final Map<String, String> map : arrayFourm) {
+            final ViewCommentItem commentItem = new ViewCommentItem(this);
             commentItem.setData(map);
             commentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
                 @Override
                 public void onShowAllReplayClick(String comment_id) {
+                    StringBuilder sbuild = new StringBuilder();
+                    sbuild.append("type=").append(type).append("&")
+                            .append("code=").append(code).append("&")
+                            .append("commentId=").append(comment_id).append("&")
+                            .append("pagesize=").append(Integer.parseInt(map.get("replay_num")) + 3).append("&");
 
+                    ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, sbuild.toString(),
+                            new InternetCallback(ArticleDetailActivity.this) {
+                                @Override
+                                public void loaded(int flag, String url, Object obj) {
+                                    if (flag >= -ReqEncyptInternet.REQ_OK_STRING) {
+                                        commentItem.addReplayView((String) obj);
+                                    }
+                                }
+                            });
                 }
 
                 @Override
@@ -367,39 +403,65 @@ public class ArticleDetailActivity extends BaseActivity {
 
                 @Override
                 public void onPraiseClick(String comment_id) {
-
+                    Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
+                    intent.putExtra("type", type);
+                    intent.putExtra("code", code);
+                    startActivity(intent);
                 }
 
                 @Override
                 public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name) {
-
+                    Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
+                    intent.putExtra("type", type);
+                    intent.putExtra("code", code);
+                    startActivity(intent);
                 }
             });
             linearLayoutThree.addView(commentItem);
         }
-
+        //查看所有评论
         TextView allComment = new TextView(this);
         allComment.setTextColor(Color.parseColor("#333333"));
         allComment.setGravity(Gravity.CENTER);
-        allComment.setTextSize(Tools.getDimenSp(this,R.dimen.sp_15));
+        allComment.setTextSize(Tools.getDimenSp(this, R.dimen.sp_15));
         allComment.setText("查看所有评论>");
-        linearLayoutThree.addView(allComment,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,Tools.getDimen(this,R.dimen.dp_56)));
+        linearLayoutThree.addView(allComment, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_56)));
+        allComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
+                intent.putExtra("type", type);
+                intent.putExtra("code", code);
+                startActivity(intent);
+            }
+        });
         addLineView();
         linearLayoutThree.setVisibility(View.VISIBLE);
     }
 
-    private void addLineView(){
+    private void addLineView() {
         View view = new View(this);
         view.setBackgroundResource(R.color.common_bg);
-        linearLayoutThree.addView(view,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,Tools.getDimen(this,R.dimen.dp_11)));
+        linearLayoutThree.addView(view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_11)));
     }
 
     /**
      * 请求推荐列表
      */
     private void requestRelateData() {
-        String url = StringManager.api_getRelated;
-        String param = "page=" + page + "&pagesize=10";
+        String url = "";
+        switch (type){
+            case TYPE_ARTICLE:
+                url = StringManager.api_getArticleRelated;
+                break;
+            case TYPE_VIDEO:
+                url = StringManager.api_getVideoRelated;
+                break;
+            default:
+                return;
+        }
+
+        String param = "page=" + ++page + "&pagesize=10";
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
@@ -424,43 +486,15 @@ public class ArticleDetailActivity extends BaseActivity {
      */
     private void analysRelateData(@NonNull ArrayList<Map<String, String>> ArrayRelate) {
         if (ArrayRelate.isEmpty()) return;
-        for(Map<String,String> map:ArrayRelate){
-            map.put("clickAll",map.get("clickAll") + "浏览");
-            map.put("commentNumber",map.get("commentNumber") + "评论");
+        for (Map<String, String> map : ArrayRelate) {
+            map.put("clickAll", map.get("clickAll") + "浏览");
+            map.put("commentNumber", map.get("commentNumber") + "评论");
         }
         otherListMap.addAll(ArrayRelate);
 
-        if(otherListMap.size() > 0)
-            otherListMap.get(0).put("showheader","1");
+        if (otherListMap.size() > 0)
+            otherListMap.get(0).put("showheader", "1");
         detailAdapter.notifyDataSetChanged();
     }
-
-    private void registnetworkListener(){
-        connectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
-            @Override
-            public void disconnect() {
-                isAutoPaly = false;
-            }
-
-            @Override
-            public void wifi() {
-                isAutoPaly = true;
-            }
-
-            @Override
-            public void mobile() {
-                isAutoPaly = false;
-            }
-        });
-        IntentFilter filter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(connectionChangeReceiver,filter);
-    }
-
-    public void unregistnetworkListener(){
-        if(connectionChangeReceiver != null){
-            unregisterReceiver(connectionChangeReceiver);
-        }
-    }
-
 
 }

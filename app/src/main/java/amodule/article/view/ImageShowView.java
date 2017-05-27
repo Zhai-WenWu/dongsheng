@@ -7,13 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,6 +31,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     private String imageUrl = null;
     private int imageWidth = 0;
     private int imageHieght = 0;
+    private String type = IMAGE;
 
     public ImageShowView(Context context) {
         this(context, null);
@@ -60,7 +58,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
 
     /**
      * <a href="图片跳转链接">
-     *      <img src="imageUrl" width="1242" height="2208">
+     * <img src="imageUrl" width="1242" height="2208">
      * </a>
      *
      * @return
@@ -69,10 +67,10 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     public JSONObject getOutputData() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("type",IMAGE);
-            jsonObject.put("imageurl",imageUrl);
-            jsonObject.put("imageurl",imageUrl);
-            jsonObject.put("imageurl",imageUrl);
+            jsonObject.put("type", type);
+            jsonObject.put(IMAGE_GIF.equals(type) ? "gifurl" : "imageurl", imageUrl);
+            jsonObject.put("imageWidth", imageWidth);
+            jsonObject.put("imageHieght", imageHieght);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -81,9 +79,14 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-        if(imageUrl.endsWith(".gif")){
-            Glide.with(getContext()).load(imageUrl).asGif().into(showImage);
-        }else{
+        if (imageUrl.endsWith(".gif")) {
+            type = IMAGE_GIF;
+            if (enableEdit)
+                Glide.with(getContext()).load(imageUrl).asBitmap().into(showImage);
+            else
+                Glide.with(getContext()).load(imageUrl).asGif().into(showImage);
+        } else {
+            type = IMAGE;
             LoadImage.with(getContext())
                     .load(imageUrl)
                     .build()
@@ -114,7 +117,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.image:
                 if (null != mOnClickImageListener) {
-                    mOnClickImageListener.onClick(v,imageUrl);
+                    mOnClickImageListener.onClick(v, imageUrl);
                 }
                 break;
             case R.id.delete_image:

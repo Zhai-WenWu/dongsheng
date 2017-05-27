@@ -1,6 +1,7 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
+import amodule.article.activity.ArticleDetailActivity;
 
 /**
  * PackageName : amodule.article.view
@@ -51,7 +53,7 @@ public class RecommendItemView extends ItemBaseView {
         recComment = (TextView) findViewById(R.id.rec_comment);
     }
 
-    public void setData(Map<String, String> map) {
+    public void setData(final Map<String, String> map) {
         findViewById(R.id.hander).setVisibility(map.containsKey("showheader") ? View.VISIBLE : View.GONE);
         setViewImage(recImage, map.get("img"));
         setViewText(recTitle, map, "title", View.INVISIBLE);
@@ -63,5 +65,16 @@ public class RecommendItemView extends ItemBaseView {
             findViewById(R.id.gourmet_icon)
                     .setVisibility(customer.containsKey("isGourmet") && "2".equals(customer.get("isGourmet")) ? View.VISIBLE : View.GONE);
         }
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //开启文章
+                if(map.containsKey("code") && !TextUtils.isEmpty(map.get("code"))){
+                    Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
+                    intent.putExtra("code",map.get("code"));
+                    getContext().startActivity(intent);
+                }
+            }
+        });
     }
 }

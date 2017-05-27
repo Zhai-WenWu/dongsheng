@@ -17,6 +17,7 @@ import org.json.JSONObject;
 public abstract class BaseView extends RelativeLayout {
     protected static final String TEXT = "text";
     protected static final String IMAGE = "image";
+    protected static final String IMAGE_GIF = "gif";
     protected static final String VIDEO = "video";
     protected static final String URLS = "urls";
     protected OnClickImageListener mOnClickImageListener;
