@@ -25,18 +25,16 @@ import aplug.recordervideo.tools.FileToolsCammer;
 /**
  * 文件夹Adapter
  */
-public class ArticleVideoFolderAdapter extends BaseAdapter {
+public class ArticleVideoFolderAdapter extends BaseAdapter implements View.OnClickListener{
 
     private Context mContext;
     private Map<String, List<Map<String, String>>> mVideos;
     private List<String> mParentPaths = new ArrayList<String>();
 
-    private int mImageSize;
-    private ViewHolder mLastSelectedHolder = null;
+    private int mLastSelectedPosition = -1;
 
     public ArticleVideoFolderAdapter(Context context) {
         mContext = context;
-        mImageSize = mContext.getResources().getDimensionPixelOffset(R.dimen.dp_72);
     }
 
     /**
@@ -59,20 +57,13 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
     }
 
     public void resetSelected() {
-        mLastSelectedHolder = null;
+        mLastSelectedPosition = -1;
     }
 
-    public void onItemSelected(View itemView) {
-        if (itemView == null)
+    public void onItemSelected(int position) {
+        if (position == mLastSelectedPosition)
             return;
-        ViewHolder selectedHolder = (ViewHolder) itemView.getTag();
-        if (selectedHolder == mLastSelectedHolder)
-            return;
-        if (mLastSelectedHolder != null) {
-            mLastSelectedHolder.indicator.setVisibility(View.INVISIBLE);
-            selectedHolder.indicator.setVisibility(View.VISIBLE);
-            mLastSelectedHolder = selectedHolder;
-        }
+        mLastSelectedPosition = position;
     }
 
     @Override
@@ -100,14 +91,21 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         ViewHolder holder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.image_seletor_list_item_folder, viewGroup, false);
+        if (convertView == null || convertView.getTag() == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.image_seletor_list_item_folder, viewGroup, false);
+            convertView.setOnClickListener(this);
             holder = new ViewHolder(convertView);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.bindData(i);
         return convertView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mOnItemClickListener != null)
+            mOnItemClickListener.onItemClick(((ViewHolder)v.getTag()).position);
     }
 
     class ViewHolder {
@@ -130,10 +128,10 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
             if (mParentPaths == null || mParentPaths.size() <= 0)
                 return;
             this.position = position;
-            if (position == 0 && mLastSelectedHolder == null) {
-                mLastSelectedHolder = this;
+            if (position == 0 && mLastSelectedPosition == -1) {
+                mLastSelectedPosition = 0;
             }
-            indicator.setVisibility(mLastSelectedHolder == this ? View.VISIBLE : View.INVISIBLE);
+            indicator.setVisibility((mLastSelectedPosition != -1 && mLastSelectedPosition == position) ? View.VISIBLE : View.INVISIBLE);
             String parentPath = mParentPaths.get(position);
             String videoPath = null;
             List<Map<String, String>> videos = new ArrayList<Map<String, String>>();
@@ -159,13 +157,22 @@ public class ArticleVideoFolderAdapter extends BaseAdapter {
             if (videos != null && videos.size() > 0) {
                 size.setText(videos.size()+"张");
             }
-            Glide.with(itemView.getContext()).load(new File(FileToolsCammer.getImgPath(videoPath)))
+            Glide.with(itemView.getContext())
+                    .load(new File(FileToolsCammer.getImgPath(videoPath)))
                     .error(R.drawable.default_error)
                     .placeholder(R.drawable.mall_recommed_product_backgroup)
-                    .override(mImageSize, mImageSize)
                     .centerCrop()
                     .into(cover);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    private OnItemClickListener mOnItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
     }
 
 }

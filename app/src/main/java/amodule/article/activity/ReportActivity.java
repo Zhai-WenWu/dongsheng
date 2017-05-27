@@ -12,9 +12,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -149,13 +147,11 @@ public class ReportActivity extends BaseActivity {
                     addView(mReportContainer, reasons.get(0));
                 }
             }
-            if (LoginManager.isManager()) {
-                String moreReason = map.get("more_reason");
-                if (!TextUtils.isEmpty(moreReason)) {
-                    ArrayList<Map<String, String>> moreReas = StringManager.getListMapByJson(moreReason);
-                    if (moreReas != null && moreReas.size() > 0) {
-                        addView(mAdminContainer, moreReas.get(0));
-                    }
+            String moreReason = map.get("more_reason");
+            if (!TextUtils.isEmpty(moreReason)) {
+                ArrayList<Map<String, String>> moreReas = StringManager.getListMapByJson(moreReason);
+                if (moreReas != null && moreReas.size() > 0) {
+                    addView(mAdminContainer, moreReas.get(0));
                 }
             }
         }
@@ -173,49 +169,74 @@ public class ReportActivity extends BaseActivity {
 
     private void addView(final ViewGroup parentView, Map<String, String> map) {
         if (map != null && !map.isEmpty() && parentView != null) {
-            int index = 0;
-            Set<Map.Entry<String, String>> entry = map.entrySet();
-            Iterator iterator = entry.iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, String> data = (Map.Entry<String, String>) iterator.next();
-                if (data != null) {
-                    final ReportItem item = new ReportItem(this);
-                    parentView.addView(item, index);
-                    item.setData(data.getKey(), data.getValue(), index);
-                    item.setOnItemClickListener(new ReportItem.OnItemClickListener() {
-                        @Override
-                        public void onItemClick() {
-                            if (parentView == mReportContainer) {
-                                if (mLastSelectedReportChild == null) {
-                                    mLastSelectedReportChild = item;
-                                    mLastSelectedReportChild.setSelected(true);
-                                } else if (mLastSelectedReportChild == item) {
-                                    mLastSelectedReportChild.setSelected(false);
-                                    mLastSelectedReportChild = null;
-                                } else {
-                                    mLastSelectedReportChild.setSelected(false);
-                                    mLastSelectedReportChild = item;
-                                    mLastSelectedReportChild.setSelected(true);
-                                }
-                            } else if (parentView == mAdminContainer) {
-                                if (mLastSelectedAdminChild == null) {
-                                    mLastSelectedAdminChild = item;
-                                    mLastSelectedAdminChild.setSelected(true);
-                                } else if (mLastSelectedAdminChild == item) {
-                                    mLastSelectedAdminChild.setSelected(false);
-                                    mLastSelectedAdminChild = null;
-                                } else {
-                                    mLastSelectedAdminChild.setSelected(false);
-                                    mLastSelectedAdminChild = item;
-                                    mLastSelectedAdminChild.setSelected(true);
-                                }
-                            }
+            for (int i = 0; i < map.size(); i ++) {
+                if (parentView == mReportContainer) {
+                    String key = String.valueOf(i + 1);
+                    String value = map.get(key);
+                    if (!TextUtils.isEmpty(value)) {
+                        int index = parentView.getChildCount();
+                        ReportItem item = getItemView(parentView, key, value, index);
+                        if (item != null)
+                            parentView.addView(item, index);
+
+                    }
+                } else if (parentView == mAdminContainer) {
+                    if (i == 0) {
+                        String value = map.get("40");
+                        if (!TextUtils.isEmpty(value)) {
+                            int index = parentView.getChildCount();
+                            ReportItem item = getItemView(parentView, "40", value, index);
+                            if (item != null)
+                                parentView.addView(item, index);
                         }
-                    });
-                    index++;
+                    } else if (i == 1) {
+                        String value = map.get("20");
+                        if (!TextUtils.isEmpty(value)) {
+                            int index = parentView.getChildCount();
+                            ReportItem item = getItemView(parentView, "20", value, index);
+                            if (item != null)
+                                parentView.addView(item, index);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private ReportItem getItemView(final ViewGroup parentView, String key, String value, int index) {
+        final ReportItem item = new ReportItem(this);
+        item.setData(key, value, index);
+        item.setOnItemClickListener(new ReportItem.OnItemClickListener() {
+            @Override
+            public void onItemClick() {
+                if (parentView == mReportContainer) {
+                    if (mLastSelectedReportChild == null) {
+                        mLastSelectedReportChild = item;
+                        mLastSelectedReportChild.setSelected(true);
+                    } else if (mLastSelectedReportChild == item) {
+                        mLastSelectedReportChild.setSelected(false);
+                        mLastSelectedReportChild = null;
+                    } else {
+                        mLastSelectedReportChild.setSelected(false);
+                        mLastSelectedReportChild = item;
+                        mLastSelectedReportChild.setSelected(true);
+                    }
+                } else if (parentView == mAdminContainer) {
+                    if (mLastSelectedAdminChild == null) {
+                        mLastSelectedAdminChild = item;
+                        mLastSelectedAdminChild.setSelected(true);
+                    } else if (mLastSelectedAdminChild == item) {
+                        mLastSelectedAdminChild.setSelected(false);
+                        mLastSelectedAdminChild = null;
+                    } else {
+                        mLastSelectedAdminChild.setSelected(false);
+                        mLastSelectedAdminChild = item;
+                        mLastSelectedAdminChild.setSelected(true);
+                    }
+                }
+            }
+        });
+        return item;
     }
 
     public void onCommitClick() {

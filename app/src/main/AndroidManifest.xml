@@ -429,6 +429,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.article.activity.ArticleSelectActiivty"
