@@ -1,7 +1,9 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +14,7 @@ import java.util.Map;
 import java.util.Map;
 
 import acore.override.view.ItemBaseView;
+import acore.tools.StringManager;
 
 /**
  * PackageName : amodule.article.view
@@ -48,7 +51,17 @@ public class RecommendItemView extends ItemBaseView {
         recComment = (TextView) findViewById(R.id.rec_comment);
     }
 
-    public void setData(Map<String,String> map){
-
+    public void setData(Map<String, String> map) {
+        findViewById(R.id.hander).setVisibility(map.containsKey("showheader") ? View.VISIBLE : View.GONE);
+        setViewImage(recImage, map.get("img"));
+        setViewText(recTitle, map, "title", View.INVISIBLE);
+        setViewText(recBrowse, map, "clickAll");
+        setViewText(recComment, map, "commentNumber");
+        if (map.containsKey("customer")) {
+            Map<String, String> customer = StringManager.getFirstMap(map.get("customer"));
+            setViewText(recCustomerName, customer, "nickName");
+            findViewById(R.id.gourmet_icon)
+                    .setVisibility(customer.containsKey("isGourmet") && "2".equals(customer.get("isGourmet")) ? View.VISIBLE : View.GONE);
+        }
     }
 }

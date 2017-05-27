@@ -104,6 +104,7 @@
                     android:textSize="@dimen/dp_12"/>
 
                 <ImageView
+                    android:id="@+id/gourmet_icon"
                     android:layout_width="@dimen/dp_11"
                     android:layout_height="@dimen/dp_11"
                     android:src="@drawable/z_user_gourmet_ico"/>

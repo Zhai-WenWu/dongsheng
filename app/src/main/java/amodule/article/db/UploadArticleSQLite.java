@@ -215,7 +215,7 @@ public class UploadArticleSQLite extends SQLiteOpenHelper {
         }finally {
             close(null, writableDatabase);
         }
-        Tools.showToast(XHApplication.in().getApplicationContext(),"更新数据");
+//        Tools.showToast(XHApplication.in().getApplicationContext(),"更新数据");
         return row;
     }
     

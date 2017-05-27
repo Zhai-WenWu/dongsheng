@@ -349,7 +349,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
             }
         }
         if (id > 0) {
-            Tools.showToast(ArticleEidtActiivty.this, "保存成功");
+//            Tools.showToast(ArticleEidtActiivty.this, "保存成功");
         }
         return id;
     }
