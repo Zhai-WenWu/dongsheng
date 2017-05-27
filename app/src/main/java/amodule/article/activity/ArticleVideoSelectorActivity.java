@@ -196,7 +196,10 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMedias();
+                ArrayList<String> formats = new ArrayList<String>();
+                formats.add("mov");
+                formats.add("mp4");
+                ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMediasLimitFormats(formats);
                 if (videos != null && videos.size() > 0) {
                     for (Map<String, String> map : videos) {
                         if (map != null) {
