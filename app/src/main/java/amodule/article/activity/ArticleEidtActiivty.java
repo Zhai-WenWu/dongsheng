@@ -223,6 +223,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 super.handleMessage(msg);
                 if (uploadArticleData != null) {
                     editTitle.setText(uploadArticleData.getTitle());
+                    mixLayout.setXHServiceData(uploadArticleData.getContent());
                 }
             }
         };
@@ -239,7 +240,6 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                     }else {
                         uploadArticleData = sqLite.getDraftData();
                     }
-                    saveDraft();
                     handler.sendEmptyMessage(0);
                 }
             }).start();

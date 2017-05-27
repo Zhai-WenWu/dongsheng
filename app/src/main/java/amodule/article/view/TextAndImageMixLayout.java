@@ -65,6 +65,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /** 设置上传需要数据 */
     public void setXHServiceData(String content) {
+        if(TextUtils.isEmpty(content))return;
         removeAllViews();
         List<Map<String, String>> dataArray = StringManager.getListMapByJson(content);
         for (Map<String, String> map : dataArray) {
@@ -281,7 +282,8 @@ public class TextAndImageMixLayout extends LinearLayout
             if (view instanceof ImageShowView) {
                 Map<String, String> map = new HashMap<>();
                 String path = ((ImageShowView) view).getImageUrl();
-                map.put(path, imageMap.get(path));
+                map.put("path", path);
+                map.put("url", imageMap.get(path));
                 arrayList.add(map);
             }
         }
