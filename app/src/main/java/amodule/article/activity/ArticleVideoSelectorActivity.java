@@ -62,7 +62,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private RelativeLayout mVideoContainer;
     private VideoView mVideoView;
 
-    private ArrayList<Map<String, String>> mAllDatas;
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
     private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
 
@@ -237,7 +236,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                     Tools.showToast(ArticleVideoSelectorActivity.this, "本地没有视频哦");
                     return;
                 }
-                mAllDatas = datas;
                 mGridViewLayout.setVisibility(View.VISIBLE);
                 if (mAdapter == null) {
                     mAdapter = new ArticleVideoSelectorAdapter();
