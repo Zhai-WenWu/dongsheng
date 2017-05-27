@@ -711,7 +711,7 @@ public class Main extends Activity implements OnClickListener {
         quanRefreshState=state;
         if(state) {
             ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found_refresh);
-            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("刷新");
+            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
         }else{
             ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found);
             ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
