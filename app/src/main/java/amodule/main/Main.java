@@ -123,7 +123,12 @@ public class Main extends Activity implements OnClickListener {
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
         //初始化
-        InMobiAdTools.getInstance().initSdk(this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InMobiAdTools.getInstance().initSdk(Main.this);
+            }
+        }).start();
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);

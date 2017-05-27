@@ -1,5 +1,7 @@
 package third.ad.tools;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -200,7 +202,7 @@ public class WelcomeAdTools {
      * 处理inmobi广告
      */
     private void getInMobi(final boolean isCache) {
-        String adid = analysData(ad_data.get(index_ad));
+        final String adid = analysData(ad_data.get(index_ad));
         if (TextUtils.isEmpty(adid)) {
             index_ad++;
             nextAd(false);
@@ -216,57 +218,63 @@ public class WelcomeAdTools {
                 return;
             }
         }
-        //
-        temporaryNative = new InMobiNative(XHActivityManager.getInstance().getCurrentActivity(),
-                Long.parseLong(adid),
-                new InMobiNative.NativeAdListener() {
-                    @Override
-                    public void onAdLoadSucceeded(InMobiNative inMobiNative) {
-                        if (isCache) {
-                            welcomeNative = inMobiNative;
-                        }
-                        Log.i("tzy", "WelcomeAdTools onAdLoadSucceeded");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdLoadSucceeded(inMobiNative);
-                        }
-                    }
+        Handler handler= new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                temporaryNative = new InMobiNative(XHActivityManager.getInstance().getCurrentActivity(),
+                        Long.parseLong(adid),
+                        new InMobiNative.NativeAdListener() {
+                            @Override
+                            public void onAdLoadSucceeded(InMobiNative inMobiNative) {
+                                if (isCache) {
+                                    welcomeNative = inMobiNative;
+                                }
+                                Log.i("tzy", "WelcomeAdTools onAdLoadSucceeded");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdLoadSucceeded(inMobiNative);
+                                }
+                            }
 
-                    @Override
-                    public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                        index_ad++;
-                        nextAd(false);
-                        Log.i("tzy", "WelcomeAdTools onAdLoadFailed");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdLoadFailed(inMobiNative, inMobiAdRequestStatus);
-                        }
-                    }
+                            @Override
+                            public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
+                                index_ad++;
+                                nextAd(false);
+                                Log.i("tzy", "WelcomeAdTools onAdLoadFailed");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdLoadFailed(inMobiNative, inMobiAdRequestStatus);
+                                }
+                            }
 
-                    @Override
-                    public void onAdDismissed(InMobiNative inMobiNative) {
-                        Log.i("tzy", "WelcomeAdTools onAdDismissed");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdDismissed(inMobiNative);
-                        }
-                    }
+                            @Override
+                            public void onAdDismissed(InMobiNative inMobiNative) {
+                                Log.i("tzy", "WelcomeAdTools onAdDismissed");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdDismissed(inMobiNative);
+                                }
+                            }
 
-                    @Override
-                    public void onAdDisplayed(InMobiNative inMobiNative) {
-                        Log.i("tzy", "WelcomeAdTools onAdDisplayed");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdDisplayed(inMobiNative);
-                        }
-                    }
+                            @Override
+                            public void onAdDisplayed(InMobiNative inMobiNative) {
+                                Log.i("tzy", "WelcomeAdTools onAdDisplayed");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdDisplayed(inMobiNative);
+                                }
+                            }
 
-                    @Override
-                    public void onUserLeftApplication(InMobiNative inMobiNative) {
-                        Log.i("tzy", "WelcomeAdTools onUserLeftApplication");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onUserLeftApplication(inMobiNative);
-                        }
-                    }
-                });
-        //加载广告
-        temporaryNative.load();
+                            @Override
+                            public void onUserLeftApplication(InMobiNative inMobiNative) {
+                                Log.i("tzy", "WelcomeAdTools onUserLeftApplication");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onUserLeftApplication(inMobiNative);
+                                }
+                            }
+                        });
+                //加载广告
+                temporaryNative.load();
+            }
+        });
+
     }
 
     /**

@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -157,6 +156,7 @@ public class WelcomeDialog extends Dialog {
                 new WelcomeAdTools.GdtCallback() {
                     @Override
                     public void onAdPresent() {
+                        Log.i("zhangyujian","GdtCallback");
                         if(mAdTime>5){
                             endCountDown();
                             mAdTime=5;
@@ -207,6 +207,7 @@ public class WelcomeDialog extends Dialog {
                     @Override
                     public void onAdLoadSucceeded(final InMobiNative inMobiNative) {
                         try {
+                            Log.i("zhangyujian","InMobiNativeCallback");
                             isAdLoadOk = true;
                             //成功
                             JSONObject content = new JSONObject((String) inMobiNative.getAdContent());
@@ -353,10 +354,10 @@ public class WelcomeDialog extends Dialog {
     }
     private void showSkipContainer(){
         mADSkipContainer.setVisibility(View.VISIBLE);
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation.setDuration(500);
-        alphaAnimation.setFillAfter(true);
-        mADSkipContainer.startAnimation(alphaAnimation);
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+//        alphaAnimation.setDuration(500);
+//        alphaAnimation.setFillAfter(true);
+//        mADSkipContainer.startAnimation(alphaAnimation);
     }
 
     private Runnable mCountDownRun = new Runnable() {
@@ -466,7 +467,13 @@ public class WelcomeDialog extends Dialog {
             long endTime2=System.currentTimeMillis();
             Log.i("zhangyujian","dialog::onWindowFocusChanged:333:"+(endTime2-XHApplication.in().startTime));
             //
-            WelcomeAdTools.getInstance().handlerAdData(false, null);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    WelcomeAdTools.getInstance().handlerAdData(false, null);
+                }
+            }).start();
+
             long endTime=System.currentTimeMillis();
             Log.i("zhangyujian","dialog::onWindowFocusChanged::"+(endTime-XHApplication.in().startTime));
         }
