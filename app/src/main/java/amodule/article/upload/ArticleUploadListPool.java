@@ -5,8 +5,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -156,6 +158,7 @@ public class ArticleUploadListPool extends UploadListPool {
      */
     @Override
     protected void uploadThingOver(final boolean flag, final String uniquId, final String responseStr, final JSONObject jsonObject) {
+        Log.i("articleUpload","uploadThingOver() isPause:" + isPause);
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(),
@@ -277,13 +280,13 @@ public class ArticleUploadListPool extends UploadListPool {
 
         //视频首图
         List<UploadItemData> headDataList = uploadPoolData.getHeadDataList();
-        if(headDataList.size() > 0){
+        if(headDataList != null && headDataList.size() > 0){
             Log.i("articleUpload","视频首图 path:" + headDataList.get(0).getPath() + "   url:" + headDataList.get(0).getRecMsg());
             uploadDishData.setVideoImgUrl(isReset ? "" : headDataList.get(0).getRecMsg());
         }
         //视频信息
         final List<UploadItemData> bodyItemDatas = uploadPoolData.getBodyDataList();
-        if(bodyItemDatas.size() > 0) {
+        if(bodyItemDatas != null && bodyItemDatas.size() > 0) {
             UploadItemData captureItem = bodyItemDatas.get(bodyItemDatas.size() - 1);
             Log.i("articleUpload","视频信息 path:" + captureItem.getPath() + "  type:" + captureItem.getType() + "   url:" + captureItem.getRecMsg());
             if(UploadItemData.TYPE_VIDEO == captureItem.getType()){
@@ -292,7 +295,7 @@ public class ArticleUploadListPool extends UploadListPool {
             }
         }
         //图片信息
-        if(bodyItemDatas.size() > 0) {
+        if(bodyItemDatas != null && bodyItemDatas.size() > 0) {
             final ArrayList<Map<String, String>> makesList = uploadDishData.getImgArray();
             uploadPoolData.loopPoolData(bodyItemDatas, new UploadPoolData.LoopCallback() {
                 @Override
@@ -359,11 +362,11 @@ public class ArticleUploadListPool extends UploadListPool {
                         if (!TextUtils.isEmpty(imgUrl)) {
                             continue;
                         }
+                        Log.e("articleUpload", "文章上传 imgPath: " + imgPath + ", " + true);
                         if (!Tools.isFileExists(imgPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章图片路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
                         }
-                        Log.e("FRJ", "文章上传 imgPath: " + imgPath + ", " + true);
 
                         headItemData = new UploadItemData();
                         headItemData.setPath(imgPath);
@@ -422,21 +425,40 @@ public class ArticleUploadListPool extends UploadListPool {
         ArrayList<Map<String,String>> arrayList = uploadArticleData.getImgArray();
         for(int i = 0; i < arrayList.size(); i++){
             Map<String,String> map = arrayList.get(i);
-            Log.i("articleUpload","combineParameter() path:" + map.get("path") + "   url:" + map.get("url"));
-            content = content.replace(map.get("path"),map.get("url"));
+            String path = map.get("path");
+            String url = map.get("url");
+            String newPath = path.replace("/","\\/");
+            String newUrl = url.replace("/","\\/");
+            Log.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
+            content = content.replace(newPath,newUrl);
+            Log.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
         }
-        ArrayList<Map<String,String>> imgArray = uploadArticleData.getImgArray();
-        Log.i("articleUpload","combineParameter() uploadArticleData.getImgUrl():" + uploadArticleData.getImgUrl());
-        Log.i("articleUpload","combineParameter() uploadArticleData.getVideoUrl():" + uploadArticleData.getVideoUrl());
-        uploadTextData.put("title",uploadArticleData.getTitle());
-        uploadTextData.put("classCode",uploadArticleData.getClassCode());
-        uploadTextData.put("content",content);
-        uploadTextData.put("isOriginal",String.valueOf(uploadArticleData.getIsOriginal()));
-        uploadTextData.put("repAddress",uploadArticleData.getRepAddress());
-        uploadTextData.put("img",imgArray.size() > 0 ? imgArray.get(0).get("url") : "");
-        uploadTextData.put("video",uploadArticleData.getVideoUrl());
-        uploadTextData.put("videoImg",uploadArticleData.getVideoImgUrl());
-        uploadTextData.put("code",uploadArticleData.getCode());
+        String videoImgUrl = uploadArticleData.getVideoImg();
+        if(!TextUtils.isEmpty(videoImgUrl)) {
+            videoImgUrl = videoImgUrl.replace("/", "\\/");
+            content = content.replace(videoImgUrl, uploadArticleData.getVideoImgUrl());
+            String videoUrl = uploadArticleData.getVideo();
+            videoUrl = videoUrl.replace("/", "\\/");
+            content = content.replace(videoUrl, uploadArticleData.getVideoUrl());
+        }
+
+        Log.i("articleUpload","combineParameter() 2222content:" + content);
+        try {
+            ArrayList<Map<String, String>> imgArray = uploadArticleData.getImgArray();
+            Log.i("articleUpload", "combineParameter() uploadArticleData.getImgUrl():" + uploadArticleData.getImgUrl());
+            Log.i("articleUpload", "combineParameter() uploadArticleData.getVideoUrl():" + uploadArticleData.getVideoUrl());
+            uploadTextData.put("title", uploadArticleData.getTitle());
+            uploadTextData.put("classCode", uploadArticleData.getClassCode());
+            uploadTextData.put("content", URLEncoder.encode(content, HTTP.UTF_8));
+            uploadTextData.put("isOriginal", String.valueOf(uploadArticleData.getIsOriginal()));
+            uploadTextData.put("repAddress", uploadArticleData.getRepAddress());
+            uploadTextData.put("img", imgArray.size() > 0 ? imgArray.get(0).get("url") : "");
+            uploadTextData.put("video", uploadArticleData.getVideoUrl());
+            uploadTextData.put("videoImg", uploadArticleData.getVideoImgUrl());
+            uploadTextData.put("code", uploadArticleData.getCode());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return uploadTextData;
     }
 
@@ -478,9 +500,9 @@ public class ArticleUploadListPool extends UploadListPool {
                             new UploadFailPopWindowDialog.UploadFailDialogCallback() {
                                 @Override
                                 public void callback(int draftId) {
-                                    Intent intent = new Intent();
-                                    intent.setClass(XHApplication.in().getApplicationContext(), UploadDishListActivity.class);
+                                    Intent intent = new Intent(XHApplication.in().getApplicationContext(), UploadDishListActivity.class);
                                     intent.putExtra("draftId", draftId);
+                                    XHApplication.in().getApplicationContext().startActivity(intent);
                                 }
                             });
             failPopWindowDialog.show();

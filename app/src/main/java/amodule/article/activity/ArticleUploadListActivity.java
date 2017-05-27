@@ -374,7 +374,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
-            intent.putExtra("index", 1);
+            intent.putExtra("index", 3);
             intent.setClass(this, FriendHome.class);
             FriendHome.isRefresh = true;
             startActivity(intent);

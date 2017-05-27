@@ -160,6 +160,7 @@ public class UploadPoolData {
 
 
     public void loopPoolData(List<UploadItemData> list, LoopCallback callback) {
+        if(list == null) return;
         boolean needStop = false;
         for (UploadItemData itemData : list) {
             if(needStop)

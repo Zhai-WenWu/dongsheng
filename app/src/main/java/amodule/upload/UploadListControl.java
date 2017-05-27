@@ -21,7 +21,6 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
 
 /**
  * Created by ：fei_teng on 2016/10/27 20:43.
@@ -86,25 +85,24 @@ public class UploadListControl {
 //    }
 
 
-
     /**
      * 临时方法，处理步骤视频，最终视频，大图路径丢失
      * 处理完数据库数据丢失问题后应该删除
-     *
-     *
+     * <p>
+     * <p>
      * 上传池类型，草稿id，上传池UI回调,获取上传池，
      * 上传池已存在，无需创建，否则创建
      *
-     * @param poolType 上传池类型
+     * @param poolType       上传池类型
      * @param draftId
-     * @param coverPath 大图路径
+     * @param coverPath      大图路径
      * @param finalVideoPath 最终视频路径
-     * @param timestamp 时间戳
+     * @param timestamp      时间戳
      * @param callback
      * @return UploadListPool 上传池
      */
     public UploadListPool add(Class<? extends UploadListPool> poolType, int draftId,
-                              String coverPath,String finalVideoPath,String timestamp,
+                              String coverPath, String finalVideoPath, String timestamp,
                               UploadListUICallBack callback) {
         UploadListPool pool;
         String poolKey = poolType.getSimpleName() + draftId;
@@ -112,7 +110,7 @@ public class UploadListControl {
         if (pool == null) {
             try {
                 pool = poolType.newInstance();
-                pool.initData(draftId, coverPath,finalVideoPath,timestamp,callback);
+                pool.initData(draftId, coverPath, finalVideoPath, timestamp, callback);
                 HashMap<String, UploadListPool> poolHashMap = new HashMap<>();
                 poolHashMap.put(poolKey, pool);
                 uploadPoolList.add(poolHashMap);
@@ -204,6 +202,7 @@ public class UploadListControl {
 
     /**
      * 上传视频，以断点续传方式上传
+     *
      * @param data
      * @param callback
      * @return
@@ -244,16 +243,16 @@ public class UploadListControl {
      * @return
      */
     private int startUploadImg(final UploadItemData itemData, final UploadListNetCallBack callback) {
-        Log.i("articleUpload","startUploadImg() path:" + itemData.getPath());
+        Log.i("articleUpload", "startUploadImg() path:" + itemData.getPath());
         new UploadImg("", itemData.getPath(), new InternetCallback(XHApplication.in().getApplicationContext()) {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
-                    Log.i("articleUpload","startUploadImg() onSuccess()" + url);
+                    Log.i("articleUpload", "startUploadImg() onSuccess()" + url);
                     callback.onSuccess((String) msg, itemData.getUniqueId(), null);
                 } else {
                     callback.onFaild((String) msg, itemData.getUniqueId());
-                    Log.i("articleUpload","startUploadImg() onFaild()" + url);
+                    Log.i("articleUpload", "startUploadImg() onFaild()" + url);
                 }
             }
         }).uploadImg();
@@ -342,11 +341,11 @@ public class UploadListControl {
 
 
     private void uploadLastInfo(final Class<? extends UploadListPool> poolType, final int draftId) {
-        Log.i("articleUpload","uploadLastInfo() draftId:" + draftId);
+        Log.i("articleUpload", "uploadLastInfo() draftId:" + draftId);
         final UploadListPool pool = getPool(poolType.getSimpleName() + draftId);
-        if(pool == null){
-            Log.e("uploadLastInfo","数据丢失");
-            Toast.makeText(XHApplication.in(),"上传最后一步，数据丢失",Toast.LENGTH_SHORT).show();
+        if (pool == null) {
+            Log.e("uploadLastInfo", "数据丢失");
+            Toast.makeText(XHApplication.in(), "上传最后一步，数据丢失", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -355,42 +354,55 @@ public class UploadListControl {
             @Override
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
-                    if(TextUtils.isEmpty(itemData.getUploadUrl())){
-                        Log.e("uploadLastInfo","数据丢失");
-                        Toast.makeText(XHApplication.in(),"上传最后一步，数据丢失",Toast.LENGTH_SHORT).show();
+                    if (TextUtils.isEmpty(itemData.getUploadUrl())) {
+                        Log.e("articleUpload", "上传url为空");
+                        Toast.makeText(XHApplication.in(), "上传最后一步，上传url为空", Toast.LENGTH_SHORT).show();
                         return true;
                     }
-
                     String path = itemData.getUploadUrl();
-                    if(TextUtils.isEmpty(path)){
-                        InternetCallback internetCallback = new InternetCallback(XHApplication.in()) {
-                            @Override
-                            public void loaded(int flag, String url, Object msg) {
-                                if (flag >= UtilInternet.REQ_OK_STRING) {
-                                    retryNum = 0;
-                                    pool.getUploadPoolData().getNetCallback().onLastUploadOver(true, (String) msg);
+                    Log.i("articleUpload", "uploadLastInfo() getUploadUrl:" + path);
+                    InternetCallback internetCallback = new InternetCallback(XHApplication.in()) {
+                        @Override
+                        public void loaded(int flag, String url, Object msg) {
+                            if (flag >= UtilInternet.REQ_OK_STRING) {
+                                retryNum = 0;
+                                pool.getUploadPoolData().getNetCallback().onLastUploadOver(true, (String) msg);
+                            } else {
+                                if (retryNum < MAX_RETRY_NUM) {
+                                    retryNum++;
+                                    uploadLastInfo(poolType, draftId);
                                 } else {
-                                    if (retryNum < MAX_RETRY_NUM) {
-                                        retryNum++;
-                                        uploadLastInfo(poolType, draftId);
-                                    } else {
-                                        pool.getUploadPoolData().getNetCallback().onLastUploadOver(false, (String) msg);
-                                    }
+                                    pool.getUploadPoolData().getNetCallback().onLastUploadOver(false, (String) msg);
                                 }
                             }
-                        };
-                        if(path.contains("Main7")){
-                            ReqEncyptInternet.in().doEncypt(path, UtilString.getStringByMap(itemData.getUploadMsg(), "&", "="),internetCallback);
-                        }else{
-                            ReqInternet.in().doPost(path,itemData.getUploadMsg(),internetCallback);
                         }
-
+                    };
+                    Log.i("articleUpload", "uploadLastInfo() params:" + MapToString(itemData.getUploadMsg(), "&", "="));
+                    if (path.contains("Main7")) {
+                        ReqEncyptInternet.in().doEncypt(path, MapToString(itemData.getUploadMsg(), "&", "="), internetCallback);
+                    } else {
+                        ReqInternet.in().doPost(path, itemData.getUploadMsg(), internetCallback);
                     }
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    public String MapToString(Map<String, String> map, String line1, String line2) {
+        StringBuffer str = new StringBuffer();
+        int index = 0;
+        for (String key : map.keySet()) {
+            if (index != 0) {
+                str.append(line1);
+            }
+            str.append(key);
+            str.append(line2);
+            str.append(map.get(key));
+            index++;
+        }
+        return str.toString();
     }
 
 
@@ -431,7 +443,7 @@ public class UploadListControl {
     }
 
     //从数组中删除上传池
-    private void removeSpecPool(String poolKey){
+    private void removeSpecPool(String poolKey) {
         Map<String, UploadListPool> poolMap = null;
         for (Map<String, UploadListPool> map : uploadPoolList) {
             if (map.containsKey(poolKey)) {

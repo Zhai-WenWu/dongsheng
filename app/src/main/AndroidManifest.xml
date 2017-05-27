@@ -423,7 +423,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.article.activity.ArticleVideoSelectorActivity"
             android:configChanges="orientation|keyboardHidden"
