@@ -51,8 +51,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 174
-        versionName "5.3.3.4"
+        versionCode 175
+        versionName "5.3.4"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -66,8 +66,8 @@ android {
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
 //            storeFile file('D:/android_workspace/xiangha.keystore')
-//            storeFile file('E:/keystore/xiangha.keystore')
-            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
+//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }

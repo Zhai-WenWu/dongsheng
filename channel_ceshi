@@ -1,5 +1,6 @@
 #gradlew clean assembleRelease -PchannelFile=channel_ceshi
 #gradle clean assembleRelease -PchannelList=ceshi
+#gradlew clean assembleRelease -PchannelList=ceshi
 #gradle clean assembleRelease -PchannelList=xiangha
 #---------------------测试------------------------
 ceshi
