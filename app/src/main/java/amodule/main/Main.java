@@ -52,8 +52,11 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.XiangHaTabHost;
 import amodule.article.activity.ArticleUploadListActivity;
+import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadParentSQLite;
+import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
 import amodule.main.activity.MainChangeSend;
@@ -177,29 +180,36 @@ public class Main extends Activity implements OnClickListener {
                 PushManager.tongjiPush();
                 isShowWelcomeDialog=false;
 
-                UploadArticleSQLite uploadArticleSQLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
-                final UploadArticleData uploadArticleData = uploadArticleSQLite.getUploadIngData();
-                if(uploadArticleData != null){
-                    final XhDialog xhDialog = new XhDialog(Main.this);
-                    xhDialog.setTitle("您的文章还未上传完毕，是否继续上传？")
-                            .setCanselButton("取消", new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    xhDialog.cancel();
-                                }
-                            }).setSureButton(" 继续", new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(Main.this,ArticleUploadListActivity.class);
-                            intent.putExtra("draftId",uploadArticleData.getId());
-                            intent.putExtra("coverPath",uploadArticleData.getImg());
-                            intent.putExtra("finalVideoPath",uploadArticleData.getVideo());
-                            startActivity(intent);
-                            xhDialog.cancel();
-                        }
-                    }).show();
-                }
+                boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()),EditParentActivity.TYPE_ARTICLE,"您的文章还未上传完毕，是否继续上传？");
+                if(!isShow) showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()),EditParentActivity.TYPE_VIDEO,"您的视频还未上传完毕，是否继续上传？");
             }
+        }
+
+        private boolean showUploading(UploadParentSQLite sqLite, final int dataType,String title){
+            final UploadArticleData uploadArticleData = sqLite.getUploadIngData();
+            if(uploadArticleData != null){
+                final XhDialog xhDialog = new XhDialog(Main.this);
+                xhDialog.setTitle(title)
+                        .setCanselButton("取消", new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                xhDialog.cancel();
+                            }
+                        }).setSureButton(" 继续", new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Main.this,ArticleUploadListActivity.class);
+                        intent.putExtra("draftId",uploadArticleData.getId());
+                        intent.putExtra("dataType", dataType);
+                        intent.putExtra("coverPath",uploadArticleData.getImg());
+                        intent.putExtra("finalVideoPath",uploadArticleData.getVideo());
+                        startActivity(intent);
+                        xhDialog.cancel();
+                    }
+                }).show();
+                return true;
+            }
+            return false;
         }
 
         @Override

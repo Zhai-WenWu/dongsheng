@@ -40,7 +40,7 @@ public class LoginManager {
     public static final int LOGIN_WB = 3;
     public static final String[] PLATFORMS = {"QQ", "微信", "新浪"};
 
-    public static Map<String, String> userInfo = new HashMap<String, String>(); // 当前登录用户信息
+    public static Map<String, String> userInfo = new HashMap<>(); // 当前登录用户信息
 
     private static String mPlatformName = "QQ";
     private static BaseActivity mAct;

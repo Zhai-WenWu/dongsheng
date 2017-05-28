@@ -17,12 +17,18 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.EditParentActivity;
+import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadParentSQLite;
+import amodule.article.db.UploadVideoSQLite;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -41,13 +47,25 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     private String checkCode;
     private int isCheck = 0; //1:转载内容   2：原创内容
 
-    private UploadArticleSQLite sqLite;
+    private UploadParentSQLite sqLite;
     private UploadArticleData uploadArticleData;
+
+    private int dataType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("发文章", 5, 0, R.layout.a_common_post_new_title, R.layout.a_article_select_activity);
+        dataType = getIntent().getIntExtra("dataType",0);
+        if(dataType == EditParentActivity.TYPE_ARTICLE) {
+            initActivity("发文章", 5, 0, R.layout.a_common_post_new_title, R.layout.a_article_select_activity);
+            sqLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
+        }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+            initActivity("发视频", 5, 0, R.layout.a_common_post_new_title, R.layout.a_article_select_activity);
+            sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
+        }else{
+            Tools.showToast(this,"发布数据类型为空");
+            finish();
+        }
         initView();
         getClassifyData();
     }
@@ -90,7 +108,12 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void getClassifyData(){
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleClass, "", new InternetCallback(this) {
+        String url = "";
+        if(dataType == EditParentActivity.TYPE_ARTICLE)
+            url = StringManager.api_getArticleClass;
+        else if(dataType == EditParentActivity.TYPE_VIDEO)
+            url = StringManager.getVideoClass;
+        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
@@ -119,7 +142,6 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
 
     private void upload(){
         int draftId = getIntent().getIntExtra("draftId",-1);
-        sqLite = new UploadArticleSQLite(this);
         uploadArticleData = sqLite.selectById(draftId);
         uploadArticleData.setClassCode(checkCode);
         uploadArticleData.setIsOriginal(isCheck);
@@ -127,6 +149,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         sqLite.update(draftId,uploadArticleData);
         Intent intent = new Intent(this,ArticleUploadListActivity.class);
         intent.putExtra("draftId",draftId);
+        intent.putExtra("dataType",dataType);
         intent.putExtra("coverPath",uploadArticleData.getImg());
         intent.putExtra("finalVideoPath",uploadArticleData.getVideo());
         startActivity(intent);
@@ -136,7 +159,11 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(this,ArticleEidtActiivty.class);
+        Intent intent = new Intent();
+        if(dataType == EditParentActivity.TYPE_ARTICLE)
+            intent.setClass(this,ArticleEidtActiivty.class);
+        else if(dataType == EditParentActivity.TYPE_VIDEO)
+            intent.setClass(this,VideoEditActivity.class);
         startActivity(intent);
     }
 

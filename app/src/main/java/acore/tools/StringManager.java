@@ -272,9 +272,11 @@ public class StringManager extends UtilString {
 	public final static String api_articleAdd = apiUrl + "Main7/Article/articleAdd"; //发布文章
 
 	/*视频*/
+	public final static String getVideoClass = apiUrl + "Main7/Video/getVideoClass"; //视频分类
 	public final static String api_getVideoInfo = apiUrl + "/Main7/Video/videoInfo"; //视频详情
 	public final static String api_getVideoRelated = apiUrl + "/Main7/Video/getRelated"; //视频详情
 	public final static String api_likeVideo = apiUrl + "/Main7/Video/likeVideo"; //视频详情
+	public final static String api_videoAdd = apiUrl + "Main7/Video/videoAdd"; //发布视频
 
 	/*评论*/
 	public final static String api_forumList = apiUrl + "Main7/Forum/forumList"; //发布文章

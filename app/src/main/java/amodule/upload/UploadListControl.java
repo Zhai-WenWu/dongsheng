@@ -125,6 +125,45 @@ public class UploadListControl {
     }
 
     /**
+     * 临时方法，处理步骤视频，最终视频，大图路径丢失
+     * 处理完数据库数据丢失问题后应该删除
+     * <p>
+     * <p>
+     * 上传池类型，草稿id，上传池UI回调,获取上传池，
+     * 上传池已存在，无需创建，否则创建
+     *
+     * @param poolType       上传池类型
+     * @param draftId
+     * @param coverPath      大图路径
+     * @param finalVideoPath 最终视频路径
+     * @param timestamp      时间戳
+     * @param callback
+     * @return UploadListPool 上传池
+     */
+    public UploadListPool add(int dataType,Class<? extends UploadListPool> poolType, int draftId,
+                              String coverPath, String finalVideoPath, String timestamp,
+                              UploadListUICallBack callback) {
+        UploadListPool pool;
+        String poolKey = poolType.getSimpleName() + draftId;
+        pool = getPool(poolKey);
+        if (pool == null) {
+            try {
+                pool = poolType.newInstance();
+                pool.initData(dataType,draftId, coverPath, finalVideoPath, timestamp, callback);
+                HashMap<String, UploadListPool> poolHashMap = new HashMap<>();
+                poolHashMap.put(poolKey, pool);
+                uploadPoolList.add(poolHashMap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            pool.setUiCallback(callback);
+        }
+
+        return pool;
+    }
+
+    /**
      * 初始化网络上传,获取上传进度，
      *
      * @param data 单项数据
@@ -344,8 +383,8 @@ public class UploadListControl {
         Log.i("articleUpload", "uploadLastInfo() draftId:" + draftId);
         final UploadListPool pool = getPool(poolType.getSimpleName() + draftId);
         if (pool == null) {
-            Log.e("uploadLastInfo", "数据丢失");
-            Toast.makeText(XHApplication.in(), "上传最后一步，数据丢失", Toast.LENGTH_SHORT).show();
+//            Log.e("uploadLastInfo", "数据丢失");
+//            Toast.makeText(XHApplication.in(), "上传最后一步，数据丢失", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -357,7 +396,7 @@ public class UploadListControl {
                     if (TextUtils.isEmpty(itemData.getUploadUrl())) {
                         Log.e("articleUpload", "上传url为空");
                         Toast.makeText(XHApplication.in(), "上传最后一步，上传url为空", Toast.LENGTH_SHORT).show();
-                        return true;
+                        return false;
                     }
                     String path = itemData.getUploadUrl();
                     Log.i("articleUpload", "uploadLastInfo() getUploadUrl:" + path);

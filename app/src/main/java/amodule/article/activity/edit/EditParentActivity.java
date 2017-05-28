@@ -1,4 +1,4 @@
-package amodule.article.activity;
+package amodule.article.activity.edit;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,7 +15,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
@@ -34,8 +33,9 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.article.activity.ArticleVideoSelectorActivity;
 import amodule.article.db.UploadArticleData;
-import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadParentSQLite;
 import amodule.article.view.EditBottomControler;
 import amodule.article.view.InputUrlDialog;
 import amodule.article.view.TextAndImageMixLayout;
@@ -53,26 +53,30 @@ import xh.windowview.XhDialog;
  * Created by MrTrying on 2017/5/19 09:19.
  * E_mail : ztanzeyu@gmail.com
  */
-public class ArticleEidtActiivty extends BaseActivity implements View.OnClickListener {
+public abstract class EditParentActivity extends BaseActivity implements View.OnClickListener {
 
     private final int REQUEST_SELECT_IMAGE = 0x01;
     private final int REQUEST_SELECT_VIDEO = 0x02;
 
+    public static final int TYPE_ARTICLE = 100;
+    public static final int TYPE_VIDEO = 101;
+
     private EditBottomControler editBottomControler;
     private TextAndImageMixLayout mixLayout;
 
-    private UploadArticleSQLite sqLite;
+    protected UploadParentSQLite sqLite;
 
     private EditText editTitle;
-    private UploadArticleData uploadArticleData;
+    protected UploadArticleData uploadArticleData;
     private String code;
 
     private boolean isKeyboradShow = false;
 
+
     /**
      * 定时存草稿
      */
-    private Timer timer;
+    protected Timer timer;
     private int taskTime = 30 * 1000;
 
     @Override
@@ -80,13 +84,10 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        initActivity("发文章", 5, 0, 0, R.layout.a_article_edit_activity);
-
-        initView();
-        initData();
+        initActivity("", 5, 0, 0, R.layout.a_article_edit_activity);
     }
 
-    private void initView() {
+    protected void initView(String title) {
         //处理状态栏引发的问题
         if (Tools.isShowTitle()) {
             final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
@@ -106,9 +107,9 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         }
         String color = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(color));
+        TextView titleView = (TextView) findViewById(R.id.title);
+        titleView.setText(title);
 
-        TextView title = (TextView) findViewById(R.id.title);
-        title.setText("写文章");
         findViewById(R.id.nextStep).setVisibility(View.VISIBLE);
         findViewById(R.id.nextStep).setOnClickListener(this);
         ImageView close = (ImageView) findViewById(R.id.leftImgBtn);
@@ -153,7 +154,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnSelectImageCallback() {
                     @Override
                     public void onSelectImage() {
-                        Intent intent = new Intent(ArticleEidtActiivty.this, ImageSelectorActivity.class);
+                        Intent intent = new Intent(EditParentActivity.this, ImageSelectorActivity.class);
                         intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
                         ArrayList<String> imageArray = mixLayout.getImageArray();
                         intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 10 - imageArray.size());
@@ -165,7 +166,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnSelectVideoCallback() {
                     @Override
                     public void onSelectVideo() {
-                        Intent intent = new Intent(ArticleEidtActiivty.this, ArticleVideoSelectorActivity.class);
+                        Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
                         startActivityForResult(intent, REQUEST_SELECT_VIDEO);
                     }
                 });
@@ -175,10 +176,10 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                     public void onAddLink() {
                         //收起键盘
                         if (isKeyboradShow)
-                            ToolsDevice.keyboardControl(!isKeyboradShow, ArticleEidtActiivty.this, mixLayout.getCurrentEditText().getRichText());
+                            ToolsDevice.keyboardControl(!isKeyboradShow, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                         final int start = mixLayout.getSelectionStart();
                         final int end = mixLayout.getSelectionEnd();
-                        InputUrlDialog dialog = new InputUrlDialog(ArticleEidtActiivty.this);
+                        InputUrlDialog dialog = new InputUrlDialog(EditParentActivity.this);
                         dialog.setDescDefault(mixLayout.getSelectionText());
                         dialog.setOnReturnResultCallback(
                                 new InputUrlDialog.OnReturnResultCallback() {
@@ -198,7 +199,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 new EditBottomControler.OnKeyboardControlCallback() {
                     @Override
                     public void onKeyboardControlSwitch() {
-                        ToolsDevice.keyboardControl(!isKeyboradShow, ArticleEidtActiivty.this, mixLayout.getCurrentEditText().getRichText());
+                        ToolsDevice.keyboardControl(!isKeyboradShow, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                     }
                 });
         editBottomControler.setOnTextEidtCallback(
@@ -215,7 +216,8 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 });
     }
 
-    private void initData() {
+    protected void initData(UploadParentSQLite uploadParentSQLite) {
+        sqLite = uploadParentSQLite;
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -228,7 +230,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         };
         //通过code判断从数据库拿数据还是从服务端拿数据
         code = getIntent().getStringExtra("code");
-        sqLite = new UploadArticleSQLite(ArticleEidtActiivty.this);
+
         if (TextUtils.isEmpty(code)) {
             new Thread(new Runnable() {
                 @Override
@@ -257,21 +259,9 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         timingSave();
     }
 
-    private void onNextSetp() {
-        String checkStr = checkData();
-        if (TextUtils.isEmpty(checkStr)) {
-            saveDraft();
-            timer.cancel();
-            Intent intent = new Intent(this, ArticleSelectActiivty.class);
-            intent.putExtra("draftId", uploadArticleData.getId());
-            startActivity(intent);
-            finish();
-        } else {
-            Tools.showToast(this, checkStr);
-        }
-    }
+    public abstract void onNextSetp();
 
-    private String checkData() {
+    protected String checkData() {
         if (TextUtils.isEmpty(editTitle.getText())) {
             return "标题不能为空";
         }
@@ -296,7 +286,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 isFist = false;
                 timer.cancel();
                 timer = null;
-                final XhDialog xhDialog = new XhDialog(ArticleEidtActiivty.this);
+                final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
                 xhDialog.setTitle("系统将自动为你保存最后1篇为草稿")
                         .setSureButton("我知道了", new View.OnClickListener() {
                             @Override
@@ -330,7 +320,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
         timer.schedule(tt, taskTime, taskTime);
     }
 
-    private int saveDraft() {
+    protected int saveDraft() {
         int id;
         uploadArticleData.setTitle(String.valueOf(editTitle.getText()));
         uploadArticleData.setContent(mixLayout.getXHServiceData());
@@ -348,7 +338,7 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
             }
         }
         if (id > 0) {
-            Tools.showToast(ArticleEidtActiivty.this, "保存成功");
+            Tools.showToast(EditParentActivity.this, "保存成功");
         }
         return id;
     }
@@ -369,6 +359,13 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                     break;
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+        timer = null;
     }
 
     @Override
@@ -397,20 +394,20 @@ public class ArticleEidtActiivty extends BaseActivity implements View.OnClickLis
                 @Override
                 public void onClick(View v) {
                     int id = uploadArticleData.getId();
-                    Tools.showToast(ArticleEidtActiivty.this, "不保存：" + id);
+                    Tools.showToast(EditParentActivity.this, "不保存：" + id);
                     if (id > 0) {
                         boolean isDelete = sqLite.deleteById(id);
-                        Tools.showToast(ArticleEidtActiivty.this, "删除：" + isDelete);
+                        Tools.showToast(EditParentActivity.this, "删除：" + isDelete);
                     }
                     xhDialog.cancel();
-                    ArticleEidtActiivty.this.finish();
+                    EditParentActivity.this.finish();
                 }
             }).setSureButton("是", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     saveDraft();
                     xhDialog.cancel();
-                    ArticleEidtActiivty.this.finish();
+                    EditParentActivity.this.finish();
                 }
             }).show();
         } else {

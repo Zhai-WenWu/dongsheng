@@ -56,14 +56,23 @@ public class UploadListPool {
     /**
      *  * 临时方法，处理步骤视频，最终视频路径，大图路径丢失
      * 处理完数据库数据丢失问题后应该删除该方法
-     *
-     *
      * 初始化，设置定时刷新
-     *
      * @param draftId
      * @param callback
      */
     protected void initData(int draftId,String coverPath,String finalVideoPath,String timestamp,
+                            final UploadListUICallBack callback) {
+        setUiCallback(callback);
+    }
+
+    /**
+     *  * 临时方法，处理步骤视频，最终视频路径，大图路径丢失
+     * 处理完数据库数据丢失问题后应该删除该方法
+     * 初始化，设置定时刷新
+     * @param draftId
+     * @param callback
+     */
+    protected void initData(int dataType,int draftId,String coverPath,String finalVideoPath,String timestamp,
                             final UploadListUICallBack callback) {
         setUiCallback(callback);
     }

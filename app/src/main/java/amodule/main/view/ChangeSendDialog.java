@@ -33,7 +33,9 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;
-import amodule.article.activity.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.EditParentActivity;
+import amodule.article.activity.edit.VideoEditActivity;
 import amodule.comment.activity.PublishCommentActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
@@ -142,6 +144,8 @@ public class ChangeSendDialog extends Dialog{
 		addButton("6", R.drawable.pulish_video_dish,"发文章");
 		itemNum++;
 		addButton("7", R.drawable.pulish_video_dish,"发评论");
+		itemNum++;
+		addButton("8", R.drawable.pulish_video_dish,"发视频");
 		itemNum++;
 		if(dishVideoMap != null && dishVideoMap.size() > 0){
 			String img = dishVideoMap.get("img");
@@ -258,6 +262,11 @@ public class ChangeSendDialog extends Dialog{
 				closeDialog();
 				Intent comment = new Intent(activity, PublishCommentActivity.class);
 				activity.startActivity(comment);
+				break;
+			case "8":
+				closeDialog();
+				Intent vidoe = new Intent(activity, VideoEditActivity.class);
+				activity.startActivity(vidoe);
 				break;
 		}
 	}

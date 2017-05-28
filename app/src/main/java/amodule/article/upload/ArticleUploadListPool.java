@@ -22,8 +22,11 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.UploadFailPopWindowDialog;
 import acore.widget.UploadSuccessPopWindowDialog;
+import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadParentSQLite;
+import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.activity.upload.UploadDishListActivity;
 import amodule.dish.db.UploadDishData;
 import amodule.main.Main;
@@ -43,12 +46,21 @@ public class ArticleUploadListPool extends UploadListPool {
     private AtomicBoolean hasDoUploadLastInfo = new AtomicBoolean(false);
     private boolean flag;
 
+    private UploadParentSQLite sqLite;
+
     private String tongjiId = "a_videodish_uploadlist";
 
+    private int dataType;
+
     @Override
-    protected void initData(int draftId, String coverPath, String finalVideoPath, String timestamp, UploadListUICallBack callback) {
+    protected void initData(int dataType,int draftId, String coverPath, String finalVideoPath, String timestamp, UploadListUICallBack callback) {
         super.initData(draftId, coverPath, finalVideoPath, timestamp, callback);
-        Log.i("FRJ","coverPath:" + coverPath);
+        this.dataType = dataType;
+        if(dataType == EditParentActivity.TYPE_ARTICLE)
+            sqLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
+        else if(dataType == EditParentActivity.TYPE_VIDEO)
+            sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
+        Log.i("articleUpload","ArticleUploadListPool coverPath:" + coverPath);
         uploadPoolData.setDraftId(draftId);
         UploadArticleData uploadArticleData = modifyUploadListPoolData();
         uploadPoolData.setUploadArticleData(uploadArticleData);
@@ -136,7 +148,10 @@ public class ArticleUploadListPool extends UploadListPool {
                 @Override
                 public boolean onLoop(UploadItemData itemData) {
                     if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
-                        itemData.setUploadUrl(StringManager.api_articleAdd);
+                        if(dataType == EditParentActivity.TYPE_ARTICLE)
+                            itemData.setUploadUrl(StringManager.api_articleAdd);
+                        else if(dataType == EditParentActivity.TYPE_VIDEO)
+                            itemData.setUploadUrl(StringManager.api_videoAdd);
                         itemData.setUploadMsg(params);
                         return true;
                     }
@@ -207,16 +222,14 @@ public class ArticleUploadListPool extends UploadListPool {
      * 将上传池中的线上路径存入草稿数据库
      */
     private void saveDataToSqlit(UploadArticleData uploadDishData) {
-        UploadArticleSQLite uploadArticleSQLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
-        uploadArticleSQLite.update(uploadDishData.getId(),uploadDishData);
+        sqLite.update(uploadDishData.getId(),uploadDishData);
     }
 
     /**
      * 删除草稿箱数据库，上传成功后调用
      */
     private void deleteData() {
-        UploadArticleSQLite dishSqlite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
-        dishSqlite.deleteById(uploadPoolData.getDraftId());
+        sqLite.deleteById(uploadPoolData.getDraftId());
     }
 
     private UploadArticleData modifyUploadArticleData() {
@@ -323,9 +336,8 @@ public class ArticleUploadListPool extends UploadListPool {
      * 修改上传池数据 从草稿箱数据库读取数据，修改后，添加到上传池
      */
     public UploadArticleData modifyUploadListPoolData() {
-        UploadArticleSQLite uploadArticleSQLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
-        UploadArticleData uploadArticleData = uploadArticleSQLite.selectById(uploadPoolData.getDraftId());
-
+        UploadArticleData uploadArticleData = sqLite.selectById(uploadPoolData.getDraftId());
+        Log.i("articleUpload","修改上传池数据 draftId:" + uploadPoolData.getDraftId());
         if (uploadArticleData != null) {
 
             ArrayList<UploadItemData> headItemDatas = new ArrayList<>();

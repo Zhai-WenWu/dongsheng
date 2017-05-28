@@ -405,9 +405,14 @@
             android:windowSoftInputMode="adjustPan"/>
 
         <!-- article start -->
-
         <activity
-            android:name="amodule.article.activity.ArticleEidtActiivty"
+            android:name="amodule.article.activity.edit.ArticleEidtActiivty"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.article.activity.edit.VideoEditActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"

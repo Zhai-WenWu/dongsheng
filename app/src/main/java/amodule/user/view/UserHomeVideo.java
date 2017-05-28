@@ -26,7 +26,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import amodule.article.db.UploadArticleData;
-import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadVideoSQLite;
 import amodule.user.activity.FriendHome;
 import amodule.user.adapter.AdapterUserVideo;
 import aplug.basic.InternetCallback;
@@ -182,7 +182,7 @@ public class UserHomeVideo extends TabContentView {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UploadArticleSQLite articleSQLite = new UploadArticleSQLite(mAct);
+                    UploadVideoSQLite articleSQLite = new UploadVideoSQLite(mAct);
                     ArrayList<UploadArticleData> articleDatas = articleSQLite.getAllUploadIngData();
                     if (articleDatas != null && articleDatas.size() > 0) {
                         for (UploadArticleData articleData : articleDatas) {

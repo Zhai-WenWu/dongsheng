@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -91,7 +90,7 @@ public class FriendHome extends BaseActivity {
 				});
 			}
 		}
-		if(userCode.equals(LoginManager.userInfo.get("code"))){
+		if(!TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))){
 			tongjiId = "a_my";
 		}
 		String className = this.getComponentName().getClassName();

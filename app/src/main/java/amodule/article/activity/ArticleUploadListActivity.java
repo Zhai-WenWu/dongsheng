@@ -2,6 +2,7 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,10 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.upload.ArticleUploadListPool;
 import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
@@ -65,11 +69,18 @@ public class ArticleUploadListActivity extends BaseActivity {
     private String coverPath;
     private String finalVideoPath;
 
+    private int dataType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("上传列表", 4, 0, R.layout.c_view_bar_title_uploadlist,
-                R.layout.a_dish_upload_list);
+        initActivity("上传列表", 4, 0, R.layout.c_view_bar_title_uploadlist,R.layout.a_dish_upload_list);
+        dataType = getIntent().getIntExtra("dataType",0);
+        Log.i("articleUpload","ArticleUploadListActivity dataType:" + dataType);
+        if(dataType != EditParentActivity.TYPE_ARTICLE && dataType != EditParentActivity.TYPE_VIDEO){
+            Tools.showToast(this,"发布数据类型为空");
+            finish();
+        }
         //保持高亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initView();
@@ -96,7 +107,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         }
 
         listPool = UploadListControl.getUploadListControlInstance()
-                .add(ArticleUploadListPool.class,
+                .add(dataType,ArticleUploadListPool.class,
                         draftId,coverPath,finalVideoPath,timesStamp, generateUiCallback());
         uploadPoolData = listPool.getUploadPoolData();
 
@@ -166,6 +177,8 @@ public class ArticleUploadListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String showInfo = "确定取消上传文章吗？";
+                if(dataType == EditParentActivity.TYPE_ARTICLE)
+                    showInfo = "确定取消上传视频吗？";
                 String btnMsg1 = "确定";
                 String btnMsg2 = "取消";
 
@@ -178,7 +191,12 @@ public class ArticleUploadListActivity extends BaseActivity {
                         FriendHome.isRefresh = true;
                         isStopUpload = true;
 
-                        Intent intent = new Intent(ArticleUploadListActivity.this,ArticleEidtActiivty.class);
+                        Intent intent = new Intent();
+                        if(dataType == EditParentActivity.TYPE_ARTICLE){
+                            intent.setClass(ArticleUploadListActivity.this, ArticleEidtActiivty.class);
+                        }else if(dataType == EditParentActivity.TYPE_VIDEO){
+                            intent.setClass(ArticleUploadListActivity.this, MediaStore.Video.class);
+                        }
                         intent.putExtra("draftId",draftId);
                         startActivity(intent);
                         finish();
@@ -368,13 +386,17 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void gotoFriendHome() {
+        Log.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
             FriendHome.isRefresh = true;
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
-            intent.putExtra("index", 3);
+            if(dataType == EditParentActivity.TYPE_ARTICLE)
+                intent.putExtra("index", 3);
+            else if(dataType == EditParentActivity.TYPE_VIDEO)
+                intent.putExtra("index", 2);
             intent.setClass(this, FriendHome.class);
             FriendHome.isRefresh = true;
             startActivity(intent);
