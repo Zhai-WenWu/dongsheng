@@ -47,6 +47,9 @@ public class ViewCommentItem extends LinearLayout {
     private Map<String,String> dataMap;
     private Map<String, String> cusstomMap;
 
+    private String comment_id;
+    private String gotoCommentId,gotoReplayId;
+
     public ViewCommentItem(Context context) {
         super(context);
         initView(context);
@@ -84,6 +87,11 @@ public class ViewCommentItem extends LinearLayout {
         initOther();
     }
 
+    public void setGotoItem(String gotoCommentId,String gotoReplayId){
+        this.gotoCommentId = gotoCommentId;
+        this.gotoReplayId = gotoReplayId;
+    }
+
     private void initUserInfo(){
         String custome = dataMap.get("customer");
         ArrayList<Map<String, String>> customeArray = StringManager.getListMapByJson(custome);
@@ -114,6 +122,7 @@ public class ViewCommentItem extends LinearLayout {
 
     private void initContent(){
         commentContent.removeAllViews();
+        comment_id = dataMap.get("comment_id");
         String content = dataMap.get("content");
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
         for(Map<String, String> contentMap:contentArray) {
@@ -126,6 +135,12 @@ public class ViewCommentItem extends LinearLayout {
         View view = layoutInflater.inflate(R.layout.a_comment_item_content,null);
         final String text = contentMap.get("text");
         final MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
+        if(TextUtils.isEmpty(gotoReplayId) && !TextUtils.isEmpty(gotoCommentId) && gotoCommentId.equals(comment_id)){
+            contentText.setBackgroundColor(Color.parseColor("#fffae3"));
+            if(mListener != null)mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"), cusstomMap.get("nick_name"));
+        }else{
+            contentText.setBackgroundColor(Color.parseColor("#00fffae3"));
+        }
         if(TextUtils.isEmpty(text)){
             contentText.setVisibility(View.GONE);
         }else {
@@ -273,6 +288,12 @@ public class ViewCommentItem extends LinearLayout {
 
             String authoCode = null;
 
+            if(comment_id.equals(gotoCommentId) && replayMap.get("replay_id").equals(gotoReplayId)){
+                view.setBackgroundColor(Color.parseColor("#fffae3"));
+                if(mListener != null) mListener.onContentReplayClick(dataMap.get("comment_id"),replay_ucode,replay_uname);
+            }else{
+                view.setBackgroundColor(Color.parseColor("#00fffae3"));
+            }
             MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
             CommentBuilder uNameBuilder = new CommentBuilder(uName).setTextColor("#bcbcbc");
             uNameBuilder.parse(new CommentBuilder.CommentClickCallback() {

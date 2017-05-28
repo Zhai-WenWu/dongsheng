@@ -2,6 +2,7 @@ package amodule.comment.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private TextView sendTv;
     private View sendProgress;
 
+    private String gotoCommentId,gotoReplayId;
+    private int gotoPage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 final ViewCommentItem viewCommentItem = (ViewCommentItem) view.findViewById(R.id.comment_item);
+                viewCommentItem.setGotoItem(gotoCommentId,gotoReplayId);
                 viewCommentItem.setData(listArray.get(position));
                 viewCommentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
                     @Override
@@ -181,9 +186,21 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private void initData() {
         type = getIntent().getStringExtra("type");
         code = getIntent().getStringExtra("code");
+        gotoCommentId = getIntent().getStringExtra("gotoCommentId");
+        gotoReplayId = getIntent().getStringExtra("gotoReplayId");
+        gotoPage = getIntent().getIntExtra("gotoPage",1);
 
-        type = "1";
-        code = "2";
+        if(TextUtils.isEmpty(type)) {
+            type = "1";
+            code = "2";
+        }
+
+//        gotoCommentId = "1";
+//        gotoReplayId = "1";
+//        gotoPage = 3;
+
+        currentPage = gotoPage;
+//        gotoReplayId = "2";
 //        if (TextUtils.isEmpty(type) || TextUtils.isEmpty(code)) {
 //            Tools.showToast(this, "缺少 类型 或 主题");
 //            finish();
