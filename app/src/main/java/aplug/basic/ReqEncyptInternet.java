@@ -2,8 +2,11 @@ package aplug.basic;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,6 +24,8 @@ import xh.basic.internet.UtilInternet;
 public class ReqEncyptInternet extends UtilInternet {
     private static ReqEncyptInternet instance=null;
     private static Context initContext=null;
+    private boolean isLoginSign=false;//是否进行loginApp,获取sign
+    private ArrayList<Map<String,Object>> listInternet= new ArrayList<>();
     private ReqEncyptInternet(Context context) {
         super(context);
     }
@@ -44,7 +49,7 @@ public class ReqEncyptInternet extends UtilInternet {
         //处理数据
         long time= System.currentTimeMillis();
         if(ReqEncryptCommon.getInstance().isencrypt()&&
-                (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength())>=time){
+                (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=time){
             String encryptparams=ReqEncryptCommon.getInstance().getData(param);
             callback.setEncryptparams(encryptparams);
             doGet(actionUrl,callback);
@@ -88,14 +93,24 @@ public class ReqEncyptInternet extends UtilInternet {
         super.doPost(actionUrl, map, callback);
     }
 
-    public void getLoginApp(final String actionUrl, final String actionParam, final InternetCallback actionCallback) {
+    public void getLoginApp( String actionUrl, String actionParam, InternetCallback actionCallback) {
         try {
+            HashMap<String,Object> map= new HashMap<>();
+            map.put("url",actionUrl);
+            map.put("param",actionParam);
+            map.put("callback",actionCallback);
+            listInternet.add(map);
+            if(isLoginSign){//当前已经请求
+                return;//不处理
+            }
+            isLoginSign=true;
             String url = StringManager.API_LOGIN_APP;
             String token = ReqEncryptCommon.getInstance().getToken();
             final String params = "token=" + URLEncoder.encode(token, "utf-8");
             ReqInternet.in().doPost(url, params, new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, Object object) {
+                    isLoginSign=false;
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         Map<String, String> map = StringManager.getFirstMap(object);
                         if (map.containsKey("gy")) {
@@ -110,9 +125,26 @@ public class ReqEncyptInternet extends UtilInternet {
                             }
                             ReqEncryptCommon.getInstance().setIsencrypt(true);
                             //加盟数据并处理数据
-                            String encryptparams=ReqEncryptCommon.getInstance().getData(actionParam);
-                            actionCallback.setEncryptparams(encryptparams);
-                            doGet(actionUrl,actionCallback);
+
+                            int size= listInternet.size();
+                            for(int i=size-1;i>=0;i--){
+                                Map<String,Object> mapurl=listInternet.get(i);
+                                if(mapurl!=null) {
+                                    String encryptparams = ReqEncryptCommon.getInstance().getData((String) mapurl.get("param"));
+                                    if(mapurl.get("callback")!=null){
+                                        InternetCallback callback = (InternetCallback) mapurl.get("callback");
+                                        if(callback!=null) {
+                                            callback.setEncryptparams(encryptparams);
+                                            doGet((String) mapurl.get("url"), callback);
+                                        }
+                                    }
+
+                                }
+                            }
+                            listInternet.clear();
+//                            String encryptparams=ReqEncryptCommon.getInstance().getData(actionParam);
+//                            actionCallback.setEncryptparams(encryptparams);
+//                            doGet(actionUrl,actionCallback);
                         }
 
                     }
@@ -121,5 +153,8 @@ public class ReqEncyptInternet extends UtilInternet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void clearListIntenert(){
+        if(listInternet!=null&&listInternet.size()>0)listInternet.clear();
     }
 }

@@ -26,7 +26,7 @@ public class ReqEncryptCommon {
     private String GY="";//公钥
     private boolean isencrypt=false;//是否加密
     private String sign="";//sign值
-    private long timeLength=-1;//时间长度
+    private long timeLength=-1;//时间长度,当前是秒，使用要*1000
     private long nowTime=-1;//当前获取公钥成功的请求时间
     private static ReqEncryptCommon reqEncryptCommon=null;
     public static ReqEncryptCommon getInstance(){
