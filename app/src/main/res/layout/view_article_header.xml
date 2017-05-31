@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/common_bg">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/acticle_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
-        android:textSize="@dimen/dp_25"
-        android:text="加载中"
-        android:textColor="#494949"
+        android:background="@color/common_bg"
         android:lineSpacingExtra="@dimen/dp_3"
         android:paddingBottom="@dimen/dp_25"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_25"
-        android:visibility="gone"
-        />
+        android:text="加载中"
+        android:textColor="#494949"
+        android:textSize="@dimen/dp_25"
+        android:visibility="gone"        />
     <!--用户信息-->
     <RelativeLayout
         android:id="@+id/exp_user_rela"
-        android:layout_below="@+id/acticle_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/acticle_title"
         android:background="#fffffe"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
         android:visibility="gone">
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,7 +41,7 @@
                 android:layout_height="@dimen/dp_42"
                 android:clickable="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/bg_round_grey_e0e0e0_50" />
+                android:src="@drawable/bg_round_grey_e0e0e0_50"/>
 
             <ImageView
                 android:id="@+id/cusType"
@@ -53,14 +51,14 @@
                 android:layout_alignRight="@+id/auther_userImg"
                 android:clickable="true"
                 android:src="@drawable/z_user_gourmet_ico"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/auther_userImg"
                 android:layout_marginLeft="@dimen/dp_11"
+                android:layout_toRightOf="@+id/auther_userImg"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -74,11 +72,11 @@
                         style="@style/singleText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxWidth="@dimen/dp_170"
                         android:gravity="right"
-                        android:textColor="#535353"
+                        android:maxWidth="@dimen/dp_170"
                         android:text="加载中"
-                        android:textSize="@dimen/sp_15" />
+                        android:textColor="#535353"
+                        android:textSize="@dimen/sp_15"/>
 
                     <ImageView
                         android:id="@+id/user_vip"
@@ -87,7 +85,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_5"
                         android:layout_toRightOf="@+id/caipu_user_name"
-                        android:gravity="center" />
+                        android:gravity="center"/>
 
                 </RelativeLayout>
 
@@ -97,32 +95,31 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/caipu_user"
                     android:layout_marginTop="@dimen/dp_4"
-                    android:text="加载中"
-                    android:singleLine="true"
-                    android:maxLength="16"
                     android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="加载中"
                     android:textColor="#bcbcbc"
-                    android:textSize="@dimen/sp_12" />
+                    android:textSize="@dimen/sp_12"/>
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/follow_rela"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="@dimen/dp_26"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:background="@drawable/bg_circle_red_5">
 
-                    <TextView
-                        android:id="@+id/follow_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp_13"
-                        android:layout_centerInParent="true"
-                        android:textColor="#fffffe"
-                        android:text="关注"
-                        />
+                <TextView
+                    android:id="@+id/follow_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="关注"
+                    android:textColor="#fffffe"
+                    android:textSize="@dimen/sp_13"
+                    />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

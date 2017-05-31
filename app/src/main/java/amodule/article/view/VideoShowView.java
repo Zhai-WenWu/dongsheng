@@ -1,18 +1,23 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import third.video.VideoImagePlayerController;
 
 /**
  * PackageName : amodule.article.view
@@ -29,12 +34,14 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private String coverImageUrl;
     private String videoUrl;
 
+    private VideoImagePlayerController videoPlayerController;
+
     public VideoShowView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public VideoShowView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public VideoShowView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -47,6 +54,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         LayoutInflater.from(getContext()).inflate(R.layout.a_article_view_video, this);
         coverImage = (ImageView) findViewById(R.id.video_cover_image);
         deleteImage = (ImageView) findViewById(R.id.delete_image);
+        videoLayout = (RelativeLayout) findViewById(R.id.video_layout);
 
         coverImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
@@ -62,9 +70,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public JSONObject getOutputData() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("type",VIDEO);
-            jsonObject.put("videosimageurl",coverImageUrl);
-            jsonObject.put("videourl",videoUrl);
+            jsonObject.put("type", VIDEO);
+            jsonObject.put("videosimageurl", coverImageUrl);
+            jsonObject.put("videourl", videoUrl);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -77,6 +85,14 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         Glide.with(getContext())
                 .load(coverImageUrl)
                 .into(coverImage);
+        if(!enableEdit){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    Tools.getDimen(getContext(), R.dimen.dp_200));//
+            videoLayout.setPadding(0, 0, 0, ToolsDevice.dp2px(getContext(), 5));
+            videoLayout.setLayoutParams(params);
+            videoPlayerController = new VideoImagePlayerController(getContext(), videoLayout, coverImageUrl);
+            videoPlayerController.initVideoView2(videoUrl, "");
+        }
     }
 
     public void setEnableEdit(boolean enable) {
@@ -88,8 +104,13 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.video_cover_image:
+                if(videoPlayerController != null){
+                    coverImage.setVisibility(GONE);
+                    findViewById(R.id.video_cover_image_play).setVisibility(GONE);
+                    videoPlayerController.setOnClick();
+                }
                 if (null != mOnClickImageListener) {
-                    mOnClickImageListener.onClick(v,videoUrl);
+                    mOnClickImageListener.onClick(v, videoUrl);
                 }
                 break;
             case R.id.delete_image:
@@ -99,6 +120,36 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 break;
         }
     }
+
+    public void onResume() {
+        if (videoPlayerController != null) {
+            videoPlayerController.onResume();
+        }
+    }
+
+    public void onPause() {
+        if (videoPlayerController != null) {
+            videoPlayerController.onPause();
+        }
+    }
+
+    public void onDestroy() {
+        if (videoPlayerController != null) {
+            videoPlayerController.onDestroy();
+        }
+    }
+
+    public void onConfigurationChanged(int requestedOrientation){
+        View view = getChildAt(0);
+        if (view != null && videoPlayerController != null) {
+            videoPlayerController.setIsFullScreen(requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+    public VideoImagePlayerController getVideoPlayerController(){
+        return videoPlayerController;
+    }
+
 
     public String getCoverImageUrl() {
         return coverImageUrl;
@@ -116,12 +167,4 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         this.videoUrl = videoUrl;
     }
 
-
-    public RelativeLayout getVideoLayout() {
-        return videoLayout;
-    }
-
-    public void setVideoLayout(RelativeLayout videoLayout) {
-        this.videoLayout = videoLayout;
-    }
 }

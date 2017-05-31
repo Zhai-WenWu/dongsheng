@@ -20,7 +20,7 @@ import acore.override.view.ItemBaseView;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class CommodityItemView extends ItemBaseView implements View.OnClickListener{
+public class CommodityItemView extends ItemBaseView{
 
     private ImageView commodityImage;
     private TextView commodityTitle;
@@ -31,17 +31,14 @@ public class CommodityItemView extends ItemBaseView implements View.OnClickListe
 
     public CommodityItemView(Context context) {
         super(context,R.layout.a_article_commodity_item);
-        init();
     }
 
     public CommodityItemView(Context context, AttributeSet attrs) {
         super(context, attrs,R.layout.a_article_commodity_item);
-        init();
     }
 
     public CommodityItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr,R.layout.a_article_commodity_item);
-        init();
     }
 
     @Override
@@ -52,8 +49,6 @@ public class CommodityItemView extends ItemBaseView implements View.OnClickListe
         commodityPriceUnit = (TextView) findViewById(R.id.price_unit);
         commodityPrice = (TextView) findViewById(R.id.price);
         commoditySaledNum = (TextView) findViewById(R.id.saled_num);
-
-        findViewById(R.id.commodity_layout).setOnClickListener(this);
     }
 
     /**
@@ -67,14 +62,4 @@ public class CommodityItemView extends ItemBaseView implements View.OnClickListe
         setViewTextWithPrefix(commoditySaledNum,data,"soldNumber","已售");
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.commodity_layout:
-                //添加事件
-                break;
-            default:
-                break;
-        }
-    }
 }

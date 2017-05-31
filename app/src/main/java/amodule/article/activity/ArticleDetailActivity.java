@@ -38,7 +38,6 @@ import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichURLSpan;
 import amodule.comment.activity.CommentActivity;
 import amodule.comment.view.ViewCommentItem;
-import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -58,12 +57,11 @@ public class ArticleDetailActivity extends BaseActivity {
     private ArticleDetailAdapter detailAdapter;
     private ArrayList<Map<String, String>> otherListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
     private ArticleCommentBar mArticleCommentBar;
-    private VideoImageView videoImageView;
+    private VideoShowView videoShowView;
     private boolean isKeyboradShow = false;
     private ListView listview;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;//头部view
     private TextView title;
-    private String type = "1";
 
     private String commentNum;
 
@@ -73,7 +71,6 @@ public class ArticleDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             code = bundle.getString("code");
-            type = bundle.getString("type");
         }
         //TODO 测试
         code = "175";
@@ -85,32 +82,29 @@ public class ArticleDetailActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (videoImageView != null) {
-            videoImageView.onResume();
+        if (videoShowView != null) {
+            videoShowView.onResume();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (videoImageView != null) {
-            videoImageView.onPause();
+        if (videoShowView != null) {
+            videoShowView.onPause();
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (videoImageView != null) {
-            videoImageView.onStop();
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (videoImageView != null) {
-            videoImageView.onDestroy();
+        if (videoShowView != null) {
+            videoShowView.onDestroy();
         }
     }
 
@@ -124,7 +118,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 初始化 **/
     private void init() {
-        initActivity("文章详情页", 2, 0, 0, R.layout.a_article_detail);
+        initActivity(getTitleText(), 2, 0, 0, R.layout.a_article_detail);
         initView();
         initData();
     }
@@ -171,7 +165,7 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleCommentBar = (ArticleCommentBar) findViewById(R.id.acticle_comment_bar);
 
         mArticleCommentBar.setCode(code);
-        mArticleCommentBar.setType(type);
+        mArticleCommentBar.setType(getType());
     }
 
     /**
@@ -218,19 +212,9 @@ public class ArticleDetailActivity extends BaseActivity {
         requestArticleData();
     }
 
-    /** 请求网络 **/
+    /** 请求网络 */
     private void requestArticleData() {
-        String url = "";
-        switch (type){
-            case TYPE_ARTICLE:
-                url = StringManager.api_getArticleInfo;
-                break;
-            case TYPE_VIDEO:
-                url = StringManager.api_getVideoInfo;
-                break;
-            default:
-                return;
-        }
+        String url = getInfoAPI();
         String params = TextUtils.isEmpty(code) ? "" : "code=" + code;
         loadManager.showProgressBar();
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(this) {
@@ -266,6 +250,7 @@ public class ArticleDetailActivity extends BaseActivity {
         commentNum = mapArticle.get("commentNumber");
         String content = mapArticle.get("content");
         analysArticleContent(content);
+        mArticleCommentBar.setPraiseAPI(getPraiseAPI());
         mArticleCommentBar.setData(mapArticle);
     }
 
@@ -308,21 +293,12 @@ public class ArticleDetailActivity extends BaseActivity {
                     linearLayoutTwo.addView(imageShowView);
                 }
             } else if ("video".equals(type)) {//视频
-                String videoUrl = listContent.get(i).get("videourl");
-                String videoimageurl = listContent.get(i).get("videosimageurl");
+                Map<String,String> videoMap = StringManager.getFirstMap(listContent.get(i).get("video"));
+                String videoUrl = videoMap.get("url");
+                String videoimageurl = videoMap.get("videoImg");
                 if (!TextUtils.isEmpty(videoUrl) && !TextUtils.isEmpty(videoimageurl)) {
-                    VideoShowView videoShowView = new VideoShowView(this);
+                    videoShowView = new VideoShowView(this);
                     videoShowView.setVideoData(videoimageurl, videoUrl);
-                    videoImageView = new VideoImageView(this, false);
-                    videoImageView.setImageBg(videoimageurl);
-                    videoImageView.setVideoData(videoUrl);
-                    videoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
-                        @Override
-                        public void setVideoClick() {
-                            videoImageView.onBegin();
-                        }
-                    });
-                    videoShowView.getVideoLayout().addView(videoImageView);
                     linearLayoutTwo.addView(videoShowView);
                 }
 
@@ -369,7 +345,7 @@ public class ArticleDetailActivity extends BaseActivity {
      */
     private void requestForumData() {
         String url = StringManager.api_forumList;
-        String param = "type=1&code=" + code + "&page=1&pagesize=3";
+        String param = "type="+getType()+"&code=" + code + "&page=1&pagesize=3";
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
@@ -400,7 +376,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 @Override
                 public void onShowAllReplayClick(String comment_id) {
                     StringBuilder sbuild = new StringBuilder();
-                    sbuild.append("type=").append(type).append("&")
+                    sbuild.append("type=").append(getType()).append("&")
                             .append("code=").append(code).append("&")
                             .append("commentId=").append(comment_id).append("&")
                             .append("pagesize=").append(Integer.parseInt(map.get("replay_num")) + 3).append("&");
@@ -439,7 +415,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 @Override
                 public void onPraiseClick(String comment_id) {
                     Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
-                    intent.putExtra("type", type);
+                    intent.putExtra("type", getType());
                     intent.putExtra("code", code);
                     startActivity(intent);
                 }
@@ -447,7 +423,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 @Override
                 public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name) {
                     Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
-                    intent.putExtra("type", type);
+                    intent.putExtra("type", getType());
                     intent.putExtra("code", code);
                     startActivity(intent);
                 }
@@ -465,7 +441,7 @@ public class ArticleDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
-                intent.putExtra("type", type);
+                intent.putExtra("type", getType());
                 intent.putExtra("code", code);
                 startActivity(intent);
             }
@@ -484,18 +460,7 @@ public class ArticleDetailActivity extends BaseActivity {
      * 请求推荐列表
      */
     private void requestRelateData() {
-        String url = "";
-        switch (type){
-            case TYPE_ARTICLE:
-                url = StringManager.api_getArticleRelated;
-                break;
-            case TYPE_VIDEO:
-                url = StringManager.api_getVideoRelated;
-                break;
-            default:
-                return;
-        }
-
+        String url = getRelatedAPI();
         String param = "page=" + ++page + "&pagesize=10";
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
@@ -530,6 +495,26 @@ public class ArticleDetailActivity extends BaseActivity {
         if (otherListMap.size() > 0)
             otherListMap.get(0).put("showheader", "1");
         detailAdapter.notifyDataSetChanged();
+    }
+
+    public String getType(){
+        return TYPE_ARTICLE;
+    }
+
+    public String getTitleText(){
+        return "文章详情页";
+    }
+
+    public String getInfoAPI(){
+        return StringManager.api_getArticleInfo;
+    }
+
+    public String getRelatedAPI(){
+        return StringManager.api_getArticleRelated;
+    }
+
+    public String getPraiseAPI(){
+        return StringManager.api_likeForum;
     }
 
 }
