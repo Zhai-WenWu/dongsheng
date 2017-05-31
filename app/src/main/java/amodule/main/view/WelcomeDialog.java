@@ -84,6 +84,7 @@ public class WelcomeDialog extends Dialog {
      */
     public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
+
         Main.isShowWelcomeDialog=true;//至当前dialog状态
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime)+"::::"+adShowTime);
@@ -407,6 +408,7 @@ public class WelcomeDialog extends Dialog {
             mMainHandler.removeCallbacksAndMessages(null);
             mMainHandler=null;
         }
+        Main.isShowWelcomeDialog=false;//至当前dialog状态
         Log.i("zhangyujian","closeDialog");
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -484,5 +486,6 @@ public class WelcomeDialog extends Dialog {
 //        if (isOnGlobalLayout)
 //            super.onBackPressed();
     }
+
 
 }
