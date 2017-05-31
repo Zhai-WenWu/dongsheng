@@ -125,4 +125,9 @@ public class MainBaseActivity extends FragmentActivity {
 		overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mActMagager.onDestroy();
+	}
 }

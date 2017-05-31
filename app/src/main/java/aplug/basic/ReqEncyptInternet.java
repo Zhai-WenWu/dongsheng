@@ -40,7 +40,8 @@ public class ReqEncyptInternet extends UtilInternet {
     }
 
     /**
-     * 加密策略
+     * 加密策略，此处支持并发请求多个接口，
+     * 需要注意：已存在listInternet中多请求会在，activity的onDestroy会全部清除
      * @param actionUrl
      * @param param
      * @param callback
@@ -124,8 +125,8 @@ public class ReqEncyptInternet extends UtilInternet {
                                 ReqEncryptCommon.getInstance().setTimeLength(Long.parseLong(timeLength));
                             }
                             ReqEncryptCommon.getInstance().setIsencrypt(true);
-                            //加盟数据并处理数据
 
+                            //加盟数据并处理数据
                             int size= listInternet.size();
                             for(int i=size-1;i>=0;i--){
                                 Map<String,Object> mapurl=listInternet.get(i);
@@ -141,10 +142,7 @@ public class ReqEncyptInternet extends UtilInternet {
 
                                 }
                             }
-                            listInternet.clear();
-//                            String encryptparams=ReqEncryptCommon.getInstance().getData(actionParam);
-//                            actionCallback.setEncryptparams(encryptparams);
-//                            doGet(actionUrl,actionCallback);
+                            clearListIntenert();
                         }
 
                     }
@@ -154,6 +152,10 @@ public class ReqEncyptInternet extends UtilInternet {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 清楚全部接口
+     */
     public void clearListIntenert(){
         if(listInternet!=null&&listInternet.size()>0)listInternet.clear();
     }

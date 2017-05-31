@@ -20,6 +20,7 @@ import amodule.main.activity.MainHomePageNew;
 import amodule.main.view.WelcomeDialog;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
+import aplug.basic.ReqEncyptInternet;
 import aplug.feedback.activity.Feedback;
 import third.ad.tools.WelcomeAdTools;
 import third.mall.aplug.MallCommon;
@@ -123,6 +124,8 @@ public class ActivityMethodManager {
     }
 
     public void onDestroy() {
+        //清除还没有请求的接口
+        ReqEncyptInternet.in().clearListIntenert();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
