@@ -30,6 +30,7 @@ public class ReqEncyptInternet extends UtilInternet {
     private ReqEncyptInternet(Context context) {
         super(context);
     }
+    private int loginNum=0;
     public static ReqEncyptInternet init(Context context) {
         initContext=context;
         return in();
@@ -48,6 +49,7 @@ public class ReqEncyptInternet extends UtilInternet {
      * @param callback
      */
     public void doEncypt(String actionUrl, String param, InternetCallback callback){
+        loginNum=0;
         //处理数据
         long time= System.currentTimeMillis();
         if(!isLoginSign && ReqEncryptCommon.getInstance().isencrypt()&&
@@ -87,6 +89,8 @@ public class ReqEncyptInternet extends UtilInternet {
         InternetCallback internetCallback= new InternetCallback(XHApplication.in()) {
             @Override
             public void loaded(int flag, String url, Object object) {
+//                flag=ReqInternet.REQ_CODE_ERROR;
+//                object="4002";
                 Log.i("zhangyujian","object::"+object);
                 if(flag==ReqInternet.REQ_CODE_ERROR&&isNumeric((String) object)){
                     int errorCode= Integer.parseInt((String) object);
@@ -125,6 +129,11 @@ public class ReqEncyptInternet extends UtilInternet {
 
     public void getLoginApp( String actionUrl, String actionParam, InternetCallback actionCallback) {
         try {
+            Log.i("zhangyujian","loginNum:::"+loginNum);
+            if(loginNum>=3){//最多3次请求
+                return;
+            }
+            ++loginNum;
             HashMap<String,Object> map= new HashMap<>();
             map.put("url",actionUrl);
             map.put("param",actionParam);
