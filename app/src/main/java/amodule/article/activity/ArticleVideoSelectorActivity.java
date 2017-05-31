@@ -246,6 +246,20 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                         @Override
                         public void onItemClick(int position) {
                             Map<String, String> video = mAdapter.getData(position);
+                            String duration = video.get(MediaStore.Video.Media.DURATION);
+                            if (!TextUtils.isEmpty(duration)) {
+                                if (conditionsByTime(Long.parseLong(duration))) {
+                                    Tools.showToast(ArticleVideoSelectorActivity.this, "时长短于3秒");
+                                    return;
+                                }
+                            }
+                            String size = video.get(MediaStore.Video.Media.SIZE);
+                            if (!TextUtils.isEmpty(size)) {
+                                if (conditionsBySize(Long.parseLong(size))) {
+                                    Tools.showToast(ArticleVideoSelectorActivity.this, "大小不能大于20M");
+                                    return;
+                                }
+                            }
                             showVideo(video);
                         }
                     });
@@ -254,6 +268,14 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                 mVideoRecyclerView.setAdapter(mAdapter);
             }
         });
+    }
+
+    private boolean conditionsByTime(long millis) {
+        return millis < 3*1000;
+    }
+
+    private boolean conditionsBySize(long size) {
+        return size > 20*1024*1024;
     }
 
     @Override

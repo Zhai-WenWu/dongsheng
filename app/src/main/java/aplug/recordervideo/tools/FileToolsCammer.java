@@ -287,12 +287,12 @@ public class FileToolsCammer {
         public void loadOver(ArrayList<Map<String,String>> orderArrayLis);
     }
 
-    public static String formatVideoTimeByMills(long mills) {
-        if (mills <= 0)
+    public static String formatVideoTimeByMills(long millis) {
+        if (millis <= 0)
             return "00:00";
-        int hours = (int) (mills / (1000 * 60 * 60));
-        int mins = (int) ((mills - hours * 60 * 60 * 1000) / (1000 * 60));
-        int secos = (int) ((mills - hours * 60 * 60 * 1000 - mins * 60 * 1000) / 1000);
+        int hours = (int) (millis / (1000 * 60 * 60));
+        int mins = (int) ((millis - hours * 60 * 60 * 1000) / (1000 * 60));
+        int secos = (int) ((millis - hours * 60 * 60 * 1000 - mins * 60 * 1000) / 1000);
         StringBuffer buffer = new StringBuffer();
         if (hours >= 10)
             buffer.append(hours + ":");
@@ -320,17 +320,17 @@ public class FileToolsCammer {
         ArrayList<Map<String, String>> videos = new ArrayList<Map<String, String>>();
         Cursor cursor = XHApplication.in().getApplicationContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
         try {
-            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 Map<String, String> map = new HashMap<String, String>();
                 String data = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)); // 路径
                 if (!TextUtils.isEmpty(data)) {
                     String[] strs = data.split("\\.");
                     if (strs != null) {
                         String format = strs[strs.length - 1];
-                        if (formats != null && format != null && !formats.contains(format))
+                        if (formats != null && format != null && !formats.contains(format)) {
                             break;
+                        }
                     }
-
                 }
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)); // id
                 String title =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
