@@ -4,7 +4,7 @@
     android:id="@+id/commodity_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F9F9F9"
+    android:paddingBottom="@dimen/dp_20"
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20">
 
@@ -12,6 +12,7 @@
         android:id="@+id/commodity_image_layout"
         android:layout_width="@dimen/dp_105"
         android:layout_height="@dimen/dp_105"
+        android:background="@drawable/bg_article_commodity_image"
         android:padding="@dimen/dp_1">
 
         <ImageView
@@ -27,6 +28,7 @@
             android:layout_centerInParent="true"
             android:background="@drawable/bg_article_commodity_status"
             android:gravity="center"
+            android:visibility="gone"
             android:text="已下架"
             android:textColor="#FFFFFF"
             android:textSize="@dimen/sp_12"/>
@@ -35,6 +37,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#F9F9F9"
         android:layout_alignBottom="@+id/commodity_image_layout"
         android:layout_alignTop="@+id/commodity_image_layout"
         android:layout_toRightOf="@+id/commodity_image_layout"
@@ -46,7 +49,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="2"
-            android:text="活力橙 | 这是一口会"
             android:textColor="#535353"
             android:textSize="@dimen/sp_17"/>
 
@@ -72,7 +74,6 @@
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="498.00"
                 android:textColor="#CC0000"
                 android:textSize="@dimen/sp_14"/>
 

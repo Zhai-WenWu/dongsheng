@@ -163,7 +163,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                             editText.setText("");
                             editText.clearFocus();
                             ToolsDevice.keyboardControl(true, getContext(), editText);
-                            Tools.showToast(context,"评论成功");
+//                            Tools.showToast(context,"评论成功");
                         }else{
                             Tools.showToast(context,"评论失败，请重试");
                         }
@@ -180,6 +180,14 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         content.put("imgs", "[]");
         contentArray.add(content);
         return Tools.list2JsonArray(contentArray).toString();
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getType() {

@@ -144,12 +144,32 @@ public class ItemBaseView extends RelativeLayout {
     }
 
     public void setViewText(TextView textView, Map<String,String> map,String key){
-        setViewText(textView, map, key,View.GONE);
+        setViewText(textView, map, key,View.GONE,"","");
     }
 
     public void setViewText(TextView textView, Map<String,String> map,String key,int visibility){
+        setViewText(textView, map, key,visibility,"","");
+    }
+
+    public void setViewTextWithSuffix(TextView textView, Map<String,String> map,String key,String suffix){
+        setViewText(textView, map, key, View.GONE,"",suffix);
+    }
+    public void setViewTextWithPrefix(TextView textView, Map<String,String> map,String key,String prefix){
+        setViewText(textView, map, key, View.GONE,prefix,"");
+    }
+
+    /**
+     *
+     * @param textView
+     * @param map 数据
+     * @param key
+     * @param visibility
+     * @param prefix 前缀String
+     * @param suffix 后缀String
+     */
+    public void setViewText(TextView textView, Map<String,String> map,String key,int visibility,String prefix,String suffix){
         if(map.containsKey(key) && !TextUtils.isEmpty(map.get(key))){
-            textView.setText(map.get(key));
+            textView.setText(new StringBuilder(prefix).append(map.get(key)).append(suffix));
             textView.setVisibility(View.VISIBLE);
         }else textView.setVisibility( View.INVISIBLE == visibility ? View.INVISIBLE:View.GONE);
     }

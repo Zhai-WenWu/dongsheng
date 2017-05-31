@@ -61,7 +61,10 @@ public class CommodityItemView extends ItemBaseView implements View.OnClickListe
      * @param data
      */
     public void setData(Map<String,String> data){
-
+        setViewImage(commodityImage,data.get("img"));
+        setViewText(commodityTitle,data,"name");
+        setViewText(commodityPrice,data,"price");
+        setViewTextWithPrefix(commoditySaledNum,data,"soldNumber","已售");
     }
 
     @Override

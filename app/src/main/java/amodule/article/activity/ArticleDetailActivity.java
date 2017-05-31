@@ -5,7 +5,10 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.URLSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -20,6 +23,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -31,6 +35,7 @@ import amodule.article.view.DishItemView;
 import amodule.article.view.ImageShowView;
 import amodule.article.view.VideoShowView;
 import amodule.article.view.richtext.RichParser;
+import amodule.article.view.richtext.RichURLSpan;
 import amodule.comment.activity.CommentActivity;
 import amodule.comment.view.ViewCommentItem;
 import amodule.quan.view.VideoImageView;
@@ -164,6 +169,8 @@ public class ArticleDetailActivity extends BaseActivity {
         initHeaderView();
         listview.addHeaderView(layout);
         mArticleCommentBar = (ArticleCommentBar) findViewById(R.id.acticle_comment_bar);
+
+        mArticleCommentBar.setCode(code);
         mArticleCommentBar.setType(type);
     }
 
@@ -280,14 +287,24 @@ public class ArticleDetailActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(html)) {
                     TextView textView = new TextView(this);
                     textView.setPadding(dp_20, 0, dp_20, 0);
-                    textView.setText(RichParser.fromHtml(html));
+                    SpannableStringBuilder builder = new SpannableStringBuilder();
+                    builder.append(RichParser.fromHtml(html));
+                    URLSpan[] urlSpans = builder.getSpans(0, builder.length(), URLSpan.class);
+                    for (URLSpan span : urlSpans) {
+                        int spanStart = builder.getSpanStart(span);
+                        int spanEnd = builder.getSpanEnd(span);
+                        builder.removeSpan(span);
+                        builder.setSpan(new RichURLSpan(span.getURL(), Color.parseColor("#0872dd"), false), spanStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    textView.setText(builder);
                     linearLayoutTwo.addView(textView);
                 }
             } else if ("image".equals(type) || "gif".equals(type)) {//图片
                 String imageUrl = listContent.get(i).get("gif".equals(type) ? "gifurl" : "imageurl");
                 if (!TextUtils.isEmpty(imageUrl)) {
                     ImageShowView imageShowView = new ImageShowView(this);
-                    imageShowView.setImageUrl(imageUrl);
+                    imageShowView.setEnableEdit(false);
+                    imageShowView.showImage(imageUrl,type);
                     linearLayoutTwo.addView(imageShowView);
                 }
             } else if ("video".equals(type)) {//视频
@@ -312,14 +329,32 @@ public class ArticleDetailActivity extends BaseActivity {
             } else if ("xiangha".equals(type)) {//自定义演示。ds，电商，caipu，菜谱
                 String json = listContent.get(i).get("json");
                 if (!TextUtils.isEmpty(json)) {
-                    Map<String, String> jsonMap = StringManager.getFirstMap(json);
+                    final Map<String, String> jsonMap = StringManager.getFirstMap(json);
                     if (jsonMap.containsKey("type") && !TextUtils.isEmpty(jsonMap.get("type"))) {
                         String datatype = jsonMap.get("type");
                         if ("ds".equals(datatype)) {
                             CommodityItemView commodityItemView = new CommodityItemView(this);
+                            commodityItemView.setData(jsonMap);
+                            commodityItemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(!TextUtils.isEmpty(jsonMap.get("url"))){
+                                        AppCommon.openUrl(ArticleDetailActivity.this,jsonMap.get("url"),true);
+                                    }
+                                }
+                            });
                             linearLayoutTwo.addView(commodityItemView);
                         } else if ("caipu".equals(datatype)) {
                             DishItemView dishItemView = new DishItemView(this);
+                            dishItemView.setData(jsonMap);
+                            dishItemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(!TextUtils.isEmpty(jsonMap.get("url"))){
+                                        AppCommon.openUrl(ArticleDetailActivity.this,jsonMap.get("url"),true);
+                                    }
+                                }
+                            });
                             linearLayoutTwo.addView(dishItemView);
                         }
                     }
