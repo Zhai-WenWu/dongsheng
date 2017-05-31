@@ -11,13 +11,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import xh.basic.internet.InterCallback;
 import xh.basic.internet.UtilInternet;
 
 /**
- * 加密强求接口.
+ * 加密强求接口.-----不支持跨页面并发请求（未正确发起的请求，在切换页面会全部清除）。
  * 该类中只有 doEncypt方法可用
  */
 
@@ -49,11 +50,9 @@ public class ReqEncyptInternet extends UtilInternet {
     public void doEncypt(String actionUrl, String param, InternetCallback callback){
         //处理数据
         long time= System.currentTimeMillis();
-        if(ReqEncryptCommon.getInstance().isencrypt()&&
+        if(!isLoginSign && ReqEncryptCommon.getInstance().isencrypt()&&
                 (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=time){
-            String encryptparams=ReqEncryptCommon.getInstance().getData(param);
-            callback.setEncryptparams(encryptparams);
-            doGet(actionUrl,callback);
+            setRequest(actionUrl,param,callback);
         }else{
             getLoginApp(actionUrl,param,callback);
         }
@@ -73,6 +72,36 @@ public class ReqEncyptInternet extends UtilInternet {
             callback.setEncryptparams(data);
         }
         doGet(actionUrl,callback);
+
+
+    }
+
+    /**
+     * 处理请求。
+     * @param actionUrl
+     * @param param
+     */
+    private void setRequest(final String actionUrl, final String param, final InternetCallback callback){
+        //处理请求
+        String encryptparams=ReqEncryptCommon.getInstance().getData(param);
+        InternetCallback internetCallback= new InternetCallback(XHApplication.in()) {
+            @Override
+            public void loaded(int flag, String url, Object object) {
+                Log.i("zhangyujian","object::"+object);
+                if(flag==ReqInternet.REQ_CODE_ERROR&&isNumeric((String) object)){
+                    int errorCode= Integer.parseInt((String) object);
+                    if(errorCode>4000){//请求签名错误
+                        getLoginApp(actionUrl,param,callback);
+                    }else if(errorCode>2000){//不能救
+                        Tools.showToast(XHApplication.in(),"请呼叫技术支持");
+                    }
+                }else{
+                    callback.loaded(flag,url,object);
+                }
+            }
+        };
+        internetCallback.setEncryptparams(encryptparams);
+        doGet(actionUrl,internetCallback);
 
 
     }
@@ -128,15 +157,15 @@ public class ReqEncyptInternet extends UtilInternet {
 
                             //加盟数据并处理数据
                             int size= listInternet.size();
+                            Log.i("zhangyujian","size:::"+size);
                             for(int i=size-1;i>=0;i--){
                                 Map<String,Object> mapurl=listInternet.get(i);
                                 if(mapurl!=null) {
-                                    String encryptparams = ReqEncryptCommon.getInstance().getData((String) mapurl.get("param"));
                                     if(mapurl.get("callback")!=null){
                                         InternetCallback callback = (InternetCallback) mapurl.get("callback");
                                         if(callback!=null) {
-                                            callback.setEncryptparams(encryptparams);
-                                            doGet((String) mapurl.get("url"), callback);
+                                            Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
+                                            setRequest((String)mapurl.get("url"),(String)mapurl.get("param"),callback);
                                         }
                                     }
 
@@ -159,4 +188,13 @@ public class ReqEncyptInternet extends UtilInternet {
     public void clearListIntenert(){
         if(listInternet!=null&&listInternet.size()>0)listInternet.clear();
     }
+    public static boolean isNumeric(String str) {
+        for (int i=0; i<str.length();i++){
+            if(!Character.isDigit(str.charAt(i))){
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
