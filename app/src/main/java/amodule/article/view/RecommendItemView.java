@@ -72,6 +72,7 @@ public class RecommendItemView extends ItemBaseView {
                 if(map.containsKey("code") && !TextUtils.isEmpty(map.get("code"))){
                     Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
                     intent.putExtra("code",map.get("code"));
+                    intent.putExtra("type","1");
                     getContext().startActivity(intent);
                 }
             }

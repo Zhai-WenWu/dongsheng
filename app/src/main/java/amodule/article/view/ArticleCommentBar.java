@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.textservice.TextInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -44,6 +45,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     private String code = "";
     private String type = "1";
+    private String praiseAPI = "";
     private int praiseNum = 0;
 
     public ArticleCommentBar(Context context) {
@@ -113,20 +115,12 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     /** 点赞 */
     private void doPraise() {
-        String url = "";
-        switch (type){
-            case ArticleDetailActivity.TYPE_ARTICLE:
-                url = StringManager.api_likeForum;
-                break;
-            case ArticleDetailActivity.TYPE_VIDEO:
-                url = StringManager.api_likeVideo;
-                break;
-            default:
-                return;
+        if(TextUtils.isEmpty(praiseAPI)){
+            return;
         }
 
         //发请求
-        ReqEncyptInternet.in().doEncypt(url, "code=" + code,
+        ReqEncyptInternet.in().doEncypt(praiseAPI, "code=" + code,
                 new InternetCallback(getContext()) {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
@@ -163,7 +157,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                             editText.setText("");
                             editText.clearFocus();
                             ToolsDevice.keyboardControl(true, getContext(), editText);
-                            Tools.showToast(context,"评论成功");
+//                            Tools.showToast(context,"评论成功");
                         }else{
                             Tools.showToast(context,"评论失败，请重试");
                         }
@@ -182,11 +176,27 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         return Tools.list2JsonArray(contentArray).toString();
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getPraiseAPI() {
+        return praiseAPI;
+    }
+
+    public void setPraiseAPI(String praiseAPI) {
+        this.praiseAPI = praiseAPI;
     }
 }

@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -14,8 +15,10 @@ import com.xiangha.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import xh.basic.tool.UtilImage;
 
 /**
  * PackageName : amodule.article.view
@@ -84,7 +87,12 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
             if (enableEdit)
                 Glide.with(getContext()).load(imageUrl).asBitmap().into(showImage);
             else
-                Glide.with(getContext()).load(imageUrl).asGif().into(showImage);
+                Glide.with(getContext())
+                        .load(imageUrl)
+                        .asGif()
+                        .placeholder(R.drawable.i_nopic)
+                        .error(R.drawable.i_nopic)
+                        .into(showImage);
         } else {
             type = IMAGE;
             LoadImage.with(getContext())
@@ -93,14 +101,46 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                     .into(new SubBitmapTarget() {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                            imageWidth = bitmap.getWidth();
-                            imageHieght = bitmap.getHeight();
-                            showImage.setImageBitmap(bitmap);
+                            if(bitmap != null){
+                                imageWidth = bitmap.getWidth();
+                                imageHieght = bitmap.getHeight();
+
+                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                                int waith = newWaith;
+                                if (imageWidth <= newWaith)
+                                    waith = 0;
+                                UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+
+                            }
                         }
                     });
         }
+    }
 
+    public void showImage(String imageUrl,String type){
+        switch (type){
+            case "gif":
+                Glide.with(getContext()).load(imageUrl).asGif().into(showImage);
+                break;
+            default:
+                LoadImage.with(getContext())
+                        .load(imageUrl)
+                        .build()
+                        .into(new SubBitmapTarget() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                imageWidth = bitmap.getWidth();
+                                imageHieght = bitmap.getHeight();
 
+                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                                int waith = newWaith;
+                                if (imageWidth <= newWaith)
+                                    waith = 0;
+                                UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+                            }
+                        });
+                    break;
+        }
     }
 
     public String getImageUrl() {

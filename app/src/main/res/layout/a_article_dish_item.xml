@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/dp_20"
+    android:paddingBottom="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20">
 
     <ImageView
@@ -15,10 +16,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#F9F9F9"
         android:layout_alignBottom="@+id/dish_image"
         android:layout_alignTop="@+id/dish_image"
         android:layout_toRightOf="@+id/dish_image"
-        android:padding="@dimen/dp_14">
+        android:paddingLeft="@dimen/dp_14"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_14">
 
         <TextView
             android:id="@+id/dish_name"
@@ -26,7 +30,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            android:text="活力橙 | 这是一口会"
             android:textColor="#535353"
             android:textSize="@dimen/sp_17"/>
 
@@ -37,7 +40,7 @@
             android:layout_width="wrap_content"
             android:textColor="#BFBFBF"
             android:textSize="@dimen/sp_12"
-            android:text="浏览"
+            android:layout_marginRight="@dimen/dp_18"
             android:layout_height="wrap_content"/>
 
         <TextView
@@ -45,11 +48,9 @@
             android:layout_below="@+id/dish_name"
             android:layout_marginTop="@dimen/dp_17"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="@dimen/dp_18"
             android:layout_toRightOf="@+id/dish_browse"
             android:textColor="#BFBFBF"
             android:textSize="@dimen/sp_12"
-            android:text="浏览"
             android:layout_height="wrap_content"/>
 
         <TextView
@@ -59,7 +60,6 @@
             android:layout_width="wrap_content"
             android:textColor="#BFBFBF"
             android:textSize="@dimen/sp_12"
-            android:text="用户名"
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>

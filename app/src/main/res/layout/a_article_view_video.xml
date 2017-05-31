@@ -7,23 +7,23 @@
     android:paddingRight="@dimen/dp_20"
     android:paddingBottom="@dimen/dp_5">
 
-    <ImageView
-        android:id="@+id/video_cover_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/dp_160"
-        android:background="#E0E0E0"/>
-
-    <ImageView
-        android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
-        android:layout_centerInParent="true"
-        android:src="@drawable/iv_video_play"/>
-
     <RelativeLayout
         android:id="@+id/video_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/video_cover_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_160"/>
+
+    <ImageView
+        android:id="@+id/video_cover_image_play"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_centerInParent="true"
+        android:src="@drawable/iv_video_play"/>
 
     <ImageButton
         android:id="@+id/delete_image"
