@@ -368,7 +368,7 @@ public class ArticleUploadListPool extends UploadListPool {
                 UploadItemData headItemData = new UploadItemData();
                 headItemData.setPath(videoImgPath);
                 headItemData.setRecMsg(videoImgUrl);
-                headItemData.setType(UploadItemData.TYPE_IMG);
+                headItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
                 headItemData.setPos(UploadItemData.POS_BODY);
                 headItemData.setIndex(0);
                 headItemData.setMakeStep("视频首图");
@@ -402,7 +402,7 @@ public class ArticleUploadListPool extends UploadListPool {
                         headItemData.setRecMsg(imgUrl);
                         headItemData.setIndex(imgIndex++);
                         headItemData.setMakeStep(String.valueOf(i));
-                        headItemData.setType(UploadItemData.TYPE_IMG);
+                        headItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
                         headItemData.setPos(UploadItemData.POS_BODY);
                         bodyItemDatas.add(headItemData);
                     }
