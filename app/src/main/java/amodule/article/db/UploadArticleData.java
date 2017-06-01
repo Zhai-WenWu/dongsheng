@@ -1,12 +1,16 @@
 package amodule.article.db;
 
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
 import acore.tools.StringManager;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 
 /**
  * Created by Fang Ruijiao on 2017/5/22.
@@ -188,5 +192,26 @@ public class UploadArticleData {
 
     public String getVideoImg() {
         return videoImg;
+    }
+
+    public void upload(String url,InternetCallback callback){
+        StringBuffer uploadTextData = new StringBuffer();
+        uploadTextData.append("title=");
+        uploadTextData.append(getTitle());
+        uploadTextData.append("&classCode=");
+        uploadTextData.append(getClassCode());
+        uploadTextData.append("&content=");
+        try {
+            uploadTextData.append(URLEncoder.encode(getContent(), HTTP.UTF_8));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        uploadTextData.append("&isOriginal=");
+        uploadTextData.append(String.valueOf(getIsOriginal()));
+        uploadTextData.append("&repAddress=");
+        uploadTextData.append(getRepAddress());
+        uploadTextData.append("&code=");
+        uploadTextData.append(getCode());
+        ReqEncyptInternet.in().doEncypt(url, uploadTextData.toString(), callback);
     }
 }

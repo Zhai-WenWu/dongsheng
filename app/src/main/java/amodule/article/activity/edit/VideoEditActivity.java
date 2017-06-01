@@ -36,4 +36,16 @@ public class VideoEditActivity extends EditParentActivity{
             Tools.showToast(this, checkStr);
         }
     }
+
+    @Override
+    protected String checkData() {
+        if (TextUtils.isEmpty(editTitle.getText())) {
+            return "标题不能为空";
+        }
+        boolean isHasVideo = mixLayout.hasVideo();
+        if (!isHasVideo) {
+            return "视频不能为空";
+        }
+        return null;
+    }
 }

@@ -134,12 +134,26 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         uploadArticleData.setIsOriginal(isCheck);
         uploadArticleData.setRepAddress(String.valueOf(reprintLink.getText()));
         sqLite.update(draftId,uploadArticleData);
-        Intent intent = new Intent(this,ArticleUploadListActivity.class);
-        intent.putExtra("draftId",draftId);
-        intent.putExtra("dataType",dataType);
-        intent.putExtra("coverPath",uploadArticleData.getImg());
-        intent.putExtra("finalVideoPath",uploadArticleData.getVideo());
-        startActivity(intent);
+        if(sqLite.checkHasMidea(draftId)) {
+            Intent intent = new Intent(this, ArticleUploadListActivity.class);
+            intent.putExtra("draftId", draftId);
+            intent.putExtra("dataType", dataType);
+            intent.putExtra("coverPath", uploadArticleData.getImg());
+            intent.putExtra("finalVideoPath", uploadArticleData.getVideo());
+            startActivity(intent);
+        }else{
+            InternetCallback internetCallback = new InternetCallback(ArticleSelectActiivty.this) {
+                @Override
+                public void loaded(int i, String s, Object o) {
+
+                }
+            };
+            if(dataType == EditParentActivity.TYPE_ARTICLE) {
+                uploadArticleData.upload(StringManager.api_articleAdd,internetCallback);
+            }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+                uploadArticleData.upload(StringManager.api_videoAdd,internetCallback);
+            }
+        }
         finish();
     }
 

@@ -15,6 +15,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
@@ -63,12 +64,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public static final int TYPE_VIDEO = 101;
 
     private EditBottomControler editBottomControler;
-    private TextAndImageMixLayout mixLayout;
+    protected EditText editTitle;
+    protected TextAndImageMixLayout mixLayout;
     private LinearLayout contentLayout;
 
     protected UploadParentSQLite sqLite;
 
-    private EditText editTitle;
     protected UploadArticleData uploadArticleData;
     private String code;
 
@@ -276,6 +277,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         boolean isHasText = mixLayout.hasText();
         boolean isHasImg = mixLayout.hasImage();
         boolean isHasVideo = mixLayout.hasVideo();
+        Log.i("articleUpload","checkData() isHasText:" + isHasText + "  isHasImg=" + isHasImg + "   isHasVideo:" + isHasVideo);
         if (!isHasText && !isHasImg && !isHasVideo) {
             return "内容不能为空";
         }

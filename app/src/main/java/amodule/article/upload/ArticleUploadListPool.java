@@ -1,5 +1,6 @@
 package amodule.article.upload;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,10 +19,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.UploadFailPopWindowDialog;
-import acore.widget.UploadSuccessPopWindowDialog;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -35,7 +37,7 @@ import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
 import amodule.upload.callback.UploadListUICallBack;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
-import third.share.BarShare;
+import amodule.user.activity.FriendHome;
 
 /**
  * Created by Fang Ruijiao on 2017/5/23.
@@ -51,15 +53,19 @@ public class ArticleUploadListPool extends UploadListPool {
     private String tongjiId = "a_videodish_uploadlist";
 
     private int dataType;
+    private int fridendHomeIndex; //失败后，跳转到个人主页的index页面
 
     @Override
     protected void initData(int dataType,int draftId, String coverPath, String finalVideoPath, String timestamp, UploadListUICallBack callback) {
         super.initData(draftId, coverPath, finalVideoPath, timestamp, callback);
         this.dataType = dataType;
-        if(dataType == EditParentActivity.TYPE_ARTICLE)
+        if(dataType == EditParentActivity.TYPE_ARTICLE) {
+            fridendHomeIndex = 2;
             sqLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
-        else if(dataType == EditParentActivity.TYPE_VIDEO)
+        }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+            fridendHomeIndex = 3;
             sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
+        }
         Log.i("articleUpload","ArticleUploadListPool coverPath:" + coverPath);
         uploadPoolData.setDraftId(draftId);
         UploadArticleData uploadArticleData = modifyUploadListPoolData();
@@ -94,7 +100,7 @@ public class ArticleUploadListPool extends UploadListPool {
      */
     @Override
     public void uploadOver(final boolean flag, final String response) {
-        Log.i("FRJ","uploadOver flag:" + flag + "   response:" + response);
+        Log.i("articleUpload","uploadOver flag:" + flag + "   response:" + response);
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTailDataList(),
@@ -124,7 +130,18 @@ public class ArticleUploadListPool extends UploadListPool {
 
         super.uploadOver(flag, response);
         if (Tools.isForward(XHApplication.in())) {
-            showUploadOverDialog(flag);
+//            showUploadOverDialog(flag);
+            if(flag){
+                Activity act = XHActivityManager.getInstance().getCurrentActivity();
+                Intent it = new Intent(act, ArticleDetailActivity.class);
+                it.putExtra("code",response);
+                act.startActivity(it);
+            }else{
+                Activity act = XHActivityManager.getInstance().getCurrentActivity();
+                Intent it = new Intent(act, FriendHome.class);
+                it.putExtra("index",fridendHomeIndex);
+                act.startActivity(it);
+            }
         }
     }
 
@@ -487,22 +504,22 @@ public class ArticleUploadListPool extends UploadListPool {
         broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
 
         if (flag) {
-            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
-                    UploadStateChangeBroadcasterReceiver.STATE_SUCCESS);
-            String recMsg = uploadPoolData.getTailDataList().get(0).getRecMsg();
-            String clickUrl = StringManager.wwwUrl + "caipu/" + recMsg + ".html";
-
-            Log.e("VideoDishUploadListPool", "imgUrl  "+imgUrl);
-            UploadSuccessPopWindowDialog dialog = new UploadSuccessPopWindowDialog(Main.allMain,
-                    uploadPoolData.getTitle(), imgUrl, new UploadSuccessPopWindowDialog.UploadSuccessDialogCallback() {
-                @Override
-                public void onClick() {
-                }
-            });
-            dialog.show(BarShare.IMG_TYPE_LOC, "我做了[" + uploadPoolData.getTitle() + "]，超好吃哦~",
-                    clickUrl, "独门秘籍都在这里，你也试试吧！",
-                    imgUrl, "视频菜谱发布成功后", "强化分享");
-            BaseActivity.mUploadDishVideoSuccess = dialog;
+//            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
+//                    UploadStateChangeBroadcasterReceiver.STATE_SUCCESS);
+//            String recMsg = uploadPoolData.getTailDataList().get(0).getRecMsg();
+//            String clickUrl = StringManager.wwwUrl + "caipu/" + recMsg + ".html";
+//
+//            Log.e("VideoDishUploadListPool", "imgUrl  "+imgUrl);
+//            UploadSuccessPopWindowDialog dialog = new UploadSuccessPopWindowDialog(Main.allMain,
+//                    uploadPoolData.getTitle(), imgUrl, new UploadSuccessPopWindowDialog.UploadSuccessDialogCallback() {
+//                @Override
+//                public void onClick() {
+//                }
+//            });
+//            dialog.show(BarShare.IMG_TYPE_LOC, "我做了[" + uploadPoolData.getTitle() + "]，超好吃哦~",
+//                    clickUrl, "独门秘籍都在这里，你也试试吧！",
+//                    imgUrl, "视频菜谱发布成功后", "强化分享");
+//            BaseActivity.mUploadDishVideoSuccess = dialog;
         } else {
             broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
                     UploadStateChangeBroadcasterReceiver.STATE_FAIL);
