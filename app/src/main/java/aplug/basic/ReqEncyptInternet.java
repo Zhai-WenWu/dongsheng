@@ -115,7 +115,7 @@ public class ReqEncyptInternet extends UtilInternet {
 //                flag=ReqInternet.REQ_CODE_ERROR;
 //                object="4002";
                 Log.i("zhangyujian","object::"+object);
-                if(flag==ReqInternet.REQ_CODE_ERROR&&isNumeric((String) object)){
+                if(flag==ReqInternet.REQ_CODE_ERROR&& object != "" && isNumeric((String) object)){
                     int errorCode= Integer.parseInt((String) object);
                     if(errorCode>4000){//请求签名错误
                         getLoginApp(actionUrl,param,callback);

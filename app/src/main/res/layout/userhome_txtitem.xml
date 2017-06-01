@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20"
-    android:background="@color/transparent">
+    android:background="#ffffff">
 
     <View
         android:id="@+id/line_top"
@@ -120,8 +120,8 @@
 
         <ImageView
             android:id="@+id/play_img"
-            android:layout_width="@dimen/dp_36"
-            android:layout_height="@dimen/dp_36"
+            android:layout_width="@dimen/dp_34"
+            android:layout_height="@dimen/dp_34"
             android:layout_centerInParent="true"
             android:src="@drawable/home_item_play"
             android:background="@color/transparent"

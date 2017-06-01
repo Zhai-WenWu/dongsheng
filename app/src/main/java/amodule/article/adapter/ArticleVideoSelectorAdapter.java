@@ -30,7 +30,7 @@ public class ArticleVideoSelectorAdapter extends RecyclerView.Adapter<ArticleVid
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.articlevideo_seletor_list_item, null, false);
         if (mItemLayoutParams == null) {
             int width = ToolsDevice.getWindowPx(parent.getContext()).widthPixels;
-            int columnSpace = Tools.getDimen(parent.getContext(), R.dimen.dp_3);
+            int columnSpace = Tools.getDimen(parent.getContext(), R.dimen.dp_1_5);
             int columnWidth = (int) ((width - columnSpace * 5) / 4f);
             mItemLayoutParams = new ViewGroup.LayoutParams(columnWidth, columnWidth);
         }
