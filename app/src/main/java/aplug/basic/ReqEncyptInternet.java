@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,13 +68,13 @@ public class ReqEncyptInternet extends UtilInternet {
      * @param param
      * @param callback
      */
-    public void doEncypt(String actionUrl, Map<String,String> param, InternetCallback callback){
+    public void doEncypt(String actionUrl, JSONObject jsonObject, InternetCallback callback){
         loginNum=0;
         //处理数据
         long time= System.currentTimeMillis();
         if(!isLoginSign && ReqEncryptCommon.getInstance().isencrypt()&&
                 (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=time){
-            String encryptparams=ReqEncryptCommon.getInstance().getData(param);
+            String encryptparams=ReqEncryptCommon.getInstance().getData(jsonObject);
             callback.setEncryptparams(encryptparams);
             doGet(actionUrl,callback);
 

@@ -247,7 +247,6 @@ public class UploadListControl {
      * @return
      */
     private int startUploadVideo(UploadItemData data, UploadListNetCallBack callback) {
-
         int state = 0;
         if (isUploadingOutLimit()) {
             state = UploadItemData.STATE_WAITING;
@@ -270,7 +269,17 @@ public class UploadListControl {
      * @return
      */
     private int startUploadBreakPointImg(UploadItemData data, UploadListNetCallBack callback) {
-        int state = UploadItemData.STATE_RUNNING;
+        int state = 0;
+        if (isUploadingOutLimit()) {
+            state = UploadItemData.STATE_WAITING;
+        } else {
+            BreakPointControl uploader = uploaderMap.get(data.getUniqueId());
+            if (uploader != null) {
+                //------断点开始上传
+                uploader.start(callback);
+                state = UploadItemData.STATE_RUNNING;
+            }
+        }
         return state;
     }
 

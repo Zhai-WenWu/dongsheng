@@ -39,7 +39,7 @@ public class ViewCommentItem extends LinearLayout {
 
     private Context mContext;
     private LayoutInflater layoutInflater;
-    private ImageView userIcon,userType,userVip,commentPraise;
+    private ImageView userIcon,userType,userVip,commentPraise,commentReplayImg;
     private TextView userName,commentTime,commentDelete,commentPraiseNum,replayContentShow;
 
     private LinearLayout commentContent,commentReplay;
@@ -48,7 +48,6 @@ public class ViewCommentItem extends LinearLayout {
     private Map<String, String> cusstomMap;
 
     private String comment_id;
-    private String gotoCommentId,gotoReplayId;
 
     public ViewCommentItem(Context context) {
         super(context);
@@ -76,6 +75,7 @@ public class ViewCommentItem extends LinearLayout {
         replayContentShow = (TextView) findViewById(R.id.comment_item_replay_cotent_show);
 
         commentContent = (LinearLayout) findViewById(R.id.comment_content);
+        commentReplayImg = (ImageView) findViewById(R.id.comment_item_replay_cotent_img);
         commentReplay = (LinearLayout) findViewById(R.id.comment_item_replay_cotent);
     }
 
@@ -85,11 +85,6 @@ public class ViewCommentItem extends LinearLayout {
         initContent();
         initReplay();
         initOther();
-    }
-
-    public void setGotoItem(String gotoCommentId,String gotoReplayId){
-        this.gotoCommentId = gotoCommentId;
-        this.gotoReplayId = gotoReplayId;
     }
 
     private void initUserInfo(){
@@ -104,9 +99,9 @@ public class ViewCommentItem extends LinearLayout {
                     goFriendHome(cusstomMap.get("ucode"));
                 }
             });
-            if(!TextUtils.isEmpty(cusstomMap.get("is_gourmet")) && !"null".equals(cusstomMap.get("is_gourmet"))){
-                AppCommon.setUserTypeImage(Integer.valueOf(cusstomMap.get("is_gourmet")), userType);
-            }
+            String is_gourmet = cusstomMap.get("is_gourmet");
+            if(!TextUtils.isEmpty(is_gourmet) && !"null".equals(is_gourmet))
+                AppCommon.setUserTypeImage(Integer.valueOf(is_gourmet), userType);
             String nickName = cusstomMap.get("nick_name");
             if(TextUtils.isEmpty(nickName)) nickName = "";
             userName.setText(nickName.length() < 6 ? nickName : nickName.subSequence(0,5) + "...");
@@ -126,6 +121,9 @@ public class ViewCommentItem extends LinearLayout {
         commentContent.removeAllViews();
         comment_id = dataMap.get("comment_id");
         String content = dataMap.get("content");
+        String is_anchor = dataMap.get("is_anchor");
+        if("2".equals(is_anchor))commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
+        else commentContent.setBackgroundColor(Color.parseColor("#00fffae3"));
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
         for(Map<String, String> contentMap:contentArray) {
             initCotentView(contentMap);
@@ -137,12 +135,6 @@ public class ViewCommentItem extends LinearLayout {
         View view = layoutInflater.inflate(R.layout.a_comment_item_content,null);
         final String text = contentMap.get("text");
         final MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
-        if(TextUtils.isEmpty(gotoReplayId) && !TextUtils.isEmpty(gotoCommentId) && gotoCommentId.equals(comment_id)){
-            contentText.setBackgroundColor(Color.parseColor("#fffae3"));
-            if(mListener != null)mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"), cusstomMap.get("nick_name"));
-        }else{
-            contentText.setBackgroundColor(Color.parseColor("#00fffae3"));
-        }
         if(TextUtils.isEmpty(text)){
             contentText.setVisibility(View.GONE);
         }else {
@@ -174,7 +166,7 @@ public class ViewCommentItem extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null && !isShowContentClick)
-                        mListener.onContentReplayClick(dataMap.get("comment_id"), cusstomMap.get("ucode"), cusstomMap.get("nick_name"));
+                        mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"));
                     isShowContentClick = false;
                 }
             });
@@ -185,9 +177,9 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     if (mListener != null) {
                         if (isReport)
-                            mListener.onReportCommentClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                            mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
                         else
-                            mListener.onDeleteCommentClick(dataMap.get("comment_id"));
+                            mListener.onDeleteCommentClick(comment_id);
                     }
                 }
             });
@@ -254,6 +246,9 @@ public class ViewCommentItem extends LinearLayout {
         String replay = dataMap.get("replay");
         String replay_num = dataMap.get("replay_num");
         commentReplay.removeAllViews();
+        commentReplay.setVisibility(View.GONE);
+        commentReplayImg.setVisibility(View.GONE);
+
         addReplayView(replay);
         if(!TextUtils.isEmpty(replay_num) && Integer.parseInt(replay_num) > 0){
             replayContentShow = (TextView) findViewById(R.id.comment_item_replay_cotent_show);
@@ -263,7 +258,7 @@ public class ViewCommentItem extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     replayContentShow.setVisibility(View.GONE);
-                    if(mListener != null) mListener.onShowAllReplayClick(dataMap.get("comment_id"));;
+                    if(mListener != null) mListener.onShowAllReplayClick(comment_id);;
 
                 }
             });
@@ -290,12 +285,13 @@ public class ViewCommentItem extends LinearLayout {
 
             String authoCode = null;
 
-            if(comment_id.equals(gotoCommentId) && replayMap.get("replay_id").equals(gotoReplayId)){
+            String is_anchor = replayMap.get("is_anchor");
+            if("2".equals(is_anchor)){
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
-                if(mListener != null) mListener.onContentReplayClick(dataMap.get("comment_id"),replay_ucode,replay_uname);
-            }else{
-                view.setBackgroundColor(Color.parseColor("#00fffae3"));
+                if(mListener != null) mListener.onContentReplayClick(comment_id,replay_ucode,replay_uname);
             }
+            else view.setBackgroundColor(Color.parseColor("#00fffae3"));
+
             MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
             CommentBuilder uNameBuilder = new CommentBuilder(uName).setTextColor("#bcbcbc");
             uNameBuilder.parse(new CommentBuilder.CommentClickCallback() {
@@ -335,7 +331,7 @@ public class ViewCommentItem extends LinearLayout {
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
-                    if(mListener != null) mListener.onContentReplayClick(dataMap.get("comment_id"),replay_ucode,replay_uname);
+                    if(mListener != null) mListener.onContentReplayClick(comment_id,replay_ucode,replay_uname);
                 }
             });
             multifunctionText.addStyle(contentBuilder.getContent(), contentBuilder.build());
@@ -348,12 +344,14 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     if(mListener != null) {
                         if(isReport)
-                            mListener.onReportReplayClick(dataMap.get("comment_id"),replayMap.get("replay_id"),replay_ucode,replay_uname);
+                            mListener.onReportReplayClick(comment_id,replayMap.get("replay_id"),replay_ucode,replay_uname);
                         else
-                            mListener.onDeleteReplayClick(dataMap.get("comment_id"),replayMap.get("replay_id"));
+                            mListener.onDeleteReplayClick(comment_id,replayMap.get("replay_id"));
                     }
                 }
             });
+            commentReplay.setVisibility(View.VISIBLE);
+            commentReplayImg.setVisibility(View.VISIBLE);
             commentReplay.addView(view);
         }
     }
@@ -371,7 +369,7 @@ public class ViewCommentItem extends LinearLayout {
         commentPraise.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mListener != null) mListener.onPraiseClick(dataMap.get("comment_id"));
+                if(mListener != null) mListener.onPraiseClick(comment_id);
                 commentPraise.setImageResource(R.drawable.i_comment_praise_ok);
             }
         });
@@ -383,7 +381,7 @@ public class ViewCommentItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if(!isDelete && mListener != null)
-                    mListener.onContentReplayClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                    mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
             }
         });
         commentDelete.setText(isDelete ? "删除":"举报");
@@ -392,9 +390,9 @@ public class ViewCommentItem extends LinearLayout {
             public void onClick(View v) {
                 if(mListener != null) {
                     if (isDelete)
-                        mListener.onDeleteCommentClick(dataMap.get("comment_id"));
+                        mListener.onDeleteCommentClick(comment_id);
                     else
-                        mListener.onReportCommentClick(dataMap.get("comment_id"),cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                        mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
                 }
             }
         });

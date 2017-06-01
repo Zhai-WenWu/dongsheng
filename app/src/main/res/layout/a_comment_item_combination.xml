@@ -116,12 +116,14 @@
         </RelativeLayout>
 
         <ImageView
+            android:id="@+id/comment_item_replay_cotent_img"
             android:layout_width="@dimen/dp_13"
             android:layout_height="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_11"
             android:layout_marginLeft="@dimen/dp_12"
             android:scaleType="fitXY"
             android:src="@drawable/i_comment_content_triangle"
+            android:visibility="gone"
             />
 
         <LinearLayout
@@ -134,6 +136,7 @@
             android:paddingRight="@dimen/dp_12"
             android:paddingBottom="@dimen/dp_10"
             android:background="#efefef"
+            android:visibility="gone"
             />
         <TextView
             android:id="@+id/comment_item_replay_cotent_show"
