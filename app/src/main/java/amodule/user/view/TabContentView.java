@@ -5,7 +5,6 @@ import android.widget.LinearLayout;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.widget.DownRefreshList;
@@ -19,6 +18,8 @@ public abstract class TabContentView implements TabContentFactory{
 	public LinearLayout backLayout;
 	public TextView friend_info;
 	public String url;
+
+	private Map<String, String> mDataMap;
 	
 	@Override
 	public View createTabContent(String tag) {
@@ -37,6 +38,15 @@ public abstract class TabContentView implements TabContentFactory{
 	public void setLoadUrl(String url) {
 		this.url = url;
 	}
+
+	public void setDataMap(Map<String, String> dataMap) {
+		mDataMap = dataMap;
+	}
+
+	public Map<String, String> getDataMap() {
+		return mDataMap;
+	}
+
 	/**
 	 * 页面被激活
 	 */

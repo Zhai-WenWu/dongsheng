@@ -24,7 +24,7 @@ import amodule.dish.db.UploadDishData;
  * Created by sll on 2017/5/24.
  */
 
-public class UserHomeTxtItem extends UserHomeItem {
+public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListener{
 
     private LinearLayout mNameGourmet;
     private TextView mUserName;
@@ -39,6 +39,8 @@ public class UserHomeTxtItem extends UserHomeItem {
     private TextView mStatusInfo;
     private TextView mNum2;
     private ImageView mPlayImg;
+
+    private String mUploadType = "";
 
     public UserHomeTxtItem(Context context) {
         super(context, R.layout.userhome_txtitem);
@@ -72,27 +74,17 @@ public class UserHomeTxtItem extends UserHomeItem {
     }
 
     private void addListener() {
-        OnClickListener listener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        };
-        this.setOnClickListener(listener);
+        this.setOnClickListener(this);
     }
 
     @Override
     public void setData(Map<String, String> dataMap, int position) {
-        if (dataMap != null)
-            dataMap.put("itemType", mItemType2);
         super.setData(dataMap, position);
     }
 
     @Override
     protected void bindData() {
         super.bindData();
-        if (!mItemType2.equals(mDataMap.get("itemType")))
-            return;
         if (mIsAd) {
             if (mLayerView != null)
                 mLayerView.setVisibility(View.VISIBLE);
@@ -118,10 +110,10 @@ public class UserHomeTxtItem extends UserHomeItem {
 
         String fromLocal = mDataMap.get("dataFrom");
         if ("1".equals(fromLocal)) {//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
-            String uploadType = mDataMap.get("uploadType");
+            mUploadType = mDataMap.get("uploadType");
             String statusInfo = "";
             if (mStatusInfo != null) {
-                switch (uploadType) {
+                switch (mUploadType) {
                     case UploadDishData.UPLOAD_FAIL:
                         statusInfo = "上传失败，请重试";
                         mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
@@ -218,15 +210,11 @@ public class UserHomeTxtItem extends UserHomeItem {
     @Override
     protected void resetData() {
         super.resetData();
-        if (!mItemType2.equals(mDataMap.get("itemType")))
-            return;
     }
 
     @Override
     protected void resetView() {
         super.resetView();
-        if (!mItemType2.equals(mDataMap.get("itemType")))
-            return;
         if (viewIsVisible(mTitle))
             mTitle.setVisibility(View.GONE);
         if (viewIsVisible(mUserName))
@@ -251,5 +239,13 @@ public class UserHomeTxtItem extends UserHomeItem {
             mStatusInfo.setVisibility(View.GONE);
         if (viewIsVisible(mPlayImg))
             mPlayImg.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (!TextUtils.isEmpty(mUploadType) && UploadDishData.UPLOAD_FAIL.equals(mUploadType))
+            mStatusInfo.setText("上传中...");
+        if (mOnItemClickListener != null)
+            mOnItemClickListener.onItemClick(mDataMap);
     }
 }

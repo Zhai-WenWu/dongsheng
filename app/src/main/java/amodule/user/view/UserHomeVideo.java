@@ -5,10 +5,12 @@
  */
 package amodule.user.view;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,12 +21,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
+import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.user.activity.FriendHome;
@@ -54,9 +56,11 @@ public class UserHomeVideo extends TabContentView {
     private boolean isRefresh = false;
 
     private TextView subjectNum;
+    private LinearLayout mEmptyView;
+    private Button mGotoBtn;
 
     public UserHomeVideo(FriendHome act, String code) {
-        view = View.inflate(act, R.layout.myself_subject, null);
+        view = View.inflate(act, R.layout.myself_txt, null);
         this.mAct = act;
         userCode = code;
         if(!TextUtils.isEmpty(LoginManager.userInfo.get("code")) && LoginManager.userInfo.get("code").equals(userCode)){
@@ -83,29 +87,34 @@ public class UserHomeVideo extends TabContentView {
     private void init() {
         // 结果显示
         loadManager = mAct.loadManager;
+        mEmptyView = (LinearLayout) view.findViewById(R.id.empty);
+        mGotoBtn = (Button) mEmptyView.findViewById(R.id.goto_btn);
+        mGotoBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAct.startActivity(new Intent(mAct, ArticleEidtActiivty.class));
+            }
+        });
         theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
         theListView.setDivider(null);
         datas = new ArrayList<>();
         mLocalDatas = new ArrayList<Map<String, String>>();
         mNetDatas = new ArrayList<Map<String, String>>();
-        adapter = new AdapterUserVideo(mAct, theListView, datas, 0, null, null,new UserHomeItem.DeleteCallback() {
-            @Override
-            public void delete(int position) {
-                String numS = String.valueOf(subjectNum.getText());
-                if(!TextUtils.isEmpty(numS)){
-                    try{
-                        int num = Integer.parseInt(numS);
-                        subjectNum.setText(String.valueOf(--num));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                datas.remove(position);
-                adapter.notifyDataSetChanged();
-            }
-        });
+        adapter = new AdapterUserVideo(mAct, theListView, datas, 0, null, null);
         adapter.scaleType = ScaleType.CENTER_CROP;
         adapter.isAnimate = true;
+        adapter.setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(Map<String, String> dataMap) {
+                if (mOnItemClickListener != null)
+                    mOnItemClickListener.onItemClick(dataMap);
+            }
+        });
+    }
+
+    private UserHomeItem.OnItemClickListener mOnItemClickListener;
+    public void setOnItemClickListener(UserHomeItem.OnItemClickListener clickListener) {
+        mOnItemClickListener = clickListener;
     }
 
     @Override
@@ -135,19 +144,6 @@ public class UserHomeVideo extends TabContentView {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
         });
-    }
-
-    /**
-     * 详情页
-     */
-    private void goNextActivity(int position){
-        String isSafa="";
-        Map<String,String> map = datas.get(position);
-        if (map.containsKey("isSafa"))
-            isSafa = map.get("isSafa");
-        if (map.containsKey("style") && map.get("style").equals("6"))
-            isSafa = "qiang";
-        AppCommon.openUrl(mAct, "subjectInfo.app?code=" + map.get("code") + "&isSafa=" + isSafa, true);
     }
 
     private void setHeadViewHeight(){
@@ -259,8 +255,9 @@ public class UserHomeVideo extends TabContentView {
                 }
                 datas.addAll(mNetDatas);
                 if (datas.size() == 0) {
-                    view.findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
+                    mEmptyView.setVisibility(View.VISIBLE);
                 } else {
+                    mEmptyView.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
                     theListView.setVisibility(View.VISIBLE);
                 }

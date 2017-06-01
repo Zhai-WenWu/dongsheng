@@ -1,6 +1,7 @@
 package amodule.user.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -27,6 +28,9 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
 import acore.widget.TextViewLimitLine;
+import amodule.article.activity.ArticleDetailActivity;
+import amodule.article.activity.ArticleUploadListActivity;
+import amodule.dish.db.UploadDishData;
 import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
@@ -34,6 +38,7 @@ import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.view.TabContentView;
 import amodule.user.view.UserHomeAnswer;
 import amodule.user.view.UserHomeDish;
+import amodule.user.view.UserHomeItem;
 import amodule.user.view.UserHomeSubject;
 import amodule.user.view.UserHomeTitle;
 import amodule.user.view.UserHomeTxt;
@@ -154,12 +159,12 @@ public class FriendHome extends BaseActivity {
 		Map<String, String> subjectMap = new HashMap<String, String>();
 		subjectMap.put("title", "晒美食");
 		subjectMap.put("num", "");
-		subjectMap.put("type", "4");
+		subjectMap.put("type", "-1");
 		mTabs.add(subjectMap);
 		Map<String, String> dishMap = new HashMap<String, String>();
 		dishMap.put("title", "菜谱");
 		dishMap.put("num","");
-		dishMap.put("type", "5");
+		dishMap.put("type", "0");
 		mTabs.add(dishMap);
 		String getUrl = StringManager.api_getUserInfoByCode + "?code=" + userCode;
 		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
@@ -269,17 +274,35 @@ public class FriendHome extends BaseActivity {
 				switch (type) {
 					case "1"://视频
 						tabContentView = new UserHomeVideo(this, userCode);
+						((UserHomeVideo)tabContentView).setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
+							@Override
+							public void onItemClick(Map<String, String> dataMap) {
+								onItemClickListener(dataMap);
+							}
+						});
 						break;
 					case "2"://文章
 						tabContentView = new UserHomeTxt(this, userCode);
+						((UserHomeTxt)tabContentView).setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
+							@Override
+							public void onItemClick(Map<String, String> dataMap) {
+								onItemClickListener(dataMap);
+							}
+						});
 						break;
 					case "3"://问答
 						tabContentView = new UserHomeAnswer(this, userCode);
+						((UserHomeAnswer)tabContentView).setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
+							@Override
+							public void onItemClick(Map<String, String> dataMap) {
+								onItemClickListener(dataMap);
+							}
+						});
 						break;
-					case "4"://晒美食
+					case "-1"://晒美食
 						tabContentView = new UserHomeSubject(this, userCode);
 						break;
-					case "5"://菜谱
+					case "0"://菜谱
 						tabContentView = new UserHomeDish(this, userCode);
 						break;
 
@@ -289,6 +312,7 @@ public class FriendHome extends BaseActivity {
 						url = url.substring(1);
 					url = StringManager.apiUrl + url;
 					tabContentView.setLoadUrl(url);
+					tabContentView.setDataMap(tabMap);
 				}
 				mIsLoadeds[i] = false;
 				mTabViews.add(tabView);
@@ -311,6 +335,47 @@ public class FriendHome extends BaseActivity {
 		};
 	}
 
+	private void onItemClickListener(Map<String, String> dataMap) {
+		if (dataMap == null || dataMap.size() < 1)
+			return;
+		String dataFrom = dataMap.get("dataFrom");
+		if ("1".equals(dataFrom)) {//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
+			String uploadType = dataMap.get("uploadType");
+			String hasUploadPage = dataMap.get("hasUploadPage");
+			Map<String, String> tabMap = mTabContentViews.get(tabIndex).getDataMap();
+			if (tabMap != null && tabMap.size() > 0) {
+				String type = tabMap.get("type");
+				switch (type) {
+					case "2"://文章列表
+						if ("2".equals(hasUploadPage)) {
+							Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
+							FriendHome.this.startActivity(intent);
+							return;
+						} else if (UploadDishData.UPLOAD_FAIL.equals(uploadType)) {
+							//TODO 通知重新上传
+							return;
+						}
+						break;
+					case "1"://视频列表
+						if (UploadDishData.UPLOAD_FAIL.equals(uploadType)) {
+							//TODO 通知重新上传
+							return;
+						}
+						break;
+				}
+			}
+		} else {
+			String code = dataMap.get("code");
+			if (!TextUtils.isEmpty(code)) {
+				Intent intent = new Intent(this, ArticleDetailActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("code", code);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		}
+	}
+
 
 	// 获取tab标签卡
 	private View getTabWidget(String title, String num, OnClickListener clicker) {
@@ -328,6 +393,7 @@ public class FriendHome extends BaseActivity {
 
 	// 切换tab
 	private void tabChanged(int tabIndex) {
+		this.tabIndex = tabIndex;
 		//统计
 		switch (tabIndex) {
 			case 0:

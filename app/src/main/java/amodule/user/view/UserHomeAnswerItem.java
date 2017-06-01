@@ -29,8 +29,6 @@ public class UserHomeAnswerItem extends UserHomeTxtItem {
 
     @Override
     public void setData(Map<String, String> dataMap, int position) {
-        if (dataMap != null)
-            dataMap.put("itemType", mItemType3);
         super.setData(dataMap, position);
     }
 
@@ -49,4 +47,5 @@ public class UserHomeAnswerItem extends UserHomeTxtItem {
     protected void resetView() {
         super.resetView();
     }
+
 }
