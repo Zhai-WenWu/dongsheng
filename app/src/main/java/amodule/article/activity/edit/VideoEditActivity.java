@@ -56,8 +56,7 @@ public class VideoEditActivity extends EditParentActivity{
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
             saveDraft();
-            if (timer != null)
-                timer.cancel();
+            if(timer != null)timer.cancel();
             Intent intent = new Intent(this, ArticleSelectActiivty.class);
             intent.putExtra("draftId", uploadArticleData.getId());
             intent.putExtra("dataType", EditParentActivity.TYPE_VIDEO);

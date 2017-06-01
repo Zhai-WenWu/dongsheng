@@ -2,6 +2,7 @@ package aplug.basic;
 
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -123,8 +124,24 @@ public class ReqEncryptCommon {
                }
             }
             jsonObject.put("sign",sign);
+            Log.i("FRJ","getData() jsonObject:" + jsonObject);
             GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
             GY=GY.replace("-----END PUBLIC KEY-----","");
+            byte[] data=jsonObject.toString().getBytes();
+
+            return RSAUtils.encryptByPublicKey(data,GY);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+    }
+    public String getData(JSONObject jsonObject)  {
+        try {
+            jsonObject.put("sign",sign);
+            GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
+            GY=GY.replace("-----END PUBLIC KEY-----","");
+            Log.i("articleUpload","getData() jsonObject:" + jsonObject);
             byte[] data=jsonObject.toString().getBytes();
 
             return RSAUtils.encryptByPublicKey(data,GY);

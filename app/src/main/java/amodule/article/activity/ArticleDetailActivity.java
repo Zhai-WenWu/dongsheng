@@ -73,7 +73,7 @@ public class ArticleDetailActivity extends BaseActivity {
             code = bundle.getString("code");
         }
         //TODO 测试
-        code = "520";
+        if(TextUtils.isEmpty(code)) code = "175";
         init();
     }
 

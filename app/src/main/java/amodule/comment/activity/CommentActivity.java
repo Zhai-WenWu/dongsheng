@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -83,7 +82,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 final ViewCommentItem viewCommentItem = (ViewCommentItem) view.findViewById(R.id.comment_item);
-                viewCommentItem.setGotoItem(gotoCommentId,gotoReplayId);
                 viewCommentItem.setData(listArray.get(position));
                 viewCommentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
                     @Override
@@ -132,13 +130,11 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onDeleteReplayClick(String comment_id, String replay_id) {
-                        Tools.showToast(CommentActivity.this,"删除回复" + comment_id);
                         requstInternet(StringManager.api_delReplay,"type=" + type + "&code=" + code + "&commentId="+comment_id + "&replayId=" + replay_id);
                     }
 
                     @Override
                     public void onDeleteCommentClick(final String comment_id) {
-                        Tools.showToast(CommentActivity.this,"删除评论" + comment_id);
                         final XhDialog xhDialog = new XhDialog(CommentActivity.this);
                         xhDialog.setTitle("确认删除我的评论？").setCanselButton("取消", new View.OnClickListener() {
                             @Override
@@ -148,7 +144,16 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         }).setSureButton("确认", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                requstInternet(StringManager.api_delForum,"type=" + type + "&code=" + code + "&commentId="+comment_id);
+                                String params = "type=" + type + "&code=" + code + "&commentId="+comment_id;
+                                ReqEncyptInternet.in().doEncypt(StringManager.api_delForum, params, new InternetCallback(CommentActivity.this) {
+                                    @Override
+                                    public void loaded(int flag, String s, Object o) {
+                                        if(flag >= ReqInternet.REQ_OK_STRING){
+                                            listArray.remove(position);
+                                            adapterSimple.notifyDataSetChanged();
+                                        }
+                                    }
+                                });
                                 xhDialog.cancel();
                             }
                         }).show();
@@ -166,7 +171,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         commend_write_et.setHint("回复 " + replay_name);
                         changeKeyboard(true);
                         currentUrl = StringManager.api_addReplay;
-                        currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
+                        commentId = comment_id;
+                        replayCode = replay_code;
                     }
                 });
                 return view;
@@ -188,11 +194,10 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         code = getIntent().getStringExtra("code");
         gotoCommentId = getIntent().getStringExtra("gotoCommentId");
         gotoReplayId = getIntent().getStringExtra("gotoReplayId");
-        gotoPage = getIntent().getIntExtra("gotoPage",1);
 
         if(TextUtils.isEmpty(type)) {
             type = "1";
-            code = "2";
+            code = "520";
         }
 
 //        gotoCommentId = "1";
@@ -227,7 +232,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             currentPage++;
 
         loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listArray.size() == 0);
-        String params = "type=" + type + "&code=" + code + "&page=" + currentPage;
+        String params = "type=" + type + "&code=" + code + "&commentId=" + gotoCommentId + "&replayId=" + gotoReplayId + "&page=" + currentPage;
         ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String s, Object o) {
@@ -248,7 +253,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private String currentUrl = StringManager.api_addForum,currentParams;
+    private String currentUrl = StringManager.api_addForum;
+    String commentId,replayCode;
     private void sendData(){
         sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
@@ -256,30 +262,39 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             Tools.showToast(this,"发送内容不能超过2000字");
             return;
         }
-
-        String newParams;
-        if(StringManager.api_addForum.equals(currentUrl)){
-            JSONArray jsonArray = new JSONArray();
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("text", content);
-                jsonArray.put(jsonObject);
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + jsonArray.toString();
-        }else{
-            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
-        }
-        ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
-
-            @Override
-            public void loaded(int flag, String s, Object o) {
-                if(flag >= ReqInternet.REQ_OK_STRING) {
-                    changeKeyboard(false);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", type);
+            jsonObject.put("code", code);
+            if (StringManager.api_addForum.equals(currentUrl)) {
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    JSONObject jsonObject2 = new JSONObject();
+                    jsonObject2.put("text", content);
+                    jsonArray.put(jsonObject2);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                jsonObject.put("content", jsonArray);
+            } else {
+                if (!TextUtils.isEmpty(commentId))
+                    jsonObject.put("commentId", commentId);
+                if (!TextUtils.isEmpty(replayCode))
+                    jsonObject.put("replayUcode", replayCode);
+                jsonObject.put("content", content);
             }
-        });
+            ReqEncyptInternet.in().doEncypt(currentUrl, jsonObject, new InternetCallback(this) {
+
+                @Override
+                public void loaded(int flag, String s, Object o) {
+                    if (flag >= ReqInternet.REQ_OK_STRING) {
+                        changeKeyboard(false);
+                    }
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void changeKeyboard(boolean isShow){
