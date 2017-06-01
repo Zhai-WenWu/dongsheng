@@ -107,7 +107,9 @@ public class ArticleHeaderView extends ItemBaseView {
                     info = info.substring(0,16) + "...";
                 }
                 user_about.setText(info);
-            } else user_about.setVisibility(GONE);
+            } else {
+                user_about.setText("对美食的敬意，便是与你分享");
+            }
 
             setMapFollowSate();
             //点击事件

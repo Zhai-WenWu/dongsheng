@@ -104,17 +104,13 @@ public class TextAndImageMixLayout extends LinearLayout
         EditTextView editTextView = addRichText(-1, "");
         boolean isCenter = false;
         String htmlTmep = new String(html);
-        Log.i("tzy", htmlTmep);
         //解析段落是否居中
         String propertyStr = htmlTmep.substring(htmlTmep.indexOf("<p") + 2, htmlTmep.indexOf(">"));
-        Log.i("tzy", "propertyStr = " + propertyStr);
         String[] properties = propertyStr.split(" ");
-        Log.i("tzy", "properties[] = " + properties.toString());
         for (String property : properties) {
             if (property.contains("align")) {
                 String propValue = property.substring(property.indexOf("\""), property.lastIndexOf("\""));
                 isCenter = "center".equals(propValue);
-                Log.i("tzy", "isCenter = " + isCenter);
                 break;
             }
         }
@@ -122,23 +118,16 @@ public class TextAndImageMixLayout extends LinearLayout
         while (htmlTmep.indexOf("<a") >= 0) {
             int startIndex = htmlTmep.indexOf("<a");
             int endIndex = htmlTmep.indexOf("</a>") + 4;
-            Log.i("tzy", "startIndex = " + startIndex);
-            Log.i("tzy", "endIndex = " + endIndex);
             if (startIndex >= 0 && startIndex < htmlTmep.length()
                     && endIndex >= 0 && endIndex < htmlTmep.length()) {
                 String aTagData = htmlTmep.substring(startIndex, endIndex);
-                Log.i("tzy", "aTagData = " + aTagData);
                 String title = aTagData.substring(aTagData.indexOf(">") + 1, aTagData.indexOf("</a>"));
-                Log.i("tzy", "title = " + title);
                 String url = "";
                 String apropertyStr = aTagData.substring(aTagData.indexOf("<a") + 2, aTagData.indexOf(">"));
-                Log.i("tzy", "apropertyStr = " + apropertyStr);
                 String[] aproperties = apropertyStr.split(" ");
-                Log.i("tzy", "aproperties[] = " + aproperties);
                 for (String property : aproperties) {
                     if (property.contains("href")) {
                         url = property.substring(property.indexOf("\"") + 1, property.lastIndexOf("\""));
-                        Log.i("tzy", "url = " + url);
                         break;
                     }
                 }
@@ -581,6 +570,16 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
         return sbuilder.length();
+    }
+
+    public int getURLCount(){
+        int count = 0;
+        for (int index = 0; index < getChildCount(); index++) {
+            View view = getChildAt(index);
+            if (view instanceof EditTextView)
+                count += ((EditTextView) view).getLinkMapArray().size();
+        }
+        return count;
     }
 
     /** 设置显示单个视频 */

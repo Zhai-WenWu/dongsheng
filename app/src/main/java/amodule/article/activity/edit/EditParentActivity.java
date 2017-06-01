@@ -157,30 +157,37 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
      */
     private void initEditBottomControler() {
         editBottomControler = (EditBottomControler) findViewById(R.id.edit_controler);
-        editBottomControler.setOnSelectImageCallback(
-                new EditBottomControler.OnSelectImageCallback() {
-                    @Override
-                    public void onSelectImage() {
-                        Intent intent = new Intent(EditParentActivity.this, ImageSelectorActivity.class);
-                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
-                        ArrayList<String> imageArray = mixLayout.getImageArray();
-                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, getMaxImageCount() - imageArray.size());
-                        intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imageArray);
-                        startActivityForResult(intent, REQUEST_SELECT_IMAGE);
-                    }
-                });
-        editBottomControler.setOnSelectVideoCallback(
-                new EditBottomControler.OnSelectVideoCallback() {
-                    @Override
-                    public void onSelectVideo() {
-                        Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
-                        startActivityForResult(intent, REQUEST_SELECT_VIDEO);
-                    }
-                });
+        if (getMaxImageCount() != 0)
+            editBottomControler.setOnSelectImageCallback(
+                    new EditBottomControler.OnSelectImageCallback() {
+                        @Override
+                        public void onSelectImage() {
+                            Intent intent = new Intent(EditParentActivity.this, ImageSelectorActivity.class);
+                            intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
+                            ArrayList<String> imageArray = mixLayout.getImageArray();
+                            intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, getMaxImageCount() - imageArray.size());
+                            intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imageArray);
+                            startActivityForResult(intent, REQUEST_SELECT_IMAGE);
+                        }
+                    });
+        if (getMaxVideoCount() != 0)
+            editBottomControler.setOnSelectVideoCallback(
+                    new EditBottomControler.OnSelectVideoCallback() {
+                        @Override
+                        public void onSelectVideo() {
+                            Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
+                            startActivityForResult(intent, REQUEST_SELECT_VIDEO);
+                        }
+                    });
+        if(canAddLink())
         editBottomControler.setOnAddLinkCallback(
                 new EditBottomControler.OnAddLinkCallback() {
                     @Override
                     public void onAddLink() {
+                        if (mixLayout.getURLCount() >= getMaxURLCount()) {
+                            Tools.showToast(EditParentActivity.this, "链接最大不能超过" + getMaxURLCount() + "条");
+                            return;
+                        }
                         //收起键盘
                         if (isKeyboradShow)
                             ToolsDevice.keyboardControl(!isKeyboradShow, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
@@ -209,27 +216,43 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         ToolsDevice.keyboardControl(!isKeyboradShow, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                     }
                 });
-        final int dp_45 = Tools.getDimen(this,R.dimen.dp_45);
-        editBottomControler.setOnTextEidtCallback(
-                new EditBottomControler.OnTextEditCallback() {
-                    @Override public void onEditControlerShow(boolean isShow){
-                        contentLayout.setPadding(0 , 0 , 0 , isShow ? dp_45 * 2 : dp_45);
-                    }
-                    @Override public void onTextBold() {
-                        mixLayout.setupTextBold();
-                    }
-                    @Override public void onTextUnderLine() {
-                        mixLayout.setupUnderline();
-                    }
-                    @Override public void onTextCenter() {
-                        mixLayout.setupTextCenter();
-                    }
-                });
+        final int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+        if (isEnableEditText())
+            editBottomControler.setOnTextEidtCallback(
+                    new EditBottomControler.OnTextEditCallback() {
+                        @Override
+                        public void onEditControlerShow(boolean isShow) {
+                            contentLayout.setPadding(0, 0, 0, isShow ? dp_45 * 2 : dp_45);
+                        }
+
+                        @Override
+                        public void onTextBold() {
+                            mixLayout.setupTextBold();
+                        }
+
+                        @Override
+                        public void onTextUnderLine() {
+                            mixLayout.setupUnderline();
+                        }
+
+                        @Override
+                        public void onTextCenter() {
+                            mixLayout.setupTextCenter();
+                        }
+                    });
     }
 
+    protected abstract boolean canAddLink();
+
+    protected abstract boolean isEnableEditText();
+
     protected abstract int getMaxImageCount();
+
     protected abstract int getMaxVideoCount();
+
     protected abstract int getMaxTextCount();
+
+    protected abstract int getMaxURLCount();
 
     protected void initData(UploadParentSQLite uploadParentSQLite) {
         sqLite = uploadParentSQLite;
@@ -283,14 +306,14 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         boolean isHasText = mixLayout.hasText();
         boolean isHasImg = mixLayout.hasImage();
         boolean isHasVideo = mixLayout.hasVideo();
-        Log.i("articleUpload","checkData() isHasText:" + isHasText + "  isHasImg=" + isHasImg + "   isHasVideo:" + isHasVideo);
+        Log.i("articleUpload", "checkData() isHasText:" + isHasText + "  isHasImg=" + isHasImg + "   isHasVideo:" + isHasVideo);
         if (!isHasText && !isHasImg && !isHasVideo) {
             return "内容不能为空";
         }
         if (!isHasText) {
             return "内容文字不能为空";
         }
-        if(mixLayout.getTextCount() > getMaxTextCount()){
+        if (mixLayout.getTextCount() > getMaxTextCount()) {
             return "文字不能超过" + getMaxTextCount() + "字";
         }
         return null;
@@ -383,7 +406,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     @Override
     protected void onPause() {
         super.onPause();
-        if(timer != null){
+        if (timer != null) {
             timer.cancel();
             timer.purge();
             timer = null;

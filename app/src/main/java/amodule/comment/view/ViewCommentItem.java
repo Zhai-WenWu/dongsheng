@@ -104,7 +104,9 @@ public class ViewCommentItem extends LinearLayout {
                     goFriendHome(cusstomMap.get("ucode"));
                 }
             });
-            AppCommon.setUserTypeImage(Integer.valueOf(cusstomMap.get("is_gourmet")), userType);
+            if(!TextUtils.isEmpty(cusstomMap.get("is_gourmet")) && !"null".equals(cusstomMap.get("is_gourmet"))){
+                AppCommon.setUserTypeImage(Integer.valueOf(cusstomMap.get("is_gourmet")), userType);
+            }
             String nickName = cusstomMap.get("nick_name");
             if(TextUtils.isEmpty(nickName)) nickName = "";
             userName.setText(nickName.length() < 6 ? nickName : nickName.subSequence(0,5) + "...");

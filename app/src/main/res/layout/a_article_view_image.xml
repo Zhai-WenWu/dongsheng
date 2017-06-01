@@ -9,18 +9,17 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:src="@drawable/i_nopic"
-        android:minHeight="@dimen/dp_160"
-        android:scaleType="centerCrop"/>
+        android:scaleType="fitXY"/>
 
     <ImageView
         android:id="@+id/image_gif"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/i_nopic"
-        android:minHeight="@dimen/dp_160"
         android:visibility="gone"
         android:scaleType="centerCrop"/>
 
@@ -47,6 +46,7 @@
         android:id="@+id/dish_step_gif_hint"
         android:layout_width="@dimen/dp_54"
         android:layout_height="@dimen/dp_22"
+        android:visibility="gone"
         android:src="@drawable/i_dish_detail_gif_hint"
         android:layout_alignBottom="@+id/image"/>
 

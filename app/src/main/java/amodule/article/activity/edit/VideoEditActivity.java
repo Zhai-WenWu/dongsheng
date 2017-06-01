@@ -22,6 +22,16 @@ public class VideoEditActivity extends EditParentActivity{
     }
 
     @Override
+    protected boolean canAddLink() {
+        return false;
+    }
+
+    @Override
+    protected boolean isEnableEditText() {
+        return false;
+    }
+
+    @Override
     protected int getMaxImageCount() {
         return 0;
     }
@@ -34,6 +44,11 @@ public class VideoEditActivity extends EditParentActivity{
     @Override
     protected int getMaxTextCount() {
         return 5000;
+    }
+
+    @Override
+    protected int getMaxURLCount() {
+        return 0;
     }
 
     @Override

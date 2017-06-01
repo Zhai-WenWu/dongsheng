@@ -1,12 +1,10 @@
 package amodule.article.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -15,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.utils.VDPlayPauseHelper;
@@ -34,8 +31,6 @@ import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.view.ArticleCommentBar;
 import amodule.article.view.ArticleHeaderView;
 import amodule.article.view.VideoShowView;
-import amodule.comment.activity.CommentActivity;
-import amodule.comment.view.ViewCommentItem;
 import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;

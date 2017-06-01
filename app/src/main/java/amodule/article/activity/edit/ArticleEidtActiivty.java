@@ -24,6 +24,16 @@ public class ArticleEidtActiivty extends EditParentActivity{
     }
 
     @Override
+    protected boolean canAddLink() {
+        return true;
+    }
+
+    @Override
+    protected boolean isEnableEditText() {
+        return true;
+    }
+
+    @Override
     protected int getMaxImageCount() {
         return 50;
     }
@@ -36,6 +46,11 @@ public class ArticleEidtActiivty extends EditParentActivity{
     @Override
     protected int getMaxTextCount() {
         return 15000;
+    }
+
+    @Override
+    protected int getMaxURLCount() {
+        return 100;
     }
 
     @Override
