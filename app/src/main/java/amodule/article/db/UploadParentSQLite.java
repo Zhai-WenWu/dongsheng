@@ -275,7 +275,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
             if (cur.moveToFirst()) {// 判断游标是否为空
                 content = cur.getString(cur.getColumnIndex(UploadArticleData.article_content));
             }
-            return TextUtils.isEmpty(content);
+            return !TextUtils.isEmpty(content) && (content.contains("image") || content.contains("video"));
         } finally {
             close(cur, readableDatabase);
         }
