@@ -75,8 +75,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dp_9"
-            android:layout_marginLeft="@dimen/dp_3"
-            android:layout_marginRight="@dimen/dp_3"/>
+            android:layout_marginLeft="@dimen/dp_1.5"
+            android:layout_marginRight="@dimen/dp_1.5"/>
 
         <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
             android:id="@+id/video_recyclerview_header"
@@ -130,7 +130,7 @@
         android:id="@+id/video_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#cc000000"
+        android:background="#d8000000"
         android:visibility="invisible">
 
         <VideoView
@@ -149,10 +149,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/article_pre_videoview"
-            android:layout_marginBottom="@dimen/dp_8"
+            android:layout_marginBottom="@dimen/dp_5"
             android:layout_centerHorizontal="true"
             android:text="轻触选择"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_14"
             android:textColor="@color/c_white_text"/>
 
     </RelativeLayout>
