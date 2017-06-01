@@ -96,7 +96,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                int space = getResources().getDimensionPixelSize(R.dimen.dp_3);
+                int space = getResources().getDimensionPixelSize(R.dimen.dp_1_5);
                 outRect.left = space;
                 outRect.top = space;
                 outRect.right = space;
