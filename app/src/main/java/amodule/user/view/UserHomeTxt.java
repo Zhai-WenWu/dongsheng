@@ -90,6 +90,7 @@ public class UserHomeTxt extends TabContentView {
 		loadManager = mAct.loadManager;
 		mEmptyView = (LinearLayout) view.findViewById(R.id.empty);
 		mGotoBtn = (Button) mEmptyView.findViewById(R.id.goto_btn);
+		mGotoBtn.setText("写文章");
 		mGotoBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -106,9 +107,9 @@ public class UserHomeTxt extends TabContentView {
 		adapter.isAnimate = true;
 		adapter.setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
 			@Override
-			public void onItemClick(Map<String, String> dataMap) {
+			public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
 				if (mOnItemClickListener != null)
-					mOnItemClickListener.onItemClick(dataMap);
+					mOnItemClickListener.onItemClick(itemView, dataMap);
 			}
 		});
 	}
@@ -181,6 +182,7 @@ public class UserHomeTxt extends TabContentView {
                 public void run() {
                     UploadArticleSQLite articleSQLite = new UploadArticleSQLite(mAct);
                     ArrayList<UploadArticleData> articleDatas = articleSQLite.getAllUploadIngData();
+
                     if (articleDatas != null && articleDatas.size() > 0) {
                         for (UploadArticleData articleData : articleDatas) {
                             if (articleData != null) {
@@ -196,8 +198,10 @@ public class UserHomeTxt extends TabContentView {
                                 String videoUrl = articleData.getVideoUrl();
                                 String videoImgUrl = articleData.getVideoImgUrl();
                                 String uploadType = articleData.getUploadType();
-//								String hasUploadPage = articleData.getUploadPage();
-//								data.put("hasUploadPage", hasUploadPage);
+								int id  = articleData.getId();
+								boolean hasMedia = articleSQLite.checkHasMedia(id);
+								data.put("hasMedia", hasMedia ? "2" : "1");
+								data.put("id", String.valueOf(id));
                                 data.put("code", code);
                                 data.put("title", title);
                                 data.put("classCode", classCode);

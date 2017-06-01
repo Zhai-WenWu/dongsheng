@@ -2,17 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 style="@style/layout">
 
-    <include
-        android:id="@+id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/user_home_emptyview" />
-
     <acore.widget.DownRefreshList
         android:id="@+id/list_myself_subject"
         style="@style/listNoDivider"
         android:background="@android:color/transparent"
         android:paddingLeft="0dp"
         android:paddingRight="0dp" />
+
+    <include
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_150"
+        layout="@layout/user_home_emptyview" />
 
 </RelativeLayout>

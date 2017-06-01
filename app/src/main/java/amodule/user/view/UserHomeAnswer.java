@@ -103,9 +103,9 @@ public class UserHomeAnswer extends TabContentView {
 		adapter.isAnimate = true;
 		adapter.setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
 			@Override
-			public void onItemClick(Map<String, String> dataMap) {
+			public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
 				if (mOnItemClickListener != null)
-					mOnItemClickListener.onItemClick(dataMap);
+					mOnItemClickListener.onItemClick(itemView, dataMap);
 			}
 		});
 	}

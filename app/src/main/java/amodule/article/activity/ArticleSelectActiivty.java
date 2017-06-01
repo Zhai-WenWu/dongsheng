@@ -134,7 +134,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         uploadArticleData.setIsOriginal(isCheck);
         uploadArticleData.setRepAddress(String.valueOf(reprintLink.getText()));
         sqLite.update(draftId,uploadArticleData);
-        if(sqLite.checkHasMidea(draftId)) {
+        if(sqLite.checkHasMedia(draftId)) {
             Intent intent = new Intent(this, ArticleUploadListActivity.class);
             intent.putExtra("draftId", draftId);
             intent.putExtra("dataType", dataType);

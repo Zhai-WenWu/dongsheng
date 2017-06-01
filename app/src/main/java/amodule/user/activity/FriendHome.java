@@ -30,6 +30,9 @@ import acore.widget.LayoutScroll;
 import acore.widget.TextViewLimitLine;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ArticleUploadListActivity;
+import amodule.article.activity.VideoDetailActivity;
+import amodule.article.db.UploadArticleData;
+import amodule.article.db.UploadArticleSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
@@ -275,8 +278,8 @@ public class FriendHome extends BaseActivity {
 						tabContentView = new UserHomeVideo(this, userCode);
 						((UserHomeVideo)tabContentView).setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
 							@Override
-							public void onItemClick(Map<String, String> dataMap) {
-								onItemClickListener(dataMap);
+							public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
+								onItemClickListener(itemView, dataMap, "1");
 							}
 						});
 						break;
@@ -284,8 +287,8 @@ public class FriendHome extends BaseActivity {
 						tabContentView = new UserHomeTxt(this, userCode);
 						((UserHomeTxt)tabContentView).setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
 							@Override
-							public void onItemClick(Map<String, String> dataMap) {
-								onItemClickListener(dataMap);
+							public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
+								onItemClickListener(itemView, dataMap, "2");
 							}
 						});
 						break;
@@ -293,8 +296,8 @@ public class FriendHome extends BaseActivity {
 						tabContentView = new UserHomeAnswer(this, userCode);
 						((UserHomeAnswer)tabContentView).setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
 							@Override
-							public void onItemClick(Map<String, String> dataMap) {
-								onItemClickListener(dataMap);
+							public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
+								onItemClickListener(itemView, dataMap, "3");
 							}
 						});
 						break;
@@ -330,30 +333,49 @@ public class FriendHome extends BaseActivity {
 		};
 	}
 
-	private void onItemClickListener(Map<String, String> dataMap) {
-		if (dataMap == null || dataMap.size() < 1)
+	private void onItemClickListener(final UserHomeItem itemView, final Map<String, String> dataMap, String listType) {
+		if (dataMap == null || dataMap.size() < 1 || itemView == null)
 			return;
 		String dataFrom = dataMap.get("dataFrom");
 		if ("1".equals(dataFrom)) {//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
 			String uploadType = dataMap.get("uploadType");
-			String hasUploadPage = dataMap.get("hasUploadPage");
+			String hasMedia = dataMap.get("hasMedia");
 			Map<String, String> tabMap = mTabContentViews.get(tabIndex).getDataMap();
 			if (tabMap != null && tabMap.size() > 0) {
 				String type = tabMap.get("type");
 				switch (type) {
 					case "2"://文章列表
-						if ("2".equals(hasUploadPage)) {
+						if ("2".equals(hasMedia)) {
 							Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
 							FriendHome.this.startActivity(intent);
 							return;
 						} else if (UploadDishData.UPLOAD_FAIL.equals(uploadType)) {
-							//TODO 通知重新上传
-							return;
-						}
-						break;
-					case "1"://视频列表
-						if (UploadDishData.UPLOAD_FAIL.equals(uploadType)) {
-							//TODO 通知重新上传
+							String id = dataMap.get("id");
+							if (!TextUtils.isEmpty(id)) {
+								final UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
+								final UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(id));
+								if (articleData != null) {
+									dataMap.put("uploadType", UploadDishData.UPLOAD_ING);
+									itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_ING);
+									articleData.setUploadType(UploadDishData.UPLOAD_ING);
+									articleSQLite.update(articleData.getId(), articleData);
+									articleData.upload(StringManager.api_articleAdd, new InternetCallback(this) {
+										@Override
+										public void loaded(int i, String s, Object o) {
+											if (i > UtilInternet.REQ_OK_STRING) {
+												dataMap.put("uploadType", UploadDishData.UPLOAD_SUCCESS);
+												itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_SUCCESS);
+												articleData.setUploadType(UploadDishData.UPLOAD_SUCCESS);
+											} else {
+												dataMap.put("uploadType", UploadDishData.UPLOAD_FAIL);
+												itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_FAIL);
+												articleData.setUploadType(UploadDishData.UPLOAD_FAIL);
+											}
+											articleSQLite.update(articleData.getId(), articleData);
+										}
+									});
+								}
+							}
 							return;
 						}
 						break;
@@ -362,10 +384,22 @@ public class FriendHome extends BaseActivity {
 		} else {
 			String code = dataMap.get("code");
 			if (!TextUtils.isEmpty(code)) {
-				Intent intent = new Intent(this, ArticleDetailActivity.class);
+				Intent intent = new Intent();
 				Bundle bundle = new Bundle();
 				bundle.putString("code", code);
 				intent.putExtras(bundle);
+				Class c = null;
+				switch (listType) {
+					case "1"://视频
+						c = VideoDetailActivity.class;
+						break;
+					case "2"://文章
+						c = ArticleDetailActivity.class;
+						break;
+				}
+				if (c == null)
+					return;
+				intent.setClass(this, c);
 				startActivity(intent);
 			}
 		}
