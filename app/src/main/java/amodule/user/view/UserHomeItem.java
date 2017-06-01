@@ -198,12 +198,16 @@ public class UserHomeItem extends BaseItemView {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Map<String, String> dataMap);
+        void onItemClick(UserHomeItem itemView, Map<String, String> dataMap);
     }
 
     protected OnItemClickListener mOnItemClickListener;
     public void setOnItemClickListener(OnItemClickListener clickListener) {
         mOnItemClickListener = clickListener;
+    }
+
+    public void notifyUploadStatusChanged(String uploadType) {
+
     }
 
 }

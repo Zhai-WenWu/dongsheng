@@ -210,6 +210,7 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
     @Override
     protected void resetData() {
         super.resetData();
+        mUploadType = "";
     }
 
     @Override
@@ -243,9 +244,34 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (!TextUtils.isEmpty(mUploadType) && UploadDishData.UPLOAD_FAIL.equals(mUploadType))
-            mStatusInfo.setText("上传中...");
         if (mOnItemClickListener != null)
-            mOnItemClickListener.onItemClick(mDataMap);
+            mOnItemClickListener.onItemClick((UserHomeItem)v, mDataMap);
+    }
+
+    @Override
+    public void notifyUploadStatusChanged(String uploadType) {
+        if (!TextUtils.isEmpty(uploadType) && !mUploadType.equals(uploadType)) {
+            mUploadType = uploadType;
+            String statusInfo = "";
+            if (mStatusInfo != null && mStatusInfo.getVisibility() == View.VISIBLE) {
+                switch (mUploadType) {
+                    case UploadDishData.UPLOAD_FAIL:
+                        statusInfo = "上传失败，请重试";
+                        mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
+                        break;
+                    case UploadDishData.UPLOAD_PAUSE:
+                        statusInfo = "暂停上传";
+                        mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
+                        break;
+                    case UploadDishData.UPLOAD_ING:
+                        statusInfo = "上传中...";
+                        mStatusInfo.setTextColor(Color.parseColor("#00c847"));
+                        break;
+                }
+                if (!TextUtils.isEmpty(statusInfo)) {
+                    mStatusInfo.setText(statusInfo);
+                }
+            }
+        }
     }
 }

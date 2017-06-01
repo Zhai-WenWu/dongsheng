@@ -264,7 +264,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         return i > 0;
     }
 
-    public boolean checkHasMidea(int id){
+    public boolean checkHasMedia(int id){
         Cursor cur = null;
         SQLiteDatabase readableDatabase = null;
         try {

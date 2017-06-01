@@ -40,12 +40,13 @@ public class ReportActivity extends BaseActivity {
     private TextView mName;
     private Button mCommitBtn;
 
-    private String mUserCode;
-    private String mCode;
-    private String mType;
-    private String mCommendId;
-    private String mReplayId;
-    private String mReportName;
+    private String mUserCode = "";
+    private String mCode = "";
+    private String mType = "";
+    private String mCommendId = "";
+    private String mReplayId = "";
+    private String mReportName = "";
+    private String mReportContent = "";
 
     private boolean mFlag;
 
@@ -60,6 +61,7 @@ public class ReportActivity extends BaseActivity {
         mReportName = intent.getStringExtra("reportName");//被举报人的名字
         mCommendId = intent.getStringExtra("commendId");
         mReplayId = intent.getStringExtra("replayId");
+        mReportContent = intent.getStringExtra("reportContent");
         initView();
         addListener();
 
@@ -245,8 +247,15 @@ public class ReportActivity extends BaseActivity {
             return;
         }
         mCommitBtn.setClickable(false);
-        String url = StringManager.API_COMMIT_REPORT + "?type=" + mType + "&code=" + mCode + "&commendId=" + mCommendId + "&replayId=" + mReplayId
-                + "&reportUcode=" + mUserCode + "&reasonId=" + mLastSelectedReportChild.getKey() + "&operationId=" + (mLastSelectedAdminChild == null ? "" : mLastSelectedAdminChild.getKey());
+        String url = StringManager.API_COMMIT_REPORT
+                + "?type=" + mType
+                + "&code=" + mCode
+                + "&commendId=" + mCommendId
+                + "&replayId=" + mReplayId
+                + "&reportUcode=" + mUserCode
+                + "&reasonId=" + mLastSelectedReportChild.getKey()
+                + "&operationId=" + (mLastSelectedAdminChild == null ? "" : mLastSelectedAdminChild.getKey())
+                + "&reportContent=" + mReportContent;
         ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {

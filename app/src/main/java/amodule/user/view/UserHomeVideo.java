@@ -89,6 +89,7 @@ public class UserHomeVideo extends TabContentView {
         loadManager = mAct.loadManager;
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty);
         mGotoBtn = (Button) mEmptyView.findViewById(R.id.goto_btn);
+        mGotoBtn.setText("发视频");
         mGotoBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,9 +106,9 @@ public class UserHomeVideo extends TabContentView {
         adapter.isAnimate = true;
         adapter.setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
             @Override
-            public void onItemClick(Map<String, String> dataMap) {
+            public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
                 if (mOnItemClickListener != null)
-                    mOnItemClickListener.onItemClick(dataMap);
+                    mOnItemClickListener.onItemClick(itemView, dataMap);
             }
         });
     }
@@ -195,6 +196,8 @@ public class UserHomeVideo extends TabContentView {
                                 String videoUrl = articleData.getVideoUrl();
                                 String videoImgUrl = articleData.getVideoImgUrl();
                                 String uploadType = articleData.getUploadType();
+                                int id = articleData.getId();
+                                data.put("id", String.valueOf(id));
                                 data.put("code", code);
                                 data.put("title", title);
                                 data.put("classCode", classCode);

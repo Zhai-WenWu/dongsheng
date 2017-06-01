@@ -47,9 +47,9 @@ public class AdapterUserAnswer extends AdapterSimple {
             if (itemView != null)
                 itemView.setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
                     @Override
-                    public void onItemClick(Map<String, String> dataMap) {
+                    public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
                         if (mOnItemClickListener != null)
-                            mOnItemClickListener.onItemClick(dataMap);
+                            mOnItemClickListener.onItemClick(itemView, dataMap);
                     }
                 });
         }
