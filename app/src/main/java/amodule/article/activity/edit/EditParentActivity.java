@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,6 +64,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     private EditBottomControler editBottomControler;
     private TextAndImageMixLayout mixLayout;
+    private LinearLayout contentLayout;
 
     protected UploadParentSQLite sqLite;
 
@@ -115,6 +117,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         ImageView close = (ImageView) findViewById(R.id.leftImgBtn);
         close.setImageResource(R.drawable.i_close);
         close.setOnClickListener(this);
+
+        contentLayout = (LinearLayout) findViewById(R.id.content_layout);
 
         SpannableString ss = new SpannableString("标题（64字以内）");
         int titleSize = Tools.getDimen(this, R.dimen.dp_25);
@@ -202,8 +206,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         ToolsDevice.keyboardControl(!isKeyboradShow, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                     }
                 });
+        final int dp_45 = Tools.getDimen(this,R.dimen.dp_45);
         editBottomControler.setOnTextEidtCallback(
-                new EditBottomControler.OnTextEidtCallback() {
+                new EditBottomControler.OnTextEditCallback() {
+                    @Override public void onEditControlerShow(boolean isShow){
+                        contentLayout.setPadding(0 , 0 , 0 , isShow ? dp_45 * 2 : dp_45);
+                    }
                     @Override public void onTextBold() {
                         mixLayout.setupTextBold();
                     }
@@ -364,8 +372,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     @Override
     protected void onPause() {
         super.onPause();
-        timer.cancel();
-        timer = null;
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
     }
 
     @Override

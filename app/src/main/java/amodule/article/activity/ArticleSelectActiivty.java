@@ -125,19 +125,6 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 }
             }
         });
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Map<String,String> map;
-//                for(int i = 1; i < 5; i ++){
-//                    map = new HashMap<String, String>();
-//                    map.put("code","2332");
-//                    map.put("name","健康+" + i);
-//                    data.add(map);
-//                }
-//            }
-//        },500);
     }
 
     private void upload(){

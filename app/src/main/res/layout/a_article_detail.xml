@@ -29,6 +29,7 @@
         android:background="#fffffe"
         android:divider="@android:color/transparent"
         android:layout_marginBottom="@dimen/dp_50"
+        android:overScrollMode="never"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
         android:paddingLeft="0dp"

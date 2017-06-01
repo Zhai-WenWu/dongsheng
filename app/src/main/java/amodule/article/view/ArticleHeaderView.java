@@ -95,7 +95,11 @@ public class ArticleHeaderView extends ItemBaseView {
             } else user_name.setVisibility(GONE);
             if (mapUser.containsKey("info") && !TextUtils.isEmpty(mapUser.get("info"))) {
                 user_about.setVisibility(VISIBLE);
-                user_about.setText(mapUser.get("info"));
+                String info = mapUser.get("info");
+                if(info.length() > 16){
+                    info = info.substring(0,16) + "...";
+                }
+                user_about.setText(info);
             } else user_about.setVisibility(GONE);
 
             setMapFollowSate();

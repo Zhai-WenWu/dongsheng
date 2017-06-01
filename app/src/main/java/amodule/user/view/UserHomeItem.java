@@ -7,9 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -17,11 +14,9 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.tools.FileManager;
-import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.view.item.BaseItemView;
 import amodule.main.view.item.HomeItem;
@@ -44,11 +39,6 @@ public class UserHomeItem extends BaseItemView {
     private String mImgLevel = FileManager.save_cache; // 图片保存等级
     private ImageView.ScaleType mScaleType = ImageView.ScaleType.CENTER_CROP;
     private boolean mIsAnimate = false;// 控制图片渐渐显示
-
-    protected String mItemType1 = "1";//视频
-    protected String mItemType2 = "2";//文章
-    protected String mItemType3 = "3";//问答
-
 
     protected AdControlParent mAdControlParent;
     private View mLineTop;
@@ -207,8 +197,13 @@ public class UserHomeItem extends BaseItemView {
         loadImage(url, view);
     }
 
-    public interface DeleteCallback {
-        void delete(int position);
+    public interface OnItemClickListener {
+        void onItemClick(Map<String, String> dataMap);
+    }
+
+    protected OnItemClickListener mOnItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener clickListener) {
+        mOnItemClickListener = clickListener;
     }
 
 }

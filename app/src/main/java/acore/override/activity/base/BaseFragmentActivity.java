@@ -194,6 +194,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		mActMagager.onDestroy();
         if(Util.isOnMainThread()) {
             Glide.get(XHApplication.in()).clearMemory();
             LogManager.print("d", "***********Glide is already clearMemory...");

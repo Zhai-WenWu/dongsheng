@@ -102,4 +102,10 @@ public class MallOrderBaseActivity extends FragmentActivity{
 		super.finish();
 		overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mActMagager.onDestroy();
+	}
 }

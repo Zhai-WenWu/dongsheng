@@ -22,7 +22,7 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
     private OnSelectVideoCallback mOnSelectVideoCallback;
     private OnKeyboardControlCallback mOnKeyboardControlCallback;
     private OnAddLinkCallback mOnAddLinkCallback;
-    private OnTextEidtCallback mOnTextEidtCallback;
+    private OnTextEditCallback mOnTextEidtCallback;
 
     public EditBottomControler(Context context) {
         this(context, null);
@@ -71,6 +71,9 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
             case R.id.edit_text:
                 boolean isVisibility = textEditlayout.getVisibility() == View.VISIBLE;
                 textEditlayout.setVisibility(isVisibility ? View.GONE : View.VISIBLE);
+                if (null != mOnTextEidtCallback) {
+                    mOnTextEidtCallback.onEditControlerShow(textEditlayout.getVisibility() == View.VISIBLE);
+                }
                 break;
             //添加链接
             case R.id.add_link:
@@ -124,12 +127,13 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
 
     public void setOnKeyboardControlCallback(OnKeyboardControlCallback callback) {
         this.mOnKeyboardControlCallback = callback;
-        findViewById(R.id.edit_text).setVisibility(null != mOnKeyboardControlCallback ? View.VISIBLE : View.GONE);
+        findViewById(R.id.keyboard_control).setVisibility(null != mOnKeyboardControlCallback ? View.VISIBLE : View.GONE);
+
     }
 
-    public void setOnTextEidtCallback(OnTextEidtCallback callback) {
+    public void setOnTextEidtCallback(OnTextEditCallback callback) {
         this.mOnTextEidtCallback = callback;
-        findViewById(R.id.keyboard_control).setVisibility(null != mOnTextEidtCallback ? View.VISIBLE : View.GONE);
+        findViewById(R.id.edit_text).setVisibility(null != mOnTextEidtCallback ? View.VISIBLE : View.GONE);
     }
 
     public interface OnSelectImageCallback {
@@ -148,7 +152,9 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
         public void onKeyboardControlSwitch();
     }
 
-    public interface OnTextEidtCallback {
+    public interface OnTextEditCallback {
+        public void onEditControlerShow(boolean isShow);
+
         public void onTextBold();
 
         public void onTextUnderLine();

@@ -3,8 +3,6 @@ package amodule.user.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.xiangha.R;
-
 import java.util.Map;
 
 /**
@@ -31,8 +29,6 @@ public class UserHomeVideoItem extends UserHomeTxtItem {
 
     @Override
     public void setData(Map<String, String> dataMap, int position) {
-        if (dataMap != null)
-            dataMap.put("itemType", mItemType1);
         super.setData(dataMap, position);
     }
 
@@ -51,4 +47,5 @@ public class UserHomeVideoItem extends UserHomeTxtItem {
     protected void resetView() {
         super.resetView();
     }
+
 }
