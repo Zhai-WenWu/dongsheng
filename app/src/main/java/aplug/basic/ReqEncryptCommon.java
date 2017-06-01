@@ -134,6 +134,26 @@ public class ReqEncryptCommon {
             return "";
         }
     }
+    public String getData(Map<String,String> params)  {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            if(params!=null){
+                for (Map.Entry<String, String> entry : params.entrySet()) {
+                    jsonObject.put(entry.getKey(),entry.getValue());
+                }
+            }
+            jsonObject.put("sign",sign);
+            GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
+            GY=GY.replace("-----END PUBLIC KEY-----","");
+            byte[] data=jsonObject.toString().getBytes();
+
+            return RSAUtils.encryptByPublicKey(data,GY);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+    }
 
     public String getGY() {
         return GY;
