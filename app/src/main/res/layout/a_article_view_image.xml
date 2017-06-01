@@ -11,7 +11,17 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:src="@drawable/i_nopic"
         android:minHeight="@dimen/dp_160"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/image_gif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/i_nopic"
+        android:minHeight="@dimen/dp_160"
+        android:visibility="gone"
         android:scaleType="centerCrop"/>
 
     <ImageButton
@@ -22,5 +32,22 @@
         android:layout_alignRight="@+id/image"
         android:layout_margin="@dimen/dp_6"
         android:background="@drawable/z_common_post_imag_del"/>
+
+    <ImageView
+        android:id="@+id/load_progress"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/dp_11"
+        android:layout_marginTop="@dimen/dp_6"
+        android:visibility="gone"
+        android:src="@drawable/image_progress"/>
+
+    <ImageView
+        android:id="@+id/dish_step_gif_hint"
+        android:layout_width="@dimen/dp_54"
+        android:layout_height="@dimen/dp_22"
+        android:src="@drawable/i_dish_detail_gif_hint"
+        android:layout_alignBottom="@+id/image"/>
 
 </RelativeLayout>

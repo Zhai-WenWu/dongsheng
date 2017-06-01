@@ -43,7 +43,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private EditTextView currentEditText = null;
 
-    private boolean isSingleVideo = true;
+    private boolean isSingleVideo = false;
 
     /** 图片集合 */
     //path:url
@@ -324,6 +324,8 @@ public class TextAndImageMixLayout extends LinearLayout
         return arrayList;
     }
 
+    private int maxVideoCount = 1;
+
     /**
      * 添加视频
      *
@@ -331,6 +333,17 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param videoUrl
      */
     public void addVideo(String coverImageUrl, String videoUrl, boolean ifAddText, CharSequence content) {
+        int videoCount = 0;
+        for (int index = 0; index < getChildCount(); index++) {
+            View baseView = getChildAt(index);
+            if (baseView instanceof VideoShowView) {
+                videoCount++;
+            }
+        }
+        if(videoCount > maxVideoCount){
+            Tools.showToast(getContext(),"最多可选择" + maxVideoCount + "视频");
+            return;
+        }
         final int insertIndex = getFoucsIndex() + 1;
         VideoShowView view = null;
         //如果单个视频，则先遍历parent中是否存在
@@ -534,7 +547,7 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
             if (view instanceof EditTextView) {
-                String text = ((EditTextView) view).getOutputData().toString();
+                String text = ((EditTextView) view).getText().toString();
                 if (!TextUtils.isEmpty(text)) {
                     hasText = true;
                     return hasText;
@@ -556,6 +569,18 @@ public class TextAndImageMixLayout extends LinearLayout
                 return (VideoShowView) view;
         }
         return null;
+    }
+
+    public int getTextCount(){
+        StringBuilder sbuilder = new StringBuilder();
+        for (int index = 0; index < getChildCount(); index++) {
+            View view = getChildAt(index);
+            if (view instanceof EditTextView) {
+                String text = ((EditTextView) view).getText().toString();
+                sbuilder.append(text);
+            }
+        }
+        return sbuilder.length();
     }
 
     /** 设置显示单个视频 */
@@ -586,5 +611,13 @@ public class TextAndImageMixLayout extends LinearLayout
         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_TYPE, VideoFullScreenActivity.LOCAL_VIDEO);
         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, url);
         getContext().startActivity(intent);
+    }
+
+    public int getMaxVideoCount() {
+        return maxVideoCount;
+    }
+
+    public void setMaxVideoCount(int maxVideoCount) {
+        this.maxVideoCount = maxVideoCount;
     }
 }

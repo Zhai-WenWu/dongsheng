@@ -159,6 +159,17 @@ public class LoadManager {
 		setLoading(clicker);
 	}
 
+	public void setLoading(ListView list, ListAdapter adapter, boolean hasMore, final View.OnClickListener clicker, AutoLoadMore.OnListScrollListener listScrollListener) {
+		if (list.getAdapter() == null) {
+			if (hasMore) {
+				Button loadMore = mLoadMore.newLoadMoreBtn(list, clicker);
+				AutoLoadMore.setAutoMoreListen(list, loadMore, clicker,listScrollListener);
+			}
+			list.setAdapter(adapter);
+		}
+		setLoading(clicker);
+	}
+
 	/**
 	 * 设置下拉加载的页面加载、重载等按钮，并开始重载
 	 *

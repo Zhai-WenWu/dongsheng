@@ -1,6 +1,7 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -22,10 +23,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -118,6 +121,10 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         if(TextUtils.isEmpty(praiseAPI)){
             return;
         }
+        if(!LoginManager.isLogin()){
+            getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
+            return;
+        }
 
         //发请求
         ReqEncyptInternet.in().doEncypt(praiseAPI, "code=" + code,
@@ -139,6 +146,10 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         String text = editText.getText().toString();
         if (TextUtils.isEmpty(text)) {
             Tools.showToast(getContext(), "内容不能为空");
+            return;
+        }
+        if(!LoginManager.isLogin()){
+            getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }
 
@@ -198,5 +209,9 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     public void setPraiseAPI(String praiseAPI) {
         this.praiseAPI = praiseAPI;
+    }
+
+    public EditText getEditText() {
+        return editText;
     }
 }

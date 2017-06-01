@@ -1,6 +1,7 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -16,10 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
+import amodule.user.activity.login.LoginByAccout;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
 
@@ -57,6 +60,10 @@ public class ArticleHeaderView extends ItemBaseView {
         follow_rela.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!LoginManager.isLogin()){
+                    getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
+                    return;
+                }
 //                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), tongjiId, "用户点击", "头像点击量");
                 if (mapUser != null && !mapUser.isEmpty()) {
                     AppCommon.onAttentionClick(mapUser.get("code"), "follow");

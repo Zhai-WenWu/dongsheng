@@ -5,45 +5,51 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.URLSpan;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sina.sinavideo.sdk.VDVideoViewController;
+import com.sina.sinavideo.sdk.utils.VDPlayPauseHelper;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.view.ArticleCommentBar;
 import amodule.article.view.ArticleHeaderView;
-import amodule.article.view.CommodityItemView;
-import amodule.article.view.DishItemView;
-import amodule.article.view.ImageShowView;
 import amodule.article.view.VideoShowView;
-import amodule.article.view.richtext.RichParser;
-import amodule.article.view.richtext.RichURLSpan;
 import amodule.comment.activity.CommentActivity;
 import amodule.comment.view.ViewCommentItem;
+import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.share.BarShare;
 
+import static amodule.article.adapter.ArticleDetailAdapter.Type_caipu;
+import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
+import static amodule.article.adapter.ArticleDetailAdapter.Type_ds;
+import static amodule.article.adapter.ArticleDetailAdapter.Type_gif;
+import static amodule.article.adapter.ArticleDetailAdapter.Type_image;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
+import static amodule.article.adapter.ArticleDetailAdapter.Type_text;
+import static amodule.article.adapter.ArticleDetailAdapter.Type_video;
 
 /**
  * 文章详情
@@ -57,11 +63,10 @@ public class ArticleDetailActivity extends BaseActivity {
     private ArticleDetailAdapter detailAdapter;
     private ArrayList<Map<String, String>> otherListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
     private ArticleCommentBar mArticleCommentBar;
-    private VideoShowView videoShowView;
     private boolean isKeyboradShow = false;
     private ListView listview;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;//头部view
-    private TextView title;
+    private int mHeaderCount;
 
     private String commentNum;
 
@@ -73,40 +78,11 @@ public class ArticleDetailActivity extends BaseActivity {
             code = bundle.getString("code");
         }
         //TODO 测试
-        code = "175";
+        code = "520";
         init();
     }
 
     //**********************************************Activity生命周期方法**************************************************
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (videoShowView != null) {
-            videoShowView.onResume();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (videoShowView != null) {
-            videoShowView.onPause();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (videoShowView != null) {
-            videoShowView.onDestroy();
-        }
-    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -158,10 +134,28 @@ public class ArticleDetailActivity extends BaseActivity {
                 barShare.openShare();
             }
         });
-        TextView title = (TextView) findViewById(R.id.title);
+        findViewById(R.id.back).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
         listview = (ListView) findViewById(R.id.listview);
+        listview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
+                        break;
+                }
+                return false;
+            }
+        });
         initHeaderView();
         listview.addHeaderView(layout);
+        mHeaderCount++;
         mArticleCommentBar = (ArticleCommentBar) findViewById(R.id.acticle_comment_bar);
 
         mArticleCommentBar.setCode(code);
@@ -191,6 +185,7 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutOne);
         layout.addView(linearLayoutTwo);
         layout.addView(linearLayoutThree);
+
     }
 
     /** 数据初始化 **/
@@ -199,13 +194,40 @@ public class ArticleDetailActivity extends BaseActivity {
             Tools.showToast(this, "当前数据错误，请重新请求");
             return;
         }
-        detailAdapter = new ArticleDetailAdapter(otherListMap);
+        detailAdapter = new ArticleDetailAdapter(otherListMap, getType(), code);
+        detailAdapter.setVideoClickCallBack(new VideoShowView.VideoClickCallBack() {
+            @Override
+            public void videoOnClick(int position) {
+                int firstVisiPosi = listview.getFirstVisiblePosition();
+                View parentView = listview.getChildAt(position - firstVisiPosi + mHeaderCount);
+                setVideoLayout(parentView, position);
+            }
+        });
         loadManager.setLoading(listview, detailAdapter, true,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (page >= 1) {
                             requestRelateData();
+                        }
+                    }
+                }, new AutoLoadMore.OnListScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+                        stopVideo();
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        isScrollData = true;
+                        if (scrollDataIndex < (firstVisibleItem + visibleItemCount - 1)) {
+                            scrollDataIndex = (firstVisibleItem + visibleItemCount - 1);
+                        }
+                        if (mPlayPosition != -1) {
+                            //正在播放的视频滑出屏幕
+                            if ((mPlayPosition + mHeaderCount) < firstVisibleItem || (mPlayPosition + mHeaderCount) > (firstVisibleItem + visibleItemCount - 1)) {
+                                stopVideo();
+                            }
                         }
                     }
                 });
@@ -260,78 +282,41 @@ public class ArticleDetailActivity extends BaseActivity {
      * @param content
      */
     private void analysArticleContent(String content) {
-        int dp_20 = Tools.getDimen(this, R.dimen.dp_20);
         if (TextUtils.isEmpty(content)) return;
         ArrayList<Map<String, String>> listContent = StringManager.getListMapByJson(content);
         int size = listContent.size();
         if (size > 0) linearLayoutTwo.setVisibility(View.VISIBLE);
         for (int i = 0; i < size; i++) {
-            String type = listContent.get(i).get("type");
+            Map<String, String> map = listContent.get(i);
+            String type = map.get("type");
             if ("text".equals(type)) {//文章
-                String html = listContent.get(i).get("html");
-                if (!TextUtils.isEmpty(html)) {
-                    TextView textView = new TextView(this);
-                    textView.setPadding(dp_20, 0, dp_20, 0);
-                    SpannableStringBuilder builder = new SpannableStringBuilder();
-                    builder.append(RichParser.fromHtml(html));
-                    URLSpan[] urlSpans = builder.getSpans(0, builder.length(), URLSpan.class);
-                    for (URLSpan span : urlSpans) {
-                        int spanStart = builder.getSpanStart(span);
-                        int spanEnd = builder.getSpanEnd(span);
-                        builder.removeSpan(span);
-                        builder.setSpan(new RichURLSpan(span.getURL(), Color.parseColor("#0872dd"), false), spanStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-                    textView.setText(builder);
-                    linearLayoutTwo.addView(textView);
-                }
+                map.put("datatype", String.valueOf(Type_text));
+                otherListMap.add(map);
             } else if ("image".equals(type) || "gif".equals(type)) {//图片
-                String imageUrl = listContent.get(i).get("gif".equals(type) ? "gifurl" : "imageurl");
-                if (!TextUtils.isEmpty(imageUrl)) {
-                    ImageShowView imageShowView = new ImageShowView(this);
-                    imageShowView.setEnableEdit(false);
-                    imageShowView.showImage(imageUrl,type);
-                    linearLayoutTwo.addView(imageShowView);
-                }
+                String imageUrl = map.get("gif".equals(type) ? "gifurl" : "imageurl");
+                map.put("datatype", String.valueOf("gif".equals(type) ? Type_gif : Type_image));
+                map.put("imageUrl", imageUrl);
+                otherListMap.add(map);
             } else if ("video".equals(type)) {//视频
-                Map<String,String> videoMap = StringManager.getFirstMap(listContent.get(i).get("video"));
+                Map<String, String> videoMap = StringManager.getFirstMap(map.get("video"));
                 String videoUrl = videoMap.get("url");
-                String videoimageurl = videoMap.get("videoImg");
-                if (!TextUtils.isEmpty(videoUrl) && !TextUtils.isEmpty(videoimageurl)) {
-                    videoShowView = new VideoShowView(this);
-                    videoShowView.setVideoData(videoimageurl, videoUrl);
-                    linearLayoutTwo.addView(videoShowView);
-                }
-
+                String videoImageUrl = videoMap.get("videoImg");
+                map.put("datatype", String.valueOf(Type_video));
+                map.put("videoUrl", videoUrl);
+                map.put("videoImageUrl", videoImageUrl);
+                otherListMap.add(map);
             } else if ("xiangha".equals(type)) {//自定义演示。ds，电商，caipu，菜谱
-                String json = listContent.get(i).get("json");
+                String json = map.get("json");
                 if (!TextUtils.isEmpty(json)) {
                     final Map<String, String> jsonMap = StringManager.getFirstMap(json);
                     if (jsonMap.containsKey("type") && !TextUtils.isEmpty(jsonMap.get("type"))) {
                         String datatype = jsonMap.get("type");
                         if ("ds".equals(datatype)) {
-                            CommodityItemView commodityItemView = new CommodityItemView(this);
-                            commodityItemView.setData(jsonMap);
-                            commodityItemView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if(!TextUtils.isEmpty(jsonMap.get("url"))){
-                                        AppCommon.openUrl(ArticleDetailActivity.this,jsonMap.get("url"),true);
-                                    }
-                                }
-                            });
-                            linearLayoutTwo.addView(commodityItemView);
+                            jsonMap.put("datatype", String.valueOf(Type_ds));
+                            otherListMap.add(jsonMap);
                         } else if ("caipu".equals(datatype)) {
-                            DishItemView dishItemView = new DishItemView(this);
-                            dishItemView.setData(jsonMap);
-                            dishItemView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if(!TextUtils.isEmpty(jsonMap.get("url"))){
-                                        AppCommon.openUrl(ArticleDetailActivity.this,jsonMap.get("url"),true);
-                                    }
-                                }
-                            });
-                            linearLayoutTwo.addView(dishItemView);
+                            jsonMap.put("datatype", String.valueOf(Type_caipu));
+                            otherListMap.add(jsonMap);
                         }
                     }
                 }
@@ -345,115 +330,22 @@ public class ArticleDetailActivity extends BaseActivity {
      */
     private void requestForumData() {
         String url = StringManager.api_forumList;
-        String param = "type="+getType()+"&code=" + code + "&page=1&pagesize=3";
+        String param = "type=" + getType() + "&code=" + code + "&page=1&pagesize=3";
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
-                    analysForumData(listMap);
+                    Map<String, String> map = new HashMap<>();
+                    map.put("datatype", String.valueOf(Type_comment));
+                    map.put("data", object.toString());
+                    map.put("commentNum", commentNum);
+                    otherListMap.add(map);
                 } else {
                     toastFaildRes(flag, true, object);
                 }
                 requestRelateData();
             }
         });
-    }
-
-    private void analysForumData(@NonNull ArrayList<Map<String, String>> arrayFourm) {
-        if (arrayFourm.isEmpty()) return;
-        addLineView();
-        int dp_20 = Tools.getDimen(this, R.dimen.dp_20);
-        TextView textView = new TextView(this);
-        textView.setTextColor(Color.parseColor("#535353"));
-        textView.setPadding(dp_20, 0, dp_20, 0);
-        textView.setText("评论(" + commentNum + ")");
-        linearLayoutThree.addView(textView);
-        for (final Map<String, String> map : arrayFourm) {
-            final ViewCommentItem commentItem = new ViewCommentItem(this);
-            commentItem.setData(map);
-            commentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
-                @Override
-                public void onShowAllReplayClick(String comment_id) {
-                    StringBuilder sbuild = new StringBuilder();
-                    sbuild.append("type=").append(getType()).append("&")
-                            .append("code=").append(code).append("&")
-                            .append("commentId=").append(comment_id).append("&")
-                            .append("pagesize=").append(Integer.parseInt(map.get("replay_num")) + 3).append("&");
-
-                    ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, sbuild.toString(),
-                            new InternetCallback(ArticleDetailActivity.this) {
-                                @Override
-                                public void loaded(int flag, String url, Object obj) {
-                                    if (flag >= -ReqEncyptInternet.REQ_OK_STRING) {
-                                        commentItem.addReplayView((String) obj);
-                                    }
-                                }
-                            });
-                }
-
-                @Override
-                public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name) {
-
-                }
-
-                @Override
-                public void onDeleteCommentClick(String comment_id) {
-
-                }
-
-                @Override
-                public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name) {
-
-                }
-
-                @Override
-                public void onDeleteReplayClick(String comment_id, String replay_id) {
-
-                }
-
-                @Override
-                public void onPraiseClick(String comment_id) {
-                    Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
-                    intent.putExtra("type", getType());
-                    intent.putExtra("code", code);
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name) {
-                    Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
-                    intent.putExtra("type", getType());
-                    intent.putExtra("code", code);
-                    startActivity(intent);
-                }
-            });
-            linearLayoutThree.addView(commentItem);
-        }
-        //查看所有评论
-        TextView allComment = new TextView(this);
-        allComment.setTextColor(Color.parseColor("#333333"));
-        allComment.setGravity(Gravity.CENTER);
-        allComment.setTextSize(Tools.getDimenSp(this, R.dimen.sp_15));
-        allComment.setText("查看所有评论>");
-        linearLayoutThree.addView(allComment, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_56)));
-        allComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ArticleDetailActivity.this, CommentActivity.class);
-                intent.putExtra("type", getType());
-                intent.putExtra("code", code);
-                startActivity(intent);
-            }
-        });
-        addLineView();
-        linearLayoutThree.setVisibility(View.VISIBLE);
-    }
-
-    private void addLineView() {
-        View view = new View(this);
-        view.setBackgroundResource(R.color.common_bg);
-        linearLayoutThree.addView(view, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_11)));
     }
 
     /**
@@ -490,31 +382,148 @@ public class ArticleDetailActivity extends BaseActivity {
             map.put("clickAll", map.get("clickAll") + "浏览");
             map.put("commentNumber", map.get("commentNumber") + "评论");
         }
+        if (page == 1)
+            ArrayRelate.get(0).put("showheader", "1");
         otherListMap.addAll(ArrayRelate);
 
-        if (otherListMap.size() > 0)
-            otherListMap.get(0).put("showheader", "1");
         detailAdapter.notifyDataSetChanged();
     }
 
-    public String getType(){
+    private VideoImageView mVideoImageView;
+    private RelativeLayout mVideoLayout;
+    /** 正在播放的位置，默认-1，即没有正在播放的 */
+    private int mPlayPosition = -1;
+    private View mPlayParentView = null;
+
+    private VDPlayPauseHelper mVDPlayPauseHelper;
+
+    private boolean isScrollData = false;//是否滚动数据
+    private int scrollDataIndex = -1;//滚动数据的位置
+
+    /**
+     * 处理view,video
+     *
+     * @param parentView
+     * @param position
+     */
+    private void setVideoLayout(final View parentView, final int position) {
+        if (parentView == null || position < 0 || position >= otherListMap.size())
+            return;
+        if (otherListMap.get(position).containsKey("video") && !TextUtils.isEmpty(otherListMap.get(position).get("video"))) {
+            Map<String, String> videoData = StringManager.getFirstMap(otherListMap.get(position).get("video"));
+            if (mVideoImageView == null)
+                mVideoImageView = new VideoImageView(this, false);
+            mVideoImageView.setImageBg(otherListMap.get(position).get("img"));
+            if (videoData != null) {
+                String videoUrl = videoData.get("videoUrl");
+                if (!TextUtils.isEmpty(videoUrl)) {
+                    ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(videoUrl);
+                    if (maps != null && maps.size() > 0) {
+                        String videoD = "";
+                        int width = ToolsDevice.getWindowPx(this).widthPixels;
+                        for (Map<String, String> map : maps) {
+                            if (map != null) {
+                                if (width <= 480 && map.containsKey("D480p")) {
+                                    videoD = map.get("D480p");
+                                } else if (width > 720 && map.containsKey("D1080p")) {
+                                    videoD = map.get("D1080p");
+                                } else if (map.containsKey("D720p")) {
+                                    videoD = map.get("D720p");
+                                }
+                            }
+                        }
+                        mVideoImageView.setVideoData(videoD);
+                    }
+                }
+            }
+            mVideoImageView.setVideoCycle(false);
+            mVideoImageView.setVisibility(View.VISIBLE);
+            if (mVideoLayout != null && mVideoLayout.getChildCount() > 0) {
+                mVideoLayout.removeAllViews();
+            }
+
+            mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_layout);
+            mVideoLayout.addView(mVideoImageView);
+            mVideoImageView.onBegin();
+            mPlayPosition = position;
+            mPlayParentView = parentView;
+            final View resumeView = parentView.findViewById(R.id.video_cover_image_play);
+            mVideoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
+                @Override
+                public void setVideoClick() {
+                    if (resumeView != null)
+                        resumeView.setVisibility(isPlaying() ? View.VISIBLE : View.GONE);
+                    playPause();
+                }
+            });
+        }
+    }
+
+    /**
+     * 暂停播放
+     */
+    public void stopVideo() {
+        if (mVideoImageView != null) {
+            mPlayPosition = -1;
+            if (mPlayParentView != null) {
+                View resumeView = mPlayParentView.findViewById(R.id.resume_img);
+                if (resumeView != null && resumeView.getVisibility() != View.GONE)
+                    resumeView.setVisibility(View.GONE);
+            }
+            mPlayParentView = null;
+            mVideoImageView.onVideoPause();
+            if (mVideoLayout != null)
+                mVideoLayout.removeAllViews();
+        }
+    }
+
+    /**
+     * 重播
+     */
+    private void restartVideo() {
+        VDVideoViewController controller = VDVideoViewController.getInstance(this);
+        if (controller != null) {
+            controller.resume();
+            controller.start();
+        }
+    }
+
+    /**
+     * 播放/暂停
+     */
+    private void playPause() {
+        if (mVDPlayPauseHelper == null)
+            mVDPlayPauseHelper = new VDPlayPauseHelper(this);
+        mVDPlayPauseHelper.doClick();
+    }
+
+    /**
+     * 是否正在播放
+     *
+     * @return
+     */
+    private boolean isPlaying() {
+        return mVideoImageView == null ? false : mVideoImageView.getIsPlaying();
+    }
+
+    public String getType() {
         return TYPE_ARTICLE;
     }
 
-    public String getTitleText(){
+    public String getTitleText() {
         return "文章详情页";
     }
 
-    public String getInfoAPI(){
+    public String getInfoAPI() {
         return StringManager.api_getArticleInfo;
     }
 
-    public String getRelatedAPI(){
+    public String getRelatedAPI() {
         return StringManager.api_getArticleRelated;
     }
 
-    public String getPraiseAPI(){
-        return StringManager.api_likeForum;
+    public String getPraiseAPI() {
+        return StringManager.api_likeArticle;
     }
 
 }

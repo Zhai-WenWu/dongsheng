@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.view.item.HomeRecipeItem;
 import third.video.VideoImagePlayerController;
 
 /**
@@ -33,8 +34,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private boolean enableEdit = false;
     private String coverImageUrl;
     private String videoUrl;
-
-    private VideoImagePlayerController videoPlayerController;
+    private int position;
 
     public VideoShowView(Context context) {
         this(context, null);
@@ -79,20 +79,25 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         return jsonObject;
     }
 
+    public void setVideoDataFromService(String coverImageUrl, String videoUrl,int position){
+        this.position = position;
+        this.coverImageUrl = coverImageUrl;
+        this.videoUrl = videoUrl;
+        Glide.with(getContext())
+                .load(coverImageUrl)
+                .into(coverImage);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                Tools.getDimen(getContext(), R.dimen.dp_200));//
+        videoLayout.setPadding(0, 0, 0, ToolsDevice.dp2px(getContext(), 5));
+        videoLayout.setLayoutParams(params);
+    }
+
     public void setVideoData(String coverImageUrl, String videoUrl) {
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
         Glide.with(getContext())
                 .load(coverImageUrl)
                 .into(coverImage);
-        if(!enableEdit){
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    Tools.getDimen(getContext(), R.dimen.dp_200));//
-            videoLayout.setPadding(0, 0, 0, ToolsDevice.dp2px(getContext(), 5));
-            videoLayout.setLayoutParams(params);
-            videoPlayerController = new VideoImagePlayerController(getContext(), videoLayout, coverImageUrl);
-            videoPlayerController.initVideoView2(videoUrl, "");
-        }
     }
 
     public void setEnableEdit(boolean enable) {
@@ -104,10 +109,10 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.video_cover_image:
-                if(videoPlayerController != null){
+                if(mVideoClickCallBack != null){
+                    mVideoClickCallBack.videoOnClick(position);
                     coverImage.setVisibility(GONE);
                     findViewById(R.id.video_cover_image_play).setVisibility(GONE);
-                    videoPlayerController.setOnClick();
                 }
                 if (null != mOnClickImageListener) {
                     mOnClickImageListener.onClick(v, videoUrl);
@@ -120,36 +125,6 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 break;
         }
     }
-
-    public void onResume() {
-        if (videoPlayerController != null) {
-            videoPlayerController.onResume();
-        }
-    }
-
-    public void onPause() {
-        if (videoPlayerController != null) {
-            videoPlayerController.onPause();
-        }
-    }
-
-    public void onDestroy() {
-        if (videoPlayerController != null) {
-            videoPlayerController.onDestroy();
-        }
-    }
-
-    public void onConfigurationChanged(int requestedOrientation){
-        View view = getChildAt(0);
-        if (view != null && videoPlayerController != null) {
-            videoPlayerController.setIsFullScreen(requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-    }
-
-    public VideoImagePlayerController getVideoPlayerController(){
-        return videoPlayerController;
-    }
-
 
     public String getCoverImageUrl() {
         return coverImageUrl;
@@ -167,4 +142,16 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         this.videoUrl = videoUrl;
     }
 
+    /**
+     * 视频view点击回调
+     */
+    public interface VideoClickCallBack {
+        public void videoOnClick(int position);
+    }
+
+    private VideoClickCallBack mVideoClickCallBack;
+
+    public void setVideoClickCallBack(VideoClickCallBack clickCallBack) {
+        mVideoClickCallBack = clickCallBack;
+    }
 }

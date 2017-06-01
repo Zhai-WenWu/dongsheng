@@ -57,6 +57,8 @@ import xh.windowview.XhDialog;
  */
 public abstract class EditParentActivity extends BaseActivity implements View.OnClickListener {
 
+    public final static int MAX_IMAGE = 50;
+
     private final int REQUEST_SELECT_IMAGE = 0x01;
     private final int REQUEST_SELECT_VIDEO = 0x02;
 
@@ -145,7 +147,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             }
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
-
+        mixLayout.setMaxVideoCount(getMaxVideoCount());
         //初始化底部编辑控制
         initEditBottomControler();
     }
@@ -162,7 +164,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         Intent intent = new Intent(EditParentActivity.this, ImageSelectorActivity.class);
                         intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
                         ArrayList<String> imageArray = mixLayout.getImageArray();
-                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 10 - imageArray.size());
+                        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, getMaxImageCount() - imageArray.size());
                         intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imageArray);
                         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
                     }
@@ -225,6 +227,10 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 });
     }
 
+    protected abstract int getMaxImageCount();
+    protected abstract int getMaxVideoCount();
+    protected abstract int getMaxTextCount();
+
     protected void initData(UploadParentSQLite uploadParentSQLite) {
         sqLite = uploadParentSQLite;
         final Handler handler = new Handler() {
@@ -283,6 +289,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         }
         if (!isHasText) {
             return "内容文字不能为空";
+        }
+        if(mixLayout.getTextCount() > getMaxTextCount()){
+            return "文字不能超过" + getMaxTextCount() + "字";
         }
         return null;
     }

@@ -270,6 +270,8 @@ public class StringManager extends UtilString {
 	public final static String api_getArticleRelated = apiUrl + "Main7/Article/getRelated"; //文章详情中的相关推荐
 	public final static String api_getArticleInfo = apiUrl + "Main7/Article/articleInfo"; //文章详情
 	public final static String api_articleAdd = apiUrl + "Main7/Article/articleAdd"; //发布文章
+	public final static String api_likeArticle = apiUrl + "Main7/Article/likeArticle"; //文章点赞
+	public final static String api_articleDel = apiUrl + "Main7/Article/articleDel"; //删除文章
 
 	/*视频*/
 	public final static String getVideoClass = apiUrl + "Main7/Video/getVideoClass"; //视频分类

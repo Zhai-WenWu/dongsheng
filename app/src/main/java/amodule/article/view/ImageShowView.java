@@ -2,19 +2,31 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import acore.override.helper.XHActivityManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -27,8 +39,12 @@ import xh.basic.tool.UtilImage;
  */
 
 public class ImageShowView extends BaseView implements View.OnClickListener {
+    public static final int TAG_ID = R.string.tag;
     private ImageView showImage;
+    private ImageView showImageGif;
     private ImageView deleteImage;
+    private ImageView loadProgress;
+    private ImageView itemGifHint;
 
     private boolean enableEdit = false;
     private String imageUrl = null;
@@ -54,6 +70,9 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         LayoutInflater.from(getContext()).inflate(R.layout.a_article_view_image, this);
         showImage = (ImageView) findViewById(R.id.image);
         deleteImage = (ImageView) findViewById(R.id.delete_image);
+        showImageGif = (ImageView) findViewById(R.id.image_gif);
+        loadProgress = (ImageView) findViewById(R.id.load_progress);
+        itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
 
         showImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
@@ -101,7 +120,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                     .into(new SubBitmapTarget() {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                            if(bitmap != null){
+                            if (bitmap != null) {
                                 imageWidth = bitmap.getWidth();
                                 imageHieght = bitmap.getHeight();
 
@@ -117,31 +136,133 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         }
     }
 
-    public void showImage(String imageUrl,String type){
-        switch (type){
-            case "gif":
-                Glide.with(getContext()).load(imageUrl).asGif().into(showImage);
-                break;
-            default:
-                LoadImage.with(getContext())
-                        .load(imageUrl)
-                        .build()
-                        .into(new SubBitmapTarget() {
-                            @Override
-                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                                imageWidth = bitmap.getWidth();
-                                imageHieght = bitmap.getHeight();
+    public void showImage(final String imageUrl, String type) {
+        itemGifHint.setVisibility(View.GONE);
+        showImage.setVisibility(View.VISIBLE);
+        loadProgress.clearAnimation();
+        loadProgress.setVisibility(View.GONE);
 
-                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                int waith = newWaith;
-                                if (imageWidth <= newWaith)
-                                    waith = 0;
-                                UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
-                            }
-                        });
-                    break;
+        loadImg(imageUrl);
+        if ("gif".equals(type)) {
+            this.type = IMAGE_GIF;
+            showImage.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadGif(imageUrl);
+                }
+            });
+            showImageGif.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemGifHint.setVisibility(View.VISIBLE);
+                    showImage.setVisibility(View.VISIBLE);
+                }
+            });
+            if ("wifi".equals(ToolsDevice.getNetWorkType(getContext()))) {
+                loadGif(imageUrl);
+            }
         }
     }
+
+    public void stopGif() {
+        itemGifHint.setVisibility(View.VISIBLE);
+        showImage.setVisibility(View.VISIBLE);
+    }
+
+    private void loadImg(String imgUrl) {
+        if (!TextUtils.isEmpty(imgUrl)) {
+            showImage.setImageResource(R.drawable.i_nopic);
+            showImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            showImage.setTag(TAG_ID, imgUrl);
+            if (!XHActivityManager.getInstance().getCurrentActivity().isFinishing()) {
+                BitmapRequestBuilder<GlideUrl, Bitmap> requestBuilder = LoadImage.with(XHActivityManager.getInstance().getCurrentActivity())
+                        .load(imgUrl)
+                        .setPlaceholderId(R.drawable.i_nopic)
+                        .setErrorId(R.drawable.i_nopic)
+                        .build();
+                if (requestBuilder != null) {
+                    itemGifHint.setVisibility(View.VISIBLE);
+                    itemGifHint.setImageResource(R.drawable.i_dish_detail_gif_hint);
+                    requestBuilder.into(new SubBitmapTarget() {
+                        @Override
+                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                            imageWidth = bitmap.getWidth();
+                            imageHieght = bitmap.getHeight();
+
+                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                            int waith = newWaith;
+                            if (imageWidth <= newWaith)
+                                waith = 0;
+                            UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置GIF
+     *
+     * @param gifUrl
+     */
+    private void loadGif(final String gifUrl) {
+        if (!TextUtils.isEmpty(gifUrl)) {
+            if (showImageGif.getTag() == null)
+                showImageGif.setTag(TAG_ID, gifUrl);
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.loading_anim);
+            loadProgress.startAnimation(animation);
+            loadProgress.setVisibility(VISIBLE);
+            showImage.setVisibility(VISIBLE);
+            itemGifHint.setVisibility(View.GONE);
+            if (!XHActivityManager.getInstance().getCurrentActivity().isFinishing()) {
+                final GifRequestBuilder requestBuilder = Glide.with(XHActivityManager.getInstance().getCurrentActivity())
+                        .load(gifUrl)
+                        .asGif()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .listener(new RequestListener<String, GifDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GifDrawable gifDrawable, String s, Target<GifDrawable> target, boolean b, boolean b1) {
+                                if (showImageGif.getTag(TAG_ID).equals(gifUrl)) {
+                                    loadProgress.clearAnimation();
+                                    loadProgress.setVisibility(GONE);
+                                    showImage.setVisibility(View.GONE);
+                                    itemGifHint.setVisibility(View.GONE);
+                                    setImageWH(showImageGif, showImage.getHeight());
+                                }
+                                return false;
+                            }
+                        });
+                if (showImageGif != null) {
+                    if (showImageGif.getTag(TAG_ID).equals(gifUrl)) {
+                        requestBuilder.into(showImageGif);
+                    }
+                }
+            }
+        }
+    }
+
+    private void setImageWH(ImageView imgView, int imgHeight) {
+        imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        int dp_290 = Tools.getDimen(getContext(), R.dimen.dp_290);
+        RelativeLayout.LayoutParams layoutParams;
+        if (IMAGE_GIF.equals(type)) {
+            imgView.setMinimumHeight(0);
+            layoutParams = new RelativeLayout.LayoutParams((int) (imgHeight / 9.0 * 16), imgHeight);
+        } else
+            layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
+        int dp_12 = Tools.getDimen(getContext(), R.dimen.dp_12);
+        int dp_8 = Tools.getDimen(getContext(), R.dimen.dp_8);
+        int dp_23 = Tools.getDimen(getContext(), R.dimen.dp_23);
+        layoutParams.setMargins(0, dp_12, dp_23, 0);
+        imgView.setLayoutParams(layoutParams);
+    }
+
 
     public String getImageUrl() {
         return imageUrl;

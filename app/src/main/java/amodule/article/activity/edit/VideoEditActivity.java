@@ -22,6 +22,21 @@ public class VideoEditActivity extends EditParentActivity{
     }
 
     @Override
+    protected int getMaxImageCount() {
+        return 0;
+    }
+
+    @Override
+    protected int getMaxVideoCount() {
+        return 1;
+    }
+
+    @Override
+    protected int getMaxTextCount() {
+        return 5000;
+    }
+
+    @Override
     public void onNextSetp() {
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
@@ -45,6 +60,9 @@ public class VideoEditActivity extends EditParentActivity{
         boolean isHasVideo = mixLayout.hasVideo();
         if (!isHasVideo) {
             return "视频不能为空";
+        }
+        if(mixLayout.getTextCount() > getMaxTextCount()){
+            return "文字不能超过" + getMaxTextCount() + "字";
         }
         return null;
     }

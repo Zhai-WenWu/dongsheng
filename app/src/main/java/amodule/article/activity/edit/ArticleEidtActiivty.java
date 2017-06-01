@@ -24,6 +24,21 @@ public class ArticleEidtActiivty extends EditParentActivity{
     }
 
     @Override
+    protected int getMaxImageCount() {
+        return 50;
+    }
+
+    @Override
+    protected int getMaxVideoCount() {
+        return 5;
+    }
+
+    @Override
+    protected int getMaxTextCount() {
+        return 15000;
+    }
+
+    @Override
     public void onNextSetp() {
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
