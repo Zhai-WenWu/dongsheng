@@ -291,6 +291,11 @@ public class StringManager extends UtilString {
 	public final static String API_COMMENTS_REPORT = apiUrl + "Main7/Forum/reportList";
 	public final static String API_COMMIT_REPORT = apiUrl + "Main7/Forum/addReport";
 
+	/*个人主页列表*/
+	public final static String API_USERHOME_ARTICLE = apiUrl + "Main7/Article/articleList";//文章列表
+	public final static String API_USERHOME_VIDEO = apiUrl + "Main7/Video/videoList";//视频列表
+	public final static String API_USERHOME_ANSWER = apiUrl + "Main7/Qa/qaList";//问答列表
+
 	//替换url
 	public final static String replaceUrl(String url) {
 		if (defaultDomain != domain) {

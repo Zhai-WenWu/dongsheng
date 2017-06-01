@@ -266,7 +266,6 @@ public class FriendHome extends BaseActivity {
 			if (tabMap != null && tabMap.size() > 0 && tabMap.containsKey("type")) {
 				String title = tabMap.get("title");
 				String num = tabMap.get("num");
-				String url = tabMap.get("url");
 				View tabView = getTabWidget(title, num, getTabClicker(i));
 				View tabViewFloat = getTabWidget(title, num, getTabClicker(i));
 				TabContentView tabContentView = null;
@@ -307,11 +306,7 @@ public class FriendHome extends BaseActivity {
 						break;
 
 				}
-				if (!TextUtils.isEmpty(url) && tabContentView != null) {
-					if (url.startsWith("/") && url.length() > 1)
-						url = url.substring(1);
-					url = StringManager.apiUrl + url;
-					tabContentView.setLoadUrl(url);
+				if (tabContentView != null) {
 					tabContentView.setDataMap(tabMap);
 				}
 				mIsLoadeds[i] = false;

@@ -220,7 +220,7 @@ public class UserHomeTxt extends TabContentView {
             }).start();
         }
 
-		String getUrl = url + "?code=" + userCode + "&page=" + currentPage;
+		String getUrl = StringManager.API_USERHOME_ARTICLE + "?code=" + userCode + "&page=" + currentPage;
 		ReqEncyptInternet.in().doEncypt(getUrl, "", new InternetCallback(mAct) {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {

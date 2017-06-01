@@ -17,7 +17,6 @@ public abstract class TabContentView implements TabContentFactory{
 	public LayoutScroll scrollLayout;
 	public LinearLayout backLayout;
 	public TextView friend_info;
-	public String url;
 
 	private Map<String, String> mDataMap;
 	
@@ -30,14 +29,6 @@ public abstract class TabContentView implements TabContentFactory{
 	 * 开始第一次加载，需给theListView赋值
 	 */
 	public abstract void initLoad();
-
-	/**
-	 * 设置自己加载的url
-	 * @param url
-	 */
-	public void setLoadUrl(String url) {
-		this.url = url;
-	}
 
 	public void setDataMap(Map<String, String> dataMap) {
 		mDataMap = dataMap;
