@@ -79,9 +79,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     private boolean isKeyboradShow = false;
 
 
-    /**
-     * 定时存草稿
-     */
+    /** 定时存草稿 */
     protected Timer timer;
     private int taskTime = 30 * 1000;
 

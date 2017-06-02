@@ -3,6 +3,7 @@ package amodule.article.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -31,28 +32,31 @@ public class ArticleCommentView extends ItemBaseView {
     private TextView commentNum;
     private LinearLayout commentLayout;
     private TextView commentAll;
+    private TextView robsofa;
 
     private String code;
     private String type;
+
     public ArticleCommentView(Context context) {
-        super(context,R.layout.a_article_comment_view);
+        super(context, R.layout.a_article_comment_view);
         init();
     }
 
     public ArticleCommentView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs,R.layout.a_article_comment_view);
+        super(context, attrs, R.layout.a_article_comment_view);
         init();
     }
 
     public ArticleCommentView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr,R.layout.a_article_comment_view);
+        super(context, attrs, defStyleAttr, R.layout.a_article_comment_view);
         init();
     }
 
-    public void init(){
+    public void init() {
         commentNum = (TextView) findViewById(R.id.comment_num);
         commentAll = (TextView) findViewById(R.id.comment_all);
         commentLayout = (LinearLayout) findViewById(R.id.comment_layout);
+        robsofa = (TextView) findViewById(R.id.robsofa);
 
         commentAll.setOnClickListener(new OnClickListener() {
             @Override
@@ -62,10 +66,22 @@ public class ArticleCommentView extends ItemBaseView {
         });
     }
 
-    public void setData(Map<String,String> map){
-        setViewText(commentNum,map,"commentNum",GONE,"评论(",")");
+    public void setData(Map<String, String> map) {
+        if (TextUtils.isEmpty(map.get("commentNum"))
+                || "0".equals(map.get("commentNum"))) {
+            robsofa.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (robsofaClickListener != null) {
+                        robsofaClickListener.onClick(v);
+                    }
+                }
+            });
+            findViewById(R.id.has_comment_layout).setVisibility(GONE);
+        }
+        setViewText(commentNum, map, "commentNum", GONE, "评论(", ")");
         String dataStr = map.get("data");
-        List<Map<String,String>> data = StringManager.getListMapByJson(dataStr);
+        List<Map<String, String>> data = StringManager.getListMapByJson(dataStr);
         for (final Map<String, String> dataMap : data) {
             final ViewCommentItem commentItem = new ViewCommentItem(getContext());
             commentItem.setData(dataMap);
@@ -123,7 +139,7 @@ public class ArticleCommentView extends ItemBaseView {
         }
     }
 
-    private void gotoCommentActivity(){
+    private void gotoCommentActivity() {
         Intent intent = new Intent(getContext(), CommentActivity.class);
         intent.putExtra("type", getType());
         intent.putExtra("code", code);
@@ -144,5 +160,11 @@ public class ArticleCommentView extends ItemBaseView {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    private OnClickListener robsofaClickListener;
+
+    public void setRobsofaClickListener(OnClickListener listener) {
+        robsofaClickListener = listener;
     }
 }

@@ -63,7 +63,6 @@
             android:textSize="@dimen/dp_17"/>
     </LinearLayout>
 
-
     <ImageView
         android:id="@+id/rightImgBtn2"
         style="@style/rightBtn"

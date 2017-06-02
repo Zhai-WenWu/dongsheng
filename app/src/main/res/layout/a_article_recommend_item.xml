@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <View
             android:layout_width="match_parent"
@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFE"
-            android:paddingBottom="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_28"
+            android:paddingBottom="@dimen/dp_3"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20">
 
@@ -30,7 +31,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="@dimen/dp_12"
                 android:layout_marginRight="@dimen/dp_12"
-                android:layout_marginTop="@dimen/dp_28"
                 android:text="相关推荐"
                 android:textColor="#999999"
                 android:textSize="@dimen/sp_14"/>
@@ -38,16 +38,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0.5"
-                android:layout_alignTop="@+id/title"
-                android:layout_marginTop="@dimen/dp_6"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/title"
                 android:background="#E1E1E1"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0.5"
-                android:layout_alignTop="@+id/title"
-                android:layout_marginTop="@dimen/dp_6"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/title"
                 android:background="#E1E1E1"/>
 
@@ -63,7 +61,7 @@
         android:orientation="vertical"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_5">
+        android:paddingTop="@dimen/dp_20">
 
         <RelativeLayout
             android:layout_width="match_parent"

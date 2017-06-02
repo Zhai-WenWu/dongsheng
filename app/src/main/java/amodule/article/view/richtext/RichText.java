@@ -53,7 +53,7 @@ public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_QUOTE = 0x06;
     public static final int FORMAT_LINK = 0x07;
 
-    private final String KEY_URL = "link";
+    private final String KEY_URL = "url";
     private final String KEY_TITLE = "title";
 
     private int bulletColor = 0;
@@ -673,6 +673,7 @@ public class RichText extends EditText implements TextWatcher {
 
         linkInvalid(start, end);
         getEditableText().setSpan(new RichURLSpan(link, linkColor, linkUnderline), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        setSelection(end);
     }
 
     /**
@@ -692,11 +693,12 @@ public class RichText extends EditText implements TextWatcher {
             return;
         }
 
-
         URLSpan[] spans = getEditableText().getSpans(start, end, URLSpan.class);
         for (URLSpan span : spans) {
             getEditableText().removeSpan(span);
         }
+        styleInvalid(Typeface.BOLD, start, end);
+        underlineInvalid(start,end);
     }
 
     public boolean containLink(){

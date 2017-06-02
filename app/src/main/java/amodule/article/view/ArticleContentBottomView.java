@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.Map;
+
 import acore.override.view.ItemBaseView;
 
 /**
@@ -53,15 +55,31 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
         findViewById(R.id.article_report).setOnClickListener(this);
     }
 
+    public void setData(Map<String,String> map){
+        setViewTextWithPrefix(articleRepintSource,map,"repAddress","转载");
+        setViewTextWithPrefix(articleBrowse,map,"allClick","阅读");
+        setViewText(articlePublishDate,map,"addTime");
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             //举报
             case R.id.article_report:
-
+                if(mOnReportClickCallback != null)
+                    mOnReportClickCallback.onReportClick();
                 break;
             default:
                 break;
         }
+    }
+
+    private OnReportClickCallback mOnReportClickCallback;
+    public interface OnReportClickCallback{
+        public void onReportClick();
+    }
+    public void setOnReportClickCallback(OnReportClickCallback callback){
+        this.mOnReportClickCallback = callback;
+        findViewById(R.id.article_report).setVisibility(VISIBLE);
     }
 }
