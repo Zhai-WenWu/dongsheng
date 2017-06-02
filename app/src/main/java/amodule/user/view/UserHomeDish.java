@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -318,7 +320,11 @@ public class UserHomeDish extends TabContentView {
                 currentPage = loadManager.changeMoreBtn(theListView, flag, everyPage, loadPage, currentPage, isBlankSpace);
                 // 如果总数据为空,显示没有菜谱
                 if (flag >= UtilInternet.REQ_OK_STRING && listDataMyDish.size() == 0 && draftSize == 0) {
-                    view.findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
+                    LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
+                    TextView empty = (TextView) view.findViewById(R.id.tv_noData);
+                    RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) empty.getLayoutParams();
+                    emptyParams.topMargin = tabMainMyself.getTop() + tabMainMyself.getHeight();
+                    empty.setVisibility(View.VISIBLE);
                 }
                 // 如果总数据为空,显示没有菜谱
 //				if (flag >= UtilInternet.REQ_OK_STRING && listDataMyDish.size() == 0) {
