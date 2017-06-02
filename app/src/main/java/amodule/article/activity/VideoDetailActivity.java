@@ -2,6 +2,7 @@ package amodule.article.activity;
 
 
 import acore.tools.StringManager;
+import amodule.article.activity.edit.VideoEditActivity;
 
 /**
  * PackageName : amodule.article.activity
@@ -34,5 +35,10 @@ public class VideoDetailActivity extends ArticleDetailActivity {
     @Override
     public String getPraiseAPI() {
         return StringManager.api_likeVideo;
+    }
+
+    @Override
+    public Class<?> getIntentClass() {
+        return VideoEditActivity.class;
     }
 }
