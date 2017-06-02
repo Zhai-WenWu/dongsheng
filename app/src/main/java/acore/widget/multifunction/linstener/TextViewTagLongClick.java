@@ -35,7 +35,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	private String mRightBtnName = "投诉";
 	private String mCopyText="";
 
-	private int normBackColor;
+	private int normBackColor,choseBackColor = Color.parseColor("#E3E3E3");
 
 	private OnLongClickListener longClickListener;
 
@@ -57,7 +57,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	public boolean onLongClick(View v) {
 		if(nIsHaveCopy){
 			if(longClickListener != null) longClickListener.onLongClick();
-			mTv.setBackgroundColor(Color.parseColor("#E3E3E3"));
+			mTv.setBackgroundColor(choseBackColor);
 			getPopupWindowsInstance();
 			mPopupWindow.showAsPullUp(mTv, 0, -20);
 			return true;
@@ -196,8 +196,10 @@ public class TextViewTagLongClick implements OnLongClickListener{
 		normBackColor = color;
 	}
 
+	public void setChoseBackColor(int choseBackColor) {
+		this.choseBackColor = choseBackColor;
+	}
 
-	
 	private class CustomPopupWindow extends PopupWindow {
 		public CustomPopupWindow(View contentView, int width, int height) {
 			super(contentView, width, height, false);

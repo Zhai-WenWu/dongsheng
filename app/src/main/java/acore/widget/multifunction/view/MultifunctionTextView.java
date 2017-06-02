@@ -240,6 +240,10 @@ public class MultifunctionTextView extends TextView {
 		mTextViewTagLongClick.setNormBackColor(color);
 	}
 
+	public void setChoseBackColor(int color) {
+		mTextViewTagLongClick.setChoseBackColor(color);
+	}
+
 	/**
 	 * 设置
 	 *

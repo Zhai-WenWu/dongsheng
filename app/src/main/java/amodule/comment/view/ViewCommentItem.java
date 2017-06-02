@@ -92,7 +92,9 @@ public class ViewCommentItem extends LinearLayout {
         ArrayList<Map<String, String>> customeArray = StringManager.getListMapByJson(custome);
         if(customeArray.size() > 0){
             cusstomMap = customeArray.get(0);
-            setUserImage(userIcon,cusstomMap.get("header_img"));
+            String headerImg = "http://s1.cdn.xiangha.com/i/201703/2421/58d525620302f.jpg/MTAweDEwMA";
+            setUserImage(userIcon,headerImg);
+//            setUserImage(userIcon,cusstomMap.get("header_img"));
             userIcon.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -140,6 +142,7 @@ public class ViewCommentItem extends LinearLayout {
         }else {
             contentText.setVisibility(View.VISIBLE);
             contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+            contentText.setChoseBackColor(Color.parseColor("#fffde3"));
             int maxNum = 100;
             if (TextUtils.isEmpty(text) || text.length() <= maxNum) {
                 contentText.setText(text);
@@ -275,6 +278,7 @@ public class ViewCommentItem extends LinearLayout {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
             replayTv.setNormBackColor(Color.parseColor("#efefef"));
+            replayTv.setChoseBackColor(Color.parseColor("#fffde3"));
             String content = replayMap.get("content");
             String uName = replayMap.get("uname");
             final String ucode = replayMap.get("ucode");
@@ -363,7 +367,8 @@ public class ViewCommentItem extends LinearLayout {
     }
 
     private void initOther(){
-        commentTime.setText(dataMap.get("create_time"));
+        commentTime.setText("2017-6-2");
+//        commentTime.setText(dataMap.get("create_time"));
         commentPraiseNum.setText(dataMap.get("fabulous_num"));
         commentPraise.setImageResource("2".equals(dataMap.get("is_fabulous")) ? R.drawable.i_comment_praise_ok : R.drawable.i_comment_praise);
         commentPraise.setOnClickListener(new OnClickListener() {
@@ -408,7 +413,7 @@ public class ViewCommentItem extends LinearLayout {
         v.setImageResource(R.drawable.bg_round_grey_e0e0e0_50);
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mContext)
                 .load(value)
-                .setImageRound(ToolsDevice.dp2px(mContext, 500))
+                .setImageRound(ToolsDevice.dp2px(mContext, 800))
                 .build();
         if(bitmapRequest != null)
             bitmapRequest.into(v);

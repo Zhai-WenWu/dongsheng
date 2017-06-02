@@ -1,12 +1,14 @@
 package amodule.comment.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -32,8 +34,6 @@ import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
-import static xh.basic.tool.UtilString.getListMapByJson;
-
 /**
  * Created by Fang Ruijiao on 2017/5/25.
  */
@@ -45,11 +45,11 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private int currentPage = 0, everyPage = 0;
 
     private EditText commend_write_et;
+    private ImageView writePen;
     private TextView sendTv;
     private View sendProgress;
 
     private String gotoCommentId,gotoReplayId;
-    private int gotoPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +66,15 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         sendTv = (TextView) findViewById(R.id.comment_send);
         sendTv.setOnClickListener(this);
         sendProgress = findViewById(R.id.comment_send_progress);
+        writePen = (ImageView) findViewById(R.id.commend_write_pen);
         commend_write_et = (EditText) findViewById(R.id.commend_write_et);
         commend_write_et.setOnClickListener(this);
+        commend_write_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                changeKeyboard(hasFocus);
+            }
+        });
         downRefreshList = (DownRefreshList) findViewById(R.id.comment_listview);
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -169,7 +176,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onContentReplayClick(String comment_id,String replay_code, String replay_name) {
-                        commend_write_et.setHint("回复 " + replay_name);
+                        commend_write_et.setHint(" 回复" + replay_name);
                         changeKeyboard(true);
                         currentUrl = StringManager.api_addReplay;
                         currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
@@ -194,17 +201,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         code = getIntent().getStringExtra("code");
         gotoCommentId = getIntent().getStringExtra("gotoCommentId");
         gotoReplayId = getIntent().getStringExtra("gotoReplayId");
-        String page = getIntent().getStringExtra("gotoPage");
-        if(!TextUtils.isEmpty(page)){
-            gotoPage = Integer.parseInt(page);
-        }
 
         if(TextUtils.isEmpty(type)) {
             type = "1";
             code = "520";
         }
 
-        currentPage = gotoPage;
 //        gotoCommentId = "1";
 //        gotoReplayId = "1";
 
@@ -245,15 +247,24 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 int loadCount;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     if (isForward) listArray.clear();
-                    ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
-                    listArray.addAll(arrayList);
-                    adapterSimple.notifyDataSetChanged();
-                    loadCount = arrayList.size();;
-                    if (everyPage == 0)
-                        everyPage = loadCount;
-                    downRefreshList.setVisibility(View.VISIBLE);
-                    currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0);
-                    downRefreshList.onRefreshComplete();
+                    ArrayList<Map<String,String>> arrayList =StringManager.getListMapByJson(o);
+                    if(arrayList.size() > 0) {
+                        Map<String,String> dataMap = arrayList.get(0);
+                        String dataList = dataMap.get("list");
+                        String dataPage = dataMap.get("page");
+                        if(!TextUtils.isEmpty(dataPage)){
+                            currentPage = Integer.parseInt(dataPage);
+                        }
+                        listArray.addAll(StringManager.getListMapByJson(dataList));
+                        adapterSimple.notifyDataSetChanged();
+                        loadCount = arrayList.size();
+                        ;
+                        if (everyPage == 0)
+                            everyPage = loadCount;
+                        downRefreshList.setVisibility(View.VISIBLE);
+                        currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0);
+                        downRefreshList.onRefreshComplete();
+                    }
                 }
             }
         });
@@ -283,7 +294,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }
         ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
-
             @Override
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING) {
@@ -296,11 +306,18 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private void changeKeyboard(boolean isShow){
         if(isShow){
             ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
+            commend_write_et.setHintTextColor(Color.parseColor("#cdcdcd"));
+            commend_write_et.setPadding(Tools.getDimen(this,R.dimen.dp_13),Tools.getDimen(this,R.dimen.dp_10),0,Tools.getDimen(this,R.dimen.dp_10));
             sendTv.setVisibility(View.VISIBLE);
+            writePen.setVisibility(View.GONE);
         }else{
             sendTv.setVisibility(View.GONE);
-            commend_write_et.setHint("写评论");
+            writePen.setVisibility(View.VISIBLE);
+            commend_write_et.setHint(" 写评论");
+            commend_write_et.setHintTextColor(Color.parseColor("#333333"));
             commend_write_et.setText("");
+            commend_write_et.setPadding(Tools.getDimen(this,R.dimen.dp_30),Tools.getDimen(this,R.dimen.dp_10),0,Tools.getDimen(this,R.dimen.dp_10));
+            commend_write_et.clearFocus();
             sendProgress.setVisibility(View.GONE);
             ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);
         }
