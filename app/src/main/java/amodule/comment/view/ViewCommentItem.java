@@ -280,7 +280,7 @@ public class ViewCommentItem extends LinearLayout {
             replayTv.setNormBackColor(Color.parseColor("#efefef"));
             replayTv.setChoseBackColor(Color.parseColor("#fffde3"));
             final String content = replayMap.get("content");
-            String uName = replayMap.get("uname");
+            final String uName = replayMap.get("uname");
             final String ucode = replayMap.get("ucode");
             final String is_author = replayMap.get("is_author");
             final String replay_uname = replayMap.get("replay_uname");
@@ -292,7 +292,7 @@ public class ViewCommentItem extends LinearLayout {
             String is_anchor = replayMap.get("is_anchor");
             if("2".equals(is_anchor)){
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
-                if(mListener != null) mListener.onContentReplayClick(comment_id,replay_ucode,replay_uname);
+                if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName);
             }
             else view.setBackgroundColor(Color.parseColor("#00fffae3"));
 
@@ -335,7 +335,7 @@ public class ViewCommentItem extends LinearLayout {
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
-                    if(mListener != null) mListener.onContentReplayClick(comment_id,replay_ucode,replay_uname);
+                    if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName);
                 }
             });
             multifunctionText.addStyle(contentBuilder.getContent(), contentBuilder.build());
@@ -426,7 +426,7 @@ public class ViewCommentItem extends LinearLayout {
         public void onReportReplayClick(String comment_id, String replay_id,String replay_user_code,String replay_user_name,String reportContent);
         public void onDeleteReplayClick(String comment_id, String replay_id);
         public void onPraiseClick(String comment_id);
-        public void onContentReplayClick(String comment_id,String replay_user_code, String replay_user_name);
+        public void onContentReplayClick(String comment_id,String replay_user_code,String replay_user_name);
     }
 
 

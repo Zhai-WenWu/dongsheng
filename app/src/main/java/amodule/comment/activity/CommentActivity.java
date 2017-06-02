@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +70,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         writePen = (ImageView) findViewById(R.id.commend_write_pen);
         commend_write_et = (EditText) findViewById(R.id.commend_write_et);
         commend_write_et.setOnClickListener(this);
-        commend_write_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                changeKeyboard(hasFocus);
-            }
-        });
         downRefreshList = (DownRefreshList) findViewById(R.id.comment_listview);
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -178,6 +173,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onContentReplayClick(String comment_id,String replay_code, String replay_name) {
+                        Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
                         commend_write_et.setHint(" 回复" + replay_name);
                         changeKeyboard(true);
                         currentUrl = StringManager.api_addReplay;
@@ -295,6 +291,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }else{
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }
+        Log.i("commentReplay","sendData() newParams:" + newParams);
         ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
             @Override
             public void loaded(int flag, String s, Object o) {
@@ -306,7 +303,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void changeKeyboard(boolean isShow){
+        Log.i("commentReplay","changeKeyboard() isShow:" + isShow);
         if(isShow){
+            commend_write_et.requestFocus();
             ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
             commend_write_et.setHintTextColor(Color.parseColor("#cdcdcd"));
             commend_write_et.setPadding(Tools.getDimen(this,R.dimen.dp_13),Tools.getDimen(this,R.dimen.dp_10),0,Tools.getDimen(this,R.dimen.dp_10));
