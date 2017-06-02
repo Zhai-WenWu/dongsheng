@@ -391,8 +391,9 @@ public class ArticleUploadListPool extends UploadListPool {
                         if (!TextUtils.isEmpty(imgUrl)) {
                             continue;
                         }
-                        Log.e("articleUpload", "文章上传 imgPath: " + imgPath + ", " + true);
-                        if (!Tools.isFileExists(imgPath)) {
+                        Log.e("articleUpload", "文章上传 imgPath: " + imgPath + ",imgUrl:" + imgUrl);
+                        Log.e("articleUpload", "文章上传 imgPath.indexOf(\"http\"): " + imgPath.indexOf("http"));
+                        if (imgPath.indexOf("http") != 0 && !Tools.isFileExists(imgPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章图片路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
                         }

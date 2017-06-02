@@ -29,13 +29,13 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
+import amodule.comment.activity.CommentActivity;
 import amodule.dish.activity.OfflineDish;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
-import amodule.user.activity.MyFavorite;
 import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.ScoreStore;
 import amodule.user.activity.Setting;
@@ -386,12 +386,12 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 	public void onEventCommon(int index) {
 		switch (index) {
 			case 0://收藏
-				XHClick.track(getApplicationContext(), "点击我的页面的收藏");
-				XHClick.mapStat(this, tongjiId,"列表","收藏");
-				Intent intent_fav = new Intent(MainMyself.this, MyFavorite.class);
-				startActivity(intent_fav);
-//				Intent intent = new Intent(this,CommentActivity.class);
-//				startActivity(intent);
+//				XHClick.track(getApplicationContext(), "点击我的页面的收藏");
+//				XHClick.mapStat(this, tongjiId,"列表","收藏");
+//				Intent intent_fav = new Intent(MainMyself.this, MyFavorite.class);
+//				startActivity(intent_fav);
+				Intent intent = new Intent(this,CommentActivity.class);
+				startActivity(intent);
 				break;
 			case 1://浏览记录
 				XHClick.mapStat(this, tongjiId,"列表","看过");

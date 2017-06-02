@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import acore.override.XHApplication;
 import acore.tools.Tools;
-import amodule.article.activity.ArticleSelectActiivty;
+import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.db.UploadVideoSQLite;
 
 /**
@@ -57,9 +57,11 @@ public class VideoEditActivity extends EditParentActivity{
         if (TextUtils.isEmpty(checkStr)) {
             saveDraft();
             if(timer != null)timer.cancel();
-            Intent intent = new Intent(this, ArticleSelectActiivty.class);
+            Intent intent = new Intent(this, ArticleUploadListActivity.class);
             intent.putExtra("draftId", uploadArticleData.getId());
             intent.putExtra("dataType", EditParentActivity.TYPE_VIDEO);
+            intent.putExtra("coverPath", uploadArticleData.getImg());
+            intent.putExtra("finalVideoPath", uploadArticleData.getVideo());
             startActivity(intent);
             finish();
         } else {

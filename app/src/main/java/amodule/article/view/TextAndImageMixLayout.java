@@ -22,12 +22,9 @@ import java.util.Set;
 
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.UploadImg;
 import amodule.article.view.richtext.RichParser;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqInternet;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
 import xh.windowview.XhDialog;
 
@@ -300,6 +297,7 @@ public class TextAndImageMixLayout extends LinearLayout
             if (view instanceof ImageShowView) {
                 Map<String, String> map = new HashMap<>();
                 String path = ((ImageShowView) view).getImageUrl();
+                Log.i("articleUpload","getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
                 map.put("path", path);
                 map.put("url", imageMap.get(path));
                 arrayList.add(map);

@@ -28,6 +28,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -283,13 +284,25 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 }
             }).start();
         } else {
-            ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, "", new InternetCallback(this) {
+            ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, "code=" + code, new InternetCallback(this) {
                 @Override
                 public void loaded(int i, String s, Object o) {
                     if (i == ReqInternet.REQ_OK_STRING) {
-                        uploadArticleData = new UploadArticleData();
-
-                        handler.sendEmptyMessage(0);
+                        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
+                        if(arrayList.size() > 0) {
+                            Map<String,String> map = arrayList.get(0);
+                            uploadArticleData = new UploadArticleData();
+                            uploadArticleData.setCode(code);
+                            uploadArticleData.setTitle(map.get("title"));
+                            uploadArticleData.setContent(map.get("content"));
+                            uploadArticleData.setIsOriginal(map.get("isOriginal"));
+                            uploadArticleData.setRepAddress(map.get("repAddress"));
+                            uploadArticleData.setClassCode(map.get("classCode"));
+                            handler.sendEmptyMessage(0);
+                        }else{
+                            Tools.showToast(EditParentActivity.this,"数据错误");
+                            EditParentActivity.this.finish();
+                        }
                     }
                 }
             });
@@ -365,7 +378,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     protected int saveDraft() {
         int id;
         uploadArticleData.setTitle(String.valueOf(editTitle.getText()));
-        uploadArticleData.setContent(mixLayout.getXHServiceData());
+        String content = mixLayout.getXHServiceData();
+        Log.i("articleUpload","saveDraft() content:" + content);
+        uploadArticleData.setContent(content);
         uploadArticleData.setVideo(mixLayout.getFirstVideoUrl());
         uploadArticleData.setVideoImg(mixLayout.getFirstCoverImage());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());

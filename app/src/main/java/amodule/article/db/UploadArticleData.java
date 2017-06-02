@@ -1,5 +1,7 @@
 package amodule.article.db;
 
+import android.text.TextUtils;
+
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,7 +41,7 @@ public class UploadArticleData {
     private String title;
     private String classCode;
     private String content;
-    private int isOriginal; //是否原创 1-转载 2-原创
+    private int isOriginal = -1; //是否原创 1-转载 2-原创
     private String repAddress; //转载地址
     private String img; //首图
     private String imgUrl; //首图url
@@ -140,6 +142,14 @@ public class UploadArticleData {
 
     public void setIsOriginal(int isOriginal) {
         this.isOriginal = isOriginal;
+    }
+
+    public void setIsOriginal(String isOriginal) {
+        if(TextUtils.isEmpty(isOriginal)){
+            this.isOriginal = 1;
+        }else{
+            this.isOriginal = Integer.parseInt(isOriginal);
+        }
     }
 
     public void setRepAddress(String repAddress) {

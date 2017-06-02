@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -51,6 +52,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     private UploadArticleData uploadArticleData;
 
     private int dataType;
+    private int draftId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             Tools.showToast(this,"发布数据类型为空");
             finish();
         }
+        initData();
         initView();
         getClassifyData();
     }
@@ -78,17 +81,35 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         TextView link = (TextView) findViewById(R.id.article_select_check_original_link);
         link.setText(Html.fromHtml("<u>《香哈原创声明》</u>"));
         link.setOnClickListener(this);
-        reprintImg = (ImageView) findViewById(R.id.article_select_check_reprint);
-        reprintImg.setOnClickListener(this);
         originalImg = (ImageView) findViewById(R.id.article_select_check_original);
         originalImg.setOnClickListener(this);
+        reprintImg = (ImageView) findViewById(R.id.article_select_check_reprint);
+        reprintImg.setOnClickListener(this);
         reprintLink = (EditText) findViewById(R.id.article_select_check_reprint_link);
+        if(2 == uploadArticleData.getIsOriginal()){
+            isCheck = 2;
+            originalImg.setImageResource(R.drawable.i_article_select_yes);
+        }else if(1 == uploadArticleData.getIsOriginal()){
+            isCheck = 1;
+            reprintImg.setImageResource(R.drawable.i_article_select_yes);
+        }
 
         data = new ArrayList<>();
         gridView = (GridView) findViewById(R.id.article_select_gridview);
         adapterSimple = new AdapterSimple(gridView,data,R.layout.a_article_select_activity_item,
                 new String[]{"name"},
-                new int[]{R.id.article_select_classify_text});
+                new int[]{R.id.article_select_classify_text}){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                if(data.get(position).get("code").equals(checkCode)){
+                    TextView textView = (TextView) view.findViewById(R.id.article_select_classify_text);
+                    textView.setBackgroundResource(R.drawable.article_select_classify_yes);
+                    textView.setTextColor(Color.parseColor("#ffffff"));
+                }
+                return view;
+            }
+        };
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -105,6 +126,12 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 }
             }
         });
+    }
+
+    private void initData(){
+        draftId = getIntent().getIntExtra("draftId",-1);
+        uploadArticleData = sqLite.selectById(draftId);
+        checkCode = uploadArticleData.getClassCode();
     }
 
     private void getClassifyData(){
@@ -128,8 +155,6 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void upload(){
-        int draftId = getIntent().getIntExtra("draftId",-1);
-        uploadArticleData = sqLite.selectById(draftId);
         uploadArticleData.setClassCode(checkCode);
         uploadArticleData.setIsOriginal(isCheck);
         uploadArticleData.setRepAddress(String.valueOf(reprintLink.getText()));
