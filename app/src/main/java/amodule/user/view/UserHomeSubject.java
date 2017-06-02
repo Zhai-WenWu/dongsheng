@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -56,6 +57,7 @@ public class UserHomeSubject extends TabContentView {
 	private int headerCount=0;//存在listview头数据
 
 	private TextView subjectNum;
+	private LinearLayout mTabMainMyself;
 
 	public UserHomeSubject(FriendHome act, String code) {
 		view = View.inflate(act, R.layout.myself_subject, null);
@@ -78,8 +80,8 @@ public class UserHomeSubject extends TabContentView {
 		super.onResume(tag);
 		theListView.setSelection(1);
 		if(subjectNum == null) {
-			LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
-			subjectNum = (TextView) tabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
+			mTabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
+			subjectNum = (TextView) mTabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
 		}
 	}
 
@@ -308,7 +310,10 @@ public class UserHomeSubject extends TabContentView {
 		}
 		// 如果总数据为空,显示没有美食帖
 		if (listDataMySb.size() == 0) {
-			view.findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
+			TextView empty = (TextView) view.findViewById(R.id.tv_noData);
+			RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) empty.getLayoutParams();
+			emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();
+			empty.setVisibility(View.VISIBLE);
 		} else {
 			adapter.notifyDataSetChanged();
 			theListView.setVisibility(View.VISIBLE);
