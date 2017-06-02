@@ -143,8 +143,6 @@ public class ChangeSendDialog extends Dialog{
 		//TODO 暂时添加
 		addButton("6", R.drawable.pulish_video_dish,"发文章");
 		itemNum++;
-		addButton("7", R.drawable.pulish_video_dish,"发评论");
-		itemNum++;
 		addButton("8", R.drawable.pulish_video_dish,"发视频");
 		itemNum++;
 		if(dishVideoMap != null && dishVideoMap.size() > 0){
@@ -253,15 +251,11 @@ public class ChangeSendDialog extends Dialog{
 				videoDish.putExtra(UploadDishActivity.DISH_TYPE_KEY, UploadDishActivity.DISH_TYPE_VIDEO);
 				activity.startActivity(videoDish);
 				break;
+			//TODO
 			case "6":
 				closeDialog();
 				Intent article = new Intent(activity, ArticleEidtActiivty.class);
 				activity.startActivity(article);
-				break;
-			case "7":
-				closeDialog();
-				Intent comment = new Intent(activity, PublishCommentActivity.class);
-				activity.startActivity(comment);
 				break;
 			case "8":
 				closeDialog();

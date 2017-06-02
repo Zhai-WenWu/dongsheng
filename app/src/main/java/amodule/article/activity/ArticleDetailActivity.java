@@ -1,10 +1,12 @@
 package amodule.article.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -28,6 +30,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.view.ArticleCommentBar;
 import amodule.article.view.ArticleHeaderView;
@@ -76,6 +79,8 @@ public class ArticleDetailActivity extends BaseActivity {
         //TODO 测试
         if(TextUtils.isEmpty(code))
             code = "520";
+
+        Log.i("tzy","code = " + code);
         init();
     }
 
@@ -151,6 +156,10 @@ public class ArticleDetailActivity extends BaseActivity {
         findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(ArticleDetailActivity.this,getIntentClass());
+                intent.putExtra("code",code);
+                startActivity(intent);
                 Tools.showToast(ArticleDetailActivity.this,"编辑");
             }
         });
@@ -552,4 +561,7 @@ public class ArticleDetailActivity extends BaseActivity {
         return StringManager.api_likeArticle;
     }
 
+    public Class<?> getIntentClass() {
+        return ArticleEidtActiivty.class;
+    }
 }
