@@ -178,11 +178,13 @@ public class WelcomeDialog extends Dialog {
 
                     @Override
                     public void onAdDismissed() {
+                        Log.i("zhangyujian","onAdDismissed");
                         closeDialog();
                     }
 
                     @Override
                     public void onAdClick() {
+                        Log.i("zhangyujian","onAdClick");
                         closeDialog();
                         AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "click", "开屏广告位");
                         XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
@@ -410,15 +412,10 @@ public class WelcomeDialog extends Dialog {
         }
         Main.isShowWelcomeDialog=false;//至当前dialog状态
         Log.i("zhangyujian","closeDialog");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                WelcomeDialog.this.dismiss();
-                if(isAdLeadClick)
+        WelcomeDialog.this.dismiss();
+        if(isAdLeadClick)
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.api_vip, true);
                 activity.overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
-            }
-        }, 200);
     }
 
     private OnDismissListener onDismissListener = new OnDismissListener() {
