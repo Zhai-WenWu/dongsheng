@@ -318,26 +318,23 @@ public class FileToolsCammer {
      */
     public static ArrayList<Map<String, String>> getLocalMediasLimitFormats(ArrayList<String> formats) {
         ArrayList<Map<String, String>> videos = new ArrayList<Map<String, String>>();
-        Cursor cursor = XHApplication.in().getApplicationContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
+        Cursor cursor = XHApplication.in().getApplicationContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Video.Media.DATE_ADDED + " DESC");
         try {
             while (cursor.moveToNext()) {
                 Map<String, String> map = new HashMap<String, String>();
+                String mimeType =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
                 String data = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)); // 路径
-                if (!TextUtils.isEmpty(data)) {
-                    String[] strs = data.split("\\.");
-                    if (strs != null) {
-                        String format = strs[strs.length - 1];
-                        if (formats != null && format != null && !formats.contains(format)) {
-                            break;
-                        }
-                    }
+                String[] strs = mimeType.split("/");
+                if (formats != null && !formats.contains(strs[1])) {
+                    continue;
                 }
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)); // id
                 String title =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
                 String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM)); // 专辑
+                if (TextUtils.isEmpty(album))
+                    album = "Camera";
                 String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST)); // 艺术家
                 String displayName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)); // 显示名称
-                String mimeType =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
                 long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)); // 时长
                 long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)); // 大小
                 String resolution =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION));//分辨率
