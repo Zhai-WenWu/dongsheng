@@ -128,6 +128,7 @@ public class UserHomeTxt extends TabContentView {
 	public void initLoad() {
 		currentPage = 0;
 		isRefresh = true;
+		theListView.setVisibility(View.GONE);
 		if (theListView.getAdapter() == null) {
 			headView = new View(mAct);
 			setHeadViewHeight();
@@ -143,14 +144,7 @@ public class UserHomeTxt extends TabContentView {
 			public void onClick(View v) {
 				mAct.doReload();
 			}
-		}, datas.size() == 0, new LoadManager.ViewScrollCallBack() {
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-			}
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
-		});
+		}, datas.size() == 0);
 	}
 
 	private void setHeadViewHeight(){

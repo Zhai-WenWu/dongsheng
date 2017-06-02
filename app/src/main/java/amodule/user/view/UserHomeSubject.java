@@ -58,6 +58,7 @@ public class UserHomeSubject extends TabContentView {
 
 	private TextView subjectNum;
 	private LinearLayout mTabMainMyself;
+	private TextView mEmpty;
 
 	public UserHomeSubject(FriendHome act, String code) {
 		view = View.inflate(act, R.layout.myself_subject, null);
@@ -88,6 +89,7 @@ public class UserHomeSubject extends TabContentView {
 	private void init() {
 		// 结果显示
 		loadManager = mAct.loadManager;
+		mEmpty = (TextView) view.findViewById(R.id.tv_noData);
 		theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
 		theListView.setDivider(null);
 		listDataMySb = new ArrayList<>();
@@ -116,10 +118,7 @@ public class UserHomeSubject extends TabContentView {
 	public void initLoad() {
 		currentPage = 0;
 		isRefresh = true;
-		// listDataMySb.clear();
-		// theListView.setVisibility(View.GONE);
-		// final int tabHost_h =
-		// Tools.getTargetHeight(FriendHome.showUser.tabMainMyself);
+		theListView.setVisibility(View.GONE);
 		if (theListView.getAdapter() == null) {
 			headView = new View(mAct);
 			setHeadViewHeight();
@@ -310,11 +309,11 @@ public class UserHomeSubject extends TabContentView {
 		}
 		// 如果总数据为空,显示没有美食帖
 		if (listDataMySb.size() == 0) {
-			TextView empty = (TextView) view.findViewById(R.id.tv_noData);
-			RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) empty.getLayoutParams();
+			RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmpty.getLayoutParams();
 			emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();
-			empty.setVisibility(View.VISIBLE);
+			mEmpty.setVisibility(View.VISIBLE);
 		} else {
+			mEmpty.setVisibility(View.GONE);
 			adapter.notifyDataSetChanged();
 			theListView.setVisibility(View.VISIBLE);
 		}

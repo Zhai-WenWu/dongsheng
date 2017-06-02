@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -56,6 +57,9 @@ public class UserHomeVideo extends TabContentView {
     private boolean isRefresh = false;
 
     private TextView subjectNum;
+
+    private LinearLayout mTabMainMyself;
+    private RelativeLayout mEmptyContainer;
     private LinearLayout mEmptyView;
     private Button mGotoBtn;
 
@@ -79,15 +83,16 @@ public class UserHomeVideo extends TabContentView {
         super.onResume(tag);
         theListView.setSelection(1);
         if(subjectNum == null) {
-            LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
-            subjectNum = (TextView) tabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
+            mTabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
+            subjectNum = (TextView) mTabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
         }
     }
 
     private void init() {
         // 结果显示
         loadManager = mAct.loadManager;
-        mEmptyView = (LinearLayout) view.findViewById(R.id.empty);
+        mEmptyContainer = (RelativeLayout) view.findViewById(R.id.empty_container);
+        mEmptyView = (LinearLayout) mEmptyContainer.findViewById(R.id.empty);
         mGotoBtn = (Button) mEmptyView.findViewById(R.id.goto_btn);
         mGotoBtn.setText("发视频");
         mGotoBtn.setOnClickListener(new OnClickListener() {
@@ -122,6 +127,7 @@ public class UserHomeVideo extends TabContentView {
     public void initLoad() {
         currentPage = 0;
         isRefresh = true;
+        theListView.setVisibility(View.GONE);
         if (theListView.getAdapter() == null) {
             headView = new View(mAct);
             setHeadViewHeight();
@@ -137,14 +143,7 @@ public class UserHomeVideo extends TabContentView {
             public void onClick(View v) {
                 mAct.doReload();
             }
-        }, datas.size() == 0, new LoadManager.ViewScrollCallBack() {
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-        });
+        }, datas.size() == 0);
     }
 
     private void setHeadViewHeight(){
@@ -258,9 +257,11 @@ public class UserHomeVideo extends TabContentView {
                 }
                 datas.addAll(mNetDatas);
                 if (datas.size() == 0) {
-                    mEmptyView.setVisibility(View.VISIBLE);
+                    RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
+                    emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();
+                    mEmptyContainer.setVisibility(View.VISIBLE);
                 } else {
-                    mEmptyView.setVisibility(View.GONE);
+                    mEmptyContainer.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
                     theListView.setVisibility(View.VISIBLE);
                 }
