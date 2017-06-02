@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -171,8 +172,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         commend_write_et.setHint("回复 " + replay_name);
                         changeKeyboard(true);
                         currentUrl = StringManager.api_addReplay;
-                        commentId = comment_id;
-                        replayCode = replay_code;
+                        currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
                     }
                 });
                 return view;
@@ -194,18 +194,20 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         code = getIntent().getStringExtra("code");
         gotoCommentId = getIntent().getStringExtra("gotoCommentId");
         gotoReplayId = getIntent().getStringExtra("gotoReplayId");
+        String page = getIntent().getStringExtra("gotoPage");
+        if(!TextUtils.isEmpty(page)){
+            gotoPage = Integer.parseInt(page);
+        }
 
         if(TextUtils.isEmpty(type)) {
             type = "1";
             code = "520";
         }
 
+        currentPage = gotoPage;
 //        gotoCommentId = "1";
 //        gotoReplayId = "1";
-//        gotoPage = 3;
 
-        currentPage = gotoPage;
-//        gotoReplayId = "2";
 //        if (TextUtils.isEmpty(type) || TextUtils.isEmpty(code)) {
 //            Tools.showToast(this, "缺少 类型 或 主题");
 //            finish();
@@ -232,7 +234,11 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             currentPage++;
 
         loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listArray.size() == 0);
-        String params = "type=" + type + "&code=" + code + "&commentId=" + gotoCommentId + "&replayId=" + gotoReplayId + "&page=" + currentPage;
+        String params = "type=" + type + "&code=" + code + "&page=" + currentPage;
+        if(!TextUtils.isEmpty(gotoCommentId))
+            params +=  "&commentId=" + gotoCommentId;
+        if(!TextUtils.isEmpty(gotoReplayId))
+            params += "&replayId=" + gotoReplayId;;
         ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String s, Object o) {
@@ -253,8 +259,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private String currentUrl = StringManager.api_addForum;
-    String commentId,replayCode;
+    private String currentUrl = StringManager.api_addForum,currentParams;
     private void sendData(){
         sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
@@ -262,39 +267,30 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             Tools.showToast(this,"发送内容不能超过2000字");
             return;
         }
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("type", type);
-            jsonObject.put("code", code);
-            if (StringManager.api_addForum.equals(currentUrl)) {
-                JSONArray jsonArray = new JSONArray();
-                try {
-                    JSONObject jsonObject2 = new JSONObject();
-                    jsonObject2.put("text", content);
-                    jsonArray.put(jsonObject2);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                jsonObject.put("content", jsonArray);
-            } else {
-                if (!TextUtils.isEmpty(commentId))
-                    jsonObject.put("commentId", commentId);
-                if (!TextUtils.isEmpty(replayCode))
-                    jsonObject.put("replayUcode", replayCode);
-                jsonObject.put("content", content);
-            }
-            ReqEncyptInternet.in().doEncypt(currentUrl, jsonObject, new InternetCallback(this) {
 
-                @Override
-                public void loaded(int flag, String s, Object o) {
-                    if (flag >= ReqInternet.REQ_OK_STRING) {
-                        changeKeyboard(false);
-                    }
-                }
-            });
-        }catch (Exception e){
-            e.printStackTrace();
+        String newParams;
+        if(StringManager.api_addForum.equals(currentUrl)){
+            JSONArray jsonArray = new JSONArray();
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("text", content);
+                jsonArray.put(jsonObject);
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + jsonArray.toString();
+        }else{
+            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }
+        ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
+
+            @Override
+            public void loaded(int flag, String s, Object o) {
+                if(flag >= ReqInternet.REQ_OK_STRING) {
+                    changeKeyboard(false);
+                }
+            }
+        });
     }
 
     private void changeKeyboard(boolean isShow){
