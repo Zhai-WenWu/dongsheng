@@ -216,7 +216,6 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int index = 0; index < imageUrlArray.size(); index++) {
             String imageUrl = imageUrlArray.get(index);
             addImage(imageUrl, true, index == imageUrlArray.size() - 1 ? content : "");
-            uploadImage(imageUrl);
         }
     }
 
@@ -231,17 +230,6 @@ public class TextAndImageMixLayout extends LinearLayout
                 || imagePath.startsWith("http://"))
             return;
         //上传图片
-//        new UploadImg("", imagePath,
-//                new InternetCallback(getContext()) {
-//                    @Override
-//                    public void loaded(int i, String s, Object o) {
-//                        if (i >= ReqInternet.REQ_OK_STRING) {
-//                            String imageUrl = (String) o;
-//                            imageMap.put(imagePath, imageUrl);
-//                        }
-//                    }
-//                }).uploadImg();
-
         new BreakPointControl(getContext(),"",imagePath,TYPE_IMG).start(new UploadListNetCallBack() {
             @Override
             public void onProgress(double progress, String uniqueId) {
@@ -288,6 +276,13 @@ public class TextAndImageMixLayout extends LinearLayout
         addView(view, insertIndex, getChildLayoutParams());
 
         imageMap.put(imageUrl, "");
+        uploadImage(imageUrl);
+        //如果网络图片则不上传，直接替换map数据
+        if(imageUrl.startsWith("http")){
+            imageMap.put(imageUrl,imageUrl);
+        }
+
+
         //默认插入edit
         if (ifAddText)
             addRichText(insertIndex + 1, content);
