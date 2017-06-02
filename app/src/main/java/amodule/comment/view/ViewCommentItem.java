@@ -180,7 +180,7 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     if (mListener != null) {
                         if (isReport)
-                            mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                            mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text);
                         else
                             mListener.onDeleteCommentClick(comment_id);
                     }
@@ -279,7 +279,7 @@ public class ViewCommentItem extends LinearLayout {
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
             replayTv.setNormBackColor(Color.parseColor("#efefef"));
             replayTv.setChoseBackColor(Color.parseColor("#fffde3"));
-            String content = replayMap.get("content");
+            final String content = replayMap.get("content");
             String uName = replayMap.get("uname");
             final String ucode = replayMap.get("ucode");
             final String is_author = replayMap.get("is_author");
@@ -348,7 +348,7 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     if(mListener != null) {
                         if(isReport)
-                            mListener.onReportReplayClick(comment_id,replayMap.get("replay_id"),replay_ucode,replay_uname);
+                            mListener.onReportReplayClick(comment_id,replayMap.get("replay_id"),replay_ucode,replay_uname,content);
                         else
                             mListener.onDeleteReplayClick(comment_id,replayMap.get("replay_id"));
                     }
@@ -397,7 +397,7 @@ public class ViewCommentItem extends LinearLayout {
                     if (isDelete)
                         mListener.onDeleteCommentClick(comment_id);
                     else
-                        mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                        mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),dataMap.get("content"));
                 }
             }
         });
@@ -421,9 +421,9 @@ public class ViewCommentItem extends LinearLayout {
 
     public interface OnCommentItenListener{
         public void onShowAllReplayClick(String comment_id);
-        public void onReportCommentClick(String comment_id,String comment_user_code,String comment_user_name);
+        public void onReportCommentClick(String comment_id,String comment_user_code,String comment_user_name,String reportContent);
         public void onDeleteCommentClick(String comment_id);
-        public void onReportReplayClick(String comment_id, String replay_id,String replay_user_code,String replay_user_name);
+        public void onReportReplayClick(String comment_id, String replay_id,String replay_user_code,String replay_user_name,String reportContent);
         public void onDeleteReplayClick(String comment_id, String replay_id);
         public void onPraiseClick(String comment_id);
         public void onContentReplayClick(String comment_id,String replay_user_code, String replay_user_name);

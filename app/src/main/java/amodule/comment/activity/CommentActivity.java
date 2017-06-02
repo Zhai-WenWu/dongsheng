@@ -112,7 +112,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     }
 
                     @Override
-                    public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name) {
+                    public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent) {
                         Tools.showToast(CommentActivity.this,"举报评论 " + comment_id);
                         Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
                         intent.putExtra("type",type);
@@ -120,11 +120,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         intent.putExtra("commendId",comment_id);
                         intent.putExtra("userCode",comment_user_code);
                         intent.putExtra("reportName",comment_user_name);
+                        intent.putExtra("reportContent",reportContent);
                         startActivity(intent);
                     }
 
                     @Override
-                    public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name) {
+                    public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
                         Tools.showToast(CommentActivity.this,"举报回复 " + comment_id + "  " +replay_id);
                         Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
                         intent.putExtra("type",type);
@@ -133,6 +134,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         intent.putExtra("replayId",replay_id);
                         intent.putExtra("userCode",replay_user_code);
                         intent.putExtra("reportName",replay_user_name);
+                        intent.putExtra("reportContent",reportContent);
                         startActivity(intent);
                     }
 

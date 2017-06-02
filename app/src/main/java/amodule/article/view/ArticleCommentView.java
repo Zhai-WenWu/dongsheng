@@ -90,7 +90,7 @@ public class ArticleCommentView extends ItemBaseView {
                 }
 
                 @Override
-                public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name) {
+                public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent) {
 
                 }
 
@@ -100,7 +100,7 @@ public class ArticleCommentView extends ItemBaseView {
                 }
 
                 @Override
-                public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name) {
+                public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
 
                 }
 
