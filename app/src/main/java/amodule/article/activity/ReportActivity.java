@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -39,6 +40,7 @@ public class ReportActivity extends BaseActivity {
     private TextView mReportInfo;
     private TextView mName;
     private Button mCommitBtn;
+    private RelativeLayout mBackBtn;
 
     private String mUserCode = "";
     private String mCode = "";
@@ -47,13 +49,15 @@ public class ReportActivity extends BaseActivity {
     private String mReplayId = "";
     private String mReportName = "";
     private String mReportContent = "";
+    private String mReportType = "2";//1:主题，2:评论（默认），3:回复
 
     private boolean mFlag;
+    private boolean mLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("举报", 2, 0, R.layout.c_view_bar_title, R.layout.report_layout);
+        initActivity("举报", 2, 0, 0, R.layout.report_layout);
         Intent intent = getIntent();
         mType = intent.getStringExtra("type");
         mCode = intent.getStringExtra("code"); //主题code
@@ -62,9 +66,10 @@ public class ReportActivity extends BaseActivity {
         mCommendId = intent.getStringExtra("commendId");
         mReplayId = intent.getStringExtra("replayId");
         mReportContent = intent.getStringExtra("reportContent");
+        mReportType = intent.getStringExtra("reportType");
+        initTitle();
         initView();
         addListener();
-
     }
 
     @Override
@@ -80,12 +85,31 @@ public class ReportActivity extends BaseActivity {
             finish();
             return;
         }
-        getReportData();
+        if (!mLoaded) {
+            loadManager.setLoading(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getReportData();
+                }
+            }, false);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    private void initTitle() {
+        if(Tools.isShowTitle()) {
+            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+            int height = dp_45 + Tools.getStatusBarHeight(this);
+
+            RelativeLayout bar_title = (RelativeLayout)findViewById(R.id.barTitle);
+            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+            bar_title.setLayoutParams(layout);
+            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
+        }
     }
 
     private void initView() {
@@ -96,7 +120,8 @@ public class ReportActivity extends BaseActivity {
         mReportInfo = (TextView) findViewById(R.id.report_info);
         mCommitBtn = (Button) findViewById(R.id.report_commit);
         mName = (TextView) findViewById(R.id.title);
-        mName.setText(mReportName);
+        mName.setText("举报 " + mReportName);
+        mBackBtn = (RelativeLayout) findViewById(R.id.back);
     }
 
     private void addListener() {
@@ -110,23 +135,27 @@ public class ReportActivity extends BaseActivity {
                     case R.id.report_commit:
                         onCommitClick();
                         break;
+                    case R.id.back:
+                        ReportActivity.this.finish();
+                        break;
                 }
             }
         };
         mReportInfo.setOnClickListener(clickListener);
         mCommitBtn.setOnClickListener(clickListener);
-
+        mBackBtn.setOnClickListener(clickListener);
     }
 
     private void getReportData() {
-        String url = StringManager.API_COMMENTS_REPORT + "?type=" + mType;
+        loadManager.showProgressBar();
+        String url = StringManager.API_COMMENTS_REPORT + "?type=" + mType + "&reportType=" + mReportType;
         ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {
-                    onDataReady(StringManager.getListMapByJson(o));
+                    onDataReady(i, StringManager.getListMapByJson(o));
                 } else {
-                    onDataReady(null);
+                    onDataReady(i, null);
                 }
             }
         });
@@ -135,11 +164,13 @@ public class ReportActivity extends BaseActivity {
     private ReportItem mLastSelectedReportChild;
     private ReportItem mLastSelectedAdminChild;
 
-    private void onDataReady(ArrayList<Map<String, String>> mapDatas) {
+    private void onDataReady(int flag, ArrayList<Map<String, String>> mapDatas) {
+        mLoaded = true;
         if (mapDatas == null || mapDatas.size() < 1) {
-
+            loadManager.loadOver(flag, 1, true);
             return;
         }
+        loadManager.hideProgressBar();
         Map<String, String> map = mapDatas.get(0);
         if (map != null) {
             String reason = map.get("reason");

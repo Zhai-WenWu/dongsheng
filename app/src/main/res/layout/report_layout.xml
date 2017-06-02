@@ -5,10 +5,43 @@
     style="@style/layout"
     android:clickable="false">
 
+    <RelativeLayout
+        android:id="@+id/barTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_top_bg">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/top_title_singleText"
+                android:layout_width="match_parent"
+                android:paddingLeft="@dimen/dp_55"
+                android:paddingRight="@dimen/dp_55"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:clickable="true" />
+
+            <include
+                android:id="@+id/ll_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                layout="@layout/a_bar_item_back" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
     <acore.widget.MsgScrollView
         android:id="@+id/report_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/barTitle"
         android:overScrollMode="never"
         android:scrollbars="none"
         android:visibility="gone">
