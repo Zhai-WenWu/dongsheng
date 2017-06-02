@@ -149,7 +149,7 @@ public class UploadListPool {
         if (operation == TYPE_START) {
             if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
                 uploadLast();
-            } else if (itemData.getType() == UploadItemData.TYPE_IMG || itemData.getType() == UploadItemData.TYPE_VIDEO) {
+            } else if (itemData.getType() == UploadItemData.TYPE_IMG || itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG || itemData.getType() == UploadItemData.TYPE_VIDEO) {
                 int state = UploadListControl.getUploadListControlInstance().startUpload(itemData, uploadPoolData.getNetCallback());
                 itemData.setState(state);
             }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
@@ -73,7 +74,8 @@ public class ArticleDetailActivity extends BaseActivity {
             code = bundle.getString("code");
         }
         //TODO 测试
-        if(TextUtils.isEmpty(code)) code = "175";
+        if(TextUtils.isEmpty(code))
+            code = "520";
         init();
     }
 
@@ -136,6 +138,22 @@ public class ArticleDetailActivity extends BaseActivity {
                         onBackPressed();
                     }
                 });
+        findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReqEncyptInternet.in().doEncypt(StringManager.api_articleDel, "code=" + code, new InternetCallback(ArticleDetailActivity.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+                    }
+                });
+            }
+        });
+        findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tools.showToast(ArticleDetailActivity.this,"编辑");
+            }
+        });
         listview = (ListView) findViewById(R.id.listview);
         listview.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -269,6 +287,19 @@ public class ArticleDetailActivity extends BaseActivity {
         analysArticleContent(content);
         mArticleCommentBar.setPraiseAPI(getPraiseAPI());
         mArticleCommentBar.setData(mapArticle);
+
+        //TODO 测试注释
+//        if(LoginManager.isLogin()){
+//            Map<String,String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
+//            if(TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+//                    && TextUtils.isEmpty(customerData.get("code"))
+//                    && customerData.get("code").equals(LoginManager.userInfo.get("code"))){
+                findViewById(R.id.delete).setVisibility(View.VISIBLE);
+                findViewById(R.id.edit).setVisibility(View.VISIBLE);
+//            }
+//
+//        }
+
     }
 
     /**

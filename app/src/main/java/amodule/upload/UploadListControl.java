@@ -180,6 +180,9 @@ public class UploadListControl {
             case UploadItemData.TYPE_VIDEO:
                 progress = initUploadVideo(data);
                 break;
+            case UploadItemData.TYPE_BREAKPOINT_IMG:
+                progress = initUploadImage(data);
+                break;
             default:
                 progress = 0;
                 break;
@@ -192,6 +195,15 @@ public class UploadListControl {
                 = new BreakPointControl(XHApplication.in().getApplicationContext(),
                 data.getUniqueId(),
                 data.getPath(), BreakPointUploadManager.TYPE_VIDEO);
+        uploaderMap.put(data.getUniqueId(), breakPointContorl);
+        return (int) (breakPointContorl.getProgress() * 100);
+    }
+
+    private int initUploadImage(UploadItemData data) {
+        BreakPointControl breakPointContorl
+                = new BreakPointControl(XHApplication.in().getApplicationContext(),
+                data.getUniqueId(),
+                data.getPath(), BreakPointUploadManager.TYPE_IMG);
         uploaderMap.put(data.getUniqueId(), breakPointContorl);
         return (int) (breakPointContorl.getProgress() * 100);
     }
