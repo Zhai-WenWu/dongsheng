@@ -181,7 +181,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                         .setErrorId(R.drawable.i_nopic)
                         .build();
                 if (requestBuilder != null) {
-                    itemGifHint.setVisibility(View.VISIBLE);
+                    itemGifHint.setVisibility(View.GONE);
                     itemGifHint.setImageResource(R.drawable.i_dish_detail_gif_hint);
                     requestBuilder.into(new SubBitmapTarget() {
                         @Override

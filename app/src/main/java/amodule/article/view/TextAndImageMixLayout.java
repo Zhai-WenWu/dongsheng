@@ -231,16 +231,16 @@ public class TextAndImageMixLayout extends LinearLayout
                 || imagePath.startsWith("http://"))
             return;
         //上传图片
-        new UploadImg("", imagePath,
-                new InternetCallback(getContext()) {
-                    @Override
-                    public void loaded(int i, String s, Object o) {
-                        if (i >= ReqInternet.REQ_OK_STRING) {
-                            String imageUrl = (String) o;
-                            imageMap.put(imagePath, imageUrl);
-                        }
-                    }
-                }).uploadImg();
+//        new UploadImg("", imagePath,
+//                new InternetCallback(getContext()) {
+//                    @Override
+//                    public void loaded(int i, String s, Object o) {
+//                        if (i >= ReqInternet.REQ_OK_STRING) {
+//                            String imageUrl = (String) o;
+//                            imageMap.put(imagePath, imageUrl);
+//                        }
+//                    }
+//                }).uploadImg();
 
         new BreakPointControl(getContext(),"",imagePath,TYPE_IMG).start(new UploadListNetCallBack() {
             @Override

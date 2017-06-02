@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barTitle"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:background="@color/common_top_bg">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/top_title_singleText"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:paddingLeft="@dimen/dp_50"
+        android:paddingRight="@dimen/dp_50"/>
+
+    <TextView
+        android:id="@+id/title_time"
+        style="@style/singleText"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp__1"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/dp_3.5"
+        android:paddingLeft="@dimen/dp_50"
+        android:paddingRight="@dimen/dp_50"
+        android:textColor="@color/common_top_text"
+        android:textSize="@dimen/sp_7"/>
+
+    <include
+        android:id="@+id/ll_back"
+        layout="@layout/a_bar_item_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/rightImgBtn2"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="@color/common_top_text"
+            android:textSize="@dimen/dp_17"/>
+
+        <TextView
+            android:id="@+id/edit"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:text="编辑"
+            android:gravity="center"
+            android:textColor="@color/common_top_text"
+            android:textSize="@dimen/dp_17"/>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/rightImgBtn2"
+        style="@style/rightBtn"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/z_z_topbar_ico_share"
+        android:visibility="visible"/>
+</RelativeLayout>

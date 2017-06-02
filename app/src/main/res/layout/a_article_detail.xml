@@ -14,7 +14,7 @@
 
         <include
             android:id="@+id/relativeLayout_global"
-            layout="@layout/c_view_bar_title_time"
+            layout="@layout/c_view_bar_title_article"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_46"
             android:clickable="false"/>

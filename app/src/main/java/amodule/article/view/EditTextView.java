@@ -6,6 +6,7 @@ import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -78,6 +79,22 @@ public class EditTextView extends BaseView {
                 if (mOnFocusChangeCallback != null) {
                     mOnFocusChangeCallback.onFocusChange(EditTextView.this, hasFocus);
                 }
+            }
+        });
+        mRichText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
         mRichText.setFilters(new InputFilter[]{emojiFilter});
