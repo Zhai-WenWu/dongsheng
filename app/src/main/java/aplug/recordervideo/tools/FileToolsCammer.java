@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -356,5 +357,27 @@ public class FileToolsCammer {
             cursor.close();
             return videos;
         }
+    }
+
+    /**
+     * 获取视频首图
+     * @param videoPath 视频路径
+     * @param kind MINI_KIND or MICRO_KIND
+     * @return 返回首图路径
+     */
+    public static String getVideoThumbnailPath(String videoPath, int kind) {
+        if(TextUtils.isEmpty(videoPath) || kind != MediaStore.Images.Thumbnails.MINI_KIND || kind != MediaStore.Images.Thumbnails.MICRO_KIND)
+            return null;
+        String imgPath = null;
+        //如果有辞视频，但是没有次视频的封面图
+        if(new File(videoPath).exists()) {
+            String bitmapName = StringManager.toMD5(videoPath,false);
+            imgPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
+            if(!new File(imgPath).exists()) {
+                Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
+                FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
+            }
+        }
+        return imgPath;
     }
 }
