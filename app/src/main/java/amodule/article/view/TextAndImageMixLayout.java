@@ -205,9 +205,10 @@ public class TextAndImageMixLayout extends LinearLayout
         currentEditText.setOnAfterTextChanged(new EditTextView.OnAfterTextChanged() {
             @Override
             public void afterTextChanged(Editable s) {
-                int value = getTextCount() - 15;
+                int value = getTextCount() - TEXT_COUNT_MAX;
                 if(value > 0){
                     currentEditText.setText(s.subSequence(0,s.length() - value));
+                    currentEditText.setSelection(currentEditText.getText().length());
                     Tools.showToast(getContext(),"内容不能超过" + TEXT_COUNT_MAX + "字");
                 }
             }

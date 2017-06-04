@@ -165,6 +165,11 @@ public class EditTextView extends BaseView {
             mRichText.setText(text);
     }
 
+    public void setSelection(int index){
+        if(mRichText != null)
+            mRichText.setSelection(index);
+    }
+
     public String getTextHtml() {
         return mRichText.toHtml();
     }
