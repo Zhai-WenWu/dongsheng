@@ -58,7 +58,6 @@ import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_VIDEO;
 
 public class JsAppCommon extends JsBase{
 	public Activity mAct;
-	private Handler handler;
 	private XHWebView mWebView;
 	private LoadManager mLoadManager = null;
 	private BarShare mBarShare = null;
@@ -70,7 +69,6 @@ public class JsAppCommon extends JsBase{
 		this.mWebView = webView;
 		this.mLoadManager = loadManager;
 		this.mBarShare = barShare;
-		handler = new Handler();
 		TAG = "appCommon";
 	}
 

@@ -58,8 +58,6 @@ import xh.windowview.XhDialog;
  */
 public abstract class EditParentActivity extends BaseActivity implements View.OnClickListener {
 
-    public final static int MAX_IMAGE = 50;
-
     private final int REQUEST_SELECT_IMAGE = 0x01;
     private final int REQUEST_SELECT_VIDEO = 0x02;
 
@@ -116,9 +114,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
         findViewById(R.id.nextStep).setVisibility(View.VISIBLE);
         findViewById(R.id.nextStep).setOnClickListener(this);
-        ImageView close = (ImageView) findViewById(R.id.leftImgBtn);
-        close.setImageResource(R.drawable.i_close);
-        close.setOnClickListener(this);
+        findViewById(R.id.leftImgBtn).setVisibility(View.GONE);
+        findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
+        findViewById(R.id.back).setOnClickListener(this);
 
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
 
@@ -142,6 +140,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0 && s.length() > 59) {
                     editTitle.setText(s.subSequence(0, 59));
+                    editTitle.setSelection(editTitle.getText().length());
                 }
             }
         });
@@ -432,7 +431,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             case R.id.nextStep:
                 onNextSetp();
                 break;
-            case R.id.leftImgBtn:
+            case R.id.back:
                 onClose();
                 break;
             default:

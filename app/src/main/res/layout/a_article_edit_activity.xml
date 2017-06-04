@@ -30,7 +30,8 @@
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
                 android:background="@null"
-                android:minHeight="@dimen/dp_73"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_15"
                 android:textColorHint="#bbbbbb"
                 android:textCursorDrawable="@null"
                 android:textSize="@dimen/sp_25"/>

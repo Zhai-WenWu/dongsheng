@@ -1,6 +1,7 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -81,6 +82,7 @@ public class EditTextView extends BaseView {
                 }
             }
         });
+        mRichText.setFilters(new InputFilter[]{emojiFilter});
         mRichText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -94,10 +96,11 @@ public class EditTextView extends BaseView {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if(onAfterTextChanged != null){
+                    onAfterTextChanged.afterTextChanged(s);
+                }
             }
         });
-        mRichText.setFilters(new InputFilter[]{emojiFilter});
         mRichText.setOnSelectLinkCallback(new RichText.OnSelectLinkCallback() {
             @Override
             public void onSelectLink(String url, String desc) {
@@ -160,6 +163,11 @@ public class EditTextView extends BaseView {
     public void setText(CharSequence text) {
         if (mRichText != null)
             mRichText.setText(text);
+    }
+
+    public void setSelection(int index){
+        if(mRichText != null)
+            mRichText.setSelection(index);
     }
 
     public String getTextHtml() {
@@ -310,4 +318,15 @@ public class EditTextView extends BaseView {
     public RichText getRichText() {
         return mRichText;
     }
+
+    private OnAfterTextChanged onAfterTextChanged;
+
+    public void setOnAfterTextChanged(OnAfterTextChanged onAfterTextChanged) {
+        this.onAfterTextChanged = onAfterTextChanged;
+    }
+
+    public interface OnAfterTextChanged{
+        public void afterTextChanged(Editable s);
+    }
+
 }
