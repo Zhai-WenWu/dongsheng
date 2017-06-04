@@ -49,6 +49,7 @@
     <color name="ingre_yellow_bg_title">#EF8113</color>
 
     <color name="c_trans_parent">#cc333333</color> <!--透明度-->
+    <color name="video_preview_transparent">#d8000000</color>
 
     <!-- quan color -->
     <color name="quan_green_bg_bartitle_select">#ffffff</color>

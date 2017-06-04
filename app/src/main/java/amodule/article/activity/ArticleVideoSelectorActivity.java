@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -21,7 +20,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
@@ -35,14 +33,14 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import amodule.article.adapter.ArticleVideoFolderAdapter;
 import amodule.article.adapter.ArticleVideoSelectorAdapter;
-import aplug.recordervideo.db.RecorderVideoData;
 import aplug.recordervideo.tools.FileToolsCammer;
 
 
 public class ArticleVideoSelectorActivity extends BaseActivity implements View.OnClickListener{
+
+    private final int SELECTED_VIDEO = 1;
 
     private Button mCancelBtn;
     private ImageView mBackImg;
@@ -58,9 +56,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private PopupWindow mCategoryPopup;
     private ListView mFolderListView;
     private ArticleVideoFolderAdapter mCategoryAdapter;
-
-    private RelativeLayout mVideoContainer;
-    private VideoView mVideoView;
 
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
     private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
@@ -80,18 +75,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
     private void addListener() {
         mCancelBtn.setOnClickListener(this);
-        mVideoContainer.setOnClickListener(this);
         mBackImg.setOnClickListener(this);
         mCategoryText.setOnClickListener(this);
-        mVideoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Map<String, String> videoData = (Map<String, String>) v.getTag();
-                setResult(RESULT_OK, getSingleResult(videoData));
-                finish();
-                return true;
-            }
-        });
         mVideoRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
@@ -161,8 +146,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mGridViewLayout = (RelativeLayout) findViewById(R.id.grid_layout);
         mVideoEmptyView = (RelativeLayout) findViewById(R.id.video_emptyview);
 
-        mVideoContainer = (RelativeLayout) findViewById(R.id.video_container);
-        mVideoView = (VideoView) findViewById(R.id.article_pre_videoview);
     }
 
     private void initTitle() {
@@ -182,10 +165,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
-        if (mVideoContainer.getVisibility() == View.VISIBLE) {
-            mVideoView.resume();
-            mVideoView.start();
-        }
     }
 
     /**
@@ -260,7 +239,9 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                                     return;
                                 }
                             }
-                            showVideo(video);
+                            Intent intent = new Intent(ArticleVideoSelectorActivity.this, VideoPreviewActivity.class);
+                            intent.putExtra(MediaStore.Video.Media.DATA, video.get(MediaStore.Video.Media.DATA));
+                            startActivityForResult(intent, SELECTED_VIDEO);
                         }
                     });
                 }
@@ -281,9 +262,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.video_container:
-                hideVideo();
-                break;
             case R.id.btn_cancel:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -356,51 +334,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         });
     }
 
-    /**
-     * 封装选择的视频
-     * @param videoData
-     * @return
-     */
-    private Intent getSingleResult(Map<String, String> videoData) {
-        Intent intent = new Intent();
-        if (videoData != null && videoData.size() > 0) {
-            String videoPath = videoData.get(MediaStore.Video.Media.DATA);
-            intent.putExtra(MediaStore.Video.Media.DATA, videoPath);
-            intent.putExtra(RecorderVideoData.video_img_path, FileToolsCammer.getImgPath(videoPath));
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            switch (requestCode) {
+                case SELECTED_VIDEO:
+                    setResult(RESULT_OK, data);
+                    finish();
+                    break;
+            }
         }
-        return intent;
-    }
-
-    /**
-     * 显示预览
-     * @param videoData
-     */
-    private void showVideo(Map<String, String> videoData) {
-        if (videoData == null || videoData.size() < 0 || mVideoView == null || mVideoContainer == null)
-            return;
-        String videoPath = videoData.get(MediaStore.Video.Media.DATA);
-        if (TextUtils.isEmpty(videoPath))
-            return;
-        int fixedWidth = getResources().getDimensionPixelSize(R.dimen.dp_375);
-        int fixedHeight = getResources().getDimensionPixelSize(R.dimen.dp_213);
-        int screenWidth = ToolsDevice.getWindowPx(this).widthPixels;
-        int newHeight =  fixedHeight * screenWidth / fixedWidth;
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(screenWidth, newHeight);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mVideoView.setLayoutParams(params);
-        mVideoView.setTag(videoData);
-        mVideoView.setVideoPath(videoPath);
-        mVideoView.start();
-        mVideoContainer.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 关闭预览
-     */
-    private void hideVideo() {
-        if (mVideoView == null || mVideoContainer == null)
-            return;
-        mVideoView.stopPlayback();
-        mVideoContainer.setVisibility(View.INVISIBLE);
     }
 }

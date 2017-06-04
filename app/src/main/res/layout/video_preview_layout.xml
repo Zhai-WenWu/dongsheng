@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/video_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="invisible">
+
+        <VideoView
+            android:id="@+id/article_pre_videoview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_gradient_black_alpha40"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/temp"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_centerHorizontal="true"
+            android:text="轻触选择"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/c_white_text"/>
+
+        <View
+            android:id="@+id/temp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/video_back"
+        android:layout_width="@dimen/dp_28"
+        android:layout_height="@dimen/dp_28"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:src="@drawable/video_preview_back"/>
+
+</RelativeLayout>

@@ -43,6 +43,12 @@
         <!--Activity切换动画效果-->
     </style>
 
+    <style name="Video_Preview_Theme">
+        <item name="android:windowBackground">@color/video_preview_transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="titleTheme" parent="android:Theme.Light">
         <item name="android:windowTitleSize">@dimen/dp_45</item>
         <item name="android:windowTitleBackgroundStyle">@style/titleBarBackground</item>
