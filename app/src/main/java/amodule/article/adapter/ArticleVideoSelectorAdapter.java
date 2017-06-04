@@ -105,7 +105,7 @@ public class ArticleVideoSelectorAdapter extends RecyclerView.Adapter<ArticleVid
             String path = mapData.get(MediaStore.Video.Media.DATA);
             String videoShowTime = mapData.get(MediaStore.Video.Media.DURATION);
             if (!TextUtils.isEmpty(path)) {
-                String imgPath = FileToolsCammer.getImgPath(path);
+                String imgPath = FileToolsCammer.getVideoThumbnailPath(path, MediaStore.Images.Thumbnails.MINI_KIND);
                 if (imgPath != null)
                     Glide.with(image.getContext()).load(new File(imgPath)).centerCrop().into(image);
                 else
