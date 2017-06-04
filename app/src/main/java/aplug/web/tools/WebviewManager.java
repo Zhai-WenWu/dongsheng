@@ -52,7 +52,7 @@ public class WebviewManager {
 	public WebviewManager(Activity act,LoadManager loadManager,boolean state){
 		this.act = act;
 		this.loadManager = loadManager;
-		mWwebArray = new ArrayList<XHWebView>();
+		mWwebArray = new ArrayList<>();
 		this.state= state;
 	}
 

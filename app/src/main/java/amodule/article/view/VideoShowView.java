@@ -2,6 +2,7 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import org.json.JSONException;
@@ -18,7 +20,10 @@ import org.json.JSONObject;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.view.item.HomeRecipeItem;
+import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
 import third.video.VideoImagePlayerController;
+import xh.basic.tool.UtilImage;
 
 /**
  * PackageName : amodule.article.view
@@ -58,7 +63,6 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
         coverImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
-
     }
 
     /**
@@ -79,13 +83,28 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         return jsonObject;
     }
 
-    public void setVideoDataFromService(String coverImageUrl, String videoUrl,int position){
+    public void setVideoDataFromService(String coverImageUrl, String videoUrl, int position) {
         this.position = position;
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
-        Glide.with(getContext())
+        LoadImage.with(getContext())
                 .load(coverImageUrl)
-                .into(coverImage);
+                .build()
+                .into(new SubBitmapTarget() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                        if (bitmap != null) {
+                            int imageWidth = bitmap.getWidth();
+                            int imageHieght = bitmap.getHeight();
+
+                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                            int waith = newWaith;
+                            if (imageWidth <= newWaith) waith = 0;
+                            UtilImage.setImgViewByWH(coverImage, bitmap, waith, 0, false);
+
+                        }
+                    }
+                });
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 Tools.getDimen(getContext(), R.dimen.dp_200));//
         videoLayout.setPadding(0, 0, 0, ToolsDevice.dp2px(getContext(), 5));
@@ -95,9 +114,23 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void setVideoData(String coverImageUrl, String videoUrl) {
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
-        Glide.with(getContext())
+        LoadImage.with(getContext())
                 .load(coverImageUrl)
-                .into(coverImage);
+                .build()
+                .into(new SubBitmapTarget() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                        if (bitmap != null) {
+                            int imageWidth = bitmap.getWidth();
+                            int imageHieght = bitmap.getHeight();
+
+                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                            int waith = newWaith;
+                            if (imageWidth <= newWaith) waith = 0;
+                            UtilImage.setImgViewByWH(coverImage, bitmap, waith, 0, false);
+                        }
+                    }
+                });
     }
 
     public void setEnableEdit(boolean enable) {
@@ -109,7 +142,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.video_cover_image:
-                if(mVideoClickCallBack != null){
+                if (mVideoClickCallBack != null) {
                     mVideoClickCallBack.videoOnClick(position);
                     coverImage.setVisibility(GONE);
                     findViewById(R.id.video_cover_image_play).setVisibility(GONE);
@@ -142,9 +175,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         this.videoUrl = videoUrl;
     }
 
-    /**
-     * 视频view点击回调
-     */
+    /** 视频view点击回调 */
     public interface VideoClickCallBack {
         public void videoOnClick(int position);
     }

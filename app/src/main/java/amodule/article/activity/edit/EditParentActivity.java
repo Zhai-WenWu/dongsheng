@@ -117,7 +117,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         findViewById(R.id.nextStep).setVisibility(View.VISIBLE);
         findViewById(R.id.nextStep).setOnClickListener(this);
         ImageView close = (ImageView) findViewById(R.id.leftImgBtn);
-        close.setImageResource(R.drawable.i_close);
+        close.setImageResource(R.drawable.close_white);
         close.setOnClickListener(this);
 
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);

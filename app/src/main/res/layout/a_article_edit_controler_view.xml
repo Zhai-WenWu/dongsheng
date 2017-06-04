@@ -9,8 +9,7 @@
         android:id="@+id/edit_controler_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
-        android:layout_marginLeft="@dimen/dp_3"
-        android:layout_marginRight="@dimen/dp_3">
+        android:layout_marginRight="@dimen/dp_5">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -20,28 +19,28 @@
             <ImageView
                 android:id="@+id/select_image"
                 style="@style/article_bottom_select"
-                android:layout_width="@dimen/dp_79"
+                android:layout_width="@dimen/dp_60"
                 android:layout_height="match_parent"
                 android:src="@drawable/i_article_eidt_img" />
 
             <ImageView
                 android:id="@+id/select_video"
                 style="@style/article_bottom_select"
-                android:layout_width="@dimen/dp_82"
+                android:layout_width="@dimen/dp_60"
                 android:layout_height="match_parent"
                 android:src="@drawable/i_article_eidt_video" />
 
             <ImageView
                 android:id="@+id/edit_text"
                 style="@style/article_bottom_select"
-                android:layout_width="@dimen/dp_50"
+                android:layout_width="@dimen/dp_49"
                 android:layout_height="match_parent"
                 android:src="@drawable/i_article_eidt_fount" />
 
             <ImageView
                 android:id="@+id/add_link"
                 style="@style/article_bottom_select"
-                android:layout_width="@dimen/dp_54"
+                android:layout_width="@dimen/dp_49"
                 android:layout_height="match_parent"
                 android:src="@drawable/i_article_eidt_link" />
 
@@ -50,7 +49,7 @@
         <ImageView
             android:id="@+id/keyboard_control"
             style="@style/article_bottom_select"
-            android:layout_width="@dimen/dp_59"
+            android:layout_width="@dimen/dp_49"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:src="@drawable/i_article_eidt_keyboard" />

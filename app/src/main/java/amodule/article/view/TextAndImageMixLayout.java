@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,8 @@ import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
  */
 public class TextAndImageMixLayout extends LinearLayout
         implements BaseView.OnRemoveCallback, BaseView.OnClickImageListener {
+
+    public final static int TEXT_COUNT_MAX = 15000;
 
     private EditTextView currentEditText = null;
 
@@ -194,8 +197,19 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setOnFocusChangeCallback(new EditTextView.OnFocusChangeCallback() {
             @Override
             public void onFocusChange(EditTextView v, boolean hasFocus) {
-                if (hasFocus)
+                if (hasFocus){
                     currentEditText = v;
+                }
+            }
+        });
+        currentEditText.setOnAfterTextChanged(new EditTextView.OnAfterTextChanged() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                int value = getTextCount() - 15;
+                if(value > 0){
+                    currentEditText.setText(s.subSequence(0,s.length() - value));
+                    Tools.showToast(getContext(),"内容不能超过" + TEXT_COUNT_MAX + "字");
+                }
             }
         });
         if (!TextUtils.isEmpty(content))
