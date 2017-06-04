@@ -30,6 +30,8 @@ import android.widget.TextView;
 
 import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.stat.StatConfig;
+import com.tencent.stat.StatService;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -122,6 +124,12 @@ public class Main extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
+        //腾讯统计
+        StatConfig.setDebugEnable(true);
+        StatService.setContext(this.getApplication());
+        StatService.trackCustomEvent(this, "onCreate", "");
+        //百度统计
+//        com.baidu.mobstat.StatService.setDebugOn(true);
         //初始化
         new Thread(new Runnable() {
             @Override

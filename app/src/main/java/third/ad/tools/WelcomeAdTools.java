@@ -60,6 +60,7 @@ public class WelcomeAdTools {
     private InMobiNativeCallback mInMobiNativeCallback;
     /** 自有AD回调 */
     private XHBannerCallback mXHBannerCallback;
+    private boolean isTwoShow=false;
 
     private WelcomeAdTools() {
         String splashConfigDataStr = AppCommon.getConfigByLocal(CONFIGKEY);
@@ -85,12 +86,13 @@ public class WelcomeAdTools {
         return mInstance;
     }
     public void handlerAdData(final boolean isCache){
-        this.handlerAdData(isCache,null);
+        this.handlerAdData(isCache,null,false);
     }
     /**
      * 广告入口
      */
-    public void handlerAdData(final boolean isCache,AdDataCallBack CallBack) {
+    public void handlerAdData(final boolean isCache,AdDataCallBack CallBack,boolean isTwoShow) {
+        this.isTwoShow=isTwoShow;
         list_ad.clear();
         ad_data.clear();
         index_ad = 0;
@@ -157,12 +159,14 @@ public class WelcomeAdTools {
 
     //展示AD
     private void displayGdtAD() {
-        final String adid = analysData(ad_data.get(index_ad));
+         String adid = isTwoShow?"2090116985265199":analysData(ad_data.get(index_ad));
         if (TextUtils.isEmpty(adid) || null == mGdtCallback) {
             index_ad++;
             nextAd(false);
             return;
         }
+        Log.i("zhangyujian","adid:::"+adid);
+
         GdtAdTools.newInstance().showSplashAD(
                 XHActivityManager.getInstance().getCurrentActivity(),
                 mGdtCallback.getADLayout(),

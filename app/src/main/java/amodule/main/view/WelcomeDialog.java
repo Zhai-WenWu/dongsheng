@@ -68,12 +68,17 @@ public class WelcomeDialog extends Dialog {
     private boolean isOnGlobalLayout = false;//是否渲染完成;
     private boolean isInit = false;//是否加载过
     private int num = 0;//绘制被调用的次数
+    private boolean isTwoShow=false;
 
     public WelcomeDialog(@NonNull Activity act) {
         this(act, DEFAULT_TIME,null);
     }
     public WelcomeDialog(@NonNull Activity act, int adTime) {
         this(act, adTime,null);
+    }
+    public WelcomeDialog(@NonNull Activity act, int adTime,boolean isTwoShow) {
+        this(act, adTime,null);
+        this.isTwoShow= isTwoShow;
     }
     public WelcomeDialog(@NonNull Activity act, DialogShowCallBack callBack) {this(act, DEFAULT_TIME,callBack);}
     /**
@@ -413,9 +418,10 @@ public class WelcomeDialog extends Dialog {
         Main.isShowWelcomeDialog=false;//至当前dialog状态
         Log.i("zhangyujian","closeDialog");
         WelcomeDialog.this.dismiss();
-        if(isAdLeadClick)
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.api_vip, true);
-                activity.overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
+        if(isAdLeadClick) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.api_vip, true);
+        }
+        activity.overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
     }
 
     private OnDismissListener onDismissListener = new OnDismissListener() {
@@ -469,7 +475,7 @@ public class WelcomeDialog extends Dialog {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    WelcomeAdTools.getInstance().handlerAdData(false, null);
+                    WelcomeAdTools.getInstance().handlerAdData(false, null,isTwoShow);
                 }
             }).start();
 

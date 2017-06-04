@@ -506,7 +506,7 @@ public class HomeFragment extends Fragment{
                                     if (mAdControl != null) {
                                         //插入广告
                                         Log.i("zhangyujian","mListData:::"+mListData.size()+"::"+upDataSize);
-                                        if(upDataSize>0)
+                                        if(upDataSize>0 && isRecom)
                                             mAdControl.setLimitNum(upDataSize);
                                         mListData = mAdControl.getNewAdData(mListData, false);
                                     }
