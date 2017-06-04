@@ -146,6 +146,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
         mixLayout.setMaxVideoCount(getMaxVideoCount());
+        mixLayout.setMaxTextCount(getMaxTextCount());
         //初始化底部编辑控制
         initEditBottomControler();
     }

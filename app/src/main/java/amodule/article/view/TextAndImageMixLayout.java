@@ -39,7 +39,7 @@ import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
 public class TextAndImageMixLayout extends LinearLayout
         implements BaseView.OnRemoveCallback, BaseView.OnClickImageListener {
 
-    public final static int TEXT_COUNT_MAX = 15000;
+    private int maxTextCount = 1000;
 
     private EditTextView currentEditText = null;
 
@@ -205,11 +205,11 @@ public class TextAndImageMixLayout extends LinearLayout
         currentEditText.setOnAfterTextChanged(new EditTextView.OnAfterTextChanged() {
             @Override
             public void afterTextChanged(Editable s) {
-                int value = getTextCount() - TEXT_COUNT_MAX;
+                int value = getTextCount() - maxTextCount;
                 if(value > 0){
                     currentEditText.setText(s.subSequence(0,s.length() - value));
                     currentEditText.setSelection(currentEditText.getText().length());
-                    Tools.showToast(getContext(),"内容不能超过" + TEXT_COUNT_MAX + "字");
+                    Tools.showToast(getContext(),"内容不能超过" + maxTextCount + "字");
                 }
             }
         });
@@ -626,5 +626,9 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setMaxVideoCount(int maxVideoCount) {
         this.maxVideoCount = maxVideoCount;
+    }
+
+    public void setMaxTextCount(int maxTextCount) {
+        this.maxTextCount = maxTextCount;
     }
 }
