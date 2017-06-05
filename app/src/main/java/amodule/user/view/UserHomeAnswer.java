@@ -252,7 +252,7 @@ public class UserHomeAnswer extends TabContentView {
 					isRefresh = false;
 				}
 				datas.addAll(mNetDatas);
-				if (datas.size() == 0) {
+				if (datas.size() == 0 && isMyselft) {
 					mEmptyView.setVisibility(View.VISIBLE);
 				} else {
 					mEmptyView.setVisibility(View.GONE);

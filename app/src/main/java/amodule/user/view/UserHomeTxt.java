@@ -260,7 +260,7 @@ public class UserHomeTxt extends TabContentView {
                     isRefresh = false;
                 }
                 datas.addAll(mNetDatas);
-                if (datas.size() == 0) {
+                if (datas.size() == 0 && isMyselft) {
 					RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
 					emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();
 					mEmptyContainer.setVisibility(View.VISIBLE);

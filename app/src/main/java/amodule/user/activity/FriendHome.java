@@ -75,6 +75,8 @@ public class FriendHome extends BaseActivity {
 
 	public static boolean isAlive = false,isRefresh = false;
 
+	private boolean mIsMySelf;
+
 	//接收菜谱视频上传状态
 	UploadStateChangeBroadcasterReceiver receiver;
 
@@ -98,7 +100,8 @@ public class FriendHome extends BaseActivity {
 				});
 			}
 		}
-		if(!TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))){
+		mIsMySelf = !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"));
+		if(mIsMySelf){
 			tongjiId = "a_my";
 		}
 		String className = this.getComponentName().getClassName();
@@ -234,9 +237,9 @@ public class FriendHome extends BaseActivity {
 		Iterator<Map<String, String>> iterator = mTabs.iterator();
 		while (iterator.hasNext()) {
 			Map<String, String> map = iterator.next();
-			if (map != null && map.size() > 0 && map.containsKey("num")) {
+			if (map != null && map.size() > 0) {
 				String num = map.get("num");
-				if (TextUtils.isEmpty(num) || (Integer.parseInt(num) <= 0) && (!TextUtils.isEmpty(LoginManager.userInfo.get("code")) && !LoginManager.userInfo.get("code").equals(userCode))) {
+				if (TextUtils.isEmpty(num) || (Integer.parseInt(num) <= 0) && !mIsMySelf) {
 					iterator.remove();
 				}
 			}
