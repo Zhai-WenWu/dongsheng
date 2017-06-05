@@ -48,6 +48,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
@@ -126,6 +127,7 @@ public class Main extends Activity implements OnClickListener {
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
         //腾讯统计
         StatConfig.setDebugEnable(true);
+        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatService.setContext(this.getApplication());
         StatService.trackCustomEvent(this, "onCreate", "");
         //百度统计

@@ -112,7 +112,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 		}
 		//去我的订单
 		if(MallPayActivity.pay_state){
-			onEventCommon(4);
+			onEventCommon(3);
 		}
 	}
 
@@ -419,15 +419,15 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 				XHClick.mapStat(this, tongjiId,"列表", "我的会员");
 				AppCommon.openUrl(MainMyself.this,StringManager.api_vip,true);
 				FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowVip","2");
-				gourp2.getChildAt(5).findViewById(R.id.my_new_info).setVisibility(View.GONE);
-				gourp2.getChildAt(5).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+				gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+				gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
 				break;
 			case 6://钱包
 				XHClick.mapStat(this, tongjiId,"列表", "我的钱包");
 				AppCommon.openUrl(MainMyself.this,StringManager.api_money,true);
 				FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowMoney","2");
-				gourp2.getChildAt(7).findViewById(R.id.my_new_info).setVisibility(View.GONE);
-				gourp2.getChildAt(7).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+				gourp2.getChildAt(3).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+				gourp2.getChildAt(3).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
 				break;
 			case 7:
 				XHClick.track(getApplicationContext(), "点击我的页面的积分");
