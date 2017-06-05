@@ -230,6 +230,7 @@ public class ArticleDetailActivity extends BaseActivity {
         if (mapArticle.isEmpty()) return;
         findViewById(R.id.rightImgBtn2).setVisibility(View.VISIBLE);
         ArticleHeaderView headerView = new ArticleHeaderView(ArticleDetailActivity.this);
+        headerView.setType(getType());
         headerView.setData(mapArticle);
         linearLayoutOne.addView(headerView);
         linearLayoutOne.setVisibility(View.VISIBLE);
@@ -258,10 +259,12 @@ public class ArticleDetailActivity extends BaseActivity {
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAuthor)
+                if (isAuthor) {
                     showBottomDialog();
-                else
+                } else {
                     openShare();
+                    statistics("分享", "");
+                }
             }
         });
     }
@@ -339,6 +342,7 @@ public class ArticleDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 openShare();
+                statistics("更多", "分享");
             }
         }).addButton("编辑", new View.OnClickListener() {
             @Override
@@ -346,6 +350,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 Intent intent = new Intent(ArticleDetailActivity.this, getIntentClass());
                 intent.putExtra("code", code);
                 startActivity(intent);
+                statistics("更多", "编辑");
             }
         }).addButton("删除", new View.OnClickListener() {
             @Override
@@ -392,6 +397,7 @@ public class ArticleDetailActivity extends BaseActivity {
                                         }
                                     }
                                 });
+                        statistics("更多", "删除");
                     }
                 }).show();
     }
@@ -420,7 +426,6 @@ public class ArticleDetailActivity extends BaseActivity {
         return ArticleEidtActiivty.class;
     }
 
-    //TODO 添加统计
     private void statistics(String twoLevel, String threeLevel) {
         String eventId = "";
         switch (getType()) {

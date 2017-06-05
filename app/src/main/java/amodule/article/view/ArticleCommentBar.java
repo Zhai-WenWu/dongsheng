@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -99,9 +100,11 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         switch (v.getId()) {
             case R.id.comment_edit_fake:
                 doComment("评论文章");
+                statistics("底部栏", "评论输入框");
                 break;
             case R.id.praise_button:
                 if (praiseButton.isEnabled()) {
+                    statistics("底部栏", "点赞");
                     doPraise();
                 }
                 break;
@@ -238,5 +241,23 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     public void setOnCommentSuccessCallback(OnCommentSuccessCallback onCommentSuccessCallback) {
         this.onCommentSuccessCallback = onCommentSuccessCallback;
+    }
+
+    //统计
+    private void statistics(String twoLevel, String threeLevel) {
+        String eventId = "";
+        if (TextUtils.isEmpty(getType()))
+            return;
+        switch (getType()) {
+            case ArticleDetailActivity.TYPE_ARTICLE:
+                eventId = "a_ArticleDetail";
+                break;
+            case ArticleDetailActivity.TYPE_VIDEO:
+                eventId = "a_ShortVideoDetail";
+                break;
+        }
+        if (TextUtils.isEmpty(eventId))
+            return;
+        XHClick.mapStat(getContext(), eventId, twoLevel, threeLevel);
     }
 }

@@ -22,6 +22,7 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.user.activity.login.LoginByAccout;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
@@ -69,6 +70,7 @@ public class ArticleHeaderView extends ItemBaseView {
                     AppCommon.onAttentionClick(mapUser.get("code"), "follow");
                     mapUser.put("isFollow", "2");
                     setMapFollowSate();
+                    statistics("用户信息", "关注");
                 }
             }
         });
@@ -126,6 +128,7 @@ public class ArticleHeaderView extends ItemBaseView {
     private OnClickListener onClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
+            statistics("用户信息", "用户头像");
             XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), tongjiId, "用户点击", "头像点击量");
 //            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapUser.get("url"),true);
         }
@@ -150,5 +153,28 @@ public class ArticleHeaderView extends ItemBaseView {
                 follow_tv.setTextColor(Color.parseColor("#999999"));
             }
         } else follow_rela.setVisibility(GONE);
+    }
+
+    private String mCurrType;
+    public void setType(String type) {
+        mCurrType = type;
+    }
+
+    //统计
+    private void statistics(String twoLevel, String threeLevel) {
+        String eventId = "";
+        if (TextUtils.isEmpty(mCurrType))
+            return;
+        switch (mCurrType) {
+            case ArticleDetailActivity.TYPE_ARTICLE:
+                eventId = "a_ArticleDetail";
+                break;
+            case ArticleDetailActivity.TYPE_VIDEO:
+                eventId = "a_ShortVideoDetail";
+                break;
+        }
+        if (TextUtils.isEmpty(eventId))
+            return;
+        XHClick.mapStat(getContext(), eventId, twoLevel, threeLevel);
     }
 }

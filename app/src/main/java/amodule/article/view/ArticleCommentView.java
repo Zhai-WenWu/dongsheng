@@ -14,8 +14,10 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.comment.activity.CommentActivity;
 import amodule.comment.view.ViewCommentItem;
 import aplug.basic.InternetCallback;
@@ -95,6 +97,7 @@ public class ArticleCommentView extends ItemBaseView {
                                         }
                                     }
                                 });
+                        statistics("评论", "查看更多回复");
                     }
 
                     @Override
@@ -125,6 +128,7 @@ public class ArticleCommentView extends ItemBaseView {
                     @Override
                     public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
                         gotoCommentActivity();
+                        statistics("评论", type);
                     }
                 });
                 commentLayout.addView(commentItem);
@@ -137,6 +141,7 @@ public class ArticleCommentView extends ItemBaseView {
                 public void onClick(View v) {
                     if (robsofaClickListener != null) {
                         robsofaClickListener.onClick(v);
+                        statistics("评论", "抢沙发");
                     }
                 }
             });
@@ -151,6 +156,7 @@ public class ArticleCommentView extends ItemBaseView {
         intent.putExtra("type", getType());
         intent.putExtra("code", code);
         getContext().startActivity(intent);
+        statistics("评论", "查看所有评论");
     }
 
     public String getCode() {
@@ -173,5 +179,23 @@ public class ArticleCommentView extends ItemBaseView {
 
     public void setRobsofaClickListener(OnClickListener listener) {
         robsofaClickListener = listener;
+    }
+
+    //统计
+    private void statistics(String twoLevel, String threeLevel) {
+        String eventId = "";
+        if (TextUtils.isEmpty(getType()))
+            return;
+        switch (getType()) {
+            case ArticleDetailActivity.TYPE_ARTICLE:
+                eventId = "a_ArticleDetail";
+                break;
+            case ArticleDetailActivity.TYPE_VIDEO:
+                eventId = "a_ShortVideoDetail";
+                break;
+        }
+        if (TextUtils.isEmpty(eventId))
+            return;
+        XHClick.mapStat(getContext(), eventId, twoLevel, threeLevel);
     }
 }
