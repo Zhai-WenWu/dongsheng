@@ -123,7 +123,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
                         intent.putExtra("type",type);
                         intent.putExtra("code",code);
-                        intent.putExtra("commendId",comment_id);
+                        intent.putExtra("commentId",comment_id);
                         intent.putExtra("userCode",comment_user_code);
                         intent.putExtra("reportName",comment_user_name);
                         intent.putExtra("reportContent",reportContent);
@@ -136,7 +136,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
                         intent.putExtra("type",type);
                         intent.putExtra("code",code);
-                        intent.putExtra("commendId",comment_id);
+                        intent.putExtra("commentId",comment_id);
                         intent.putExtra("replayId",replay_id);
                         intent.putExtra("userCode",replay_user_code);
                         intent.putExtra("reportName",replay_user_name);

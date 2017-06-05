@@ -45,7 +45,7 @@ public class ReportActivity extends BaseActivity {
     private String mUserCode = "";
     private String mCode = "";
     private String mType = "";
-    private String mCommendId = "";
+    private String mCommentId = "";
     private String mReplayId = "";
     private String mReportName = "";
     private String mReportContent = "";
@@ -63,7 +63,7 @@ public class ReportActivity extends BaseActivity {
         mCode = intent.getStringExtra("code"); //主题code
         mUserCode = intent.getStringExtra("userCode"); //被举报人的code
         mReportName = intent.getStringExtra("reportName");//被举报人的名字
-        mCommendId = intent.getStringExtra("commendId");
+        mCommentId = intent.getStringExtra("commentId");
         mReplayId = intent.getStringExtra("replayId");
         mReportContent = intent.getStringExtra("reportContent");
         mReportType = intent.getStringExtra("reportType");
@@ -281,8 +281,8 @@ public class ReportActivity extends BaseActivity {
         String url = StringManager.API_COMMIT_REPORT
                 + "?type=" + mType
                 + "&code=" + mCode
-                + "&commendId=" + mCommendId
-                + "&replayId=" + mReplayId
+                + "&commentId=" + (mCommentId == null ? "" : mCommentId)
+                + "&replayId=" + (mReplayId == null ? "" : mReplayId)
                 + "&reportUcode=" + mUserCode
                 + "&reasonId=" + mLastSelectedReportChild.getKey()
                 + "&operationId=" + (mLastSelectedAdminChild == null ? "" : mLastSelectedAdminChild.getKey())
