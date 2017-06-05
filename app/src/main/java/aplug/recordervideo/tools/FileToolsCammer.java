@@ -366,7 +366,7 @@ public class FileToolsCammer {
      * @return 返回首图路径
      */
     public static String getVideoThumbnailPath(String videoPath, int kind) {
-        if(TextUtils.isEmpty(videoPath) || kind != MediaStore.Images.Thumbnails.MINI_KIND || kind != MediaStore.Images.Thumbnails.MICRO_KIND)
+        if(TextUtils.isEmpty(videoPath) || (kind != MediaStore.Images.Thumbnails.MINI_KIND && kind != MediaStore.Images.Thumbnails.MICRO_KIND))
             return null;
         String imgPath = null;
         //如果有辞视频，但是没有次视频的封面图
