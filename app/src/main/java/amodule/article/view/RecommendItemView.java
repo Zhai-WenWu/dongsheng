@@ -2,12 +2,14 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -17,6 +19,8 @@ import java.util.Map;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import amodule.article.activity.ArticleDetailActivity;
+import aplug.basic.SubBitmapTarget;
+import xh.basic.tool.UtilImage;
 
 /**
  * PackageName : amodule.article.view
@@ -77,5 +81,38 @@ public class RecommendItemView extends ItemBaseView {
                 }
             }
         });
+
+
+    }
+
+    @Override
+    public SubBitmapTarget getTarget(final ImageView v, final String url) {
+        return new SubBitmapTarget() {
+            @Override
+            public void onResourceReady(final Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                ImageView img = null;
+                if (v.getTag(TAG_ID).equals(url))
+                    img = v;
+                if (img != null && bitmap != null) {
+                    // 图片圆角和宽高适应auther_userImg
+                    if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
+                        v.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//						bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(context, 500));
+                        v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+                    } else {
+                        v.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
+                        if (isAnimate) {
+//							AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+//							alphaAnimation.setDuration(300);
+//							v.setAnimation(alphaAnimation);
+                        }
+                    }
+                    if(v.getId() == R.id.rec_image){
+                        findViewById(R.id.imgs).setVisibility(v.getVisibility());
+                    }
+                }
+            }
+        };
     }
 }

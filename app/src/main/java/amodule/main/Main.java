@@ -86,9 +86,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener {
     public static Main allMain;
     public static Timer timer;
-    /**
-     * 把层级>=close_level的层级关闭
-     */
+    /** 把层级>=close_level的层级关闭 */
     public static int colse_level = 1000;
     public static MainBaseActivity mainActivity;
 
@@ -113,40 +111,41 @@ public class Main extends Activity implements OnClickListener {
     private String url = null;
     // 每过everyReq请求一次，runTime+1
     private int runTime = 100, everyReq = 4 * 60;
-    private boolean quanRefreshState= false;
+    private boolean quanRefreshState = false;
 
-    private boolean WelcomeDialogstate=false;//false表示当前无显示,true已经显示
-    private boolean mainOnResumeState=false;//false 无焦点，true 获取焦点
+    private boolean WelcomeDialogstate = false;//false表示当前无显示,true已经显示
+    private boolean mainOnResumeState = false;//false 无焦点，true 获取焦点
     private MainInitDataControl mainInitDataControl;
 
     private long homebackTime;
     private boolean isForeground = true;
-    private int nowTab=0;//当前选中tab
-    private boolean isInit=false;
-    public static boolean isShowWelcomeDialog=false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
+    private int nowTab = 0;//当前选中tab
+    private boolean isInit = false;
+    public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        long endTime=System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
         //初始化
         InMobiAdTools.getInstance().initSdk(this);
-        Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
+        Log.i("zhangyujian", "main::oncreate::start::" + (endTime - XHApplication.in().startTime));
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
-        String[] times = FileManager.getSharedPreference(XHApplication.in(),FileManager.xmlKey_appKillTime);
-        if(times != null && times.length > 1 && !TextUtils.isEmpty(times[1])){
-            Tools.getApiSurTime("killback",Long.parseLong(times[1]),System.currentTimeMillis());
+        String[] times = FileManager.getSharedPreference(XHApplication.in(), FileManager.xmlKey_appKillTime);
+        if (times != null && times.length > 1 && !TextUtils.isEmpty(times[1])) {
+            Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
         LogManager.print("i", "Main -------- onCreate");
         // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
         if (savedInstanceState != null) {
             defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
-            if (defaultTab == 0 && mBuoy!=null&&!TextUtils.isEmpty(mBuoy.getFloatIndex()) &&"1".equals(mBuoy.getFloatIndex())
-                    || defaultTab == 1 && mBuoy!=null&&!TextUtils.isEmpty(mBuoy.getFloatSubjectList())&& "1".equals(mBuoy.getFloatSubjectList())
+            if (defaultTab == 0 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatIndex()) && "1".equals(mBuoy.getFloatIndex())
+                    || defaultTab == 1 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatSubjectList()) && "1".equals(mBuoy.getFloatSubjectList())
                     || defaultTab == 2
                     || defaultTab == 3) {
-                if(mBuoy!=null) {
+                if (mBuoy != null) {
                     mBuoy.clearAnimation();
                     mBuoy.hide();
                     mBuoy.setClosed(true);
@@ -154,40 +153,42 @@ public class Main extends Activity implements OnClickListener {
                 }
             }
         }
-        mainInitDataControl= new MainInitDataControl();
+        mainInitDataControl = new MainInitDataControl();
         WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(this,dialogShowCallBack) : new WelcomeDialog(this,3,dialogShowCallBack);
+                new WelcomeDialog(this, dialogShowCallBack) : new WelcomeDialog(this, 3, dialogShowCallBack);
         welcomeDialog.show();
-        long endTime1=System.currentTimeMillis();
-        Log.i("zhangyujian","main::oncreate::"+(endTime1-XHApplication.in().startTime));
+        long endTime1 = System.currentTimeMillis();
+        Log.i("zhangyujian", "main::oncreate::" + (endTime1 - XHApplication.in().startTime));
     }
 
     /**
      * welcomeDialog的回调封装
      */
-    private WelcomeDialog.DialogShowCallBack dialogShowCallBack=new WelcomeDialog.DialogShowCallBack() {
+    private WelcomeDialog.DialogShowCallBack dialogShowCallBack = new WelcomeDialog.DialogShowCallBack() {
         @Override
         public void dialogState(boolean show) {
-            if(!show){//展示后关闭
-                Log.i("zhangyujian","________________________________________________________");
-                if(mainInitDataControl!=null){
+            if (!show) {//展示后关闭
+                Log.i("zhangyujian", "________________________________________________________");
+                if (mainInitDataControl != null) {
                     mainInitDataControl.initMainOnResume(Main.this);
-                    mainInitDataControl.iniMainAfter(Main.this);}
+                    mainInitDataControl.iniMainAfter(Main.this);
+                }
                 showIndexActivity();
-                WelcomeDialogstate=true;
+                WelcomeDialogstate = true;
                 openUri();
                 new DialogControler().showDialog();
                 PushManager.tongjiPush();
-                isShowWelcomeDialog=false;
+                isShowWelcomeDialog = false;
 
-                boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()),EditParentActivity.TYPE_ARTICLE,"您的文章还未上传完毕，是否继续上传？");
-                if(!isShow) showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()),EditParentActivity.TYPE_VIDEO,"您的视频还未上传完毕，是否继续上传？");
+                boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
+                if (!isShow)
+                    showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？");
             }
         }
 
-        private boolean showUploading(UploadParentSQLite sqLite, final int dataType,String title){
+        private boolean showUploading(UploadParentSQLite sqLite, final int dataType, String title) {
             final UploadArticleData uploadArticleData = sqLite.getUploadIngData();
-            if(uploadArticleData != null){
+            if (uploadArticleData != null) {
                 final XhDialog xhDialog = new XhDialog(Main.this);
                 xhDialog.setTitle(title)
                         .setCanselButton("取消", new OnClickListener() {
@@ -198,11 +199,11 @@ public class Main extends Activity implements OnClickListener {
                         }).setSureButton(" 继续", new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(Main.this,ArticleUploadListActivity.class);
-                        intent.putExtra("draftId",uploadArticleData.getId());
+                        Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
+                        intent.putExtra("draftId", uploadArticleData.getId());
                         intent.putExtra("dataType", dataType);
-                        intent.putExtra("coverPath",uploadArticleData.getImg());
-                        intent.putExtra("finalVideoPath",uploadArticleData.getVideo());
+                        intent.putExtra("coverPath", uploadArticleData.getImg());
+                        intent.putExtra("finalVideoPath", uploadArticleData.getVideo());
                         startActivity(intent);
                         xhDialog.cancel();
                     }
@@ -214,7 +215,7 @@ public class Main extends Activity implements OnClickListener {
 
         @Override
         public void dialogOnLayout() {
-            Log.i("zhangyujian","++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            Log.i("zhangyujian", "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             AdControlHomeDish.getInstance();
             setCurrentTabByIndex(defaultTab);
             init();
@@ -234,10 +235,11 @@ public class Main extends Activity implements OnClickListener {
         public void dialogAdComplete() {
         }
     };
+
     /**
      * 外部传递参数
      */
-    private void openFromOther(){
+    private void openFromOther() {
         // 获取外部参数;
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -250,11 +252,12 @@ public class Main extends Activity implements OnClickListener {
             }
         }
         //外部知道吊起app
-        if(this.getIntent().getData() != null){
+        if (this.getIntent().getData() != null) {
             url = this.getIntent().getData().toString();
             this.getIntent().setData(null);
         }
     }
+
     /**
      * 初始化第三方控件
      */
@@ -263,11 +266,11 @@ public class Main extends Activity implements OnClickListener {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        QbSdk.initX5Environment(Main.this,null);
+        QbSdk.initX5Environment(Main.this, null);
         //视频合成so初始化，单独列出
         LoadLanSongSdk.initVideoSdk(getApplicationContext());
     }
-    
+
     /**
      * 初始化布局
      */
@@ -380,16 +383,16 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        long endTime=System.currentTimeMillis();
-        Log.i("zhangyujian","main::onResume::"+(endTime-XHApplication.in().startTime));
-        mainOnResumeState=true;
+        long endTime = System.currentTimeMillis();
+        Log.i("zhangyujian", "main::onResume::" + (endTime - XHApplication.in().startTime));
+        mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
             System.exit(0);
         }
-        if(!isForeground){
+        if (!isForeground) {
             long newHomebackTime = System.currentTimeMillis();
-            getApiSurTime("homeback",homebackTime,newHomebackTime);
+            getApiSurTime("homeback", homebackTime, newHomebackTime);
         }
         isForeground = true;
         //设置未读消息数
@@ -409,8 +412,8 @@ public class Main extends Activity implements OnClickListener {
     /**
      * 外部吊起app
      */
-    private void openUri(){
-        if(mainOnResumeState&&WelcomeDialogstate){
+    private void openUri() {
+        if (mainOnResumeState && WelcomeDialogstate) {
             //这个问题待验证
 //        Intent intent = this.getIntent();
 //        if (intent != null) {
@@ -423,7 +426,7 @@ public class Main extends Activity implements OnClickListener {
 //        }
             openFromOther();
             //外部开启页面
-            if(!TextUtils.isEmpty(url)){
+            if (!TextUtils.isEmpty(url)) {
                 AppCommon.openUrl(this, url, true);
                 url = null;
             }
@@ -433,7 +436,7 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        mainOnResumeState=false;
+        mainOnResumeState = false;
         try {
             mLocalActivityManager.dispatchPause(isFinishing());
         } catch (Exception e) {
@@ -444,7 +447,7 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onStop() {
         super.onStop();
-        if(!Tools.isAppOnForeground()){
+        if (!Tools.isAppOnForeground()) {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
@@ -452,7 +455,7 @@ public class Main extends Activity implements OnClickListener {
 
     @Override
     public void finish() {
-        FileManager.setSharedPreference(XHApplication.in(),FileManager.xmlKey_appKillTime,String.valueOf(System.currentTimeMillis()));
+        FileManager.setSharedPreference(XHApplication.in(), FileManager.xmlKey_appKillTime, String.valueOf(System.currentTimeMillis()));
         super.finish();
     }
 
@@ -509,16 +512,16 @@ public class Main extends Activity implements OnClickListener {
                     }
                 }, 1000 * 5);
             } else {
-                if(timer!=null) {
+                if (timer != null) {
                     timer.cancel();
                     timer.purge();
                 }
                 colse_level = 0;
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 // 开启自我唤醒
-                if(act!=null)new XGLocalPushServer(act).initLocalPush();
+                if (act != null) new XGLocalPushServer(act).initLocalPush();
                 // 关闭时发送页面停留时间统计
-                if(act!=null)XHClick.finishToSendPath(act);
+                if (act != null) XHClick.finishToSendPath(act);
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 ReqInternet.in().finish();
@@ -546,7 +549,7 @@ public class Main extends Activity implements OnClickListener {
         if (index > -1 && index < 5) {
             tabHost.setCurrentTab(index);
             setCurrentText(index);
-            nowTab=index;
+            nowTab = index;
         }
     }
 
@@ -573,20 +576,20 @@ public class Main extends Activity implements OnClickListener {
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
             }
         }
-            if(index==2){//特殊美食圈的逻辑
-                changeSendLayout.setVisibility(View.VISIBLE);
-            }else{
-                changeSendLayout.setVisibility(View.GONE);
-            }
-        if(nowTab==0&&index!=0){//当前是首页，切换到其他页面
-            if(allTab.containsKey("MainIndex")) {
+        if (index == 2) {//特殊美食圈的逻辑
+            changeSendLayout.setVisibility(View.VISIBLE);
+        } else {
+            changeSendLayout.setVisibility(View.GONE);
+        }
+        if (nowTab == 0 && index != 0) {//当前是首页，切换到其他页面
+            if (allTab.containsKey("MainIndex")) {
                 MainHome mainIndex = (MainHome) allTab.get("MainIndex");
                 mainIndex.saveNowStatictis();
-                XHClick.newHomeStatictis(true,"");
+                XHClick.newHomeStatictis(true, "");
             }
 
-        }else if(nowTab!=0&&index==0){//当前是其他页面，切换到首页
-            if(allTab.containsKey("MainIndex")) {
+        } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
+            if (allTab.containsKey("MainIndex")) {
                 MainHome mainIndex = (MainHome) allTab.get("MainIndex");
                 mainIndex.setRecommedTime(System.currentTimeMillis());
             }
@@ -654,11 +657,11 @@ public class Main extends Activity implements OnClickListener {
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
-                if (i == 2 && allTab.containsKey("MainCircle")&&i==nowTab) {
+                if (i == 2 && allTab.containsKey("MainCircle") && i == nowTab) {
                     MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
 //					mainCircle.setCurrentList(0);
                     mainCircle.refresh();
-                } else if (i == 0 && allTab.containsKey("MainIndex")&&i==nowTab) {
+                } else if (i == 0 && allTab.containsKey("MainIndex") && i == nowTab) {
                     MainHome mainIndex = (MainHome) allTab.get("MainIndex");
                     mainIndex.refreshContentView(true);
                 } else if (i == 1 && allTab.containsKey("MainMall") && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
@@ -674,7 +677,7 @@ public class Main extends Activity implements OnClickListener {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get("MainMyself");
 //                    mainMyself.scrollToTop();
-                } else if (i == 3 && allTab.containsKey("MyMessage")&&i==nowTab) {
+                } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
                 }
@@ -726,10 +729,11 @@ public class Main extends Activity implements OnClickListener {
 
     /**
      * 执行一个旋转动画
+     *
      * @param view
      */
-    private void setRoteAnimation(View view){
-        RotateAnimation animation= new RotateAnimation(0,360, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+    private void setRoteAnimation(View view) {
+        RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(800);
         view.clearAnimation();
         view.startAnimation(animation);
@@ -737,15 +741,16 @@ public class Main extends Activity implements OnClickListener {
 
     /**
      * 设置导航美食圈按钮显示刷新状态
+     *
      * @param state
      */
-    public void setQuanRefreshState(boolean state){
-        quanRefreshState=state;
-        if(state) {
-            ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found_refresh);
+    public void setQuanRefreshState(boolean state) {
+        quanRefreshState = state;
+        if (state) {
+            ((ImageView) tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found_refresh);
             ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("刷新");
-        }else{
-            ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found);
+        } else {
+            ((ImageView) tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found);
             ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
         }
     }
@@ -779,10 +784,10 @@ public class Main extends Activity implements OnClickListener {
     }
 
     /**
-     *welcome处理当前view
+     * welcome处理当前view
      */
-    public void showIndexActivity(){
-        if(allTab.containsKey("MainIndex")){
+    public void showIndexActivity() {
+        if (allTab.containsKey("MainIndex")) {
             MainHome mainIndex = (MainHome) allTab.get("MainIndex");
             mainIndex.onActivityshow();
         }
@@ -792,18 +797,18 @@ public class Main extends Activity implements OnClickListener {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
-            isInit=true;
+            isInit = true;
 //            mainInitDataControl.iniMainAfter(Main.this);
         }
         //此处可以进行分级处理:暂时无需要
-        Log.i("zhangyujian","main::onWindowFocusChanged");
+        Log.i("zhangyujian", "main::onWindowFocusChanged");
     }
 
     /**
      * 处理首页统计
      */
-    public void handlerHomeStatistics(){
-        if(allTab.containsKey("MainIndex")){
+    public void handlerHomeStatistics() {
+        if (allTab.containsKey("MainIndex")) {
             MainHome mainIndex = (MainHome) allTab.get("MainIndex");
             mainIndex.saveNowStatictis();
         }
@@ -812,6 +817,6 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        Log.i("zhangyujian","main::onPostCreate");
+        Log.i("zhangyujian", "main::onPostCreate");
     }
 }

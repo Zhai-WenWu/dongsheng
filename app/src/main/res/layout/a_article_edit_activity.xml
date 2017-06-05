@@ -13,6 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#FFFFFE"
         android:layout_below="@+id/title_rela"
         android:scrollbars="none">
 
@@ -30,11 +31,13 @@
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
                 android:background="@null"
+                android:textColor="#494949"
+                android:textStyle="bold"
                 android:paddingTop="@dimen/dp_15"
                 android:paddingBottom="@dimen/dp_15"
                 android:textColorHint="#bbbbbb"
                 android:textCursorDrawable="@null"
-                android:textSize="@dimen/sp_25"/>
+                android:textSize="@dimen/sp_24"/>
 
             <View
                 android:layout_width="match_parent"

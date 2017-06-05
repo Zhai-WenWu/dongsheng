@@ -127,10 +127,18 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(title);
 
-        findViewById(R.id.nextStep).setVisibility(View.VISIBLE);
-        findViewById(R.id.nextStep).setOnClickListener(this);
-        findViewById(R.id.leftImgBtn).setVisibility(View.GONE);
-        findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
+        TextView nestStep = (TextView) findViewById(R.id.nextStep);
+        int dp_20 = (int) this.getResources().getDimension(R.dimen.dp_20);
+        nestStep.setPadding(dp_20 , 0 , dp_20 , 0);
+        nestStep.setVisibility(View.VISIBLE);
+        nestStep.setOnClickListener(this);
+        ImageView leftImgBtn=(ImageView)findViewById(R.id.leftImgBtn);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) leftImgBtn.getLayoutParams();
+        params.setMargins((int) getResources().getDimension(R.dimen.dp_18), 0, 0, 0);
+        leftImgBtn.setImageResource(R.drawable.image_selector_close);
+        int dp_2= (int) this.getResources().getDimension(R.dimen.dp_2);
+        int dp_8= (int) this.getResources().getDimension(R.dimen.dp_8);
+        leftImgBtn.setPadding(dp_2, dp_8, dp_2, dp_8);
         findViewById(R.id.back).setOnClickListener(this);
 
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
@@ -179,7 +187,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             Intent intent = new Intent(EditParentActivity.this, ImageSelectorActivity.class);
                             intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
                             ArrayList<String> imageArray = mixLayout.getImageArray();
-                            intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, getMaxImageCount() - imageArray.size());
+                            int maxImageCount = getMaxImageCount() - imageArray.size();
+                            intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, maxImageCount > 10 ? 10 : maxImageCount);
                             intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imageArray);
                             startActivityForResult(intent, REQUEST_SELECT_IMAGE);
                             switch (mPageTag) {

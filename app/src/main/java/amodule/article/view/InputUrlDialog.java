@@ -2,8 +2,11 @@ package amodule.article.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -54,6 +57,7 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
     }
 
     private TextView title;
+    private TextView sure;
     private EditText urlEdit;
     private EditText descEdit;
 
@@ -65,16 +69,27 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
         urlEdit = (EditText) findViewById(R.id.url_edit);
         descEdit = (EditText) findViewById(R.id.desc_edit);
         title = (TextView) findViewById(R.id.title);
+        sure = (TextView) findViewById(R.id.sure);
 
-        findViewById(R.id.sure).setOnClickListener(this);
+        sure.setOnClickListener(this);
         findViewById(R.id.cannel).setOnClickListener(this);
         findViewById(R.id.dialog_root).setOnClickListener(this);
+        urlEdit.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+                sure.setTextColor(Color.parseColor(s.length() > 0 ? "#4AC768" : "#999999"));
+            }
+        });
         //
         initWebUrPatternl();
     }
 
-    public void setUrl(String url){
-        if (!TextUtils.isEmpty(url)){
+    public void setUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
             urlEdit.setText(url);
             title.setText("编辑链接");
         }
@@ -102,7 +117,7 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
                 if (htmlUrl.matches()) {
                     dismiss();
                     String desc = descEdit.getText().toString().trim();
-                    if(TextUtils.isEmpty(desc)){
+                    if (TextUtils.isEmpty(desc)) {
                         desc = url;
                     }
                     if (mOnReturnResultCallback != null) {
@@ -119,10 +134,6 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
         public void onSure(String url, String desc);
 
         public void onCannel();
-    }
-
-    public OnReturnResultCallback getOnReturnResultCallback() {
-        return mOnReturnResultCallback;
     }
 
     public void setOnReturnResultCallback(OnReturnResultCallback mOnReturnResultCallback) {

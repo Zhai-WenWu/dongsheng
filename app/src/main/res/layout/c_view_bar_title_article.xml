@@ -35,7 +35,6 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -67,6 +66,7 @@
         android:id="@+id/rightImgBtn2"
         style="@style/rightBtn"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_10"
         android:src="@drawable/z_z_topbar_ico_share"
         android:visibility="visible"/>
 </RelativeLayout>

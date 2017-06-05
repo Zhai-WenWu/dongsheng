@@ -103,9 +103,10 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         this.imageUrl = imageUrl;
         if (imageUrl.endsWith(".gif")) {
             type = IMAGE_GIF;
-            if (enableEdit)
+            if (enableEdit){
                 Glide.with(getContext()).load(imageUrl).asBitmap().into(showImage);
-            else
+                itemGifHint.setVisibility(VISIBLE);
+            } else
                 Glide.with(getContext())
                         .load(imageUrl)
                         .asGif()

@@ -37,7 +37,6 @@ import aplug.basic.ReqEncyptInternet;
  * Created by MrTrying on 2017/5/27 09:57.
  * E_mail : ztanzeyu@gmail.com
  */
-
 public class ArticleCommentBar extends RelativeLayout implements View.OnClickListener {
 
     private EditText editText;
@@ -50,6 +49,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     private String type = "1";
     private String praiseAPI = "";
     private int praiseNum = 0;
+    private boolean isSofa = false;
 
     public ArticleCommentBar(Context context) {
         super(context);
@@ -88,6 +88,10 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
         }
         praiseNum = Integer.parseInt(map.get("likeNumber"));
+        praiseText.setText("赞" + praiseNum);
+
+        String commentNum = map.get("commentNumber");
+        isSofa = "0".equals(commentNum);
     }
 
     @Override
@@ -109,7 +113,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         }
     }
 
-    private void doComment(String hintText) {
+    public void doComment(String hintText) {
         findViewById(R.id.comment_bar_fake).setVisibility(View.INVISIBLE);
         findViewById(R.id.comment_bar_real).setVisibility(View.VISIBLE);
         editText.setHint(hintText);
@@ -169,7 +173,10 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                             editText.setText("");
                             editText.clearFocus();
                             ToolsDevice.keyboardControl(true, getContext(), editText);
-//                            Tools.showToast(context,"评论成功");
+                            if(onCommentSuccessCallback != null){
+                                onCommentSuccessCallback.onCommentSuccess(isSofa);
+                            }
+                            if(isSofa) isSofa = !isSofa;
                         }else{
                             Tools.showToast(context,"评论失败，请重试");
                         }
@@ -214,5 +221,22 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     public EditText getEditText() {
         return editText;
+    }
+
+    public boolean isSofa() {
+        return isSofa;
+    }
+
+    public void setSofa(boolean sofa) {
+        isSofa = sofa;
+    }
+
+    private OnCommentSuccessCallback onCommentSuccessCallback;
+    public interface OnCommentSuccessCallback{
+        public void onCommentSuccess(boolean isSofa);
+    }
+
+    public void setOnCommentSuccessCallback(OnCommentSuccessCallback onCommentSuccessCallback) {
+        this.onCommentSuccessCallback = onCommentSuccessCallback;
     }
 }

@@ -67,8 +67,71 @@ public class ArticleCommentView extends ItemBaseView {
     }
 
     public void setData(Map<String, String> map) {
-        if (TextUtils.isEmpty(map.get("commentNum"))
-                || "0".equals(map.get("commentNum"))) {
+        String dataStr = map.get("data");
+        Map<String, String> commentMap = StringManager.getFirstMap(dataStr);
+        List<Map<String, String>> data = StringManager.getListMapByJson(commentMap.get("list"));
+        if (data.size() > 0) {
+            if (!TextUtils.isEmpty(map.get("commentNum"))) {
+                setViewText(commentNum, map, "commentNum", GONE, "评论(", ")");
+            }
+            for (final Map<String, String> dataMap : data) {
+                final ViewCommentItem commentItem = new ViewCommentItem(getContext());
+                commentItem.setData(dataMap);
+                commentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
+                    @Override
+                    public void onShowAllReplayClick(String comment_id) {
+                        StringBuilder sbuild = new StringBuilder();
+                        sbuild.append("type=").append(getType()).append("&")
+                                .append("code=").append(code).append("&")
+                                .append("commentId=").append(comment_id).append("&")
+                                .append("pagesize=").append(Integer.parseInt(dataMap.get("replay_num")) + 3).append("&");
+
+                        ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, sbuild.toString(),
+                                new InternetCallback(getContext()) {
+                                    @Override
+                                    public void loaded(int flag, String url, Object obj) {
+                                        if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                                            commentItem.addReplayView((String) obj);
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent, String reportType) {
+
+                    }
+
+                    @Override
+                    public void onDeleteCommentClick(String comment_id, String deleteType) {
+
+                    }
+
+                    @Override
+                    public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
+
+                    }
+
+                    @Override
+                    public void onDeleteReplayClick(String comment_id, String replay_id) {
+
+                    }
+
+                    @Override
+                    public void onPraiseClick(String comment_id) {
+                        gotoCommentActivity();
+                    }
+
+                    @Override
+                    public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
+                        gotoCommentActivity();
+                    }
+                });
+                commentLayout.addView(commentItem);
+            }
+            findViewById(R.id.has_comment_layout).setVisibility(VISIBLE);
+            findViewById(R.id.robsofa).setVisibility(GONE);
+        } else {
             robsofa.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,65 +141,9 @@ public class ArticleCommentView extends ItemBaseView {
                 }
             });
             findViewById(R.id.has_comment_layout).setVisibility(GONE);
+            findViewById(R.id.robsofa).setVisibility(VISIBLE);
         }
-        setViewText(commentNum, map, "commentNum", GONE, "评论(", ")");
-        String dataStr = map.get("data");
-        List<Map<String, String>> data = StringManager.getListMapByJson(dataStr);
-        for (final Map<String, String> dataMap : data) {
-            final ViewCommentItem commentItem = new ViewCommentItem(getContext());
-            commentItem.setData(dataMap);
-            commentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
-                @Override
-                public void onShowAllReplayClick(String comment_id) {
-                    StringBuilder sbuild = new StringBuilder();
-                    sbuild.append("type=").append(getType()).append("&")
-                            .append("code=").append(code).append("&")
-                            .append("commentId=").append(comment_id).append("&")
-                            .append("pagesize=").append(Integer.parseInt(dataMap.get("replay_num")) + 3).append("&");
 
-                    ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, sbuild.toString(),
-                            new InternetCallback(getContext()) {
-                                @Override
-                                public void loaded(int flag, String url, Object obj) {
-                                    if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                                        commentItem.addReplayView((String) obj);
-                                    }
-                                }
-                            });
-                }
-
-                @Override
-                public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent, String reportType) {
-
-                }
-
-                @Override
-                public void onDeleteCommentClick(String comment_id, String deleteType) {
-
-                }
-
-                @Override
-                public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-
-                }
-
-                @Override
-                public void onDeleteReplayClick(String comment_id, String replay_id) {
-
-                }
-
-                @Override
-                public void onPraiseClick(String comment_id) {
-                    gotoCommentActivity();
-                }
-
-                @Override
-                public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
-                    gotoCommentActivity();
-                }
-            });
-            commentLayout.addView(commentItem);
-        }
     }
 
     private void gotoCommentActivity() {

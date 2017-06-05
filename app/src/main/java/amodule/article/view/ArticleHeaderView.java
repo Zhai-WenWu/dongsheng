@@ -147,7 +147,7 @@ public class ArticleHeaderView extends ItemBaseView {
                 follow_rela.setBackgroundColor(Color.parseColor("#fffffe"));
                 follow_rela.setClickable(false);
                 follow_tv.setText("已关注");
-                follow_tv.setTextColor(Color.parseColor("#333333"));
+                follow_tv.setTextColor(Color.parseColor("#999999"));
             }
         } else follow_rela.setVisibility(GONE);
     }

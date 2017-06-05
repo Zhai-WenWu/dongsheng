@@ -297,7 +297,6 @@ public class TextAndImageMixLayout extends LinearLayout
             imageMap.put(imageUrl,imageUrl);
         }
 
-
         //默认插入edit
         if (ifAddText)
             addRichText(insertIndex + 1, content);

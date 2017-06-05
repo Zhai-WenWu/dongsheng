@@ -8,18 +8,17 @@
         android:id="@+id/hander"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:visibility="visible">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sp_12"/>
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFE"
             android:layout_marginTop="@dimen/dp_28"
+            android:background="#FFFFFE"
             android:paddingBottom="@dimen/dp_3"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20">
@@ -37,102 +36,198 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_0.5"
+                android:layout_height="1px"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/title"
                 android:background="#E1E1E1"/>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_0.5"
+                android:layout_height="1px"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/title"
                 android:background="#E1E1E1"/>
 
         </RelativeLayout>
 
-
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/hander"
-        android:orientation="vertical"
+        android:background="@color/transparent"
         android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_20">
+        android:paddingRight="@dimen/dp_20">
 
-        <RelativeLayout
+        <View
+            android:id="@+id/line_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="#e9e9e9"/>
+
+        <LinearLayout
+            android:id="@+id/time_tag_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_round_homeitem"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/time_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_35"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="#ff533c"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/rec_image"
-                android:layout_width="@dimen/dp_110"
-                android:layout_height="@dimen/dp_77.5"
-                android:layout_alignParentRight="true"
-                android:visibility="visible"/>
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_12"
+                android:layout_marginLeft="@dimen/dp_3"
+                android:layout_marginTop="@dimen/dp_1"
+                android:scaleType="centerInside"
+                android:src="@drawable/time_tag_refresh"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/txt_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_74.5"
+            android:layout_below="@+id/time_tag_container"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_toLeftOf="@+id/imgs">
 
             <TextView
                 android:id="@+id/rec_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dp_17"
-                android:layout_toLeftOf="@+id/rec_image"
-                android:lineSpacingExtra="@dimen/dp_6"
-                android:lineSpacingMultiplier="1"
-                android:lines="2"
-                android:textColor="#000"
-                android:textSize="@dimen/dp_18"/>
+                android:ellipsize="end"
+                android:lineSpacingExtra="@dimen/dp_4"
+                android:maxLines="2"
+                android:text="七年老鸭"
+                android:textColor="@color/c_black_text"
+                android:textSize="@dimen/sp_17"
+                android:visibility="visible"/>
 
             <LinearLayout
+                android:id="@+id/user_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/rec_title"
-                android:layout_toLeftOf="@+id/rec_image"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/rec_customer_name"
+                <ImageView
+                    android:id="@+id/top_tag"
+                    android:layout_width="@dimen/dp_27"
+                    android:layout_height="@dimen/dp_14"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:src="@drawable/top"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:id="@+id/name_gourmet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="七年老鸭"
-                    android:textColor="#BABABA"
-                    android:textSize="@dimen/dp_12"/>
+                    android:layout_marginRight="@dimen/dp_14"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/gourmet_icon"
-                    android:layout_width="@dimen/dp_11"
-                    android:layout_height="@dimen/dp_11"
-                    android:src="@drawable/z_user_gourmet_ico"/>
+                    <TextView
+                        android:id="@+id/rec_customer_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_1"
+                        android:maxLength="5"
+                        android:maxLines="1"
+                        android:text="七年老鸭"
+                        android:textColor="#b5b4b4"
+                        android:textSize="@dimen/sp_11"
+                        android:visibility="visible"/>
+
+                    <ImageView
+                        android:id="@+id/gourmet_icon"
+                        android:layout_width="@dimen/dp_11"
+                        android:layout_height="@dimen/dp_11"
+                        android:src="@drawable/home_item_gourmet_icon"
+                        android:visibility="visible"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/rec_browse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_15"
-                    android:text="56.0万浏览"
-                    android:textColor="#BABABA"
-                    android:textSize="@dimen/dp_12"/>
+                    android:layout_marginRight="@dimen/dp_14"
+                    android:text="七年老鸭"
+                    android:textColor="#b5b4b4"
+                    android:textSize="@dimen/sp_11"
+                    android:visibility="visible"/>
 
                 <TextView
                     android:id="@+id/rec_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_15"
-                    android:text="199评论"
-                    android:textColor="#BABABA"
-                    android:textSize="@dimen/dp_12"/>
+                    android:text="七年老鸭"
+                    android:textColor="#b5b4b4"
+                    android:textSize="@dimen/sp_11"
+                    android:visibility="visible"/>
 
             </LinearLayout>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/imgs"
+            android:layout_width="@dimen/dp_110"
+            android:layout_height="@dimen/dp_72.5"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/time_tag_container"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:layout_marginLeft="@dimen/dp_17"
+            android:layout_marginTop="@dimen/dp_15"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/rec_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:visibility="visible"/>
+
+            <View
+                android:id="@+id/layer_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#19ffffff"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/ad_tag"
+                android:layout_width="@dimen/dp_35"
+                android:layout_height="@dimen/dp_16.5"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/home_item_adtag_black"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
         <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_0.5"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="#E9E9E9"/>
-    </LinearLayout>
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_below="@id/txt_container"/>
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_below="@id/imgs"/>
+    </RelativeLayout>
 
 </RelativeLayout>

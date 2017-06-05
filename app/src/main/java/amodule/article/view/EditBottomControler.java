@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.xiangha.R;
@@ -17,6 +18,7 @@ import com.xiangha.R;
 public class EditBottomControler extends LinearLayout implements View.OnClickListener {
 
     private LinearLayout textEditlayout;
+    private ImageView textEditImage;
 
     private OnSelectImageCallback mOnSelectImageCallback;
     private OnSelectVideoCallback mOnSelectVideoCallback;
@@ -40,6 +42,7 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
 
     private void init() {
         textEditlayout = (LinearLayout) findViewById(R.id.text_edit_layout);
+        textEditImage = (ImageView) findViewById(R.id.edit_text);
 
         //设置监听
         findViewById(R.id.select_image).setOnClickListener(this);
@@ -71,6 +74,7 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
             case R.id.edit_text:
                 boolean isVisibility = textEditlayout.getVisibility() == View.VISIBLE;
                 textEditlayout.setVisibility(isVisibility ? View.GONE : View.VISIBLE);
+                textEditImage.setSelected(!isVisibility);
                 if (null != mOnTextEidtCallback) {
                     mOnTextEidtCallback.onEditControlerShow(textEditlayout.getVisibility() == View.VISIBLE);
                 }

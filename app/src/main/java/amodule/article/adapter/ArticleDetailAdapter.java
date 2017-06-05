@@ -40,11 +40,9 @@ public class ArticleDetailAdapter extends BaseAdapter {
     public final static int Type_text = 2;//文本
     public final static int Type_image = 3;//图片
     public final static int Type_gif = 4;//gif
-    public final static int Type_video = 5;//视频
     public final static int Type_caipu = 6;//菜谱
     public final static int Type_ds = 7;//电商
     public final static int Type_comment = 8;//评论
-    public final static int Type_articleinfo = 9;//转自
 
     private Context context;
     private ArrayList<Map<String, String>> listMap;
@@ -90,9 +88,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
             case Type_gif:
                 convertView = getImageView(map,"gif");
                 break;
-            case Type_video:
-                convertView = getVideoView(map,position);
-                break;
             case Type_caipu:
                 convertView = getCaipuView(map);
                 break;
@@ -101,9 +96,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
                 break;
             case Type_comment:
                 convertView = getCommentView(map);
-                break;
-            case Type_articleinfo:
-                convertView = getContentBottom(map);
                 break;
             case Type_recommed:
                 RecommedViewHolder viewHolder = null;
@@ -121,14 +113,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private View getContentBottom(Map<String, String> map) {
-        ArticleContentBottomView view = new ArticleContentBottomView(context);
-        view.setData(map);
-        if(mOnReportClickCallback != null)
-            view.setOnReportClickCallback(mOnReportClickCallback);
-        return view;
-    }
-
     private View getCommentView(Map<String, String> map) {
         ArticleCommentView view = new ArticleCommentView(context);
         view.setType(type);
@@ -139,8 +123,25 @@ public class ArticleDetailAdapter extends BaseAdapter {
                 Tools.showToast(context,"抢沙发");
             }
         });
+        view.setRobsofaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onRabSofaCallback != null){
+                    onRabSofaCallback.onRabSoaf();
+                }
+            }
+        });
         view.setData(map);
         return view;
+    }
+
+    private OnRabSofaCallback onRabSofaCallback;
+    public interface OnRabSofaCallback{
+        public void onRabSoaf();
+    }
+
+    public void setOnRabSofaCallback(OnRabSofaCallback onRabSofaCallback) {
+        this.onRabSofaCallback = onRabSofaCallback;
     }
 
     @Override
@@ -167,7 +168,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
             int spanEnd = builder.getSpanEnd(span);
             builder.removeSpan(span);
             Log.i("tzy", "url = " + span.getURL());
-            builder.setSpan(new RichURLSpan(span.getURL(), Color.parseColor("#0872dd"), false) {
+            builder.setSpan(new RichURLSpan(span.getURL(), Color.parseColor("#5c809c"), false) {
                 @Override
                 public void onClick(View widget) {
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), span.getURL(), true);
@@ -185,15 +186,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
         imageShowView.setEnableEdit(false);
         imageShowView.showImage(map.get("imageUrl"), type);
         return imageShowView;
-    }
-
-    private View getVideoView(Map<String, String> map,int position) {
-        VideoShowView videoShowView = new VideoShowView(context);
-        videoShowView.setEnableEdit(false);
-        videoShowView.setVideoDataFromService(map.get("videoUrl"),map.get("videoImageUrl"),position);
-        if(mVideoClickCallBack != null)
-            videoShowView.setVideoClickCallBack(mVideoClickCallBack);
-        return videoShowView;
     }
 
     private View getCommodityView(final Map<String, String> map) {
@@ -236,16 +228,5 @@ public class ArticleDetailAdapter extends BaseAdapter {
                 view.setData(map);
             }
         }
-    }
-
-    private VideoShowView.VideoClickCallBack mVideoClickCallBack;
-
-    public void setVideoClickCallBack(VideoShowView.VideoClickCallBack clickCallBack) {
-        mVideoClickCallBack = clickCallBack;
-    }
-
-    private ArticleContentBottomView.OnReportClickCallback mOnReportClickCallback;
-    public void setOnReportClickCallback(ArticleContentBottomView.OnReportClickCallback callback){
-        mOnReportClickCallback = callback;
     }
 }
