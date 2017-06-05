@@ -122,6 +122,7 @@ public class HomeFragment extends Fragment{
     private boolean isRecom=false;//是否是推荐
     private long statrTime= -1;//开始的时间戳
     private boolean isNextUrl=true;//执行数据有问题时，数据请求，只执行一次。
+    private int upDataSize = 0;//向上刷新数据集合大小
 
     public static HomeFragment newInstance(HomeModuleBean moduleBean) {
         HomeFragment fragment = new HomeFragment();
@@ -477,7 +478,10 @@ public class HomeFragment extends Fragment{
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
+                                        Log.i("zhangyujian","listDatas:::"+listDatas.size());
                                         listDatas = mAdControl.getNewAdData(listDatas, true);
+
+                                        upDataSize+=listDatas.size();
                                     }
                                     mListData.addAll(0, listDatas);//插入到第一个位置
                                 } else {
@@ -501,6 +505,9 @@ public class HomeFragment extends Fragment{
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
+                                        Log.i("zhangyujian","mListData:::"+mListData.size()+"::"+upDataSize);
+                                        if(upDataSize>0 && isRecom)
+                                            mAdControl.setLimitNum(upDataSize);
                                         mListData = mAdControl.getNewAdData(mListData, false);
                                     }
                                 }

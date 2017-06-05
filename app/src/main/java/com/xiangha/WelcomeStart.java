@@ -20,6 +20,7 @@ public class WelcomeStart extends Activity{
         super.onCreate(savedInstanceState);
         long endTime= System.currentTimeMillis();
         Log.i("zhangyujian","WelcomeStart::oncreate:start:"+(endTime- XHApplication.in().startTime));
+
         Intent intent = new Intent(this,Main.class);
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {

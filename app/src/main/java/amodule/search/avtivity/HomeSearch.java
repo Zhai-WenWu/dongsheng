@@ -86,7 +86,7 @@ public class HomeSearch extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SearchResultAdDataProvider.getInstance().getXhAllAdControl().releaseView();
+//        SearchResultAdDataProvider.getInstance().getXhAllAdControl().releaseView();
         System.gc();
     }
 

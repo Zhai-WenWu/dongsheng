@@ -30,7 +30,6 @@ public class AdControlHomeDish extends AdControlParent{
     private int currentControlTag = -1;
     private int adControlNum = 1;
     private int nextAdNum = 2;
-
     private AdControlHomeDish(){
         adControlMap = new HashMap<>();
         AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0, AD_INSTERT_INDEX_0);
@@ -69,13 +68,16 @@ public class AdControlHomeDish extends AdControlParent{
     @Override
     public ArrayList<Map<String, String>> getNewAdData(ArrayList<Map<String, String>> old_list,boolean isBack) {
         //向上加载数据,则循环找到广告
-        AdOptionHomeDish adControlParent = getCurrentControl(isBack);
-        if(adControlParent == null){
+        AdOptionHomeDish adOptionHomeDish = getCurrentControl(isBack);
+        if(adOptionHomeDish == null){
             return old_list;
         }else{
-            old_list = adControlParent.getNewAdData(old_list,isBack);
+            Log.i("zhangyujian","getLimitNum()::"+getLimitNum());
+            if(getLimitNum()>0&&!isBack)
+                adOptionHomeDish.setLimitNum(getLimitNum());
+            old_list = adOptionHomeDish.getNewAdData(old_list,isBack);
             //判断是否需要提前加载广告数据
-            if(isBack &&  adControlParent.getIsLoadNext() && currentControlTag > adControlMap.size() - nextAdNum){
+            if(isBack &&  adOptionHomeDish.getIsLoadNext() && currentControlTag > adControlMap.size() - nextAdNum){
                 AdOptionHomeDish adControl = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST, AD_INSTERT_INDEX);
                 adControl.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++adControlNum));
                 adControlMap.put(adControlNum,adControl);
@@ -86,18 +88,18 @@ public class AdControlHomeDish extends AdControlParent{
     }
 
     private AdOptionHomeDish getCurrentControl(boolean isBack){
-        AdOptionHomeDish adControlHomeDish = null;
+        AdOptionHomeDish adOptionHomeDish = null;
         if(isBack) {
             if (adControlMap.size() > nextAdNum) {
                 if (currentControlTag < nextAdNum) {
                     currentControlTag = nextAdNum;
                 }
                 if (currentControlTag < adControlMap.size()) {
-                    adControlHomeDish = adControlMap.get(currentControlTag);
-                    if (!adControlHomeDish.getIsHasNewData()) {
+                    adOptionHomeDish = adControlMap.get(currentControlTag);
+                    if (!adOptionHomeDish.getIsHasNewData()) {
                         currentControlTag++;
                         Log.i("FRJ", "这个控制类没有了数据，切换下一个currentControlTag :" + currentControlTag);
-                        adControlHomeDish = getCurrentControl(isBack);
+                        adOptionHomeDish = getCurrentControl(isBack);
                     }
                 }
             }
@@ -105,9 +107,9 @@ public class AdControlHomeDish extends AdControlParent{
             AdOptionHomeDish adOptionHomeDish1 = adControlMap.get(1);
             if(adOptionHomeDish1.getHasData())
                 return adOptionHomeDish1;
-            adControlHomeDish = adControlMap.get(0);
+            adOptionHomeDish = adControlMap.get(0);
         }
-        return adControlHomeDish;
+        return adOptionHomeDish;
     }
 
     @Override

@@ -16,7 +16,7 @@ import third.ad.scrollerAd.XHScrollerAdParent;
 /**
  * Created by Fang Ruijiao on 2017/4/25.
  */
-public abstract class AdOptionList extends AdOptionParent {
+public abstract class  AdOptionList extends AdOptionParent {
 
     public AdOptionList(String[] adPlayIds, Integer[] adIndexs) {
         super(adPlayIds, adIndexs);
@@ -25,6 +25,19 @@ public abstract class AdOptionList extends AdOptionParent {
     @Override
     protected ArrayList<Map<String, String>> getBdData(ArrayList<Map<String, String>> old_list,boolean isBack) {
         Log("getBdData adArray.size():" + adArray.size() + "    adIdList.size():" + adIdList.size());
+        ArrayList<Map<String,String>> tempList = new ArrayList<>();
+        Log.i("zhangyujian","getLimitNum::"+getLimitNum());
+//        int size = old_list.size();
+        if(!isBack&&getLimitNum()>0){//listDatas，向下翻页
+            int limitNum= getLimitNum();
+            for(int index=0;index<limitNum;index++){
+                tempList.add(old_list.get(index));
+            }
+            for(int index=0;index<limitNum;index++){
+                old_list.remove(0);
+            }
+            Log.i("zhangyujian","节点数据为::"+old_list.get(0).get("name"));
+        }
         if (adArray.size() > 0) {
             Map<String,String> adMap;
             if(!isBack){ //向上加载时添加广告数据
@@ -81,6 +94,9 @@ public abstract class AdOptionList extends AdOptionParent {
                     break;
                 }
             }
+        }
+        if(!isBack&&tempList!=null&&tempList.size()>0){
+            old_list.addAll(0,tempList);
         }
         return old_list;
     }

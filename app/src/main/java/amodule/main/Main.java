@@ -30,6 +30,8 @@ import android.widget.TextView;
 
 import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.stat.StatConfig;
+import com.tencent.stat.StatService;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -121,9 +123,20 @@ public class Main extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         long endTime=System.currentTimeMillis();
-        //初始化
-        InMobiAdTools.getInstance().initSdk(this);
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
+        //腾讯统计
+        StatConfig.setDebugEnable(true);
+        StatService.setContext(this.getApplication());
+        StatService.trackCustomEvent(this, "onCreate", "");
+        //百度统计
+//        com.baidu.mobstat.StatService.setDebugOn(true);
+        //初始化
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InMobiAdTools.getInstance().initSdk(Main.this);
+            }
+        }).start();
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
@@ -149,7 +162,7 @@ public class Main extends Activity implements OnClickListener {
         }
         mainInitDataControl= new MainInitDataControl();
         WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(this,dialogShowCallBack) : new WelcomeDialog(this,3,dialogShowCallBack);
+                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
         long endTime1=System.currentTimeMillis();
         Log.i("zhangyujian","main::oncreate::"+(endTime1-XHApplication.in().startTime));
@@ -171,7 +184,6 @@ public class Main extends Activity implements OnClickListener {
                 openUri();
                 new DialogControler().showDialog();
                 PushManager.tongjiPush();
-                isShowWelcomeDialog=false;
             }
         }
 
@@ -706,7 +718,7 @@ public class Main extends Activity implements OnClickListener {
         quanRefreshState=state;
         if(state) {
             ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found_refresh);
-            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("刷新");
+            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
         }else{
             ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found);
             ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");

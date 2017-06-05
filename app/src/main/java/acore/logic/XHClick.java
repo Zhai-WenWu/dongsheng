@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.dplus.UMADplus;
 
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import acore.dialogManager.VersionOp;
 import acore.logic.load.LoadManager;
@@ -126,8 +128,10 @@ public class XHClick {
     public static void mapStat(Context context, String eventID, String twoLevel, String threeLevel) {
         if (!TextUtils.isEmpty(threeLevel)) {
             onEvent(context, eventID, twoLevel, threeLevel);
+            onMtaEvent(context,eventID,twoLevel,threeLevel);//mta统计
         }
         onEvent(context, eventID, "全部", twoLevel);
+        onMtaEvent(context,eventID,"全部",twoLevel);//mta统计
     }
 
     /**
@@ -142,9 +146,13 @@ public class XHClick {
     public static void mapStat(Context context, String eventID, String twoLevel, String threeLevel, int number) {
         if (!TextUtils.isEmpty(threeLevel)) {
             onEventValue(context, eventID, twoLevel, threeLevel, number);
+            onMtaEvent(context,eventID,twoLevel,threeLevel);//mta统计
         }
         onEventValue(context, eventID, "全部", twoLevel, number);
+        onMtaEvent(context,eventID,"全部",twoLevel);//mta统计
+
     }
+
 
     /**
      * 计算事件统计
@@ -182,6 +190,29 @@ public class XHClick {
     }
 
     /**
+     * 腾讯统计
+     * @param context
+     * @param eventID
+     * @param twoLevel
+     * @param threeLevel
+     */
+    private static void onMtaEvent(Context context, String eventID,String twoLevel, String threeLevel){
+        Properties prop = new Properties();
+        prop.setProperty(twoLevel, threeLevel);
+//        StatService.trackCustomKVEvent(context,eventID,prop);
+        StatService.trackCustomEvent(context,eventID,twoLevel, threeLevel);
+    }
+    /**
+     * 百度统计
+     * @param context
+     * @param eventID
+     * @param twoLevel
+     * @param threeLevel
+     */
+    private static void onbaiduEvent(Context context, String eventID,String twoLevel, String threeLevel){
+//        com.baidu.mobstat.StatService.onEvent(context,eventID,twoLevel);
+    }
+    /**
      * 计数事件统计	(无map)
      *
      * @param context 上下文
@@ -191,6 +222,8 @@ public class XHClick {
     public static void onEvent(Context context, String eventID, String value) {
         if (isStatistics(context)) {
             MobclickAgent.onEvent(context, eventID, value);
+            StatService.trackCustomEvent(context, eventID, value);
+//            com.baidu.mobstat.StatService.onEvent(context,eventID,value);
         }
         showToast(context, "统计_计算_" + eventID + "：" + value);
     }

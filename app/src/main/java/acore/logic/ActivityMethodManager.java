@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.xiangha.R;
+import com.xiangha.Welcome;
 
 import java.util.Map;
 
@@ -17,7 +19,6 @@ import acore.tools.FileManager;
 import acore.widget.XHADView;
 import amodule.main.Main;
 import amodule.main.activity.MainHomePageNew;
-import amodule.main.view.WelcomeDialog;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
 import aplug.feedback.activity.Feedback;
@@ -50,6 +51,7 @@ public class ActivityMethodManager {
             adScrollView.refreshContext(mAct);
         }
         MobclickAgent.onResume(mAct);
+        StatService.onResume(mAct);//mta腾讯统计
         XHClick.getStartTime(mAct);
         // 应用到后台时如果数据被清理，需要重新自动登录
         if (LoginManager.userInfo.size() == 0) {
@@ -74,7 +76,8 @@ public class ActivityMethodManager {
                 final long MAX = WelcomeAdTools.getInstance().getSplashmaxs() * 1000;
                 long 时间差值 = currentTime - switchTime;
                 Log.i("tzy","" + 时间差值);
-                if (时间差值 >= MIN && 时间差值 <= MAX) {
+                if (时间差值 >= MIN){
+                        //&& 时间差值 <= MAX) {
                     //获取已启动次数
                     String currentCountStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "splashOpenSecond").toString();
                     int currentCount = 0;
@@ -84,13 +87,16 @@ public class ActivityMethodManager {
                     Log.i("tzy","已启动次数 ： " + currentCount);
                     final int showCount = WelcomeAdTools.getInstance().getShownum();
                     Log.i("tzy","启动MAX次数 ： " + showCount);
-                    if (0 >= showCount || currentCount <= showCount) {
+//                    if (0 >= showCount || currentCount <= showCount) {
                         int adShowTime = WelcomeAdTools.getInstance().getDuretimes();
-                        if(!Main.isShowWelcomeDialog)
-                            new WelcomeDialog(mAct, adShowTime).show();
+                        if(!Main.isShowWelcomeDialog) {
+//                            new WelcomeDialog(mAct, adShowTime).show();
+                            Log.i("zhangyujian","二次开屏");
+                            mAct.startActivity(new Intent(mAct, Welcome.class));
+                        }
                         //更新开启次数
                         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "splashOpenSecond", String.valueOf(++currentCount));
-                    }
+//                    }
                 }
             }
         }
@@ -113,6 +119,7 @@ public class ActivityMethodManager {
 
     public void onPause() {
         MobclickAgent.onPause(mAct);
+        StatService.onPause(mAct);//mta腾讯统计
         XHClick.getStopTime(mAct);
         XHClick.sendBrowseCodes(mAct);
         if (mHomeWatcher != null)
@@ -158,9 +165,9 @@ public class ActivityMethodManager {
                 public void onHomePressed() {
                     // 进行点击Home键的处理
                     XHClick.HomeKeyListener(mAct);
-
+                    Log.i("zhangyujian","HomeKeyListener111");
                     if (WelcomeAdTools.getInstance().isOpenSecond()) {
-                    Log.i("tzy","onHomePressed");
+                    Log.i("zhangyujian","onHomePressed");
                         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", String.valueOf(System.currentTimeMillis()));
                         WelcomeAdTools.getInstance().handlerAdData(true);
                     }
