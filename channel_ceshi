@@ -2,6 +2,7 @@
 #gradle clean assembleRelease -PchannelList=ceshi
 #gradlew clean assembleRelease -PchannelList=ceshi
 #gradle clean assembleRelease -PchannelList=xiangha
+#gradlew clean assembleRelease -PchannelList=xiangha
 #---------------------测试------------------------
 ceshi
 #---------------------百度要单独加百度自动更新sdk的aar------------------------
