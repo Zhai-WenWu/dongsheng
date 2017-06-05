@@ -967,7 +967,15 @@ public class AppCommon {
         return setVip(act,vipView,data,"","");
     }
 
+    public static boolean setVip(final Activity act, ImageView vipView, String data, View.OnClickListener listener){
+        return setVip(act,vipView,data,"","","",listener);
+    }
+
     public static boolean setVip(final Activity act, ImageView vipView, String data, final String eventId, final String twoLevel){
+        return setVip(act,vipView,data,eventId,twoLevel,"",null);
+    }
+
+    public static boolean setVip(final Activity act, ImageView vipView, String data, final String eventId, final String twoLevel, final String threadLevel, final View.OnClickListener listener){
         boolean isVip = isVip(data);
         if(isVip){
             vipView.setVisibility(View.VISIBLE);
@@ -978,7 +986,8 @@ public class AppCommon {
         vipView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!TextUtils.isEmpty(eventId)) XHClick.mapStat(act,eventId,twoLevel,"会员皇冠");
+                if(!TextUtils.isEmpty(eventId)) XHClick.mapStat(act,eventId,twoLevel,TextUtils.isEmpty(threadLevel) ? "会员皇冠" : threadLevel);
+                if(listener != null) listener.onClick(v);
                 AppCommon.openUrl(act, StringManager.api_vip, true);
             }
         });

@@ -106,12 +106,12 @@ public class ArticleCommentView extends ItemBaseView {
                 }
 
                 @Override
-                public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent) {
+                public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent, String reportType) {
 
                 }
 
                 @Override
-                public void onDeleteCommentClick(String comment_id) {
+                public void onDeleteCommentClick(String comment_id, String deleteType) {
 
                 }
 
@@ -131,7 +131,7 @@ public class ArticleCommentView extends ItemBaseView {
                 }
 
                 @Override
-                public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name) {
+                public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
                     gotoCommentActivity();
                 }
             });

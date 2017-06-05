@@ -92,12 +92,13 @@ public class ViewCommentItem extends LinearLayout {
         ArrayList<Map<String, String>> customeArray = StringManager.getListMapByJson(custome);
         if(customeArray.size() > 0){
             cusstomMap = customeArray.get(0);
-            String headerImg = "http://s1.cdn.xiangha.com/i/201703/2421/58d525620302f.jpg/MTAweDEwMA";
-            setUserImage(userIcon,headerImg);
-//            setUserImage(userIcon,cusstomMap.get("header_img"));
+//            String headerImg = "http://s1.cdn.xiangha.com/i/201703/2421/58d525620302f.jpg/MTAweDEwMA";
+//            setUserImage(userIcon,headerImg);
+            setUserImage(userIcon,cusstomMap.get("header_img"));
             userIcon.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(mUserListener != null) mUserListener.onCommentUserIconClick();
                     goFriendHome(cusstomMap.get("ucode"));
                 }
             });
@@ -106,16 +107,23 @@ public class ViewCommentItem extends LinearLayout {
                 AppCommon.setUserTypeImage(Integer.valueOf(is_gourmet), userType);
             String nickName = cusstomMap.get("nick_name");
             if(TextUtils.isEmpty(nickName)) nickName = "";
+            final String commentUserName = nickName;
             userName.setText(nickName.length() < 6 ? nickName : nickName.subSequence(0,5) + "...");
             userName.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(mUserListener != null) mUserListener.onCommentUserNameClick(commentUserName);
                     goFriendHome(cusstomMap.get("ucode"));
                 }
             });
             if(!TextUtils.isEmpty(cusstomMap.get("name_color")))
                 userName.setTextColor(Color.parseColor(cusstomMap.get("name_color")));
-            AppCommon.setVip((Activity) mContext,userVip,cusstomMap.get("is_member"));
+            AppCommon.setVip((Activity) mContext, userVip, cusstomMap.get("is_member"), new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mUserListener != null) mUserListener.onCommentUserVipClick();
+                }
+            });
         }
     }
 
@@ -169,7 +177,7 @@ public class ViewCommentItem extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null && !isShowContentClick)
-                        mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"));
+                        mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字");
                     isShowContentClick = false;
                 }
             });
@@ -180,9 +188,9 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     if (mListener != null) {
                         if (isReport)
-                            mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text);
+                            mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text,"点击长按后的评论举报按钮");
                         else
-                            mListener.onDeleteCommentClick(comment_id);
+                            mListener.onDeleteCommentClick(comment_id,"点击长按后的评论删除按钮");
                     }
                 }
             });
@@ -244,6 +252,10 @@ public class ViewCommentItem extends LinearLayout {
     public void setCommentItemListener(OnCommentItenListener listener){
         mListener = listener;
     }
+    private OnUserInforListener mUserListener;
+    public void setUserInforListenr(OnUserInforListener listenr){
+        mUserListener = listenr;
+    }
 
     private void initReplay(){
         String replay = dataMap.get("replay");
@@ -289,23 +301,24 @@ public class ViewCommentItem extends LinearLayout {
 
             String authoCode = null;
 
-            String is_anchor = replayMap.get("is_anchor");
-            if("2".equals(is_anchor)){
-                view.setBackgroundColor(Color.parseColor("#fffae3"));
-                if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName);
-            }
-            else view.setBackgroundColor(Color.parseColor("#00fffae3"));
+            final boolean isAuthor = "2".equals(is_author);
+//            if(isAuthor){
+//                view.setBackgroundColor(Color.parseColor("#fffae3"));
+//                if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName);
+//            }
+//            else view.setBackgroundColor(Color.parseColor("#00fffae3"));
 
             MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
             CommentBuilder uNameBuilder = new CommentBuilder(uName).setTextColor("#bcbcbc");
             uNameBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
+                    if(mUserListener != null) mUserListener.onReplayUserNameClick(isAuthor,uName);
                     goFriendHome(ucode);
                 }
             });
             multifunctionText.addStyle(uNameBuilder.getContent(), uNameBuilder.build());
-            if("2".equals(is_author)) {
+            if(isAuthor) {
                 authoCode = ucode;
                 CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                 authorBuilder.parse(null);
@@ -320,6 +333,7 @@ public class ViewCommentItem extends LinearLayout {
                 replayNameBuilder.parse(new CommentBuilder.CommentClickCallback() {
                     @Override
                     public void onCommentClick(View v, String userCode) {
+                        if(mUserListener != null) mUserListener.onReplayUserNameClick(isAuthor,replay_uname);
                         goFriendHome(replay_ucode);
                     }
                 });
@@ -335,7 +349,7 @@ public class ViewCommentItem extends LinearLayout {
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
-                    if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName);
+                    if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName,"点击楼中楼文字");
                 }
             });
             multifunctionText.addStyle(contentBuilder.getContent(), contentBuilder.build());
@@ -367,8 +381,7 @@ public class ViewCommentItem extends LinearLayout {
     }
 
     private void initOther(){
-        commentTime.setText("2017-6-2");
-//        commentTime.setText(dataMap.get("create_time"));
+        commentTime.setText(dataMap.get("create_time"));
         commentPraiseNum.setText(dataMap.get("fabulous_num"));
         commentPraise.setImageResource("2".equals(dataMap.get("is_fabulous")) ? R.drawable.i_comment_praise_ok : R.drawable.i_comment_praise);
         commentPraise.setOnClickListener(new OnClickListener() {
@@ -386,7 +399,7 @@ public class ViewCommentItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if(!isDelete && mListener != null)
-                    mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"));
+                    mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),"点击回复按钮");
             }
         });
         commentDelete.setText(isDelete ? "删除":"举报");
@@ -395,9 +408,9 @@ public class ViewCommentItem extends LinearLayout {
             public void onClick(View v) {
                 if(mListener != null) {
                     if (isDelete)
-                        mListener.onDeleteCommentClick(comment_id);
+                        mListener.onDeleteCommentClick(comment_id,"点击评论删除按钮");
                     else
-                        mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),dataMap.get("content"));
+                        mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),dataMap.get("content"),"点击评论举报按钮");
                 }
             }
         });
@@ -421,12 +434,42 @@ public class ViewCommentItem extends LinearLayout {
 
     public interface OnCommentItenListener{
         public void onShowAllReplayClick(String comment_id);
-        public void onReportCommentClick(String comment_id,String comment_user_code,String comment_user_name,String reportContent);
-        public void onDeleteCommentClick(String comment_id);
+
+        /**
+         * 举报点击回调
+         * @param comment_id
+         * @param comment_user_code ：被举报用户code
+         * @param comment_user_name ：被举报用户名字
+         * @param reportContent ：被举报内容
+         * @param reportType ：被举报的形式：点击长按后的评论举报按钮、点击评论举报按钮
+         */
+        public void onReportCommentClick(String comment_id,String comment_user_code,String comment_user_name,String reportContent,String reportType);
+
+        /**
+         * 删除回调
+         * @param comment_id
+         * @param deleteType ：被删除的形式：点击长按后的评论删除按钮、点击评论删除按钮
+         */
+        public void onDeleteCommentClick(String comment_id,String deleteType);
         public void onReportReplayClick(String comment_id, String replay_id,String replay_user_code,String replay_user_name,String reportContent);
         public void onDeleteReplayClick(String comment_id, String replay_id);
         public void onPraiseClick(String comment_id);
-        public void onContentReplayClick(String comment_id,String replay_user_code,String replay_user_name);
+
+        /**
+         * 回复回调
+         * @param comment_id
+         * @param replay_user_code
+         * @param replay_user_name
+         * @param type ：需要回复的触发形式：点击评论文字、点击回复文字、点击楼中楼文字
+         */
+        public void onContentReplayClick(String comment_id,String replay_user_code,String replay_user_name,String type);
+    }
+
+    public interface OnUserInforListener{
+        public void onReplayUserNameClick(boolean isAuther, String userName);
+        public void onCommentUserNameClick(String userName);
+        public void onCommentUserIconClick();
+        public void onCommentUserVipClick();
     }
 
 

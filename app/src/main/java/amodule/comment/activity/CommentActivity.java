@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
@@ -52,6 +53,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private String gotoCommentId,gotoReplayId;
 
+    private String contentTongjiId,likeTongjiId = "a_like",reportTongjiId="a_report",deleteTongjiId = "a_delete";
+    private String likeTwoLeven,reportTwoLeven,deleteTwoLeven;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         writePen = (ImageView) findViewById(R.id.commend_write_pen);
         commend_write_et = (EditText) findViewById(R.id.commend_write_et);
         commend_write_et.setOnClickListener(this);
+        commend_write_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                changeKeyboard(hasFocus);
+            }
+        });
         downRefreshList = (DownRefreshList) findViewById(R.id.comment_listview);
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -107,8 +117,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     }
 
                     @Override
-                    public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent) {
+                    public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent,String reportType) {
                         Tools.showToast(CommentActivity.this,"举报评论 " + comment_id);
+                        XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,reportType);
                         Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
                         intent.putExtra("type",type);
                         intent.putExtra("code",code);
@@ -121,7 +132,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-                        Tools.showToast(CommentActivity.this,"举报回复 " + comment_id + "  " +replay_id);
+                        XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,"点击楼中楼的举报");
                         Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
                         intent.putExtra("type",type);
                         intent.putExtra("code",code);
@@ -135,11 +146,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onDeleteReplayClick(String comment_id, String replay_id) {
+                        XHClick.mapStat(CommentActivity.this,deleteTongjiId,deleteTwoLeven,"点击楼中楼的删除按钮");
                         requstInternet(StringManager.api_delReplay,"type=" + type + "&code=" + code + "&commentId="+comment_id + "&replayId=" + replay_id);
                     }
 
                     @Override
-                    public void onDeleteCommentClick(final String comment_id) {
+                    public void onDeleteCommentClick(final String comment_id,String deleteType) {
+                        XHClick.mapStat(CommentActivity.this,deleteTongjiId,deleteTwoLeven,deleteType);
                         final XhDialog xhDialog = new XhDialog(CommentActivity.this);
                         xhDialog.setTitle("确认删除我的评论？").setCanselButton("取消", new View.OnClickListener() {
                             @Override
@@ -166,13 +179,16 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                     @Override
                     public void onPraiseClick(String comment_id) {
+                        XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
+                        XHClick.mapStat(CommentActivity.this,likeTongjiId,likeTwoLeven,"");
                         Map<String,String> map = listArray.get(position);
                         map.put("is_fabulous","2");
                         requstInternet(StringManager.api_likeForum,"type=" + type + "&code=" + code + "&commentId=" + comment_id);
                     }
 
                     @Override
-                    public void onContentReplayClick(String comment_id,String replay_code, String replay_name) {
+                    public void onContentReplayClick(String comment_id,String replay_code, String replay_name,String type) {
+                        XHClick.mapStat(CommentActivity.this,contentTongjiId,"回复",type);
                         Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
                         commend_write_et.setHint(" 回复" + replay_name);
                         changeKeyboard(true);
@@ -180,7 +196,29 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
                     }
                 });
+                viewCommentItem.setUserInforListenr(getUserInforListener());
                 return view;
+            }
+        };
+    }
+
+    private ViewCommentItem.OnUserInforListener getUserInforListener(){
+        return new ViewCommentItem.OnUserInforListener() {
+            @Override
+            public void onReplayUserNameClick(boolean isAuther, String userName) {
+                XHClick.mapStat(CommentActivity.this,contentTongjiId,"用户信息",isAuther ? "点击楼层作者用户名" : "点击楼层其他用户名");
+            }
+            @Override
+            public void onCommentUserNameClick(String userName) {
+                XHClick.mapStat(CommentActivity.this,contentTongjiId,"用户信息","点击评论用户名");
+            }
+            @Override
+            public void onCommentUserIconClick() {
+                XHClick.mapStat(CommentActivity.this,contentTongjiId,"用户信息","点击用户头像");
+            }
+            @Override
+            public void onCommentUserVipClick() {
+                XHClick.mapStat(CommentActivity.this,contentTongjiId,"用户信息","点击会员icon");
             }
         };
     }
@@ -205,13 +243,28 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             code = "520";
         }
 
-//        gotoCommentId = "1";
-//        gotoReplayId = "1";
+        if (TextUtils.isEmpty(type) || TextUtils.isEmpty(code)) {
+            Tools.showToast(this, "缺少 类型 或 主题");
+            finish();
+        }
 
-//        if (TextUtils.isEmpty(type) || TextUtils.isEmpty(code)) {
-//            Tools.showToast(this, "缺少 类型 或 主题");
-//            finish();
-//        }
+        if("1".equals(type)){
+            contentTongjiId = "a_article_comment";
+            likeTwoLeven = "文章评论点赞量";
+            reportTwoLeven = "文章";
+            deleteTwoLeven = "文章";
+        }else if("2".equals(type)){
+            contentTongjiId = "a_video_comment";
+            likeTwoLeven = "视频评论点赞量";
+            reportTwoLeven = "视频";
+            deleteTwoLeven = "视频";
+        }else{
+            Tools.showToast(this, "类型不对");
+            finish();
+        }
+
+
+
         loadManager.showProgressBar();
         loadManager.setLoading(downRefreshList, adapterSimple, true, new View.OnClickListener() {
             @Override
@@ -239,6 +292,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             params +=  "&commentId=" + gotoCommentId;
         if(!TextUtils.isEmpty(gotoReplayId))
             params += "&replayId=" + gotoReplayId;;
+        params += "&from=1&slide=1&dropPage=1";
+        Log.i("commentReplay","getCommentData() params:" + params);
         ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String s, Object o) {
@@ -250,7 +305,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         Map<String,String> dataMap = arrayList.get(0);
                         String dataList = dataMap.get("list");
                         String dataPage = dataMap.get("page");
-                        if(!TextUtils.isEmpty(dataPage)){
+                        if(!TextUtils.isEmpty(dataPage) && !"null".equals(dataPage)){
                             currentPage = Integer.parseInt(dataPage);
                         }
                         listArray.addAll(StringManager.getListMapByJson(dataList));
@@ -333,6 +388,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 sendData();
                 break;
             case R.id.commend_write_et:
+                XHClick.mapStat(CommentActivity.this,contentTongjiId,"点击评论框","");
                 changeKeyboard(true);
                 break;
         }
