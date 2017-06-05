@@ -21,8 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
@@ -479,6 +482,16 @@ public class TextAndImageMixLayout extends LinearLayout
                 break;
             }
         }
+
+        if (getContext() instanceof ArticleEidtActiivty) {
+            if (view instanceof ImageShowView)
+                XHClick.mapStat(getContext(), "a_ArticleEdit", "编辑文章内容", "删除图片");
+            else if (view instanceof VideoShowView)
+                XHClick.mapStat(getContext(), "a_ArticleEdit", "编辑文章内容", "删除视频");
+        } else if (getContext() instanceof VideoEditActivity) {
+            if (view instanceof VideoShowView)
+                XHClick.mapStat(getContext(), "a_ShortVideoEdit", "编辑视频内容", "删除视频");
+        }
     }
 
     /**
@@ -618,6 +631,7 @@ public class TextAndImageMixLayout extends LinearLayout
         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_TYPE, VideoFullScreenActivity.LOCAL_VIDEO);
         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, url);
         getContext().startActivity(intent);
+        XHClick.mapStat(getContext(), "a_ArticleEdit", "编辑文章内容", "播放视频");
     }
 
     public int getMaxVideoCount() {

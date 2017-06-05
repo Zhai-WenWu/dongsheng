@@ -18,6 +18,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
@@ -119,6 +120,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                         textView.setBackgroundResource(R.drawable.article_select_classify_yes);
                         textView.setTextColor(Color.parseColor("#ffffff"));
                         checkCode = data.get(i).get("code");
+                        XHClick.mapStat(ArticleSelectActiivty.this, "a_ArticleEdit", "下一步_选择分类", textView.getText() + "");
                     }else{
                         textView.setBackgroundResource(R.drawable.article_select_classify_no);
                         textView.setTextColor(Color.parseColor("#333333"));
@@ -180,17 +182,20 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             }
         }
         finish();
+        tjClosePage();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent();
-        if(dataType == EditParentActivity.TYPE_ARTICLE)
-            intent.setClass(this,ArticleEidtActiivty.class);
-        else if(dataType == EditParentActivity.TYPE_VIDEO)
+        if(dataType == EditParentActivity.TYPE_ARTICLE) {
+            intent.setClass(this, ArticleEidtActiivty.class);
+            XHClick.mapStat(this, "a_ArticleEdit", "下一步", "返回");
+        } else if(dataType == EditParentActivity.TYPE_VIDEO)
             intent.setClass(this,VideoEditActivity.class);
         startActivity(intent);
+        tjClosePage();
     }
 
     @Override
@@ -207,21 +212,30 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     Tools.showToast(ArticleSelectActiivty.this,"请选择原创/转载");
                     return;
                 }
+                XHClick.mapStat(this, "a_ArticleEdit", "下一步", "发布");
                 break;
             case R.id.article_select_check_original_link:
                 Tools.showToast(ArticleSelectActiivty.this,"香哈原创声明");
+                XHClick.mapStat(this, "a_ArticleEdit", "下一步_文章来源", "《香哈原创声明》");
                 break;
             case R.id.article_select_check_reprint:
                 isCheck = 1;
                 reprintImg.setImageResource(R.drawable.i_article_select_yes);
                 originalImg.setImageResource(R.drawable.i_article_select_no);
+                XHClick.mapStat(this, "a_ArticleEdit", "下一步_文章来源", "转载");
                 break;
             case R.id.article_select_check_original:
                 isCheck = 2;
                 originalImg.setImageResource(R.drawable.i_article_select_yes);
                 reprintImg.setImageResource(R.drawable.i_article_select_no);
+                XHClick.mapStat(this, "a_ArticleEdit", "下一步_文章来源", "原创");
                 break;
 
         }
+    }
+
+    //统计 关闭发布页面
+    private void tjClosePage() {
+        XHClick.mapStat(this, "a_post_button","关闭发布页面","");
     }
 }

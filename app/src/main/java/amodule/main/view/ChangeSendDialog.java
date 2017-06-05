@@ -186,6 +186,7 @@ public class ChangeSendDialog extends Dialog{
 			case "1": //发帖
 				closeDialog();
 				XHClick.mapStat(activity, "a_post_button","发帖子","");
+				XHClick.mapStat(activity, "a_post_button","晒美食","");
 				Intent subIntent = new Intent(activity,UploadSubjectNew.class);
 				subIntent.putExtra("skip", true);
 				activity.startActivity(subIntent);
@@ -200,6 +201,7 @@ public class ChangeSendDialog extends Dialog{
 				}
 				XHClick.mapStat(activity, "uploadDish", "uploadDish", "从导航发", 1);
 				XHClick.mapStat(activity, "a_post_button","发菜谱","");
+				XHClick.mapStat(activity, "a_post_button","写菜谱","");
 				closeDialog();
 				Intent dishIntent = new Intent(activity, UploadDishActivity.class);
 				activity.startActivity(dishIntent);

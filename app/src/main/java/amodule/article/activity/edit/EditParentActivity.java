@@ -1,5 +1,6 @@
 package amodule.article.activity.edit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -81,12 +83,25 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     protected Timer timer;
     private int taskTime = 30 * 1000;
 
+    private String mPageTag = "EditParentActivity";
+    private final String mArticlePageTag = "ArticleEidtActiivty";
+    private final String mVideoPageTag = "VideoEditActivity";
+    private Context mCurrentContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         initActivity("", 5, 0, 0, R.layout.a_article_edit_activity);
+        mCurrentContext = this;
+        if (this instanceof ArticleEidtActiivty) {
+            mPageTag = mArticlePageTag;
+            XHClick.mapStat(this, "a_post_button","文章","进入编辑文章页面");
+        } else if (this instanceof VideoEditActivity) {
+            mPageTag = mVideoPageTag;
+            XHClick.mapStat(this, "a_post_button","短视频","进入编辑视频页面");
+        }
     }
 
     protected void initView(String title) {
@@ -167,6 +182,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, getMaxImageCount() - imageArray.size());
                             intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imageArray);
                             startActivityForResult(intent, REQUEST_SELECT_IMAGE);
+                            switch (mPageTag) {
+                                case mArticlePageTag:
+                                    XHClick.mapStat(mCurrentContext, "a_ArticleEdit", "编辑文章内容", "添加图片");
+                                    break;
+                            }
                         }
                     });
         if (getMaxVideoCount() != 0)
@@ -176,6 +196,14 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         public void onSelectVideo() {
                             Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
                             startActivityForResult(intent, REQUEST_SELECT_VIDEO);
+                            switch (mPageTag) {
+                                case mArticlePageTag:
+                                    XHClick.mapStat(mCurrentContext, "a_ArticleEdit", "编辑文章内容", "添加视频");
+                                    break;
+                                case mVideoPageTag:
+                                    XHClick.mapStat(mCurrentContext, "a_ShortVideoEdit", "编辑视频内容", "添加视频");
+                                    break;
+                            }
                         }
                     });
         if(canAddLink())
@@ -183,6 +211,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 new EditBottomControler.OnAddLinkCallback() {
                     @Override
                     public void onAddLink() {
+                        switch (mPageTag) {
+                            case mArticlePageTag:
+                                XHClick.mapStat(mCurrentContext, "a_ArticleEdit", "编辑文章内容", "添加超链接");
+                                break;
+                        }
                         if (mixLayout.getURLCount() >= getMaxURLCount()) {
                             Tools.showToast(EditParentActivity.this, "链接最大不能超过" + getMaxURLCount() + "条");
                             return;
@@ -222,6 +255,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         @Override
                         public void onEditControlerShow(boolean isShow) {
                             contentLayout.setPadding(0, 0, 0, isShow ? dp_45 * 2 : dp_45);
+                            switch (mPageTag) {
+                                case mArticlePageTag:
+                                    XHClick.mapStat(mCurrentContext, "a_ArticleEdit", "编辑文章内容", "字体样式");
+                                    break;
+                            }
                         }
 
                         @Override
@@ -470,6 +508,14 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             }).show();
         } else {
             finish();
+        }
+        switch (mPageTag) {
+            case mVideoPageTag:
+                XHClick.mapStat(this, "a_ShortVideoEdit", "关闭页面", "");
+                break;
+            case mArticlePageTag:
+                XHClick.mapStat(this, "a_ArticleEdit", "关闭页面", "");
+                break;
         }
     }
 }

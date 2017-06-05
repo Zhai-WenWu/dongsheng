@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
@@ -639,5 +640,21 @@ public class ArticleDetailActivity extends BaseActivity {
 
     public Class<?> getIntentClass() {
         return ArticleEidtActiivty.class;
+    }
+
+    //TODO 添加统计
+    private void statistics(String twoLevel, String threeLevel) {
+        String eventId = "";
+        switch (getType()) {
+            case TYPE_ARTICLE:
+                eventId = "a_ArticleDetail";
+                break;
+            case TYPE_VIDEO:
+                eventId = "a_ShortVideoDetail";
+                break;
+        }
+        if (TextUtils.isEmpty(eventId))
+            return;
+        XHClick.mapStat(this, eventId, twoLevel, threeLevel);
     }
 }
