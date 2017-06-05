@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -19,11 +21,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.logic.AppCommon;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
@@ -60,10 +64,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         dataType = getIntent().getIntExtra("dataType",0);
         if(dataType == EditParentActivity.TYPE_ARTICLE) {
-            initActivity("发文章", 5, 0, R.layout.a_common_post_new_title, R.layout.a_article_select_activity);
+            initActivity("发文章", 5, 0, R.layout.a_article_select_title, R.layout.a_article_select_activity);
             sqLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
         }else if(dataType == EditParentActivity.TYPE_VIDEO) {
-            initActivity("发视频", 5, 0, R.layout.a_common_post_new_title, R.layout.a_article_select_activity);
+            initActivity("发视频", 5, 0, R.layout.a_article_select_title, R.layout.a_article_select_activity);
             sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
         }else{
             Tools.showToast(this,"发布数据类型为空");
@@ -96,6 +100,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         }
 
         data = new ArrayList<>();
+        int windW = ToolsDevice.getWindowPx(this).widthPixels;
+        final int itemSpace = (windW - Tools.getDimen(this,R.dimen.dp_20) * 2 - Tools.getDimen(this,R.dimen.dp_97) * 3) / 4;
+        final int dp3 = Tools.getDimen(this,R.dimen.dp_3);
+        Log.i("articleSelect","articleSelect windW:" + windW + "    itemSpace:" + itemSpace);
         gridView = (GridView) findViewById(R.id.article_select_gridview);
         adapterSimple = new AdapterSimple(gridView,data,R.layout.a_article_select_activity_item,
                 new String[]{"name"},
@@ -103,14 +111,23 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(R.id.article_select_classify_text);
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
+                if(position % 3 == 0){
+                    layoutParams.setMargins(0,0,itemSpace - dp3,0);
+                }else if(position % 3 == 2) {
+                    layoutParams.setMargins(itemSpace - dp3,0,0,0);
+                }else{
+                    layoutParams.setMargins(itemSpace,0,itemSpace,0);
+                }
                 if(data.get(position).get("code").equals(checkCode)){
-                    TextView textView = (TextView) view.findViewById(R.id.article_select_classify_text);
                     textView.setBackgroundResource(R.drawable.article_select_classify_yes);
                     textView.setTextColor(Color.parseColor("#ffffff"));
                 }
                 return view;
             }
         };
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -217,6 +234,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             case R.id.article_select_check_original_link:
                 Tools.showToast(ArticleSelectActiivty.this,"香哈原创声明");
                 XHClick.mapStat(this, "a_ArticleEdit", "下一步_文章来源", "《香哈原创声明》");
+                AppCommon.openUrl(ArticleSelectActiivty.this,StringManager.api_agreementOriginal,true);
                 break;
             case R.id.article_select_check_reprint:
                 isCheck = 1;

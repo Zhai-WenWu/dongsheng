@@ -22,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/article_select_classify"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_18"
         android:numColumns="3"
         android:verticalSpacing="@dimen/dp_11"
@@ -46,11 +48,13 @@
                 android:layout_width="@dimen/dp_15"
                 android:layout_height="@dimen/dp_15"
                 android:src="@drawable/i_article_select_no"
+                android:layout_centerVertical="true"
                 />
             <TextView
                 android:id="@+id/article_select_check_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_6"
                 android:layout_toRightOf="@+id/article_select_check_reprint"
                 android:text="转载，请注明出处"
@@ -61,9 +65,11 @@
                 android:id="@+id/article_select_check_reprint_link"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/article_select_check_hint"
                 android:layout_marginLeft="@dimen/dp_6"
                 android:hint="输入来源"
+                android:textColorHint="#ccc"
                 android:textSize="@dimen/sp_14"
                 android:textCursorDrawable="@null"
                 android:background="@null"
@@ -101,6 +107,7 @@
                 android:id="@+id/article_select_check_original_link"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#666666"
                 android:textSize="@dimen/sp_14"
                 />
         </LinearLayout>
