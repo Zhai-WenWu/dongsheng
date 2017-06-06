@@ -130,8 +130,6 @@ public class Main extends Activity implements OnClickListener {
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatService.setContext(this.getApplication());
         StatService.trackCustomEvent(this, "onCreate", "");
-        //百度统计
-//        com.baidu.mobstat.StatService.setDebugOn(true);
         //初始化
         new Thread(new Runnable() {
             @Override
