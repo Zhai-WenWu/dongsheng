@@ -19,6 +19,7 @@ import java.util.Map;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.article.activity.VideoDetailActivity;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
@@ -73,10 +74,19 @@ public class RecommendItemView extends ItemBaseView {
             @Override
             public void onClick(View v) {
                 //开启文章
-                if(map.containsKey("code") && !TextUtils.isEmpty(map.get("code"))){
-                    Intent intent = new Intent(getContext(), ArticleDetailActivity.class);
+                if(map.containsKey("code") && !TextUtils.isEmpty(map.get("code"))
+                        && map.containsKey("type") && !TextUtils.isEmpty(map.get("type"))){
+                    String type = map.get("type");
+                    Intent intent = new Intent();
+                    switch (type){
+                        case "1":
+                            intent.setClass(getContext(),ArticleDetailActivity.class);
+                            break;
+                        case "2":
+                            intent.setClass(getContext(),VideoDetailActivity.class);
+                            break;
+                    }
                     intent.putExtra("code",map.get("code"));
-                    intent.putExtra("type","1");
                     getContext().startActivity(intent);
                 }
             }

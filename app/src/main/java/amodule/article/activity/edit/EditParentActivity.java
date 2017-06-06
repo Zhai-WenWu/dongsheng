@@ -161,8 +161,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0 && s.length() > 59) {
-                    editTitle.setText(s.subSequence(0, 59));
+                if (s.length() > 0 && s.length() > 64) {
+                    editTitle.setText(s.subSequence(0, 64));
                     editTitle.setSelection(editTitle.getText().length());
                 }
             }
@@ -234,17 +234,19 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             ToolsDevice.keyboardControl(!isKeyboradShow, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                         final int start = mixLayout.getSelectionStart();
                         final int end = mixLayout.getSelectionEnd();
-                        InputUrlDialog dialog = new InputUrlDialog(EditParentActivity.this);
+                        final InputUrlDialog dialog = new InputUrlDialog(EditParentActivity.this);
                         dialog.setDescDefault(mixLayout.getSelectionText());
                         dialog.setOnReturnResultCallback(
                                 new InputUrlDialog.OnReturnResultCallback() {
                                     @Override
                                     public void onSure(String url, String desc) {
                                         mixLayout.addLink(url, desc, start, end);
+                                        dialog.dismiss();
                                     }
 
                                     @Override
                                     public void onCannel() {
+                                        dialog.dismiss();
                                     }
                                 });
                         dialog.show();

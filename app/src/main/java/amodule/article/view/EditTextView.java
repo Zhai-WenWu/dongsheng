@@ -1,6 +1,7 @@
 package amodule.article.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -34,6 +35,7 @@ import amodule.article.view.richtext.RichText;
  */
 public class EditTextView extends BaseView {
 
+    boolean isDialogShow = false;
     private RichText mRichText;
 
     private OnFocusChangeCallback mOnFocusChangeCallback;
@@ -104,20 +106,30 @@ public class EditTextView extends BaseView {
         mRichText.setOnSelectLinkCallback(new RichText.OnSelectLinkCallback() {
             @Override
             public void onSelectLink(String url, String desc) {
+                if(isDialogShow) return;
+                isDialogShow = true;
                 final int start = mRichText.getSelectionStart();
                 final int end = mRichText.getSelectionEnd();
-                InputUrlDialog dialog = new InputUrlDialog(getContext());
+                final InputUrlDialog dialog = new InputUrlDialog(getContext());
                 dialog.setDescDefault(desc);
                 dialog.setUrl(url);
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        isDialogShow = false;
+                    }
+                });
                 dialog.setOnReturnResultCallback(
                         new InputUrlDialog.OnReturnResultCallback() {
                             @Override
                             public void onSure(String url, String desc) {
                                 mRichText.link(url, start, end);
+                                dialog.dismiss();
                             }
 
                             @Override
                             public void onCannel() {
+                                dialog.dismiss();
                             }
                         });
                 dialog.show();

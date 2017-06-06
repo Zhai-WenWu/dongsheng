@@ -218,6 +218,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
         public void setData(Map<String, String> map, int position) {
             if (view != null) {
+                map.put("type",type);
                 view.setData(map);
             }
         }

@@ -108,7 +108,7 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
                     mOnReturnResultCallback.onCannel();
                 }
             case R.id.dialog_root:
-                dismiss();
+//                dismiss();
                 break;
             case R.id.sure:
                 String url = urlEdit.getText().toString().trim();
