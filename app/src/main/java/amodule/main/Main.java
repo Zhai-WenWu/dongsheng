@@ -126,10 +126,9 @@ public class Main extends Activity implements OnClickListener {
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
         //腾讯统计
-        StatConfig.setDebugEnable(true);
+        StatConfig.setDebugEnable(false);
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatService.setContext(this.getApplication());
-        StatService.trackCustomEvent(this, "onCreate", "");
         //初始化
         new Thread(new Runnable() {
             @Override
