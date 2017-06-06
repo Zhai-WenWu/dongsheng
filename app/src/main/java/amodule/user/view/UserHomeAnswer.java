@@ -27,6 +27,7 @@ import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.user.activity.FriendHome;
 import amodule.user.adapter.AdapterUserAnswer;
 import aplug.basic.InternetCallback;
@@ -199,6 +200,8 @@ public class UserHomeAnswer extends TabContentView {
 									videoImgUrl = videoArray.get(0).get("imageUrl");
 								}
 								String uploadType = articleData.getUploadType();
+                                if (!TextUtils.isEmpty(uploadType) && UploadDishData.UPLOAD_ING_BACK.equals(uploadType))
+                                    continue;
 								data.put("code", code);
 								data.put("title", title);
 								data.put("classCode", classCode);

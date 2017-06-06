@@ -30,6 +30,7 @@ import acore.widget.DownRefreshList;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.user.activity.FriendHome;
 import amodule.user.adapter.AdapterUserTxt;
 import aplug.basic.InternetCallback;
@@ -202,6 +203,8 @@ public class UserHomeTxt extends TabContentView {
 								}
 
                                 String uploadType = articleData.getUploadType();
+								if (!TextUtils.isEmpty(uploadType) && UploadDishData.UPLOAD_ING_BACK.equals(uploadType))
+									continue;
 								int id  = articleData.getId();
 								boolean hasMedia = articleSQLite.checkHasMedia(id);
 								data.put("hasMedia", hasMedia ? "2" : "1");

@@ -31,6 +31,7 @@ import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.user.activity.FriendHome;
 import amodule.user.adapter.AdapterUserVideo;
 import aplug.basic.InternetCallback;
@@ -199,6 +200,8 @@ public class UserHomeVideo extends TabContentView {
                                     videoImgUrl = videoArray.get(0).get("imageUrl");
                                 }
                                 String uploadType = articleData.getUploadType();
+                                if (!TextUtils.isEmpty(uploadType) && UploadDishData.UPLOAD_ING_BACK.equals(uploadType))
+                                    continue;
                                 int id = articleData.getId();
                                 data.put("id", String.valueOf(id));
                                 data.put("code", code);
