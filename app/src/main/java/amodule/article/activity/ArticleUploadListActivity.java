@@ -2,7 +2,6 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
+import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.upload.ArticleUploadListPool;
 import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
@@ -195,7 +195,7 @@ public class ArticleUploadListActivity extends BaseActivity {
                         if(dataType == EditParentActivity.TYPE_ARTICLE){
                             intent.setClass(ArticleUploadListActivity.this, ArticleEidtActiivty.class);
                         }else if(dataType == EditParentActivity.TYPE_VIDEO){
-                            intent.setClass(ArticleUploadListActivity.this, MediaStore.Video.class);
+                            intent.setClass(ArticleUploadListActivity.this, VideoEditActivity.class);
                         }
                         intent.putExtra("draftId",draftId);
                         startActivity(intent);

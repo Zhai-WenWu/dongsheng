@@ -24,6 +24,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.UploadFailPopWindowDialog;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.article.activity.VideoDetailActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -134,6 +135,11 @@ public class ArticleUploadListPool extends UploadListPool {
             if(flag){
                 Activity act = XHActivityManager.getInstance().getCurrentActivity();
                 Intent it = new Intent(act, ArticleDetailActivity.class);
+                if(dataType == EditParentActivity.TYPE_ARTICLE) {
+                    it.setClass(act, ArticleDetailActivity.class);
+                }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+                    it.setClass(act, VideoDetailActivity.class);
+                }
                 it.putExtra("code",response);
                 act.startActivity(it);
             }else{

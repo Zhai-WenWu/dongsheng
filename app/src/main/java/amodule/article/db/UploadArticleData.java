@@ -38,7 +38,7 @@ public class UploadArticleData {
     private String title;
     private String classCode;
     private String content;
-    private int isOriginal = -1; //是否原创 1-转载 2-原创
+    private int isOriginal = 2; //是否原创 1-转载 2-原创
     private String repAddress; //转载地址
     private String img; //首图
     private String imgUrl; //首图url
