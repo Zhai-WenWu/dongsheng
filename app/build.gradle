@@ -112,7 +112,7 @@ android {
     //会根据渠道号，自动执行对应的方法，默认执行main
     sourceSets{
         main {
-            res.srcDirs = ['src/main/res','src/main/res_normal']
+            res.srcDirs = ['src\\main\\res','src\\main\\res_normal']
 //            res.srcDirs = ['src/main/res','src/main/res_360']
 //            res.srcDirs = ['src/main/res','src/main/res_anzhuoapk']
 //            res.srcDirs = ['src/main/res','src/main/res_baidu']
