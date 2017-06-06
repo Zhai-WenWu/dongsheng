@@ -415,7 +415,6 @@ public class ViewCommentItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if(mListener != null) mListener.onPraiseClick(comment_id);
-                commentPraise.setImageResource(R.drawable.i_comment_praise_ok);
             }
         });
         String is_del_report = dataMap.get("is_del_report");

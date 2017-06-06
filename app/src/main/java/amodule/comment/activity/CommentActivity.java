@@ -199,6 +199,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 XHClick.mapStat(CommentActivity.this,likeTongjiId,likeTwoLeven,"");
                 Map<String,String> map = listArray.get(position);
                 map.put("is_fabulous","2");
+                adapterSimple.notifyDataSetChanged();
                 requstInternet(StringManager.api_likeForum,"type=" + type + "&code=" + code + "&commentId=" + comment_id);
             }
 
