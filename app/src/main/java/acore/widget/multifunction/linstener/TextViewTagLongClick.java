@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -172,6 +173,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 		mPopupWindow.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
+				Log.i("commentReplay","TextViewTagLongClick  PopupWindow onDismiss（）:" + normBackColor);
 				mTv.setBackgroundColor(normBackColor);
 			}
 		});

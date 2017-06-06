@@ -12,6 +12,8 @@ public class StyleConfig {
 	String text = "";
 	/** 文本背景颜色 */
 	String backgroudColor = "";
+	/** 文本背景颜色 */
+	int chooseBackgroudColor = 0;
 	/** 文本颜色 */
 	String textColor = "";
 	/** 文本大小 */
@@ -56,6 +58,14 @@ public class StyleConfig {
 	public StyleConfig setBackgroudColor(String backgroudColor) {
 		this.backgroudColor = backgroudColor;
 		return this;
+	}
+
+	public void setChooseBackgroudColor(int chooseBackgroudColor) {
+		this.chooseBackgroudColor = chooseBackgroudColor;
+	}
+
+	public int getChooseBackgroudColor() {
+		return chooseBackgroudColor;
 	}
 
 	public String getTextColor() {

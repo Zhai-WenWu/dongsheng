@@ -18,6 +18,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -58,7 +59,16 @@ public class MultifunctionTextView extends TextView {
 		mTextViewTagLongClick.setOnLongClickListener(new TextViewTagLongClick.OnLongClickListener() {
 			@Override
 			public void onLongClick() {
-
+				if (mMultifunctionText == null) {
+					return;
+				}
+				String text = mMultifunctionText.getText();
+				Log.i("commentReplay","MultifunctionTextView  onLongClick（）:");
+				//背景色
+				SpannableStringBuilder style = new SpannableStringBuilder(text);
+//				MultifunctionTextView.this.getText();
+				style = parseTextStyle(style,mMultifunctionText.getConfigs(),true);
+				MultifunctionTextView.this.setText(style,BufferType.NORMAL);
 				isLongClick = true;
 			}
 		});
@@ -66,7 +76,7 @@ public class MultifunctionTextView extends TextView {
 
 	public void setText(SpannableStringBuilder style) {
 		if (mMultifunctionText != null) {
-			style = parseTextStyle(style, mMultifunctionText.getConfigs());
+			style = parseTextStyle(style, mMultifunctionText.getConfigs(),false);
 		}
 		super.setText(style,BufferType.NORMAL);
 	}
@@ -80,7 +90,7 @@ public class MultifunctionTextView extends TextView {
 		if (text != null) {
 			//解析Emoji
 			SpannableStringBuilder style = new SpannableStringBuilder(text);
-			style = parseTextStyle(style, mMultifunctionText.getConfigs());
+			style = parseTextStyle(style, mMultifunctionText.getConfigs(),false);
 			super.setText(style, BufferType.NORMAL);
 		}
 	}
@@ -95,17 +105,25 @@ public class MultifunctionTextView extends TextView {
 	}
 
 	/** 解析 */
-	private SpannableStringBuilder parseTextStyle(SpannableStringBuilder style, ArrayList<StyleConfig> configsArray) {
+	private SpannableStringBuilder parseTextStyle(SpannableStringBuilder style, ArrayList<StyleConfig> configsArray,boolean isChoose) {
 		for (final StyleConfig config : configsArray) {
 			if(style.length() <= 0
 					|| style.length() < config.getEnd()
 					|| config.getStart() < 0){
 				continue;
 			}
-			//背景色
-			if (!TextUtils.isEmpty(config.getBackgroudColor())) {
-				style.setSpan(new BackgroundColorSpan(Color.parseColor(config.getBackgroudColor())),
-						config.getStart(), config.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			if(isChoose){
+				//选择后背景色
+				if (config.getChooseBackgroudColor() > 0) {
+					style.setSpan(new BackgroundColorSpan(config.getChooseBackgroudColor()),
+							config.getStart(), config.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+			}else {
+				//背景色
+				if (!TextUtils.isEmpty(config.getBackgroudColor())) {
+					style.setSpan(new BackgroundColorSpan(Color.parseColor(config.getBackgroudColor())),
+							config.getStart(), config.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
 			}
 			//文字颜色
 			if (!TextUtils.isEmpty(config.getTextColor())) {

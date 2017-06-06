@@ -312,7 +312,7 @@ public class ViewCommentItem extends LinearLayout {
         for(final Map<String, String> replayMap:replayArray) {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
-            replayTv.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+            replayTv.setNormBackColor(Color.parseColor("#efefef"));
             replayTv.setChoseBackColor(Color.parseColor("#fffde3"));
             final String content = replayMap.get("content");
             final String uName = replayMap.get("uname");
@@ -370,8 +370,10 @@ public class ViewCommentItem extends LinearLayout {
                     multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
                 }
             }
-            CommentBuilder contentBuilder = new CommentBuilder(" : " + content).setTextColor("#535353");
-//                    .setBackgroudColor("#efefef");
+            CommentBuilder contentBuilder = new CommentBuilder(" : " + content).setTextColor("#535353")
+                    .setChoseBackColor(Color.parseColor("#fffde3"));
+//            contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+//            contentText.setChoseBackColor(Color.parseColor("#fffde3"));
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {

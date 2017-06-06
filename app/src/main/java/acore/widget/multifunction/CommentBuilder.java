@@ -35,8 +35,9 @@ public class CommentBuilder extends StyleConfigBuilder {
         return this;
     }
 
-    public void setChoseBackColor(int color){
+    public CommentBuilder setChoseBackColor(int color){
         chooseColor = color;
+        return this;
     }
 
     public CommentBuilder setTextSize(int px){
@@ -51,6 +52,8 @@ public class CommentBuilder extends StyleConfigBuilder {
             config.setTextSize(textSize);
         if(!TextUtils.isEmpty(backgroundColor))
             config.setBackgroudColor(backgroundColor);
+        if(chooseColor > 0)
+            config.setChooseBackgroudColor(chooseColor);
         config.setStart(0);
         config.setEnd(text.length());
         config.setClickListener(new View.OnClickListener() {
