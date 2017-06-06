@@ -333,8 +333,9 @@ public class ViewCommentItem extends LinearLayout {
             }
             else view.setBackgroundColor(Color.parseColor("#00fffae3"));
 
+            String newUName = uName.length() > 6 ? uName.subSequence(0, 5) + "..." : uName;
             MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
-            CommentBuilder uNameBuilder = new CommentBuilder(uName).setTextColor("#bcbcbc");
+            CommentBuilder uNameBuilder = new CommentBuilder(newUName).setTextColor("#bcbcbc");
             uNameBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {

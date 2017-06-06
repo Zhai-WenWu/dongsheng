@@ -197,10 +197,21 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             public void onPraiseClick(String comment_id) {
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
                 XHClick.mapStat(CommentActivity.this,likeTongjiId,likeTwoLeven,"");
-                Map<String,String> map = listArray.get(position);
-                map.put("is_fabulous","2");
-                adapterSimple.notifyDataSetChanged();
-                requstInternet(StringManager.api_likeForum,"type=" + type + "&code=" + code + "&commentId=" + comment_id);
+                String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id;
+                ReqEncyptInternet.in().doEncypt(StringManager.api_likeForum, params, new InternetCallback(CommentActivity.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+                        if(i >= ReqInternet.REQ_OK_STRING) {
+                            ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
+                            if(arrayList.size() > 0) {
+                                Map<String, String> map = listArray.get(position);
+                                map.put("is_fabulous", "2");
+                                map.put("fabulous_num", arrayList.get(0).get("num"));
+                                adapterSimple.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
             }
 
             @Override
@@ -367,6 +378,10 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private void sendData(){
         sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
+        if(content.length() == 0){
+            Tools.showToast(this,"发送内容不能为空");
+            return;
+        }
         if(content.length() > 2000){
             Tools.showToast(this,"发送内容不能超过2000字");
             return;
