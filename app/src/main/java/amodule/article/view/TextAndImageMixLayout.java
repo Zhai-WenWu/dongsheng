@@ -117,7 +117,7 @@ public class TextAndImageMixLayout extends LinearLayout
                 break;
             }
         }
-
+        //处理<a></a>
         while (htmlTmep.indexOf("<a") >= 0) {
             int startIndex = htmlTmep.indexOf("<a");
             int endIndex = htmlTmep.indexOf("</a>") + 4;
@@ -140,7 +140,14 @@ public class TextAndImageMixLayout extends LinearLayout
                 htmlTmep = htmlTmep.replaceFirst(aTagData, "");
             }
         }
+
         editTextView.setCenterHorizontal(isCenter);
+        //删除<p></p>
+        if(htmlTmep.indexOf(">") + 1 >= 0
+                && htmlTmep.indexOf("</p>") >=0
+                && htmlTmep.indexOf("</p>") < htmlTmep.length()){
+            html = htmlTmep.substring(htmlTmep.indexOf(">") + 1,htmlTmep.indexOf("</p>"));
+        }
         editTextView.setTextFrormHtml(html);
     }
 
@@ -335,11 +342,10 @@ public class TextAndImageMixLayout extends LinearLayout
         int videoCount = 0;
         for (int index = 0; index < getChildCount(); index++) {
             View baseView = getChildAt(index);
-            if (baseView instanceof VideoShowView) {
+            if (baseView instanceof VideoShowView)
                 videoCount++;
-            }
         }
-        if(videoCount > maxVideoCount){
+        if(videoCount >= maxVideoCount){
             Tools.showToast(getContext(),"最多可选择" + maxVideoCount + "视频");
             return;
         }

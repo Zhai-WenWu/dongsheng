@@ -30,6 +30,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -331,6 +332,7 @@ public class MainHome extends MainBaseActivity {
             return;
         homeFragment.returnListTop();
         homeFragment.refresh();
+        startActivity(new Intent(this, ArticleDetailActivity.class));
     }
 
     /**

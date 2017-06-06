@@ -7,23 +7,28 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -40,12 +45,13 @@ import aplug.basic.ReqInternet;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.share.BarShare;
 import xh.windowview.XhDialog;
 
-import static amodule.article.adapter.ArticleDetailAdapter.Type_articleinfo;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
+import static third.ad.tools.AdPlayIdConfig.DETAIL_DISH_MAKE;
 
 /** 文章详情 */
 public class ArticleDetailActivity extends BaseActivity {
@@ -60,8 +66,12 @@ public class ArticleDetailActivity extends BaseActivity {
     private ListView listview;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;//头部view
     private ImageView rightButton;
+    private ArticleContentBottomView articleContentBottomView;
+    private XHAllAdControl xhAllAdControl;
 
     private String commentNum;
+    private Map<String, String> adDataMap;
+    private boolean isAdShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +79,8 @@ public class ArticleDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null)
             code = bundle.getString("code");
+        if (TextUtils.isEmpty(code)) code = "1078";
+
         Log.i("tzy", "code = " + code);
         init();
     }
@@ -85,6 +97,36 @@ public class ArticleDetailActivity extends BaseActivity {
         initActivity(getTitleText(), 2, 0, 0, R.layout.a_article_detail);
         initView();
         initData();
+    }
+
+    private View adView;
+
+    private void showAD(Map<String, String> dataMap) {
+        if (articleContentBottomView == null) return;
+        adView = LayoutInflater.from(this).inflate(R.layout.a_article_detail_ad, null);
+        //加载图片
+        ImageView imageView = (ImageView) adView.findViewById(R.id.img);
+        int width = ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this, R.dimen.dp_20) * 2;
+        int height = width * 312 / 670;//312 670
+        imageView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+        Glide.with(this).load(dataMap.get("imgUrl")).centerCrop().into(imageView);
+        //加载title
+        TextView title = (TextView) adView.findViewById(R.id.title);
+        title.setText(new StringBuilder().append(dataMap.get("title")).append(" | ").append(dataMap.get("desc")));
+        //设置ad点击
+        adView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                xhAllAdControl.onAdClick(adView, 0, "0");
+            }
+        });
+        adView.findViewById(R.id.ad_tag).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCommon.setAdHintClick(ArticleDetailActivity.this, adView.findViewById(R.id.ad_tag), xhAllAdControl, 0, "0");
+            }
+        });
+        articleContentBottomView.addViewToAdLayout(adView);
     }
 
     /** View部分初始化 **/
@@ -192,8 +234,50 @@ public class ArticleDetailActivity extends BaseActivity {
                         if (page >= 1)
                             requestRelateData();
                     }
+                }, new AutoLoadMore.OnListScrollListener() {
+                    int srceenHeight = ToolsDevice.getWindowPx(ArticleDetailActivity.this).heightPixels;
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        if (adView != null && !isAdShow) {
+                            int[] location = new int[2];
+                            adView.getLocationOnScreen(location);
+                            if (location[1] > 0
+                                    && location[1] < srceenHeight * 3 / 4) {
+                                isAdShow = true;
+                                xhAllAdControl.onAdBind(0, adView, "0");
+                            }
+                        }
+                    }
                 });
         requestArticleData();
+        //请求广告数据
+        requestAdData();
+    }
+
+    private void requestAdData() {
+        final String[] ads = new String[]{DETAIL_DISH_MAKE};
+        ArrayList<String> adData = new ArrayList<>();
+        adData.add(DETAIL_DISH_MAKE);
+        xhAllAdControl = new XHAllAdControl(adData,
+                new XHAllAdControl.XHBackIdsDataCallBack() {
+                    @Override
+                    public void callBack(Map<String, String> map) {
+                        for (String key : ads) {
+                            String adStr = map.get(key);
+                            if (!TextUtils.isEmpty(adStr)) {
+                                adDataMap = StringManager.getFirstMap(adStr);
+                                if (adDataMap != null && adDataMap.size() > 0) {
+                                    showAD(adDataMap);
+                                    detailAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+                }, this, "统计id");
     }
 
     /** 请求网络 */
@@ -244,19 +328,11 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         XHWebView webView = manager.createWebView(0);
-        manager.setJSObj(webView, new JsAppCommon(this, webView,loadManager,barShare));
+        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
         linearLayoutTwo.addView(webView);
         linearLayoutTwo.setVisibility(View.VISIBLE);
-        webView.loadDataWithBaseURL("", mapArticle.get("html").replace("www.xiangha.com","http://www.xiangha.com"), "text/html", "utf-8", null);
-
-        Map<String, String> map = new HashMap<>();
-        map.put("datatype", String.valueOf(Type_articleinfo));
-        map.put("repAddress", mapArticle.get("repAddress"));
-        map.put("clickAll", mapArticle.get("clickAll"));
-        map.put("addTime", mapArticle.get("addTime"));
-        allDataListMap.add(map);
-
-        detailAdapter.notifyDataSetChanged();
+        webView.loadUrl("http://m.ixiangha.com:9813/articleVideo/getArticleInfo?code=" + code);
+//        webView.loadDataWithBaseURL("", mapArticle.get("html").replace("www.xiangha.com", "http://www.xiangha.com"), "text/html", "utf-8", null);
 
         final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         final String userCode = customerData.get("code");
@@ -276,8 +352,13 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
             }
         });
-        if(!isAuthor){
-            detailAdapter.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
+
+        articleContentBottomView = new ArticleContentBottomView(this);
+        articleContentBottomView.setData(mapArticle);
+        linearLayoutThree.addView(articleContentBottomView);
+        linearLayoutThree.setVisibility(View.VISIBLE);
+        if (!isAuthor) {
+            articleContentBottomView.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
                 @Override
                 public void onReportClick() {
                     Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
@@ -291,6 +372,10 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
             });
         }
+        if (adDataMap != null)
+            showAD(adDataMap);
+
+        detailAdapter.notifyDataSetChanged();
     }
 
     /** 请求评论列表 */
@@ -308,17 +393,14 @@ public class ArticleDetailActivity extends BaseActivity {
                     if (isRefresh) {
                         int commentCount = Integer.parseInt(commentNum);
                         map.put("commentNum", "" + ++commentCount);
-                        allDataListMap.set(1, map);
-                    } else {
+                        allDataListMap.set(0, map);
+                    } else
                         allDataListMap.add(map);
-                    }
                     detailAdapter.notifyDataSetChanged();
-                } else {
+                } else
                     toastFaildRes(flag, true, object);
-                }
-                if (page < 1) {
+                if (page < 1)
                     requestRelateData();
-                }
             }
         });
     }
@@ -333,13 +415,11 @@ public class ArticleDetailActivity extends BaseActivity {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
                     int size = listMap.size();
-                    for (int i = 0; i < size; i++) {
+                    for (int i = 0; i < size; i++)
                         listMap.get(i).put("datatype", String.valueOf(Type_recommed));
-                    }
                     analysRelateData(listMap);
-                } else {
+                } else
                     toastFaildRes(flag, true, object);
-                }
             }
         });
     }

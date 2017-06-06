@@ -42,7 +42,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
     public final static int Type_caipu = 6;//菜谱
     public final static int Type_ds = 7;//电商
     public final static int Type_comment = 8;//评论
-    public final static int Type_articleinfo = 9;//转自
 
     private Context context;
     private ArrayList<Map<String, String>> listMap;
@@ -79,26 +78,23 @@ public class ArticleDetailAdapter extends BaseAdapter {
         Map<String, String> map = listMap.get(position);
         int dataType = getItemViewType(position);
         switch (dataType) {
-            case Type_text:
-                convertView = getTextView(map);
-                break;
-            case Type_image:
-                convertView = getImageView(map,"image");
-                break;
-            case Type_gif:
-                convertView = getImageView(map,"gif");
-                break;
-            case Type_caipu:
-                convertView = getCaipuView(map);
-                break;
-            case Type_ds:
-                convertView = getCommodityView(map);
-                break;
+//            case Type_text:
+//                convertView = getTextView(map);
+//                break;
+//            case Type_image:
+//                convertView = getImageView(map,"image");
+//                break;
+//            case Type_gif:
+//                convertView = getImageView(map,"gif");
+//                break;
+//            case Type_caipu:
+//                convertView = getCaipuView(map);
+//                break;
+//            case Type_ds:
+//                convertView = getCommodityView(map);
+//                break;
             case Type_comment:
                 convertView = getCommentView(map);
-                break;
-            case Type_articleinfo:
-                convertView = getArticleInfoView(map);
                 break;
             case Type_recommed:
                 RecommedViewHolder viewHolder = null;
@@ -116,18 +112,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private View getArticleInfoView(Map<String, String> map) {
-        ArticleContentBottomView view = new ArticleContentBottomView(context);
-        view.setData(map);
-        if(onReportClickCallback != null)
-            view.setOnReportClickCallback(onReportClickCallback);
-        return view;
-    }
-
-    private ArticleContentBottomView.OnReportClickCallback onReportClickCallback;
-    public void setOnReportClickCallback(ArticleContentBottomView.OnReportClickCallback callback){
-        this.onReportClickCallback = callback;
-    }
     private View getCommentView(Map<String, String> map) {
         ArticleCommentView view = new ArticleCommentView(context);
         view.setType(type);

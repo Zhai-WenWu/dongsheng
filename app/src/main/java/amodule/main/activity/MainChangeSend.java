@@ -92,11 +92,11 @@ public class MainChangeSend extends BaseActivity{
 		int itemNum = 0;
 		list = new ArrayList<>();
 		if (LoginManager.isShowsendsubjectButton()) {
-			addButton("1",R.drawable.pulish_subject,"发贴");
+			addButton("1",R.drawable.pulish_subject,"晒美食");
 			itemNum ++;
 		}
 		if (LoginManager.isShowsendDishButton()) {
-			addButton("2",R.drawable.send_dish,"发菜谱");
+			addButton("2",R.drawable.send_dish,"写菜谱");
 			itemNum ++;
 		}
 		if (LoginManager.isShowShortVideoButton()) {
@@ -114,7 +114,7 @@ public class MainChangeSend extends BaseActivity{
 		//删除true
 		addButton("6", R.drawable.pulish_article,"发文章");
 		itemNum++;
-		addButton("7", R.drawable.pulish_video,"发视频");
+		addButton("7", R.drawable.pulish_video,"短视频");
 		itemNum++;
 		if(dishVideoMap != null && dishVideoMap.size() > 0){
 			String img = dishVideoMap.get("img");
@@ -239,7 +239,7 @@ public class MainChangeSend extends BaseActivity{
 				if(LoginManager.isShowSendVideoButton())
 					startActivity(new Intent(this, VideoEditActivity.class));
 				else
-					showDialog("发视频",StringManager.api_applyVideoPower);
+					showDialog("短视频",StringManager.api_applyVideoPower);
 				break;
 		}
 	}

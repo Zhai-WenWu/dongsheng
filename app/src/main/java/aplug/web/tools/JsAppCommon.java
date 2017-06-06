@@ -631,7 +631,10 @@ public class JsAppCommon extends JsBase{
 			public void run() {
 				//统计
 				Intent it = new Intent(mAct,PlayVideo.class);
-				it.putExtra("url", url);
+                String urlTemp = url;
+//                if(urlTemp.startsWith("https://"))
+//                    urlTemp = urlTemp.replace("https","http");
+				it.putExtra("url", urlTemp);
 				it.putExtra("name", name);
 				it.putExtra("img", img);
 				mAct.startActivity(it);
@@ -649,13 +652,15 @@ public class JsAppCommon extends JsBase{
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
+				if(imageUrls == null)
+					return;
 				ArrayList<String> data = new ArrayList<>();
 				for(String url:imageUrls){
 					data.add(url);
 				}
 				Intent intent = new Intent(mAct, ImgWallActivity.class);
 				intent.putStringArrayListExtra("images",data);
-				intent.putExtra("index",0);
+				intent.putExtra("index",index);
 				mAct.startActivity(intent);
 			}
 		});
