@@ -28,6 +28,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.user.activity.FriendHome;
@@ -55,10 +56,6 @@ public class UserHomeVideo extends TabContentView {
 
     private int currentPage = 0, everyPage = 0;
     private boolean isRefresh = false;
-
-    private TextView subjectNum;
-
-    private LinearLayout mTabMainMyself;
     private RelativeLayout mEmptyContainer;
     private LinearLayout mEmptyView;
     private Button mGotoBtn;
@@ -81,11 +78,12 @@ public class UserHomeVideo extends TabContentView {
     @Override
     public void onResume(String tag) {
         super.onResume(tag);
+        if (tag.equals("resume")) {
+            initLoad();
+            super.onResume("0");
+        } else
+            super.onResume(tag);
         theListView.setSelection(1);
-        if(subjectNum == null) {
-            mTabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
-            subjectNum = (TextView) mTabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
-        }
     }
 
     private void init() {
@@ -98,7 +96,7 @@ public class UserHomeVideo extends TabContentView {
         mGotoBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAct.startActivity(new Intent(mAct, ArticleEidtActiivty.class));
+                mAct.startActivity(new Intent(mAct, VideoEditActivity.class));
             }
         });
         theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
@@ -263,8 +261,9 @@ public class UserHomeVideo extends TabContentView {
                 }
                 datas.addAll(mNetDatas);
                 if (datas.size() == 0 && isMyselft) {
+                    LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
                     RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
-                    emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();
+                    emptyParams.topMargin = tabMainMyself.getTop() + tabMainMyself.getHeight();
                     mEmptyContainer.setVisibility(View.VISIBLE);
                 } else {
                     mEmptyContainer.setVisibility(View.GONE);

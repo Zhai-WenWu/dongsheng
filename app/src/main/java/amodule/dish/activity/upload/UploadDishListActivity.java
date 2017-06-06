@@ -474,6 +474,7 @@ public class UploadDishListActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        listPool.unBindUI();
+        if (listPool != null)
+            listPool.unBindUI();
     }
 }

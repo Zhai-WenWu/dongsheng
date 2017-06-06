@@ -390,6 +390,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
             FriendHome.isRefresh = true;
+            FriendHome.notifyUploadOver(dataType);
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));

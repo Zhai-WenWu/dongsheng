@@ -130,6 +130,10 @@ public class ArticleUploadListPool extends UploadListPool {
                 });
 
         super.uploadOver(flag, response);
+        if (FriendHome.isAlive) {
+            FriendHome.isRefresh = true;
+            FriendHome.notifyUploadOver(dataType);
+        }
         if (Tools.isForward(XHApplication.in())) {
 //            showUploadOverDialog(flag);
             if(flag){

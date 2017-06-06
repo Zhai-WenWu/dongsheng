@@ -360,7 +360,7 @@ public class FriendHome extends BaseActivity {
 								intent.putExtra("coverPath", articleData.getImg());
 								String videoPath = "";
 								ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
-								if(videoArray.size() > 0){
+								if(videoArray != null && videoArray.size() > 0){
 									videoPath = videoArray.get(0).get("video");
 								}
 								intent.putExtra("finalVideoPath", videoPath);
@@ -394,6 +394,30 @@ public class FriendHome extends BaseActivity {
 								}
 							}
 							return;
+						}
+						break;
+					case "1"://视频列表
+						switch (uploadType) {
+							case UploadDishData.UPLOAD_FAIL:
+								String draftId = dataMap.get("id");
+								if (!TextUtils.isEmpty(draftId)) {
+									UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
+									UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(draftId));
+									Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
+									intent.putExtra("draftId", articleData.getId());
+									intent.putExtra("dataType", EditParentActivity.TYPE_ARTICLE);
+									intent.putExtra("coverPath", articleData.getImg());
+									String videoPath = "";
+									ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
+									if(videoArray != null && videoArray.size() > 0){
+										videoPath = videoArray.get(0).get("video");
+									}
+									intent.putExtra("finalVideoPath", videoPath);
+									FriendHome.this.startActivity(intent);
+								}
+								break;
+							case UploadDishData.UPLOAD_ING:
+								break;
 						}
 						break;
 				}
@@ -456,6 +480,16 @@ public class FriendHome extends BaseActivity {
 			tabSelectStyle(mTabViews.get(i), i == tabHost.getCurrentTab());
 			tabSelectStyle(mTabViewsFloat.get(i), i == tabHost.getCurrentTab());
 		}
+
+		String tabType = mTabs.get(tabIndex).get("type");
+        if ("1".equals(tabType) && mRefreshList.contains(String.valueOf(EditParentActivity.TYPE_VIDEO))) {
+            mIsLoadeds[tabIndex] = false;
+            mRefreshList.remove(String.valueOf(EditParentActivity.TYPE_VIDEO));
+        } else if ("2".equals(tabType) && mRefreshList.contains(String.valueOf(EditParentActivity.TYPE_ARTICLE))) {
+            mIsLoadeds[tabIndex] = false;
+            mRefreshList.remove(String.valueOf(EditParentActivity.TYPE_ARTICLE));
+        }
+
 		if (!mIsLoadeds[tabIndex]) {
 			mTabContentViews.get(tabIndex).initLoad();
 			mIsLoadeds[tabIndex] = true;
@@ -484,14 +518,15 @@ public class FriendHome extends BaseActivity {
 	protected void onResume() {
 		super.onResume();
 		CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
-		if(isRefresh && mTabContentViews != null && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null)
-			mTabContentViews.get(tabIndex).onResume("resume");
+		if(isRefresh && mTabContentViews != null && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null) {
+            isRefresh = false;
+            mTabContentViews.get(tabIndex).onResume("resume");
+        }
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		isRefresh = false;
 		//view失焦点
 		for(int i=0;i<mTabContentViews.size();i++){
 			if(mTabContentViews.get(i) instanceof UserHomeSubject){
@@ -530,4 +565,10 @@ public class FriendHome extends BaseActivity {
 			unregisterReceiver(receiver);
 		}
 	}
+
+	private static ArrayList<String> mRefreshList = new ArrayList<String>();
+	public static void notifyUploadOver(int dataType) {
+        if (!mRefreshList.contains(String.valueOf(dataType)))
+            mRefreshList.add(String.valueOf(dataType));
+    }
 }

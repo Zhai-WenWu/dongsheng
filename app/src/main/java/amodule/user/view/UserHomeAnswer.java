@@ -12,7 +12,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
@@ -53,7 +53,6 @@ public class UserHomeAnswer extends TabContentView {
 	private int currentPage = 0, everyPage = 0;
 	private boolean isRefresh = false;
 
-	private TextView subjectNum;
 	private LinearLayout mEmptyView;
 	private Button mGotoBtn;
 
@@ -75,11 +74,12 @@ public class UserHomeAnswer extends TabContentView {
 	@Override
 	public void onResume(String tag) {
 		super.onResume(tag);
-		theListView.setSelection(1);
-		if(subjectNum == null) {
-			LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
-			subjectNum = (TextView) tabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
-		}
+        if (tag.equals("resume")) {
+            initLoad();
+            super.onResume("0");
+        } else
+            super.onResume(tag);
+        theListView.setSelection(1);
 	}
 
 	private void init() {
@@ -259,6 +259,9 @@ public class UserHomeAnswer extends TabContentView {
 				}
 				datas.addAll(mNetDatas);
 				if (datas.size() == 0 && isMyselft) {
+                    LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
+                    RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
+                    emptyParams.topMargin = tabMainMyself.getTop() + tabMainMyself.getHeight();
 					mEmptyView.setVisibility(View.VISIBLE);
 				} else {
 					mEmptyView.setVisibility(View.GONE);

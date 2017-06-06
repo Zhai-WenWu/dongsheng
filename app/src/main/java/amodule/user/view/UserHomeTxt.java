@@ -56,10 +56,6 @@ public class UserHomeTxt extends TabContentView {
 	private int currentPage = 0, everyPage = 0;
 	private boolean isRefresh = false;
 
-	private TextView subjectNum;
-
-	private LinearLayout mTabMainMyself;
-
 	private RelativeLayout mEmptyContainer;
 	private LinearLayout mEmptyView;
 	private Button mGotoBtn;
@@ -82,11 +78,12 @@ public class UserHomeTxt extends TabContentView {
 	@Override
 	public void onResume(String tag) {
 		super.onResume(tag);
+		if (tag.equals("resume")) {
+			initLoad();
+			super.onResume("0");
+		} else
+			super.onResume(tag);
 		theListView.setSelection(1);
-		if(subjectNum == null) {
-			mTabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
-			subjectNum = (TextView) mTabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
-		}
 	}
 
 	private void init() {
@@ -269,8 +266,9 @@ public class UserHomeTxt extends TabContentView {
                 }
                 datas.addAll(mNetDatas);
                 if (datas.size() == 0 && isMyselft) {
+					LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
 					RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
-					emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();
+					emptyParams.topMargin = tabMainMyself.getTop() + tabMainMyself.getHeight();
 					mEmptyContainer.setVisibility(View.VISIBLE);
                 } else {
 					mEmptyContainer.setVisibility(View.GONE);
