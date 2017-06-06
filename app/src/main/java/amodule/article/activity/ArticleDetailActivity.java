@@ -323,16 +323,15 @@ public class ArticleDetailActivity extends BaseActivity {
         manager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
             @Override
             public void onLoadFinish() {
-                //请求
-                requestForumData(false);
+                requestForumData(false);//请求
+                linearLayoutThree.setVisibility(View.VISIBLE);
             }
         });
         XHWebView webView = manager.createWebView(0);
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
         linearLayoutTwo.addView(webView);
         linearLayoutTwo.setVisibility(View.VISIBLE);
-        webView.loadUrl("http://m.ixiangha.com:9813/articleVideo/getArticleInfo?code=" + code);
-//        webView.loadDataWithBaseURL("", mapArticle.get("html").replace("www.xiangha.com", "http://www.xiangha.com"), "text/html", "utf-8", null);
+        webView.loadDataWithBaseURL("", mapArticle.get("html"), "text/html", "utf-8", null);
 
         final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         final String userCode = customerData.get("code");
@@ -356,7 +355,7 @@ public class ArticleDetailActivity extends BaseActivity {
         articleContentBottomView = new ArticleContentBottomView(this);
         articleContentBottomView.setData(mapArticle);
         linearLayoutThree.addView(articleContentBottomView);
-        linearLayoutThree.setVisibility(View.VISIBLE);
+
         if (!isAuthor) {
             articleContentBottomView.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
                 @Override

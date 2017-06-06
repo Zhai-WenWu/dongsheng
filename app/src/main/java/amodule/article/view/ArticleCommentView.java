@@ -103,22 +103,22 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent, String reportType) {
-
+                        gotoCommentActivity();
                     }
 
                     @Override
                     public void onDeleteCommentClick(String comment_id, String deleteType) {
-
+                        gotoCommentActivity();
                     }
 
                     @Override
                     public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-
+                        gotoCommentActivity();
                     }
 
                     @Override
                     public void onDeleteReplayClick(String comment_id, String replay_id) {
-
+                        gotoCommentActivity();
                     }
 
                     @Override

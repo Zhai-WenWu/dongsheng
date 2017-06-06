@@ -179,7 +179,10 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                             if(onCommentSuccessCallback != null){
                                 onCommentSuccessCallback.onCommentSuccess(isSofa);
                             }
-                            if(isSofa) isSofa = !isSofa;
+                            if(isSofa) {
+                                isSofa = !isSofa;
+                                editText.setHint("评论文章");
+                            }
                         }else{
                             Tools.showToast(context,"评论失败，请重试");
                         }
