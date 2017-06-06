@@ -184,6 +184,10 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     new EditBottomControler.OnSelectImageCallback() {
                         @Override
                         public void onSelectImage() {
+                            if(mixLayout.getImageCount() >= getMaxImageCount()){
+                                Tools.showToast(EditParentActivity.this,"最多可选取" + getMaxImageCount() + "张图片");
+                                return;
+                            }
                             Intent intent = new Intent(EditParentActivity.this, ImageSelectorActivity.class);
                             intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
                             ArrayList<String> imageArray = mixLayout.getImageArray();
@@ -203,6 +207,10 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     new EditBottomControler.OnSelectVideoCallback() {
                         @Override
                         public void onSelectVideo() {
+                            if(mixLayout.getVideoCount() >= getMaxVideoCount()){
+                                Tools.showToast(EditParentActivity.this,"最多可选取" + getMaxVideoCount() + "个视频");
+                                return;
+                            }
                             Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
                             startActivityForResult(intent, REQUEST_SELECT_VIDEO);
                             switch (mPageTag) {

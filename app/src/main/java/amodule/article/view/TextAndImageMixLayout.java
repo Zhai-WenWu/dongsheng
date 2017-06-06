@@ -626,6 +626,26 @@ public class TextAndImageMixLayout extends LinearLayout
         return imageUrlArray;
     }
 
+    public int getImageCount(){
+        int imageCount = 0;
+        for(int index = 0;index< getChildCount();index++){
+            View view = getChildAt(index);
+            if(view instanceof ImageShowView)
+                imageCount++;
+        }
+        return imageCount;
+    }
+
+    public int getVideoCount(){
+        int imageCount = 0;
+        for(int index = 0;index< getChildCount();index++){
+            View view = getChildAt(index);
+            if(view instanceof VideoShowView)
+                imageCount++;
+        }
+        return imageCount;
+    }
+
     /**
      * 获取视频数据
      * @return
