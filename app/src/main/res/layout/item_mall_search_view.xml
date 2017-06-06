@@ -9,7 +9,7 @@
     
     <acore.widget.TagTextView
         xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
-        tagTextView:backgroundColor="#f1eee4"
+        tagTextView:backgroundColor="@color/common_bg"
         tagTextView:radius="@dimen/dp_20"
         android:id="@+id/tv_content" 
         android:layout_width="wrap_content"
