@@ -31,6 +31,7 @@ import acore.widget.TextViewLimitLine;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.VideoDetailActivity;
+import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.dish.db.UploadDishData;
@@ -348,12 +349,20 @@ public class FriendHome extends BaseActivity {
 				String type = tabMap.get("type");
 				switch (type) {
 					case "2"://文章列表
+						String id = dataMap.get("id");
 						if ("2".equals(hasMedia)) {
-							Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
-							FriendHome.this.startActivity(intent);
+							if (!TextUtils.isEmpty(id)) {
+								UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
+								UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(id));
+								Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
+								intent.putExtra("draftId", articleData.getId());
+								intent.putExtra("dataType", EditParentActivity.TYPE_ARTICLE);
+								intent.putExtra("coverPath", articleData.getImg());
+								intent.putExtra("finalVideoPath", articleData.getVideo());
+								FriendHome.this.startActivity(intent);
+							}
 							return;
 						} else if (UploadDishData.UPLOAD_FAIL.equals(uploadType)) {
-							String id = dataMap.get("id");
 							if (!TextUtils.isEmpty(id)) {
 								final UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
 								final UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(id));
