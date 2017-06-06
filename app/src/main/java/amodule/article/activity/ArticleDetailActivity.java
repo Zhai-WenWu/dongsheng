@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,9 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -32,15 +31,19 @@ import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.view.ArticleCommentBar;
+import amodule.article.view.ArticleContentBottomView;
 import amodule.article.view.ArticleHeaderView;
 import amodule.article.view.BottomDialog;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
+import aplug.web.view.XHWebView;
 import third.share.BarShare;
 import xh.windowview.XhDialog;
 
+import static amodule.article.adapter.ArticleDetailAdapter.Type_articleinfo;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 
@@ -64,13 +67,8 @@ public class ArticleDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getIntent().getExtras();
-        if (bundle != null) {
+        if (bundle != null)
             code = bundle.getString("code");
-        }
-        //TODO 测试
-        if (TextUtils.isEmpty(code))
-            code = "520";
-
         Log.i("tzy", "code = " + code);
         init();
     }
@@ -78,7 +76,7 @@ public class ArticleDetailActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(loadManager != null)
+        if (loadManager != null)
             loadManager.hideProgressBar();
     }
 
@@ -145,7 +143,8 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleCommentBar.setOnCommentSuccessCallback(new ArticleCommentBar.OnCommentSuccessCallback() {
             @Override
             public void onCommentSuccess(boolean isSofa) {
-                requestForumData(true);
+                if (isSofa)
+                    requestForumData(true);
             }
         });
     }
@@ -171,7 +170,6 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutOne);
         layout.addView(linearLayoutTwo);
         layout.addView(linearLayoutThree);
-
     }
 
     /** 数据初始化 **/
@@ -191,9 +189,8 @@ public class ArticleDetailActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (page >= 1) {
+                        if (page >= 1)
                             requestRelateData();
-                        }
                     }
                 });
         requestArticleData();
@@ -214,8 +211,6 @@ public class ArticleDetailActivity extends BaseActivity {
                 } else {
                     toastFaildRes(flag, true, object);
                 }
-                //请求
-                requestForumData(false);
                 loadManager.hideProgressBar();
             }
         });
@@ -240,12 +235,26 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleCommentBar.setPraiseAPI(getPraiseAPI());
         mArticleCommentBar.setData(mapArticle);
 
-        //TODO webview
         WebviewManager manager = new WebviewManager(this, loadManager, true);
-        WebView webView = manager.createWebView(0);
+        manager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
+            @Override
+            public void onLoadFinish() {
+                //请求
+                requestForumData(false);
+            }
+        });
+        XHWebView webView = manager.createWebView(0);
+        manager.setJSObj(webView, new JsAppCommon(this, webView,loadManager,barShare));
         linearLayoutTwo.addView(webView);
         linearLayoutTwo.setVisibility(View.VISIBLE);
-        webView.loadDataWithBaseURL("", mapArticle.get("html"), "text/html", "utf-8", null);
+        webView.loadDataWithBaseURL("", mapArticle.get("html").replace("www.xiangha.com","http://www.xiangha.com"), "text/html", "utf-8", null);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("datatype", String.valueOf(Type_articleinfo));
+        map.put("repAddress", mapArticle.get("repAddress"));
+        map.put("clickAll", mapArticle.get("clickAll"));
+        map.put("addTime", mapArticle.get("addTime"));
+        allDataListMap.add(map);
 
         detailAdapter.notifyDataSetChanged();
 
@@ -267,6 +276,21 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
             }
         });
+        if(!isAuthor){
+            detailAdapter.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
+                @Override
+                public void onReportClick() {
+                    Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
+                    intent.putExtra("code", code);
+                    intent.putExtra("type", getType());
+                    intent.putExtra("userCode", userCode);
+                    intent.putExtra("reportName", customerData.get("nickName"));
+                    intent.putExtra("reportContent", mapArticle.get("title"));
+                    intent.putExtra("reportType", "1");
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     /** 请求评论列表 */
@@ -281,9 +305,11 @@ public class ArticleDetailActivity extends BaseActivity {
                     map.put("datatype", String.valueOf(Type_comment));
                     map.put("data", object.toString());
                     map.put("commentNum", commentNum);
-                    if(isRefresh){
-                        allDataListMap.set(0,map);
-                    }else{
+                    if (isRefresh) {
+                        int commentCount = Integer.parseInt(commentNum);
+                        map.put("commentNum", "" + ++commentCount);
+                        allDataListMap.set(1, map);
+                    } else {
                         allDataListMap.add(map);
                     }
                     detailAdapter.notifyDataSetChanged();

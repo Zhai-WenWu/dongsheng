@@ -12,6 +12,8 @@ public class StyleConfig {
 	String text = "";
 	/** 文本背景颜色 */
 	String backgroudColor = "";
+	/** 文本背景颜色 */
+	int chooseBackgroudColor = 0;
 	/** 文本颜色 */
 	String textColor = "";
 	/** 文本大小 */
@@ -34,6 +36,7 @@ public class StyleConfig {
 	int end = -1;
 	/** 点击回调 */
 	View.OnClickListener clickListener;
+	private int chooseColor;
 
 	public StyleConfig(String text) {
 		this.text = text;
@@ -55,6 +58,14 @@ public class StyleConfig {
 	public StyleConfig setBackgroudColor(String backgroudColor) {
 		this.backgroudColor = backgroudColor;
 		return this;
+	}
+
+	public void setChooseBackgroudColor(int chooseBackgroudColor) {
+		this.chooseBackgroudColor = chooseBackgroudColor;
+	}
+
+	public int getChooseBackgroudColor() {
+		return chooseBackgroudColor;
 	}
 
 	public String getTextColor() {
@@ -158,8 +169,17 @@ public class StyleConfig {
 		return clickListener;
 	}
 
+	public int getChooseColor() {
+		return chooseColor;
+	}
+
 	public StyleConfig setClickListener(View.OnClickListener clickListener) {
 		this.clickListener = clickListener;
+		return this;
+	}
+
+	public StyleConfig setChooseColor(int color){
+		chooseColor = color;
 		return this;
 	}
 }

@@ -39,6 +39,7 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import aplug.imageselector.ImgWallActivity;
 import aplug.web.view.XHWebView;
 import third.mall.activity.ShoppingActivity;
 import third.mall.alipay.MallAlipay;
@@ -634,6 +635,28 @@ public class JsAppCommon extends JsBase{
 				it.putExtra("name", name);
 				it.putExtra("img", img);
 				mAct.startActivity(it);
+			}
+		});
+	}
+
+	/**
+	 * 打开图片墙
+	 * @param imageUrls
+	 * @param index
+	 */
+	@JavascriptInterface
+	public void doShowImages(final String[] imageUrls,final int index){
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<String> data = new ArrayList<>();
+				for(String url:imageUrls){
+					data.add(url);
+				}
+				Intent intent = new Intent(mAct, ImgWallActivity.class);
+				intent.putStringArrayListExtra("images",data);
+				intent.putExtra("index",0);
+				mAct.startActivity(intent);
 			}
 		});
 	}

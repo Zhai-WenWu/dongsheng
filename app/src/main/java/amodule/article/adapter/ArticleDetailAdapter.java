@@ -27,7 +27,6 @@ import amodule.article.view.CommodityItemView;
 import amodule.article.view.DishItemView;
 import amodule.article.view.ImageShowView;
 import amodule.article.view.RecommendItemView;
-import amodule.article.view.VideoShowView;
 import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichURLSpan;
 
@@ -43,6 +42,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
     public final static int Type_caipu = 6;//菜谱
     public final static int Type_ds = 7;//电商
     public final static int Type_comment = 8;//评论
+    public final static int Type_articleinfo = 9;//转自
 
     private Context context;
     private ArrayList<Map<String, String>> listMap;
@@ -97,6 +97,9 @@ public class ArticleDetailAdapter extends BaseAdapter {
             case Type_comment:
                 convertView = getCommentView(map);
                 break;
+            case Type_articleinfo:
+                convertView = getArticleInfoView(map);
+                break;
             case Type_recommed:
                 RecommedViewHolder viewHolder = null;
                 if (convertView == null
@@ -113,16 +116,22 @@ public class ArticleDetailAdapter extends BaseAdapter {
         return convertView;
     }
 
+    private View getArticleInfoView(Map<String, String> map) {
+        ArticleContentBottomView view = new ArticleContentBottomView(context);
+        view.setData(map);
+        if(onReportClickCallback != null)
+            view.setOnReportClickCallback(onReportClickCallback);
+        return view;
+    }
+
+    private ArticleContentBottomView.OnReportClickCallback onReportClickCallback;
+    public void setOnReportClickCallback(ArticleContentBottomView.OnReportClickCallback callback){
+        this.onReportClickCallback = callback;
+    }
     private View getCommentView(Map<String, String> map) {
         ArticleCommentView view = new ArticleCommentView(context);
         view.setType(type);
         view.setCode(code);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Tools.showToast(context,"抢沙发");
-            }
-        });
         view.setRobsofaClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

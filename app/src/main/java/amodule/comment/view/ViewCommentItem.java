@@ -18,6 +18,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.xiangha.R;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -132,16 +135,19 @@ public class ViewCommentItem extends LinearLayout {
         comment_id = dataMap.get("comment_id");
         String content = dataMap.get("content");
         String is_anchor = dataMap.get("is_anchor");
-        if("2".equals(is_anchor))commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
+        if("2".equals(is_anchor)){
+            commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
+            dataMap.put("is_anchor","1");
+        }
         else commentContent.setBackgroundColor(Color.parseColor("#00fffae3"));
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
         for(Map<String, String> contentMap:contentArray) {
-            initCotentView(contentMap);
+            addCotentView(contentMap);
         }
     }
 
     private boolean isShowContentClick = false;
-    private void initCotentView(final Map<String, String> contentMap){
+    private void addCotentView(final Map<String, String> contentMap){
         View view = layoutInflater.inflate(R.layout.a_comment_item_content,null);
         final String text = contentMap.get("text");
         final MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
@@ -282,10 +288,27 @@ public class ViewCommentItem extends LinearLayout {
         }
     }
 
+    private void resetReplay(ArrayList<Map<String, String>> replayArray){
+        try {
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObject;
+            for (final Map<String, String> replayMap : replayArray) {
+                jsonObject = new JSONObject();
+                for (String key : replayMap.keySet())
+                    jsonObject.put(key, replayMap.get(key));
+                jsonArray.put(jsonObject);
+            }
+            dataMap.put("replay",jsonArray.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void addReplayView(String replay){
         ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
         View view;
         MultifunctionTextView replayTv;
+        boolean isReset = false;
         for(final Map<String, String> replayMap:replayArray) {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
@@ -295,30 +318,33 @@ public class ViewCommentItem extends LinearLayout {
             final String uName = replayMap.get("uname");
             final String ucode = replayMap.get("ucode");
             final String is_author = replayMap.get("is_author");
+            final String is_anchor = replayMap.get("is_anchor"); //是否是锚点
             final String replay_uname = replayMap.get("replay_uname");
             final String replay_ucode = replayMap.get("replay_ucode");
             final String is_replay_author = replayMap.get("is_replay_author");
 
             String authoCode = null;
 
-            final boolean isAuthor = "2".equals(is_author);
-//            if(isAuthor){
-//                view.setBackgroundColor(Color.parseColor("#fffae3"));
-//                if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName);
-//            }
-//            else view.setBackgroundColor(Color.parseColor("#00fffae3"));
+            if("2".equals(is_anchor)){ //是否是锚点
+                view.setBackgroundColor(Color.parseColor("#fffae3"));
+                if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName,"");
+                replayMap.put("is_anchor","1");
+                isReset = true;
+            }
+            else view.setBackgroundColor(Color.parseColor("#00fffae3"));
 
+            String newUName = uName.length() > 6 ? uName.subSequence(0, 5) + "..." : uName;
             MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
-            CommentBuilder uNameBuilder = new CommentBuilder(uName).setTextColor("#bcbcbc");
+            CommentBuilder uNameBuilder = new CommentBuilder(newUName).setTextColor("#bcbcbc");
             uNameBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
-                    if(mUserListener != null) mUserListener.onReplayUserNameClick(isAuthor,uName);
+                    if(mUserListener != null) mUserListener.onReplayUserNameClick("2".equals(is_author),uName);
                     goFriendHome(ucode);
                 }
             });
             multifunctionText.addStyle(uNameBuilder.getContent(), uNameBuilder.build());
-            if(isAuthor) {
+            if("2".equals(is_author)) {
                 authoCode = ucode;
                 CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                 authorBuilder.parse(null);
@@ -333,7 +359,7 @@ public class ViewCommentItem extends LinearLayout {
                 replayNameBuilder.parse(new CommentBuilder.CommentClickCallback() {
                     @Override
                     public void onCommentClick(View v, String userCode) {
-                        if(mUserListener != null) mUserListener.onReplayUserNameClick(isAuthor,replay_uname);
+                        if(mUserListener != null) mUserListener.onReplayUserNameClick("2".equals(is_replay_author),replay_uname);
                         goFriendHome(replay_ucode);
                     }
                 });
@@ -345,7 +371,10 @@ public class ViewCommentItem extends LinearLayout {
                     multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
                 }
             }
-            CommentBuilder contentBuilder = new CommentBuilder(" : " + content).setTextColor("#535353");
+            CommentBuilder contentBuilder = new CommentBuilder(" : " + content).setTextColor("#535353")
+                    .setChoseBackColor(Color.parseColor("#fffde3"));
+//            contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+//            contentText.setChoseBackColor(Color.parseColor("#fffde3"));
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
@@ -372,6 +401,7 @@ public class ViewCommentItem extends LinearLayout {
             commentReplayImg.setVisibility(View.VISIBLE);
             commentReplay.addView(view);
         }
+        if(isReset) resetReplay(replayArray);
     }
 
     private void goFriendHome(String code){
@@ -388,7 +418,6 @@ public class ViewCommentItem extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if(mListener != null) mListener.onPraiseClick(comment_id);
-                commentPraise.setImageResource(R.drawable.i_comment_praise_ok);
             }
         });
         String is_del_report = dataMap.get("is_del_report");

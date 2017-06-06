@@ -18,7 +18,6 @@ import com.xiangha.R;
  * Created by MrTrying on 2017/6/2 11:24.
  * E_mail : ztanzeyu@gmail.com
  */
-
 public class BottomDialog extends Dialog {
 
     private LinearLayout buttonLayout;
@@ -35,7 +34,12 @@ public class BottomDialog extends Dialog {
     private void initView() {
         buttonLayout = (LinearLayout) findViewById(R.id.bottom_dialog_button_layout);
         cannleButton = (TextView) findViewById(R.id.bottom_dialog_cancel);
-
+        buttonLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         cannleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

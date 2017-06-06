@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_64"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"

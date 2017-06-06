@@ -620,6 +620,24 @@ public class TextAndImageMixLayout extends LinearLayout
         return imageUrlArray;
     }
 
+    /**
+     * 获取视频数据
+     * @return
+     */
+    public ArrayList<Map<String,String>> getVideoArray(){
+        ArrayList<Map<String,String>> dataArray = new ArrayList<>();
+        for(int index = 0 ; index < getChildCount() ;index ++){
+            View view = getChildAt(index);
+            if(view instanceof VideoShowView){
+                Map<String,String> map = new HashMap<>();
+                map.put("video",((VideoShowView)view).getVideoUrl());
+                map.put("image",((VideoShowView)view).getCoverImageUrl());
+                dataArray.add(map);
+            }
+        }
+        return dataArray;
+    }
+
     public EditTextView getCurrentEditText() {
         return currentEditText;
     }
