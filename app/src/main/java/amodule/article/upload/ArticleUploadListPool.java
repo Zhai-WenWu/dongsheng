@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -23,8 +24,6 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.UploadFailPopWindowDialog;
-import amodule.article.activity.ArticleDetailActivity;
-import amodule.article.activity.VideoDetailActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -135,23 +134,38 @@ public class ArticleUploadListPool extends UploadListPool {
             FriendHome.notifyUploadOver(dataType);
         }
         if (Tools.isForward(XHApplication.in())) {
-//            showUploadOverDialog(flag);
-            if(flag){
+            if (FriendHome.isAlive) {
+                FriendHome.isRefresh = true;
+            } else {
                 Activity act = XHActivityManager.getInstance().getCurrentActivity();
-                Intent it = new Intent(act, ArticleDetailActivity.class);
-                if(dataType == EditParentActivity.TYPE_ARTICLE) {
-                    it.setClass(act, ArticleDetailActivity.class);
-                }else if(dataType == EditParentActivity.TYPE_VIDEO) {
-                    it.setClass(act, VideoDetailActivity.class);
-                }
-                it.putExtra("code",response);
-                act.startActivity(it);
-            }else{
-                Activity act = XHActivityManager.getInstance().getCurrentActivity();
-                Intent it = new Intent(act, FriendHome.class);
-                it.putExtra("index",fridendHomeIndex);
-                act.startActivity(it);
+                Intent intent = new Intent();
+                intent.putExtra("code", LoginManager.userInfo.get("code"));
+                if(dataType == EditParentActivity.TYPE_ARTICLE)
+                    intent.putExtra("index", 3);
+                else if(dataType == EditParentActivity.TYPE_VIDEO)
+                    intent.putExtra("index", 2);
+                intent.setClass(act, FriendHome.class);
+                FriendHome.isRefresh = true;
+                act.startActivity(intent);
             }
+
+//            showUploadOverDialog(flag);
+//            if(flag){
+//                Activity act = XHActivityManager.getInstance().getCurrentActivity();
+//                Intent it = new Intent(act, ArticleDetailActivity.class);
+//                if(dataType == EditParentActivity.TYPE_ARTICLE) {
+//                    it.setClass(act, ArticleDetailActivity.class);
+//                }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+//                    it.setClass(act, VideoDetailActivity.class);
+//                }
+//                it.putExtra("code",response);
+//                act.startActivity(it);
+//            }else{
+//                Activity act = XHActivityManager.getInstance().getCurrentActivity();
+//                Intent it = new Intent(act, FriendHome.class);
+//                it.putExtra("index",fridendHomeIndex);
+//                act.startActivity(it);
+//            }
         }
     }
 
@@ -230,8 +244,10 @@ public class ArticleUploadListPool extends UploadListPool {
                                     itemData.setRecMsg(responseStr);
                                 }
                                 UploadArticleData uploadArticleData = modifyUploadArticleData();
-                                uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING);
-                                saveDataToSqlit(uploadArticleData);
+                                if(uploadArticleData != null) {
+                                    uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING);
+                                    saveDataToSqlit(uploadArticleData);
+                                }
                             } else {
                                 itemData.setState(UploadItemData.STATE_FAILD);
                             }
@@ -445,11 +461,11 @@ public class ArticleUploadListPool extends UploadListPool {
 
                         Log.e("articleUpload", "文章上传 videoPath: " + videoPath + "  videoUrl:" + videoUrl);
                         Log.e("articleUpload", "文章上传 videoImage: " + videoImage + "  imageUrl:" + imageUrl);
-                        if (!Tools.isFileExists(videoPath)) {
+                        if (videoPath.indexOf("http") != 0 && !Tools.isFileExists(videoPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章视频路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
                         }
-                        if (!Tools.isFileExists(videoImage)) {
+                        if (videoImage.indexOf("http") != 0 && !Tools.isFileExists(videoImage)) {
                             Toast.makeText(Main.allMain, "获取不到文章视频图片路径", Toast.LENGTH_SHORT).show();
                             return null;
                         }
