@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
@@ -35,6 +36,7 @@ public class VideoPreviewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         initActivity("", 2, 0, 0, R.layout.video_preview_layout);
         Intent intent = getIntent();
         mVideoPath = intent.getStringExtra(MediaStore.Video.Media.DATA);
@@ -42,10 +44,6 @@ public class VideoPreviewActivity extends BaseActivity {
         addListener();
         if (TextUtils.isEmpty(mVideoPath))
             return;
-        if(Tools.isShowTitle()) {
-            RelativeLayout.LayoutParams backParams = (RelativeLayout.LayoutParams) mVideoBack.getLayoutParams();
-            backParams.topMargin = Tools.getStatusBarHeight(this) + Tools.getDimen(this, R.dimen.dp_10);
-        }
         mVideoContainer.setVisibility(View.VISIBLE);
         mVideoView.setVideoPath(mVideoPath);
     }

@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/temp"
-            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_28"
             android:layout_centerHorizontal="true"
             android:text="轻触选择"
             android:textSize="@dimen/sp_14"
@@ -44,8 +44,8 @@
         android:id="@+id/video_back"
         android:layout_width="@dimen/dp_28"
         android:layout_height="@dimen/dp_28"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_20"
         android:src="@drawable/video_preview_back"/>
 
 </RelativeLayout>
