@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -280,12 +279,12 @@ public class ArticleUploadListActivity extends BaseActivity {
                     view.findViewById(R.id.iv_cover_dish).setVisibility(View.GONE);
                     view.findViewById(R.id.iv_cover_dish_last).setVisibility(View.VISIBLE);
                 }else{
-                    int newPosition = position;
+                    String imgPath = arrayList.get(position).get("path");
                     if(String.valueOf(UploadItemData.TYPE_VIDEO).equals(arrayList.get(position).get("type")))
-                        newPosition = 0;
+                        imgPath = arrayList.get(position).get("videoImage");
                     view.findViewById(R.id.iv_cover_dish).setVisibility(View.VISIBLE);
                     view.findViewById(R.id.iv_cover_dish_last).setVisibility(View.GONE);
-                    Glide.with(ArticleUploadListActivity.this).load(arrayList.get(newPosition).get("path"))
+                    Glide.with(ArticleUploadListActivity.this).load(imgPath)
                             .into(((ImageView) view.findViewById(R.id.iv_cover_dish)));
                 }
                 ((ProgressBar) view.findViewById(R.id.pb_progress)).setProgress(Integer.parseInt(itemMap.get("progress")));

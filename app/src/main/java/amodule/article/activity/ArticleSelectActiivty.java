@@ -183,7 +183,12 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             intent.putExtra("draftId", draftId);
             intent.putExtra("dataType", dataType);
             intent.putExtra("coverPath", uploadArticleData.getImg());
-            intent.putExtra("finalVideoPath", uploadArticleData.getVideo());
+            String videoPath = "";
+            ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
+            if(videoArray.size() > 0){
+                videoPath = videoArray.get(0).get("video");
+            }
+            intent.putExtra("finalVideoPath", videoPath);
             startActivity(intent);
         }else{
             InternetCallback internetCallback = new InternetCallback(ArticleSelectActiivty.this) {

@@ -27,13 +27,10 @@ public class UploadArticleData {
     public static String article_isOriginal = "food"; //是否原创 1-转载 2-原创
     public static String article_repAddress = "repAddress"; //转载地址
     public static String article_img = "img"; //首图
-    public static String article_video = "video"; //视频
-    public static String article_videoImg = "videoImg";  //视频首图
     public static String article_imgs = "imgs"; //图片集合
+    public static String article_videos = "videos"; //视频集合
     public static String article_code = "code";  //文章code
     public static String article_imgUrl = "imgUrl";  //图片url
-    public static String article_videoUrl = "videoUrl";
-    public static String article_videoImgUrl = "videoImgUrl";
     public static String article_uploadType = "uploadType";  //上传类型包括：后台发布、发布中
 
     private int id = -1;
@@ -45,11 +42,8 @@ public class UploadArticleData {
     private String repAddress; //转载地址
     private String img; //首图
     private String imgUrl; //首图url
-    private String video; //视频
-    private String videoUrl; //视频url
-    private String videoImg;  //视频首图
-    private String videoImgUrl;  //视频首图url
     private String imgs; //所有图片集合
+    private String videos; //所有视频集合
 
     private String uploadType; //上传类型包括：后台发布、发布中
 
@@ -65,29 +59,42 @@ public class UploadArticleData {
         this.imgUrl = imgUrl;
     }
 
-    public void setVideoImgUrl(String videoImgUrl) {
-        this.videoImgUrl = videoImgUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
 
     public void setImgs(String imgs) {
         this.imgs = imgs;
+    }
+
+    public void setVideos(String videos) {
+        this.videos = videos;
+    }
+
+    public void setVideoArray(ArrayList<Map<String,String>> arrayList){
+        JSONArray jsonArray = new JSONArray();
+        Map<String,String> map;
+        JSONObject jsonObject;
+        try {
+            for (int i = 0; i < arrayList.size(); i++) {
+                jsonObject = new JSONObject();
+                map = arrayList.get(i);
+                for (String key : map.keySet()) {
+                    jsonObject.put(key, map.get(key));
+                }
+                jsonArray.put(jsonObject);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        videos = jsonArray.toString();
+    }
+
+    public String getVideos() {
+        return videos;
     }
 
     public String getImgUrl() {
         return imgUrl;
     }
 
-    public String getVideoImgUrl() {
-        return videoImgUrl;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
 
     public void setImgArray(ArrayList<Map<String,String>> arrayList){
         JSONArray jsonArray = new JSONArray();
@@ -122,6 +129,10 @@ public class UploadArticleData {
 
     public ArrayList<Map<String,String>> getImgArray(){
         return StringManager.getListMapByJson(imgs);
+    }
+
+    public ArrayList<Map<String,String>> getVideoArray(){
+        return StringManager.getListMapByJson(videos);
     }
 
     public void setClassCode(String classCode) {
@@ -160,14 +171,6 @@ public class UploadArticleData {
         this.title = title;
     }
 
-    public void setVideo(String video) {
-        this.video = video;
-    }
-
-    public void setVideoImg(String videoImg) {
-        this.videoImg = videoImg;
-    }
-
     public String getClassCode() {
         return classCode;
     }
@@ -194,14 +197,6 @@ public class UploadArticleData {
 
     public String getTitle() {
         return title;
-    }
-
-    public String getVideo() {
-        return video;
-    }
-
-    public String getVideoImg() {
-        return videoImg;
     }
 
     public void upload(String url,InternetCallback callback){

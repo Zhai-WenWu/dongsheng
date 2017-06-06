@@ -44,6 +44,7 @@ public class UploadItemData {
     private String name;
     private int type;
     private String path;
+    private String videoImage;
     private int pos;
     private int index;
     private int totleLength;
@@ -136,6 +137,14 @@ public class UploadItemData {
         uniqueId = Md5Util.encode(path + UPLOAD_API);
     }
 
+    public void setVideoImage(String videoImage) {
+        this.videoImage = videoImage;
+    }
+
+    public String getVideoImage() {
+        return videoImage;
+    }
+
     public String getRecMsg() {
         return recMsg;
     }
@@ -200,6 +209,7 @@ public class UploadItemData {
         map.put("name", name);
         map.put("type", type + "");
         map.put("path", path);
+        map.put("videoImage", videoImage);
         map.put("pos", pos + "");
         map.put("index", index + "");
         map.put("speed", speed + "");

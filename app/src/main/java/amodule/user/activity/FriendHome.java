@@ -358,7 +358,12 @@ public class FriendHome extends BaseActivity {
 								intent.putExtra("draftId", articleData.getId());
 								intent.putExtra("dataType", EditParentActivity.TYPE_ARTICLE);
 								intent.putExtra("coverPath", articleData.getImg());
-								intent.putExtra("finalVideoPath", articleData.getVideo());
+								String videoPath = "";
+								ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
+								if(videoArray.size() > 0){
+									videoPath = videoArray.get(0).get("video");
+								}
+								intent.putExtra("finalVideoPath", videoPath);
 								FriendHome.this.startActivity(intent);
 							}
 							return;

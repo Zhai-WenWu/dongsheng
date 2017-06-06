@@ -189,9 +189,15 @@ public class UserHomeAnswer extends TabContentView {
 								int isOriginal = articleData.getIsOriginal();
 								String repAddress = articleData.getRepAddress();
 								String img = articleData.getImg();
-								String video = articleData.getVideo();
-								String videoUrl = articleData.getVideoUrl();
-								String videoImgUrl = articleData.getVideoImgUrl();
+								String video = "";
+								String videoUrl = "";
+								String videoImgUrl = "";
+								ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
+								if(videoArray.size() > 0){
+									video = videoArray.get(0).get("video");
+									videoUrl = videoArray.get(0).get("videoUrl");
+									videoImgUrl = videoArray.get(0).get("imageUrl");
+								}
 								String uploadType = articleData.getUploadType();
 								data.put("code", code);
 								data.put("title", title);

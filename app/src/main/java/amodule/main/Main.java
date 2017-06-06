@@ -32,6 +32,7 @@ import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.tencent.smtt.sdk.QbSdk;
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -203,7 +204,12 @@ public class Main extends Activity implements OnClickListener {
                         intent.putExtra("draftId", uploadArticleData.getId());
                         intent.putExtra("dataType", dataType);
                         intent.putExtra("coverPath", uploadArticleData.getImg());
-                        intent.putExtra("finalVideoPath", uploadArticleData.getVideo());
+                        String videoPath = "";
+                        ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
+                        if(videoArray.size() > 0){
+                            videoPath = videoArray.get(0).get("video");
+                        }
+                        intent.putExtra("finalVideoPath", videoPath);
                         startActivity(intent);
                         xhDialog.cancel();
                     }

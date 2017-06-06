@@ -304,25 +304,53 @@ public class ArticleUploadListPool extends UploadListPool {
     private UploadArticleData modifyUploadArticleData(final boolean isReset) {
         final UploadArticleData uploadDishData = uploadPoolData.getUploadArticleData();
         if (uploadDishData == null){
-            Log.e("VideoDishUploadListPool","UploadDishData 空");
+            Log.e("articleUpload","UploadDishData 空");
             return null;
         }
 
         //视频首图
         List<UploadItemData> headDataList = uploadPoolData.getHeadDataList();
         if(headDataList != null && headDataList.size() > 0){
-            Log.i("articleUpload","视频首图 path:" + headDataList.get(0).getPath() + "   url:" + headDataList.get(0).getRecMsg());
-            uploadDishData.setVideoImgUrl(isReset ? "" : headDataList.get(0).getRecMsg());
+            final ArrayList<Map<String, String>> makesList = uploadDishData.getVideoArray();
+            uploadPoolData.loopPoolData(headDataList, new UploadPoolData.LoopCallback() {
+                @Override
+                public boolean onLoop(UploadItemData itemData) {
+                    if (itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG) {
+                        for (int i = 0; i < makesList.size(); i++) {
+                            Map<String, String> map = makesList.get(i);
+                            Log.i("articleUpload","视频图片信息 map.path:" + map.get("image") + "  url:" + itemData.getRecMsg());
+                            if (map.get("image").equals(itemData.getPath())) {
+                                map.put("imageUrl",isReset ? "" : itemData.getRecMsg());
+                                break;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
+            uploadDishData.setVideoArray(makesList);
         }
-        //视频信息
         final List<UploadItemData> bodyItemDatas = uploadPoolData.getBodyDataList();
+        //视频信息
         if(bodyItemDatas != null && bodyItemDatas.size() > 0) {
-            UploadItemData captureItem = bodyItemDatas.get(bodyItemDatas.size() - 1);
-            Log.i("articleUpload","视频信息 path:" + captureItem.getPath() + "  type:" + captureItem.getType() + "   url:" + captureItem.getRecMsg());
-            if(UploadItemData.TYPE_VIDEO == captureItem.getType()){
-                Log.i("articleUpload","视频信息 setVideoUrl:" + captureItem.getRecMsg());
-                uploadDishData.setVideoUrl(isReset ? "" : captureItem.getRecMsg());
-            }
+            final ArrayList<Map<String, String>> makesList = uploadDishData.getVideoArray();
+            uploadPoolData.loopPoolData(bodyItemDatas, new UploadPoolData.LoopCallback() {
+                @Override
+                public boolean onLoop(UploadItemData itemData) {
+                    if (itemData.getType() == UploadItemData.TYPE_VIDEO) {
+                        for (int i = 0; i < makesList.size(); i++) {
+                            Map<String, String> map = makesList.get(i);
+                            Log.i("articleUpload","视频信息 map.path:" + map.get("video") + "  url:" + itemData.getRecMsg());
+                            if (map.get("video").equals(itemData.getPath())) {
+                                map.put("videoUrl",isReset ? "" : itemData.getRecMsg());
+                                break;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
+            uploadDishData.setVideoArray(makesList);
         }
         //图片信息
         if(bodyItemDatas != null && bodyItemDatas.size() > 0) {
@@ -330,7 +358,7 @@ public class ArticleUploadListPool extends UploadListPool {
             uploadPoolData.loopPoolData(bodyItemDatas, new UploadPoolData.LoopCallback() {
                 @Override
                 public boolean onLoop(UploadItemData itemData) {
-                    if (itemData.getType() == UploadItemData.TYPE_IMG) {
+                    if (itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG) {
                         Log.i("articleUpload","图片信息 path:" + itemData.getPath() + "  type:" + itemData.getType() + "  size:" + makesList.size());
                         for (int i = 0; i < makesList.size(); i++) {
                             Map<String, String> map = makesList.get(i);
@@ -356,25 +384,6 @@ public class ArticleUploadListPool extends UploadListPool {
         UploadArticleData uploadArticleData = sqLite.selectById(uploadPoolData.getDraftId());
         Log.i("articleUpload","修改上传池数据 draftId:" + uploadPoolData.getDraftId());
         if (uploadArticleData != null) {
-
-            ArrayList<UploadItemData> headItemDatas = new ArrayList<>();
-            String videoImgPath = uploadArticleData.getVideoImg();
-            String videoImgUrl = uploadArticleData.getVideoImgUrl();
-            Log.i("articleUpload","从草稿箱添加到上传池  videoImgPath:" + videoImgPath + "   videoImgUrl:" + videoImgUrl);
-            if (!TextUtils.isEmpty(videoImgPath)) {
-                if (videoImgPath.startsWith("http")) {
-                    videoImgUrl = videoImgPath;
-                }
-                UploadItemData headItemData = new UploadItemData();
-                headItemData.setPath(videoImgPath);
-                headItemData.setRecMsg(videoImgUrl);
-                headItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
-                headItemData.setPos(UploadItemData.POS_BODY);
-                headItemData.setIndex(0);
-                headItemData.setMakeStep("视频首图");
-                headItemDatas.add(headItemData);
-                uploadPoolData.setHeadDataList(headItemDatas);
-            }
 
             int imgIndex = 0;
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
@@ -410,23 +419,55 @@ public class ArticleUploadListPool extends UploadListPool {
                 }
             }
 
-            String videoPath = uploadArticleData.getVideo();
-            String videoUrl = uploadArticleData.getVideoUrl();
-            if (!TextUtils.isEmpty(videoPath)) {
-                if (!Tools.isFileExists(videoPath)) {
-                    Toast.makeText(Main.allMain, "获取不到文章视频路径", Toast.LENGTH_SHORT).show();
-                    return null;
+            ArrayList<UploadItemData> headItemDatas = new ArrayList<>();
+            int headImgIndex = 0;
+            String videosDataStr = uploadArticleData.getVideos();
+            if (!TextUtils.isEmpty(videosDataStr)) {
+                UploadItemData captureVideoData;
+                ArrayList<Map<String, String>> videosList = StringManager.getListMapByJson(videosDataStr);
+                if (videosList != null && videosList.size() > 0) {
+                    for (int i = 0; i < videosList.size(); i++) {
+                        Map<String, String> map = videosList.get(i);
+                        String videoPath = map.get("video");
+                        String videoUrl = map.get("videoUrl");
+                        String videoImage = map.get("image");
+                        String imageUrl = map.get("imageUrl");
+
+                        Log.e("articleUpload", "文章上传 videoPath: " + videoPath + "  videoUrl:" + videoUrl);
+                        Log.e("articleUpload", "文章上传 videoImage: " + videoImage + "  imageUrl:" + imageUrl);
+                        if (!Tools.isFileExists(videoPath)) {
+                            Toast.makeText(Main.allMain, "获取不到文章视频路径 " + i, Toast.LENGTH_SHORT).show();
+                            return null;
+                        }
+                        if (!Tools.isFileExists(videoImage)) {
+                            Toast.makeText(Main.allMain, "获取不到文章视频图片路径", Toast.LENGTH_SHORT).show();
+                            return null;
+                        }
+
+                        UploadItemData videoImgItemData = new UploadItemData();
+                        videoImgItemData.setPath(videoImage);
+                        videoImgItemData.setRecMsg(imageUrl);
+                        videoImgItemData.setIndex(headImgIndex++);
+                        videoImgItemData.setMakeStep(String.valueOf(i));
+                        videoImgItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
+                        videoImgItemData.setPos(UploadItemData.POS_BODY);
+                        headItemDatas.add(videoImgItemData);
+
+                        captureVideoData = new UploadItemData();
+                        captureVideoData.setPath(videoPath);
+                        captureVideoData.setVideoImage(videoImage);
+                        captureVideoData.setRecMsg(videoUrl);
+                        captureVideoData.setIndex(imgIndex++);
+                        captureVideoData.setMakeStep("文章视频");
+                        captureVideoData.setPos(UploadItemData.POS_BODY);
+                        captureVideoData.setType(UploadItemData.TYPE_VIDEO);
+                        bodyItemDatas.add(captureVideoData);
+                    }
                 }
-                UploadItemData captureVideoData = new UploadItemData();
-                captureVideoData.setPath(videoPath);
-                captureVideoData.setRecMsg(videoUrl);
-                captureVideoData.setIndex(imgIndex++);
-                captureVideoData.setMakeStep("文章视频");
-                captureVideoData.setPos(UploadItemData.POS_BODY);
-                captureVideoData.setType(UploadItemData.TYPE_VIDEO);
-                bodyItemDatas.add(captureVideoData);
             }
+            uploadPoolData.setHeadDataList(headItemDatas);
             uploadPoolData.setBodyDataList(bodyItemDatas);
+
 
             ArrayList<UploadItemData> tailItemDatas = new ArrayList<>();
             UploadItemData tailItemData = new UploadItemData();
@@ -453,30 +494,17 @@ public class ArticleUploadListPool extends UploadListPool {
         String content = uploadArticleData.getContent();
         Log.i("articleUpload","combineParameter() content:" + content);
         ArrayList<Map<String,String>> arrayList = uploadArticleData.getImgArray();
-        for(int i = 0; i < arrayList.size(); i++){
-            Map<String,String> map = arrayList.get(i);
-            String path = map.get("path");
-            String url = map.get("url");
-            String newPath = path.replace("/","\\/");
-            String newUrl = url.replace("/","\\/");
-            Log.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
-            content = content.replace(newPath,newUrl);
-            Log.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
-        }
-        String videoImgUrl = uploadArticleData.getVideoImg();
-        if(!TextUtils.isEmpty(videoImgUrl)) {
-            videoImgUrl = videoImgUrl.replace("/", "\\/");
-            content = content.replace(videoImgUrl, uploadArticleData.getVideoImgUrl());
-            String videoUrl = uploadArticleData.getVideo();
-            videoUrl = videoUrl.replace("/", "\\/");
-            content = content.replace(videoUrl, uploadArticleData.getVideoUrl());
-        }
-
+        content = replaceUrl(content,arrayList,"path","url");
+        Log.i("articleUpload","combineParameter() 替换图片 content:" + content);
+        ArrayList<Map<String,String>> videoArrayList = uploadArticleData.getVideoArray();
+        content = replaceUrl(content,videoArrayList,"video","videoUrl");
+        Log.i("articleUpload","combineParameter() 替换视频 content:" + content);
+        content = replaceUrl(content,videoArrayList,"image","imageUrl");
         Log.i("articleUpload","combineParameter() 2222content:" + content);
         try {
             ArrayList<Map<String, String>> imgArray = uploadArticleData.getImgArray();
             Log.i("articleUpload", "combineParameter() uploadArticleData.getImgUrl():" + uploadArticleData.getImgUrl());
-            Log.i("articleUpload", "combineParameter() uploadArticleData.getVideoUrl():" + uploadArticleData.getVideoUrl());
+            Log.i("articleUpload", "combineParameter() uploadArticleData.getVideos():" + uploadArticleData.getVideos());
             uploadTextData.put("title", uploadArticleData.getTitle());
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
             Log.i("tzy","content = " + content);
@@ -484,13 +512,30 @@ public class ArticleUploadListPool extends UploadListPool {
             uploadTextData.put("isOriginal", String.valueOf(uploadArticleData.getIsOriginal()));
             uploadTextData.put("repAddress", uploadArticleData.getRepAddress());
             uploadTextData.put("img", imgArray.size() > 0 ? imgArray.get(0).get("url") : "");
-            uploadTextData.put("video", uploadArticleData.getVideoUrl());
-            uploadTextData.put("videoImg", uploadArticleData.getVideoImgUrl());
+            if(videoArrayList.size() > 0) {
+                Map<String,String> map = videoArrayList.get(0);
+                uploadTextData.put("video", map.get("videoUrl"));
+                uploadTextData.put("videoImg", map.get("imageUrl"));
+            }
             uploadTextData.put("code", uploadArticleData.getCode());
         }catch (Exception e){
             e.printStackTrace();
         }
         return uploadTextData;
+    }
+
+    private String replaceUrl(String content,ArrayList<Map<String,String>> arrayList,String pathKey,String urlKey){
+        for(int i = 0; i < arrayList.size(); i++){
+            Map<String,String> map = arrayList.get(i);
+            String path = map.get(pathKey);
+            String url = map.get(urlKey);
+            String newPath = path.replace("/","\\/");
+            String newUrl = url.replace("/","\\/");
+            Log.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
+            content = content.replace(newPath,newUrl);
+            Log.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
+        }
+        return content;
     }
 
     /**

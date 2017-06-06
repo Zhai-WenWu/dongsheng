@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -59,11 +58,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                         upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
                         upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
                         upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
-                        upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
-                        upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
                         upData.setUploadType(uploadType);
-                        upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
-                        upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+                        upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
                         break;
                     }
                 }while (cur.moveToNext());
@@ -99,11 +95,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                         upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
                         upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
                         upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
-                        upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
-                        upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
                         upData.setUploadType(uploadType);
-                        upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
-                        upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+                        upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
                         break;
                     }
                 }while (cur.moveToNext());
@@ -140,11 +133,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                         upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
                         upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
                         upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
-                        upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
-                        upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
                         upData.setUploadType(uploadType);
-                        upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
-                        upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+                        upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
                         articleDatas.add(upData);
                     }
                 }while (cur.moveToNext());
@@ -170,11 +160,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         cv.put(UploadArticleData.article_imgs, upData.getImgs());
         cv.put(UploadArticleData.article_code, upData.getCode());
         cv.put(UploadArticleData.article_imgUrl, upData.getImgUrl());
-        cv.put(UploadArticleData.article_videoUrl, upData.getVideoUrl());
-        cv.put(UploadArticleData.article_videoImgUrl, upData.getVideoImgUrl());
         cv.put(UploadArticleData.article_uploadType, upData.getUploadType());
-        cv.put(UploadArticleData.article_video, upData.getVideo());
-        cv.put(UploadArticleData.article_videoImg, upData.getVideoImg());
+        cv.put(UploadArticleData.article_videos, upData.getVideos());
 
         long id = -1;
         try {
@@ -202,11 +189,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         cv.put(UploadArticleData.article_imgs, upData.getImgs());
         cv.put(UploadArticleData.article_code, upData.getCode());
         cv.put(UploadArticleData.article_imgUrl, upData.getImgUrl());
-        cv.put(UploadArticleData.article_videoUrl, upData.getVideoUrl());
-        cv.put(UploadArticleData.article_videoImgUrl, upData.getVideoImgUrl());
         cv.put(UploadArticleData.article_uploadType, upData.getUploadType());
-        cv.put(UploadArticleData.article_video, upData.getVideo());
-        cv.put(UploadArticleData.article_videoImg, upData.getVideoImg());
+        cv.put(UploadArticleData.article_videos, upData.getVideos());
         try {
             writableDatabase = getWritableDatabase();
             row = writableDatabase.update(TB_NAME, cv, UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)});
@@ -238,11 +222,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                 upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
                 upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
                 upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
-                upData.setVideoUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoUrl)));
-                upData.setVideoImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImgUrl)));
                 upData.setUploadType(cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType)));
-                upData.setVideo(cur.getString(cur.getColumnIndex(UploadArticleData.article_video)));
-                upData.setVideoImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_videoImg)));
+                upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
             }
             return upData;
         } finally {
@@ -265,20 +246,21 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
     }
 
     public boolean checkHasMedia(int id){
-        Cursor cur = null;
-        SQLiteDatabase readableDatabase = null;
-        try {
-            readableDatabase = getReadableDatabase();
-            String content = null;
-            cur = readableDatabase.query(TB_NAME, null,
-                    UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)}, null, null, null);// 查询并获得游标
-            if (cur.moveToFirst()) {// 判断游标是否为空
-                content = cur.getString(cur.getColumnIndex(UploadArticleData.article_content));
-            }
-            return !TextUtils.isEmpty(content) && (content.contains("image") || content.contains("video"));
-        } finally {
-            close(cur, readableDatabase);
-        }
+//        Cursor cur = null;
+//        SQLiteDatabase readableDatabase = null;
+//        try {
+//            readableDatabase = getReadableDatabase();
+//            String content = null;
+//            cur = readableDatabase.query(TB_NAME, null,
+//                    UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)}, null, null, null);// 查询并获得游标
+//            if (cur.moveToFirst()) {// 判断游标是否为空
+//                content = cur.getString(cur.getColumnIndex(UploadArticleData.article_content));
+//            }
+//            return !TextUtils.isEmpty(content) && (content.contains("image") || content.contains("video"));
+//        } finally {
+//            close(cur, readableDatabase);
+//        }
+        return true;
     }
 
     /**
@@ -306,13 +288,10 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                 + UploadArticleData.article_repAddress + " text,"
                 + UploadArticleData.article_img + " text,"
                 + UploadArticleData.article_imgs + " text,"
+                + UploadArticleData.article_videos + " text,"
                 + UploadArticleData.article_code + " text,"
                 + UploadArticleData.article_imgUrl + " text,"
-                + UploadArticleData.article_videoUrl + " text,"
-                + UploadArticleData.article_videoImgUrl + " text,"
-                + UploadArticleData.article_uploadType + " text,"
-                + UploadArticleData.article_video + " text,"
-                + UploadArticleData.article_videoImg + " text)";
+                + UploadArticleData.article_uploadType + " text)";
     }
 
 }

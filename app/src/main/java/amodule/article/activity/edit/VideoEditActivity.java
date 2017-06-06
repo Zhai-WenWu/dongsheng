@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import acore.override.XHApplication;
 import acore.tools.Tools;
 import amodule.article.activity.ArticleUploadListActivity;
@@ -61,7 +64,12 @@ public class VideoEditActivity extends EditParentActivity{
             intent.putExtra("draftId", uploadArticleData.getId());
             intent.putExtra("dataType", EditParentActivity.TYPE_VIDEO);
             intent.putExtra("coverPath", uploadArticleData.getImg());
-            intent.putExtra("finalVideoPath", uploadArticleData.getVideo());
+            String videoPath = "";
+            ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
+            if(videoArray.size() > 0){
+                videoPath = videoArray.get(0).get("video");
+            }
+            intent.putExtra("finalVideoPath", videoPath);
             startActivity(intent);
             finish();
         } else {
