@@ -141,7 +141,7 @@ public class ChangeSendDialog extends Dialog{
 			addButton("5", R.drawable.pulish_video_dish,"发视频菜谱");
 			itemNum++;
 		}
-		//TODO 删除true
+		//删除true
         addButton("6", R.drawable.pulish_article,"发文章");
         itemNum++;
         addButton("7", R.drawable.pulish_video,"发视频");
@@ -162,11 +162,7 @@ public class ChangeSendDialog extends Dialog{
 				}
 			});
 		}
-		if(itemNum > 2){
-			mGridView.setNumColumns(4);
-		}else{
-			mGridView.setNumColumns(2);
-		}
+		mGridView.setNumColumns(itemNum > 3 ? 4 : itemNum);
 	}
 
 	private void addButton(String tag,int img,String name){
@@ -264,7 +260,7 @@ public class ChangeSendDialog extends Dialog{
 				break;
 			case "7":
 				closeDialog();
-                if(LoginManager.isShowSendVideoDishButton())
+                if(LoginManager.isShowSendVideoButton())
 				    activity.startActivity(new Intent(activity, VideoEditActivity.class));
                 else
                     showDialog("发视频",StringManager.api_applyVideoPower);

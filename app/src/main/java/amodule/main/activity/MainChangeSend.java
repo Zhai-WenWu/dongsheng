@@ -29,7 +29,10 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
@@ -108,6 +111,11 @@ public class MainChangeSend extends BaseActivity{
 			addButton("5", R.drawable.pulish_video_dish,"发视频菜谱");
 			itemNum++;
 		}
+		//删除true
+		addButton("6", R.drawable.pulish_article,"发文章");
+		itemNum++;
+		addButton("7", R.drawable.pulish_video,"发视频");
+		itemNum++;
 		if(dishVideoMap != null && dishVideoMap.size() > 0){
 			String img = dishVideoMap.get("img");
 			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(this)
@@ -124,11 +132,7 @@ public class MainChangeSend extends BaseActivity{
 				}
 			});
 		}
-		if(itemNum > 2){
-			mGridView.setNumColumns(3);
-		}else{
-			mGridView.setNumColumns(2);
-		}
+		mGridView.setNumColumns(itemNum > 3 ? 4 : itemNum);
 	}
 
 	private void addButton(String tag,int img,String name){
@@ -222,7 +226,41 @@ public class MainChangeSend extends BaseActivity{
 				videoDish.putExtra(UploadDishActivity.DISH_TYPE_KEY, UploadDishActivity.DISH_TYPE_VIDEO);
 				this.startActivity(videoDish);
 				break;
+			//TODO
+			case "6":
+				finish();
+				if(LoginManager.isShowSendArticleButton())
+					startActivity(new Intent(this, ArticleEidtActiivty.class));
+				else
+					showDialog("发文章", StringManager.api_applyArticlePower);
+				break;
+			case "7":
+				finish();
+				if(LoginManager.isShowSendVideoButton())
+					startActivity(new Intent(this, VideoEditActivity.class));
+				else
+					showDialog("发视频",StringManager.api_applyVideoPower);
+				break;
 		}
+	}
+
+	private void showDialog(String text,final String url){
+		final XhDialog dialog = new XhDialog(this);
+		dialog.setMessage("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
+				.setSureButton("是", new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						AppCommon.openUrl(MainChangeSend.this,url,true);
+						dialog.cancel();
+					}
+				})
+				.setCanselButton("否", new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.cancel();
+					}
+				})
+				.show();
 	}
 
 	public void onCloseThis(View v){

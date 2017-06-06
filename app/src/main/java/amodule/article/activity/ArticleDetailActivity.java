@@ -69,10 +69,8 @@ public class ArticleDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null)
             code = bundle.getString("code");
-//        code = "1078";
         Log.i("tzy", "code = " + code);
         init();
-        AppCommon.openUrl(this,"http://www.xiangha.com",true);
     }
 
     @Override

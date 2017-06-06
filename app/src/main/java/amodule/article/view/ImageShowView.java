@@ -92,7 +92,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
             jsonObject.put("type", type);
             jsonObject.put(IMAGE_GIF.equals(type) ? "gifurl" : "imageurl", imageUrl);
             jsonObject.put("width", imageWidth);
-            jsonObject.put("hieght", imageHieght);
+            jsonObject.put("height", imageHieght);
         } catch (JSONException e) {
             e.printStackTrace();
         }
