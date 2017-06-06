@@ -89,6 +89,8 @@
                 android:paddingLeft="@dimen/dp_13"
                 android:gravity="center"
                 android:text="发送"
+               android:textSize="@dimen/sp_12"
+               android:textColor="#ccc"
                 android:visibility="gone"
                 />
 

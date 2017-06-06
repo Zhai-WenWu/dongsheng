@@ -3,7 +3,9 @@ package amodule.comment.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
@@ -30,6 +33,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
 import amodule.article.activity.ReportActivity;
 import amodule.comment.view.ViewCommentItem;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -73,6 +77,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.commend_hind).setOnClickListener(this);
         sendTv = (TextView) findViewById(R.id.comment_send);
         sendTv.setOnClickListener(this);
+        sendTv.setClickable(false);
         sendProgress = findViewById(R.id.comment_send_progress);
         writePen = (ImageView) findViewById(R.id.commend_write_pen);
         commend_write_et = (EditText) findViewById(R.id.commend_write_et);
@@ -84,6 +89,17 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     XHClick.mapStat(CommentActivity.this,contentTongjiId,"点击评论框","");
                 }
                 changeKeyboard(hasFocus);
+            }
+        });
+        commend_write_et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            @Override
+            public void afterTextChanged(Editable s) {
+                sendTv.setClickable(s.length() > 0);
+                sendTv.setTextColor(s.length() > 0 ? Color.parseColor("#333333") : Color.parseColor("#cccccc"));
             }
         });
         downRefreshList = (DownRefreshList) findViewById(R.id.comment_listview);
@@ -195,6 +211,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onPraiseClick(String comment_id) {
+                if(!LoginManager.isLogin()){
+                    Tools.showToast(CommentActivity.this,"请先登录或注册哦~");
+                    Intent intent = new Intent(CommentActivity.this, LoginByAccout.class);
+                    startActivity(intent);
+                    return;
+                }
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
                 XHClick.mapStat(CommentActivity.this,likeTongjiId,likeTwoLeven,"");
                 String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id;
@@ -375,7 +397,15 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private String currentUrl = StringManager.api_addForum,currentParams;
-    private void sendData(){
+    private boolean isSend = false;
+    private synchronized void sendData(){
+        if(isSend)return;
+        isSend = true;
+        if(!LoginManager.isLogin()){
+            Tools.showToast(this,"请先登录或注册哦~");
+            Intent intent = new Intent(CommentActivity.this, LoginByAccout.class);
+            startActivity(intent);
+        }
         sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
         if(content.length() == 0){
@@ -407,7 +437,10 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     changeKeyboard(false);
+                }else{
+                    sendProgress.setVisibility(View.GONE);
                 }
+                isSend = false;
             }
         });
     }
