@@ -101,7 +101,9 @@ public class CircleItemBaseRelativeLayout extends RelativeLayout {
 					if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
 						v.setScaleType(ScaleType.CENTER_CROP);
 //						bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(context, 500));
-						v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+//						v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+						v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
+
 					} else {
 						v.setScaleType(scaleType);
 						UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
