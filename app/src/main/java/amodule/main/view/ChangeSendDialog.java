@@ -32,6 +32,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
@@ -140,15 +141,11 @@ public class ChangeSendDialog extends Dialog{
 			addButton("5", R.drawable.pulish_video_dish,"发视频菜谱");
 			itemNum++;
 		}
-		//TODO 暂时添加
-		if(LoginManager.isShowSendVideoDishButton() || true){
-			addButton("6", R.drawable.pulish_article,"发文章");
-			itemNum++;
-		}
-		if(LoginManager.isShowSendVideoDishButton() || true){
-			addButton("8", R.drawable.pulish_video,"发视频");
-			itemNum++;
-		}
+		//TODO 删除true
+        addButton("6", R.drawable.pulish_article,"发文章");
+        itemNum++;
+        addButton("7", R.drawable.pulish_video,"发视频");
+        itemNum++;
 		if(dishVideoMap != null && dishVideoMap.size() > 0){
 			String img = dishVideoMap.get("img");
 			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(activity)
@@ -166,7 +163,7 @@ public class ChangeSendDialog extends Dialog{
 			});
 		}
 		if(itemNum > 2){
-			mGridView.setNumColumns(3);
+			mGridView.setNumColumns(4);
 		}else{
 			mGridView.setNumColumns(2);
 		}
@@ -260,16 +257,39 @@ public class ChangeSendDialog extends Dialog{
 			//TODO
 			case "6":
 				closeDialog();
-				Intent article = new Intent(activity, ArticleEidtActiivty.class);
-				activity.startActivity(article);
+                if(LoginManager.isShowSendArticleButton())
+                    activity.startActivity(new Intent(activity, ArticleEidtActiivty.class));
+                else
+                    showDialog("发文章", StringManager.api_applyArticlePower);
 				break;
-			case "8":
+			case "7":
 				closeDialog();
-				Intent vidoe = new Intent(activity, VideoEditActivity.class);
-				activity.startActivity(vidoe);
+                if(LoginManager.isShowSendVideoDishButton())
+				    activity.startActivity(new Intent(activity, VideoEditActivity.class));
+                else
+                    showDialog("发视频",StringManager.api_applyVideoPower);
 				break;
 		}
 	}
+
+	private void showDialog(String text,final String url){
+        final XhDialog dialog = new XhDialog(activity);
+        dialog.setMessage("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
+                .setSureButton("是", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AppCommon.openUrl(activity,url,true);
+                        dialog.cancel();
+                    }
+                })
+                .setCanselButton("否", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                })
+				.show();
+    }
 
 	@Override
 	public void show() {

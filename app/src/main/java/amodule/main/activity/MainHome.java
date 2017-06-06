@@ -279,7 +279,6 @@ public class MainHome extends MainBaseActivity {
         if(isRefresh){
             refreshFragment(itemPosition);
         }
-                startActivity(new Intent(this,ArticleDetailActivity.class));
     }
 
     @Override

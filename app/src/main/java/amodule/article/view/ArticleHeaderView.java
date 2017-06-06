@@ -23,6 +23,7 @@ import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
@@ -131,6 +132,9 @@ public class ArticleHeaderView extends ItemBaseView {
             statistics("用户信息", "用户头像");
             XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), tongjiId, "用户点击", "头像点击量");
 //            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapUser.get("url"),true);
+            Intent intent = new Intent(getContext(), FriendHome.class);
+            intent.putExtra("code",mapUser.get("code"));
+            getContext().startActivity(intent);
         }
     };
 

@@ -38,6 +38,7 @@ public class ArticleCommentView extends ItemBaseView {
 
     private String code;
     private String type;
+    private boolean isSofa = false;
 
     public ArticleCommentView(Context context) {
         super(context, R.layout.a_article_comment_view);
@@ -136,6 +137,7 @@ public class ArticleCommentView extends ItemBaseView {
             findViewById(R.id.has_comment_layout).setVisibility(VISIBLE);
             findViewById(R.id.robsofa).setVisibility(GONE);
         } else {
+            isSofa = true;
             robsofa.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

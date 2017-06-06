@@ -303,6 +303,9 @@ public class StringManager extends UtilString {
     public final static String API_USERHOME_VIDEO = apiUrl + "Main7/Video/videoList";//视频列表
     public final static String API_USERHOME_ANSWER = apiUrl + "Main7/Qa/qaList";//问答列表
 
+    public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
+    public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain) {

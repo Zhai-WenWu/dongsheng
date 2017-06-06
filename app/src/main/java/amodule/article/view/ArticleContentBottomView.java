@@ -57,7 +57,7 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
 
     public void setData(Map<String,String> map){
         setViewTextWithPrefix(articleRepintSource,map,"repAddress","转载");
-        setViewTextWithPrefix(articleBrowse,map,"allClick","阅读");
+        setViewTextWithPrefix(articleBrowse,map,"clickAll","阅读");
         setViewText(articlePublishDate,map,"addTime");
     }
 

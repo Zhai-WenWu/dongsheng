@@ -415,6 +415,30 @@ public class LoginManager {
     }
 
     /**
+     * 是否有权限发文章
+     * @return
+     */
+    public static boolean isShowSendArticleButton() {
+        if (MainChangeSend.sendMap == null) {
+            return false;
+        } else {
+            return "2".equals(MainChangeSend.sendMap.get("sendArticle"));
+        }
+    }
+
+    /**
+     * 是否有权限发视频
+     * @return
+     */
+    public static boolean isShowSendVideoButton() {
+        if (MainChangeSend.sendMap == null) {
+            return false;
+        } else {
+            return "2".equals(MainChangeSend.sendMap.get("sendVideo"));
+        }
+    }
+
+    /**
      * 是否可以发布小视频
      *
      * @return
@@ -425,6 +449,8 @@ public class LoginManager {
         else
             return false;
     }
+
+
 
 
     /**
@@ -473,5 +499,6 @@ public class LoginManager {
             regTime = obj.toString();
         return regTime;
     }
+
 
 }
