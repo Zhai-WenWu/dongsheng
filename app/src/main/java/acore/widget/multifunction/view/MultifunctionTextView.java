@@ -58,6 +58,7 @@ public class MultifunctionTextView extends TextView {
 		mTextViewTagLongClick.setOnLongClickListener(new TextViewTagLongClick.OnLongClickListener() {
 			@Override
 			public void onLongClick() {
+
 				isLongClick = true;
 			}
 		});
@@ -127,6 +128,10 @@ public class MultifunctionTextView extends TextView {
 					//  在onClick方法中可以编写单击链接时要执行的动作
 					@Override
 					public void onClick(View widget) {
+						if(isLongClick){
+							isLongClick = false;
+							return;
+						}
 						config.getClickListener().onClick(widget);
 					}
 

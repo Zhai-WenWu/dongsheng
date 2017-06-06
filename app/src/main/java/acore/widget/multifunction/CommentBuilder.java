@@ -15,6 +15,7 @@ public class CommentBuilder extends StyleConfigBuilder {
     private String text;
     private String textColor = "#535353";
     private String backgroundColor ;
+    private int chooseColor;
     private int textSize;
 
     public CommentBuilder(String text) {
@@ -32,6 +33,10 @@ public class CommentBuilder extends StyleConfigBuilder {
     public CommentBuilder setBackgroudColor(String color){
         backgroundColor = color;
         return this;
+    }
+
+    public void setChoseBackColor(int color){
+        chooseColor = color;
     }
 
     public CommentBuilder setTextSize(int px){

@@ -41,6 +41,8 @@ public class TextViewTagLongClick implements OnLongClickListener{
 
 	//是否删除掉star和end时前面添加@后面添加 <空格>
 	public boolean isHaveAt = true,nIsHaveCopy=true;
+
+	private boolean isLongClick = false;
 	
 	public TextViewTagLongClick(Context con,TextView tv){
 		mCon = con;
@@ -55,8 +57,11 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	
 	@Override
 	public boolean onLongClick(View v) {
+		isLongClick = true;
 		if(nIsHaveCopy){
-			if(longClickListener != null) longClickListener.onLongClick();
+			if(longClickListener != null){
+				longClickListener.onLongClick();
+			}
 			mTv.setBackgroundColor(choseBackColor);
 			getPopupWindowsInstance();
 			mPopupWindow.showAsPullUp(mTv, 0, -20);

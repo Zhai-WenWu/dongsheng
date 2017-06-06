@@ -34,6 +34,7 @@ public class StyleConfig {
 	int end = -1;
 	/** 点击回调 */
 	View.OnClickListener clickListener;
+	private int chooseColor;
 
 	public StyleConfig(String text) {
 		this.text = text;
@@ -158,8 +159,17 @@ public class StyleConfig {
 		return clickListener;
 	}
 
+	public int getChooseColor() {
+		return chooseColor;
+	}
+
 	public StyleConfig setClickListener(View.OnClickListener clickListener) {
 		this.clickListener = clickListener;
+		return this;
+	}
+
+	public StyleConfig setChooseColor(int color){
+		chooseColor = color;
 		return this;
 	}
 }
