@@ -287,10 +287,8 @@ public class UserHomeTxt extends TabContentView {
 	 * @param returnObj 要解析的数据
 	 */
 	public int parseInfo(Object returnObj) {
-		if (isRefresh) {
-            if (mNetDatas != null)
-			    mNetDatas.clear();
-		}
+		if (mNetDatas != null && mNetDatas.size() > 0)
+			mNetDatas.clear();
 		int loadCount = 0;
 		ArrayList<Map<String, String>> listMySelf = StringManager.getListMapByJson(returnObj);
 		if(listMySelf != null && listMySelf.size() > 0) {
