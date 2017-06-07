@@ -45,6 +45,9 @@ import amodule.article.view.ArticleCommentBar;
 import amodule.article.view.ArticleContentBottomView;
 import amodule.article.view.ArticleHeaderView;
 import amodule.article.view.BottomDialog;
+import amodule.main.Main;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
+import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -577,13 +580,36 @@ public class ArticleDetailActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
-                        ReqEncyptInternet.in().doEncypt(StringManager.api_articleDel, "code=" + code,
+                        String url = "";
+                        switch (getType()) {
+                            case TYPE_ARTICLE:
+                                url = StringManager.api_articleDel;
+                                break;
+                            case TYPE_VIDEO:
+                                url = StringManager.api_videoDel;
+                                break;
+                        }
+                        if (TextUtils.isEmpty(url))
+                            return;
+                        ReqEncyptInternet.in().doEncypt(url, "code=" + code,
                                 new InternetCallback(ArticleDetailActivity.this) {
                                     @Override
                                     public void loaded(int flag, String url, Object obj) {
                                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                                             //自动关闭
                                             ArticleDetailActivity.this.finish();
+                                            if (FriendHome.isAlive) {
+                                                Intent broadIntent = new Intent();
+                                                broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                                                String type = "";
+                                                if (TYPE_ARTICLE.equals(getType()))
+                                                    type = "2";
+                                                else if (TYPE_VIDEO.equals(getType()))
+                                                    type = "1";
+                                                if (!TextUtils.isEmpty(type))
+                                                    broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+                                                Main.allMain.sendBroadcast(broadIntent);
+                                            }
                                         } else {
                                             toastFaildRes(flag, true, obj);
                                         }
