@@ -143,11 +143,9 @@ public class TextAndImageMixLayout extends LinearLayout
 
         editTextView.setCenterHorizontal(isCenter);
         //删除<p></p>
-        if(htmlTmep.indexOf(">") + 1 >= 0
-                && htmlTmep.indexOf("</p>") >=0
-                && htmlTmep.indexOf("</p>") < htmlTmep.length()){
-            html = htmlTmep.substring(htmlTmep.indexOf(">") + 1,htmlTmep.indexOf("</p>"));
-        }
+        htmlTmep = htmlTmep.replace("</p>","");
+        if(htmlTmep.indexOf(">") + 1 >= 0)
+            html = htmlTmep.substring(htmlTmep.indexOf(">") + 1,htmlTmep.length());
         editTextView.setTextFrormHtml(html);
     }
 
@@ -162,7 +160,9 @@ public class TextAndImageMixLayout extends LinearLayout
         final int length = getChildCount();
         for (int index = 0; index < length; index++) {
             BaseView baseView = (BaseView) getChildAt(index);
-            jsonArray.put(baseView.getOutputData());
+            JSONObject jsonObject = baseView.getOutputData();
+            if(jsonObject != null)
+                jsonArray.put(jsonObject);
             Log.i("tzy",jsonArray.toString());
         }
         jsonArray.put(getUrlsJsonObj());

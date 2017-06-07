@@ -339,7 +339,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 }
             }).start();
         } else {
-            ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, "code=" + code, new InternetCallback(this) {
+            StringBuilder sbuilder = new StringBuilder().append("code=").append(code).append("&type=RAW");
+            ReqEncyptInternet.in().doEncypt(getEditApi(), sbuilder.toString(), new InternetCallback(this) {
                 @Override
                 public void loaded(int i, String s, Object o) {
                     if (i == ReqInternet.REQ_OK_STRING) {
@@ -364,6 +365,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         }
         timingSave();
     }
+
+    public abstract String getEditApi();
 
     public abstract void onNextSetp();
 

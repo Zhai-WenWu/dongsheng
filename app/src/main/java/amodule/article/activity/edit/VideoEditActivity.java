@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.XHApplication;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.db.UploadVideoSQLite;
@@ -52,6 +53,11 @@ public class VideoEditActivity extends EditParentActivity{
     @Override
     protected int getMaxURLCount() {
         return 0;
+    }
+
+    @Override
+    public String getEditApi() {
+        return StringManager.api_getVideoInfo;
     }
 
     @Override

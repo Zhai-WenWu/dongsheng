@@ -176,6 +176,27 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
             showImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
             showImage.setTag(TAG_ID, imgUrl);
             if (!XHActivityManager.getInstance().getCurrentActivity().isFinishing()) {
+//                itemGifHint.setVisibility(View.GONE);
+//                itemGifHint.setImageResource(R.drawable.i_dish_detail_gif_hint);
+//                Glide.with(getContext()).load(imgUrl).asBitmap().thumbnail(0.8f).listener(new RequestListener<String, Bitmap>() {
+//                    @Override
+//                    public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
+//                        imageWidth = bitmap.getWidth();
+//                        imageHieght = bitmap.getHeight();
+//
+//                        int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+//                        int waith = newWaith;
+//                        if (imageWidth <= newWaith)
+//                            waith = 0;
+//                        UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+//                        return false;
+//                    }
+//                });
                 BitmapRequestBuilder<GlideUrl, Bitmap> requestBuilder = LoadImage.with(XHActivityManager.getInstance().getCurrentActivity())
                         .load(imgUrl)
                         .setPlaceholderId(R.drawable.i_nopic)
@@ -258,7 +279,6 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         } else
             layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
         int dp_12 = Tools.getDimen(getContext(), R.dimen.dp_12);
-        int dp_8 = Tools.getDimen(getContext(), R.dimen.dp_8);
         int dp_23 = Tools.getDimen(getContext(), R.dimen.dp_23);
         layoutParams.setMargins(0, dp_12, dp_23, 0);
         imgView.setLayoutParams(layoutParams);

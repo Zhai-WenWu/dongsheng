@@ -139,6 +139,8 @@ public class EditTextView extends BaseView {
 
     @Override
     public JSONObject getOutputData() {
+        if(TextUtils.isEmpty(mRichText.getText()))
+            return null;
         JSONObject jsonObject = new JSONObject();
         try {
             //正则处理html标签

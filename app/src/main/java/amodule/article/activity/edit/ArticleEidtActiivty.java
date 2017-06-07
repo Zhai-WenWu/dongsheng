@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import acore.override.XHApplication;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.activity.ArticleSelectActiivty;
 import amodule.article.db.UploadArticleSQLite;
@@ -51,6 +52,11 @@ public class ArticleEidtActiivty extends EditParentActivity{
     @Override
     protected int getMaxURLCount() {
         return 100;
+    }
+
+    @Override
+    public String getEditApi() {
+        return StringManager.api_getArticleInfo;
     }
 
     @Override
