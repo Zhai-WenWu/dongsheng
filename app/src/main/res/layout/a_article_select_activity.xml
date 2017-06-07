@@ -70,6 +70,7 @@
                 android:layout_marginLeft="@dimen/dp_6"
                 android:hint="输入来源"
                 android:textColorHint="#ccc"
+                android:textColor="#666666"
                 android:textSize="@dimen/sp_14"
                 android:textCursorDrawable="@null"
                 android:background="@null"

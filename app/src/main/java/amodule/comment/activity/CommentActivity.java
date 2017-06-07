@@ -2,6 +2,7 @@ package amodule.comment.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,8 +11,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -73,6 +76,21 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initView() {
+        final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.a_comment_keyboard_parent);
+        final int dp45 = Tools.getDimen(this,R.dimen.dp_45);
+        rl.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    public void onGlobalLayout() {
+                        int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+                        Rect r = new Rect();
+                        rl.getWindowVisibleDisplayFrame(r);
+                        int screenHeight = rl.getRootView().getHeight();
+                        int heightDifference = screenHeight - (r.bottom - r.top);
+                        isShowKeyboard = heightDifference > 200;
+                        heightDifference = isShowKeyboard ? heightDifference - heightDiff + dp45 : 0;
+                        bottomBarLayout.setPadding(0, 0, 0, heightDifference);
+                    }
+                });
         listArray = new ArrayList<>();
         findViewById(R.id.commend_hind).setOnClickListener(this);
         sendTv = (TextView) findViewById(R.id.comment_send);
@@ -107,7 +125,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(isShowKeyboard) {
-                    sendTv.setVisibility(View.GONE);
                     currentUrl = StringManager.api_addForum;
                     changeKeyboard(false);
                 }
@@ -447,20 +464,23 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private void changeKeyboard(boolean isShow){
         isShowKeyboard = isShow;
+        int dp10 = Tools.getDimen(this,R.dimen.dp_10);
         if(isShow){
+            int dp13 = Tools.getDimen(this,R.dimen.dp_13);
             commend_write_et.requestFocus();
             ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
             commend_write_et.setHintTextColor(Color.parseColor("#cdcdcd"));
-            commend_write_et.setPadding(Tools.getDimen(this,R.dimen.dp_13),Tools.getDimen(this,R.dimen.dp_10),0,Tools.getDimen(this,R.dimen.dp_10));
+            commend_write_et.setPadding(dp13,dp10,dp13,dp10);
             sendTv.setVisibility(View.VISIBLE);
             writePen.setVisibility(View.GONE);
         }else{
+            int dp30 = Tools.getDimen(this,R.dimen.dp_30);
             sendTv.setVisibility(View.GONE);
             writePen.setVisibility(View.VISIBLE);
             commend_write_et.setHint(" 写评论");
             commend_write_et.setHintTextColor(Color.parseColor("#333333"));
             commend_write_et.setText("");
-            commend_write_et.setPadding(Tools.getDimen(this,R.dimen.dp_30),Tools.getDimen(this,R.dimen.dp_10),0,Tools.getDimen(this,R.dimen.dp_10));
+            commend_write_et.setPadding(dp30,dp10,0,dp10);
             commend_write_et.clearFocus();
             sendProgress.setVisibility(View.GONE);
             ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);

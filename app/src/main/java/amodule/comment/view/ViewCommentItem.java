@@ -166,7 +166,7 @@ public class ViewCommentItem extends LinearLayout {
                 CommentBuilder textBuilder = new CommentBuilder(newText).setTextColor("#535353");
                 textBuilder.parse(null);
                 multifunctionText.addStyle(textBuilder.getContent(), textBuilder.build());
-                CommentBuilder showBuilder = new CommentBuilder("...>").setTextColor("#bcbcbc");
+                CommentBuilder showBuilder = new CommentBuilder("...全文>").setTextColor("#0b24fb");
                 showBuilder.parse(new CommentBuilder.CommentClickCallback() {
                     @Override
                     public void onCommentClick(View v, String userCode) {
@@ -176,8 +176,9 @@ public class ViewCommentItem extends LinearLayout {
                     }
                 });
                 multifunctionText.addStyle(showBuilder.getContent(), showBuilder.build());
+
                 contentText.setText(multifunctionText);
-                contentText.setCopyText(newText + "...>");
+                contentText.setCopyText(text);
             }
             contentText.setOnClickListener(new OnClickListener() {
                 @Override

@@ -5,15 +5,15 @@
     android:layout_height="match_parent">
 
     <acore.widget.DownRefreshList
-        style="@style/listView"
         android:id="@+id/comment_listview"
-        android:background="@android:color/transparent"
+        style="@style/listView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/a_comment_keyboard"
+        android:background="@android:color/transparent"
+        android:divider="@null"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:divider="@null"
         android:visibility="visible" />
 
     <TextView
@@ -25,85 +25,86 @@
         android:text="暂无评论，抢沙发~"
         android:textColor="#333"
         android:textSize="@dimen/sp_15"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#ccc"
-        android:layout_above="@+id/a_comment_keyboard"
-        />
     <RelativeLayout
-        android:id="@+id/a_comment_keyboard"
+        android:id="@+id/a_comment_keyboard_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/common_bg"
-        android:paddingTop="@dimen/dp_8"
-        android:paddingBottom="@dimen/dp_8"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
-        android:layout_alignParentBottom="true"
         >
-        
-        <ImageView
-            android:id="@+id/commend_write_pen"
-            android:layout_width="@dimen/dp_12"
-            android:layout_height="@dimen/dp_12"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/dp_2"
-            android:layout_marginLeft="@dimen/dp_14"
-            android:src="@drawable/i_comment_pen"
-            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/a_comment_keyboard"
+            android:background="#ccc" />
 
-        <EditText
-            android:id="@+id/commend_write_et"
+        <RelativeLayout
+            android:id="@+id/a_comment_keyboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textCursorDrawable="@drawable/comment_text_cursor"
-            android:maxLines="5"
-            android:layout_toLeftOf="@+id/comment_send_parent"
-            android:background="@drawable/bg_round40_dbdbdb"
-            android:paddingLeft="@dimen/dp_30"
-            android:paddingTop="@dimen/dp_10"
-            android:paddingBottom="@dimen/dp_10"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/sp_12"
-            android:textColor="#333333"
-            android:textColorHint="#333"
-            android:hint="写评论"
-            />
+            android:layout_alignParentBottom="true"
+            android:background="@color/common_bg"
+            android:paddingBottom="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_8">
 
-        <LinearLayout
-            android:id="@+id/comment_send_parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            >
-           <TextView
-                android:id="@+id/comment_send"
+            <ImageView
+                android:id="@+id/commend_write_pen"
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_12"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_2"
+                android:src="@drawable/i_comment_pen" />
+
+            <EditText
+                android:id="@+id/commend_write_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/comment_send_parent"
+                android:background="@drawable/bg_round40_dbdbdb"
+                android:gravity="center_vertical"
+                android:hint="写评论"
+                android:maxLines="5"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_40"
+                android:paddingRight="@dimen/dp_40"
+                android:paddingTop="@dimen/dp_10"
+                android:textColor="#333333"
+                android:textColorHint="#333"
+                android:textCursorDrawable="@drawable/comment_text_cursor"
+                android:textSize="@dimen/sp_12" />
+
+            <LinearLayout
+                android:id="@+id/comment_send_parent"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/dp_13"
-                android:gravity="center"
-                android:text="发送"
-               android:textSize="@dimen/sp_12"
-               android:textColor="#ccc"
-                android:visibility="gone"
-                />
-
-            <ProgressBar
-                android:id="@+id/comment_send_progress"
-                android:layout_width="@dimen/dp_22"
-                android:layout_height="@dimen/dp_22"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:paddingLeft="@dimen/dp_13"
-                android:visibility="gone"
-                />
-        </LinearLayout>
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical">
 
+                <TextView
+                    android:id="@+id/comment_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/dp_13"
+                    android:text="发送"
+                    android:textColor="#ccc"
+                    android:textSize="@dimen/sp_12"
+                    android:visibility="visible" />
+
+                <ProgressBar
+                    android:id="@+id/comment_send_progress"
+                    android:layout_width="@dimen/dp_22"
+                    android:layout_height="@dimen/dp_22"
+                    android:layout_alignParentRight="true"
+                    android:paddingLeft="@dimen/dp_13"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>
