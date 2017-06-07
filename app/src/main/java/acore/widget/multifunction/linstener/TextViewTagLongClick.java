@@ -14,12 +14,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.override.XHApplication;
 import acore.tools.Tools;
 
 @SuppressWarnings("deprecation")
@@ -27,6 +29,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	private Context mCon;
 	private TextView mTv;
 	private CustomPopupWindow mPopupWindow;
+	private ImageView upArrow,downArrow;
 	/**
 	 * 长按弹框类型，
 	 */
@@ -123,6 +126,8 @@ public class TextViewTagLongClick implements OnLongClickListener{
 		LayoutInflater layoutInflater = LayoutInflater.from(mCon);
 		
 		View popupWindow = layoutInflater.inflate(R.layout.c_widget_textview_showpop, null);
+		upArrow = (ImageView) popupWindow.findViewById(R.id.textview_showpop_up_arrow);
+		downArrow = (ImageView) popupWindow.findViewById(R.id.textview_showpop_down_arrow);
 		Button btnCopy = (Button) popupWindow.findViewById(R.id.copytext);
 		btnCopy.setOnClickListener(new OnClickListener() {
 			@Override
@@ -230,8 +235,17 @@ public class TextViewTagLongClick implements OnLongClickListener{
 			// 计算anchor中点
 			anchorCenter[0] = location[0] + anchor.getWidth() / 2;
 			anchorCenter[1] = location[1];
-			super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] - mPopupWindow.getHeight() + yoff);
-			// anchor.getContext().getResources().getDimensionPixelSize(R.dimen.popup_upload_height)
+			int popupWindH = mPopupWindow.getHeight();
+			int titleH = Tools.getDimen(XHApplication.in(),R.dimen.dp_45);
+			if(location[1] < titleH * 2 + popupWindH - yoff) {
+				upArrow.setVisibility(View.VISIBLE);
+				downArrow.setVisibility(View.GONE);
+				super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] + popupWindH + yoff);
+			}else{
+				upArrow.setVisibility(View.GONE);
+				downArrow.setVisibility(View.VISIBLE);
+				super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] - popupWindH + yoff);
+			}
 		}
 	}
 

@@ -182,7 +182,7 @@ public class ViewCommentItem extends LinearLayout {
             contentText.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mListener != null && !isShowContentClick)
+                    if (mListener != null && !isShowContentClick && !"2".equals(cusstomMap.get("is_author")))
                         mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字");
                     isShowContentClick = false;
                 }
@@ -378,7 +378,8 @@ public class ViewCommentItem extends LinearLayout {
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
-                    if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName,"点击楼中楼文字");
+                    if(mListener != null && !"2".equals(is_author))
+                        mListener.onContentReplayClick(comment_id,ucode,uName,"点击楼中楼文字");
                 }
             });
             multifunctionText.addStyle(contentBuilder.getContent(), contentBuilder.build());
@@ -427,7 +428,7 @@ public class ViewCommentItem extends LinearLayout {
         commentReplay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isDelete && mListener != null)
+                if(!isDelete && mListener != null && !"2".equals(cusstomMap.get("is_author")))
                     mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),"点击回复按钮");
             }
         });
