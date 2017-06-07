@@ -38,6 +38,7 @@ import amodule.article.db.UploadVideoSQLite;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import xh.windowview.XhDialog;
 
 /**
  * Created by Fang Ruijiao on 2017/5/22.
@@ -229,7 +230,24 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     return;
                 }
                 if(isCheck > 0){
-                    upload();
+                    if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActiivty.this))) {
+                        upload();
+                    }else{
+                        final XhDialog xhDialog = new XhDialog(ArticleSelectActiivty.this);
+                        xhDialog.setTitle("当前不是WiFi环境，是否发布？")
+                                .setCanselButton("暂不发布", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        xhDialog.cancel();
+                                    }
+                                }).setSureButton("继续", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                upload();
+                                xhDialog.cancel();
+                            }
+                        }).show();
+                    }
                 }else{
                     Tools.showToast(ArticleSelectActiivty.this,"请选择原创/转载");
                     return;

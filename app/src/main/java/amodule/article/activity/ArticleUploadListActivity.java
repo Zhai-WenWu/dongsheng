@@ -2,6 +2,7 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,7 +118,9 @@ public class ArticleUploadListActivity extends BaseActivity {
         }
         dishName = uploadPoolData.getTitle();
         arrayList = uploadPoolData.getListData();
-        tv_title.setText(dishName);
+        if(!TextUtils.isEmpty(dishName)) {
+            tv_title.setText(dishName.length() > 7 ? dishName.substring(0,6) + "..." : dishName);
+        }
 
         if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
             allStartOrPause(true);

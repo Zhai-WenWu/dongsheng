@@ -64,6 +64,7 @@ public class VideoEditActivity extends EditParentActivity{
     public void onNextSetp() {
         String checkStr = checkData();
         if (TextUtils.isEmpty(checkStr)) {
+            uploadArticleData.setIsOriginal(2);
             saveDraft();
             if(timer != null)timer.cancel();
             Intent intent = new Intent(this, ArticleUploadListActivity.class);
