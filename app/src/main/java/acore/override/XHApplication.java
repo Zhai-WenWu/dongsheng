@@ -10,6 +10,7 @@ import android.util.Log;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
+import acore.dialogManager.VersionOp;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.ToolsDevice;
@@ -144,8 +145,16 @@ public class XHApplication extends Application {
                 CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
                 strategy.setAppChannel(ChannelUtil.getChannel(context));
                 strategy.setAppReportDelay(5 * 1000);
-//		测试阶段建议设置成true，发布时设置为false
-                CrashReport.initCrashReport(context, "1150004142", false, strategy);
+                //		测试阶段建议设置成true，发布时设置为false
+                String versoinName = VersionOp.getVerName(context);
+                Log.i("tzy","versoinName = " + versoinName);
+                String[] temp = versoinName.split("\\.");
+                Log.i("tzy","temp = " + temp.toString());
+                String testAppID = "4146e8557a";//测试APP id
+                String AppID = "1150004142";//正式APP id
+                boolean isTest = temp.length != 3;
+                Log.i("tzy","isTest = " + isTest);
+                CrashReport.initCrashReport(context, isTest ? AppID : testAppID, isTest, strategy);
                 CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
             }
         }).start();

@@ -39,6 +39,7 @@ import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
 import amodule.upload.callback.UploadListUICallBack;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
 
@@ -191,7 +192,18 @@ public class ArticleUploadListActivity extends BaseActivity {
                     public void onClick(View v) {
                         dialog.cancel();
                         listPool.cancelUpload();
-                        FriendHome.isRefresh = true;
+                        if (FriendHome.isAlive) {
+                            Intent broadIntent = new Intent();
+                            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                            String type = "";
+                            if (dataType == EditParentActivity.TYPE_ARTICLE)
+                                type = "2";
+                            else if (dataType == EditParentActivity.TYPE_VIDEO)
+                                type = "1";
+                            if (!TextUtils.isEmpty(type))
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+                            Main.allMain.sendBroadcast(broadIntent);
+                        }
                         isStopUpload = true;
 
                         Intent intent = new Intent();
@@ -392,8 +404,16 @@ public class ArticleUploadListActivity extends BaseActivity {
         Log.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
-            FriendHome.isRefresh = true;
-            FriendHome.notifyUploadOver(dataType);
+            Intent broadIntent = new Intent();
+            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+            String type = "";
+            if (this.dataType == EditParentActivity.TYPE_ARTICLE)
+                type = "2";
+            else if (this.dataType == EditParentActivity.TYPE_VIDEO)
+                type = "1";
+            if (!TextUtils.isEmpty(type))
+                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+            Main.allMain.sendBroadcast(broadIntent);
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
@@ -402,7 +422,6 @@ public class ArticleUploadListActivity extends BaseActivity {
             else if(dataType == EditParentActivity.TYPE_VIDEO)
                 intent.putExtra("index", 2);
             intent.setClass(this, FriendHome.class);
-            FriendHome.isRefresh = true;
             startActivity(intent);
         }
         finish();

@@ -24,6 +24,7 @@ public class StringManager extends UtilString {
     public final static String appWebTitle = "http://appweb";
     public final static String wwwTitle = "http://www";
     public final static String mmTitle = "http://mm";
+    public final static String mTitle = "http://m";
     //当前域名
     public static String domain = defaultDomain;
     //API请求地址
@@ -34,6 +35,8 @@ public class StringManager extends UtilString {
     public static String wwwUrl = wwwTitle + defaultDomain + "/";
     //手机管理平台地址
     public static String mmUrl = mmTitle + defaultDomain + "/";
+
+    public static String mUrl = mTitle + defaultDomain + "/";
 
     public static final Map<String, String> urlSection = new HashMap<String, String>();
 
@@ -305,12 +308,13 @@ public class StringManager extends UtilString {
 
     public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
     public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
+    public final static String api_articleVideo = mUrl +  "articleVideo/getArticleInfo";//文章&视频详情页m
 
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain) {
-            String[] find = {apiTitle, appWebTitle, wwwTitle, mmTitle};
-            String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl};
+            String[] find = {apiTitle, appWebTitle, wwwTitle, mmTitle,mTitle};
+            String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl,mUrl};
             for (int i = 0; i < find.length; i++) {
                 String findStr = find[i] + defaultDomain + "/";
                 if (url.indexOf(findStr) == 0 && url.indexOf(api_uploadImg) != 0) {

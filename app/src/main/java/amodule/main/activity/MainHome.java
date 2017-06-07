@@ -30,7 +30,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.article.activity.ArticleDetailActivity;
-import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -87,9 +86,7 @@ public class MainHome extends MainBaseActivity {
         addListener();
     }
 
-    /*
-     * 初始化顶部布局
-     */
+    /**初始化顶部布局 */
     private void initTopView() {
         if (Tools.isShowTitle()) {
             int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
@@ -101,9 +98,7 @@ public class MainHome extends MainBaseActivity {
         }
     }
 
-    /**
-     * 添加监听事件
-     */
+    /** 添加监听事件 */
     private void addListener() {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -332,7 +327,6 @@ public class MainHome extends MainBaseActivity {
             return;
         homeFragment.returnListTop();
         homeFragment.refresh();
-        startActivity(new Intent(this, ArticleDetailActivity.class));
     }
 
     /**

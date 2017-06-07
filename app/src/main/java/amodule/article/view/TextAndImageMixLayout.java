@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,19 +76,27 @@ public class TextAndImageMixLayout extends LinearLayout
         if(TextUtils.isEmpty(content))return;
         removeAllViews();
         List<Map<String, String>> dataArray = StringManager.getListMapByJson(content);
-        for (Map<String, String> map : dataArray) {
+        Log.i("tzy","dataArray = " + dataArray.toString());
+        for (int index = 0 ; index < dataArray.size() ; index ++) {
+            Map<String, String> map = dataArray.get(index);
+            Log.i("tzy","map = " + map.toString());
+            if(!map.containsKey("type")
+                    || TextUtils.isEmpty(map.get("type"))){
+                continue;
+            }
+            boolean isLast = index == dataArray.size() - 1;
             switch (map.get("type")) {
                 case BaseView.TEXT:
                     handlerTextData(map.get("html"));
                     break;
                 case BaseView.IMAGE:
-                    addImage(map.get("imageurl"), false, "");
+                    addImage(map.get("imageurl"), isLast, "");
                     break;
                 case BaseView.IMAGE_GIF:
-                    addImage(map.get("gifurl"), false, "");
+                    addImage(map.get("gifurl"), isLast, "");
                     break;
                 case BaseView.VIDEO:
-                    addVideo(map.get("videosimageurl"), map.get("videourl"), false, "");
+                    addVideo(map.get("videosimageurl"), map.get("videourl"), isLast, "");
                     break;
                 case BaseView.URLS:
                     //do nothing
@@ -104,9 +113,17 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param html
      */
     private void handlerTextData(String html) {
-        EditTextView editTextView = addRichText(-1, "");
+        EditTextView editTextView = null;
+        if(getChildCount() - 1 >= 0){
+            View view = getChildAt(getChildCount() - 1);
+            if(view instanceof EditTextView){
+                editTextView = (EditTextView)view;
+            }
+        }
+        if(editTextView == null)
+            editTextView = addRichText(-1, "");
         boolean isCenter = false;
-        String htmlTmep = new String(html);
+        StringBuilder htmlTmep = new StringBuilder(html);
         //解析段落是否居中
         String propertyStr = htmlTmep.substring(htmlTmep.indexOf("<p") + 2, htmlTmep.indexOf(">"));
         String[] properties = propertyStr.split(" ");
@@ -117,6 +134,9 @@ public class TextAndImageMixLayout extends LinearLayout
                 break;
             }
         }
+
+        if(htmlTmep.indexOf(">") + 1 >= 0)
+            html = htmlTmep.substring(htmlTmep.indexOf(">") + 1,htmlTmep.length());
         //处理<a></a>
         while (htmlTmep.indexOf("<a") >= 0) {
             int startIndex = htmlTmep.indexOf("<a");
@@ -134,18 +154,19 @@ public class TextAndImageMixLayout extends LinearLayout
                         break;
                     }
                 }
+                Log.i("tzy","htmlTmep = "+htmlTmep);
+                Log.i("tzy","title = "+title);
+                Log.i("tzy","url = "+url);
                 if (!TextUtils.isEmpty(title)
                         && !TextUtils.isEmpty(url))
                     editTextView.addLinkToData(url, title);
-                htmlTmep = htmlTmep.replaceFirst(aTagData, "");
+                htmlTmep = htmlTmep.replace(htmlTmep.indexOf(aTagData),htmlTmep.indexOf(aTagData) + aTagData.length(), "");
             }
         }
-
-        editTextView.setCenterHorizontal(isCenter);
         //删除<p></p>
-        htmlTmep = htmlTmep.replace("</p>","");
-        if(htmlTmep.indexOf(">") + 1 >= 0)
-            html = htmlTmep.substring(htmlTmep.indexOf(">") + 1,htmlTmep.length());
+//        html = html.replace(propertyStr,"");
+//        html = html.replace("</p>","");
+        editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
     }
 
@@ -345,7 +366,7 @@ public class TextAndImageMixLayout extends LinearLayout
             if (baseView instanceof VideoShowView)
                 videoCount++;
         }
-        if(videoCount >= maxVideoCount){
+        if(videoCount >= maxVideoCount && !isSingleVideo){
             Tools.showToast(getContext(),"最多可选择" + maxVideoCount + "视频");
             return;
         }
@@ -469,7 +490,7 @@ public class TextAndImageMixLayout extends LinearLayout
      */
     private void removeBaseView(BaseView view) {
         final int index = indexOfChild(view);
-        String text = null;
+        String text = "";
         if (index + 1 < getChildCount()) {
             View removeView = getChildAt(index + 1);
             if (removeView instanceof EditTextView)
@@ -483,7 +504,8 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int i = index; i >= 0; i--) {
             View lastView = getChildAt(i);
             if (lastView instanceof EditTextView) {
-                ((EditTextView) lastView).appendText((Editable) RichParser.fromHtml(text));
+                if(!TextUtils.isEmpty(text))
+                    ((EditTextView) lastView).appendText((Editable) RichParser.fromHtml(text));
                 break;
             }
         }

@@ -136,6 +136,7 @@ public class ArticleCommentView extends ItemBaseView {
             }
             findViewById(R.id.has_comment_layout).setVisibility(VISIBLE);
             findViewById(R.id.robsofa).setVisibility(GONE);
+            commentAll.setVisibility(commentLayout.getChildCount() < 3 ? GONE : VISIBLE);
         } else {
             isSofa = true;
             robsofa.setOnClickListener(new OnClickListener() {

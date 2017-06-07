@@ -25,6 +25,11 @@ public class ArticleEidtActiivty extends EditParentActivity{
     }
 
     @Override
+    public String getType() {
+        return "1";
+    }
+
+    @Override
     protected boolean canAddLink() {
         return true;
     }

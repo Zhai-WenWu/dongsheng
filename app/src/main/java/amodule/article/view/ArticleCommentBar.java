@@ -2,7 +2,10 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,6 +83,17 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         sendComment.setOnClickListener(this);
         findViewById(R.id.comment_edit_fake).setOnClickListener(this);
         findViewById(R.id.praise_button).setOnClickListener(this);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            @Override
+            public void afterTextChanged(Editable s) {
+                sendComment.setClickable(s.length() > 0);
+                sendComment.setTextColor(s.length() > 0 ? Color.parseColor("#333333") : Color.parseColor("#cccccc"));
+            }
+        });
     }
 
     public void setData(Map<String, String> map) {
@@ -162,7 +176,6 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             return;
         }
 
-        sendComment.setVisibility(GONE);
         progressBar.setVisibility(VISIBLE);
 
         StringBuilder sbuild = new StringBuilder();
@@ -175,9 +188,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if(flag >= ReqEncyptInternet.REQ_OK_STRING){
-                            editText.setText("");
-                            editText.clearFocus();
-                            ToolsDevice.keyboardControl(true, getContext(), editText);
+
                             if(onCommentSuccessCallback != null){
                                 onCommentSuccessCallback.onCommentSuccess(isSofa);
                             }
@@ -190,6 +201,9 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                         }
                         sendComment.setVisibility(VISIBLE);
                         progressBar.setVisibility(GONE);
+                        editText.setText("");
+                        editText.clearFocus();
+                        ToolsDevice.keyboardControl(false, getContext(), editText);
                     }
                 });
     }

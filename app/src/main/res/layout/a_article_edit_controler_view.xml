@@ -14,8 +14,7 @@
     <RelativeLayout
         android:id="@+id/edit_controler_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
-        android:layout_marginRight="@dimen/dp_5">
+        android:layout_height="@dimen/dp_50">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -26,6 +25,7 @@
                 android:id="@+id/select_image"
                 style="@style/article_bottom_select"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dp_6"
                 android:src="@drawable/i_article_eidt_img"/>
 
             <ImageView
@@ -53,6 +53,7 @@
             style="@style/article_bottom_select"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_5"
             android:src="@drawable/i_article_eidt_keyboard"/>
 
     </RelativeLayout>

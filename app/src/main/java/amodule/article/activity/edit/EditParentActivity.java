@@ -170,6 +170,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
         mixLayout.setMaxVideoCount(getMaxVideoCount());
         mixLayout.setMaxTextCount(getMaxTextCount());
+        mixLayout.setSingleVideo("2".equals(getType()));
         //初始化底部编辑控制
         initEditBottomControler();
     }
@@ -207,7 +208,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     new EditBottomControler.OnSelectVideoCallback() {
                         @Override
                         public void onSelectVideo() {
-                            if(mixLayout.getVideoCount() >= getMaxVideoCount()){
+                            if(getMaxVideoCount() >= 2
+                                    && mixLayout.getVideoCount() >= getMaxVideoCount()){
                                 Tools.showToast(EditParentActivity.this,"最多可选取" + getMaxVideoCount() + "个视频");
                                 return;
                             }
@@ -350,7 +352,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             uploadArticleData = new UploadArticleData();
                             uploadArticleData.setCode(code);
                             uploadArticleData.setTitle(map.get("title"));
-                            uploadArticleData.setContent(map.get("content"));
+                            uploadArticleData.setContent(map.get("raw"));
                             uploadArticleData.setIsOriginal(map.get("isOriginal"));
                             uploadArticleData.setRepAddress(map.get("repAddress"));
                             uploadArticleData.setClassCode(map.get("classCode"));
@@ -369,6 +371,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public abstract String getEditApi();
 
     public abstract void onNextSetp();
+    public abstract String getType();
 
     protected String checkData() {
         if (TextUtils.isEmpty(editTitle.getText())) {
@@ -447,9 +450,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             id = sqLite.update(uploadArticleData.getId(), uploadArticleData);
         } else {
             id = sqLite.insert(uploadArticleData);
-            if (id > 0) {
+            if (id > 0)
                 uploadArticleData.setId(id);
-            }
         }
         if (id > 0) {
             Tools.showToast(EditParentActivity.this, "保存成功");
@@ -469,7 +471,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 case REQUEST_SELECT_VIDEO:
                     String videoPath = data.getStringExtra(MediaStore.Video.Media.DATA);
                     String coverPath = data.getStringExtra(RecorderVideoData.video_img_path);
-                    mixLayout.addVideo(coverPath, videoPath, true, mixLayout.getCurrentEditText().getSelectionEndContent());
+                    mixLayout.addVideo(coverPath, videoPath, !"2".equals(getType()), mixLayout.getCurrentEditText().getSelectionEndContent());
                     break;
             }
         }

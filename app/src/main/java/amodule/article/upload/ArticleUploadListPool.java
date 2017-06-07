@@ -130,24 +130,28 @@ public class ArticleUploadListPool extends UploadListPool {
 
         super.uploadOver(flag, response);
         if (FriendHome.isAlive) {
-            FriendHome.isRefresh = true;
-            FriendHome.notifyUploadOver(dataType);
-        }
-        if (Tools.isForward(XHApplication.in())) {
-            if (FriendHome.isAlive) {
-                FriendHome.isRefresh = true;
-            } else {
-                Activity act = XHActivityManager.getInstance().getCurrentActivity();
-                Intent intent = new Intent();
-                intent.putExtra("code", LoginManager.userInfo.get("code"));
-                if(dataType == EditParentActivity.TYPE_ARTICLE)
-                    intent.putExtra("index", 3);
-                else if(dataType == EditParentActivity.TYPE_VIDEO)
-                    intent.putExtra("index", 2);
-                intent.setClass(act, FriendHome.class);
-                FriendHome.isRefresh = true;
-                act.startActivity(intent);
-            }
+            Intent broadIntent = new Intent();
+            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+            String type = "";
+            if (this.dataType == EditParentActivity.TYPE_ARTICLE)
+                type = "2";
+            else if (this.dataType == EditParentActivity.TYPE_VIDEO)
+                type = "1";
+            if (!TextUtils.isEmpty(type))
+                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
+                    flag ? UploadStateChangeBroadcasterReceiver.STATE_SUCCESS : UploadStateChangeBroadcasterReceiver.STATE_FAIL);
+            Main.allMain.sendBroadcast(broadIntent);
+        } else if (Tools.isForward(XHApplication.in())) {
+            Activity act = XHActivityManager.getInstance().getCurrentActivity();
+            Intent intent = new Intent();
+            intent.putExtra("code", LoginManager.userInfo.get("code"));
+            if(dataType == EditParentActivity.TYPE_ARTICLE)
+                intent.putExtra("index", 3);
+            else if(dataType == EditParentActivity.TYPE_VIDEO)
+                intent.putExtra("index", 2);
+            intent.setClass(act, FriendHome.class);
+            act.startActivity(intent);
 
 //            showUploadOverDialog(flag);
 //            if(flag){
