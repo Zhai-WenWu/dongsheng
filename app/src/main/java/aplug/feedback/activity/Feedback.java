@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,7 +56,9 @@ public class Feedback extends BaseActivity implements OnClickListener {
 	private String Token = "";
 	private String mImageUrl = "";
 	private static String feekback_text = "",feekUrl="",from = "";
-	private boolean LoadOver = false,addHeaderOver=false;	
+	private boolean LoadOver = false,addHeaderOver=false;
+
+	private String backData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +67,10 @@ public class Feedback extends BaseActivity implements OnClickListener {
 		if(bundle != null){
 			feekUrl=bundle.getString("feekUrl");
 			from = bundle.getString("from");
+			backData = bundle.getString("backData");
 			doTongJi();//统计
 		}
+		Log.i("FeedbackFuntion","backData:" + backData);
 		Token = XGPushServer.getXGToken(this);
 		initActivity("香哈小秘书", 2, 0, R.layout.c_view_bar_title, R.layout.a_xh_feedback);
 		// 设置加载
@@ -214,6 +219,10 @@ public class Feedback extends BaseActivity implements OnClickListener {
 //							mapReturn.put("title", "用外部浏览器打开。。。");
 //						}
 						contentList.add(0, mapReturn);
+					}
+					if(!TextUtils.isEmpty(backData)) {
+						sendFeekback(backData);
+						backData = null;
 					}
 					if(!addHeaderOver&&listReturn.size() < 10){
 						Map<String, String> mapReturn = new HashMap<>();

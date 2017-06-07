@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/myself_ll_tab"
                     android:layout_alignParentTop="true"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/user_top_bg"/>
 
                 <View

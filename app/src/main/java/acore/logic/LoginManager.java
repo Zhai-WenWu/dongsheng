@@ -419,12 +419,11 @@ public class LoginManager {
      * @return
      */
     public static boolean isShowSendArticleButton() {
-        return true;
-//        if (MainChangeSend.sendMap == null) {
-//            return false;
-//        } else {
-//            return "2".equals(MainChangeSend.sendMap.get("sendArticle"));
-//        }
+        if (MainChangeSend.sendMap == null) {
+            return false;
+        } else {
+            return "2".equals(MainChangeSend.sendMap.get("sendArticle"));
+        }
     }
 
     /**
@@ -432,12 +431,12 @@ public class LoginManager {
      * @return
      */
     public static boolean isShowSendVideoButton() {
-        return true;
-//        if (MainChangeSend.sendMap == null) {
-//            return false;
-//        } else {
-//            return "2".equals(MainChangeSend.sendMap.get("sendVideo"));
-//        }
+//        return true;
+        if (MainChangeSend.sendMap == null) {
+            return false;
+        } else {
+            return "2".equals(MainChangeSend.sendMap.get("sendVideo"));
+        }
     }
 
     /**
