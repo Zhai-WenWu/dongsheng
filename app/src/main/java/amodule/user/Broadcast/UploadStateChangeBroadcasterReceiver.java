@@ -20,6 +20,7 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     public static final String STATE_SUCCESS = "success";
     public static final String STATE_FAIL = "fail";
     public static final String STATE_SUSPEND = "suspend";
+    public static final String DATA_TYPE = "dataType";
 
 
 
@@ -30,7 +31,8 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String state = intent.getStringExtra(STATE_KEY);
-        callback.onGetReceive(state);
+        String dataType = intent.getStringExtra(DATA_TYPE);
+        callback.onGetReceive(state, dataType);
     }
 
 
@@ -41,7 +43,7 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     }
 
     public interface ReceiveBack{
-        void onGetReceive(String state);
+        void onGetReceive(String state, String dataType);
     }
 
 }

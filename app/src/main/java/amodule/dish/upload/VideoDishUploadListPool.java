@@ -268,7 +268,7 @@ public class VideoDishUploadListPool extends UploadListPool {
         }
         Intent broadIntent = new Intent();
         broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
-
+        broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
         if (flag) {
             broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
                     UploadStateChangeBroadcasterReceiver.STATE_SUCCESS);

@@ -18,8 +18,10 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -74,9 +76,13 @@ public class FriendHome extends BaseActivity {
 	private int tabIndex = 0;
 	private String tongjiId = "a_user";
 
-	public static boolean isAlive = false,isRefresh = false;
+	public static boolean isAlive = false;
 
 	private boolean mIsMySelf;
+
+	private Set<String> mTabRefreshTypes = new HashSet<String>();
+	private boolean mIsResumming = false;
+	private boolean mIsFromPause = false;
 
 	//接收菜谱视频上传状态
 	UploadStateChangeBroadcasterReceiver receiver;
@@ -480,21 +486,17 @@ public class FriendHome extends BaseActivity {
 			tabSelectStyle(mTabViews.get(i), i == tabHost.getCurrentTab());
 			tabSelectStyle(mTabViewsFloat.get(i), i == tabHost.getCurrentTab());
 		}
-
-		String tabType = mTabs.get(tabIndex).get("type");
-        if ("1".equals(tabType) && mRefreshList.contains(String.valueOf(EditParentActivity.TYPE_VIDEO))) {
-            mIsLoadeds[tabIndex] = false;
-            mRefreshList.remove(String.valueOf(EditParentActivity.TYPE_VIDEO));
-        } else if ("2".equals(tabType) && mRefreshList.contains(String.valueOf(EditParentActivity.TYPE_ARTICLE))) {
-            mIsLoadeds[tabIndex] = false;
-            mRefreshList.remove(String.valueOf(EditParentActivity.TYPE_ARTICLE));
-        }
-
+		TabContentView currTabView = mTabContentViews.get(tabIndex);
+		String tabType = currTabView.getDataMap().get("type");
+		if (mTabRefreshTypes.contains(tabType)) {
+			mIsLoadeds[tabIndex] = false;
+			mTabRefreshTypes.remove(tabType);
+		}
 		if (!mIsLoadeds[tabIndex]) {
-			mTabContentViews.get(tabIndex).initLoad();
+			currTabView.initLoad();
 			mIsLoadeds[tabIndex] = true;
 		}
-		mTabContentViews.get(tabIndex).onResume(tag);
+		currTabView.onResume(tag);
 	}
 
 	// 设置tab选中的样式
@@ -517,16 +519,26 @@ public class FriendHome extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
-		if(isRefresh && mTabContentViews != null && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null) {
-            isRefresh = false;
-            mTabContentViews.get(tabIndex).onResume("resume");
-        }
+		mIsResumming = true;
+		if (mIsFromPause) {
+			mIsFromPause = false;
+			if (mTabContentViews != null && tabIndex >= 0 && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null) {
+				TabContentView currTabView = mTabContentViews.get(tabIndex);
+				String tabType = currTabView.getDataMap().get("type");
+				if (!TextUtils.isEmpty(tabType) && mTabRefreshTypes.contains(tabType)) {
+					mTabRefreshTypes.remove(tabType);
+					CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
+					currTabView.onResume("resume");
+				}
+			}
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mIsResumming = false;
+		mIsFromPause = true;
 		//view失焦点
 		for(int i=0;i<mTabContentViews.size();i++){
 			if(mTabContentViews.get(i) instanceof UserHomeSubject){
@@ -548,10 +560,22 @@ public class FriendHome extends BaseActivity {
 		 receiver = new UploadStateChangeBroadcasterReceiver(
 				new UploadStateChangeBroadcasterReceiver.ReceiveBack() {
 					@Override
-					public void onGetReceive(String state) {
-						CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
-						if(mTabContentViews != null && mTabContentViews.size()> tabIndex && mTabContentViews.get(tabIndex) != null)
-							mTabContentViews.get(tabIndex).onResume("resume");
+					public void onGetReceive(String state, String dataType) {
+						if (!TextUtils.isEmpty(dataType)) {
+							if (mTabContentViews != null && tabIndex >= 0 && mTabContentViews.size() > tabIndex) {
+								TabContentView currTabView = mTabContentViews.get(tabIndex);
+								if (currTabView != null) {
+									String tabType = currTabView.getDataMap().get("type");
+									if (dataType.equals(tabType) && mIsResumming) {
+										mTabRefreshTypes.remove(tabType);
+										CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
+										currTabView.onResume("resume");
+									} else if (!mTabRefreshTypes.contains(dataType)) {
+										mTabRefreshTypes.add(dataType);
+									}
+								}
+							}
+						}
 					}
 				}
 		);
@@ -565,10 +589,4 @@ public class FriendHome extends BaseActivity {
 			unregisterReceiver(receiver);
 		}
 	}
-
-	private static ArrayList<String> mRefreshList = new ArrayList<String>();
-	public static void notifyUploadOver(int dataType) {
-        if (!mRefreshList.contains(String.valueOf(dataType)))
-            mRefreshList.add(String.valueOf(dataType));
-    }
 }

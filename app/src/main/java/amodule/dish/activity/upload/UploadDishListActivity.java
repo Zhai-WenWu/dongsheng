@@ -40,6 +40,7 @@ import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
 import amodule.upload.callback.UploadListUICallBack;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
 
@@ -208,7 +209,12 @@ public class UploadDishListActivity extends BaseActivity {
                     public void onClick(View v) {
                         dialog.cancel();
                         listPool.cancelUpload();
-                        FriendHome.isRefresh = true;
+                        if (FriendHome.isAlive) {
+                            Intent broadIntent = new Intent();
+                            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+                            Main.allMain.sendBroadcast(broadIntent);
+                        }
                         isStopUpload = true;
 
                         Intent intent = new Intent();
@@ -445,13 +451,15 @@ public class UploadDishListActivity extends BaseActivity {
     private void gotoFriendHome() {
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
-            FriendHome.isRefresh = true;
+            Intent broadIntent = new Intent();
+            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+            Main.allMain.sendBroadcast(broadIntent);
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
             intent.putExtra("index", 1);
             intent.setClass(this, FriendHome.class);
-            FriendHome.isRefresh = true;
             startActivity(intent);
         }
         finish();
