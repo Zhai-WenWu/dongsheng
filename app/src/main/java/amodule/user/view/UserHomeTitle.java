@@ -92,7 +92,7 @@ public class UserHomeTitle {
     private void initTitle() {
         if (Tools.isShowTitle()) {
             mAct.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int dp_200 = ToolsDevice.dp2px(mAct,200);
+            int dp_200 = mAct.getResources().getDimensionPixelSize(R.dimen.dp_200);
             int height = dp_200 + Tools.getStatusBarHeight(mAct);
 
             RelativeLayout bar_title = (RelativeLayout) mParentTitleView.findViewById(R.id.a_user_home_title_img_layout);
