@@ -14,7 +14,7 @@
         android:divider="@null"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/commend_hind"

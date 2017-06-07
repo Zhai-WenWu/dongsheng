@@ -144,6 +144,16 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         };
     }
 
+    private void changeDataChange(){
+        if(listArray.size() == 0){
+            downRefreshList.setVisibility(View.GONE);
+            findViewById(R.id.commend_hind).setVisibility(View.VISIBLE);
+        }else{
+            downRefreshList.setVisibility(View.VISIBLE);
+            findViewById(R.id.commend_hind).setVisibility(View.GONE);
+        }
+    }
+
     private ViewCommentItem.OnCommentItenListener getCommentItenListener(final ViewCommentItem viewCommentItem, final int position){
         return new ViewCommentItem.OnCommentItenListener() {
             @Override
@@ -218,6 +228,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                                 if(flag >= ReqInternet.REQ_OK_STRING){
                                     listArray.remove(position);
                                     adapterSimple.notifyDataSetChanged();
+                                    changeDataChange();
                                 }
                             }
                         });
@@ -408,7 +419,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         downRefreshList.onRefreshComplete();
                     }
                 }
-                currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0);
+                changeDataChange();
+                currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0,"没有更多评论啦");
             }
         });
     }
