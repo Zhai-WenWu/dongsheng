@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -93,10 +94,12 @@ public class ArticleHeaderView extends ItemBaseView {
         if (map.containsKey("customer") && !TextUtils.isEmpty(map.get("customer"))) {
             exp_user_rela.setVisibility(VISIBLE);
             mapUser = StringManager.getFirstMap(map.get("customer"));
+            Log.i("tzy","mapUser = " + mapUser.toString());
             if (mapUser.containsKey("img") && !TextUtils.isEmpty(mapUser.get("img"))) {
                 setViewImage(auther_userImg, mapUser.get("img"));
             }
-            if (mapUser.containsKey("isGourment") && "2".equals(mapUser.get("isGourment"))) {
+            Log.i("tzy","isGourmet = " + mapUser.get("isGourmet"));
+            if (mapUser.containsKey("isGourmet") && "2".equals(mapUser.get("isGourmet"))) {
                 findViewById(R.id.cusType).setVisibility(VISIBLE);
             } else findViewById(R.id.cusType).setVisibility(GONE);
             if (mapUser.containsKey("nickName") && !TextUtils.isEmpty(mapUser.get("nickName"))) {

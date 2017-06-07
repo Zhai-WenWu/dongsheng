@@ -306,7 +306,7 @@ public class EditTextView extends BaseView {
         // 过滤html标签
         htmlStr = delTag(htmlStr, regEx_html);
         // 过滤空格回车标签
-        htmlStr = delTag(htmlStr, regEx_space);
+//        htmlStr = delTag(htmlStr, regEx_space);
         // 返回文本字符串
         return htmlStr;
     }

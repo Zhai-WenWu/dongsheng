@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
@@ -190,6 +191,7 @@ public class WebviewManager {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
                 if (state) {
+                    Log.i("tzy","url = " + url);
                     loadManager.setLoading(new OnClickListener() {
                         @Override
                         public void onClick(View v) {

@@ -409,7 +409,7 @@
             android:name="amodule.article.activity.edit.ArticleEidtActiivty"
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.article.activity.edit.VideoEditActivity"

@@ -26,6 +26,11 @@ public class VideoEditActivity extends EditParentActivity{
     }
 
     @Override
+    public String getType() {
+        return "2";
+    }
+
+    @Override
     protected boolean canAddLink() {
         return false;
     }

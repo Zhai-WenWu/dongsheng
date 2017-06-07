@@ -87,9 +87,6 @@ public class ArticleDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null)
             code = bundle.getString("code");
-        if (TextUtils.isEmpty(code)) code = "1078";
-
-        Log.i("tzy", "code = " + code);
         init();
     }
 
@@ -336,10 +333,10 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         XHWebView webView = manager.createWebView(0);
-        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
+        manager.setJSObj(webView, new JsAppCommon(this, webView,loadManager,null));
         linearLayoutTwo.addView(webView);
         linearLayoutTwo.setVisibility(View.VISIBLE);
-        webView.loadDataWithBaseURL("", mapArticle.get("html"), "text/html", "utf-8", null);
+        webView.loadDataWithBaseURL(StringManager.api_articleVideo + "?code=" + code, mapArticle.get("html"), "text/html", "utf-8", null);
 
         final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         final String userCode = customerData.get("code");
@@ -431,6 +428,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     for (int i = 0; i < size; i++)
                         listMap.get(i).put("datatype", String.valueOf(Type_recommed));
                     analysRelateData(listMap);
+                    loadManager.changeMoreBtn(flag,10,0,page,false);
                 } else
                     toastFaildRes(flag, true, object);
             }

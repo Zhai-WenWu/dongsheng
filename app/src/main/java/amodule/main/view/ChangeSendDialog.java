@@ -129,10 +129,10 @@ public class ChangeSendDialog extends Dialog {
             addButton("2", R.drawable.send_dish, "写菜谱");
             itemNum++;
         }
-        if (LoginManager.isShowShortVideoButton()) {
-            addButton("3", R.drawable.pulish_video, "小视频");
-            itemNum++;
-        }
+//        if (LoginManager.isShowShortVideoButton()) {
+//            addButton("3", R.drawable.pulish_video, "小视频");
+//            itemNum++;
+//        }
         if (LoginManager.isShowRecorderVideoButton()) {
             addButton("4", R.drawable.pulish_record, "录制菜谱");
             itemNum++;
@@ -198,21 +198,21 @@ public class ChangeSendDialog extends Dialog {
                 activity.startActivity(dishIntent);
                 XHClick.track(activity, "发菜谱");
                 break;
-            case "3": //小视频
-                closeDialog();
-                if (LoginManager.canPublishShortVideo()) {
-                    XHClick.mapStat(activity, "a_post_button", "小视频", "");
-                    Intent smallVideo = new Intent(activity, MediaRecorderActivity.class);
-                    activity.startActivity(smallVideo);
-                    XHClick.track(activity, "发小视频贴");
-                } else {
-                    Tools.showToast(activity, "请绑定手机号");
-                    Intent bindPhone = new Intent(activity, LoginByAccout.class);
-                    bindPhone.putExtra("type", "bind");
-                    bindPhone.putExtra("title", "绑定手机号");
-                    activity.startActivity(bindPhone);
-                }
-                break;
+//            case "3": //小视频
+//                closeDialog();
+//                if (LoginManager.canPublishShortVideo()) {
+//                    XHClick.mapStat(activity, "a_post_button", "小视频", "");
+//                    Intent smallVideo = new Intent(activity, MediaRecorderActivity.class);
+//                    activity.startActivity(smallVideo);
+//                    XHClick.track(activity, "发小视频贴");
+//                } else {
+//                    Tools.showToast(activity, "请绑定手机号");
+//                    Intent bindPhone = new Intent(activity, LoginByAccout.class);
+//                    bindPhone.putExtra("type", "bind");
+//                    bindPhone.putExtra("title", "绑定手机号");
+//                    activity.startActivity(bindPhone);
+//                }
+//                break;
             case "4": //录制菜谱
                 DeviceUtilDialog deviceUtilDialog = new DeviceUtilDialog(activity);
                 deviceUtilDialog.deviceStorageSpaceState(1024, 500, new DeviceUtilDialog.DeviceCallBack() {
@@ -251,14 +251,20 @@ public class ChangeSendDialog extends Dialog {
             //TODO
             case "6":
                 closeDialog();
-                if (LoginManager.isShowSendArticleButton())
+                if(!LoginManager.isLogin()) {
+                    Tools.showToast(activity, "请登录");
+                    activity.startActivity(new Intent(activity, LoginByAccout.class));
+                }else if (LoginManager.isShowSendArticleButton())
                     activity.startActivity(new Intent(activity, ArticleEidtActiivty.class));
                 else
                     showDialog("文章", StringManager.api_applyArticlePower);
                 break;
             case "7":
                 closeDialog();
-                if (LoginManager.isShowSendVideoButton())
+                if(!LoginManager.isLogin()) {
+                    Tools.showToast(activity, "请登录");
+                    activity.startActivity(new Intent(activity, LoginByAccout.class));
+                }else if (LoginManager.isShowSendVideoButton())
                     activity.startActivity(new Intent(activity, VideoEditActivity.class));
                 else
                     showDialog("短视频", StringManager.api_applyVideoPower);

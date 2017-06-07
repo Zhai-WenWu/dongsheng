@@ -652,8 +652,9 @@ public class JsAppCommon extends JsBase{
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				if(imageUrls == null)
+				if(imageUrls == null){
 					return;
+				}
 				ArrayList<String> data = new ArrayList<>();
 				for(String url:imageUrls){
 					data.add(url);
