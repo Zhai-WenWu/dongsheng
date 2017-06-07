@@ -199,8 +199,7 @@ public class FriendHome extends BaseActivity {
 				onLoaded(flag);
 			}
 		});
-		String getSecondUrl = StringManager.API_USERMAIN_LEVEL + "?code=" + userCode;
-		ReqEncyptInternet.in().doEncypt(getSecondUrl, "", new InternetCallback(this) {
+		ReqEncyptInternet.in().doEncypt(StringManager.API_USERMAIN_LEVEL, "code=" + userCode, new InternetCallback(this) {
 			@Override
 			public void loaded(int i, String s, Object o) {
 				if (i >= UtilInternet.REQ_OK_STRING) {
