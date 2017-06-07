@@ -524,14 +524,14 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             }).setSureButton("是", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    saveDraft();
-                    xhDialog.cancel();
-                    EditParentActivity.this.finish();
+
                 }
             }).show();
         } else {
             finish();
         }
+        saveDraft();
+        EditParentActivity.this.finish();
         switch (mPageTag) {
             case mVideoPageTag:
                 XHClick.mapStat(this, "a_ShortVideoEdit", "关闭页面", "");

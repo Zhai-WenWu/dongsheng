@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.xiangha.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +70,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private void init() {
         setOrientation(VERTICAL);
+        setPadding(0,0,0,Tools.getDimen(getContext(), R.dimen.dp_20));
         addRichText(-1, "");
     }
 
@@ -316,7 +319,18 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setImageUrl(imageUrl);
         view.setmOnRemoveCallback(this);
 
-        addView(view, insertIndex, getChildLayoutParams());
+        if(insertIndex >= getChildCount()){
+            if(getChildCount() == 0){
+                addRichText(-1,"");
+            }else{
+                View preView = getChildAt(getChildCount() - 1);
+                if(!(preView instanceof EditTextView)){
+                    addRichText(-1,"");
+                }
+            }
+            addView(view,getChildLayoutParams());
+        } else
+            addView(view, insertIndex, getChildLayoutParams());
 
         imageMap.put(imageUrl, "");
         uploadImage(imageUrl);
@@ -384,7 +398,19 @@ public class TextAndImageMixLayout extends LinearLayout
         }
         if (null == view) {
             view = new VideoShowView(getContext());
-            addView(view, insertIndex, getChildLayoutParams());
+            if(insertIndex >= getChildCount()){
+                if(getChildCount() == 0){
+                    addRichText(-1,"");
+                }else{
+                    View preView = getChildAt(getChildCount() - 1);
+                    if(!(preView instanceof EditTextView)){
+                        addRichText(-1,"");
+                    }
+                }
+                addView(view,getChildLayoutParams());
+            } else
+                addView(view, insertIndex, getChildLayoutParams());
+
             //默认插入edit
             if (ifAddText)
                 addRichText(insertIndex + 1, content);
