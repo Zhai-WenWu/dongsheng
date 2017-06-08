@@ -53,7 +53,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 177
-        versionName "5.3.6.2"
+        versionName "5.3.6.3"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO

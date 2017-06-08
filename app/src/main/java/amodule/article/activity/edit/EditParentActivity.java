@@ -104,6 +104,13 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //聚焦
+        ToolsDevice.keyboardControl(true,this,editTitle);
+    }
+
     protected void initView(String title) {
         //处理状态栏引发的问题
         if (Tools.isShowTitle()) {
@@ -164,6 +171,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 if (s.length() > 0 && s.length() > 64) {
                     editTitle.setText(s.subSequence(0, 64));
                     editTitle.setSelection(editTitle.getText().length());
+                    Tools.showToast(EditParentActivity.this,"标题不能超过64字");
                 }
             }
         });
@@ -171,6 +179,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setMaxVideoCount(getMaxVideoCount());
         mixLayout.setMaxTextCount(getMaxTextCount());
         mixLayout.setSingleVideo("2".equals(getType()));
+        findViewById(R.id.scroll_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToolsDevice.keyboardControl(true,EditParentActivity.this,mixLayout.getCurrentEditText());
+            }
+        });
         //初始化底部编辑控制
         initEditBottomControler();
     }
@@ -471,7 +485,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 case REQUEST_SELECT_VIDEO:
                     String videoPath = data.getStringExtra(MediaStore.Video.Media.DATA);
                     String coverPath = data.getStringExtra(RecorderVideoData.video_img_path);
-                    mixLayout.addVideo(coverPath, videoPath, !"2".equals(getType()), mixLayout.getCurrentEditText().getSelectionEndContent());
+                    boolean isVideo = "2".equals(getType());
+                    CharSequence text = "";
+                    if(!isVideo)
+                        text = mixLayout.getCurrentEditText().getSelectionEndContent();
+                    mixLayout.addVideo(coverPath, videoPath, isVideo, text);
                     break;
             }
         }
@@ -507,29 +525,29 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     }
 
     private void onClose() {
-        if (TextUtils.isEmpty(checkData())) {
-            final XhDialog xhDialog = new XhDialog(this);
-            xhDialog.setTitle("是否保存草稿？").setCanselButton("否", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int id = uploadArticleData.getId();
-                    Tools.showToast(EditParentActivity.this, "不保存：" + id);
-                    if (id > 0) {
-                        boolean isDelete = sqLite.deleteById(id);
-                        Tools.showToast(EditParentActivity.this, "删除：" + isDelete);
-                    }
-                    xhDialog.cancel();
-                    EditParentActivity.this.finish();
-                }
-            }).setSureButton("是", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            }).show();
-        } else {
-            finish();
-        }
+//        if (TextUtils.isEmpty(checkData())) {
+//            final XhDialog xhDialog = new XhDialog(this);
+//            xhDialog.setTitle("是否保存草稿？").setCanselButton("否", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    int id = uploadArticleData.getId();
+//                    Tools.showToast(EditParentActivity.this, "不保存：" + id);
+//                    if (id > 0) {
+//                        boolean isDelete = sqLite.deleteById(id);
+//                        Tools.showToast(EditParentActivity.this, "删除：" + isDelete);
+//                    }
+//                    xhDialog.cancel();
+//                    EditParentActivity.this.finish();
+//                }
+//            }).setSureButton("是", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            }).show();
+//        } else {
+//            finish();
+//        }
         saveDraft();
         EditParentActivity.this.finish();
         switch (mPageTag) {

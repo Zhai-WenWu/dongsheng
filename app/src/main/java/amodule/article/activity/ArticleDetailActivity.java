@@ -9,7 +9,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
@@ -54,6 +54,7 @@ import aplug.basic.ReqInternet;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.share.BarShare;
 import xh.basic.tool.UtilImage;
@@ -67,22 +68,26 @@ import static third.ad.tools.AdPlayIdConfig.DETAIL_DISH_MAKE;
 public class ArticleDetailActivity extends BaseActivity {
     public static final String TYPE_ARTICLE = "1";
     public static final String TYPE_VIDEO = "2";
-    private String code = "";//请求数据的code
-    private int page = 0;//相关推荐的page
-    private ArticleDetailAdapter detailAdapter;
-    private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
-    private ArticleCommentBar mArticleCommentBar;
-    private boolean isKeyboradShow = false;
+
     private ListView listview;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;//头部view
     private ImageView rightButton;
+    private PtrClassicFrameLayout refreshLayout;
     private ArticleContentBottomView articleContentBottomView;
+    private ArticleHeaderView headerView;
+    private XHWebView webView;
+    private ArticleCommentBar mArticleCommentBar;
     private XHAllAdControl xhAllAdControl;
+    private ArticleDetailAdapter detailAdapter;
 
-    private String commentNum;
+    private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
     private Map<String, String> adDataMap;
     private Map<String, String> shareMap = new HashMap<>();
+    private String commentNum;
+    private boolean isKeyboradShow = false;
     private boolean isAdShow = false;
+    private String code = "";//请求数据的code
+    private int page = 0;//相关推荐的page
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,18 @@ public class ArticleDetailActivity extends BaseActivity {
             loadManager.hideProgressBar();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Glide.with(this).resumeRequests();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Glide.with(this).pauseRequests();
+    }
+
     /** 初始化 **/
     private void init() {
         initActivity(getTitleText(), 2, 0, 0, R.layout.a_article_detail);
@@ -110,7 +127,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private View adView;
 
     private void showAD(Map<String, String> dataMap) {
-        if (articleContentBottomView == null) return;
+        if (articleContentBottomView == null || isFinishing()) return;
         adView = LayoutInflater.from(this).inflate(R.layout.a_article_detail_ad, null);
         //加载图片
         ImageView imageView = (ImageView) adView.findViewById(R.id.img);
@@ -172,6 +189,7 @@ public class ArticleDetailActivity extends BaseActivity {
                         onBackPressed();
                     }
                 });
+        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         //初始化listview
         listview = (ListView) findViewById(R.id.listview);
         listview.setOnTouchListener(new View.OnTouchListener() {
@@ -193,8 +211,8 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleCommentBar.setOnCommentSuccessCallback(new ArticleCommentBar.OnCommentSuccessCallback() {
             @Override
             public void onCommentSuccess(boolean isSofa) {
-                if (isSofa)
-                    requestForumData(true);
+//                if (isSofa)
+                requestForumData(true);
             }
         });
     }
@@ -235,7 +253,13 @@ public class ArticleDetailActivity extends BaseActivity {
                 mArticleCommentBar.doComment("抢沙发");
             }
         });
-        loadManager.setLoading(listview, detailAdapter, true,
+        loadManager.setLoading(refreshLayout, listview, detailAdapter, true,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        refreshData();
+                    }
+                },
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -244,6 +268,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                 }, new AutoLoadMore.OnListScrollListener() {
                     int srceenHeight = ToolsDevice.getWindowPx(ArticleDetailActivity.this).heightPixels;
+
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
                     }
@@ -264,6 +289,24 @@ public class ArticleDetailActivity extends BaseActivity {
         requestArticleData();
         //请求广告数据
         requestAdData();
+    }
+
+    private void refreshData() {
+        resetData();
+        requestArticleData();
+        //请求广告数据
+        requestAdData();
+    }
+
+    private void resetData() {
+        page = 0;
+        isAdShow = false;
+        allDataListMap.clear();
+        if(adDataMap != null)
+            adDataMap.clear();
+        shareMap.clear();
+        if(detailAdapter != null)
+            detailAdapter.notifyDataSetChanged();
     }
 
     private void requestAdData() {
@@ -303,6 +346,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 } else {
                     toastFaildRes(flag, true, object);
                 }
+                refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
             }
         });
@@ -316,10 +360,11 @@ public class ArticleDetailActivity extends BaseActivity {
     private void analysArticleData(@NonNull final Map<String, String> mapArticle) {
         if (mapArticle.isEmpty()) return;
         findViewById(R.id.rightImgBtn2).setVisibility(View.VISIBLE);
-        ArticleHeaderView headerView = new ArticleHeaderView(ArticleDetailActivity.this);
+        headerView = new ArticleHeaderView(ArticleDetailActivity.this);
         headerView.setType(getType());
         headerView.setData(mapArticle);
-        linearLayoutOne.addView(headerView);
+//        if(linearLayoutOne.getChildCount() == 0)
+            linearLayoutOne.addView(headerView);
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
         listview.setVisibility(View.VISIBLE);
@@ -335,9 +380,10 @@ public class ArticleDetailActivity extends BaseActivity {
                 linearLayoutThree.setVisibility(View.VISIBLE);
             }
         });
-        XHWebView webView = manager.createWebView(0);
-        manager.setJSObj(webView, new JsAppCommon(this, webView,loadManager,null));
-        linearLayoutTwo.addView(webView);
+        webView = manager.createWebView(0);
+        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, null));
+        if(linearLayoutTwo.getChildCount() == 0)
+            linearLayoutTwo.addView(webView);
         linearLayoutTwo.setVisibility(View.VISIBLE);
         webView.loadDataWithBaseURL(StringManager.api_articleVideo + "?code=" + code, mapArticle.get("html"), "text/html", "utf-8", null);
 
@@ -363,7 +409,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
         articleContentBottomView = new ArticleContentBottomView(this);
         articleContentBottomView.setData(mapArticle);
-        linearLayoutThree.addView(articleContentBottomView);
+        if(linearLayoutThree.getChildCount() == 0)
+            linearLayoutThree.addView(articleContentBottomView);
 
         if (!isAuthor) {
             articleContentBottomView.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
@@ -387,6 +434,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
         mapArticle.remove("html");
         mapArticle.remove("content");
+        mapArticle.remove("raw");
         //处理分享数据
         handlerShareData(mapArticle);
     }
@@ -431,7 +479,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     for (int i = 0; i < size; i++)
                         listMap.get(i).put("datatype", String.valueOf(Type_recommed));
                     analysRelateData(listMap);
-                    loadManager.changeMoreBtn(flag,10,0,page,false);
+                    loadManager.changeMoreBtn(flag, 10, 0, page, false);
                 } else
                     toastFaildRes(flag, true, object);
             }
@@ -506,12 +554,12 @@ public class ArticleDetailActivity extends BaseActivity {
 
                         @Override
                         public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
-                            if(bitmap != null)
+                            if (bitmap != null)
                                 shareImageBitmap = getBitmap(bitmap);
                             return false;
                         }
                     });
-        }else{
+        } else {
             shareMap.put("img", String.valueOf(R.drawable.umen_share_launch));
             shareMap.put("imgType", BarShare.IMG_TYPE_RES);
         }
@@ -546,19 +594,19 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void openShare() {
-        if(shareMap.isEmpty()){
-            Tools.showToast(this,"数据处理中，请稍候");
+        if (shareMap.isEmpty()) {
+            Tools.showToast(this, "数据处理中，请稍候");
             return;
         }
 
-        barShare = new BarShare(ArticleDetailActivity.this, "1".equals(getType())?"文章详情":"视频详情", "");
+        barShare = new BarShare(ArticleDetailActivity.this, "1".equals(getType()) ? "文章详情" : "视频详情", "");
         String title = shareMap.get("title");
         String content = shareMap.get("summary");
         String clickUrl = shareMap.get("clickUrl");
         String type = BarShare.IMG_TYPE_RES;
         String shareImg = "" + R.drawable.umen_share_launch;
-        if(shareImageBitmap != null){
-            barShare.setShare(title,content,shareImageBitmap,clickUrl);
+        if (shareImageBitmap != null) {
+            barShare.setShare(title, content, shareImageBitmap, clickUrl);
         } else {
             type = shareMap.get("imgType");
             shareImg = shareMap.get("img");
@@ -580,44 +628,48 @@ public class ArticleDetailActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
-                        String url = "";
-                        switch (getType()) {
-                            case TYPE_ARTICLE:
-                                url = StringManager.api_articleDel;
-                                break;
-                            case TYPE_VIDEO:
-                                url = StringManager.api_videoDel;
-                                break;
-                        }
-                        if (TextUtils.isEmpty(url))
-                            return;
-                        ReqEncyptInternet.in().doEncypt(url, "code=" + code,
-                                new InternetCallback(ArticleDetailActivity.this) {
-                                    @Override
-                                    public void loaded(int flag, String url, Object obj) {
-                                        if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                                            //自动关闭
-                                            ArticleDetailActivity.this.finish();
-                                            if (FriendHome.isAlive) {
-                                                Intent broadIntent = new Intent();
-                                                broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
-                                                String type = "";
-                                                if (TYPE_ARTICLE.equals(getType()))
-                                                    type = "2";
-                                                else if (TYPE_VIDEO.equals(getType()))
-                                                    type = "1";
-                                                if (!TextUtils.isEmpty(type))
-                                                    broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
-                                                Main.allMain.sendBroadcast(broadIntent);
-                                            }
-                                        } else {
-                                            toastFaildRes(flag, true, obj);
-                                        }
-                                    }
-                                });
+                        deleteThis();
                         statistics("更多", "删除");
                     }
                 }).show();
+    }
+
+    private void deleteThis(){
+        String url = "";
+        switch (getType()) {
+            case TYPE_ARTICLE:
+                url = StringManager.api_articleDel;
+                break;
+            case TYPE_VIDEO:
+                url = StringManager.api_videoDel;
+                break;
+        }
+        if (TextUtils.isEmpty(url))
+            return;
+        ReqEncyptInternet.in().doEncypt(url, "code=" + code,
+                new InternetCallback(ArticleDetailActivity.this) {
+                    @Override
+                    public void loaded(int flag, String url, Object obj) {
+                        if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                            //自动关闭
+                            ArticleDetailActivity.this.finish();
+                            if (FriendHome.isAlive) {
+                                Intent broadIntent = new Intent();
+                                broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                                String type = "";
+                                if (TYPE_ARTICLE.equals(getType()))
+                                    type = "2";
+                                else if (TYPE_VIDEO.equals(getType()))
+                                    type = "1";
+                                if (!TextUtils.isEmpty(type))
+                                    broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+                                Main.allMain.sendBroadcast(broadIntent);
+                            }
+                        } else {
+                            toastFaildRes(flag, true, obj);
+                        }
+                    }
+                });
     }
 
     public String getType() {

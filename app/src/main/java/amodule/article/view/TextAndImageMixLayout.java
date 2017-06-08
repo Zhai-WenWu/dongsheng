@@ -108,6 +108,8 @@ public class TextAndImageMixLayout extends LinearLayout
                     break;
             }
         }
+        if(getChildCount() == 0)
+            addRichText(-1,"");
     }
 
     /**
