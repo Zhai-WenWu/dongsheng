@@ -356,6 +356,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     handler.sendEmptyMessage(0);
                 }
             }).start();
+            timingSave();
         } else {
             StringBuilder sbuilder = new StringBuilder().append("code=").append(code).append("&type=RAW");
             ReqEncyptInternet.in().doEncypt(getEditApi(), sbuilder.toString(), new InternetCallback(this) {
@@ -381,7 +382,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 }
             });
         }
-        timingSave();
     }
 
     public abstract String getEditApi();
@@ -517,7 +517,29 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     }
 
     private void onClose() {
-        saveDraft();
+        if(TextUtils.isEmpty(code)) {
+            saveDraft();
+            finshActivity();
+        }else{
+            final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
+            xhDialog.setTitle("二次编辑的内容将不会保存到草稿箱，是否继续退出？")
+                    .setSureButton("留下编辑", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            xhDialog.cancel();
+                        }
+                    }).setCanselButton("清空并退出", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    xhDialog.cancel();
+                    finshActivity();
+                }
+            }).show();
+        }
+
+    }
+
+    private void finshActivity(){
         EditParentActivity.this.finish();
         switch (mPageTag) {
             case mVideoPageTag:
