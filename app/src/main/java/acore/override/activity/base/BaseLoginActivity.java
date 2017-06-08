@@ -107,7 +107,8 @@ public class BaseLoginActivity extends BaseActivity {
 
     private ArrayList<BaseLoginActivity> activityList = new ArrayList<BaseLoginActivity>();
     private SMSSendCallback callback;
-
+    private String phoneNumber="";//手机号码
+    private String countyrCode="";//验证码
 
     /**
      * Activity标题初始化
@@ -187,6 +188,8 @@ public class BaseLoginActivity extends BaseActivity {
                             callback.onSendFalse();
                             UtilLog.print("w", data.toString() + "");
                             String param = "log=" + data.toString();
+                            if(!TextUtils.isEmpty(phoneNumber))param+="&phoneNumber="+phoneNumber;
+                            if(!TextUtils.isEmpty(countyrCode))param+="&code="+countyrCode;
                             ReqInternet.in().doPost(StringManager.api_smsReport, param, new InternetCallback(mAct.getApplicationContext()) {
                                 @Override
                                 public void loaded(int flag, String url, Object returnObj) {
@@ -431,6 +434,8 @@ public class BaseLoginActivity extends BaseActivity {
      */
     protected boolean reqIdentifyCode(String countyrCode, String phone_number,SMSSendCallback callback) {
         this.callback = callback;
+        this.countyrCode=countyrCode;
+        this.phoneNumber=phone_number;
         SMSSDK.initSDK(this, smsAppkey, smsAppsecret);
         SMSSDK.registerEventHandler(eventHandler);
         SMSSDK.getVerificationCode(countyrCode, phone_number);
