@@ -119,9 +119,8 @@ public class ArticleDetailAdapter extends BaseAdapter {
         view.setRobsofaClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onRabSofaCallback != null){
+                if(onRabSofaCallback != null)
                     onRabSofaCallback.onRabSoaf();
-                }
             }
         });
         view.setData(map);
