@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -323,9 +324,10 @@ public class ViewCommentItem extends LinearLayout {
         }
     }
 
-    public void addReplayView(String replay,boolean isClear){
+    public void addReplayView(Object replay, boolean isClear){
         if(isClear)commentReplay.removeAllViews();
         ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
+        Log.i("commentReplay","addReplayView() replayArray.size:" + replayArray.size());
         View view;
         MultifunctionTextView replayTv;
         boolean isReset = false;

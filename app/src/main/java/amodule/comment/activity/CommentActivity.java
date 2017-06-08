@@ -43,6 +43,8 @@ import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
+import static xh.basic.tool.UtilString.getListMapByJson;
+
 /**
  * Created by Fang Ruijiao on 2017/5/25.
  */
@@ -126,9 +128,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
+//                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
                 if(View.VISIBLE == sendTv.getVisibility()) {
-                    currentUrl = StringManager.api_addForum;
                     changeKeyboard(false);
                 }
                 return false;
@@ -250,7 +251,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void loaded(int i, String s, Object o) {
                         if(i >= ReqInternet.REQ_OK_STRING) {
-                            ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
+                            ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
                             if(arrayList.size() > 0) {
                                 Map<String, String> map = listArray.get(position);
                                 map.put("is_fabulous", "2");
@@ -269,6 +270,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 commend_write_et.setHint(" 回复" + replay_name);
                 currentUrl = StringManager.api_addReplay;
                 currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
+                replayIndex = position;
                 changeKeyboard(true);
             }
         };
@@ -388,12 +390,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 int loadCount = 0;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     from = 1;
-                    ArrayList<Map<String,String>> arrayList =StringManager.getListMapByJson(o);
+                    ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
                     if(arrayList.size() > 0) {
                         Map<String,String> dataMap = arrayList.get(0);
                         String dataList = dataMap.get("list");
                         String dataPage = dataMap.get("page");
-                        arrayList = StringManager.getListMapByJson(dataList);
+                        arrayList = getListMapByJson(dataList);
                         if(isForward){
                             if(dropPage == 1){
                                 listArray.clear();
@@ -423,6 +425,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private String currentUrl = StringManager.api_addForum,currentParams;
+    private int replayIndex;
     private boolean isSend = false,isAddForm;
     private synchronized void sendData(){
         if(isSend)return;
@@ -467,38 +470,44 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     changeKeyboard(false);
                     if(isAddForm){
-//                        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
-//                        if(arrayList.size() > 0){
-//                            Map<String,String> newCotent = new HashMap<>();
-//                            String comment_id = arrayList.get(0).get("comment_id");
-//                            if(commentIdStrBuffer.length() != 0)
-//                                commentIdStrBuffer.append(",");
-//                            commentIdStrBuffer.append(comment_id);
-//
-//                            newCotent.put("comment_id",comment_id);
-//                            newCotent.put("create_time","刚刚");
-//                            newCotent.put("fabulous_num","0");
-//                            newCotent.put("is_anchor","1");
-//                            newCotent.put("is_del_report","2");
-//                            newCotent.put("is_fabulous","1");
-//                            newCotent.put("replay_count","0");
-//                            newCotent.put("replay_num","0");
-//                            newCotent.put("replay","");
-//                            JSONArray customerJSONArray = new JSONArray();
-//                            try {
-//                                JSONObject customerJSONObject = new JSONObject();
-//                                customerJSONObject.put("header_img", LoginManager.userInfo.get("img"));
-//
-//                                customerJSONArray.put(customerJSONObject);
-//                            }catch (JSONException e){
-//                                e.printStackTrace();
-//                            }
-//
-//                            newCotent.put("customer",customerJSONArray.toString());
-//
-//                        }
+                        ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
+                        Log.i("commentReplay","sendData() arrayList:" + arrayList.size());
+                        if(arrayList.size() > 0) {
+                            Map<String,String> map = arrayList.get(0);
+                            if(commentIdStrBuffer.length() != 0) commentIdStrBuffer.append(",");
+                            commentIdStrBuffer.append(map.get("comment_id"));
+                            listArray.add(0, arrayList.get(0));
+                        }
+                        adapterSimple.notifyDataSetChanged();
+                        downRefreshList.setSelection(0);
                     }else{
-
+                        Log.i("commentReplay","sendData() replayIndex:" + replayIndex);
+                        Map<String,String> map = listArray.get(replayIndex);
+                        String replay = map.get("replay");
+                        Log.i("commentReplay","sendData() replay:" + replay);
+                        if(!TextUtils.isEmpty(replay)) {
+                            JSONArray jsonArray = new JSONArray();
+                            JSONObject jsonObject;
+                            Map<String, String> replayMap;
+                            ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(replay);
+                            ArrayList<Map<String, String>> newList = StringManager.getListMapByJson(o);
+                            arrayList.addAll(newList);
+                            try {
+                                for (int i = 0; i < arrayList.size(); i++) {
+                                    jsonObject = new JSONObject();
+                                    replayMap = arrayList.get(i);
+                                    for (String key : replayMap.keySet()) {
+                                        jsonObject.put(key, replayMap.get(key));
+                                    }
+                                    jsonArray.put(jsonObject);
+                                }
+                            }catch (JSONException exception){
+                                exception.printStackTrace();
+                            }
+                            map.put("replay",jsonArray.toString());
+                            Log.i("commentReplay","sendData() jsonArray:" + jsonArray.toString());
+                            adapterSimple.notifyDataSetChanged();
+                        }
                     }
                 }else{
                     sendProgress.setVisibility(View.GONE);
@@ -520,6 +529,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             sendTv.setVisibility(View.VISIBLE);
             writePen.setVisibility(View.GONE);
         }else{
+            currentUrl = StringManager.api_addForum;
             int dp30 = Tools.getDimen(this,R.dimen.dp_30);
             sendTv.setVisibility(View.GONE);
             writePen.setVisibility(View.VISIBLE);
