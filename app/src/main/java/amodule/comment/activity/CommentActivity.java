@@ -66,6 +66,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private boolean isShowKeyboard = false;
 
+    private StringBuffer commentIdStrBuffer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +126,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
-                if(isShowKeyboard) {
+                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
+                if(View.VISIBLE == sendTv.getVisibility()) {
                     currentUrl = StringManager.api_addForum;
                     changeKeyboard(false);
                 }
@@ -165,14 +167,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void loaded(int flag, String s, Object o) {
                         if(flag >= ReqInternet.REQ_OK_STRING){
-//                                    ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
-//                                    Map<String,String> oldCommentMap = listArray.get(position);
-//                                    oldCommentMap.put("replay_num","0");
-//                                    String oldReplay = oldCommentMap.get("replay");
-//                                    ArrayList<Map<String,String>> oldReplayArray = StringManager.getListMapByJson(oldReplay);
-//                                    oldReplayArray.addAll(arrayList);
-//                                    adapterSimple.notifyDataSetChanged();
-                            viewCommentItem.addReplayView(o.toString());
+                            viewCommentItem.addReplayView(o.toString(),true);
                         }
                     }
                 });
@@ -310,6 +305,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initData() {
+        commentIdStrBuffer = new StringBuffer();
         type = getIntent().getStringExtra("type");
         code = getIntent().getStringExtra("code");
         gotoCommentId = getIntent().getStringExtra("commentId");
@@ -463,17 +459,22 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }else{
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }
+        newParams += "&commentIds=" + commentIdStrBuffer;
         Log.i("commentReplay","sendData() newParams:" + newParams);
         ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
             @Override
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     changeKeyboard(false);
-//                    if(isAddForm){
+                    if(isAddForm){
 //                        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
 //                        if(arrayList.size() > 0){
 //                            Map<String,String> newCotent = new HashMap<>();
 //                            String comment_id = arrayList.get(0).get("comment_id");
+//                            if(commentIdStrBuffer.length() != 0)
+//                                commentIdStrBuffer.append(",");
+//                            commentIdStrBuffer.append(comment_id);
+//
 //                            newCotent.put("comment_id",comment_id);
 //                            newCotent.put("create_time","刚刚");
 //                            newCotent.put("fabulous_num","0");
@@ -483,13 +484,22 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 //                            newCotent.put("replay_count","0");
 //                            newCotent.put("replay_num","0");
 //                            newCotent.put("replay","");
-//                            JSONArray customerJsonArray = new JSONArray();
-//                            newCotent.put("customer","");
+//                            JSONArray customerJSONArray = new JSONArray();
+//                            try {
+//                                JSONObject customerJSONObject = new JSONObject();
+//                                customerJSONObject.put("header_img", LoginManager.userInfo.get("img"));
+//
+//                                customerJSONArray.put(customerJSONObject);
+//                            }catch (JSONException e){
+//                                e.printStackTrace();
+//                            }
+//
+//                            newCotent.put("customer",customerJSONArray.toString());
 //
 //                        }
-//                    }else{
-//
-//                    }
+                    }else{
+
+                    }
                 }else{
                     sendProgress.setVisibility(View.GONE);
                 }
