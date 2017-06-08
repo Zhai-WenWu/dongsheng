@@ -114,7 +114,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.comment_edit_fake:
-                doComment("评论文章");
+                doComment(getTextHint());
                 statistics("底部栏", "评论输入框");
                 break;
             case R.id.praise_button:
@@ -194,7 +194,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                             }
                             if(isSofa) {
                                 isSofa = !isSofa;
-                                editText.setHint("评论文章");
+                                editText.setHint(getTextHint());
                             }
                         }else{
                             Tools.showToast(context,"评论失败，请重试");
@@ -206,6 +206,10 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                         ToolsDevice.keyboardControl(false, getContext(), editText);
                     }
                 });
+    }
+
+    private String getTextHint(){
+        return  "1".equals(getType()) ? "评论文章" : "评论视频";
     }
 
     public String getContent() {

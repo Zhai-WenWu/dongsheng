@@ -351,7 +351,6 @@ public class ArticleUploadListActivity extends BaseActivity {
     public View getFooterView() {
         return LayoutInflater.from(ArticleUploadListActivity.this)
                 .inflate(R.layout.c_upload_footer_item, null);
-
     }
 
     private void setStatisInfo() {

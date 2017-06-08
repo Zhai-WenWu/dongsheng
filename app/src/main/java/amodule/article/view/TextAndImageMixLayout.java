@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +79,11 @@ public class TextAndImageMixLayout extends LinearLayout
     /** 设置上传需要数据 */
     public void setXHServiceData(String content) {
         if(TextUtils.isEmpty(content))return;
+        try {
+            content = URLDecoder.decode(content,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         removeAllViews();
         List<Map<String, String>> dataArray = StringManager.getListMapByJson(content);
         Log.i("tzy","dataArray = " + dataArray.toString());
@@ -110,6 +117,11 @@ public class TextAndImageMixLayout extends LinearLayout
         }
         if(getChildCount() == 0)
             addRichText(-1,"");
+        else if(isSingleVideo){
+            for(int index = getChildCount() -1 ; index > 1  ; index--){
+                removeViewAt(index);
+            }
+        }
     }
 
     /**
@@ -169,8 +181,8 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
         //删除<p></p>
-//        html = html.replace(propertyStr,"");
-//        html = html.replace("</p>","");
+        html = html.replace(propertyStr,"");
+        html = html.replace("</p>","");
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
     }
@@ -521,9 +533,10 @@ public class TextAndImageMixLayout extends LinearLayout
         String text = "";
         if (index + 1 < getChildCount()) {
             View removeView = getChildAt(index + 1);
-            if (removeView instanceof EditTextView)
+            if (removeView instanceof EditTextView){
                 text = ((EditTextView) removeView).getTextHtml();
-            removeViewAt(index + 1);
+                removeViewAt(index + 1);
+            }
         }
         //同时维护图片集合
         removeImagePath(view);

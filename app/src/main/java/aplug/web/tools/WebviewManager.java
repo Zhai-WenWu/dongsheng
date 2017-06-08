@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -83,6 +84,7 @@ public class WebviewManager {
         return webview;
     }
 
+    @JavascriptInterface
     public void setJSObj(XHWebView webview, JsBase jsObj) {
         webview.addJavascriptInterface(jsObj, jsObj.TAG);
     }
@@ -230,7 +232,7 @@ public class WebviewManager {
                 Tools.showToast(view.getContext(), message);
                 result.cancel();
                 loadManager.hideProgressBar();
-                return true;
+                return super.onJsAlert(view, url, message, result);
             }
 
             @Override
