@@ -236,10 +236,12 @@ public class UploadListPool {
      * 解除UI绑定
      */
     public void unBindUI() {
-
-        timer.cancel();
-        timer = null;
-
+        if(timer!=null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+        if(uploadPoolData!=null){
         uploadPoolData.setUiCallback(new UploadListUICallBack() {
 
             @Override
@@ -256,7 +258,7 @@ public class UploadListPool {
             public void uploadOver(boolean flag, String responseStr) {
 
             }
-        });
+        });}
     }
 
     public void setUiCallback(UploadListUICallBack callback) {
