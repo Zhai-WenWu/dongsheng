@@ -9,7 +9,7 @@
         style="@style/listView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/a_comment_keyboard"
+        android:layout_above="@+id/a_comment_keyboard_parent"
         android:background="@android:color/transparent"
         android:divider="@null"
         android:paddingLeft="0dp"

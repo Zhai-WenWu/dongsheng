@@ -155,6 +155,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void getClassifyData(){
+        loadManager.showProgressBar();
         String url = "";
         if(dataType == EditParentActivity.TYPE_ARTICLE)
             url = StringManager.api_getArticleClass;
@@ -163,13 +164,21 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
+                Log.i("commentUpload","getClassifyData() falg:" + i + "  return data:" + o);
                 if(i >= ReqInternet.REQ_OK_STRING){
                     ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
                     if(arrayList.size() > 0){
                         data.addAll(arrayList);
                         gridView.setAdapter(adapterSimple);
+                        findViewById(R.id.article_select_classify).setVisibility(View.VISIBLE);
+                        gridView.setVisibility(View.VISIBLE);
+                        findViewById(R.id.article_select_other).setVisibility(View.VISIBLE);
+                        loadManager.hideProgressBar();
+                        return;
                     }
                 }
+                loadManager.hideProgressBar();
+                loadManager.showLoadFaildBar();
             }
         });
     }
