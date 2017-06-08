@@ -149,8 +149,7 @@ public class ReportActivity extends BaseActivity {
 
     private void getReportData() {
         loadManager.showProgressBar();
-        String url = StringManager.API_COMMENTS_REPORT + "?type=" + mType + "&reportType=" + mReportType;
-        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_COMMENTS_REPORT, "type=" + mType + "&reportType=" + mReportType, new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {
@@ -279,8 +278,7 @@ public class ReportActivity extends BaseActivity {
             return;
         }
         mCommitBtn.setClickable(false);
-        String url = StringManager.API_COMMIT_REPORT
-                + "?type=" + mType
+        String params = "type=" + mType
                 + "&code=" + mCode
                 + "&commentId=" + (mCommentId == null ? "" : mCommentId)
                 + "&replayId=" + (mReplayId == null ? "" : mReplayId)
@@ -288,7 +286,7 @@ public class ReportActivity extends BaseActivity {
                 + "&reasonId=" + mLastSelectedReportChild.getKey()
                 + "&operationId=" + (mLastSelectedAdminChild == null ? "" : mLastSelectedAdminChild.getKey())
                 + "&reportContent=" + mReportContent;
-        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_COMMIT_REPORT, params, new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
                 ReportActivity.this.finish();

@@ -227,15 +227,9 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                             Map<String, String> video = mAdapter.getData(position);
                             String duration = video.get(MediaStore.Video.Media.DURATION);
                             if (!TextUtils.isEmpty(duration)) {
-                                if (conditionsByTime(Long.parseLong(duration))) {
-                                    Tools.showToast(ArticleVideoSelectorActivity.this, "时长短于3秒");
-                                    return;
-                                }
-                            }
-                            String size = video.get(MediaStore.Video.Media.SIZE);
-                            if (!TextUtils.isEmpty(size)) {
-                                if (conditionsBySize(Long.parseLong(size))) {
-                                    Tools.showToast(ArticleVideoSelectorActivity.this, "大小不能大于20M");
+                                String conditions = conditionsByTime(Long.parseLong(duration));
+                                if (!TextUtils.isEmpty(conditions)) {
+                                    Tools.showToast(ArticleVideoSelectorActivity.this, conditions);
                                     return;
                                 }
                             }
@@ -251,12 +245,13 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         });
     }
 
-    private boolean conditionsByTime(long millis) {
-        return millis < 3*1000;
-    }
-
-    private boolean conditionsBySize(long size) {
-        return size > 20*1024*1024;
+    private String conditionsByTime(long millis) {
+        String ret = null;
+        if (millis < 1*1000)
+            ret = "不能短于1秒";
+        else if (millis > 1*1000*60*60)
+            ret = "不能长于1小时";
+        return ret;
     }
 
     @Override

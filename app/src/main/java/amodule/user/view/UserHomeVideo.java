@@ -226,8 +226,7 @@ public class UserHomeVideo extends TabContentView {
             }).start();
         }
 
-        String getUrl = StringManager.API_USERHOME_VIDEO + "?code=" + userCode + "&page=" + currentPage;
-        ReqEncyptInternet.in().doEncypt(getUrl, "", new InternetCallback(mAct) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_USERHOME_VIDEO, "code=" + userCode + "&page=" + currentPage, new InternetCallback(mAct) {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 int loadCount = 0;
