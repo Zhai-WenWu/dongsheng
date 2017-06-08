@@ -289,7 +289,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     new EditBottomControler.OnTextEditCallback() {
                         @Override
                         public void onEditControlerShow(boolean isShow) {
-                            contentLayout.setPadding(0, 0, 0, isShow ? dp_45 * 2 : dp_45);
+                            int bottom = isShow ? dp_45 * 2 : dp_45;
+                            contentLayout.setPadding(0, 0, 0, bottom);
                             switch (mPageTag) {
                                 case mArticlePageTag:
                                     XHClick.mapStat(mCurrentContext, "a_ArticleEdit", "编辑文章内容", "字体样式");
@@ -414,18 +415,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         if (TextUtils.isEmpty(checkStr)) {
             if (isFist) {
                 isFist = false;
-                timer.cancel();
-                timer = null;
-                final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
-                xhDialog.setTitle("系统将自动为你保存最后1篇为草稿")
-                        .setSureButton("我知道了", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                saveDraft();
-                                timingSave();
-                                xhDialog.cancel();
-                            }
-                        }).show();
+                Tools.showToast(EditParentActivity.this,"内容已保存");
+                saveDraft();
             } else {
                 saveDraft();
             }
@@ -467,9 +458,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             if (id > 0)
                 uploadArticleData.setId(id);
         }
-        if (id > 0) {
-            Tools.showToast(EditParentActivity.this, "保存成功");
-        }
+        Log.i("articleUpload","saveDraft() 保存后id:" + id);
         return id;
     }
 
@@ -525,29 +514,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     }
 
     private void onClose() {
-//        if (TextUtils.isEmpty(checkData())) {
-//            final XhDialog xhDialog = new XhDialog(this);
-//            xhDialog.setTitle("是否保存草稿？").setCanselButton("否", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    int id = uploadArticleData.getId();
-//                    Tools.showToast(EditParentActivity.this, "不保存：" + id);
-//                    if (id > 0) {
-//                        boolean isDelete = sqLite.deleteById(id);
-//                        Tools.showToast(EditParentActivity.this, "删除：" + isDelete);
-//                    }
-//                    xhDialog.cancel();
-//                    EditParentActivity.this.finish();
-//                }
-//            }).setSureButton("是", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            }).show();
-//        } else {
-//            finish();
-//        }
         saveDraft();
         EditParentActivity.this.finish();
         switch (mPageTag) {

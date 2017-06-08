@@ -124,6 +124,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+//                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
                 if(isShowKeyboard) {
                     currentUrl = StringManager.api_addForum;
                     changeKeyboard(false);
@@ -145,11 +146,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void changeDataChange(){
+        Log.i("commentActivity","changeDataChange() size:" + listArray.size());
         if(listArray.size() == 0){
             downRefreshList.setVisibility(View.GONE);
             findViewById(R.id.commend_hind).setVisibility(View.VISIBLE);
         }else{
             downRefreshList.setVisibility(View.VISIBLE);
+            downRefreshList.onRefreshComplete();
             findViewById(R.id.commend_hind).setVisibility(View.GONE);
         }
     }
@@ -415,8 +418,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         ;
                         if (everyPage == 0)
                             everyPage = loadCount;
-                        downRefreshList.setVisibility(View.VISIBLE);
-                        downRefreshList.onRefreshComplete();
                     }
                 }
                 changeDataChange();
@@ -426,7 +427,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private String currentUrl = StringManager.api_addForum,currentParams;
-    private boolean isSend = false;
+    private boolean isSend = false,isAddForm;
     private synchronized void sendData(){
         if(isSend)return;
         isSend = true;
@@ -447,7 +448,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }
 
         String newParams;
+        isAddForm = false;
         if(StringManager.api_addForum.equals(currentUrl)){
+            isAddForm = true;
             JSONArray jsonArray = new JSONArray();
             try {
                 JSONObject jsonObject = new JSONObject();
@@ -466,6 +469,27 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     changeKeyboard(false);
+//                    if(isAddForm){
+//                        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
+//                        if(arrayList.size() > 0){
+//                            Map<String,String> newCotent = new HashMap<>();
+//                            String comment_id = arrayList.get(0).get("comment_id");
+//                            newCotent.put("comment_id",comment_id);
+//                            newCotent.put("create_time","刚刚");
+//                            newCotent.put("fabulous_num","0");
+//                            newCotent.put("is_anchor","1");
+//                            newCotent.put("is_del_report","2");
+//                            newCotent.put("is_fabulous","1");
+//                            newCotent.put("replay_count","0");
+//                            newCotent.put("replay_num","0");
+//                            newCotent.put("replay","");
+//                            JSONArray customerJsonArray = new JSONArray();
+//                            newCotent.put("customer","");
+//
+//                        }
+//                    }else{
+//
+//                    }
                 }else{
                     sendProgress.setVisibility(View.GONE);
                 }

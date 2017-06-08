@@ -46,8 +46,6 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	//是否删除掉star和end时前面添加@后面添加 <空格>
 	public boolean isHaveAt = true,nIsHaveCopy=true;
 
-	private boolean isLongClick = false;
-	
 	public TextViewTagLongClick(Context con,TextView tv){
 		mCon = con;
 		mTv = tv;
@@ -61,14 +59,15 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	
 	@Override
 	public boolean onLongClick(View v) {
-		isLongClick = true;
 		if(nIsHaveCopy){
 			if(longClickListener != null){
 				longClickListener.onLongClick();
 			}
-			mTv.setBackgroundColor(choseBackColor);
 			getPopupWindowsInstance();
-			mPopupWindow.showAsPullUp(mTv, 0, -20);
+			if (mPopupWindow != null){
+				mTv.setBackgroundColor(choseBackColor);
+				mPopupWindow.showAsPullUp(mTv, 0, -20);
+			}
 			return true;
 		}else
 			return false;
@@ -123,6 +122,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	 * @param rightBtnName
 	 */
 	private void initPopuptWindow(final OnClickListener userClicker,final OnClickListener rightclicker, String rightBtnName) {
+		if(rightclicker == null) return;
 		LayoutInflater layoutInflater = LayoutInflater.from(mCon);
 		
 		View popupWindow = layoutInflater.inflate(R.layout.c_widget_textview_showpop, null);
@@ -240,7 +240,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 			if(location[1] < titleH * 2 + popupWindH - yoff) {
 				upArrow.setVisibility(View.VISIBLE);
 				downArrow.setVisibility(View.GONE);
-				super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] + popupWindH + yoff);
+				super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] + anchor.getHeight() - yoff);
 			}else{
 				upArrow.setVisibility(View.GONE);
 				downArrow.setVisibility(View.VISIBLE);

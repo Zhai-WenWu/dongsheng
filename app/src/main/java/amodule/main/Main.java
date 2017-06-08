@@ -58,6 +58,7 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
 import amodule.main.activity.MainChangeSend;
@@ -187,7 +188,7 @@ public class Main extends Activity implements OnClickListener {
             }
         }
 
-        private boolean showUploading(UploadParentSQLite sqLite, final int dataType, String title) {
+        private boolean showUploading(final UploadParentSQLite sqLite, final int dataType, String title) {
             final UploadArticleData uploadArticleData = sqLite.getUploadIngData();
             if (uploadArticleData != null) {
                 final XhDialog xhDialog = new XhDialog(Main.this);
@@ -195,6 +196,8 @@ public class Main extends Activity implements OnClickListener {
                         .setCanselButton("取消", new OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
+                                sqLite.update(uploadArticleData.getId(),uploadArticleData);
                                 xhDialog.cancel();
                             }
                         }).setSureButton(" 继续", new OnClickListener() {

@@ -31,6 +31,7 @@
         android:id="@+id/a_comment_keyboard_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         >
         <View
             android:layout_width="match_parent"
@@ -42,7 +43,6 @@
             android:id="@+id/a_comment_keyboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:background="@color/common_bg"
             android:paddingBottom="@dimen/dp_8"
             android:paddingLeft="@dimen/dp_20"
