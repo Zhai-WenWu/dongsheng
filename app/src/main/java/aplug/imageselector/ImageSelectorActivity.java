@@ -621,7 +621,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			if (resultList != null && resultList.size() > 0) {
 				commit();
 			}else{
-				Tools.showToast(this, "请选择图片");
+				finish();
 			}
 			break;
 		}
