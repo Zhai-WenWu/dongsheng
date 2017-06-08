@@ -94,7 +94,7 @@ public class ArticleCommentView extends ItemBaseView {
                                     @Override
                                     public void loaded(int flag, String url, Object obj) {
                                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                                            commentItem.addReplayView((String) obj);
+                                            commentItem.addReplayView((String) obj,true);
                                         }
                                     }
                                 });

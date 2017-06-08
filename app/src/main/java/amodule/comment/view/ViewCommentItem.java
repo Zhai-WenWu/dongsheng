@@ -160,6 +160,19 @@ public class ViewCommentItem extends LinearLayout {
             int maxNum = 100;
             if (TextUtils.isEmpty(text) || text.length() <= maxNum) {
                 contentText.setText(text);
+                String ucode = cusstomMap.get("ucode");
+                final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
+                contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            if (isReport)
+                                mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text,"点击长按后的评论举报按钮");
+                            else
+                                mListener.onDeleteCommentClick(comment_id,"点击长按后的评论删除按钮");
+                        }
+                    }
+                });
             } else {
                 String newText = text.substring(0, maxNum);
                 MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
@@ -171,34 +184,40 @@ public class ViewCommentItem extends LinearLayout {
                     @Override
                     public void onCommentClick(View v, String userCode) {
                         isShowContentClick = true;
-                        contentText.setText(text);
+                        MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
+                        CommentBuilder textBuilder = new CommentBuilder(text).setTextColor("#535353");
+                        textBuilder.parse(null);
+                        multifunctionText.addStyle(textBuilder.getContent(), textBuilder.build());
+                        contentText.setText(multifunctionText);
                         contentText.setCopyText(text);
+
+                        String ucode = cusstomMap.get("ucode");
+                        final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
+                        contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (mListener != null) {
+                                    if (isReport)
+                                        mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text,"点击长按后的评论举报按钮");
+                                    else
+                                        mListener.onDeleteCommentClick(comment_id,"点击长按后的评论删除按钮");
+                                }
+                            }
+                        });
                     }
                 });
+                contentText.setRightClicker(null);
                 multifunctionText.addStyle(showBuilder.getContent(), showBuilder.build());
-
                 contentText.setText(multifunctionText);
-                contentText.setCopyText(text);
             }
             contentText.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mListener != null && !isShowContentClick && !"2".equals(cusstomMap.get("is_author")))
+                    String ucode = cusstomMap.get("ucode");
+                    boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
+                    if (mListener != null && !isShowContentClick && !isMyselft)
                         mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字");
                     isShowContentClick = false;
-                }
-            });
-            String ucode = cusstomMap.get("ucode");
-            final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-            contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        if (isReport)
-                            mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text,"点击长按后的评论举报按钮");
-                        else
-                            mListener.onDeleteCommentClick(comment_id,"点击长按后的评论删除按钮");
-                    }
                 }
             });
         }
@@ -267,11 +286,10 @@ public class ViewCommentItem extends LinearLayout {
     private void initReplay(){
         String replay = dataMap.get("replay");
         String replay_num = dataMap.get("replay_num");
-        commentReplay.removeAllViews();
         commentReplay.setVisibility(View.GONE);
         commentReplayImg.setVisibility(View.GONE);
 
-        addReplayView(replay);
+        addReplayView(replay,true);
         if(!TextUtils.isEmpty(replay_num) && Integer.parseInt(replay_num) > 0){
             replayContentShow = (TextView) findViewById(R.id.comment_item_replay_cotent_show);
             replayContentShow.setVisibility(View.VISIBLE);
@@ -305,7 +323,8 @@ public class ViewCommentItem extends LinearLayout {
         }
     }
 
-    public void addReplayView(String replay){
+    public void addReplayView(String replay,boolean isClear){
+        if(isClear)commentReplay.removeAllViews();
         ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
         View view;
         MultifunctionTextView replayTv;
@@ -325,6 +344,7 @@ public class ViewCommentItem extends LinearLayout {
             final String is_replay_author = replayMap.get("is_replay_author");
 
             String authoCode = null;
+
 
             if("2".equals(is_anchor)){ //是否是锚点
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
@@ -379,7 +399,8 @@ public class ViewCommentItem extends LinearLayout {
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
                 public void onCommentClick(View v, String userCode) {
-                    if(mListener != null && !"2".equals(is_author))
+                    boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
+                    if(mListener != null && !isMyselft)
                         mListener.onContentReplayClick(comment_id,ucode,uName,"点击楼中楼文字");
                 }
             });
@@ -429,7 +450,9 @@ public class ViewCommentItem extends LinearLayout {
         commentReplay.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isDelete && mListener != null && !"2".equals(cusstomMap.get("is_author")))
+                String ucode = cusstomMap.get("ucode");
+                final boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
+                if(!isDelete && mListener != null && !isMyselft)
                     mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),"点击回复按钮");
             }
         });

@@ -66,6 +66,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private boolean isShowKeyboard = false;
 
+    private StringBuffer commentIdStrBuffer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +126,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(isShowKeyboard) {
+                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
+                if(View.VISIBLE == sendTv.getVisibility()) {
                     currentUrl = StringManager.api_addForum;
                     changeKeyboard(false);
                 }
@@ -145,11 +148,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void changeDataChange(){
+        Log.i("commentActivity","changeDataChange() size:" + listArray.size());
         if(listArray.size() == 0){
             downRefreshList.setVisibility(View.GONE);
             findViewById(R.id.commend_hind).setVisibility(View.VISIBLE);
         }else{
             downRefreshList.setVisibility(View.VISIBLE);
+            downRefreshList.onRefreshComplete();
             findViewById(R.id.commend_hind).setVisibility(View.GONE);
         }
     }
@@ -162,14 +167,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void loaded(int flag, String s, Object o) {
                         if(flag >= ReqInternet.REQ_OK_STRING){
-//                                    ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
-//                                    Map<String,String> oldCommentMap = listArray.get(position);
-//                                    oldCommentMap.put("replay_num","0");
-//                                    String oldReplay = oldCommentMap.get("replay");
-//                                    ArrayList<Map<String,String>> oldReplayArray = StringManager.getListMapByJson(oldReplay);
-//                                    oldReplayArray.addAll(arrayList);
-//                                    adapterSimple.notifyDataSetChanged();
-                            viewCommentItem.addReplayView(o.toString());
+                            viewCommentItem.addReplayView(o.toString(),true);
                         }
                     }
                 });
@@ -307,6 +305,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initData() {
+        commentIdStrBuffer = new StringBuffer();
         type = getIntent().getStringExtra("type");
         code = getIntent().getStringExtra("code");
         gotoCommentId = getIntent().getStringExtra("commentId");
@@ -415,8 +414,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         ;
                         if (everyPage == 0)
                             everyPage = loadCount;
-                        downRefreshList.setVisibility(View.VISIBLE);
-                        downRefreshList.onRefreshComplete();
                     }
                 }
                 changeDataChange();
@@ -426,7 +423,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private String currentUrl = StringManager.api_addForum,currentParams;
-    private boolean isSend = false;
+    private boolean isSend = false,isAddForm;
     private synchronized void sendData(){
         if(isSend)return;
         isSend = true;
@@ -447,7 +444,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }
 
         String newParams;
+        isAddForm = false;
         if(StringManager.api_addForum.equals(currentUrl)){
+            isAddForm = true;
             JSONArray jsonArray = new JSONArray();
             try {
                 JSONObject jsonObject = new JSONObject();
@@ -460,12 +459,47 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }else{
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }
+        newParams += "&commentIds=" + commentIdStrBuffer;
         Log.i("commentReplay","sendData() newParams:" + newParams);
         ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
             @Override
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     changeKeyboard(false);
+                    if(isAddForm){
+//                        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
+//                        if(arrayList.size() > 0){
+//                            Map<String,String> newCotent = new HashMap<>();
+//                            String comment_id = arrayList.get(0).get("comment_id");
+//                            if(commentIdStrBuffer.length() != 0)
+//                                commentIdStrBuffer.append(",");
+//                            commentIdStrBuffer.append(comment_id);
+//
+//                            newCotent.put("comment_id",comment_id);
+//                            newCotent.put("create_time","刚刚");
+//                            newCotent.put("fabulous_num","0");
+//                            newCotent.put("is_anchor","1");
+//                            newCotent.put("is_del_report","2");
+//                            newCotent.put("is_fabulous","1");
+//                            newCotent.put("replay_count","0");
+//                            newCotent.put("replay_num","0");
+//                            newCotent.put("replay","");
+//                            JSONArray customerJSONArray = new JSONArray();
+//                            try {
+//                                JSONObject customerJSONObject = new JSONObject();
+//                                customerJSONObject.put("header_img", LoginManager.userInfo.get("img"));
+//
+//                                customerJSONArray.put(customerJSONObject);
+//                            }catch (JSONException e){
+//                                e.printStackTrace();
+//                            }
+//
+//                            newCotent.put("customer",customerJSONArray.toString());
+//
+//                        }
+                    }else{
+
+                    }
                 }else{
                     sendProgress.setVisibility(View.GONE);
                 }
