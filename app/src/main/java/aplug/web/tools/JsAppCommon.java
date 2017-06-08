@@ -151,7 +151,7 @@ public class JsAppCommon extends JsBase{
 	 *        JS 返回后，在之前页面执行JS
 	 *        no 返回后，在之前页面不执行操作
 	 */
-	@JavascriptInterface
+	@android.webkit.JavascriptInterface
 	public void setGoBack(String backAction) {
 		JSAction.backAction = backAction;
 	}
@@ -632,6 +632,7 @@ public class JsAppCommon extends JsBase{
 				//统计
 				Intent it = new Intent(mAct,PlayVideo.class);
                 String urlTemp = url;
+				Log.i("tzy","urlTemp = " + urlTemp);
 //                if(urlTemp.startsWith("https://"))
 //                    urlTemp = urlTemp.replace("https","http");
 				it.putExtra("url", urlTemp);
@@ -652,6 +653,7 @@ public class JsAppCommon extends JsBase{
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
+				Log.i("tzy","imageUrls = " + imageUrls);
 				if(imageUrls == null){
 					return;
 				}

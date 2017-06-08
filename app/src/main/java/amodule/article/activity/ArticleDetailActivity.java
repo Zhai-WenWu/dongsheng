@@ -9,10 +9,12 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.webkit.JavascriptInterface;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -363,7 +365,7 @@ public class ArticleDetailActivity extends BaseActivity {
         headerView = new ArticleHeaderView(ArticleDetailActivity.this);
         headerView.setType(getType());
         headerView.setData(mapArticle);
-//        if(linearLayoutOne.getChildCount() == 0)
+        if(linearLayoutOne.getChildCount() == 0)
             linearLayoutOne.addView(headerView);
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
@@ -381,11 +383,22 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         webView = manager.createWebView(0);
-        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, null));
+        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
+//        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+//        webView.getSettings().setJavaScriptEnabled(true);
+//        JsAppCommon js = new JsAppCommon(this, webView, loadManager, barShare);
+//        webView.addJavascriptInterface(js,js.TAG);
+        Log.i("tzy",getMAPI() + code);
+//        webView.loadUrl(getMAPI() + code + ".html");
+//        webView.loadDataWithBaseURL(getMAPI() + code + ".html", mapArticle.get("html"), "text/html", "utf-8", null);
+//        webView.loadDataWithBaseURL("", mapArticle.get("html"), "text/html", "utf-8", null);
+        webView.loadData(mapArticle.get("html"), "text/html", "utf-8");
+//        webView.requestFocus();
+
         if(linearLayoutTwo.getChildCount() == 0)
             linearLayoutTwo.addView(webView);
         linearLayoutTwo.setVisibility(View.VISIBLE);
-        webView.loadDataWithBaseURL(StringManager.api_articleVideo + "?code=" + code, mapArticle.get("html"), "text/html", "utf-8", null);
+
 
         final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         final String userCode = customerData.get("code");
@@ -436,13 +449,18 @@ public class ArticleDetailActivity extends BaseActivity {
         mapArticle.remove("content");
         mapArticle.remove("raw");
         //处理分享数据
-        handlerShareData(mapArticle);
+        shareMap = StringManager.getFirstMap(mapArticle.get("share"));
+        handlerShareData();
+    }
+
+    public String getMAPI() {
+        return StringManager.replaceUrl(StringManager.api_article);
     }
 
     /** 请求评论列表 */
     private void requestForumData(final boolean isRefresh) {
         String url = StringManager.api_forumList;
-        String param = "from=1&type=" + getType() + "&code=" + code + "&pageSize=3";
+        String param = "from=1&type=" + getType() + "&code=" + code;
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
@@ -479,7 +497,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     for (int i = 0; i < size; i++)
                         listMap.get(i).put("datatype", String.valueOf(Type_recommed));
                     analysRelateData(listMap);
-                    loadManager.changeMoreBtn(flag, 10, 0, page, false);
+                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
                     toastFaildRes(flag, true, object);
             }
@@ -527,71 +545,69 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         dialog.show();
+        //TODO
+//        webView.loadUrl("javascript:appCommon.openShadow()");
     }
 
     private Bitmap shareImageBitmap = null;
 
-    private void handlerShareData(Map<String, String> mapArticle) {
-        shareMap.put("title", mapArticle.get("title"));
-        shareMap.put("summary", mapArticle.get("summary"));
-        shareMap.put("clickUrl", "http://www.xiangha.com ");
-        if (!TextUtils.isEmpty(mapArticle.get("img"))) {
-            shareMap.put("img", mapArticle.get("img"));
+    private void handlerShareData() {
+        if (!TextUtils.isEmpty(shareMap.get("img"))) {
             shareMap.put("imgType", BarShare.IMG_TYPE_WEB);
-        } else if (!TextUtils.isEmpty(mapArticle.get("video"))) {
-            Map<String, String> videoMap = StringManager.getFirstMap(mapArticle.get("video"));
-            String videoImage = videoMap.get("videoImg");
-            int dp_75 = Tools.getDimen(this, R.dimen.dp_75);
-            Glide.with(this)
-                    .load(videoImage)
-                    .asBitmap()
-                    .override(dp_75, dp_75)
-                    .listener(new RequestListener<String, Bitmap>() {
-                        @Override
-                        public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
-                            if (bitmap != null)
-                                shareImageBitmap = getBitmap(bitmap);
-                            return false;
-                        }
-                    });
+//        } else if (!TextUtils.isEmpty(mapArticle.get("video"))) {
+//            Map<String, String> videoMap = StringManager.getFirstMap(mapArticle.get("video"));
+//            String videoImage = videoMap.get("videoImg");
+//            int dp_75 = Tools.getDimen(this, R.dimen.dp_75);
+//            Glide.with(this)
+//                    .load(videoImage)
+//                    .asBitmap()
+//                    .override(dp_75, dp_75)
+//                    .listener(new RequestListener<String, Bitmap>() {
+//                        @Override
+//                        public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
+//                            if (bitmap != null)
+//                                shareImageBitmap = getBitmap(bitmap);
+//                            return false;
+//                        }
+//                    });
         } else {
             shareMap.put("img", String.valueOf(R.drawable.umen_share_launch));
             shareMap.put("imgType", BarShare.IMG_TYPE_RES);
         }
     }
 
-    public Bitmap getBitmap(Bitmap mBitmap) {
-        Bitmap btp = null;
-        InputStream is = this.getResources().openRawResource(R.drawable.z_icon_play);
-        Bitmap mPlayBitmap = UtilImage.inputStreamTobitmap(is);
-        int playImgWH = Tools.getDimen(this, R.dimen.dp_41);
-        int left, top;
-        if (mBitmap != null && mPlayBitmap != null) {
-            int mBW = mBitmap.getWidth();
-            int mBH = mBitmap.getHeight();
-            btp = Bitmap.createBitmap(mBW, mBH, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(btp);
-            //对图片的切割显示
-            Rect rect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
-            //图片在画布上的显示位置和大小
-            Rect dst = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
-            canvas.drawBitmap(mBitmap, rect, dst, new Paint());
-
-            left = mBW / 2 - playImgWH / 2;
-            top = mBH / 2 - playImgWH / 2;
-//			//对图片的切割显示
-            rect = new Rect(0, 0, mPlayBitmap.getWidth(), mPlayBitmap.getHeight());
-//			//图片在画布上的显示位置和大小
-            dst = new Rect(left, top, left + playImgWH, top + playImgWH);
-            canvas.drawBitmap(mPlayBitmap, rect, dst, new Paint());
-        }
-        return btp;
-    }
+//    private Bitmap getBitmap(Bitmap mBitmap) {
+//        Bitmap btp = null;
+//        InputStream is = this.getResources().openRawResource(R.drawable.z_icon_play);
+//        Bitmap mPlayBitmap = UtilImage.inputStreamTobitmap(is);
+//        int playImgWH = Tools.getDimen(this, R.dimen.dp_41);
+//        int left, top;
+//        if (mBitmap != null && mPlayBitmap != null) {
+//            int mBW = mBitmap.getWidth();
+//            int mBH = mBitmap.getHeight();
+//            btp = Bitmap.createBitmap(mBW, mBH, Bitmap.Config.ARGB_8888);
+//            Canvas canvas = new Canvas(btp);
+//            //对图片的切割显示
+//            Rect rect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
+//            //图片在画布上的显示位置和大小
+//            Rect dst = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
+//            canvas.drawBitmap(mBitmap, rect, dst, new Paint());
+//
+//            left = mBW / 2 - playImgWH / 2;
+//            top = mBH / 2 - playImgWH / 2;
+////			//对图片的切割显示
+//            rect = new Rect(0, 0, mPlayBitmap.getWidth(), mPlayBitmap.getHeight());
+////			//图片在画布上的显示位置和大小
+//            dst = new Rect(left, top, left + playImgWH, top + playImgWH);
+//            canvas.drawBitmap(mPlayBitmap, rect, dst, new Paint());
+//        }
+//        return btp;
+//    }
 
     private void openShare() {
         if (shareMap.isEmpty()) {
@@ -601,8 +617,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
         barShare = new BarShare(ArticleDetailActivity.this, "1".equals(getType()) ? "文章详情" : "视频详情", "");
         String title = shareMap.get("title");
-        String content = shareMap.get("summary");
-        String clickUrl = shareMap.get("clickUrl");
+        String content = shareMap.get("content");
+        String clickUrl = shareMap.get("url");
         String type = BarShare.IMG_TYPE_RES;
         String shareImg = "" + R.drawable.umen_share_launch;
         if (shareImageBitmap != null) {

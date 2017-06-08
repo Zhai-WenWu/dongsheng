@@ -96,8 +96,10 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
     }
 
     public void setDescDefault(String desc) {
-        if (!TextUtils.isEmpty(desc))
+        if (!TextUtils.isEmpty(desc)){
             descEdit.setText(desc);
+            descEdit.setEnabled(false);
+        }
     }
 
     @Override

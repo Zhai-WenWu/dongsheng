@@ -34,7 +34,7 @@ public class ArticleCommentView extends ItemBaseView {
     private TextView commentNum;
     private LinearLayout commentLayout;
     private TextView commentAll;
-    private TextView robsofa;
+    private LinearLayout robsofa;
 
     private String code;
     private String type;
@@ -59,12 +59,12 @@ public class ArticleCommentView extends ItemBaseView {
         commentNum = (TextView) findViewById(R.id.comment_num);
         commentAll = (TextView) findViewById(R.id.comment_all);
         commentLayout = (LinearLayout) findViewById(R.id.comment_layout);
-        robsofa = (TextView) findViewById(R.id.robsofa);
+        robsofa = (LinearLayout) findViewById(R.id.robsofa);
 
         commentAll.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoCommentActivity();
+                gotoCommentActivity(null,null);
             }
         });
     }
@@ -77,7 +77,9 @@ public class ArticleCommentView extends ItemBaseView {
             if (!TextUtils.isEmpty(map.get("commentNum"))) {
                 setViewText(commentNum, map, "commentNum", GONE, "评论(", ")");
             }
-            for (final Map<String, String> dataMap : data) {
+            final int length = data.size() > 3 ? 3 : data.size();
+            for (int index = 0; index < length; index++) {
+                final Map<String, String> dataMap = data.get(index);
                 final ViewCommentItem commentItem = new ViewCommentItem(getContext());
                 commentItem.setData(dataMap);
                 commentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
@@ -103,32 +105,32 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent, String reportType) {
-                        gotoCommentActivity();
+                        gotoCommentActivity(comment_id,null);
                     }
 
                     @Override
                     public void onDeleteCommentClick(String comment_id, String deleteType) {
-                        gotoCommentActivity();
+                        gotoCommentActivity(comment_id,null);
                     }
 
                     @Override
                     public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-                        gotoCommentActivity();
+                        gotoCommentActivity(comment_id,replay_id);
                     }
 
                     @Override
                     public void onDeleteReplayClick(String comment_id, String replay_id) {
-                        gotoCommentActivity();
+                        gotoCommentActivity(comment_id,replay_id);
                     }
 
                     @Override
                     public void onPraiseClick(String comment_id) {
-                        gotoCommentActivity();
+                        gotoCommentActivity(comment_id,null);
                     }
 
                     @Override
                     public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
-                        gotoCommentActivity();
+                        gotoCommentActivity(comment_id,null);
                         statistics("评论", type);
                     }
                 });
@@ -136,7 +138,7 @@ public class ArticleCommentView extends ItemBaseView {
             }
             findViewById(R.id.has_comment_layout).setVisibility(VISIBLE);
             findViewById(R.id.robsofa).setVisibility(GONE);
-            commentAll.setVisibility(commentLayout.getChildCount() < 3 ? GONE : VISIBLE);
+            commentAll.setVisibility(data.size() > 3 ? VISIBLE : GONE);
         } else {
             isSofa = true;
             robsofa.setOnClickListener(new OnClickListener() {
@@ -154,10 +156,14 @@ public class ArticleCommentView extends ItemBaseView {
 
     }
 
-    private void gotoCommentActivity() {
+    private void gotoCommentActivity(String commentId,String replayId) {
         Intent intent = new Intent(getContext(), CommentActivity.class);
         intent.putExtra("type", getType());
         intent.putExtra("code", code);
+        if(!TextUtils.isEmpty(commentId))
+            intent.putExtra("commentId", commentId);
+        if(!TextUtils.isEmpty(replayId))
+            intent.putExtra("replayId", replayId);
         getContext().startActivity(intent);
         statistics("评论", "查看所有评论");
     }

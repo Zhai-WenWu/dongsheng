@@ -18,6 +18,11 @@ public class VideoDetailActivity extends ArticleDetailActivity {
     }
 
     @Override
+    public String getMAPI() {
+        return StringManager.replaceUrl(StringManager.api_Video);
+    }
+
+    @Override
     public String getTitleText() {
         return "视频详情页";
     }

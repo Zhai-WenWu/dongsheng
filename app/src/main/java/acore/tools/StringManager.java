@@ -309,7 +309,8 @@ public class StringManager extends UtilString {
 
     public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
     public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
-    public final static String api_articleVideo = mUrl +  "articleVideo/getArticleInfo";//文章&视频详情页m
+    public final static String api_article = mUrl +  "article/";//文章详情页m
+    public final static String api_Video = mUrl +  "videoInfo/";//视频详情页m
 
     //替换url
     public final static String replaceUrl(String url) {
@@ -334,6 +335,7 @@ public class StringManager extends UtilString {
             appWebUrl = appWebTitle + domain + "/";
             wwwUrl = wwwTitle + domain + "/";
             mmUrl = mmTitle + domain + "/";
+            mUrl = mTitle + domain + "/";
         }
     }
 

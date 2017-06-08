@@ -73,7 +73,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("评论", 5, 0, R.layout.a_common_post_new_title, R.layout.a_comment_activity);
+        initActivity("评论", 2, 0, R.layout.a_common_post_new_title, R.layout.a_comment_activity);
 //        setContentView(R.layout.a_comment_activity);
         initView();
         initData();
