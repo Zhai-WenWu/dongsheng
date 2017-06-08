@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activityLayout"
-    style="@style/layout"
+                android:id="@+id/activityLayout"
+                style="@style/layout"
     >
 
     <LinearLayout
@@ -9,31 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/dp_10" >
+        android:padding="@dimen/dp_10">
 
         <TextView
             android:id="@+id/tv_now_domain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="当前选择域："
-            android:textSize="@dimen/sp_20" />
+            android:textSize="@dimen/sp_20"/>
 
         <RadioGroup
             android:id="@+id/rg_domain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <RadioButton
                 android:id="@+id/radio1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=".xiangha.com" />
+                android:text=".xiangha.com"/>
 
             <RadioButton
                 android:id="@+id/radio2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=".ixiangha.com" />
+                android:text=".ixiangha.com"/>
         </RadioGroup>
 
         <View
@@ -41,17 +41,17 @@
             android:layout_height="@dimen/dp_0.5"
             android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="#dddddd" />
+            android:background="#dddddd"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="端口号：" />
+                android:text="端口号："/>
 
             <EditText
                 android:id="@+id/et_input1"
@@ -59,46 +59,51 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:hint="80"
-                android:singleLine="true" />
+                android:inputType="phone|number"
+                android:maxLength="4"
+                android:numeric="integer"
+                android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
-<View
-    android:id="@+id/change_line" 
-    android:layout_below="@+id/xiangha_linear"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_0.5"
-    android:background="#e1e2e4"/>
+
+    <View
+        android:id="@+id/change_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0.5"
+        android:layout_below="@+id/xiangha_linear"
+        android:background="#e1e2e4"/>
+
     <LinearLayout
         android:id="@+id/mall_linear"
-        android:layout_below="@+id/change_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/change_line"
         android:orientation="vertical"
-        android:padding="@dimen/dp_10" >
+        android:padding="@dimen/dp_10">
 
         <TextView
             android:id="@+id/mall_tv_now_domain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="电商当前选择域："
-            android:textSize="@dimen/sp_20" />
+            android:textSize="@dimen/sp_20"/>
 
         <RadioGroup
             android:id="@+id/mall_rg_domain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <RadioButton
                 android:id="@+id/mall_radio1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=".ds.xiangha.com" />
+                android:text=".ds.xiangha.com"/>
 
             <RadioButton
                 android:id="@+id/mall_radio2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=".ds.mamaweiyang.net" />
+                android:text=".ds.mamaweiyang.net"/>
         </RadioGroup>
 
         <View
@@ -106,17 +111,17 @@
             android:layout_height="@dimen/dp_0.5"
             android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="#dddddd" />
+            android:background="#dddddd"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="端口号：" />
+                android:text="端口号："/>
 
             <EditText
                 android:id="@+id/mall_et_input1"
@@ -124,7 +129,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:hint="80"
-                android:singleLine="true" />
+                android:inputType="phone|number"
+                android:maxLength="4"
+                android:numeric="integer"
+                android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
 

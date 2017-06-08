@@ -544,8 +544,9 @@ public class ArticleDetailActivity extends BaseActivity {
                 openDeleteDialog();
             }
         });
-//        dialog.show();
-        webView.loadUrl("javascript:appCommon.openShadow()");
+        dialog.show();
+        //TODO
+//        webView.loadUrl("javascript:appCommon.openShadow()");
     }
 
     private Bitmap shareImageBitmap = null;
