@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
@@ -409,6 +410,9 @@ public class XHClick {
                             return super.getReqHeader(header, url, params);
                         }
                     });
+
+                //循环统计feed流数据
+                loopHandlerStatictis();
                 //循环计时器 每隔30秒执行一次
                 handler.postDelayed(runnable, CIRCULATION_TIME);
             }
@@ -822,6 +826,16 @@ public class XHClick {
             }
         }
     }
+
+    /**
+     *轮训统计首页请求数据
+     */
+    private static void loopHandlerStatictis(){
+        String data=FileManager.loadShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6).toString();
+        if(!TextUtils.isEmpty(data)){
+            newHomeStatictis(true,"");
+        }
+    }
 	/**
 	 * 首页统计
      * @param isResetData 是否要重置参数数据
@@ -942,12 +956,13 @@ public class XHClick {
 			params+="&position="+position;
 			params+="&button_name="+button_name;
 			params+="&deep="+deep;
-			if(TextUtils.isEmpty(data)){
+            Log.i("zhangyujian","加载数据：：："+params);
+            if(TextUtils.isEmpty(data)){
 
 				FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,params);
 			}else{
                 String[] strs= data.split("&&");
-                if(strs.length>=1000){
+                if(strs.length>=500){
                     FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,"");
 //                    Log.i("zhangyujian","数据超过1000条，请求数据");
                     new Handler(Looper.getMainLooper()).post(new Runnable() {

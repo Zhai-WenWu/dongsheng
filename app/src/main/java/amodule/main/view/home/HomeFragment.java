@@ -69,6 +69,8 @@ import static com.xiangha.R.id.return_top;
 public class HomeFragment extends Fragment{
     /** 保存板块信息的key */
     protected static final String MODULEDATA = "moduleData";
+    public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
+
     private HomeModuleBean homeModuleBean;//数据的结构
     private LoadManager mLoadManager = null;
     private MainBaseActivity mActivity;
@@ -868,7 +870,7 @@ public class HomeFragment extends Fragment{
             int size= listmaps.size();
             for(int i=0;i<size;i++){
                 listmaps.get(i).put("isTop","2");
-                HomeItem view= handlerTopView(listmaps.get(i));
+                HomeItem view= handlerTopView(listmaps.get(i),i);
                 if(view!=null){
                     linearLayoutThree.addView(view);
                     linearLayoutThree.addView(LayoutInflater.from(mActivity).inflate(R.layout.view_home_show_line,null));
@@ -883,7 +885,7 @@ public class HomeFragment extends Fragment{
      * @param map
      * @return
      */
-    private HomeItem handlerTopView(Map<String,String> map){
+    private HomeItem handlerTopView(Map<String,String> map,int position){
         HomeItem viewTop=null;
         if(map.containsKey("type")&&!TextUtils.isEmpty(map.get("type"))){
             int type=Integer.parseInt(map.get("type"));
@@ -903,7 +905,9 @@ public class HomeFragment extends Fragment{
                     break;
 
             }
-            viewTop.setData(map,0);
+            viewTop.setViewType(MODULETOPTYPE);
+            viewTop.setHomeModuleBean(homeModuleBean);
+            viewTop.setData(map,position);
         }
         return viewTop;
     }

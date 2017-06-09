@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activityLayout"
     style="@style/layout"
     android:background="#FFFFFE">
+
     <RelativeLayout
+        android:id="@+id/welcome_one"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linear_welcome">
+
         <ImageView
             android:id="@+id/image"
             android:layout_width="@dimen/dp_200"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_100"
             android:src="@drawable/welcome_big"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/ad_layout"
@@ -31,73 +33,66 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_105"
         android:layout_alignParentBottom="true"
-        android:padding="@dimen/dp_30"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/dp_30">
+
         <ImageView
             android:id="@+id/iv_welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
             android:baselineAlignBottom="true"
-            android:src="@drawable/welcome"/>
+            android:scaleType="fitCenter"
+            android:src="@drawable/welcome" />
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/skip_container"
+    <acore.widget.TagTextView xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ad_vip_lead"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_30"
-        android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_24"
-        android:orientation="horizontal"
-        android:background="@android:color/transparent"
-        android:visibility="gone">
-        <acore.widget.TagTextView
-            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/ad_vip_lead"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingLeft="@dimen/dp_15"
-            android:paddingRight="@dimen/dp_9"
-            android:text="会员免广告"
-            android:textColor="#FFFFFE"
-            android:textSize="@dimen/sp_12"
-            android:visibility="visible"
-            tagTextView:backgroundColor="#B2000000"
-            tagTextView:topLeftRadius="@dimen/dp_20"
-            tagTextView:bottomLeftRadius="@dimen/dp_20"
-            />
-        <acore.widget.TagTextView
-            xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/ad_skip"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/ad_vip_lead"
-            android:gravity="center"
-            android:paddingLeft="@dimen/dp_10"
-            android:paddingRight="@dimen/dp_15"
-            android:text="跳过"
-            android:textColor="#FFFFFE"
-            android:textSize="@dimen/sp_12"
-            tagTextView:backgroundColor="#B2000000"
-            tagTextView:topRightRadius="@dimen/dp_20"
-            tagTextView:bottomRightRadius="@dimen/dp_20"
-            />
-        <View
-            android:id="@+id/ad_line"
-            android:layout_width="1px"
-            android:layout_height="@dimen/dp_12"
-            android:layout_gravity="center_vertical"
-            android:layout_toRightOf="@+id/ad_vip_lead"
-            android:layout_centerVertical="true"
-            android:background="#fefefe"
-            />
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_9"
+        android:text="会员免广告"
+        android:textColor="#FFFFFE"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"
+        tagTextView:sideColor="#fffffe"
+        tagTextView:sideWidth="1px"
+        tagTextView:backgroundColor="#B2000000"
+        tagTextView:bottomLeftRadius="@dimen/dp_20"
+        tagTextView:bottomRightRadius="@dimen/dp_20"
+        tagTextView:topLeftRadius="@dimen/dp_20"
+        tagTextView:topRightRadius="@dimen/dp_20"
+        />
 
-    </RelativeLayout>
+    <acore.widget.TagTextView xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ad_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_28"
+        android:layout_below="@+id/welcome_one"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_12"
+        android:paddingRight="@dimen/dp_12"
+        android:text="跳过"
+        android:textColor="#979797"
+        android:textSize="@dimen/sp_12"
+        android:visibility="gone"
+        tagTextView:backgroundColor="#fffffe"
+        tagTextView:sideColor="#dee3e4"
+        tagTextView:sideWidth="1px"
+        tagTextView:bottomLeftRadius="@dimen/dp_20"
+        tagTextView:bottomRightRadius="@dimen/dp_20"
+        tagTextView:topLeftRadius="@dimen/dp_20"
+        tagTextView:topRightRadius="@dimen/dp_20" />
 
 </RelativeLayout>

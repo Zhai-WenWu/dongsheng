@@ -101,8 +101,9 @@ public class HomePostItem extends HomeItem {
                         if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
                             if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
                             else mTransferUrl+="?data_type="+mDataMap.get("type");
+                            mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
                             Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                            XHClick.saveStatictisFile("home","recom",mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
+                            XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
                         }
                         AppCommon.openUrl((Activity) getContext(), mTransferUrl, false);
                     }

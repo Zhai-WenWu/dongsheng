@@ -54,7 +54,6 @@ public class WelcomeDialog extends Dialog {
     protected int height;
 
     private TextView textSkip,textLead;
-    private RelativeLayout mADSkipContainer;
     private RelativeLayout mADLayout;
 //    private WelcomeRelativeLayout welcomeRelativeLayout;
     private boolean isAdLoadOk = false;
@@ -137,7 +136,6 @@ public class WelcomeDialog extends Dialog {
      */
     private void initWelcome() {
         // 初始化
-        mADSkipContainer = (RelativeLayout) view.findViewById(R.id.skip_container);
         mADLayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
         textSkip = (TextView) view.findViewById(R.id.ad_skip);
         textLead = (TextView) findViewById(R.id.ad_vip_lead);
@@ -147,7 +145,7 @@ public class WelcomeDialog extends Dialog {
                 isAdLeadClick=true;
             }
         });
-        mADSkipContainer.setOnClickListener(new View.OnClickListener() {
+        textSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeDialog();
@@ -361,7 +359,8 @@ public class WelcomeDialog extends Dialog {
                 });
     }
     private void showSkipContainer(){
-        mADSkipContainer.setVisibility(View.VISIBLE);
+        textLead.setVisibility(View.VISIBLE);
+        textSkip.setVisibility(View.VISIBLE);
 //        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
 //        alphaAnimation.setDuration(500);
 //        alphaAnimation.setFillAfter(true);

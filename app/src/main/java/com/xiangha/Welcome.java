@@ -46,7 +46,6 @@ public class Welcome extends BaseActivity {
     private Handler mMainHandler = null;
     private final long mAdIntervalTime = 1000;
 
-    private RelativeLayout mADSkipContainer;
     private RelativeLayout mADLayout;
 
     private String tongjiId = "a_ad";
@@ -80,7 +79,6 @@ public class Welcome extends BaseActivity {
      */
     private void initWelcome() {
         // 初始化
-        mADSkipContainer = (RelativeLayout) findViewById(R.id.skip_container);
         mADLayout = (RelativeLayout) findViewById(R.id.ad_layout);
         textSkip = (TextView) findViewById(R.id.ad_skip);
         textLead = (TextView) findViewById(R.id.ad_vip_lead);
@@ -90,7 +88,7 @@ public class Welcome extends BaseActivity {
                 isAdLeadClick=true;
             }
         });
-        mADSkipContainer.setOnClickListener(new View.OnClickListener() {
+        textSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeActivity();
@@ -323,7 +321,8 @@ public class Welcome extends BaseActivity {
     }
 
     private void showSkipContainer(){
-        mADSkipContainer.setVisibility(View.VISIBLE);
+        textSkip.setVisibility(View.VISIBLE);
+        textLead.setVisibility(View.VISIBLE);
 //        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
 //        alphaAnimation.setDuration(500);
 //        alphaAnimation.setFillAfter(true);

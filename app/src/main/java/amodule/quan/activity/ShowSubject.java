@@ -106,6 +106,7 @@ public class ShowSubject extends BaseActivity {
 	private boolean isHasVideo = false;
 
 	private String data_type = "";//推荐列表过来的数据
+	private String module_type="";
 	private Long startTime;//统计使用的时间
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public class ShowSubject extends BaseActivity {
 		if (bundle != null) {
 			subCode = bundle.getString("code");
 			data_type= bundle.getString("data_type");
+			module_type= bundle.getString("module_type");
 			isReplayFloorOwner = !TextUtils.isEmpty(bundle.getString("isReplayFloorOwner"));
 			//下面参数没有的时候就是null
 			//			String floorNum = Integer.valueOf(TextUtils.isEmpty(floorNum) ? "0" : floorNum);
@@ -1100,8 +1102,8 @@ public class ShowSubject extends BaseActivity {
 	@Override
 	public void finish() {
 		long nowTime=System.currentTimeMillis();
-		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)){
-			XHClick.saveStatictisFile("ShowSubject","info",data_type,subCode,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
+			XHClick.saveStatictisFile("ShowSubject",module_type,data_type,subCode,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
 		}
 		super.finish();
 	}

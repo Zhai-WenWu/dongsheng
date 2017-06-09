@@ -13,6 +13,7 @@ import java.util.Map;
 public class BaseItemView extends RelativeLayout {
 
     protected Map<String, String> mDataMap;
+    public String viewType="";
     protected int mPosition = 0;
     public BaseItemView(Context context) {
         super(context);
@@ -33,6 +34,13 @@ public class BaseItemView extends RelativeLayout {
         mPosition = position;
     }
 
+    /**
+     * 设置数据类型
+     * 必须在setData方法之前调用
+     */
+    public void setViewType(String type){
+        this.viewType= type;
+    }
     public Map<String, String> getData() {
         return mDataMap;
     }
