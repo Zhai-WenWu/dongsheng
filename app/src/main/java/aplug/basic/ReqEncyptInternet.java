@@ -63,25 +63,6 @@ public class ReqEncyptInternet extends UtilInternet {
     }
 
     /**
-     * 测试map字段加密
-     * @param actionUrl
-     * @param param
-     * @param callback
-     */
-    public void doEncypt(String actionUrl, JSONObject jsonObject, InternetCallback callback){
-        loginNum=0;
-        //处理数据
-        long time= System.currentTimeMillis();
-        if(!isLoginSign && ReqEncryptCommon.getInstance().isencrypt()&&
-                (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=time){
-            String encryptparams=ReqEncryptCommon.getInstance().getData(jsonObject);
-            callback.setEncryptparams(encryptparams);
-            doGet(actionUrl,callback);
-
-        }else{
-//            getLoginApp(actionUrl,param,callback);
-        }
-    }
 
     /**
      * 加密策略,只执行AEC加密
