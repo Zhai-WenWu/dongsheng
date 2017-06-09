@@ -671,6 +671,7 @@ public class ArticleDetailActivity extends BaseActivity {
                                     type = "1";
                                 if (!TextUtils.isEmpty(type))
                                     broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
                                 Main.allMain.sendBroadcast(broadIntent);
                             }
                         } else {

@@ -544,6 +544,15 @@ public class AppCommon {
      * @param code
      */
     public static void onAttentionClick(String code, final String type) {
+        onAttentionClick(code, type, null);
+    }
+
+    /**
+     * 关注请求
+     *
+     * @param code
+     */
+    public static void onAttentionClick(String code, final String type, final Runnable succRun) {
         if (code != null) {
             ReqInternet.in().doPost(StringManager.api_setUserData, "type=" + type + "&p1=" + code.toString(),
                     new InternetCallback(XHApplication.in()) {
@@ -552,6 +561,8 @@ public class AppCommon {
                             if (flag >= ReqInternet.REQ_OK_STRING) {
                                 LoginManager.modifyUserInfo(XHApplication.in(), "followNum", returnObj.toString());
                                 AppCommon.follwersNum = Integer.valueOf(returnObj.toString());
+                                if (succRun != null)
+                                    succRun.run();
                             }
                         }
                     });

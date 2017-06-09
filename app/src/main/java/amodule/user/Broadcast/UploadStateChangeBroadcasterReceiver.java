@@ -22,7 +22,10 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     public static final String STATE_SUSPEND = "suspend";
     public static final String DATA_TYPE = "dataType";
 
-
+    //详情页的删除操作
+    public static final String ACTION_DEL = "actionDel";//2:删除成功
+    //详情页的关注操作
+    public static final String ACTION_ATT = "actionAtt";//表示“关注”操作
 
     public UploadStateChangeBroadcasterReceiver(ReceiveBack callback){
         this.callback = callback;
@@ -30,9 +33,7 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String state = intent.getStringExtra(STATE_KEY);
-        String dataType = intent.getStringExtra(DATA_TYPE);
-        callback.onGetReceive(state, dataType);
+        callback.onGetReceive(intent);
     }
 
 
@@ -43,7 +44,7 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     }
 
     public interface ReceiveBack{
-        void onGetReceive(String state, String dataType);
+        void onGetReceive(Intent intent);
     }
 
 }

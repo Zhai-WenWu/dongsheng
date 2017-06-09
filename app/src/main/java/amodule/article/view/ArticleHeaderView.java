@@ -24,6 +24,8 @@ import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.main.Main;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
 
@@ -69,7 +71,17 @@ public class ArticleHeaderView extends ItemBaseView {
                 }
 //                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), tongjiId, "用户点击", "头像点击量");
                 if (mapUser != null && !mapUser.isEmpty()) {
-                    AppCommon.onAttentionClick(mapUser.get("code"), "follow");
+                    AppCommon.onAttentionClick(mapUser.get("code"), "follow", new Runnable() {
+                        @Override
+                        public void run() {
+                            if (FriendHome.isAlive) {
+                                Intent broadIntent = new Intent();
+                                broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_ATT, "1");
+                                Main.allMain.sendBroadcast(broadIntent);
+                            }
+                        }
+                    });
                     mapUser.put("isFollow", "2");
                     setMapFollowSate();
                     statistics("用户信息", "关注");

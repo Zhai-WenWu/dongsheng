@@ -55,6 +55,11 @@ import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_ATT;
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_DEL;
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.DATA_TYPE;
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.STATE_KEY;
+
 @SuppressLint("CutPasteId")
 public class FriendHome extends BaseActivity {
 
@@ -71,6 +76,7 @@ public class FriendHome extends BaseActivity {
 	private UserHomeTitle mUserHomeTitle;
 	public LayoutScroll scrollLayout;
 	public LinearLayout backLayout;
+	public LinearLayout tabMainMyselfFloat;
 	public TextViewLimitLine friend_info;
 
 	private int tabIndex = 0;
@@ -270,7 +276,7 @@ public class FriendHome extends BaseActivity {
 		}
 		tabHost.setup(Main.allMain.getLocalActivityManager());
 		tabMainMyself = (LinearLayout) findViewById(R.id.a_user_home_title_tab);
-		LinearLayout tabMainMyselfFloat = (LinearLayout) findViewById(R.id.tab_float_mainMyself);
+		tabMainMyselfFloat = (LinearLayout) findViewById(R.id.tab_float_mainMyself);
 		if (mIsLoadeds == null)
 			mIsLoadeds = new boolean[mTabs.size()];
 		for (int i = 0; i < mTabs.size(); i++) {
@@ -521,6 +527,8 @@ public class FriendHome extends BaseActivity {
 		mIsResumming = true;
 		if (mIsFromPause) {
 			mIsFromPause = false;
+            if (mIsRefreshUserInfo)
+                updateUserAttention();
 			if (mTabContentViews != null && tabIndex >= 0 && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null) {
 				TabContentView currTabView = mTabContentViews.get(tabIndex);
 				String tabType = currTabView.getDataMap().get("type");
@@ -559,7 +567,11 @@ public class FriendHome extends BaseActivity {
 		 receiver = new UploadStateChangeBroadcasterReceiver(
 				new UploadStateChangeBroadcasterReceiver.ReceiveBack() {
 					@Override
-					public void onGetReceive(String state, String dataType) {
+					public void onGetReceive(Intent intent) {
+						String state = intent.getStringExtra(STATE_KEY);
+						String dataType = intent.getStringExtra(DATA_TYPE);
+						String actionDel = intent.getStringExtra(ACTION_DEL);
+						String actionAtt = intent.getStringExtra(ACTION_ATT);
 						if (!TextUtils.isEmpty(dataType)) {
 							if (mTabContentViews != null && tabIndex >= 0 && mTabContentViews.size() > tabIndex) {
 								TabContentView currTabView = mTabContentViews.get(tabIndex);
@@ -575,10 +587,37 @@ public class FriendHome extends BaseActivity {
 								}
 							}
 						}
+						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType) && !"0".equals(dataType)
+								&& !TextUtils.isEmpty(actionDel) && "2".equals(actionDel)) {
+							updateTabNum();
+						}
+						//文章、视频详情页的关注，并且是成功了才会有这个值。
+						if (!TextUtils.isEmpty(actionAtt)) {
+							mIsRefreshUserInfo = true;
+						}
 					}
 				}
 		);
 		receiver.register(this);
+	}
+
+	private void updateTabNum() {
+		View view1 = tabMainMyself.getChildAt(tabIndex);
+		View view2 = tabMainMyselfFloat.getChildAt(tabIndex);
+		TextView tv = (TextView) view1.findViewById(R.id.tab_data);
+		int num1 = Integer.parseInt(tv.getText().toString());
+		tv.setText(--num1 + "");
+		TextView tv2 = (TextView) view2.findViewById(R.id.tab_data);
+		int num2 = Integer.parseInt(tv2.getText().toString());
+		tv2.setText(--num2 + "");
+	}
+
+	private boolean mIsRefreshUserInfo = false;
+	private void updateUserAttention() {
+        mIsRefreshUserInfo = false;
+		if (mUserHomeTitle != null) {
+			mUserHomeTitle.notifyAttentionInfo();
+		}
 	}
 
 	@Override

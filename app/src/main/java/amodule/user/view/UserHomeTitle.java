@@ -297,4 +297,11 @@ public class UserHomeTitle {
 //            return;
 //        }
     }
+
+    public void notifyAttentionInfo() {
+        if (userinfo_map != null && userinfo_map.containsKey("folState")) {
+            userinfo_map.put("folState", "3");
+            changeFollow("3");
+        }
+    }
 }
