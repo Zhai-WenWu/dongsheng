@@ -159,7 +159,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         checkCode = uploadArticleData.getClassCode();
     }
 
+    private boolean isLoading = false;
     private void getClassifyData(){
+        if(isLoading)return;
+        isLoading = true;
         loadManager.showProgressBar();
         String url = "";
         if(dataType == EditParentActivity.TYPE_ARTICLE)
@@ -179,11 +182,14 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                         gridView.setVisibility(View.VISIBLE);
                         findViewById(R.id.article_select_other).setVisibility(View.VISIBLE);
                         loadManager.hideProgressBar();
+                        isLoading = false;
                         return;
                     }
                 }
+                isLoading = false;
                 loadManager.hideProgressBar();
                 loadManager.showLoadFaildBar();
+
             }
         });
     }
