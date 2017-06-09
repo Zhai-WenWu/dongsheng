@@ -264,8 +264,22 @@ public class Tools {
      * @param returnObj 需要弹出的内容,如果是空的内容,就不弹.
      */
     public static void showToast(Context context, String returnObj) {
+        if (context == null)
+            return;
+        showToast(context, returnObj, -1);
+    }
+
+    /**
+     * @param context   上下文
+     * @param returnObj 需要弹出的内容,如果是空的内容,就不弹.
+     */
+    public static void showToast(Context context, String returnObj, int gravity) {
         if (context != null && returnObj != "" && returnObj != null && !"[]".equals(returnObj)) {
-            Toast.makeText(context, returnObj, Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(context, returnObj, Toast.LENGTH_SHORT);
+            if (gravity == -1)
+                gravity = toast.getGravity();
+            toast.setGravity(gravity, 0, 0);
+            toast.show();
         }
     }
 
