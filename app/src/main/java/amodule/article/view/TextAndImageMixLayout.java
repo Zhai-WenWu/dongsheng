@@ -29,7 +29,9 @@ import java.util.Set;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
 import amodule.upload.callback.UploadListNetCallBack;
@@ -264,6 +266,7 @@ public class TextAndImageMixLayout extends LinearLayout
                     currentEditText.setText(s.subSequence(0,s.length() - value));
                     currentEditText.setSelection(currentEditText.getText().length());
                     Tools.showToast(getContext(),"内容最多" + maxTextCount + "字");
+                    ToolsDevice.keyboardControl(false,getContext(),currentEditText);
                 }
             }
         });

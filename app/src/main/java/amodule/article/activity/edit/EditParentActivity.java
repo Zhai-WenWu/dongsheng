@@ -195,6 +195,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     editTitle.setText(s.subSequence(0, 64));
                     editTitle.setSelection(editTitle.getText().length());
                     Tools.showToast(EditParentActivity.this, "标题最多64字");
+                    ToolsDevice.keyboardControl(false,EditParentActivity.this,editTitle);
                 }
             }
         });

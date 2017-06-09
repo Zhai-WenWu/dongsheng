@@ -8,10 +8,9 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/dp_120"
         android:src="@drawable/i_nopic"
         android:scaleType="fitXY"/>
 
@@ -31,6 +30,7 @@
         android:layout_alignRight="@+id/image"
         android:padding="@dimen/dp_6"
         android:scaleType="centerInside"
+        android:background="@android:color/transparent"
         android:src="@drawable/delete_image_icon"/>
 
     <ImageView

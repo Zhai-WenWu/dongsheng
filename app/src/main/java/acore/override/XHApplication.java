@@ -154,7 +154,7 @@ public class XHApplication extends Application {
                 String AppID = "1150004142";//正式APP id
                 boolean isTest = temp.length != 3;
                 Log.i("tzy","isTest = " + isTest);
-                CrashReport.initCrashReport(context, isTest ? AppID : testAppID, isTest, strategy);
+                CrashReport.initCrashReport(context, isTest ? testAppID:AppID , isTest, strategy);
                 CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
             }
         }).start();
