@@ -182,12 +182,12 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                     }
                 }
                 String val = handleNumber(mDataMap.get("commentNumber"));
-                if (!TextUtils.isEmpty(val) && mNum2 != null) {
+                if (!TextUtils.isEmpty(val) && mNum2 != null && Integer.parseInt(val) > 0) {
                     mNum2.setText(val + "评论");
                     mNum2.setVisibility(View.VISIBLE);
                 }
                 String allClick = handleNumber(mDataMap.get("allClick"));
-                if (!TextUtils.isEmpty(allClick) && mNum1 != null) {
+                if (!TextUtils.isEmpty(allClick) && mNum1 != null && Integer.parseInt(allClick) > 0) {
                     mNum1.setText(allClick + "浏览");
                     mNum1.setVisibility(View.VISIBLE);
                 }
