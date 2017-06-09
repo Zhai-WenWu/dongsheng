@@ -36,6 +36,8 @@ import amodule.article.activity.VideoDetailActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadParentSQLite;
+import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
@@ -359,15 +361,25 @@ public class FriendHome extends BaseActivity {
 			if (tabMap != null && tabMap.size() > 0) {
 				String type = tabMap.get("type");
 				switch (type) {
+                    case "1"://视频列表
 					case "2"://文章列表
 						String id = dataMap.get("id");
 						if ("2".equals(hasMedia)) {
 							if (!TextUtils.isEmpty(id)) {
-								UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
-								UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(id));
+								UploadParentSQLite parentSQL = null;
+								int dataType = EditParentActivity.TYPE_ARTICLE;
+								if ("1".equals(type)) {
+									parentSQL = new UploadVideoSQLite(this);
+									dataType = EditParentActivity.TYPE_VIDEO;
+								} else if ("2".equals(type)) {
+									parentSQL = new UploadArticleSQLite(this);
+								}
+								if (parentSQL == null)
+									return;
+								UploadArticleData articleData = parentSQL.selectById(Integer.parseInt(id));
 								Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
 								intent.putExtra("draftId", articleData.getId());
-								intent.putExtra("dataType", EditParentActivity.TYPE_ARTICLE);
+								intent.putExtra("dataType", dataType);
 								intent.putExtra("coverPath", articleData.getImg());
 								String videoPath = "";
 								ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
@@ -405,30 +417,6 @@ public class FriendHome extends BaseActivity {
 								}
 							}
 							return;
-						}
-						break;
-					case "1"://视频列表
-						switch (uploadType) {
-							case UploadDishData.UPLOAD_FAIL:
-								String draftId = dataMap.get("id");
-								if (!TextUtils.isEmpty(draftId)) {
-									UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
-									UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(draftId));
-									Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
-									intent.putExtra("draftId", articleData.getId());
-									intent.putExtra("dataType", EditParentActivity.TYPE_ARTICLE);
-									intent.putExtra("coverPath", articleData.getImg());
-									String videoPath = "";
-									ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
-									if(videoArray != null && videoArray.size() > 0){
-										videoPath = videoArray.get(0).get("video");
-									}
-									intent.putExtra("finalVideoPath", videoPath);
-									FriendHome.this.startActivity(intent);
-								}
-								break;
-							case UploadDishData.UPLOAD_ING:
-								break;
 						}
 						break;
 				}
