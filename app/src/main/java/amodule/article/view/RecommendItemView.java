@@ -73,6 +73,12 @@ public class RecommendItemView extends ItemBaseView {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if("2".equals(map.get("isAd"))){
+                    if(onAdClickCallback != null){
+                        onAdClickCallback.onAdClick(RecommendItemView.this);
+                    }
+                    return;
+                }
                 //开启文章
                 if(map.containsKey("code") && !TextUtils.isEmpty(map.get("code"))
                         && map.containsKey("type") && !TextUtils.isEmpty(map.get("type"))){
@@ -124,5 +130,18 @@ public class RecommendItemView extends ItemBaseView {
                 }
             }
         };
+    }
+
+    private OnAdClickCallback onAdClickCallback;
+    public interface OnAdClickCallback{
+        public void onAdClick(View view);
+    }
+
+    public OnAdClickCallback getOnAdClickCallback() {
+        return onAdClickCallback;
+    }
+
+    public void setOnAdClickCallback(OnAdClickCallback onAdClickCallback) {
+        this.onAdClickCallback = onAdClickCallback;
     }
 }

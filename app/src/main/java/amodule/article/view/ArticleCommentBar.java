@@ -146,6 +146,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             return;
         }
         if(!LoginManager.isLogin()){
+            ToolsDevice.keyboardControl(false, getContext(), editText);
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }
@@ -168,6 +169,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     /** 发评论 */
     private void sentComment() {
         if(!LoginManager.isLogin()){
+            ToolsDevice.keyboardControl(false, getContext(), editText);
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }
@@ -177,6 +179,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             return;
         }
 
+        sendComment.setVisibility(INVISIBLE);
         progressBar.setVisibility(VISIBLE);
 
         StringBuilder sbuild = new StringBuilder();

@@ -138,5 +138,15 @@
 "show":"ad_show_jz",
 "click":"ad_click_jz",
 "twoData":"佳作列表"
+},
+"wz_wz":{
+"show":"ad_show_wz",
+"click":"ad_click_wz",
+"twoData":"文章下方"
+},
+"wz_list":{
+"show":"ad_show_wz",
+"click":"ad_click_wz",
+"twoData":"文章页面相关推荐"
 }
 }

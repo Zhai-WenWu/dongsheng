@@ -110,4 +110,9 @@ public class AdPlayIdConfig {
     public static final String SUBJECT_LIST_5 = "msq_liebiao5";
     public static final String SUBJECT_LIST_6 = "msq_liebiao6";
 
+    /**文章*/
+    public static final String ARTICLE_CONTENT_BOTTOM = "wz_wz";
+    public static final String ARTICLE_RECM = "wz_tuijian1";
+
+
 }

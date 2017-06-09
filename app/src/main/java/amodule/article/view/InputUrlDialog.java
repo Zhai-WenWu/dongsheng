@@ -19,6 +19,8 @@ import org.w3c.dom.Text;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import acore.tools.ToolsDevice;
+
 /**
  * PackageName : amodule.article.view
  * Created by MrTrying on 2017/5/19 09:46.
@@ -51,7 +53,7 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
         sb.deleteCharAt(sb.length() - 1);
         sb.append(")");
         // final pattern str
-        String pattern = "((https?|s?ftp|irc[6s]?|git|afp|telnet|smb)://)((www\\.|[a-zA-Z\\.]+\\.)?[a-zA-Z0-9\\-]+\\." + sb.toString() + "(:[0-9]{1,5})?)((/[a-zA-Z0-9\\./,;\\?'\\+&%\\$#=~_\\-]*)|([^\\u4e00-\\u9fa5\\s0-9a-zA-Z\\./,;\\?'\\+&%\\$#=~_\\-]*))";
+        String pattern = "((https?|s?ftp|irc[6s]?|git|afp|telnet|smb)://)|((www\\.|[a-zA-Z\\.]+\\.)?[a-zA-Z0-9\\-]+\\." + sb.toString() + "(:[0-9]{1,5})?)((/[a-zA-Z0-9\\./,;\\?'\\+&%\\$#=~_\\-]*)|([^\\u4e00-\\u9fa5\\s0-9a-zA-Z\\./,;\\?'\\+&%\\$#=~_\\-]*))";
         // Log.v(TAG, "pattern = " + pattern);
         WEB_URL = Pattern.compile(pattern);
     }
@@ -122,6 +124,9 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
                     if (TextUtils.isEmpty(desc)) {
                         desc = url;
                     }
+                    if(!url.startsWith("http://")){
+                        url = "http://" + url;
+                    }
                     if (mOnReturnResultCallback != null) {
                         mOnReturnResultCallback.onSure(url, desc);
                     }
@@ -130,6 +135,12 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        ToolsDevice.keyboardControl(true,getContext(),urlEdit);
     }
 
     public interface OnReturnResultCallback {

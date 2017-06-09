@@ -140,6 +140,10 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
         findViewById(R.id.edit_text).setVisibility(null != mOnTextEidtCallback ? View.VISIBLE : View.GONE);
     }
 
+    public boolean isShowEditLayout(){
+        return textEditlayout.getVisibility() == VISIBLE;
+    }
+
     public interface OnSelectImageCallback {
         public void onSelectImage();
     }

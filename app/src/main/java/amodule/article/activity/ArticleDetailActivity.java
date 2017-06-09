@@ -29,6 +29,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +68,8 @@ import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
+import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
+import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM;
 import static third.ad.tools.AdPlayIdConfig.DETAIL_DISH_MAKE;
 
 /** 文章详情 */
@@ -80,11 +85,13 @@ public class ArticleDetailActivity extends BaseActivity {
     private ArticleHeaderView headerView;
     private XHWebView webView;
     private ArticleCommentBar mArticleCommentBar;
-    private XHAllAdControl xhAllAdControl;
+    private XHAllAdControl xhAllAdControlBootom;
+    private XHAllAdControl xhAllAdControlList;
     private ArticleDetailAdapter detailAdapter;
 
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
     private Map<String, String> adDataMap;
+    private Map<String, String> adRcomDataMap;
     private Map<String, String> shareMap = new HashMap<>();
     private String commentNum;
     private boolean isKeyboradShow = false;
@@ -145,13 +152,13 @@ public class ArticleDetailActivity extends BaseActivity {
         adView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                xhAllAdControl.onAdClick(adView, 0, "0");
+                xhAllAdControlBootom.onAdClick(adView, 0, "0");
             }
         });
         adView.findViewById(R.id.ad_tag).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.setAdHintClick(ArticleDetailActivity.this, adView.findViewById(R.id.ad_tag), xhAllAdControl, 0, "0");
+                AppCommon.setAdHintClick(ArticleDetailActivity.this, adView.findViewById(R.id.ad_tag), xhAllAdControlBootom, 0, "0");
             }
         });
         articleContentBottomView.addViewToAdLayout(adView);
@@ -284,54 +291,71 @@ public class ArticleDetailActivity extends BaseActivity {
                             if (location[1] > 0
                                     && location[1] < srceenHeight * 3 / 4) {
                                 isAdShow = true;
-                                xhAllAdControl.onAdBind(0, adView, "0");
+                                xhAllAdControlBootom.onAdBind(0, adView, "0");
                             }
                         }
                     }
                 });
         requestArticleData();
-        //请求广告数据
-        requestAdData();
+        if("1".equals(getType())){
+            //请求广告数据
+            xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM},"wz_wz");
+            xhAllAdControlList = requestAdData(new String[]{ ARTICLE_RECM},"wz_list");
+            detailAdapter.setXHAllAdControl(xhAllAdControlList);
+        }
     }
 
     private void refreshData() {
         resetData();
         requestArticleData();
         //请求广告数据
-        requestAdData();
+//        requestAdData();
     }
 
     private void resetData() {
         page = 0;
         isAdShow = false;
         allDataListMap.clear();
-        if(adDataMap != null)
+        if (adDataMap != null)
             adDataMap.clear();
         shareMap.clear();
-        if(detailAdapter != null)
+        if (detailAdapter != null)
             detailAdapter.notifyDataSetChanged();
     }
 
-    private void requestAdData() {
-        final String[] ads = new String[]{DETAIL_DISH_MAKE};
+    private XHAllAdControl requestAdData(final String[] ads,String id) {
         ArrayList<String> adData = new ArrayList<>();
-        adData.add(DETAIL_DISH_MAKE);
-        xhAllAdControl = new XHAllAdControl(adData,
+        for (String str : ads)
+            adData.add(str);
+        return new XHAllAdControl(adData,
                 new XHAllAdControl.XHBackIdsDataCallBack() {
                     @Override
                     public void callBack(Map<String, String> map) {
                         for (String key : ads) {
                             String adStr = map.get(key);
-                            if (!TextUtils.isEmpty(adStr)) {
-                                adDataMap = StringManager.getFirstMap(adStr);
-                                if (adDataMap != null && adDataMap.size() > 0) {
-                                    showAD(adDataMap);
-                                    detailAdapter.notifyDataSetChanged();
-                                }
+                            switch (key) {
+                                case ARTICLE_CONTENT_BOTTOM:
+                                    if (!TextUtils.isEmpty(adStr)) {
+                                        adDataMap = StringManager.getFirstMap(adStr);
+                                        if (adDataMap != null && adDataMap.size() > 0) {
+                                            showAD(adDataMap);
+                                            detailAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                    break;
+                                case ARTICLE_RECM:
+                                    if (!TextUtils.isEmpty(adStr)) {
+                                        adRcomDataMap = StringManager.getFirstMap(adStr);
+                                        Log.i("tzy","adRcomDataMap = " +adRcomDataMap.toString());
+                                        handlerAdData();
+                                        detailAdapter.notifyDataSetChanged();
+                                    }
+                                    break;
                             }
+
                         }
                     }
-                }, this, "统计id");
+                }, this, id);
     }
 
     /** 请求网络 */
@@ -366,7 +390,7 @@ public class ArticleDetailActivity extends BaseActivity {
         headerView = new ArticleHeaderView(ArticleDetailActivity.this);
         headerView.setType(getType());
         headerView.setData(mapArticle);
-        if(linearLayoutOne.getChildCount() == 0)
+        if (linearLayoutOne.getChildCount() == 0)
             linearLayoutOne.addView(headerView);
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
@@ -387,9 +411,10 @@ public class ArticleDetailActivity extends BaseActivity {
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 //        webView.loadData(mapArticle.get("html"), "text/html", "utf-8");
-        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"),mapArticle.get("html"), "text/html", "utf-8",null);
+        Log.i("tzy", "url = " + getMAPI() + mapArticle.get("code"));
+        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
 
-        if(linearLayoutTwo.getChildCount() == 0)
+        if (linearLayoutTwo.getChildCount() == 0)
             linearLayoutTwo.addView(webView);
         linearLayoutTwo.setVisibility(View.VISIBLE);
 
@@ -416,7 +441,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
         articleContentBottomView = new ArticleContentBottomView(this);
         articleContentBottomView.setData(mapArticle);
-        if(linearLayoutThree.getChildCount() == 0)
+        if (linearLayoutThree.getChildCount() == 0)
             linearLayoutThree.addView(articleContentBottomView);
 
         if (!isAuthor) {
@@ -484,14 +509,37 @@ public class ArticleDetailActivity extends BaseActivity {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
                     int size = listMap.size();
-                    for (int i = 0; i < size; i++)
+                    for (int i = 0; i < size; i++) {
                         listMap.get(i).put("datatype", String.valueOf(Type_recommed));
+                        listMap.get(i).put("idAd", "1");
+                    }
                     analysRelateData(listMap);
+                    handlerAdData();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
                     toastFaildRes(flag, true, object);
             }
         });
+    }
+
+    private void handlerAdData() {
+        if (adRcomDataMap != null
+                && allDataListMap.size() > 1) {
+            try {
+                Map<String, String> dataMap = new HashMap<>();
+                dataMap.put("datatype", String.valueOf(Type_recommed));
+                dataMap.put("idAd", "2");
+                dataMap.put("adPosition", "0");
+                dataMap.put("title", adRcomDataMap.get("imgUrl"));
+                dataMap.put("img", adRcomDataMap.get("desc"));
+                dataMap.put("customer", new JSONObject().put("customer", adRcomDataMap.get("title")).toString());
+                dataMap.put("clickAll", Tools.getRandom(1000, 60000) + "浏览");
+                dataMap.put("commentNumber", "广告");
+                allDataListMap.add(1, adDataMap);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -542,62 +590,14 @@ public class ArticleDetailActivity extends BaseActivity {
     private void handlerShareData() {
         if (!TextUtils.isEmpty(shareMap.get("img"))) {
             shareMap.put("imgType", BarShare.IMG_TYPE_WEB);
-//        } else if (!TextUtils.isEmpty(mapArticle.get("video"))) {
-//            Map<String, String> videoMap = StringManager.getFirstMap(mapArticle.get("video"));
-//            String videoImage = videoMap.get("videoImg");
-//            int dp_75 = Tools.getDimen(this, R.dimen.dp_75);
-//            Glide.with(this)
-//                    .load(videoImage)
-//                    .asBitmap()
-//                    .override(dp_75, dp_75)
-//                    .listener(new RequestListener<String, Bitmap>() {
-//                        @Override
-//                        public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
-//                            if (bitmap != null)
-//                                shareImageBitmap = getBitmap(bitmap);
-//                            return false;
-//                        }
-//                    });
+
         } else {
             shareMap.put("img", String.valueOf(R.drawable.umen_share_launch));
             shareMap.put("imgType", BarShare.IMG_TYPE_RES);
         }
     }
 
-//    private Bitmap getBitmap(Bitmap mBitmap) {
-//        Bitmap btp = null;
-//        InputStream is = this.getResources().openRawResource(R.drawable.z_icon_play);
-//        Bitmap mPlayBitmap = UtilImage.inputStreamTobitmap(is);
-//        int playImgWH = Tools.getDimen(this, R.dimen.dp_41);
-//        int left, top;
-//        if (mBitmap != null && mPlayBitmap != null) {
-//            int mBW = mBitmap.getWidth();
-//            int mBH = mBitmap.getHeight();
-//            btp = Bitmap.createBitmap(mBW, mBH, Bitmap.Config.ARGB_8888);
-//            Canvas canvas = new Canvas(btp);
-//            //对图片的切割显示
-//            Rect rect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
-//            //图片在画布上的显示位置和大小
-//            Rect dst = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
-//            canvas.drawBitmap(mBitmap, rect, dst, new Paint());
-//
-//            left = mBW / 2 - playImgWH / 2;
-//            top = mBH / 2 - playImgWH / 2;
-////			//对图片的切割显示
-//            rect = new Rect(0, 0, mPlayBitmap.getWidth(), mPlayBitmap.getHeight());
-////			//图片在画布上的显示位置和大小
-//            dst = new Rect(left, top, left + playImgWH, top + playImgWH);
-//            canvas.drawBitmap(mPlayBitmap, rect, dst, new Paint());
-//        }
-//        return btp;
-//    }
-
-    public String getMAPI(){
+    public String getMAPI() {
         return StringManager.replaceUrl(StringManager.api_article);
     }
 
@@ -642,7 +642,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 }).show();
     }
 
-    private void deleteThis(){
+    private void deleteThis() {
         String url = "";
         switch (getType()) {
             case TYPE_ARTICLE:

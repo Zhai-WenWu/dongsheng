@@ -29,6 +29,7 @@ import amodule.article.view.ImageShowView;
 import amodule.article.view.RecommendItemView;
 import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichURLSpan;
+import third.ad.scrollerAd.XHAllAdControl;
 
 /**
  * 文章详情页adapter
@@ -45,17 +46,22 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<Map<String, String>> listMap;
+    private XHAllAdControl xhAllAdControl;
 
     int dp_20;
     String type;
     String code;
 
-    public ArticleDetailAdapter(Context context,ArrayList<Map<String, String>> list, String type, String code) {
+    public ArticleDetailAdapter(Context context, ArrayList<Map<String, String>> list, String type, String code) {
         this.context = context;
         this.type = type;
         this.code = code;
         this.listMap = list;
         dp_20 = Tools.getDimen(context, R.dimen.dp_20);
+    }
+
+    public void setXHAllAdControl(XHAllAdControl xhAllAdControl) {
+        this.xhAllAdControl = xhAllAdControl;
     }
 
     @Override
@@ -106,6 +112,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
                 } else {
                     viewHolder = (RecommedViewHolder) convertView.getTag();
                 }
+
                 viewHolder.setData(map, position);
                 break;
         }
@@ -119,7 +126,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
         view.setRobsofaClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onRabSofaCallback != null)
+                if (onRabSofaCallback != null)
                     onRabSofaCallback.onRabSoaf();
             }
         });
@@ -128,7 +135,8 @@ public class ArticleDetailAdapter extends BaseAdapter {
     }
 
     private OnRabSofaCallback onRabSofaCallback;
-    public interface OnRabSofaCallback{
+
+    public interface OnRabSofaCallback {
         public void onRabSoaf();
     }
 
@@ -215,11 +223,39 @@ public class ArticleDetailAdapter extends BaseAdapter {
             this.view = itemView;
         }
 
-        public void setData(Map<String, String> map, int position) {
+        public void setData(Map<String, String> map, final int position) {
             if (view != null) {
-                map.put("type",type);
+                map.put("type", type);
                 view.setData(map);
+                if("2".equals(map.get("isAd"))
+                        && null != xhAllAdControl
+                        && view != null){
+                    xhAllAdControl.onAdBind(Integer.parseInt(map.get("adPosition")), view, "");
+                }
+                view.setOnAdClickCallback(new RecommendItemView.OnAdClickCallback() {
+                    @Override
+                    public void onAdClick(View view) {
+                        if(xhAllAdControl != null)
+                            xhAllAdControl.onAdClick(view, position, "");
+                    }
+                });
             }
         }
+    }
+
+    private OnADCallback mOnADCallback;
+
+    public interface OnADCallback {
+        public void onClick();
+
+        public void onBind();
+    }
+
+    public OnADCallback getmOnADCallback() {
+        return mOnADCallback;
+    }
+
+    public void setmOnADCallback(OnADCallback mOnADCallback) {
+        this.mOnADCallback = mOnADCallback;
     }
 }

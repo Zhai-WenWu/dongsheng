@@ -107,13 +107,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //聚焦
-        ToolsDevice.keyboardControl(true, this, editTitle);
-    }
-
     protected void initView(String title) {
         //处理状态栏引发的问题
         if (Tools.isShowTitle()) {
@@ -129,6 +122,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             isKeyboradShow = heightDifference > 200;
                             heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
                             bottomBarLayout.setPadding(0, 0, 0, heightDifference);
+//                            int paddingBottom = editBottomControler.isShowEditLayout() ? dp_50 + dp_64 + heightDifference : dp_50 + dp_64;
+//                            contentLayout.setPadding(0, 0, 0, paddingBottom);
                         }
                     });
         }
@@ -155,16 +150,16 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_MOVE:
-                        ToolsDevice.keyboardControl(false,EditParentActivity.this,mixLayout.getCurrentEditText().getRichText());
+                        ToolsDevice.keyboardControl(false, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                         break;
                 }
                 return false;
             }
         });
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
-        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this,R.dimen.dp_45) -Tools.getStatusBarHeight(this);
+        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this, R.dimen.dp_45) - Tools.getStatusBarHeight(this);
         contentLayout.setMinimumHeight(contentLayoutHeight);
         contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,7 +190,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     editTitle.setText(s.subSequence(0, 64));
                     editTitle.setSelection(editTitle.getText().length());
                     Tools.showToast(EditParentActivity.this, "标题最多64字");
-                    ToolsDevice.keyboardControl(false,EditParentActivity.this,editTitle);
+                    ToolsDevice.keyboardControl(false, EditParentActivity.this, editTitle);
                 }
             }
         });
@@ -203,6 +198,14 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setMaxVideoCount(getMaxVideoCount());
         mixLayout.setMaxTextCount(getMaxTextCount());
         mixLayout.setSingleVideo("2".equals(getType()));
+        mixLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mixLayout.getCurrentEditText().getRichText().clearFocus();
+                editTitle.requestFocus();
+                ToolsDevice.keyboardControl(true, EditParentActivity.this, editTitle);
+            }
+        });
 
         //初始化底部编辑控制
         initEditBottomControler();
@@ -300,13 +303,13 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         ToolsDevice.keyboardControl(!isKeyboradShow, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                     }
                 });
-        final int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+
         if (isEnableEditText())
             editBottomControler.setOnTextEidtCallback(
                     new EditBottomControler.OnTextEditCallback() {
                         @Override
                         public void onEditControlerShow(boolean isShow) {
-                            int bottom = isShow ? dp_45 * 2 : dp_45;
+                            int bottom = isShow ? dp_50 + dp_64 : dp_50;
                             contentLayout.setPadding(0, 0, 0, bottom);
                             switch (mPageTag) {
                                 case mArticlePageTag:
@@ -344,7 +347,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     protected abstract int getMaxURLCount();
 
+    int dp_50, dp_64;
+
     protected void initData(UploadParentSQLite uploadParentSQLite) {
+        dp_50 = Tools.getDimen(this, R.dimen.dp_50);
+        dp_64 = Tools.getDimen(this, R.dimen.dp_64);
         sqLite = uploadParentSQLite;
         final Handler handler = new Handler() {
             @Override
@@ -434,7 +441,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         if (TextUtils.isEmpty(checkStr)) {
             if (isFist) {
                 isFist = false;
-                Tools.showToast(EditParentActivity.this,"内容已保存");
+                Tools.showToast(EditParentActivity.this, "内容已保存");
                 saveDraft();
             } else {
                 saveDraft();
@@ -466,7 +473,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         String content = mixLayout.getXHServiceData();
         Log.i("articleUpload", "saveDraft() content:" + content);
         uploadArticleData.setContent(content);
-        Log.i("tzy","content = " + content);
+        Log.i("tzy", "content = " + content);
         uploadArticleData.setVideoArray(mixLayout.getVideoArray());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());
         uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
@@ -478,7 +485,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             if (id > 0)
                 uploadArticleData.setId(id);
         }
-        Log.i("articleUpload","saveDraft() 保存后id:" + id);
+        Log.i("articleUpload", "saveDraft() 保存后id:" + id);
         return id;
     }
 
@@ -534,10 +541,15 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     }
 
     private void onClose() {
-        if(TextUtils.isEmpty(code)) {
+        if (TextUtils.isEmpty(code)) {
+            if (!TextUtils.isEmpty(editTitle.getText().toString())
+                    || mixLayout.hasText()
+                    || mixLayout.hasImage()
+                    || mixLayout.hasVideo())
+                Tools.showToast(this, "内容以保存");
             saveDraft();
             finshActivity();
-        }else{
+        } else {
             final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
             xhDialog.setTitle("二次编辑的内容将不会保存到草稿箱，是否继续退出？")
                     .setSureButton("留下编辑", new View.OnClickListener() {
@@ -556,8 +568,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     }
 
-    private void finshActivity(){
-        EditParentActivity.this.finish();
+    private void finshActivity() {
         switch (mPageTag) {
             case mVideoPageTag:
                 XHClick.mapStat(this, "a_ShortVideoEdit", "关闭页面", "");
@@ -566,5 +577,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 XHClick.mapStat(this, "a_ArticleEdit", "关闭页面", "");
                 break;
         }
+        EditParentActivity.this.finish();
     }
 }

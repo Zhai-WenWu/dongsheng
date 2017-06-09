@@ -193,8 +193,8 @@ public class TextAndImageMixLayout extends LinearLayout
         html = html.replace("</p>","");
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
+        editTextView.setSelection(editTextView.getRichText().getText().length());
     }
-
 
     /**
      * 获取上传需要的数据
@@ -270,8 +270,10 @@ public class TextAndImageMixLayout extends LinearLayout
                 }
             }
         });
-        if (!TextUtils.isEmpty(content))
+        if (!TextUtils.isEmpty(content)){
             view.setText(content);
+            view.setSelection(view.getRichText().getText().length());
+        }
         return view;
     }
 
@@ -577,32 +579,6 @@ public class TextAndImageMixLayout extends LinearLayout
     private void removeImagePath(BaseView view) {
         if (view instanceof ImageShowView)
             imageMap.remove(((ImageShowView) view).getImageUrl());
-    }
-
-    /**
-     * 获取第一个Video封面图
-     *
-     * @return
-     */
-    public String getFirstCoverImage() {
-        String coverImageUrl = "";
-        VideoShowView view = getFirstVideoView();
-        if (view != null)
-            coverImageUrl = view.getCoverImageUrl();
-        return coverImageUrl;
-    }
-
-    /**
-     * 获取第一个视频url
-     *
-     * @return
-     */
-    public String getFirstVideoUrl() {
-        String videoUrl = "";
-        VideoShowView view = getFirstVideoView();
-        if (view != null)
-            videoUrl = view.getVideoUrl();
-        return videoUrl;
     }
 
     /**
