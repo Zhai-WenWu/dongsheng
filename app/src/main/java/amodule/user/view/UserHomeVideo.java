@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -27,7 +26,6 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
-import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
@@ -203,6 +201,8 @@ public class UserHomeVideo extends TabContentView {
                                 if (!TextUtils.isEmpty(uploadType) && UploadDishData.UPLOAD_ING_BACK.equals(uploadType))
                                     continue;
                                 int id = articleData.getId();
+                                boolean hasMedia = articleSQLite.checkHasMedia(id);
+                                data.put("hasMedia", hasMedia ? "2" : "1");
                                 data.put("id", String.valueOf(id));
                                 data.put("code", code);
                                 data.put("title", title);
