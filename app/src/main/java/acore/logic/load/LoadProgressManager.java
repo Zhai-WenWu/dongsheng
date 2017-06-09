@@ -1,7 +1,5 @@
 package acore.logic.load;
 
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -21,6 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
+
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 
 /**
  * progress的管理类
@@ -54,7 +55,7 @@ public class LoadProgressManager {
 		layout.addView(mProgressShadow);
 		//初始化progressBar
 		mProgressBar = (RelativeLayout) inflater.inflate(R.layout.xh_main_loading, null);
-		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mProgressBar.setLayoutParams(lp);
 		//设置加载中动画
@@ -81,10 +82,10 @@ public class LoadProgressManager {
 		mLoadFailLayout.addView(loadFailTv);
 		mLoadFailLayout.addView(mLoadFailBtn);
 		
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mLoadFailLayout.setLayoutParams(lp);
-		mLoadFailLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+		mLoadFailLayout.setGravity(Gravity.CENTER);
 		
 		int dp = ToolsDevice.dp2px(context, 52); 
 		LinearLayout.LayoutParams loadFaildParams = new LinearLayout.LayoutParams(dp, dp);

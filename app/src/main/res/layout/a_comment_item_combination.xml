@@ -61,10 +61,11 @@
 
             <ImageView
                 android:id="@+id/comment_user_vip"
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_3"
+                android:paddingLeft="@dimen/dp_3"
+                android:paddingRight="@dimen/dp_3"
                 android:gravity="center" />
 
         </LinearLayout>

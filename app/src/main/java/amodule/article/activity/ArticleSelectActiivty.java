@@ -76,7 +76,6 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         }
         initData();
         initView();
-        getClassifyData();
     }
 
     private void initView(){
@@ -146,6 +145,12 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 }
             }
         });
+        loadManager.setLoading(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getClassifyData();
+            }
+        },true);
     }
 
     private void initData(){

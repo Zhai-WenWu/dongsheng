@@ -4,8 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.json.JSONObject;
-
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.XHApplication;
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import xh.basic.internet.InterCallback;
@@ -95,14 +92,18 @@ public class ReqEncyptInternet extends UtilInternet {
             public void loaded(int flag, String url, Object object) {
 //                flag=ReqInternet.REQ_CODE_ERROR;
 //                object="4002";
-                Log.i("zhangyujian","object::"+object);
-                if(flag==ReqInternet.REQ_CODE_ERROR&& object != "" && isNumeric((String) object)){
+                Log.i("zhangyujian","flag:" + flag + "   object::"+object);
+                if(flag==ReqInternet.REQ_CODE_ERROR && object != "" && isNumeric((String) object)){
                     int errorCode= Integer.parseInt((String) object);
                     if(errorCode>4000){//请求签名错误
                         getLoginApp(actionUrl,param,callback);
                     }else if(errorCode>2000){//不能救
                         Tools.showToast(XHApplication.in(),"请呼叫技术支持");
+                        callback.loaded(flag,url,object);
+                    }else{
+                        callback.loaded(flag,url,object);
                     }
+
                 }else{
                     callback.loaded(flag,url,object);
                 }
@@ -153,6 +154,7 @@ public class ReqEncyptInternet extends UtilInternet {
             ReqInternet.in().doPost(url, params, new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, Object object) {
+                    Log.i("zhangyujian","getLoginApp() falg:" + flag + "  url:" + url + "  object:" + object);
                     isLoginSign=false;
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         Map<String, String> map = StringManager.getFirstMap(object);
@@ -187,6 +189,23 @@ public class ReqEncyptInternet extends UtilInternet {
                             clearListIntenert();
                         }
 
+                    }else{
+                        //加盟数据并处理数据
+                        int size= listInternet.size();
+                        Log.i("zhangyujian","size:::"+size);
+                        for(int i=size-1;i>=0;i--){
+                            Map<String,Object> mapurl=listInternet.get(i);
+                            if(mapurl!=null) {
+                                if(mapurl.get("callback")!=null){
+                                    InternetCallback callback = (InternetCallback) mapurl.get("callback");
+                                    if(callback!=null) {
+                                        Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
+                                        setRequest((String)mapurl.get("url"),(String)mapurl.get("param"),callback);
+                                    }
+                                }
+
+                            }
+                        }
                     }
                 }
             });

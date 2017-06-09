@@ -140,6 +140,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             }
         };
         findViewById(R.id.title).setOnClickListener(this);
+        findViewById(R.id.activityLayout).setOnClickListener(this);
     }
 
     private void changeDataChange(){
@@ -557,6 +558,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 changeKeyboard(true);
                 break;
             case R.id.title:
+            case R.id.activityLayout:
                 changeKeyboard(false);
                 commend_write_et.setHint(" 写评论");
                 break;
