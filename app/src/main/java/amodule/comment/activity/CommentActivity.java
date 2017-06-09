@@ -429,13 +429,14 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private boolean isSend = false,isAddForm;
     private synchronized void sendData(){
         if(isSend)return;
-        isSend = true;
         if(!LoginManager.isLogin()){
             Tools.showToast(this,"请先登录或注册哦~");
             ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);
             Intent intent = new Intent(CommentActivity.this, LoginByAccout.class);
             startActivity(intent);
+            return;
         }
+        isSend = true;
         sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
         if(content.length() == 0){
