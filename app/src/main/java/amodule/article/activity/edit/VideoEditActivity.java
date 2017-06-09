@@ -99,7 +99,7 @@ public class VideoEditActivity extends EditParentActivity{
             return "视频不能为空";
         }
         if(mixLayout.getTextCount() > getMaxTextCount()){
-            return "文字不能超过" + getMaxTextCount() + "字";
+            return "文字最多" + getMaxTextCount() + "字";
         }
         return null;
     }

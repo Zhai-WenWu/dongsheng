@@ -632,9 +632,6 @@ public class JsAppCommon extends JsBase{
 				//统计
 				Intent it = new Intent(mAct,PlayVideo.class);
                 String urlTemp = url;
-				Log.i("tzy","urlTemp = " + urlTemp);
-//                if(urlTemp.startsWith("https://"))
-//                    urlTemp = urlTemp.replace("https","http");
 				it.putExtra("url", urlTemp);
 				it.putExtra("name", name);
 				it.putExtra("img", img);

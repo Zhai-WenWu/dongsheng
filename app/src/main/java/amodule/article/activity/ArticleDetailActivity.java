@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -384,16 +385,9 @@ public class ArticleDetailActivity extends BaseActivity {
         });
         webView = manager.createWebView(0);
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
-//        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        JsAppCommon js = new JsAppCommon(this, webView, loadManager, barShare);
-//        webView.addJavascriptInterface(js,js.TAG);
-        Log.i("tzy",getMAPI() + code);
-//        webView.loadUrl(getMAPI() + code + ".html");
-//        webView.loadDataWithBaseURL(getMAPI() + code + ".html", mapArticle.get("html"), "text/html", "utf-8", null);
-//        webView.loadDataWithBaseURL("", mapArticle.get("html"), "text/html", "utf-8", null);
-        webView.loadData(mapArticle.get("html"), "text/html", "utf-8");
-//        webView.requestFocus();
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//        webView.loadData(mapArticle.get("html"), "text/html", "utf-8");
+        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"),mapArticle.get("html"), "text/html", "utf-8",null);
 
         if(linearLayoutTwo.getChildCount() == 0)
             linearLayoutTwo.addView(webView);
@@ -451,10 +445,6 @@ public class ArticleDetailActivity extends BaseActivity {
         //处理分享数据
         shareMap = StringManager.getFirstMap(mapArticle.get("share"));
         handlerShareData();
-    }
-
-    public String getMAPI() {
-        return StringManager.replaceUrl(StringManager.api_article);
     }
 
     /** 请求评论列表 */
@@ -545,8 +535,6 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         dialog.show();
-        //TODO
-//        webView.loadUrl("javascript:appCommon.openShadow()");
     }
 
     private Bitmap shareImageBitmap = null;
@@ -608,6 +596,10 @@ public class ArticleDetailActivity extends BaseActivity {
 //        }
 //        return btp;
 //    }
+
+    public String getMAPI(){
+        return StringManager.replaceUrl(StringManager.api_article);
+    }
 
     private void openShare() {
         if (shareMap.isEmpty()) {

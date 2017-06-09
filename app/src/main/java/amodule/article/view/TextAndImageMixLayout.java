@@ -95,6 +95,12 @@ public class TextAndImageMixLayout extends LinearLayout
                 continue;
             }
             boolean isLast = index == dataArray.size() - 1;
+            if(index + 1 < dataArray.size()){
+                Map<String,String> nextMap = dataArray.get(index + 1);
+                if(!BaseView.TEXT.equals(nextMap.get("type"))){
+                    isLast = true;
+                }
+            }
             switch (map.get("type")) {
                 case BaseView.TEXT:
                     handlerTextData(map.get("html"));
@@ -257,7 +263,7 @@ public class TextAndImageMixLayout extends LinearLayout
                 if(value > 0){
                     currentEditText.setText(s.subSequence(0,s.length() - value));
                     currentEditText.setSelection(currentEditText.getText().length());
-                    Tools.showToast(getContext(),"内容不能超过" + maxTextCount + "字");
+                    Tools.showToast(getContext(),"内容最多" + maxTextCount + "字");
                 }
             }
         });

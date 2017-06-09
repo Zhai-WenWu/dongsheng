@@ -90,8 +90,9 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                sendComment.setClickable(s.length() > 0);
-                sendComment.setTextColor(s.length() > 0 ? Color.parseColor("#333333") : Color.parseColor("#cccccc"));
+                boolean hasText = s.length() > 0;
+                sendComment.setEnabled(hasText);
+                sendComment.setTextColor(Color.parseColor(hasText?"#333333":"#CCCCCC"));
             }
         });
     }
@@ -166,13 +167,13 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     /** 发评论 */
     private void sentComment() {
-        String text = editText.getText().toString();
-        if (TextUtils.isEmpty(text)) {
-            Tools.showToast(getContext(), "内容不能为空");
-            return;
-        }
         if(!LoginManager.isLogin()){
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
+            return;
+        }
+        String text = editText.getText().toString();
+        if (TextUtils.isEmpty(text)) {
+//            Tools.showToast(getContext(), "内容不能为空");
             return;
         }
 

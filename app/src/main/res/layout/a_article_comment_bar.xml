@@ -138,7 +138,6 @@
                         android:paddingLeft="@dimen/dp_13"
                         android:text="发送"
                         android:textColor="#ccc"
-                        android:clickable="false"
                         android:visibility="visible"/>
 
                     <ProgressBar

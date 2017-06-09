@@ -232,7 +232,7 @@ public class WebviewManager {
                 Tools.showToast(view.getContext(), message);
                 result.cancel();
                 loadManager.hideProgressBar();
-                return super.onJsAlert(view, url, message, result);
+                return true;
             }
 
             @Override

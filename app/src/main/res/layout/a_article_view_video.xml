@@ -13,8 +13,9 @@
 
     <ImageView
         android:id="@+id/video_cover_image"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_120"
         android:layout_centerHorizontal="true"
         android:scaleType="fitXY"
         android:src="@drawable/i_nopic"/>
@@ -29,11 +30,12 @@
 
     <ImageButton
         android:id="@+id/delete_image"
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
         android:layout_alignRight="@+id/video_cover_image"
-        android:layout_margin="@dimen/dp_6"
-        android:background="@drawable/delete_image_icon"
-        android:visibility="gone"/>
+        android:padding="@dimen/dp_6"
+        android:scaleType="centerInside"
+        android:src="@drawable/delete_image_icon"
+        android:visibility="visible"/>
 
 </RelativeLayout>

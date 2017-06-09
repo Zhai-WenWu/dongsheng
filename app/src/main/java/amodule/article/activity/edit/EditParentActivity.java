@@ -17,12 +17,14 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -70,6 +72,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     protected EditText editTitle;
     protected TextAndImageMixLayout mixLayout;
     private LinearLayout contentLayout;
+    private ScrollView scrollView;
 
     protected UploadParentSQLite sqLite;
 
@@ -148,7 +151,27 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         leftImgBtn.setPadding(dp_2, dp_8, dp_2, dp_8);
         findViewById(R.id.back).setOnClickListener(this);
 
+        scrollView = (ScrollView) findViewById(R.id.scroll_view);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()){
+                    case MotionEvent.ACTION_MOVE:
+                        ToolsDevice.keyboardControl(false,EditParentActivity.this,mixLayout.getCurrentEditText().getRichText());
+                        break;
+                }
+                return false;
+            }
+        });
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
+        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this,R.dimen.dp_45) -Tools.getStatusBarHeight(this);
+        contentLayout.setMinimumHeight(contentLayoutHeight);
+        contentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToolsDevice.keyboardControl(true, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
+            }
+        });
 
         SpannableString ss = new SpannableString("标题（64字以内）");
         int titleSize = Tools.getDimen(this, R.dimen.dp_25);
@@ -171,7 +194,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 if (s.length() > 0 && s.length() > 64) {
                     editTitle.setText(s.subSequence(0, 64));
                     editTitle.setSelection(editTitle.getText().length());
-                    Tools.showToast(EditParentActivity.this, "标题不能超过64字");
+                    Tools.showToast(EditParentActivity.this, "标题最多64字");
                 }
             }
         });
@@ -179,19 +202,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setMaxVideoCount(getMaxVideoCount());
         mixLayout.setMaxTextCount(getMaxTextCount());
         mixLayout.setSingleVideo("2".equals(getType()));
-        findViewById(R.id.scroll_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToolsDevice.keyboardControl(true, EditParentActivity.this, mixLayout.getCurrentEditText());
-            }
-        });
+
         //初始化底部编辑控制
         initEditBottomControler();
     }
 
-    /**
-     * 初始化底部编辑控制
-     */
+    /** 初始化底部编辑控制 */
     private void initEditBottomControler() {
         editBottomControler = (EditBottomControler) findViewById(R.id.edit_controler);
         if (getMaxImageCount() != 0)
@@ -250,7 +266,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                                     break;
                             }
                             if (mixLayout.getURLCount() >= getMaxURLCount()) {
-                                Tools.showToast(EditParentActivity.this, "链接最大不能超过" + getMaxURLCount() + "条");
+                                Tools.showToast(EditParentActivity.this, "链接最多" + getMaxURLCount() + "条");
                                 return;
                             }
                             //收起键盘
@@ -405,7 +421,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             return "内容文字不能为空";
         }
         if (mixLayout.getTextCount() > getMaxTextCount()) {
-            return "文字不能超过" + getMaxTextCount() + "字";
+            return "文字最多" + getMaxTextCount() + "字";
         }
         return null;
     }
@@ -481,7 +497,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     CharSequence text = "";
                     if (!isVideo)
                         text = mixLayout.getCurrentEditText().getSelectionEndContent();
-                    mixLayout.addVideo(coverPath, videoPath, isVideo, text);
+                    mixLayout.addVideo(coverPath, videoPath, !isVideo, text);
                     break;
             }
         }
