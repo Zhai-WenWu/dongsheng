@@ -415,7 +415,6 @@ public class ArticleUploadListPool extends UploadListPool {
         Log.i("articleUpload","修改上传池数据 draftId:" + uploadPoolData.getDraftId());
         if (uploadArticleData != null) {
 
-            int imgIndex = 0;
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
             String imgsDataStr = uploadArticleData.getImgs();
             if (!TextUtils.isEmpty(imgsDataStr)) {
@@ -440,8 +439,8 @@ public class ArticleUploadListPool extends UploadListPool {
                         headItemData = new UploadItemData();
                         headItemData.setPath(imgPath);
                         headItemData.setRecMsg(imgUrl);
-                        headItemData.setIndex(imgIndex++);
-                        headItemData.setMakeStep(String.valueOf(i));
+//                        headItemData.setIndex(imgIndex++);
+                        headItemData.setMakeStep("图片" + (i+1));
                         headItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
                         headItemData.setPos(UploadItemData.POS_BODY);
                         bodyItemDatas.add(headItemData);
@@ -450,7 +449,6 @@ public class ArticleUploadListPool extends UploadListPool {
             }
 
             ArrayList<UploadItemData> headItemDatas = new ArrayList<>();
-            int headImgIndex = 0;
             String videosDataStr = uploadArticleData.getVideos();
             if (!TextUtils.isEmpty(videosDataStr)) {
                 UploadItemData captureVideoData;
@@ -477,8 +475,8 @@ public class ArticleUploadListPool extends UploadListPool {
                         UploadItemData videoImgItemData = new UploadItemData();
                         videoImgItemData.setPath(videoImage);
                         videoImgItemData.setRecMsg(imageUrl);
-                        videoImgItemData.setIndex(headImgIndex++);
-                        videoImgItemData.setMakeStep(String.valueOf(i));
+//                        videoImgItemData.setIndex(headImgIndex++);
+                        videoImgItemData.setMakeStep("视频封面" + (i+1));
                         videoImgItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
                         videoImgItemData.setPos(UploadItemData.POS_BODY);
                         headItemDatas.add(videoImgItemData);
@@ -487,8 +485,8 @@ public class ArticleUploadListPool extends UploadListPool {
                         captureVideoData.setPath(videoPath);
                         captureVideoData.setVideoImage(videoImage);
                         captureVideoData.setRecMsg(videoUrl);
-                        captureVideoData.setIndex(imgIndex++);
-                        captureVideoData.setMakeStep("文章视频");
+//                        captureVideoData.setIndex(imgIndex++);
+                        captureVideoData.setMakeStep("视频" + (i+1));
                         captureVideoData.setPos(UploadItemData.POS_BODY);
                         captureVideoData.setType(UploadItemData.TYPE_VIDEO);
                         bodyItemDatas.add(captureVideoData);
@@ -502,7 +500,7 @@ public class ArticleUploadListPool extends UploadListPool {
             ArrayList<UploadItemData> tailItemDatas = new ArrayList<>();
             UploadItemData tailItemData = new UploadItemData();
             tailItemData.setType(UploadItemData.TYPE_LAST_TEXT);
-            tailItemData.setMakeStep("其他信息");
+            tailItemData.setMakeStep("文字等信息");
             tailItemData.setPos(UploadItemData.POS_TAIL);
             tailItemData.setIndex(0);
             tailItemDatas.add(tailItemData);

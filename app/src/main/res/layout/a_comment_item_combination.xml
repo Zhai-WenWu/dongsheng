@@ -93,7 +93,9 @@
                 android:id="@+id/comment_delete"
                 style="@style/comment_time"
                 android:layout_toRightOf="@+id/comment_time"
-                android:layout_marginLeft="@dimen/dp_11"
+                android:layout_marginLeft="@dimen/dp_9"
+                android:paddingLeft="@dimen/dp_3"
+                android:paddingRight="@dimen/dp_3"
                 android:text="删除"
                 />
 

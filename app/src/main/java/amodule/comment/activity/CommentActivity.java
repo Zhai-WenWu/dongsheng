@@ -58,7 +58,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private EditText commend_write_et;
     private ImageView writePen;
-    private TextView sendTv;
+    private TextView sendTv,commend_write_tv;
     private View sendProgress;
 
     private String gotoCommentId,gotoReplayId;
@@ -102,17 +102,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         sendTv.setClickable(false);
         sendProgress = findViewById(R.id.comment_send_progress);
         writePen = (ImageView) findViewById(R.id.commend_write_pen);
+        commend_write_tv = (TextView) findViewById(R.id.commend_write_tv);
+        commend_write_tv.setOnClickListener(this);
         commend_write_et = (EditText) findViewById(R.id.commend_write_et);
-        commend_write_et.setOnClickListener(this);
-        commend_write_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus && StringManager.api_addForum.equals(currentUrl)){
-                    XHClick.mapStat(CommentActivity.this,contentTongjiId,"点击评论框","");
-                }
-                changeKeyboard(hasFocus);
-            }
-        });
         commend_write_et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -131,6 +123,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 //                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
                 if(View.VISIBLE == sendTv.getVisibility()) {
                     changeKeyboard(false);
+                    commend_write_et.setHint(" 写评论");
                 }
                 return false;
             }
@@ -146,6 +139,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 return view;
             }
         };
+        findViewById(R.id.title).setOnClickListener(this);
     }
 
     private void changeDataChange(){
@@ -266,12 +260,17 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onContentReplayClick(String comment_id,String replay_code, String replay_name,String type) {
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"回复",type);
+                changeKeyboard(true);
                 Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
                 commend_write_et.setHint(" 回复" + replay_name);
                 currentUrl = StringManager.api_addReplay;
                 currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
                 replayIndex = position;
-                changeKeyboard(true);
+                if(!comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
+                    commend_write_et.setText("");
+                }
+                oldCommentId = comment_id;
+                oldReplayId = replay_code;
             }
         };
     }
@@ -424,7 +423,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private String currentUrl = StringManager.api_addForum,currentParams;
+    private String currentUrl = StringManager.api_addForum,currentParams,oldCommentId,oldReplayId;
     private int replayIndex;
     private boolean isSend = false,isAddForm;
     private synchronized void sendData(){
@@ -469,6 +468,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING) {
+                    commend_write_et.setText("");
                     changeKeyboard(false);
                     if(isAddForm){
                         ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
@@ -520,28 +520,28 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private void changeKeyboard(boolean isShow){
         isShowKeyboard = isShow;
-        int dp10 = Tools.getDimen(this,R.dimen.dp_10);
         if(isShow){
-            int dp13 = Tools.getDimen(this,R.dimen.dp_13);
+            commend_write_tv.setVisibility(View.GONE);
+            commend_write_et.setVisibility(View.VISIBLE);
             commend_write_et.requestFocus();
             ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
-            commend_write_et.setHintTextColor(Color.parseColor("#cdcdcd"));
-            commend_write_et.setPadding(dp13,dp10,dp13,dp10);
             sendTv.setVisibility(View.VISIBLE);
             writePen.setVisibility(View.GONE);
         }else{
             currentUrl = StringManager.api_addForum;
-            int dp30 = Tools.getDimen(this,R.dimen.dp_30);
             sendTv.setVisibility(View.GONE);
             writePen.setVisibility(View.VISIBLE);
-            commend_write_et.setHint(" 写评论");
-            commend_write_et.setHintTextColor(Color.parseColor("#333333"));
-            commend_write_et.setText("");
-            commend_write_et.setPadding(dp30,dp10,0,dp10);
-            commend_write_et.clearFocus();
+            commend_write_et.setVisibility(View.GONE);
+            commend_write_tv.setVisibility(View.VISIBLE);
             sendProgress.setVisibility(View.GONE);
             ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        changeKeyboard(false);
     }
 
     @Override
@@ -552,9 +552,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             case R.id.comment_send:
                 sendData();
                 break;
-            case R.id.commend_write_et:
+            case R.id.commend_write_tv:
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"点击评论框","");
                 changeKeyboard(true);
+                break;
+            case R.id.title:
+                changeKeyboard(false);
+                commend_write_et.setHint(" 写评论");
                 break;
         }
     }

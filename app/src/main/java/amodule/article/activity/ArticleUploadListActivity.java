@@ -1,6 +1,8 @@
 package amodule.article.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +23,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -42,6 +45,7 @@ import amodule.upload.callback.UploadListUICallBack;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
+import xh.windowview.XhDialog;
 
 /**
  * 文章上传列表页
@@ -89,6 +93,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         initData();
         getData();
         setAdapter();
+        registnetworkListener();
     }
 
 
@@ -334,15 +339,18 @@ public class ArticleUploadListActivity extends BaseActivity {
         rl_allstart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                allStartOrPause(true);
-                isStopUpload = false;
+                if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleUploadListActivity.this))) {
+                    allStartOrPause(true);
+                } else {
+                    hintNetWork();
+                }
+
             }
         });
         rl_allstop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 allStartOrPause(false);
-                isStopUpload = true;
             }
         });
         return view;
@@ -429,8 +437,8 @@ public class ArticleUploadListActivity extends BaseActivity {
         finish();
     }
 
-
     private void allStartOrPause(boolean isAllStart) {
+        isStopUpload = !isAllStart;
         if (isAllStart) {
             listPool.allStartOrStop(UploadListPool.TYPE_START);
             rl_allstart.setVisibility(View.GONE);
@@ -442,11 +450,56 @@ public class ArticleUploadListActivity extends BaseActivity {
         }
     }
 
+    private ConnectionChangeReceiver connectionChangeReceiver;
+    private void registnetworkListener(){
+        connectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
+            @Override
+            public void disconnect() {}
+
+            @Override
+            public void wifi() {}
+
+            @Override
+            public void mobile() {
+                if(!isStopUpload){
+                    allStartOrPause(false);
+                    hintNetWork();
+                }
+            }
+        });
+        IntentFilter filter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectionChangeReceiver,filter);
+    }
+
+    public void unregistnetworkListener(){
+        if(connectionChangeReceiver != null){
+            unregisterReceiver(connectionChangeReceiver);
+        }
+    }
+
+    private void hintNetWork(){
+        final XhDialog xhDialog = new XhDialog(ArticleUploadListActivity.this);
+        xhDialog.setTitle("当前不是wifi环境，已暂停上传~")
+                .setCanselButton("继续上传", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        xhDialog.cancel();
+                        allStartOrPause(true);
+                    }
+                }).setSureButton("知道了", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                xhDialog.cancel();
+            }
+        }).show();
+    }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (listPool != null)
             listPool.unBindUI();
+       unregistnetworkListener();
     }
 }
