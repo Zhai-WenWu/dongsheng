@@ -142,19 +142,6 @@ public class ViewCommentItem extends LinearLayout {
         String is_anchor = dataMap.get("is_anchor");
         if("2".equals(is_anchor)){
             commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
-            if (mListener != null)
-                mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    dataMap.put("is_anchor","1");
-                }
-            }).start();
         }
         else commentContent.setBackgroundColor(Color.parseColor("#00fffae3"));
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
@@ -332,7 +319,6 @@ public class ViewCommentItem extends LinearLayout {
         Log.i("commentReplay","addReplayView() replayArray.size:" + replayArray.size());
         View view;
         MultifunctionTextView replayTv;
-        boolean isReset = false;
         for(final Map<String, String> replayMap:replayArray) {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
@@ -354,9 +340,6 @@ public class ViewCommentItem extends LinearLayout {
             if("2".equals(is_anchor)){ //是否是锚点
                 Log.i("commentReplay","is_anchor:" + is_anchor);
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
-                if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName,"");
-                replayMap.put("is_anchor","1");
-                isReset = true;
             }
             else view.setBackgroundColor(Color.parseColor("#00fffae3"));
 
@@ -430,19 +413,6 @@ public class ViewCommentItem extends LinearLayout {
             commentReplay.setVisibility(View.VISIBLE);
             commentReplayImg.setVisibility(View.VISIBLE);
             commentReplay.addView(view);
-        }
-        if(isReset){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    dataMap.put("replay",StringManager.getJsonByArrayList(replayArray).toString());
-                }
-            }).start();
         }
     }
 
