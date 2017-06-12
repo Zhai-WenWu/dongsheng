@@ -62,8 +62,10 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/center_line"
             android:layout_width="@dimen/dp_0.5"
             android:layout_height="match_parent"
+            android:visibility="visible"
             android:layout_centerHorizontal="true"
             android:background="#FFFFFF" />
     </RelativeLayout>
