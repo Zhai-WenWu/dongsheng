@@ -135,6 +135,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 final ViewCommentItem viewCommentItem = (ViewCommentItem) view.findViewById(R.id.comment_item);
                 viewCommentItem.setCommentItemListener(getCommentItenListener(viewCommentItem,position));
                 viewCommentItem.setUserInforListenr(getUserInforListener());
+                viewCommentItem.setNormBackColor(getResources().getColor(R.color.common_bg));
                 viewCommentItem.setData(listArray.get(position));
                 return view;
             }
@@ -417,8 +418,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         if (everyPage == 0)
                             everyPage = loadCount;
                     }
+                    changeDataChange();
                 }
-                changeDataChange();
                 currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0,"没有更多评论啦");
             }
         });
@@ -542,8 +543,11 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        changeKeyboard(false);
+        if(isShowKeyboard){
+            changeKeyboard(false);
+        }else {
+            super.onBackPressed();
+        }
     }
 
     @Override

@@ -402,9 +402,9 @@ public class ArticleUploadListActivity extends BaseActivity {
     private void goBack() {
         gotoFriendHome();
         if (!isStopUpload) {
-            if(dataType != EditParentActivity.TYPE_ARTICLE){
+            if(dataType == EditParentActivity.TYPE_ARTICLE){
                 Toast.makeText(XHApplication.in().getApplicationContext(),"文章会在后台继续上传", Toast.LENGTH_SHORT).show();
-            }else if(dataType != EditParentActivity.TYPE_VIDEO){
+            }else if(dataType == EditParentActivity.TYPE_VIDEO){
                 Toast.makeText(XHApplication.in().getApplicationContext(),"视频会在后台继续上传", Toast.LENGTH_SHORT).show();
             }
         }
