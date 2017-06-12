@@ -81,6 +81,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     private boolean isKeyboradShow = false;
 
+    private RelativeLayout bottomBarLayout;
+
 
     /** 定时存草稿 */
     protected Timer timer;
@@ -109,8 +111,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     protected void initView(String title) {
         //处理状态栏引发的问题
+        bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
         if (Tools.isShowTitle()) {
-            final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
             rl.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
                         public void onGlobalLayout() {
@@ -194,6 +196,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     Tools.showToast(EditParentActivity.this, "标题最多64字");
                     ToolsDevice.keyboardControl(false, EditParentActivity.this, editTitle);
                 }
+            }
+        });
+        editTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                bottomBarLayout.setVisibility(hasFocus ? View.GONE : View.VISIBLE);
             }
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);

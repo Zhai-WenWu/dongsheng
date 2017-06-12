@@ -88,9 +88,12 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         link.setOnClickListener(this);
         originalImg = (ImageView) findViewById(R.id.article_select_check_original);
         originalImg.setOnClickListener(this);
+        findViewById(R.id.article_select_check_original_hint).setOnClickListener(this);
         reprintImg = (ImageView) findViewById(R.id.article_select_check_reprint);
         reprintImg.setOnClickListener(this);
         reprintLink = (EditText) findViewById(R.id.article_select_check_reprint_link);
+        reprintLink.setOnClickListener(this);
+        findViewById(R.id.article_select_check_hint).setOnClickListener(this);
         if(2 == uploadArticleData.getIsOriginal()){
             isCheck = 2;
             originalImg.setImageResource(R.drawable.i_article_select_yes);
@@ -276,17 +279,19 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 XHClick.mapStat(this, "a_ArticleEdit", "下一步", "发布");
                 break;
             case R.id.article_select_check_original_link:
-                Tools.showToast(ArticleSelectActiivty.this,"香哈原创声明");
                 XHClick.mapStat(this, "a_ArticleEdit", "下一步_文章来源", "《香哈原创声明》");
                 AppCommon.openUrl(ArticleSelectActiivty.this,StringManager.api_agreementOriginal,true);
                 break;
             case R.id.article_select_check_reprint:
+            case R.id.article_select_check_hint:
+            case R.id.article_select_check_reprint_link:
                 isCheck = 1;
                 reprintImg.setImageResource(R.drawable.i_article_select_yes);
                 originalImg.setImageResource(R.drawable.i_article_select_no);
                 XHClick.mapStat(this, "a_ArticleEdit", "下一步_文章来源", "转载");
                 break;
             case R.id.article_select_check_original:
+            case R.id.article_select_check_original_hint:
                 isCheck = 2;
                 originalImg.setImageResource(R.drawable.i_article_select_yes);
                 reprintImg.setImageResource(R.drawable.i_article_select_no);

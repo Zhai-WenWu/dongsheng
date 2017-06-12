@@ -28,6 +28,7 @@ import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
@@ -467,6 +468,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
             @Override
             public void loaded(int flag, String s, Object o) {
+                Log.i("commentReplay","sendData() flag:" + flag + "   o:" + o);
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     commend_write_et.setText("");
                     changeKeyboard(false);
@@ -510,6 +512,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                             adapterSimple.notifyDataSetChanged();
                         }
                     }
+                }else{
+                    Tools.showToast(XHApplication.in(),String.valueOf(o));
                 }
                 isSend = false;
             }
