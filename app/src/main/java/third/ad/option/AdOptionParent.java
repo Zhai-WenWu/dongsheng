@@ -21,7 +21,7 @@ import third.ad.scrollerAd.XHScrollerAdParent;
  * Created by Fang Ruijiao on 2017/4/24.
  */
 public abstract class AdOptionParent {
-
+    private int limitNum = 0;//分界节点
     private final String[] AD_IDS;
     /** 广告插入到数据的位置集合 * */
     protected ArrayList<Integer> adIdList;
@@ -214,4 +214,12 @@ public abstract class AdOptionParent {
      * @param adTag----广告类型：百度、广点通、自由
      */
     public abstract Map<String, String> getAdListItemData(final String title, final String desc, final String iconUrl, String imageUrl, String adTag);
+
+    public int getLimitNum() {
+        return limitNum;
+    }
+
+    public void setLimitNum(int limitNum) {
+        this.limitNum = limitNum;
+    }
 }

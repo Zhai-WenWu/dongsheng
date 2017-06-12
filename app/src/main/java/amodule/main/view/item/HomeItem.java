@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
 import amodule.main.bean.HomeModuleBean;
+import amodule.main.view.home.HomeFragment;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.control.AdControlParent;
@@ -200,7 +202,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                     if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                         v.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //						bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(context, 500));
-                        v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+//                        v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                     } else {
                         v.setScaleType(mScaleType);
                         UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
@@ -238,7 +241,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             initData();
             //统计---只展示一次，isShow 2已经显示
             if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())&&!TextUtils.isEmpty(mDataMap.get("code"))&&(!mDataMap.containsKey("isShowStatistic")||"1".equals(mDataMap.get("isShowStatistic")))) {//保证推荐模块类型
-                XHClick.saveStatictisFile("home","recom",mDataMap.get("type"),mDataMap.get("code"),"","show","","",String.valueOf(mPosition+1),"","");
+                Log.i("zhangyujian","展示曝光数据::"+mDataMap.get("name")+"::::"+mDataMap.get("type")+"::position:::"+position);
+                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","show","","",String.valueOf(mPosition+1),"","");
                 mDataMap.put("isShowStatistic","2");
             }
         }
@@ -431,5 +435,27 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                     mAdControlParent.onAdHintClick((Activity)getContext(), mDataMap, eventId, "点击" + mModuleBean.getTitle() + "【广告】icon");
             }
         }
+    }
+
+    /**
+     * 获取当前数据类型：用于统计
+     * @return
+     */
+    public String getModleViewType(){
+        if(!TextUtils.isEmpty(viewType)&& HomeFragment.MODULETOPTYPE.equals(viewType)){
+            return "top";
+        }
+        return "recom";
+    }
+
+    /**
+     * 是否是置顶数据类型
+     * @return
+     */
+    public boolean isTopTypeView(){
+        if(!TextUtils.isEmpty(viewType)&& HomeFragment.MODULETOPTYPE.equals(viewType)){
+            return true;
+        }
+        return false;
     }
 }

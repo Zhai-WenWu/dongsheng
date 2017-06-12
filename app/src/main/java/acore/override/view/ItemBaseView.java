@@ -1,14 +1,12 @@
-package acore.override.view;
+package amodule.dish.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -16,7 +14,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import java.io.InputStream;
-import java.util.Map;
 
 import acore.tools.FileManager;
 import aplug.basic.LoadImage;
@@ -27,7 +24,7 @@ import xh.basic.tool.UtilImage;
  * Created by Administrator on 2016/7/28.
  */
 
-public class ItemBaseView extends RelativeLayout {
+public class DishBaseView extends RelativeLayout {
     public int imgResource = R.drawable.i_nopic;
     public int roundImgPixels = 0, imgWidth = 0, imgHeight = 0,// 以像素为单位
             roundType = 1; // 1为全圆角，2上半部分圆角
@@ -41,21 +38,21 @@ public class ItemBaseView extends RelativeLayout {
     public int playImgWH = 41;
     public Context context;
 
-    public ItemBaseView(Context context, int layoutId) {
+    public DishBaseView(Context context, int layoutId) {
         super(context);
         this.context = context;
         LayoutInflater.from(context).inflate(layoutId, this, true);
         init();
     }
 
-    public ItemBaseView(Context context, AttributeSet attrs, int layoutId) {
+    public DishBaseView(Context context, AttributeSet attrs, int layoutId) {
         super(context, attrs);
         this.context = context;
         LayoutInflater.from(context).inflate(layoutId, this, true);
         init();
     }
 
-    public ItemBaseView(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
+    public DishBaseView(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         LayoutInflater.from(context).inflate(layoutId, this, true);
@@ -128,7 +125,7 @@ public class ItemBaseView extends RelativeLayout {
                     if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                         v.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //						bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(context, 500));
-                        v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                     } else {
                         v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
@@ -141,37 +138,6 @@ public class ItemBaseView extends RelativeLayout {
                 }
             }
         };
-    }
-
-    public void setViewText(TextView textView, Map<String,String> map,String key){
-        setViewText(textView, map, key,View.GONE,"","");
-    }
-
-    public void setViewText(TextView textView, Map<String,String> map,String key,int visibility){
-        setViewText(textView, map, key,visibility,"","");
-    }
-
-    public void setViewTextWithSuffix(TextView textView, Map<String,String> map,String key,String suffix){
-        setViewText(textView, map, key, View.GONE,"",suffix);
-    }
-    public void setViewTextWithPrefix(TextView textView, Map<String,String> map,String key,String prefix){
-        setViewText(textView, map, key, View.GONE,prefix,"");
-    }
-
-    /**
-     *
-     * @param textView
-     * @param map 数据
-     * @param key
-     * @param visibility
-     * @param prefix 前缀String
-     * @param suffix 后缀String
-     */
-    public void setViewText(TextView textView, Map<String,String> map,String key,int visibility,String prefix,String suffix){
-        if(map.containsKey(key) && !TextUtils.isEmpty(map.get(key))){
-            textView.setText(new StringBuilder(prefix).append(map.get(key)).append(suffix));
-            textView.setVisibility(View.VISIBLE);
-        }else textView.setVisibility( View.INVISIBLE == visibility ? View.INVISIBLE:View.GONE);
     }
 
 }

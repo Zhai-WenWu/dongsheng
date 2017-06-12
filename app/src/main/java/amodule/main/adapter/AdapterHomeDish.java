@@ -68,7 +68,7 @@ public class AdapterHomeDish extends AdapterSimple {
                 if (img != null && bitmap != null) {
                     if (v.getId() == R.id.item_author_image) {
                         v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                     }else if (v.getId() == R.id.item_ad_img) {
                         int imgWidth = ToolsDevice.getWindowPx(mAct).widthPixels, imgHeight = imgWidth * bitmap.getHeight() / bitmap.getWidth();
                         v.setScaleType(ImageView.ScaleType.FIT_XY);

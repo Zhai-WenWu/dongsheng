@@ -1,7 +1,6 @@
 package amodule.dish.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -77,6 +76,7 @@ public class DetailDish extends BaseActivity {
 
     private long startTime= 0;
     private String data_type="";
+    private String module_type="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +89,7 @@ public class DetailDish extends BaseActivity {
             if (dishTitle == null) dishTitle = "香哈菜谱";
             state = bundle.getString("state");
             data_type=bundle.getString("data_type");
+            module_type=bundle.getString("module_type");
             //保存历史记录
             DataOperate.saveHistoryCode(code);
         }
@@ -364,8 +365,8 @@ public class DetailDish extends BaseActivity {
             mVideoPlayerController.onDestroy();
         }
         long nowTime=System.currentTimeMillis();
-        if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)){
-            XHClick.saveStatictisFile("DetailDish","info",data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+        if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
+            XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
         }
         //释放资源。
         mHandler.removeCallbacksAndMessages(null);

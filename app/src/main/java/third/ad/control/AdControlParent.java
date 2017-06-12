@@ -16,7 +16,7 @@ import third.ad.option.AdOptionParent;
 public class AdControlParent {
 
     private AdOptionParent mAdOptionParent;
-
+    private int limitNum = 0;//分界点
     public AdControlParent(){
     }
 
@@ -59,5 +59,13 @@ public class AdControlParent {
 
     public void onAdHintClick(Activity act, Map<String, String> map, final String eventID, final String twoLevel){
         mAdOptionParent.onAdHintClick(act,map,eventID,twoLevel);
+    }
+
+    public int getLimitNum() {
+        return limitNum;
+    }
+
+    public void setLimitNum(int limitNum) {
+        this.limitNum = limitNum;
     }
 }

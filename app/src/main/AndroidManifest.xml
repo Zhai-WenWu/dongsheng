@@ -183,6 +183,17 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <!--inmobi广告 start-->
+
+    <!--mta统计 start-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!--mta统计 start-->
+
     <!-- inmobi广告 start -->
     <application
         android:name="acore.override.XHApplication"
@@ -289,6 +300,12 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.xiangha.Welcome"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
         <!-- main end -->
         <activity
@@ -1385,6 +1402,19 @@
 
         <activity android:name="amodule.comment.activity.PublishCommentActivity">
         </activity>
+        <!--腾讯统计mta start-->
+        <!--<provider-->
+            <!--android:name="com.tencent.mid.api.MidProvider"-->
+            <!--android:authorities="com.xiangha"-->
+            <!--android:exported="true" >-->
+        <!--</provider>-->
+        <!--appkey-->
+        <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
+        <meta-data android:name="TA_APPKEY" android:value="Aqc1150004142" />
+        <!--Channel-->
+        <meta-data android:name="InstallChannel" android:value="xiangha" />
+        <!--腾讯统计mta start-->
+
     </application>
 
 </manifest>

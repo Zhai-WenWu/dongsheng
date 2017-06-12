@@ -299,3 +299,8 @@
  public void onPause();
 }
 #GrowingIO end
+
+#mta start
+-keep class com.tencent.stat.**  {* ;}
+-keep class com.tencent.mid.**  {* ;}
+#mta end

@@ -107,7 +107,7 @@ public class MultiTagView extends LinearLayout {
         button.setTextColor(getResources().getColor(android.R.color.black));
         button.setTextSize(14);
 //        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#000000"), Color.parseColor("#BAA8A8"));
-        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#f1eee4"), Color.parseColor("#BAA8A8"));
+        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#f7f7f7"), Color.parseColor("#BAA8A8"));
         drawable.setDefautRadius(dip2px(2));
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
             button.setBackground(drawable);

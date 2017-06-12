@@ -1,6 +1,5 @@
 package amodule.main.view.item;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -12,7 +11,6 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import amodule.main.activity.MainHome;
 
@@ -53,8 +51,9 @@ public class HomeADItem extends HomeItem {
                         if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
                             if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
                             else mTransferUrl+="?data_type="+mDataMap.get("type");
+                            mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
                             Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                            XHClick.saveStatictisFile("home","recom",mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
+                            XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
                         }
                     }
                 }

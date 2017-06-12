@@ -51,6 +51,7 @@ public class ListDish extends BaseActivity {
 	public boolean moreFlag = true, offLineOver = false, infoVoer = false,isToday=false;
 	private String shareName = "";
 	private String data_type = "";//推荐列表过来的数据
+	private String module_type = "";//推荐列表过来的数据
 	private Long startTime;//统计使用的时间
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class ListDish extends BaseActivity {
 			g1 = bundle.getString("g1");
 			name = bundle.getString("name");
 			data_type= bundle.getString("data_type");
+			module_type= bundle.getString("module_type");
 			shareName = name;
 		}
 		if ("recommend".equals(type) || "typeRecommend".equals(type))
@@ -78,8 +80,8 @@ public class ListDish extends BaseActivity {
 		arrayList.clear();
 		System.gc();
 		long nowTime=System.currentTimeMillis();
-		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)){
-			XHClick.saveStatictisFile("ListDish","info",data_type,type,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
+			XHClick.saveStatictisFile("ListDish",module_type,data_type,type,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
 		}
 	}
 

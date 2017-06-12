@@ -69,6 +69,8 @@ import static com.xiangha.R.id.return_top;
 public class HomeFragment extends Fragment{
     /** 保存板块信息的key */
     protected static final String MODULEDATA = "moduleData";
+    public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
+
     private HomeModuleBean homeModuleBean;//数据的结构
     private LoadManager mLoadManager = null;
     private MainBaseActivity mActivity;
@@ -122,6 +124,7 @@ public class HomeFragment extends Fragment{
     private boolean isRecom=false;//是否是推荐
     private long statrTime= -1;//开始的时间戳
     private boolean isNextUrl=true;//执行数据有问题时，数据请求，只执行一次。
+    private int upDataSize = 0;//向上刷新数据集合大小
 
     public static HomeFragment newInstance(HomeModuleBean moduleBean) {
         HomeFragment fragment = new HomeFragment();
@@ -477,7 +480,10 @@ public class HomeFragment extends Fragment{
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
+                                        Log.i("zhangyujian","listDatas:::"+listDatas.size());
                                         listDatas = mAdControl.getNewAdData(listDatas, true);
+
+                                        upDataSize+=listDatas.size();
                                     }
                                     mListData.addAll(0, listDatas);//插入到第一个位置
                                 } else {
@@ -501,6 +507,9 @@ public class HomeFragment extends Fragment{
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
+                                        Log.i("zhangyujian","mListData:::"+mListData.size()+"::"+upDataSize);
+                                        if(upDataSize>0 && isRecom)
+                                            mAdControl.setLimitNum(upDataSize);
                                         mListData = mAdControl.getNewAdData(mListData, false);
                                     }
                                 }
@@ -861,7 +870,7 @@ public class HomeFragment extends Fragment{
             int size= listmaps.size();
             for(int i=0;i<size;i++){
                 listmaps.get(i).put("isTop","2");
-                HomeItem view= handlerTopView(listmaps.get(i));
+                HomeItem view= handlerTopView(listmaps.get(i),i);
                 if(view!=null){
                     linearLayoutThree.addView(view);
                     linearLayoutThree.addView(LayoutInflater.from(mActivity).inflate(R.layout.view_home_show_line,null));
@@ -876,7 +885,7 @@ public class HomeFragment extends Fragment{
      * @param map
      * @return
      */
-    private HomeItem handlerTopView(Map<String,String> map){
+    private HomeItem handlerTopView(Map<String,String> map,int position){
         HomeItem viewTop=null;
         if(map.containsKey("type")&&!TextUtils.isEmpty(map.get("type"))){
             int type=Integer.parseInt(map.get("type"));
@@ -896,7 +905,9 @@ public class HomeFragment extends Fragment{
                     break;
 
             }
-            viewTop.setData(map,0);
+            viewTop.setViewType(MODULETOPTYPE);
+            viewTop.setHomeModuleBean(homeModuleBean);
+            viewTop.setData(map,position);
         }
         return viewTop;
     }

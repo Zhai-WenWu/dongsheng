@@ -45,6 +45,7 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.feedback.activity.Feedback;
+import third.mall.activity.MallMyFavorableActivity;
 import third.mall.activity.MyOrderActivity;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGPushServer;
@@ -61,7 +62,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 	private RelativeLayout right_myself, userPage;
 	private LinearLayout gourp1, gourp2,gourp3;
 	private String[] name1 = {"我的收藏","浏览历史","本地下载"},
-			name2 = {"我的订单","我的会员","我的钱包","我的积分"},
+			name2 = {"我的订单","优惠券","我的会员","我的钱包","我的积分"},
 			name3 = {"帮助与反馈","系统设置"};
 
 //	private int[] img1 = {R.drawable.z_me_list_ico_collect,R.drawable.z_me_list_ico_download,R.drawable.z_me_list_ico_see
@@ -111,7 +112,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 		}
 		//去我的订单
 		if(MallPayActivity.pay_state){
-			onEventCommon(4);
+			onEventCommon(3);
 		}
 	}
 
@@ -169,20 +170,20 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 		Object isShowMoney = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowMoney");
 		Object isShowOpinion = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowOpinion");
 		if(isShowVip == null || TextUtils.isEmpty(String.valueOf(isShowVip))){
-			gourp2.getChildAt(1).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
-			gourp2.getChildAt(1).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
-		}
-		if(isShowMoney == null || TextUtils.isEmpty(String.valueOf(isShowMoney))){
 			gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
 			gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
 		}
-		gourp2.getChildAt(3).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
+		if(isShowMoney == null || TextUtils.isEmpty(String.valueOf(isShowMoney))){
+			gourp2.getChildAt(3).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
+			gourp2.getChildAt(3).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
+		}
+		gourp2.getChildAt(4).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
 		gourp3.getChildAt(1).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
 		if (TextUtils.isEmpty(String.valueOf(isShowOpinion))) {
 			gourp3.getChildAt(0).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
 			gourp3.getChildAt(0).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
 		}
-		TextView scoreTv = (TextView) gourp2.getChildAt(3).findViewById(R.id.text_right_myself);
+		TextView scoreTv = (TextView) gourp2.getChildAt(4).findViewById(R.id.text_right_myself);
 		scoreTv.setText("积分商城惊喜不断");
 		TextView setting = (TextView) gourp3.getChildAt(1).findViewById(R.id.text_right_myself);
 		setting.setText("版本号：" + ToolsDevice.getVerName(this));
@@ -322,9 +323,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 				case R.id.ll_score:
 				case R.id.myself_lv: //用户等级
 				case 0: //收藏
-				case 6: //积分
+				case 7: //积分
 				case 3: //订单
-				case 5: //钱包
+				case 4: //优惠券
+				case 6: //钱包
 					Tools.showToast(this,"请先登录或注册哦~");
 					XHClick.mapStat(this, tongjiId, "头部", "登录");
 					Intent intent = new Intent(MainMyself.this, LoginByAccout.class);
@@ -410,35 +412,40 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 				Intent intent_order = new Intent(this,MyOrderActivity.class);
 				startActivity(intent_order);
 				break;
-			case 4: //会员
+			case 4:
+				XHClick.mapStat(this, tongjiId,"列表", "优惠券");
+				Intent intent_coupon = new Intent(this,MallMyFavorableActivity.class);
+				startActivity(intent_coupon);
+				break;
+			case 5: //会员
 				XHClick.mapStat(this, tongjiId,"列表", "我的会员");
 				AppCommon.openUrl(MainMyself.this,StringManager.api_vip,true);
 				FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowVip","2");
-				gourp2.getChildAt(1).findViewById(R.id.my_new_info).setVisibility(View.GONE);
-				gourp2.getChildAt(1).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
-				break;
-			case 5://钱包
-				XHClick.mapStat(this, tongjiId,"列表", "我的钱包");
-				AppCommon.openUrl(MainMyself.this,StringManager.api_money,true);
-				FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowMoney","2");
 				gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.GONE);
 				gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
 				break;
-			case 6:
+			case 6://钱包
+				XHClick.mapStat(this, tongjiId,"列表", "我的钱包");
+				AppCommon.openUrl(MainMyself.this,StringManager.api_money,true);
+				FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowMoney","2");
+				gourp2.getChildAt(3).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+				gourp2.getChildAt(3).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+				break;
+			case 7:
 				XHClick.track(getApplicationContext(), "点击我的页面的积分");
 				XHClick.mapStat(this, tongjiId,"列表", "积分商城");
 //			AppCommon.openUrl(this, StringManager.api_scoreStore + "?code=" + LoginManager.userInfo.get("code"), true);
 				Intent scoreStore = new Intent(MainMyself.this, ScoreStore.class);
 				startActivity(scoreStore);
 				break;
-			case 8://设置
+			case 9://设置
 				XHClick.track(getApplicationContext(), "点击我的页面的设置");
 				XHClick.mapStat(this, tongjiId, "设置", "");
 				Intent intent_setting = new Intent(MainMyself.this, Setting.class);
 				intent_setting.putExtra("isGoManagerInfo",goManagerInfo.getVisibility() == View.VISIBLE);
 				startActivity(intent_setting);
 				break;
-			case 7://意见反馈
+			case 8://意见反馈
 				FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowOpinion","2");
 				gourp3.getChildAt(0).findViewById(R.id.my_new_info).setVisibility(View.GONE);
 				gourp3.getChildAt(0).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);

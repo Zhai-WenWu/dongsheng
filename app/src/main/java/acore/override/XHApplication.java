@@ -86,7 +86,7 @@ public class XHApplication extends Application {
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                XHActivityManager.getInstance().setCurrentActivity(activity);
+//                XHActivityManager.getInstance().setCurrentActivity(activity);
             }
 
             @Override

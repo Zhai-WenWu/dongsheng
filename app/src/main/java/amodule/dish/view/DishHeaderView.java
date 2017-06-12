@@ -223,8 +223,10 @@ public class DishHeaderView extends LinearLayout {
                 mNum.setText("" + msg.what);
                 if(msg.what == 0){
                     view.setVisibility(View.GONE);
-                    mVideoPlayerController.setShowAd(false);
-                    if(isOnResuming) mVideoPlayerController.setOnClick();
+                    if(!mVideoPlayerController.isPlaying()) {
+                        mVideoPlayerController.setShowAd(false);
+                        if (isOnResuming) mVideoPlayerController.setOnClick();
+                    }
                 }
             }
         };
