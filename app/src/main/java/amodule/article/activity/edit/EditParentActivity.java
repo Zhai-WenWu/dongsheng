@@ -164,6 +164,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                editTitle.clearFocus();
+                mixLayout.getCurrentEditText().getRichText().requestFocus();
                 ToolsDevice.keyboardControl(true, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
             }
         });
