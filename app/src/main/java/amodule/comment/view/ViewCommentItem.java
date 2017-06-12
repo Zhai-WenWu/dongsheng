@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -53,6 +54,8 @@ public class ViewCommentItem extends LinearLayout {
 
     private String comment_id;
 
+    private int normalBackColor = -1;
+
     public ViewCommentItem(Context context) {
         super(context);
         initView(context);
@@ -89,6 +92,10 @@ public class ViewCommentItem extends LinearLayout {
         initContent();
         initReplay();
         initOther();
+    }
+
+    public void setNormBackColor(int color){
+        normalBackColor = color;
     }
 
     private void initUserInfo(){
@@ -156,7 +163,9 @@ public class ViewCommentItem extends LinearLayout {
             contentText.setVisibility(View.GONE);
         }else {
             contentText.setVisibility(View.VISIBLE);
-            contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+            Log.i("commentReplay","addCotentView normalBackColor:" + normalBackColor);
+            if(normalBackColor != -1)
+                contentText.setNormBackColor(normalBackColor);
             contentText.setChoseBackColor(Color.parseColor("#fffde3"));
             int maxNum = 100;
             if (TextUtils.isEmpty(text) || text.length() <= maxNum) {
@@ -396,7 +405,7 @@ public class ViewCommentItem extends LinearLayout {
             }
             CommentBuilder contentBuilder = new CommentBuilder(" : " + content).setTextColor("#535353")
                     .setChoseBackColor(Color.parseColor("#fffde3"));
-//            contentText.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
+//            contentBuilder.setNormBackColor(mContext.getResources().getColor(R.color.common_bg));
 //            contentText.setChoseBackColor(Color.parseColor("#fffde3"));
             contentBuilder.parse(new CommentBuilder.CommentClickCallback() {
                 @Override
@@ -422,6 +431,7 @@ public class ViewCommentItem extends LinearLayout {
                     }
                 }
             });
+            replayTv.setHighlightColor(ContextCompat.getColor(mContext,R.color.transparent));//去掉点击后的背景颜色为透明
             commentReplay.setVisibility(View.VISIBLE);
             commentReplayImg.setVisibility(View.VISIBLE);
             commentReplay.addView(view);
