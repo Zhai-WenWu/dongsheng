@@ -11,9 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import xh.basic.tool.UtilString;
 
@@ -393,28 +391,14 @@ public class StringManager extends UtilString {
         return map;
     }
 
-    public static JSONArray getJsonObj(String str) {
-        List<Map<String, String>> list = StringManager.getListMapByJson(str);
+    public static JSONArray getJsonByArrayList(ArrayList<Map<String, String>> arrayList) {
         JSONArray jsonArray = new JSONArray();
         try {
-            for (Map<String, String> map : list) {
-                JSONObject jsonObject = new JSONObject();
-                if ("urls".equals(map.get("type"))) {
-                    List<Map<String, String>> urlsList = StringManager.getListMapByJson(map.get("urls"));
-                    JSONArray urlJsonArray = new JSONArray();
-                    for(Map<String,String> urlMap:urlsList){
-                        JSONObject urlJsonObject = new JSONObject();
-                        Set<Map.Entry<String, String>> set = urlMap.entrySet();
-                        for (Map.Entry<String, String> entry : set) {
-                            urlJsonObject.put(entry.getKey(), entry.getValue());
-                        }
-                        urlJsonArray.put(urlJsonObject);
-                    }
-                } else {
-                    Set<Map.Entry<String, String>> set = map.entrySet();
-                    for (Map.Entry<String, String> entry : set) {
-                        jsonObject.put(entry.getKey(), entry.getValue());
-                    }
+            JSONObject jsonObject;
+            for (Map<String, String> map : arrayList) {
+                jsonObject = new JSONObject();
+                for(String key : map.keySet()){
+                    jsonObject.put(key,map.get(key));
                 }
                 jsonArray.put(jsonObject);
             }
