@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.sina.sinavideo.sdk.VDVideoExtListeners.OnVDVideoCompletionListener;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
+import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.utils.VDPlayerSoundManager;
 import com.sina.sinavideo.sdk.widgets.VDVideoFullScreenButton;
@@ -45,22 +46,26 @@ import aplug.web.VideoShowWeb;
 import xh.basic.tool.UtilFile;
 
 public class VideoPlayerController {
-    private Context mContext = null;
+    protected Context mContext = null;
     //乐视的secretkey
     private final String secretkey = "5e172624924a79f81d60cb2c28f66c4d";
-    private VDVideoView mVDVideoView = null;
-    private ImageViewVideo mImageView = null;
+    protected VDVideoView mVDVideoView = null;
+    protected ImageViewVideo mImageView = null;
     private String mVideoUnique = "", mUserUnique = "";
     private boolean mHasVideoInfo = false;
     private int mVideoInfoRequestNumber = 0;
-    private ViewGroup mPraentViewGroup = null;
+    protected ViewGroup mPraentViewGroup = null;
     private StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
-    private String mImgUrl = "";
+    protected String mImgUrl = "";
     public boolean isError = false;
-    private View view_dish;
-    private View view_Tip;
+    protected View view_dish;
+    protected View view_Tip;
     private boolean isAutoPaly = false;//是否是wifi状态
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
+
+    public VideoPlayerController(Context context) {
+        this.mContext = context;
+    }
 
     /**
      * 初始化操作：
@@ -92,6 +97,18 @@ public class VideoPlayerController {
             public void onVDVideoCompletion(VDVideoInfo info, int status) {
             }
         });
+
+        VDVideoViewController controller = VDVideoViewController.getInstance(context);
+        if (controller != null) {
+            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
+                @Override
+                public void onCompletion() {
+                    if (mOnPlayingCompletionListener != null) {
+                        mOnPlayingCompletionListener.onPlayingCompletion();
+                    }
+                }
+            });
+        }
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
@@ -515,7 +532,7 @@ public class VideoPlayerController {
     }
 
     //统计视频初始化错误
-    private void statisticsInitVideoError(Context context) {
+    protected void statisticsInitVideoError(Context context) {
         isError = true;
 //		Tools.showToast(context, "您的手机暂时不支持播放视频");
         XHClick.mapStat(context, "init_video_error", "CPU型号", "" + CPUTool.getCpuName());
@@ -535,9 +552,13 @@ public class VideoPlayerController {
             //设置滑动条位置
             RelativeLayout.LayoutParams playerseekParam = (RelativeLayout.LayoutParams) playerseek2.getLayoutParams();
             playerseekParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-            VDPlayerSoundManager.setMute(mContext, true, false);
         }
     }
+
+    public void setMute(boolean isMuted, boolean needNotify) {
+        VDPlayerSoundManager.setMute(mContext, isMuted, needNotify);
+    }
+
     //是否显示广告
     private boolean isShowAd=false;
 
@@ -568,7 +589,7 @@ public class VideoPlayerController {
      * 初始化
      * @param context
      */
-    private void initView(Context context){
+    protected void initView(Context context){
         LayoutParams layoutParams= new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
         view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
         view_Tip.setLayoutParams(layoutParams);
@@ -599,4 +620,16 @@ public class VideoPlayerController {
         isShowMedia = showMedia;
     }
 //    private void play()
+
+    public interface OnPlayingCompletionListener {
+        void onPlayingCompletion();
+    }
+    protected OnPlayingCompletionListener mOnPlayingCompletionListener;
+    public void setOnPlayingCompletionListener(OnPlayingCompletionListener playingCompletionListener) {
+        mOnPlayingCompletionListener = playingCompletionListener;
+    }
+
+    public void removePlayingCompletionListener() {
+        mOnPlayingCompletionListener = null;
+    }
 }

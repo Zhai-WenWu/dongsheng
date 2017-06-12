@@ -62,6 +62,8 @@ import third.ad.option.AdOptionList;
 import third.ad.option.AdOptionParent;
 import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
+import third.video.SimpleVideoPlayerController;
+import third.video.VideoPlayerController;
 
 import static amodule.main.activity.MainHome.tag;
 import static com.xiangha.R.id.return_top;
@@ -109,7 +111,6 @@ public class HomeFragment extends Fragment{
     private boolean isRecoment = false,isDayDish = false,isSetIndex = false;
     private static final Integer[] AD_INSTERT_INDEX = new Integer[]{3,9,16,24,32,40,48,56,64,72};
 
-    private VideoImageView mVideoImageView;
     private RelativeLayout mVideoLayout;
     private ReplayAndShareView mReplayAndShareView;
 
@@ -350,7 +351,6 @@ public class HomeFragment extends Fragment{
                 }, new AutoLoadMore.OnListScrollListener() {
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
-                        stopVideo();
                     }
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -698,6 +698,8 @@ public class HomeFragment extends Fragment{
 
     private VDPlayPauseHelper mVDPlayPauseHelper;
 
+    private SimpleVideoPlayerController mPlayerController;
+
     /**
      * 处理view,video
      * @param parentView
@@ -707,10 +709,23 @@ public class HomeFragment extends Fragment{
         if (parentView == null || position < 0 || position >= mListData.size())
             return;
         if(mListData.get(position).containsKey("video") && !TextUtils.isEmpty(mListData.get(position).get("video"))) {
-            Map<String, String> videoData = StringManager.getFirstMap(mListData.get(position).get("video"));
-            if(mVideoImageView==null)
-                mVideoImageView = new VideoImageView(mActivity,false);
-            mVideoImageView.setImageBg(mListData.get(position).get("img"));
+            Map<String, String> dataMap = mListData.get(position);
+            if (dataMap == null || dataMap.size() <= 0)
+                return;
+            if (mVideoLayout != null && mVideoLayout.getChildCount() > 0) {
+                mVideoLayout.removeAllViews();
+            }
+            if (mPlayerController != null) {
+                mPlayerController.removePlayingCompletionListener();
+                mPlayerController.onPause();
+            }
+            mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_container);
+            if (mPlayerController == null)
+                mPlayerController = new SimpleVideoPlayerController(mActivity);
+            mPlayerController.setViewGroup(mVideoLayout);
+            mPlayerController.setImgUrl(dataMap.get("img"));
+            mPlayerController.initView();
+            Map<String, String> videoData = StringManager.getFirstMap(dataMap.get("video"));
             if (videoData != null) {
                 String videoUrl = videoData.get("videoUrl");
                 if (!TextUtils.isEmpty(videoUrl)) {
@@ -729,38 +744,21 @@ public class HomeFragment extends Fragment{
                                 }
                             }
                         }
-                        mVideoImageView.setVideoData(videoD);
+                        mPlayerController.initVideoView2(videoD, dataMap.get("name"), null);
                     }
-
                 }
-
             }
-            mVideoImageView.setVideoCycle(false);
-            mVideoImageView.setVisibility(View.VISIBLE);
-            if (mVideoLayout != null && mVideoLayout.getChildCount() > 0) {
-                mVideoLayout.removeAllViews();
-            }
-
-            mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_container);
-            mVideoLayout.addView(mVideoImageView);
-            mVideoImageView.onBegin();
-            mPlayPosition = position;
-            mPlayParentView = parentView;
-            final View resumeView =  parentView.findViewById(R.id.resume_img);
-            mVideoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
-                @Override
-                public void setVideoClick() {
-                    if (resumeView != null)
-                        resumeView.setVisibility(isPlaying() ? View.VISIBLE : View.GONE);
-                    playPause();
-                }
-            });
-            mVideoImageView.setOnPlayingCompletionListener(new VideoImageView.OnPlayingCompletionListener() {
+            mPlayerController.hideFullScreen();
+            mPlayerController.setMute(false, false);
+            mPlayerController.setOnClick();
+            mPlayerController.setOnPlayingCompletionListener(new VideoPlayerController.OnPlayingCompletionListener() {
                 @Override
                 public void onPlayingCompletion() {
                     showReplayShareView();
                 }
             });
+            mPlayPosition = position;
+            mPlayParentView = parentView;
         }
     }
 
@@ -768,15 +766,15 @@ public class HomeFragment extends Fragment{
      * 暂停播放
      */
     public void stopVideo(){
-        if(mVideoImageView!=null){
+        if (mPlayerController != null) {
             mPlayPosition = -1;
             if (mPlayParentView != null) {
                 View resumeView = mPlayParentView.findViewById(R.id.resume_img);
                 if (resumeView != null && resumeView.getVisibility() != View.GONE)
                     resumeView.setVisibility(View.GONE);
             }
+            mPlayerController.onPause();
             mPlayParentView = null;
-            mVideoImageView.onVideoPause();
             if (mVideoLayout != null)
                 mVideoLayout.removeAllViews();
         }
@@ -807,7 +805,7 @@ public class HomeFragment extends Fragment{
      * @return
      */
     private boolean isPlaying() {
-        return mVideoImageView == null ? false : mVideoImageView.getIsPlaying();
+        return mPlayerController == null ? false : mPlayerController.isPlaying();
     }
 
     /**

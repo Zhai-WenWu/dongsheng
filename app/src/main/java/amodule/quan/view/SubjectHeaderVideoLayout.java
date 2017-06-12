@@ -179,6 +179,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
             }
         });
         mVideoPlayerController.hideFullScreen();
+        mVideoPlayerController.setMute(true, false);
         //点击回调
         mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
             @Override
