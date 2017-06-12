@@ -20,9 +20,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.xiangha.R;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -145,7 +142,19 @@ public class ViewCommentItem extends LinearLayout {
         String is_anchor = dataMap.get("is_anchor");
         if("2".equals(is_anchor)){
             commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
-            dataMap.put("is_anchor","1");
+            if (mListener != null)
+                mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dataMap.put("is_anchor","1");
+                }
+            }).start();
         }
         else commentContent.setBackgroundColor(Color.parseColor("#00fffae3"));
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
@@ -317,25 +326,9 @@ public class ViewCommentItem extends LinearLayout {
         }
     }
 
-    private void resetReplay(ArrayList<Map<String, String>> replayArray){
-        try {
-            JSONArray jsonArray = new JSONArray();
-            JSONObject jsonObject;
-            for (final Map<String, String> replayMap : replayArray) {
-                jsonObject = new JSONObject();
-                for (String key : replayMap.keySet())
-                    jsonObject.put(key, replayMap.get(key));
-                jsonArray.put(jsonObject);
-            }
-            dataMap.put("replay",jsonArray.toString());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public void addReplayView(Object replay, boolean isClear){
         if(isClear)commentReplay.removeAllViews();
-        ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
+        final ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
         Log.i("commentReplay","addReplayView() replayArray.size:" + replayArray.size());
         View view;
         MultifunctionTextView replayTv;
@@ -357,7 +350,9 @@ public class ViewCommentItem extends LinearLayout {
             String authoCode = null;
 
 
+            Log.i("commentReplay","uName:" + uName + "   is_anchor:" + is_anchor);
             if("2".equals(is_anchor)){ //是否是锚点
+                Log.i("commentReplay","is_anchor:" + is_anchor);
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
                 if(mListener != null) mListener.onContentReplayClick(comment_id,ucode,uName,"");
                 replayMap.put("is_anchor","1");
@@ -436,7 +431,19 @@ public class ViewCommentItem extends LinearLayout {
             commentReplayImg.setVisibility(View.VISIBLE);
             commentReplay.addView(view);
         }
-        if(isReset) resetReplay(replayArray);
+        if(isReset){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dataMap.put("replay",StringManager.getJsonByArrayList(replayArray).toString());
+                }
+            }).start();
+        }
     }
 
     private void goFriendHome(String code){
