@@ -28,9 +28,9 @@ public class CommonBottonControl {
 	 * @param context
 	 */
 	public View setCommonBottonView(String className,Activity context,int contentXml){
-		if(jubgeCommonBottonShow(context,className))
-			return addCommonBottonView(className,context, contentXml);
-		else 
+//		if(jubgeCommonBottonShow(context,className))
+//			return addCommonBottonView(className,context, contentXml);
+//		else
 			return LayoutInflater.from(context).inflate(contentXml, null);
 	}
 	/**
