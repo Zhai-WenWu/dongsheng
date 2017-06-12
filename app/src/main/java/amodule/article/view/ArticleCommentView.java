@@ -18,6 +18,7 @@ import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.article.activity.ReportActivity;
 import amodule.comment.activity.CommentActivity;
 import amodule.comment.view.ViewCommentItem;
 import aplug.basic.InternetCallback;
@@ -64,7 +65,7 @@ public class ArticleCommentView extends ItemBaseView {
         commentAll.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoCommentActivity(null,null);
+                gotoCommentActivity(null, null);
             }
         });
     }
@@ -82,6 +83,12 @@ public class ArticleCommentView extends ItemBaseView {
                 final Map<String, String> dataMap = data.get(index);
                 final ViewCommentItem commentItem = new ViewCommentItem(getContext());
                 commentItem.setData(dataMap);
+                commentItem.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoCommentActivity(dataMap.get("comment_id"),null);
+                    }
+                });
                 commentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
                     @Override
                     public void onShowAllReplayClick(String comment_id) {
@@ -89,14 +96,14 @@ public class ArticleCommentView extends ItemBaseView {
                         sbuild.append("type=").append(getType()).append("&")
                                 .append("code=").append(code).append("&")
                                 .append("commentId=").append(comment_id).append("&")
-                                .append("pagesize=").append(Integer.parseInt(dataMap.get("replay_num")) + 3).append("&");
+                                .append("pagesize=").append(Integer.parseInt(dataMap.get("replay_num")) + 3);
 
                         ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, sbuild.toString(),
                                 new InternetCallback(getContext()) {
                                     @Override
                                     public void loaded(int flag, String url, Object obj) {
                                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                                            commentItem.addReplayView((String) obj,true);
+                                            commentItem.addReplayView((String) obj, true);
                                         }
                                     }
                                 });
@@ -105,32 +112,46 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent, String reportType) {
-                        gotoCommentActivity(comment_id,null);
+                        Intent intent = new Intent(context, ReportActivity.class);
+                        intent.putExtra("code", code);
+                        intent.putExtra("type", getType());
+                        intent.putExtra("userCode", comment_user_code);
+                        intent.putExtra("commentId", comment_id);
+                        intent.putExtra("reportName", comment_user_name);
+                        intent.putExtra("reportContent", reportContent);
+                        intent.putExtra("reportType", "2");
+                        context.startActivity(intent);
                     }
 
                     @Override
                     public void onDeleteCommentClick(String comment_id, String deleteType) {
-                        gotoCommentActivity(comment_id,null);
                     }
 
                     @Override
                     public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-                        gotoCommentActivity(comment_id,replay_id);
+                        Intent intent = new Intent(context, ReportActivity.class);
+                        intent.putExtra("code", code);
+                        intent.putExtra("type", getType());
+                        intent.putExtra("userCode", replay_user_code);
+                        intent.putExtra("replayId", replay_id);
+                        intent.putExtra("reportName", replay_user_name);
+                        intent.putExtra("reportContent", reportContent);
+                        intent.putExtra("reportType", "3");
+                        context.startActivity(intent);
                     }
 
                     @Override
                     public void onDeleteReplayClick(String comment_id, String replay_id) {
-                        gotoCommentActivity(comment_id,replay_id);
                     }
 
                     @Override
                     public void onPraiseClick(String comment_id) {
-                        gotoCommentActivity(comment_id,null);
+//                        gotoCommentActivity(comment_id,null);
                     }
 
                     @Override
                     public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
-                        gotoCommentActivity(comment_id,null);
+                        gotoCommentActivity(comment_id, null);
                         statistics("评论", type);
                     }
                 });
@@ -156,13 +177,13 @@ public class ArticleCommentView extends ItemBaseView {
 
     }
 
-    private void gotoCommentActivity(String commentId,String replayId) {
+    private void gotoCommentActivity(String commentId, String replayId) {
         Intent intent = new Intent(getContext(), CommentActivity.class);
         intent.putExtra("type", getType());
         intent.putExtra("code", code);
-        if(!TextUtils.isEmpty(commentId))
+        if (!TextUtils.isEmpty(commentId))
             intent.putExtra("commentId", commentId);
-        if(!TextUtils.isEmpty(replayId))
+        if (!TextUtils.isEmpty(replayId))
             intent.putExtra("replayId", replayId);
         getContext().startActivity(intent);
         statistics("评论", "查看所有评论");

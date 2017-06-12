@@ -47,6 +47,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     private EditText editText;
     private LinearLayout praiseButton;
     private TextView sendComment;
+    private TextView hintComment;
     private TextView praiseText;
     private ProgressBar progressBar;
 
@@ -78,6 +79,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         praiseButton = (LinearLayout) findViewById(R.id.praise_button);
         praiseText = (TextView) findViewById(R.id.subject_zan);
         sendComment = (TextView) findViewById(R.id.comment_send);
+        hintComment = (TextView) findViewById(R.id.comment_hint_fake);
         progressBar = (ProgressBar) findViewById(R.id.comment_send_progress);
 
         sendComment.setOnClickListener(this);
@@ -109,6 +111,8 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
         String commentNum = map.get("commentNumber");
         isSofa = "0".equals(commentNum);
+        hintComment.setText(isSofa ? "抢沙发":"写评论");
+
     }
 
     @Override
@@ -213,7 +217,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     }
 
     private String getTextHint(){
-        return  "1".equals(getType()) ? "评论文章" : "评论视频";
+        return  "写评论";
     }
 
     public String getContent() {

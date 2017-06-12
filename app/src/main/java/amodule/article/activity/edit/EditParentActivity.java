@@ -546,7 +546,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     || mixLayout.hasText()
                     || mixLayout.hasImage()
                     || mixLayout.hasVideo())
-                Tools.showToast(this, "内容以保存");
+                Tools.showToast(this, "内容已保存");
             saveDraft();
             finshActivity();
         } else {

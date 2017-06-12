@@ -214,12 +214,11 @@ public class FriendHome extends BaseActivity {
 					ArrayList<Map<String, String>> list = StringManager.getListMapByJson(o);
                     mTabs.addAll(list);
 					mSecondDataReady = true;
+					onDataReady();
 				} else {
 					onDataFailure(this, i, o);
 				}
 				mSecondLoaded = true;
-				//处理特殊情况，失败了也加在数据
-				onDataReady();
 				onLoaded(i);
 			}
 		});

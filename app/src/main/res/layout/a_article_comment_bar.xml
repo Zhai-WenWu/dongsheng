@@ -57,6 +57,7 @@
                         android:src="@drawable/i_comment_pen"/>
 
                     <TextView
+                        android:id="@+id/comment_hint_fake"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/dp_5"
