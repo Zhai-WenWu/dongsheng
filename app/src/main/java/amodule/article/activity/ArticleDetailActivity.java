@@ -2,9 +2,7 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -24,15 +21,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,14 +56,12 @@ import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.share.BarShare;
-import xh.basic.tool.UtilImage;
 import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM;
-import static third.ad.tools.AdPlayIdConfig.DETAIL_DISH_MAKE;
 
 /** 文章详情 */
 public class ArticleDetailActivity extends BaseActivity {
@@ -113,6 +104,7 @@ public class ArticleDetailActivity extends BaseActivity {
         super.onRestart();
         if (loadManager != null)
             loadManager.hideProgressBar();
+        refreshData(true);
     }
 
     @Override
@@ -267,7 +259,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        refreshData();
+                        refreshData(false);
                     }
                 },
                 new View.OnClickListener() {
@@ -296,7 +288,7 @@ public class ArticleDetailActivity extends BaseActivity {
                         }
                     }
                 });
-        requestArticleData();
+        requestArticleData(false);
         if("1".equals(getType())){
             //请求广告数据
             xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM},"wz_wz");
@@ -305,9 +297,10 @@ public class ArticleDetailActivity extends BaseActivity {
         }
     }
 
-    private void refreshData() {
-        resetData();
-        requestArticleData();
+    private void refreshData(boolean onlyUser) {
+        if(!onlyUser)
+            resetData();
+        requestArticleData(onlyUser);
         //请求广告数据
 //        requestAdData();
     }
@@ -359,7 +352,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     /** 请求网络 */
-    private void requestArticleData() {
+    private void requestArticleData(final boolean onlyUser) {
         String url = getInfoAPI();
         String params = TextUtils.isEmpty(code) ? "" : "code=" + code;
         params += "&type=HTML";
@@ -369,7 +362,7 @@ public class ArticleDetailActivity extends BaseActivity {
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
-                    analysArticleData(listMap.get(0));
+                    analysArticleData(onlyUser,listMap.get(0));
                 } else {
                     toastFaildRes(flag, true, object);
                 }
@@ -384,16 +377,19 @@ public class ArticleDetailActivity extends BaseActivity {
      *
      * @param mapArticle
      */
-    private void analysArticleData(@NonNull final Map<String, String> mapArticle) {
+    private void analysArticleData(boolean onlyUser,@NonNull final Map<String, String> mapArticle) {
         if (mapArticle.isEmpty()) return;
         findViewById(R.id.rightImgBtn2).setVisibility(View.VISIBLE);
-        headerView = new ArticleHeaderView(ArticleDetailActivity.this);
+        if(headerView == null)
+            headerView = new ArticleHeaderView(ArticleDetailActivity.this);
         headerView.setType(getType());
         headerView.setData(mapArticle);
         if (linearLayoutOne.getChildCount() == 0)
             linearLayoutOne.addView(headerView);
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
+        if(onlyUser)
+            return;
         listview.setVisibility(View.VISIBLE);
         commentNum = mapArticle.get("commentNumber");
         mArticleCommentBar.setPraiseAPI(getPraiseAPI());

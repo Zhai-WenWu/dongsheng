@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/dp_24"
-        android:text="转自：简书"
+        android:visibility="gone"
         android:textColor="#B6B5B5"
         android:textSize="@dimen/sp_15"/>
 

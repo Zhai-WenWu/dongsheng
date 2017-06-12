@@ -151,7 +151,11 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return Integer.parseInt(getItem(position).get("datatype"));
+        String dataTypeStr = getItem(position).get("datatype");
+        if(TextUtils.isEmpty(dataTypeStr)){
+            return 0;
+        }
+        return Integer.parseInt(dataTypeStr);
     }
 
     private View getTextView(Map<String, String> map) {

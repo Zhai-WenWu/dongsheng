@@ -129,6 +129,11 @@ public class ChangeSendDialog extends Dialog {
             addButton("2", R.drawable.send_dish, "写菜谱");
             itemNum++;
         }
+        //删除true
+        addButton("6", R.drawable.pulish_article, "发文章");
+        itemNum++;
+        addButton("7", R.drawable.pulish_video, "短视频");
+        itemNum++;
 //        if (LoginManager.isShowShortVideoButton()) {
 //            addButton("3", R.drawable.pulish_video, "小视频");
 //            itemNum++;
@@ -141,11 +146,7 @@ public class ChangeSendDialog extends Dialog {
             addButton("5", R.drawable.pulish_video_dish, "发视频菜谱");
             itemNum++;
         }
-        //删除true
-        addButton("6", R.drawable.pulish_article, "发文章");
-        itemNum++;
-        addButton("7", R.drawable.pulish_video, "短视频");
-        itemNum++;
+
         if (dishVideoMap != null && dishVideoMap.size() > 0) {
             String img = dishVideoMap.get("img");
             BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(activity)

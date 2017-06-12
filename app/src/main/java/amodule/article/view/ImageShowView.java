@@ -126,10 +126,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                                 imageHieght = bitmap.getHeight();
 
                                 int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                int waith = newWaith;
-                                if (imageWidth <= newWaith)
-                                    waith = 0;
-                                UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+                                UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
 
                             }
                         }
@@ -212,10 +209,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                             imageHieght = bitmap.getHeight();
 
                             int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                            int waith = newWaith;
-                            if (imageWidth <= newWaith)
-                                waith = 0;
-                            UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+                            UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
                         }
                     });
                 }

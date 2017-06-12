@@ -16,6 +16,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,6 +47,7 @@ import amodule.article.db.UploadParentSQLite;
 import amodule.article.view.EditBottomControler;
 import amodule.article.view.InputUrlDialog;
 import amodule.article.view.TextAndImageMixLayout;
+import amodule.article.view.VideoShowView;
 import amodule.dish.db.UploadDishData;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -81,8 +83,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     private boolean isKeyboradShow = false;
 
-    private RelativeLayout bottomBarLayout;
-
 
     /** 定时存草稿 */
     protected Timer timer;
@@ -111,8 +111,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     protected void initView(String title) {
         //处理状态栏引发的问题
-        bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
         if (Tools.isShowTitle()) {
+            final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
             rl.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
                         public void onGlobalLayout() {
@@ -124,8 +124,21 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             isKeyboradShow = heightDifference > 200;
                             heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
                             bottomBarLayout.setPadding(0, 0, 0, heightDifference);
-//                            int paddingBottom = editBottomControler.isShowEditLayout() ? dp_50 + dp_64 + heightDifference : dp_50 + dp_64;
-//                            contentLayout.setPadding(0, 0, 0, paddingBottom);
+                            int[] location = new int[2];
+                            mixLayout.getCurrentEditText().getRichText().getLocationOnScreen(location);
+                            DisplayMetrics dm = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(dm);
+                            int distance = dm.heightPixels-location[1];
+                            if(isKeyboradShow
+                                    && distance <= heightDiff
+                                    && !editTitle.isFocused()){
+                                scrollView.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        scrollView.scrollBy(0, dp_50);
+                                    }
+                                }, 100);
+                            }
                         }
                     });
         }
@@ -201,13 +214,37 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         editTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                bottomBarLayout.setVisibility(hasFocus ? View.GONE : View.VISIBLE);
+                editBottomControler.setVisibility(hasFocus ? View.GONE : View.VISIBLE);
             }
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
         mixLayout.setMaxVideoCount(getMaxVideoCount());
         mixLayout.setMaxTextCount(getMaxTextCount());
         mixLayout.setSingleVideo("2".equals(getType()));
+        mixLayout.setType(getType());
+        mixLayout.setOnScorllEndCallback(new TextAndImageMixLayout.OnScorllEndCallback() {
+            @Override
+            public void onScorllEnd() {
+                scrollView.scrollTo(0,mixLayout.getHeight());
+            }
+        });
+        if("2".equals(getType())){
+            mixLayout.setVideo(new VideoShowView.VideoDefaultClickCallback() {
+                @Override
+                public void defaultClick() {
+                    Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
+                    startActivityForResult(intent, REQUEST_SELECT_VIDEO);
+                    switch (mPageTag) {
+                        case mArticlePageTag:
+                            XHClick.mapStat(mCurrentContext, "a_ArticleEdit", "编辑文章内容", "添加视频");
+                            break;
+                        case mVideoPageTag:
+                            XHClick.mapStat(mCurrentContext, "a_ShortVideoEdit", "编辑视频内容", "添加视频");
+                            break;
+                    }
+                }
+            });
+        }
         mixLayout.post(new Runnable() {
             @Override
             public void run() {

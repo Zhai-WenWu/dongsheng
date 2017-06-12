@@ -74,7 +74,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private void init() {
         setOrientation(VERTICAL);
-        setPadding(0,0,0,Tools.getDimen(getContext(), R.dimen.dp_20));
+        setPadding(0,0,0,Tools.getDimen(getContext(), R.dimen.dp_80));
         addRichText(-1, "");
     }
 
@@ -86,7 +86,9 @@ public class TextAndImageMixLayout extends LinearLayout
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        removeAllViews();
+        if(!"2".equals(type))
+            removeAllViews();
+
         List<Map<String, String>> dataArray = StringManager.getListMapByJson(content);
         Log.i("tzy","dataArray = " + dataArray.toString());
         for (int index = 0 ; index < dataArray.size() ; index ++) {
@@ -255,6 +257,10 @@ public class TextAndImageMixLayout extends LinearLayout
             public void onFocusChange(EditTextView v, boolean hasFocus) {
                 if (hasFocus){
                     currentEditText = v;
+                    if(indexOfChild(currentEditText) == getChildCount() - 1){
+                        if(onScorllEndCallback != null)
+                            onScorllEndCallback.onScorllEnd();
+                    }
                 }
             }
         });
@@ -274,6 +280,7 @@ public class TextAndImageMixLayout extends LinearLayout
             view.setText(content);
             view.setSelection(view.getRichText().getText().length());
         }
+        view.getRichText().setHint(indexOfChild(view) == 0?"添加内容":"");
         return view;
     }
 
@@ -444,6 +451,22 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setVideoData(coverImageUrl, videoUrl);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);
+    }
+
+    public void setVideo(VideoShowView.VideoDefaultClickCallback callback){
+        VideoShowView view = new VideoShowView(getContext());
+        LayoutParams layoutparams = getChildLayoutParams();
+        int dp_20 = Tools.getDimen(getContext(),R.dimen.dp_20);
+//        view.setPadding(dp_20,dp_20,dp_20,0);
+        layoutparams.setMargins(0,dp_20,0,0);
+        addView(view, 0, layoutparams);
+        view.setEnableEdit(true);
+        view.setmOnRemoveCallback(this);
+        view.setmOnClickImageListener(this);
+        view.setWrapContent(false);
+        if(callback != null)
+            view.setVideoDefaultClickCallback(callback);
+        currentEditText.getRichText().setHint("添加视频介绍");
     }
 
     //=============文本操作=====================================
@@ -735,5 +758,19 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setMaxTextCount(int maxTextCount) {
         this.maxTextCount = maxTextCount;
+    }
+
+    private String type;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private OnScorllEndCallback onScorllEndCallback;
+    public interface OnScorllEndCallback{
+        public void onScorllEnd();
+    }
+
+    public void setOnScorllEndCallback(OnScorllEndCallback onScorllEndCallback) {
+        this.onScorllEndCallback = onScorllEndCallback;
     }
 }

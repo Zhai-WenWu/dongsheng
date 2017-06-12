@@ -1,16 +1,16 @@
 package amodule.article.view;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
@@ -19,10 +19,8 @@ import org.json.JSONObject;
 
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.main.view.item.HomeRecipeItem;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import third.video.VideoImagePlayerController;
 import xh.basic.tool.UtilImage;
 
 /**
@@ -35,10 +33,12 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private ImageView coverImage;
     private ImageView deleteImage;
     private RelativeLayout videoLayout;
+    private LinearLayout defaultLayout;
 
     private boolean enableEdit = false;
     private String coverImageUrl;
     private String videoUrl;
+    private boolean isWrapContent = true;
     private int position;
 
     public VideoShowView(Context context) {
@@ -60,6 +60,18 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         coverImage = (ImageView) findViewById(R.id.video_cover_image);
         deleteImage = (ImageView) findViewById(R.id.delete_image);
         videoLayout = (RelativeLayout) findViewById(R.id.video_layout);
+        defaultLayout = (LinearLayout) findViewById(R.id.default_layout);
+        int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+        int height = width * 9 / 16;
+        defaultLayout.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+        defaultLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(videoDefaultClickCallback != null){
+                    videoDefaultClickCallback.defaultClick();
+                }
+            }
+        });
 
         coverImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
@@ -84,6 +96,11 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     }
 
     public void setVideoDataFromService(String coverImageUrl, String videoUrl, int position) {
+        if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
+            return;
+        }
+        defaultLayout.setVisibility(GONE);
+        findViewById(R.id.image_layout).setVisibility(VISIBLE);
         this.position = position;
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
@@ -96,12 +113,16 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                         if (bitmap != null) {
                             int imageWidth = bitmap.getWidth();
                             int imageHieght = bitmap.getHeight();
-
-                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                            int waith = newWaith;
-                            if (imageWidth <= newWaith) waith = 0;
-                            UtilImage.setImgViewByWH(coverImage, bitmap, waith, 0, false);
-
+                            if (isWrapContent) {
+                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                                UtilImage.setImgViewByWH(coverImage, bitmap, newWaith, 0, false);
+                            }else{
+                                int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+                                int height = width * 9 / 16;
+                                coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                coverImage.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+                                coverImage.setImageBitmap(bitmap);
+                            }
                         }
                     }
                 });
@@ -112,6 +133,11 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     }
 
     public void setVideoData(String coverImageUrl, String videoUrl) {
+        if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
+            return;
+        }
+        defaultLayout.setVisibility(GONE);
+        findViewById(R.id.image_layout).setVisibility(VISIBLE);
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
         LoadImage.with(getContext())
@@ -124,10 +150,16 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                             int imageWidth = bitmap.getWidth();
                             int imageHieght = bitmap.getHeight();
 
-                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                            int waith = newWaith;
-                            if (imageWidth <= newWaith) waith = 0;
-                            UtilImage.setImgViewByWH(coverImage, bitmap, waith, 0, false);
+                            if (isWrapContent) {
+                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                                UtilImage.setImgViewByWH(coverImage, bitmap, newWaith, 0, false);
+                            }else{
+                                int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+                                int height = width * 9 / 16;
+                                coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                coverImage.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+                                coverImage.setImageBitmap(bitmap);
+                            }
                         }
                     }
                 });
@@ -184,5 +216,21 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     public void setVideoClickCallBack(VideoClickCallBack clickCallBack) {
         mVideoClickCallBack = clickCallBack;
+    }
+    private VideoDefaultClickCallback videoDefaultClickCallback;
+    public interface VideoDefaultClickCallback{
+        public void defaultClick();
+    }
+
+    public void setVideoDefaultClickCallback(VideoDefaultClickCallback videoDefaultClickCallback) {
+        this.videoDefaultClickCallback = videoDefaultClickCallback;
+    }
+
+    public boolean isWrapContent() {
+        return isWrapContent;
+    }
+
+    public void setWrapContent(boolean wrapContent) {
+        isWrapContent = wrapContent;
     }
 }

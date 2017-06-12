@@ -3,6 +3,7 @@ package amodule.article.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,14 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
     }
 
     public void setData(Map<String,String> map){
-        setViewTextWithPrefix(articleRepintSource,map,"repAddress","转载 : ");
+        if(!"2".equals(map.get("isOriginal"))){
+            String repAddressStr = map.get("repAddress");
+            if(TextUtils.isEmpty(repAddressStr) || "null".equals(repAddressStr)){
+                articleRepintSource.setText("转载");
+            }else{
+                articleRepintSource.setText("转载：" + repAddressStr);
+            }
+        }
         setViewTextWithPrefix(articleBrowse,map,"clickAll","阅读");
         setViewText(articlePublishDate,map,"addTime");
     }
