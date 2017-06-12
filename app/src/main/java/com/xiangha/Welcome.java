@@ -85,6 +85,7 @@ public class Welcome extends BaseActivity {
         textLead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isAdLeadClick=true;
                 closeActivity();
             }
         });

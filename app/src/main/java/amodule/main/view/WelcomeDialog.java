@@ -142,6 +142,7 @@ public class WelcomeDialog extends Dialog {
         textLead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isAdLeadClick=true;
                 closeDialog();
             }
         });
