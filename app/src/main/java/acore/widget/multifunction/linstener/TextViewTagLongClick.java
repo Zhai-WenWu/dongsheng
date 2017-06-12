@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -143,16 +144,22 @@ public class TextViewTagLongClick implements OnLongClickListener{
 			}
 		});
 		Button rightBtn = (Button) popupWindow.findViewById(R.id.pop_rightBtn);
-		rightBtn.setText(rightBtnName);
-		rightBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dismissPopupWindowInstance();
-				if(rightclicker != null){
-					rightclicker.onClick(v);
+		if(rightclicker != null && !TextUtils.isEmpty(rightBtnName)){
+			rightBtn.setText(rightBtnName);
+			rightBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dismissPopupWindowInstance();
+					if(rightclicker != null){
+						rightclicker.onClick(v);
+					}
 				}
-			}
-		});
+			});
+		}else{
+			rightBtn.setVisibility(View.GONE);
+			popupWindow.findViewById(R.id.center_line).setVisibility(View.GONE);
+		}
+
 		if(userClicker!=null){//有三个位置时，显示数据
 			popupWindow.findViewById(R.id.rela_right).setVisibility(View.VISIBLE);
 			popupWindow.findViewById(R.id.ll_left).setBackgroundResource(R.drawable.bg_round_black_left);
