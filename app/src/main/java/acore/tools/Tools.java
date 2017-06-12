@@ -276,9 +276,8 @@ public class Tools {
     public static void showToast(Context context, String returnObj, int gravity) {
         if (context != null && returnObj != "" && returnObj != null && !"[]".equals(returnObj)) {
             Toast toast = Toast.makeText(context, returnObj, Toast.LENGTH_SHORT);
-            if (gravity == -1)
-                gravity = toast.getGravity();
-            toast.setGravity(gravity, 0, 0);
+            if (gravity != -1)
+                toast.setGravity(gravity, 0, 0);
             toast.show();
         }
     }
