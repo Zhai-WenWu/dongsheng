@@ -59,7 +59,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private EditText commend_write_et;
     private ImageView writePen;
     private TextView sendTv,commend_write_tv;
-    private View sendProgress;
 
     private String gotoCommentId,gotoReplayId;
 
@@ -100,7 +99,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         sendTv = (TextView) findViewById(R.id.comment_send);
         sendTv.setOnClickListener(this);
         sendTv.setClickable(false);
-        sendProgress = findViewById(R.id.comment_send_progress);
         writePen = (ImageView) findViewById(R.id.commend_write_pen);
         commend_write_tv = (TextView) findViewById(R.id.commend_write_tv);
         commend_write_tv.setOnClickListener(this);
@@ -120,8 +118,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         downRefreshList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//                Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
                 if(View.VISIBLE == sendTv.getVisibility()) {
+                    Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
+                    oldUrl = currentUrl;
                     changeKeyboard(false);
                     commend_write_et.setHint(" 写评论");
                 }
@@ -172,7 +171,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent,String reportType) {
-                Tools.showToast(CommentActivity.this,"举报评论 " + comment_id);
                 XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,reportType);
                 Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
                 intent.putExtra("type",type);
@@ -425,7 +423,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private String currentUrl = StringManager.api_addForum,currentParams,oldCommentId,oldReplayId;
+    private String currentUrl = StringManager.api_addForum,oldUrl,currentParams,oldCommentId,oldReplayId;
     private int replayIndex;
     private boolean isSend = false,isAddForm;
     private synchronized void sendData(){
@@ -438,7 +436,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         isSend = true;
-        sendProgress.setVisibility(View.VISIBLE);
         String content = commend_write_et.getText().toString();
         if(content.length() == 0){
             Tools.showToast(this,"发送内容不能为空");
@@ -513,8 +510,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                             adapterSimple.notifyDataSetChanged();
                         }
                     }
-                }else{
-                    sendProgress.setVisibility(View.GONE);
                 }
                 isSend = false;
             }
@@ -536,7 +531,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             writePen.setVisibility(View.VISIBLE);
             commend_write_et.setVisibility(View.GONE);
             commend_write_tv.setVisibility(View.VISIBLE);
-            sendProgress.setVisibility(View.GONE);
             ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);
         }
     }
@@ -560,10 +554,14 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.commend_write_tv:
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"点击评论框","");
+                if(!currentUrl.equals(oldUrl)){
+                    commend_write_et.setText("");
+                }
                 changeKeyboard(true);
                 break;
             case R.id.title:
             case R.id.activityLayout:
+                oldUrl = currentUrl;
                 changeKeyboard(false);
                 commend_write_et.setHint(" 写评论");
                 break;

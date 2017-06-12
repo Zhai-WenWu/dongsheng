@@ -62,7 +62,7 @@
                 android:id="@+id/commend_write_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/comment_send_parent"
+                android:layout_toLeftOf="@+id/comment_send"
                 android:background="@drawable/bg_round40_dbdbdb"
                 android:gravity="center_vertical"
                 android:text="写评论"
@@ -78,7 +78,7 @@
                 android:id="@+id/commend_write_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/comment_send_parent"
+                android:layout_toLeftOf="@+id/comment_send"
                 android:background="@drawable/bg_round40_dbdbdb"
                 android:gravity="center_vertical"
                 android:hint="写评论"
@@ -93,33 +93,18 @@
                 android:textSize="@dimen/sp_12"
                 android:visibility="gone"/>
 
-            <LinearLayout
-                android:id="@+id/comment_send_parent"
+            <TextView
+                android:id="@+id/comment_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/comment_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingLeft="@dimen/dp_13"
-                    android:text="发送"
-                    android:textColor="#ccc"
-                    android:textSize="@dimen/sp_12"
-                    android:visibility="visible" />
-
-                <ProgressBar
-                    android:id="@+id/comment_send_progress"
-                    android:layout_width="@dimen/dp_22"
-                    android:layout_height="@dimen/dp_22"
-                    android:layout_alignParentRight="true"
-                    android:paddingLeft="@dimen/dp_13"
-                    android:visibility="gone" />
-            </LinearLayout>
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_13"
+                android:text="发送"
+                android:textColor="#ccc"
+                android:textSize="@dimen/sp_12"
+                android:visibility="visible" />
 
         </RelativeLayout>
     </RelativeLayout>
