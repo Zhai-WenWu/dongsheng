@@ -101,73 +101,85 @@ public class FriendHome extends BaseActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//sufureView页面闪烁
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle != null) {
-			userCode = bundle.getString("code");
-			tabIndex = bundle.getInt("index");
-			//消息是否读过
-			if (bundle.getString("newsId") != null) {
-				String params = "type=news&p1=" + bundle.getString("newsId");
-				ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
-					@Override
-					public void loaded(int flag, String url, Object returnObj) {
-					}
-				});
-			}
-		}
-		mIsMySelf = !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"));
-		if(mIsMySelf){
-			tongjiId = "a_my";
-		}
-		String className = this.getComponentName().getClassName();
-		CommonBottonControl control = new CommonBottonControl();
-		setContentView(control.setCommonBottonView(className, this, R.layout.a_my_friend_home));
-		XHClick.track(this,"浏览个人主页");
-		mCommonBottomView = control.mCommonBottomView;
-		level = 4;
-		setCommonStyle();
+		initData();
 
-		scrollLayout = (LayoutScroll) findViewById(R.id.scroll_body);;
-		// 滑动设置
-		backLayout = (LinearLayout) findViewById(R.id.a_user_home_title);
-		friend_info = (TextViewLimitLine) findViewById(R.id.a_user_home_title_info);
-		activityLayout_show = (LinearLayout) findViewById(R.id.a_user_home_title);
-		activityLayout_show.setVisibility(View.INVISIBLE);
+		initView();
 
-		//设置当向上滑动，浮动tab出现时，假状态栏的高度
-		if(Tools.isShowTitle()) {
-			View view = findViewById(R.id.a_user_home_float_title_view);
-			LinearLayout.LayoutParams params = (LayoutParams) view.getLayoutParams();
-			params.height = Tools.getStatusBarHeight(this);
-		}else{
-			findViewById(R.id.a_user_home_float_title_view).setVisibility(View.GONE);
-		}
-
-		mUserHomeTitle = new UserHomeTitle(this,findViewById(R.id.a_user_home_title),userCode);
-
-		findViewById(R.id.a_user_home_title_back).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
-		loadManager.setLoading(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getData();
-			}
-		});
-		friend_info.addOnClick(new TextViewLimitLine.OnClickListener() {
-			@Override
-			public void onClick(View v,boolean isNeedRefrash) {
-				if(isNeedRefrash) doReload();
-			}
-		});
-
-		isAlive = true;
-
-		registerBrocaster();
+		addListener();
 	}
+
+	private void initData() {
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            userCode = bundle.getString("code");
+            tabIndex = bundle.getInt("index");
+            //消息是否读过
+            if (bundle.getString("newsId") != null) {
+                String params = "type=news&p1=" + bundle.getString("newsId");
+                ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+                    @Override
+                    public void loaded(int flag, String url, Object returnObj) {
+                    }
+                });
+            }
+        }
+        mIsMySelf = !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"));
+        if(mIsMySelf){
+            tongjiId = "a_my";
+        }
+        String className = this.getComponentName().getClassName();
+        CommonBottonControl control = new CommonBottonControl();
+        setContentView(control.setCommonBottonView(className, this, R.layout.a_my_friend_home));
+        XHClick.track(this,"浏览个人主页");
+        mCommonBottomView = control.mCommonBottomView;
+        level = 4;
+        setCommonStyle();
+    }
+
+    private void initView() {
+        scrollLayout = (LayoutScroll) findViewById(R.id.scroll_body);;
+        // 滑动设置
+        backLayout = (LinearLayout) findViewById(R.id.a_user_home_title);
+        friend_info = (TextViewLimitLine) findViewById(R.id.a_user_home_title_info);
+        activityLayout_show = (LinearLayout) findViewById(R.id.a_user_home_title);
+        activityLayout_show.setVisibility(View.INVISIBLE);
+
+        //设置当向上滑动，浮动tab出现时，假状态栏的高度
+        if(Tools.isShowTitle()) {
+            View view = findViewById(R.id.a_user_home_float_title_view);
+            LinearLayout.LayoutParams params = (LayoutParams) view.getLayoutParams();
+            params.height = Tools.getStatusBarHeight(this);
+        }else{
+            findViewById(R.id.a_user_home_float_title_view).setVisibility(View.GONE);
+        }
+
+        mUserHomeTitle = new UserHomeTitle(this,findViewById(R.id.a_user_home_title),userCode);
+    }
+
+    private void addListener() {
+        findViewById(R.id.a_user_home_title_back).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        loadManager.setLoading(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData();
+            }
+        });
+        friend_info.addOnClick(new TextViewLimitLine.OnClickListener() {
+            @Override
+            public void onClick(View v,boolean isNeedRefrash) {
+                if(isNeedRefrash) doReload();
+            }
+        });
+
+        isAlive = true;
+
+        registerBrocaster();
+    }
 
 	private boolean mFirstDataReady;
 	private boolean mFirstLoaded;
@@ -176,17 +188,7 @@ public class FriendHome extends BaseActivity {
 	private boolean mShowErrorMsg = true;
 	private ArrayList<Map<String, String>> mTabs;
 	private void getData() {
-		mTabs = new ArrayList<Map<String, String>>();
-		Map<String, String> subjectMap = new HashMap<String, String>();
-		subjectMap.put("title", "晒美食");
-		subjectMap.put("num", "");
-		subjectMap.put("type", "-1");
-		mTabs.add(subjectMap);
-		Map<String, String> dishMap = new HashMap<String, String>();
-		dishMap.put("title", "菜谱");
-		dishMap.put("num","");
-		dishMap.put("type", "0");
-		mTabs.add(dishMap);
+        initDefTabData();
 		String getUrl = StringManager.api_getUserInfoByCode + "?code=" + userCode;
 		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
 			@Override
@@ -224,6 +226,20 @@ public class FriendHome extends BaseActivity {
 		});
 	}
 
+	private void initDefTabData() {
+        mTabs = new ArrayList<Map<String, String>>();
+        Map<String, String> subjectMap = new HashMap<String, String>();
+        subjectMap.put("title", "晒美食");
+        subjectMap.put("num", "");
+        subjectMap.put("type", "-1");
+        mTabs.add(subjectMap);
+        Map<String, String> dishMap = new HashMap<String, String>();
+        dishMap.put("title", "菜谱");
+        dishMap.put("num","");
+        dishMap.put("type", "0");
+        mTabs.add(dishMap);
+    }
+
 	private void onLoaded(int flag) {
 		if (mFirstLoaded && mSecondLoaded)
 			loadManager.loadOver(flag, 1, mTabs == null || mTabs.size() == 0);
@@ -242,10 +258,16 @@ public class FriendHome extends BaseActivity {
 			return;
 		}
 		handleTabsData();
+        showUserAndTabUI();
 		setTabHost();
 	}
 
-	private void handleTabsData() {
+    private void showUserAndTabUI() {
+        if (activityLayout_show != null)
+            activityLayout_show.setVisibility(View.VISIBLE);
+    }
+
+    private void handleTabsData() {
 		if (mTabs == null)
 			return;
 		Iterator<Map<String, String>> iterator = mTabs.iterator();
@@ -259,12 +281,6 @@ public class FriendHome extends BaseActivity {
 				}
 			}
 		}
-	}
-
-	//加载完数据后调用显示界面
-	public void show() {
-		if (activityLayout_show != null)
-			activityLayout_show.setVisibility(View.VISIBLE);
 	}
 
 	private void setTabHost() {

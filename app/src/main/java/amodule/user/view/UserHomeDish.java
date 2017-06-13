@@ -311,7 +311,6 @@ public class UserHomeDish extends TabContentView {
                     isBlankSpace = false;
                     adapter.notifyDataSetChanged();
                     setHeadViewHeight();
-                    mAct.show();
                 } else {
                     toastFaildRes(flag, true, returnObj);
                 }
