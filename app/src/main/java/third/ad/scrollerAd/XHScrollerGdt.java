@@ -63,7 +63,7 @@ public class XHScrollerGdt extends XHScrollerAdParent{
                     @Override
                     public void addAdView(String title, String desc, String iconUrl,
                                           String imageUrl, View.OnClickListener clickListener) {
-                        Log.i("tzy", "GDT NactiveAD addAdView");
+//                        Log.i("tzy", "GDT NactiveAD addAdView");
                         if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(imageUrl)){
                             Map<String,String> map= new HashMap<>();
                             map.put("title",title);

@@ -74,6 +74,7 @@ public class ImgWallActivity extends BaseActivity implements OnClickListener {
 		if (mData == null || mData.size() <= 0) {
 			Tools.showToast(this, "您选择的图片错误");
 			finish();
+			return;
 		}
 		// 初始化接口，应用启动的时候调用
 		initView();

@@ -330,6 +330,7 @@ public class ArticleDetailActivity extends BaseActivity {
                                 case ARTICLE_CONTENT_BOTTOM:
                                     if (!TextUtils.isEmpty(adStr)) {
                                         adDataMap = StringManager.getFirstMap(adStr);
+                                        Log.i("tzy","adDataMap = " +adDataMap.toString());
                                         if (adDataMap != null && adDataMap.size() > 0) {
                                             showAD(adDataMap);
                                             detailAdapter.notifyDataSetChanged();
@@ -521,17 +522,22 @@ public class ArticleDetailActivity extends BaseActivity {
     private void handlerAdData() {
         if (adRcomDataMap != null
                 && allDataListMap.size() > 1) {
+            Log.i("tzy","handlerAdData 执行了");
             try {
                 Map<String, String> dataMap = new HashMap<>();
                 dataMap.put("datatype", String.valueOf(Type_recommed));
                 dataMap.put("idAd", "2");
                 dataMap.put("adPosition", "0");
-                dataMap.put("title", adRcomDataMap.get("imgUrl"));
-                dataMap.put("img", adRcomDataMap.get("desc"));
-                dataMap.put("customer", new JSONObject().put("customer", adRcomDataMap.get("title")).toString());
+                dataMap.put("title", adRcomDataMap.get("desc"));//adRcomDataMap.get("title") + " | " +
+                dataMap.put("img", adRcomDataMap.get("imgUrl"));
+                dataMap.put("customer", new JSONObject().put("nickName", adRcomDataMap.get("title")).toString());
                 dataMap.put("clickAll", Tools.getRandom(1000, 60000) + "浏览");
                 dataMap.put("commentNumber", "广告");
-                allDataListMap.add(1, adDataMap);
+                allDataListMap.add(2, dataMap);
+                for(Map<String,String> map :allDataListMap){
+                    Log.i("tzy","ADmap = " + map.toString());
+                }
+                detailAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -544,6 +550,7 @@ public class ArticleDetailActivity extends BaseActivity {
      * @param ArrayRelate
      */
     private void analysRelateData(@NonNull ArrayList<Map<String, String>> ArrayRelate) {
+        Log.i("tzy","analysRelateData");
         if (ArrayRelate.isEmpty()) return;
         for (Map<String, String> map : ArrayRelate) {
             map.put("clickAll", map.get("clickAll") + "浏览");
