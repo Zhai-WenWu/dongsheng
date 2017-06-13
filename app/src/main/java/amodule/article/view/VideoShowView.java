@@ -36,6 +36,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private LinearLayout defaultLayout;
 
     private boolean enableEdit = false;
+    private boolean isSecondEdit = false;
     private String coverImageUrl;
     private String videoUrl;
     private boolean isWrapContent = true;
@@ -232,5 +233,13 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     public void setWrapContent(boolean wrapContent) {
         isWrapContent = wrapContent;
+    }
+
+    public boolean isSecondEdit() {
+        return isSecondEdit;
+    }
+
+    public void setSecondEdit(boolean secondEdit) {
+        isSecondEdit = secondEdit;
     }
 }

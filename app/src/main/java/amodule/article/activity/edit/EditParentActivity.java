@@ -416,7 +416,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         };
         //通过code判断从数据库拿数据还是从服务端拿数据
         code = getIntent().getStringExtra("code");
-
+        if(TextUtils.isEmpty(code))
+            mixLayout.setSecondEdit(true);
         if (TextUtils.isEmpty(code)) {
             new Thread(new Runnable() {
                 @Override

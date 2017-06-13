@@ -8,15 +8,15 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:src="@drawable/i_nopic"
+        android:background="@drawable/i_nopic"
         android:scaleType="fitXY"/>
 
     <ImageView
         android:id="@+id/image_gif"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/i_nopic"
         android:visibility="gone"

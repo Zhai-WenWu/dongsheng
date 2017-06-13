@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.xiangha.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -53,6 +51,8 @@ public class TextAndImageMixLayout extends LinearLayout
     private EditTextView currentEditText = null;
 
     private boolean isSingleVideo = false;
+
+    private boolean isSecondEdit = false;
 
     /** 图片集合 */
     //path:url
@@ -347,6 +347,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
         ImageShowView view = new ImageShowView(getContext());
         view.setEnableEdit(true);
+        view.setSelected(isSecondEdit);
         view.setImageUrl(imageUrl);
         view.setmOnRemoveCallback(this);
 
@@ -447,6 +448,7 @@ public class TextAndImageMixLayout extends LinearLayout
                 addRichText(insertIndex + 1, content);
         }
         view.setEnableEdit(true);
+        view.setSecondEdit(isSecondEdit);
         view.setVideoData(coverImageUrl, videoUrl);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);
@@ -538,22 +540,26 @@ public class TextAndImageMixLayout extends LinearLayout
 
     @Override
     public void onRemove(final BaseView view) {
-        final XhDialog dialog = new XhDialog(getContext());
-        dialog.setTitle("确定删除？");
-        dialog.setCanselButton("取消", new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        dialog.setSureButton("确定", new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeBaseView(view);
-                dialog.cancel();
-            }
-        });
-        dialog.show();
+        if(isSecondEdit){
+            removeBaseView(view);
+        }else{
+            final XhDialog dialog = new XhDialog(getContext());
+            dialog.setTitle("确定删除？");
+            dialog.setCanselButton("取消", new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.cancel();
+                }
+            });
+            dialog.setSureButton("确定", new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeBaseView(view);
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+        }
     }
 
     /**
@@ -757,6 +763,14 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setMaxTextCount(int maxTextCount) {
         this.maxTextCount = maxTextCount;
+    }
+
+    public boolean isSecondEdit() {
+        return isSecondEdit;
+    }
+
+    public void setSecondEdit(boolean secondEdit) {
+        isSecondEdit = secondEdit;
     }
 
     private String type;

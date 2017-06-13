@@ -47,6 +47,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     private ImageView itemGifHint;
 
     private boolean enableEdit = false;
+    private boolean isSecondEdit = false;
     private String imageUrl = null;
     private int imageWidth = 0;
     private int imageHieght = 0;
@@ -73,9 +74,9 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         showImageGif = (ImageView) findViewById(R.id.image_gif);
         loadProgress = (ImageView) findViewById(R.id.load_progress);
         itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
-        int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-        int height = width * 9 / 16;
-        showImage.setLayoutParams(new LayoutParams(width,height));
+//        int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+//        int height = width * 9 / 16;
+//        showImage.setLayoutParams(new LayoutParams(width,height));
 
         showImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
@@ -331,5 +332,13 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+    public boolean isSecondEdit() {
+        return isSecondEdit;
+    }
+
+    public void setSecondEdit(boolean secondEdit) {
+        isSecondEdit = secondEdit;
     }
 }
