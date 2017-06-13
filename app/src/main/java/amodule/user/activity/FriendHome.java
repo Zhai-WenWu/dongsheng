@@ -253,7 +253,8 @@ public class FriendHome extends BaseActivity {
 			Map<String, String> map = iterator.next();
 			if (map != null && map.size() > 0) {
 				String num = map.get("num");
-				if (TextUtils.isEmpty(num) || (Integer.parseInt(num) <= 0) && !mIsMySelf) {
+				String type = map.get("type");
+				if (TextUtils.isEmpty(num) || (Integer.parseInt(num) <= 0) && ("1".equals(type) || "2".equals(type)) && !mIsMySelf) {
 					iterator.remove();
 				}
 			}
