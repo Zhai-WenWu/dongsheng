@@ -137,7 +137,7 @@ public class AdapterListView extends BaseAdapter{
 
     @Override
     public int getItemViewType(int position) {
-        return Integer.parseInt(getItem(position).get("type"));
+        return Integer.parseInt(getItem(position).get("style"));
     }
     /**
      * 专辑
