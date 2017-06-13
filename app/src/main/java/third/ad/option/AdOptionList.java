@@ -57,36 +57,37 @@ public abstract class  AdOptionList extends AdOptionParent {
                             if (XHScrollerAdParent.ADKEY_API.equals(adMap.get("adClass"))) {
                                 Log.i("FRJ","stype:" + adMap.get("stype"));
                                 if ("101".equals(adMap.get("stype"))) {
-                                    adMap.put("type", "3");
+                                    adMap.put("style", "2");
                                 } else if ("202".equals(adMap.get("stype"))) {
-                                    adMap.put("type", "1");
+                                    adMap.put("style", "1");
                                 } else if ("301".equals(adMap.get("stype"))) {
-                                    adMap.put("type", "5");
+                                    adMap.put("style", "3");
                                 }
                             } else {
                                 int aboveIndex = index - 1; //广告要跟上一个样式保持一致
                                 if(aboveIndex < 0) aboveIndex = index;
                                 String imgs = old_list.get(aboveIndex).get("imgs");
                                 ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(imgs);
-                                String type = old_list.get(aboveIndex).get("type");
-                                if ("5".equals(type)) {
+                                String type = old_list.get(aboveIndex).get("style");
+                                if ("3".equals(type)) {
                                     JSONArray jsonArray = new JSONArray();
                                     JSONObject jsonObject = new JSONObject();
                                     try {
-                                        jsonObject.put("", adMap.get("img"));
+                                        jsonObject.put("url", adMap.get("img"));
+                                        jsonObject.put("type", "1");
                                         jsonArray.put(jsonObject);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    adMap.put("imgs", jsonArray.toString());
-                                    adMap.put("type", arrayList.size() > 1 && "5".equals(type) ? "3" : old_list.get(aboveIndex).get("type"));
-                                }else if("4".equals(type)){
-                                    adMap.put("type","1");
+                                    adMap.put("styleData", jsonArray.toString());
+                                    adMap.put("style", arrayList.size() > 1 && "3".equals(type) ? "2" : old_list.get(aboveIndex).get("style"));
+                                }else if("5".equals(type)){
+                                    adMap.put("style","1");
                                 }else
-                                    adMap.put("type",old_list.get(aboveIndex).get("type"));
+                                    adMap.put("style",old_list.get(aboveIndex).get("style"));
                             }
-                            Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   type:" + adMap.get("type"));
-                            if(!TextUtils.isEmpty(adMap.get("type")))
+                            Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   style:" + adMap.get("style"));
+                            if(!TextUtils.isEmpty(adMap.get("style")))
                                 old_list.add(index, adMap);
                         }
                     }
