@@ -33,16 +33,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         >
-        <View
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="20px"
             android:layout_above="@+id/a_comment_keyboard"
-            android:background="#ccc" />
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            android:src="@drawable/bg_line_shadow"
+            />
 
         <RelativeLayout
             android:id="@+id/a_comment_keyboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:background="@color/common_bg"
             android:paddingBottom="@dimen/dp_8"
             android:paddingLeft="@dimen/dp_20"
