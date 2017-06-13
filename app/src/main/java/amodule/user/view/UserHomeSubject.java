@@ -266,7 +266,6 @@ public class UserHomeSubject extends TabContentView {
 			public void loaded(int flag, String url, Object returnObj) {
 				loadData(flag, returnObj);
 				setHeadViewHeight();
-				mAct.show();
 			}
 		});
 	}

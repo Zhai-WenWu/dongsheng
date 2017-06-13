@@ -190,6 +190,8 @@ public class UserHomeTxt extends TabContentView {
                                 int isOriginal = articleData.getIsOriginal();
                                 String repAddress = articleData.getRepAddress();
                                 String img = articleData.getImg();
+								String imgs = articleData.getImgs();
+								String videos = articleData.getVideos();
 
 								String video = "";
                                 String videoUrl = "";
@@ -219,6 +221,8 @@ public class UserHomeTxt extends TabContentView {
                                 data.put("videoUrl", videoUrl);
                                 data.put("videoImgUrl", videoImgUrl);
                                 data.put("uploadType", uploadType);
+								data.put("imgs", imgs);
+								data.put("videos", videos);
                                 data.put("isMe", "2");
                                 data.put("dataFrom", String.valueOf(1));//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
                                 mLocalDatas.add(data);
@@ -244,7 +248,6 @@ public class UserHomeTxt extends TabContentView {
                 currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,datas.size() == 0);
                 onDataReady(true);
 				setHeadViewHeight();
-				mAct.show();
 			}
 		});
 	}
