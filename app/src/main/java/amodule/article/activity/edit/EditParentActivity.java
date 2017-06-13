@@ -500,7 +500,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         timer = new Timer();
         final Handler handler = new Handler(Looper.getMainLooper());
         TimerTask tt = new TimerTask() {
-
             @Override
             public void run() {
                 handler.post(new Runnable() {

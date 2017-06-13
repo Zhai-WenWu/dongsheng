@@ -53,17 +53,14 @@ public class ArticleUploadListPool extends UploadListPool {
     private String tongjiId = "a_videodish_uploadlist";
 
     private int dataType;
-    private int fridendHomeIndex; //失败后，跳转到个人主页的index页面
 
     @Override
     protected void initData(int dataType,int draftId, String coverPath, String finalVideoPath, String timestamp, UploadListUICallBack callback) {
         super.initData(draftId, coverPath, finalVideoPath, timestamp, callback);
         this.dataType = dataType;
         if(dataType == EditParentActivity.TYPE_ARTICLE) {
-            fridendHomeIndex = 2;
             sqLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
         }else if(dataType == EditParentActivity.TYPE_VIDEO) {
-            fridendHomeIndex = 3;
             sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
         }
         Log.i("articleUpload","ArticleUploadListPool coverPath:" + coverPath);
@@ -416,9 +413,10 @@ public class ArticleUploadListPool extends UploadListPool {
         if (uploadArticleData != null) {
 
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
+            int bodyIndex = 0;
             String imgsDataStr = uploadArticleData.getImgs();
             if (!TextUtils.isEmpty(imgsDataStr)) {
-                UploadItemData headItemData;
+                UploadItemData bodyItemData;
                 ArrayList<Map<String, String>> makesList = StringManager.getListMapByJson(imgsDataStr);
                 if (makesList != null && makesList.size() > 0) {
                     for (int i = 0; i < makesList.size(); i++) {
@@ -436,19 +434,20 @@ public class ArticleUploadListPool extends UploadListPool {
                             return null;
                         }
 
-                        headItemData = new UploadItemData();
-                        headItemData.setPath(imgPath);
-                        headItemData.setRecMsg(imgUrl);
-//                        headItemData.setIndex(imgIndex++);
-                        headItemData.setMakeStep("图片" + (i+1));
-                        headItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
-                        headItemData.setPos(UploadItemData.POS_BODY);
-                        bodyItemDatas.add(headItemData);
+                        bodyItemData = new UploadItemData();
+                        bodyItemData.setPath(imgPath);
+                        bodyItemData.setRecMsg(imgUrl);
+                        bodyItemData.setIndex(bodyIndex++);
+                        bodyItemData.setMakeStep("图片" + (i+1));
+                        bodyItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
+                        bodyItemData.setPos(UploadItemData.POS_BODY);
+                        bodyItemDatas.add(bodyItemData);
                     }
                 }
             }
 
             ArrayList<UploadItemData> headItemDatas = new ArrayList<>();
+            int headIndex = 0;
             String videosDataStr = uploadArticleData.getVideos();
             if (!TextUtils.isEmpty(videosDataStr)) {
                 UploadItemData captureVideoData;
@@ -475,17 +474,17 @@ public class ArticleUploadListPool extends UploadListPool {
                         UploadItemData videoImgItemData = new UploadItemData();
                         videoImgItemData.setPath(videoImage);
                         videoImgItemData.setRecMsg(imageUrl);
-//                        videoImgItemData.setIndex(headImgIndex++);
+                        videoImgItemData.setIndex(headIndex++);
                         videoImgItemData.setMakeStep("视频封面" + (i+1));
                         videoImgItemData.setType(UploadItemData.TYPE_BREAKPOINT_IMG);
-                        videoImgItemData.setPos(UploadItemData.POS_BODY);
+                        videoImgItemData.setPos(UploadItemData.POS_HEAD);
                         headItemDatas.add(videoImgItemData);
 
                         captureVideoData = new UploadItemData();
                         captureVideoData.setPath(videoPath);
                         captureVideoData.setVideoImage(videoImage);
                         captureVideoData.setRecMsg(videoUrl);
-//                        captureVideoData.setIndex(imgIndex++);
+                        captureVideoData.setIndex(bodyIndex++);
                         captureVideoData.setMakeStep("视频" + (i+1));
                         captureVideoData.setPos(UploadItemData.POS_BODY);
                         captureVideoData.setType(UploadItemData.TYPE_VIDEO);
