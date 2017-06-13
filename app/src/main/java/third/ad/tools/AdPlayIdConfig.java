@@ -36,8 +36,8 @@ public class AdPlayIdConfig {
 
     /**美食圈**/
     public static final String MAIN_CIRCLE_TITLE = "msq_dingbu";//社区首页头部
-    public static final String DETAIL_SUBJECT_FLOOR_BOTTOM = "msq_xiangqing";//美食帖详情页美食帖下方:banner广告
-    public static final String SUBJECT_CAIPU_MEDIA = "msq_tiepian";//美食帖详情cai贴片
+    public static final String DETAIL_SUBJECT_FLOOR_BOTTOM = "msq_xiangqing";//美食贴详情页美食贴下方:banner广告
+    public static final String SUBJECT_CAIPU_MEDIA = "msq_tiepian";//美食贴详情cai贴片
     public static final String SUBJECT_USER_MEDIA = "msq_dsptiepian";//菜谱详情页面用户小视频贴片
 
     /***分类*/

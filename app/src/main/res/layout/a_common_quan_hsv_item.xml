@@ -22,7 +22,7 @@
                 android:paddingBottom="@dimen/dp_4"
                 android:paddingTop="@dimen/dp_4"
                 android:gravity="center"
-                android:text="美食帖"
+                android:text="美食贴"
                 android:textColor="@drawable/quan_tab_select"
                 android:textSize="@dimen/sp_15" />
 

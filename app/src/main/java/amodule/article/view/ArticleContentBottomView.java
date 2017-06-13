@@ -64,6 +64,7 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
             }else{
                 articleRepintSource.setText("转载：" + repAddressStr);
             }
+            articleRepintSource.setVisibility(VISIBLE);
         }
         setViewTextWithPrefix(articleBrowse,map,"clickAll","阅读");
         setViewText(articlePublishDate,map,"addTime");

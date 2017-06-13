@@ -74,7 +74,7 @@ public class TencenApiAdTools {
     public static final String TX_ID_QUAN_4= "_adb_14678_10147677";
     public static final String TX_ID_QUAN_5= "_adb_14678_10147678";
     public static final String TX_ID_QUAN_6= "_adb_14678_10147679";
-    //美食圈美食帖详情banner  尺寸：582:166  loid:1
+    //美食圈美食贴详情banner  尺寸：582:166  loid:1
     public static final String TX_ID_QUAN_DETAIL= "_adb_14678_10147680";
 
     //请求url

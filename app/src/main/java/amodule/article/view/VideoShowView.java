@@ -96,6 +96,13 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         return jsonObject;
     }
 
+    public void resetData(){
+        coverImageUrl = "";
+        videoUrl = "";
+        defaultLayout.setVisibility(VISIBLE);
+        coverImage.setImageResource(R.drawable.i_nopic);
+    }
+
     public void setVideoDataFromService(String coverImageUrl, String videoUrl, int position) {
         if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
             return;

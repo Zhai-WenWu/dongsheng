@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment{
     private int position=-1;
     /** 当前二级内容中位置 */
     private int twoPosition=-1;
-    /** 帖子的数据集合 */
+    /** 贴子的数据集合 */
     private ArrayList<Map<String, String>> mListData = new ArrayList<>();
 
     private String backUrl= "";//向上拉取数据集合

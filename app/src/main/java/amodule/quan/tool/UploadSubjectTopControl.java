@@ -28,7 +28,7 @@ public class UploadSubjectTopControl {
 	private UploadSubjectNew mUpSubNew;
 	private UploadSubjectTopCallBack mUopCallBack;
 	/**
-	 * 进入发帖页面是否选择默认要发的item项,之所以用全局静态是因为发帖是先选图再进入发帖页面
+	 * 进入发贴页面是否选择默认要发的item项,之所以用全局静态是因为发贴是先选图再进入发贴页面
 	 */
 	public String defalutCid = "-1";
 	/**

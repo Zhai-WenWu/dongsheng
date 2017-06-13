@@ -58,9 +58,9 @@ public class ArticleUploadListPool extends UploadListPool {
     protected void initData(int dataType,int draftId, String coverPath, String finalVideoPath, String timestamp, UploadListUICallBack callback) {
         super.initData(draftId, coverPath, finalVideoPath, timestamp, callback);
         this.dataType = dataType;
-        if(dataType == EditParentActivity.TYPE_ARTICLE) {
+        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
             sqLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
-        }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+        }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO) {
             sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
         }
         Log.i("articleUpload","ArticleUploadListPool coverPath:" + coverPath);
@@ -130,9 +130,9 @@ public class ArticleUploadListPool extends UploadListPool {
             Intent broadIntent = new Intent();
             broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
             String type = "";
-            if (this.dataType == EditParentActivity.TYPE_ARTICLE)
+            if (this.dataType == EditParentActivity.DATA_TYPE_ARTICLE)
                 type = "2";
-            else if (this.dataType == EditParentActivity.TYPE_VIDEO)
+            else if (this.dataType == EditParentActivity.DATA_TYPE_VIDEO)
                 type = "1";
             if (!TextUtils.isEmpty(type))
                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
@@ -143,9 +143,9 @@ public class ArticleUploadListPool extends UploadListPool {
             Activity act = XHActivityManager.getInstance().getCurrentActivity();
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
-            if(dataType == EditParentActivity.TYPE_ARTICLE)
+            if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
                 intent.putExtra("index", 3);
-            else if(dataType == EditParentActivity.TYPE_VIDEO)
+            else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
                 intent.putExtra("index", 2);
             intent.setClass(act, FriendHome.class);
             act.startActivity(intent);
@@ -154,9 +154,9 @@ public class ArticleUploadListPool extends UploadListPool {
 //            if(flag){
 //                Activity act = XHActivityManager.getInstance().getCurrentActivity();
 //                Intent it = new Intent(act, ArticleDetailActivity.class);
-//                if(dataType == EditParentActivity.TYPE_ARTICLE) {
+//                if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
 //                    it.setClass(act, ArticleDetailActivity.class);
-//                }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+//                }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO) {
 //                    it.setClass(act, VideoDetailActivity.class);
 //                }
 //                it.putExtra("code",response);
@@ -190,9 +190,9 @@ public class ArticleUploadListPool extends UploadListPool {
                 @Override
                 public boolean onLoop(UploadItemData itemData) {
                     if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
-                        if(dataType == EditParentActivity.TYPE_ARTICLE)
+                        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
                             itemData.setUploadUrl(StringManager.api_articleAdd);
-                        else if(dataType == EditParentActivity.TYPE_VIDEO)
+                        else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
                             itemData.setUploadUrl(StringManager.api_videoAdd);
                         itemData.setUploadMsg(params);
                         return true;

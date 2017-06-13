@@ -22,14 +22,12 @@ import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import amodule.article.view.ArticleCommentView;
-import amodule.article.view.ArticleContentBottomView;
 import amodule.article.view.CommodityItemView;
 import amodule.article.view.DishItemView;
 import amodule.article.view.ImageShowView;
 import amodule.article.view.RecommendItemView;
 import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichURLSpan;
-import third.ad.scrollerAd.XHAllAdControl;
 
 /**
  * 文章详情页adapter
@@ -46,7 +44,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<Map<String, String>> listMap;
-    private XHAllAdControl xhAllAdControl;
 
     int dp_20;
     String type;
@@ -58,10 +55,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
         this.code = code;
         this.listMap = list;
         dp_20 = Tools.getDimen(context, R.dimen.dp_20);
-    }
-
-    public void setXHAllAdControl(XHAllAdControl xhAllAdControl) {
-        this.xhAllAdControl = xhAllAdControl;
     }
 
     @Override
@@ -227,22 +220,22 @@ public class ArticleDetailAdapter extends BaseAdapter {
             this.view = itemView;
         }
 
-        public void setData(Map<String, String> map, final int position) {
+        public void setData(final Map<String, String> map, final int position) {
             if (view != null) {
                 map.put("type", type);
                 view.setData(map);
                 if("2".equals(map.get("isAd"))
-                        && null != xhAllAdControl
-                        && view != null){
-                    xhAllAdControl.onAdBind(Integer.parseInt(map.get("adPosition")), view, "");
+                        && view != null
+                        && mOnADCallback != null){
+                    final int index = Integer.parseInt(map.get("adPosition"));
+                    mOnADCallback.onBind(index, view, "");
+                    view.setOnAdClickCallback(new RecommendItemView.OnAdClickCallback() {
+                        @Override
+                        public void onAdClick(View view) {
+                            mOnADCallback.onClick(view, index, "");
+                        }
+                    });
                 }
-                view.setOnAdClickCallback(new RecommendItemView.OnAdClickCallback() {
-                    @Override
-                    public void onAdClick(View view) {
-                        if(xhAllAdControl != null)
-                            xhAllAdControl.onAdClick(view, position, "");
-                    }
-                });
             }
         }
     }
@@ -250,9 +243,9 @@ public class ArticleDetailAdapter extends BaseAdapter {
     private OnADCallback mOnADCallback;
 
     public interface OnADCallback {
-        public void onClick();
+        public void onClick(View view, int index, String s);
 
-        public void onBind();
+        public void onBind(int index, View view, String s);
     }
 
     public OnADCallback getmOnADCallback() {

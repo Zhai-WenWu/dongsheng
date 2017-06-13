@@ -62,7 +62,7 @@ public class CircleHome extends BaseFragmentActivity implements OnClickListener 
     private FragmentManager mFragmentManager;
     /** 板块信息集合 */
     private ArrayList<PlateData> mPlateDataArray = new ArrayList<>();
-    /** 发帖是管理SubjectData的集合 */
+    /** 发贴是管理SubjectData的集合 */
     public ArrayList<SubjectData> mSubjectDataArray = new ArrayList<>();
     /** 圈子的cid */
     private String cid = "";
@@ -94,8 +94,8 @@ public class CircleHome extends BaseFragmentActivity implements OnClickListener 
 
                 @Override
                 public void onClick(View v) {
-                    XHClick.mapStat(CircleHome.this, "a_quan_zi_index", "本圈子发帖按钮", "");
-                    XHClick.mapStat(CircleHome.this, "a_down420", "发帖按钮", "");
+                    XHClick.mapStat(CircleHome.this, "a_quan_zi_index", "本圈子发贴按钮", "");
+                    XHClick.mapStat(CircleHome.this, "a_down420", "发贴按钮", "");
                     Intent uploadSubject = new Intent(CircleHome.this, UploadSubjectNew.class);
                     uploadSubject.putExtra("cid", cid);
                     CircleSqlite sqlite = new CircleSqlite(CircleHome.this);

@@ -73,11 +73,7 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
             //控制文本控制Layout显示
             case R.id.edit_text:
                 boolean isVisibility = textEditlayout.getVisibility() == View.VISIBLE;
-                textEditlayout.setVisibility(isVisibility ? View.GONE : View.VISIBLE);
-                textEditImage.setSelected(!isVisibility);
-                if (null != mOnTextEidtCallback) {
-                    mOnTextEidtCallback.onEditControlerShow(textEditlayout.getVisibility() == View.VISIBLE);
-                }
+                setEditLayoutVisibility(!isVisibility);
                 break;
             //添加链接
             case R.id.add_link:
@@ -138,6 +134,14 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
     public void setOnTextEidtCallback(OnTextEditCallback callback) {
         this.mOnTextEidtCallback = callback;
         findViewById(R.id.edit_text).setVisibility(null != mOnTextEidtCallback ? View.VISIBLE : View.GONE);
+    }
+
+    public void setEditLayoutVisibility(boolean isShow){
+        textEditlayout.setVisibility(isShow ? View.VISIBLE:View.GONE);
+        textEditImage.setSelected(isShow);
+        if (null != mOnTextEidtCallback) {
+            mOnTextEidtCallback.onEditControlerShow(textEditlayout.getVisibility() == View.VISIBLE);
+        }
     }
 
     public boolean isShowEditLayout(){

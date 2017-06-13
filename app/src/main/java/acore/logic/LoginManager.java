@@ -5,6 +5,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.tencent.android.tpush.horse.Tools;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -350,7 +352,7 @@ public class LoginManager {
 
 
     /**
-     * 是否显示发帖子任务入口
+     * 是否显示发贴子任务入口
      *
      * @return
      */
@@ -422,8 +424,7 @@ public class LoginManager {
         if (MainChangeSend.sendMap == null) {
             return false;
         } else {
-            return true;
-//            return "2".equals(MainChangeSend.sendMap.get("sendArticle"));
+            return "2".equals(MainChangeSend.sendMap.get("sendArticle"));
         }
     }
 
@@ -435,8 +436,7 @@ public class LoginManager {
         if (MainChangeSend.sendMap == null) {
             return false;
         } else {
-            return true;
-//            return "2".equals(MainChangeSend.sendMap.get("sendVideo"));
+            return "2".equals(MainChangeSend.sendMap.get("sendVideo"));
         }
     }
 

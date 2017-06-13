@@ -158,9 +158,9 @@ public class MainChangeSend extends BaseActivity {
     public void onClick(String tag) {
         if (TextUtils.isEmpty(tag)) return;
         switch (tag) {
-            case "1": //发帖
+            case "1": //发贴
                 finish();
-                XHClick.mapStat(this, "a_post_button", "发帖子", "");
+                XHClick.mapStat(this, "a_post_button", "发贴子", "");
                 Intent subIntent = new Intent(this, UploadSubjectNew.class);
                 subIntent.putExtra("skip", true);
                 startActivity(subIntent);

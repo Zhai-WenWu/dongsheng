@@ -26,7 +26,7 @@ public class AdapterListView extends BaseAdapter{
     public final static int type_video = 2;//视频
     public final static int type_acticle = 3;//文章
     public final static int type_album = 4;//专辑
-    public final static int type_subject = 5;//美食帖
+    public final static int type_subject = 5;//美食贴
 
     private ArrayList<Map<String,String>> mapArrayList;
     private Context context;
@@ -110,7 +110,7 @@ public class AdapterListView extends BaseAdapter{
                 }
                 viewAlbumViewHolder.setData(map, position);
                 break;
-            case type_subject://美食帖
+            case type_subject://美食贴
                 ViewTiziViewHolder viewTiziViewHolder = null;
                 if (convertView == null
                         || !(convertView.getTag() instanceof ViewTiziViewHolder)) {
@@ -154,7 +154,7 @@ public class AdapterListView extends BaseAdapter{
     }
 
     /**
-     * 帖子
+     * 贴子
      */
     public class ViewTiziViewHolder{
         HomePostItem view;

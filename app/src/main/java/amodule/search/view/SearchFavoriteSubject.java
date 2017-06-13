@@ -28,7 +28,7 @@ public class SearchFavoriteSubject extends SearchFavorite{
 	
 	public SearchFavoriteSubject(BaseActivity act){
 		super(act);
-		searchType = "帖子";
+		searchType = "贴子";
 	}
 	
 	@Override

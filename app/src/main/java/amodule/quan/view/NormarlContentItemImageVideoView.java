@@ -75,9 +75,9 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
     public void setShowUpload(boolean state) {
         if (state) {
             setListener(root_layout, typeSubject, "");
-            setListener(ll_imgs, typeSubject, "帖子图片");
-            setListener(image_one, typeSubject, "帖子图片");
-            setListener(tv_content, typeSubject, "帖子内容");
+            setListener(ll_imgs, typeSubject, "贴子图片");
+            setListener(image_one, typeSubject, "贴子图片");
+            setListener(tv_content, typeSubject, "贴子内容");
         } else {
         }
     }

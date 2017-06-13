@@ -94,7 +94,7 @@ public class SubjectHeaderUser extends RelativeLayout implements View.OnClickLis
             @Override
             public void onCallback(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    XHClick.mapStat(getContext(), BarSubjectFloorOwnerNew.tongjiId, "帖子部分点击量", "关注点击量");
+                    XHClick.mapStat(getContext(), BarSubjectFloorOwnerNew.tongjiId, "贴子部分点击量", "关注点击量");
                 }
             }
         });
@@ -183,7 +183,7 @@ public class SubjectHeaderUser extends RelativeLayout implements View.OnClickLis
                 if(TextUtils.isEmpty(userCode)){
                     return;
                 }
-                XHClick.mapStat(getContext(), BarSubjectFloorOwnerNew.tongjiId, "帖子部分点击量", "头像／昵称点击量");
+                XHClick.mapStat(getContext(), BarSubjectFloorOwnerNew.tongjiId, "贴子部分点击量", "头像／昵称点击量");
                 //打开用户中心
                 Intent intent = new Intent(getContext(), FriendHome.class);
                 intent.putExtra("code", userCode);

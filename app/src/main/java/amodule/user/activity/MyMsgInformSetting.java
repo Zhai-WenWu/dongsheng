@@ -33,7 +33,7 @@ import xh.basic.tool.UtilFile;
 public class MyMsgInformSetting extends BaseActivity{
 	private SwitchButton msg_newMSG_sb;//接收全部消息通知
 	private SwitchButton msg_nous_sb;//香哈头条推荐
-	private SwitchButton msg_subject_sb;//美食帖通知
+	private SwitchButton msg_subject_sb;//美食贴通知
 	private SwitchButton msg_jxMenu_sb;//精选菜单通知
 	private SwitchButton msg_jxCaiPu_sb;//精选菜谱通知
 	private SwitchButton msg_quan_zan_sb;//美食圈评论.点赞

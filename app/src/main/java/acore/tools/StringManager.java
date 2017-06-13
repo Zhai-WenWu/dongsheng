@@ -66,7 +66,7 @@ public class StringManager extends UtilString {
     public final static String api_stat = "http://stat.xiangha.com/s2.gif";
     //用户手机应用列表
     public final static String api_uploadFavorLog = "http://favor.xiangha.com/list";
-    //用户发帖发菜谱用户日志
+    //用户发贴发菜谱用户日志
     public final static String api_uploadUserLog = "http://crash.xiangha.com/crash/report2";
     //获取广告信息
     public final static String api_adData = apiUrl + "main6/ads/getBasicList";
@@ -207,7 +207,7 @@ public class StringManager extends UtilString {
     //美食圈模板
     public final static String api_getSubjectClassifyList = apiUrl + urlSection.get("quan5") + "getSubjectClassifyList";
     public final static String api_getSubjectListByClassify = apiUrl + urlSection.get("quan5") + "getSubjectListByClassify";//详细列表
-    public final static String api_changeSubjectClassify = apiUrl + urlSection.get("quan5") + "changeSubjectClassify";//修改帖子模块
+    public final static String api_changeSubjectClassify = apiUrl + urlSection.get("quan5") + "changeSubjectClassify";//修改贴子模块
     public final static String api_addJingHua = apiUrl + urlSection.get("quan5") + "addJingHua";//加精
     public final static String api_getQuanList = apiUrl + "main6/ads/getQuanList";
 
@@ -231,13 +231,13 @@ public class StringManager extends UtilString {
     //广告统计
     public final static String api_monitoring_5 = "http://stat.xiangha.com/s5.gif"; //广告统计
     public final static String api_clickAds = apiUrl + "main6/ads/clickAds"; //广告统计,用于加积分
-    public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改帖子模块
+    public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改贴子模块
     //新菜谱详情页
     public final static String api_getDishInfoNew = apiUrl + urlSection.get("caipu6") + "info";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
-    public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食帖置顶
-    public final static String api_deleteSubject = apiUrl + urlSection.get("user6") + "deleteSubject";//用户删除美食帖
+    public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶
+    public final static String api_deleteSubject = apiUrl + urlSection.get("user6") + "deleteSubject";//用户删除美食贴
     //断点上传获取校验token
     public final static String api_getQiniuToken = apiUrl + urlSection.get("other6") + "getQiniuToken";
 

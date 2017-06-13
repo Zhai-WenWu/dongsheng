@@ -357,8 +357,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 					return true;
 				case R.id.ll_subject:
 					// 统计
-					XHClick.track(getApplicationContext(), "点击我的页面的帖子");
-					XHClick.mapStat(this, tongjiId, "导航", "帖子");
+					XHClick.track(getApplicationContext(), "点击我的页面的贴子");
+					XHClick.mapStat(this, tongjiId, "导航", "贴子");
 					Intent intent_subject = new Intent(MainMyself.this, FriendHome.class);
 					intent_subject.putExtra("code", LoginManager.userInfo.get("code"));
 					startActivity(intent_subject);

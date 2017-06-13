@@ -26,7 +26,7 @@ public class ArticleEidtActiivty extends EditParentActivity{
 
     @Override
     public String getType() {
-        return "1";
+        return TYPE_ARTICLE;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ArticleEidtActiivty extends EditParentActivity{
             if(timer != null)timer.cancel();
             Intent intent = new Intent(this, ArticleSelectActiivty.class);
             intent.putExtra("draftId", uploadArticleData.getId());
-            intent.putExtra("dataType", EditParentActivity.TYPE_ARTICLE);
+            intent.putExtra("dataType", EditParentActivity.DATA_TYPE_ARTICLE);
             startActivity(intent);
             finish();
         } else {

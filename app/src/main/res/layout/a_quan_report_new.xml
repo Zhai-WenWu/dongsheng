@@ -394,7 +394,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_toRightOf="@+id/quanadmin_iv_3"
-                        android:text="删帖"
+                        android:text="删贴"
                         />
 
                 </RelativeLayout>

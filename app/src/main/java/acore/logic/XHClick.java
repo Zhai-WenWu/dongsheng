@@ -922,7 +922,7 @@ public class XHClick {
 	 * 新的统计策略
 	 * @param page_title 页面名称
 	 * @param mode_type 模块名称，list header, foot
-	 * @param data_type 数据类型 目前:图文菜谱，视频菜谱，美食帖专辑，涨知识
+	 * @param data_type 数据类型 目前:图文菜谱，视频菜谱，美食贴专辑，涨知识
 	 * @param item_code 个体标识 code唯一标示
 	 * @param show_num 显示数量 数量，浏览数据数量
 	 * @param event 事件 动作事件 info(详情),up（上翻）,down（下翻）,click（点击）list()

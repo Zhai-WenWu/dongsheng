@@ -44,7 +44,7 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
     private ArrayList<String> img_urls;
     /**头部楼主信息*/
     private SubjectHeaderUser headerUser;
-    /**帖子的title*/
+    /**贴子的title*/
     private SubjectHeaderTitle headerTitle;
     /**来自哪个圈子*/
     private SubjectHeaderFromCircle fromCircle;
@@ -149,9 +149,9 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
     }
 
     /**
-     * 删除本帖
+     * 删除本贴
      *
-     * @param folState 关注状态 1是自己帖子
+     * @param folState 关注状态 1是自己贴子
      * @param id 楼层id
      */
     private void doDeleteLou(String folState, final String id) {
@@ -183,13 +183,13 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
      */
     private void deleteDialog(final String id) {
         String params = "type=delFloor&floorId=" + id;
-        SubjectControl.getInstance().createDeleteDilog(mAct, params, "本帖",
+        SubjectControl.getInstance().createDeleteDilog(mAct, params, "本贴",
                 new SubjectControl.OnDeleteSuccessCallback() {
                     @Override
                     public void onDeleteSuccess(int flag, String url, Object returnObj) {
                         mAct.finish();
                         //统计删除贴(计算事件)
-                        XHClick.onEventValue(mAct, "quanOperate", "quanOperate", "删除帖", 1);
+                        XHClick.onEventValue(mAct, "quanOperate", "quanOperate", "删除贴", 1);
                     }
                 });
     }

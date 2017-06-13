@@ -6,7 +6,7 @@ package amodule.search.data;
 
 public interface SearchConstant {
 
-    //搜索类型 菜谱 哈友 帖子
+    //搜索类型 菜谱 哈友 贴子
     int SEARCH_CAIPU = 0;
     int SEARCH_HAYOU = 1;
     int SEARCH_MEISHITIE = 2;
@@ -21,6 +21,6 @@ public interface SearchConstant {
     int VIEW_HAYOU_RESULT = 4;
     int VIEW_TIEZI_RESULT = 5;
 
-    String[] SEARCH_CATEGORY = {"搜菜谱", "搜哈友", "搜帖子"};
+    String[] SEARCH_CATEGORY = {"搜菜谱", "搜哈友", "搜贴子"};
 
 }

@@ -341,7 +341,7 @@ public class UserHomeDish extends TabContentView {
     }
 
     /**
-     * 读取正在发布的帖子
+     * 读取正在发布的贴子
      */
     private void loadFormLocal() {
         UploadDishSqlite sqlite = new UploadDishSqlite(mAct);

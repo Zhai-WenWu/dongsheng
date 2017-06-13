@@ -101,7 +101,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
     @Override
     public void setViewData(Map<String,String> maps,int position) {
         this.map= maps;
-        String statisKey = isRobsof ? "抢沙发" : "帖子";
+        String statisKey = isRobsof ? "抢沙发" : "贴子";
 
         view.findViewById(R.id.circle_robsof_title).setVisibility(isRobsof ? View.VISIBLE : View.GONE);
         view.findViewById(R.id.circle_robsof_title).setOnClickListener(new OnClickListener() {
@@ -134,7 +134,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
 
         setViewText(user_time, map.get("timeShowV43"));
 
-        //1---个人中心；查看别人的帖子，2--查看自己的帖子
+        //1---个人中心；查看别人的贴子，2--查看自己的贴子
         if(map.containsKey("isMe")&& !TextUtils.isEmpty(map.get("isMe"))){
             if("2".equals(map.get("isMe"))) {
                 normal_friend_select.setVisibility(View.VISIBLE);
@@ -164,7 +164,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
         // 推荐
         String color = Tools.getColorStr(mAct, R.color.comment_color);
         tv_recommend.setTextColor(Color.parseColor(color));
-        // 置顶帖  0---不置顶，1为置顶
+        // 置顶贴  0---不置顶，1为置顶
         if (map.get("isOverHead") != null && map.get("isOverHead").equals("1")) {
             setViewText(tv_recommend, "置顶");
             tv_recommend.setBackgroundResource(R.drawable.round_red);
@@ -187,7 +187,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
             tv_recommend.setBackgroundResource(R.drawable.round_red);
             setTitleData(noData);
         }
-        // 精华帖
+        // 精华贴
         else if (map.get("isEssence") != null && map.get("isEssence").equals("2")) {
             setViewText(tv_recommend, "精华");
             tv_recommend.setBackgroundResource(R.drawable.round_red);
@@ -236,7 +236,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
                 setListener(userIconView, -1, "");
             }
             setListener(adHintView,typeAdHint,"广告提示");
-            setListener(quan_title_2, typeSubject,  "帖子内容");
+            setListener(quan_title_2, typeSubject,  "贴子内容");
             follow_rela.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -399,7 +399,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
      */
     private void showDeleteSubjectDialog(){
         final XhDialog dialog = new XhDialog(mAct);
-        dialog.setTitle("真的要删除这个帖子么?").
+        dialog.setTitle("真的要删除这个贴子么?").
                 setSureButton("删除", new View.OnClickListener() {
 
                     @Override
@@ -417,7 +417,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
         dialog.show();
     }
     /**
-     * 删除该美食帖
+     * 删除该美食贴
      */
     private void deleteSubject(){
         String url=StringManager.api_deleteSubject;

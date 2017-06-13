@@ -64,11 +64,14 @@ import xh.windowview.XhDialog;
  */
 public abstract class EditParentActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final String TYPE_ARTICLE = "1";
+    public static final String TYPE_VIDEO = "2";
+
     private final int REQUEST_SELECT_IMAGE = 0x01;
     private final int REQUEST_SELECT_VIDEO = 0x02;
 
-    public static final int TYPE_ARTICLE = 100;
-    public static final int TYPE_VIDEO = 101;
+    public static final int DATA_TYPE_ARTICLE = 100;
+    public static final int DATA_TYPE_VIDEO = 101;
 
     private EditBottomControler editBottomControler;
     protected EditText editTitle;
@@ -116,6 +119,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             rl.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
                         public void onGlobalLayout() {
+                            final boolean preIsKeyboradShow = isKeyboradShow;
                             int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
                             Rect r = new Rect();
                             rl.getWindowVisibleDisplayFrame(r);
@@ -133,6 +137,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             Log.i("tzy","distance = " + distance);
                             Log.i("tzy","heightDifference2 = " + heightDifference2);
                             if(isKeyboradShow
+                                    && !preIsKeyboradShow
                                     && distance <= heightDifference2
                                     && !editTitle.isFocused()){
                                 scrollView.postDelayed(new Runnable() {
@@ -170,6 +175,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_MOVE:
+                        editBottomControler.setEditLayoutVisibility(false);
                         ToolsDevice.keyboardControl(false, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                         break;
                 }
@@ -177,7 +183,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             }
         });
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
-        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this, R.dimen.dp_45) - Tools.getStatusBarHeight(this);
+        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this, R.dimen.dp_95) - Tools.getStatusBarHeight(this);
         contentLayout.setMinimumHeight(contentLayoutHeight);
         contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,7 +223,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         editTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                editBottomControler.setVisibility(hasFocus ? View.GONE : View.VISIBLE);
+                editBottomControler.setVisibility(hasFocus ? View.INVISIBLE : View.VISIBLE);
             }
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
@@ -592,11 +598,21 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     private void onClose() {
         if (TextUtils.isEmpty(code)) {
-            if (!TextUtils.isEmpty(editTitle.getText().toString())
-                    || mixLayout.hasText()
-                    || mixLayout.hasImage()
-                    || mixLayout.hasVideo())
-                Tools.showToast(this, "内容已保存");
+            switch (getType()){
+                case TYPE_ARTICLE:
+                    if (!TextUtils.isEmpty(editTitle.getText().toString())
+                            || mixLayout.hasText()
+                            || mixLayout.hasImage()
+                            || mixLayout.hasVideo())
+                        Tools.showToast(this, "内容已保存");
+                    break;
+                case TYPE_VIDEO:
+                    if (!TextUtils.isEmpty(editTitle.getText().toString())
+                            || mixLayout.hasText())
+                        Tools.showToast(this, "内容已保存");
+                    break;
+            }
+
             saveDraft();
             finshActivity();
         } else {

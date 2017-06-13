@@ -37,6 +37,8 @@ import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
+import static amodule.article.activity.ArticleDetailActivity.TYPE_ARTICLE;
+
 /**
  * PackageName : amodule.article.view
  * Created by MrTrying on 2017/5/27 09:57.
@@ -52,7 +54,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     private ProgressBar progressBar;
 
     private String code = "";
-    private String type = "1";
+    private String type = TYPE_ARTICLE;
     private String praiseAPI = "";
     private int praiseNum = 0;
     private boolean isSofa = false;
@@ -279,7 +281,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         if (TextUtils.isEmpty(getType()))
             return;
         switch (getType()) {
-            case ArticleDetailActivity.TYPE_ARTICLE:
+            case TYPE_ARTICLE:
                 eventId = "a_ArticleDetail";
                 break;
             case ArticleDetailActivity.TYPE_VIDEO:

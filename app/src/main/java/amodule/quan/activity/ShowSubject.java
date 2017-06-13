@@ -84,7 +84,7 @@ public class ShowSubject extends BaseActivity {
 	private ArrayList<Map<String, String>> listDataSubjectInfo;
 	private Map<String, String> louZhuMap;//楼主的code name
 
-	// 帖子的一些信息
+	// 贴子的一些信息
 	private String subCode = "", shareImg = "";
 	private int destFloorNum = 0;
 	private String subjectTitle = "", subjectContent = "", commentId;
@@ -98,8 +98,8 @@ public class ShowSubject extends BaseActivity {
 	private int item;//点击消息跳转详情页后定位到指定楼层
 	//点消息跳转过来的时候得到的name  code   floorId
 	private String isSafa;//是否是从沙发列表页点击进入详情页的
-	public static String types = "1";//美食帖类型
-	private boolean isJingHua = false;//是否是精华帖
+	public static String types = "1";//美食贴类型
+	private boolean isJingHua = false;//是否是精华贴
 	private String classId = "";//模块Id
 
 	private String STATISTICS_ID = "a_quan_detail_normal";
@@ -199,7 +199,7 @@ public class ShowSubject extends BaseActivity {
 		String color = Tools.getColorStr(this,R.color.common_top_bg);
 		Tools.setStatusBarColor(this, Color.parseColor(color));
 		//		setViewIndex();
-		XHClick.track(this, "浏览美食帖");
+		XHClick.track(this, "浏览美食贴");
 		SpecialWebControl.initSpecialWeb(this,"subjectInfo","",subCode);
 	}
 
@@ -230,7 +230,7 @@ public class ShowSubject extends BaseActivity {
 
 		//		//初始化全屏视屏
 		//		fullscreen = (RelativeLayout) findViewById(R.id.fullscreen);
-		//管理员权限      推荐美食帖
+		//管理员权限      推荐美食贴
 		recommendSubject = (RelativeLayout) findViewById(R.id.home_layout);
 		ImageView imageView = (ImageView) findViewById(R.id.img_home);
 		imageView.setVisibility(View.GONE);
@@ -258,7 +258,7 @@ public class ShowSubject extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				//7.29新添加统计
-				XHClick.mapStat(ShowSubject.this.getApplicationContext(), "a_collection", "美食帖", "");
+				XHClick.mapStat(ShowSubject.this.getApplicationContext(), "a_collection", "美食贴", "");
 				if (LoginManager.isLogin()) {
 					AppCommon.onFavoriteClick(ShowSubject.this, "subject", subCode, new InternetCallback(ShowSubject.this.getApplicationContext()) {
 						@Override
@@ -348,7 +348,7 @@ public class ShowSubject extends BaseActivity {
 					XHClick.mapStat(ShowSubject.this.getApplicationContext(), STATISTICS_ID, "顶部导航栏点击量", "举报点击量");
 					Intent intent = new Intent(ShowSubject.this, QuanReport.class);
 					intent.putExtra("isQuan", "1");
-					intent.putExtra("nickName", "举报此帖");
+					intent.putExtra("nickName", "举报此贴");
 					intent.putExtra("code", subCode);
 					intent.putExtra("repType", "1");
 					intent.putExtra("subjectCode", subCode);
@@ -358,7 +358,7 @@ public class ShowSubject extends BaseActivity {
 					XHClick.mapStat(ShowSubject.this.getApplicationContext(), STATISTICS_ID, "顶部导航栏点击量", "举报点击量");
 					Intent intent = new Intent(ShowSubject.this, QuanReport.class);
 					intent.putExtra("isQuan", "1");
-					intent.putExtra("nickName", "举报此帖");
+					intent.putExtra("nickName", "举报此贴");
 					intent.putExtra("code", subCode);
 					intent.putExtra("repType", "1");
 					intent.putExtra("subjectCode", subCode);
@@ -595,7 +595,7 @@ public class ShowSubject extends BaseActivity {
 						}, 1500);
 					}
 				} else if (flag == UtilInternet.REQ_CODE_ERROR) {
-					ShowSubject.this.finish();//当帖子被删掉时,finish
+					ShowSubject.this.finish();//当贴子被删掉时,finish
 				}
 
 				if (relEveryPage == 0) {
@@ -633,13 +633,13 @@ public class ShowSubject extends BaseActivity {
 		if (map.containsKey("theSubject")) {
 			theSubjectListMap = UtilString.getListMapByJson(map.get("theSubject")).get(0);
 			commentNum = Integer.parseInt(theSubjectListMap.get("commentNum"));//评论数
-			subjectTitle = theSubjectListMap.get("title");//美食帖名称
+			subjectTitle = theSubjectListMap.get("title");//美食贴名称
 			if (theSubjectListMap.containsKey("isFav")) {
 				boolean isFav = theSubjectListMap.get("isFav").equals("2");//是否收藏过
 				favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 				favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
 			}
-			if (theSubjectListMap.containsKey("type"))//帖子类
+			if (theSubjectListMap.containsKey("type"))//贴子类
 			{
 				types = theSubjectListMap.get("type");
 			}
@@ -723,7 +723,7 @@ public class ShowSubject extends BaseActivity {
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
-							UtilLog.print("d", "获取帖子图片出错");
+							UtilLog.print("d", "获取贴子图片出错");
 						}
 
 						// 楼主设置数据
@@ -846,7 +846,7 @@ public class ShowSubject extends BaseActivity {
 					String id = (String) msg.obj;
 					Intent intent = new Intent(ShowSubject.this, QuanReport.class);
 					intent.putExtra("isQuan", "1");
-					intent.putExtra("nickName", "举报此帖");
+					intent.putExtra("nickName", "举报此贴");
 					intent.putExtra("code", id);
 					intent.putExtra("repType", "2");
 					intent.putExtra("subjectCode", subCode);
@@ -895,8 +895,8 @@ public class ShowSubject extends BaseActivity {
 					}
 					commentNum++;
 
-					//统计 回复帖(计算事件)
-					XHClick.onEventValue(getApplicationContext(), "quanOperate", "quanOperate", "回复帖", 1);
+					//统计 回复贴(计算事件)
+					XHClick.onEventValue(getApplicationContext(), "quanOperate", "quanOperate", "回复贴", 1);
 
 					break;
 				case REPLY_LOU_CLICK:

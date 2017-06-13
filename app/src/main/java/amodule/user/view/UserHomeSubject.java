@@ -303,11 +303,11 @@ public class UserHomeSubject extends TabContentView {
 				if (isMyselft) map.put("isMe", "2");
 				else map.put("isMe", "1");
 				if (!TextUtils.isEmpty(map.get("num")) && !map.get("num").equals("1"))
-					map.put("title", "【跟帖】" + map.get("title"));
+					map.put("title", "【跟贴】" + map.get("title"));
 				listDataMySb.add(map);
 			}
 		}
-		// 如果总数据为空,显示没有美食帖
+		// 如果总数据为空,显示没有美食贴
 		if (listDataMySb.size() == 0) {
 			RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmpty.getLayoutParams();
 			emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();

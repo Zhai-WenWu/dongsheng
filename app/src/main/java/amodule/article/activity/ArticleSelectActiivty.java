@@ -64,10 +64,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataType = getIntent().getIntExtra("dataType",0);
-        if(dataType == EditParentActivity.TYPE_ARTICLE) {
+        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
             initActivity("发文章", 5, 0, R.layout.a_article_select_title, R.layout.a_article_select_activity);
             sqLite = new UploadArticleSQLite(XHApplication.in().getApplicationContext());
-        }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+        }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO) {
             initActivity("发视频", 5, 0, R.layout.a_article_select_title, R.layout.a_article_select_activity);
             sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
         }else{
@@ -168,9 +168,9 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         isLoading = true;
         loadManager.showProgressBar();
         String url = "";
-        if(dataType == EditParentActivity.TYPE_ARTICLE)
+        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
             url = StringManager.api_getArticleClass;
-        else if(dataType == EditParentActivity.TYPE_VIDEO)
+        else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
             url = StringManager.getVideoClass;
         ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
             @Override
@@ -222,9 +222,9 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
 
                 }
             };
-            if(dataType == EditParentActivity.TYPE_ARTICLE) {
+            if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
                 uploadArticleData.upload(StringManager.api_articleAdd,internetCallback);
-            }else if(dataType == EditParentActivity.TYPE_VIDEO) {
+            }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO) {
                 uploadArticleData.upload(StringManager.api_videoAdd,internetCallback);
             }
         }
@@ -236,10 +236,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent();
-        if(dataType == EditParentActivity.TYPE_ARTICLE) {
+        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
             intent.setClass(this, ArticleEidtActiivty.class);
             XHClick.mapStat(this, "a_ArticleEdit", "下一步", "返回");
-        } else if(dataType == EditParentActivity.TYPE_VIDEO)
+        } else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
             intent.setClass(this,VideoEditActivity.class);
         startActivity(intent);
         tjClosePage();

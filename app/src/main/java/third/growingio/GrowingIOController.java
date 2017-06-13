@@ -90,7 +90,7 @@ public class GrowingIOController {
             if(!TextUtils.isEmpty(regTime)){
                 growingIO.setCS7("regTime",regTime);
             }
-            //帖子数
+            //贴子数
             String subjectNum = userInfo.get("subjectNum");
             if(!TextUtils.isEmpty(subjectNum)){
                 growingIO.setCS8("subjectNum",subjectNum);

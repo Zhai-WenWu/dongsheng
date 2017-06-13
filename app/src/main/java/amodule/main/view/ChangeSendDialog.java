@@ -177,9 +177,9 @@ public class ChangeSendDialog extends Dialog {
     public void onClick(String tag) {
         if (TextUtils.isEmpty(tag)) return;
         switch (tag) {
-            case "1": //发帖
+            case "1": //发贴
                 closeDialog();
-                XHClick.mapStat(activity, "a_post_button", "发帖子", "");
+                XHClick.mapStat(activity, "a_post_button", "发贴子", "");
                 Intent subIntent = new Intent(activity, UploadSubjectNew.class);
                 subIntent.putExtra("skip", true);
                 activity.startActivity(subIntent);

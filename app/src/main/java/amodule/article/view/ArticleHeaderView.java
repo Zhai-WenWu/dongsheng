@@ -29,6 +29,7 @@ import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
 
+import static amodule.article.activity.ArticleDetailActivity.TYPE_ARTICLE;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
@@ -77,7 +78,7 @@ public class ArticleHeaderView extends ItemBaseView {
                             if (FriendHome.isAlive) {
                                 Intent broadIntent = new Intent();
                                 broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
-                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_ATT, "1");
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_ATT, TYPE_ARTICLE);
                                 Main.allMain.sendBroadcast(broadIntent);
                             }
                         }

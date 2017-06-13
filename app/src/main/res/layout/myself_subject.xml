@@ -5,7 +5,7 @@
     <TextView
         android:id="@+id/tv_noData"
         style="@style/noDataText"
-        android:text="还没有发过美食帖哦~"/>
+        android:text="还没有发过美食贴哦~"/>
 
     <acore.widget.DownRefreshList
         android:id="@+id/list_myself_subject"

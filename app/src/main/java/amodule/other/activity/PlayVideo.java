@@ -59,7 +59,7 @@ public class PlayVideo extends BaseActivity {
         //设置播放界面16:9
         dishVidioLayout = (LinearLayout) findViewById(R.id.dishVidio);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dishVidioLayout.getLayoutParams();
-        params.height = Tools.getPhoneWidth() * 9 / 16;
+        params.height = Tools.getPhoneHeight();
         params.width = Tools.getPhoneWidth();
         dishVidioLayout.setLayoutParams(params);
         intiVideoView();

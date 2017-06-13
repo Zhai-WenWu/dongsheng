@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import org.w3c.dom.Text;
 
 /**
- * 上传美食帖数据操作
+ * 上传美食贴数据操作
  * @author Eva
  *
  */

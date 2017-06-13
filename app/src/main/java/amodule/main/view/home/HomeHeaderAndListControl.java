@@ -45,7 +45,7 @@ public class HomeHeaderAndListControl implements OnClickListener{
 	private ScrollLinearListLayout mHeaderListView;
 	/** 头部缩放动画布局 */
 	private ZoomLayout mZommLayout;
-	/** 加载帖子的listview */
+	/** 加载贴子的listview */
 	private ListView mListView;
 	/** 头部三餐的Gallery */
 	private GalleryViewPager mGalleryViewPager;

@@ -62,7 +62,7 @@ public class CircleFragment extends Fragment {
     private LoadManager mLoadManager = null;
     /**
      * 圈子列表的头部局
-     * 包含置顶，公告，活动，发帖界面，发帖失败界面
+     * 包含置顶，公告，活动，发贴界面，发贴失败界面
      */
     private CircleHeaderView mCircleHeaderView;
     private PtrClassicFrameLayout refreshLayout;
@@ -75,7 +75,7 @@ public class CircleFragment extends Fragment {
     private int mCurrentPage = 0;
     /** 每页的数据数量 */
     private int mEveryPageNum = 0;
-    /** 帖子的数据集合 */
+    /** 贴子的数据集合 */
     private ArrayList<Map<String, String>> mListData = new ArrayList<>();
     /** 置顶和公告的数据集合 */
     private ArrayList<Map<String, String>> mRobRoNoticeData = new ArrayList<>();
@@ -145,7 +145,7 @@ public class CircleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.circle_fragment_list, null);
         mCircleHeaderView = new CircleHeaderView(mActivity);
-        //设置头部发帖失败布局点击事件
+        //设置头部发贴失败布局点击事件
         mCircleHeaderView.setFakeDelCallback(new ItemCallback() {
             @Override
             public void onClick(String content) {
@@ -171,7 +171,7 @@ public class CircleFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //处理发帖假界面
+        //处理发贴假界面
         if (mActivity instanceof CircleHome) {
             CircleHome circleHome = (CircleHome) mActivity;
             updateCircleHeader(circleHome.mSubjectDataArray);
@@ -408,7 +408,7 @@ public class CircleFragment extends Fragment {
                         }
                         String dataType = returnData.get(0).get("dataType");
                         returnData = StringManager.getListMapByJson(returnData.get(0).get("data"));
-                        //判断列表数据类型-----------------1：帖子 2：用户
+                        //判断列表数据类型-----------------1：贴子 2：用户
                         if ("2".equals(dataType)) {
                             for (int index = 0, length = returnData.size(); index < length; index++) {
                                 Map<String, String> map = returnData.get(index);

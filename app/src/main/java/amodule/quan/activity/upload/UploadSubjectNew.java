@@ -52,7 +52,7 @@ import static amodule.quan.activity.FriendQuan.REQUEST_CODE_QUAN_FRIEND;
 //import android.util.Log;
 
 /**
- * 发美食帖
+ * 发美食贴
  */
 public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 
@@ -75,7 +75,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	public int imgMax = ImageSelectorConstant.DEFAULTCOUNT;
 	public int imgMin = -1;
 	//-----------end 内容控制----------
-	/** 发布类型：帖子，回复  */
+	/** 发布类型：贴子，回复  */
 	private String uploadType = SubjectData.TYPE_UPLOAD;
 	//默认发布的圈子为秀美食cid=1,选择的默认cid=“-1”
 	private final String  defaultCid = "1",defaultChooseCid = "-1";
@@ -130,7 +130,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			switch (requestCode){
 				case UP_SUBJECT_CHOOSE_IMG:
 					ArrayList<String> array = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);//ArrayList<String>
-					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新帖图片", array.size());
+					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新贴图片", array.size());
 					upSubContent.insertImgs(array);
 					break;
 				case UP_SUBJECT_CHOOSE_CIRCLE:
@@ -179,7 +179,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		SubjectData upData = new SubjectData();
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
-			// 是回复贴还是新帖
+			// 是回复贴还是新贴
 			if (bundle.containsKey("subjectCode") && !TextUtils.isEmpty(bundle.getString("subjectCode"))) {
 				uploadType = SubjectData.TYPE_REPLY;
 			}else{
@@ -188,7 +188,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			int id;
 			id = bundle.getInt("id",-1);
 			if(id == -1){
-				//只有发帖才读草稿
+				//只有发贴才读草稿
 				if(SubjectData.TYPE_UPLOAD.equals(uploadType)){
 					upData = sqlHelp.getLastDraft(mChooseCid,false);
 					if(isSkip && upData != null){
@@ -278,7 +278,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	}
 
 	/**
-	 * 获取当前发帖rule
+	 * 获取当前发贴rule
 	 */
 	public void setCircleRule(){
 		resetRule();
@@ -387,7 +387,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		//TODO 获取数据
 		SubjectData subjectData = upSubContent.getData();
 		subjectData.setDishCode(mDishCode);
-		//只有发帖才存草稿
+		//只有发贴才存草稿
 		if(SubjectData.TYPE_UPLOAD.equals(uploadType)){
 			subjectData.setType(uploadType);
 		}else{ //楼层回复
@@ -426,7 +426,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		UploadSubjectControl upSubCon = UploadSubjectControl.getInstance();
 		if (subjectData != null) {
 			upSubCon.startUpload(subjectData);
-			XHClick.track(this,"发美食帖");
+			XHClick.track(this,"发美食贴");
 		}
 	}
 
@@ -446,8 +446,8 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			}
 			int imgNum = upSubContent.getImagSize();
 			if (imgMin > 0 && imgNum <= 0) {
-				XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", cName + "版块是带图版块哦，请带图发帖", 0);
-				return cName + "版块是带图版块哦，请带图发帖";
+				XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", cName + "版块是带图版块哦，请带图发贴", 0);
+				return cName + "版块是带图版块哦，请带图发贴";
 			}else if(imgNum >= 0 && imgNum < imgMin){
 				XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", cName + "版块至少选择 " + imgMin + " 张图", imgNum);
 				return cName + "版块至少选择 " + imgMin + " 张图";

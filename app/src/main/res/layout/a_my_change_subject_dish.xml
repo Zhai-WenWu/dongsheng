@@ -57,7 +57,7 @@
             android:paddingBottom="@dimen/dp_24.5"
             android:layout_above="@+id/gv_uploadSubject"
             android:gravity="center"
-            android:text="请选择帖子类型"
+            android:text="请选择贴子类型"
             android:textSize="@dimen/sp_12"
             android:textColor="#505050"/>
     

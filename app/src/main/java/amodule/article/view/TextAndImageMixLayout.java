@@ -568,6 +568,11 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param view
      */
     private void removeBaseView(BaseView view) {
+        if("2".equals(type)
+                && (view instanceof VideoShowView)){
+            ((VideoShowView)view).resetData();
+            return;
+        }
         final int index = indexOfChild(view);
         String text = "";
         if (index + 1 < getChildCount()) {

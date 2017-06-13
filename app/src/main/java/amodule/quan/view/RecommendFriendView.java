@@ -197,7 +197,7 @@ public class RecommendFriendView extends CircleItemBaseLinearLayout {
         tizi_num.setVisibility((map.containsKey("subjectNumber") && !TextUtils.isEmpty(map.get("subjectNumber"))) ? View.VISIBLE : View.GONE);
         caipu_num.setVisibility((map.containsKey("dishNumber") && !TextUtils.isEmpty(map.get("dishNumber"))) ? View.VISIBLE : View.GONE);
         if (map.containsKey("subjectNumber") && !TextUtils.isEmpty(map.get("subjectNumber"))) {
-            tizi_num.setText("帖子" + map.get("subjectNumber"));
+            tizi_num.setText("贴子" + map.get("subjectNumber"));
         }
         if (map.containsKey("dishNumber") && !TextUtils.isEmpty(map.get("dishNumber"))) {
             caipu_num.setText("菜谱" + map.get("dishNumber"));

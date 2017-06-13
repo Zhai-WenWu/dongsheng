@@ -60,7 +60,7 @@
 	        style="@style/noDataText"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="@dimen/dp_50"
-	        android:text="您没有收藏美食帖哦，快去收藏吧"
+	        android:text="您没有收藏美食贴哦，快去收藏吧"
 	        android:textSize="@dimen/sp_13"
 	        android:visibility="visible" />
 	    

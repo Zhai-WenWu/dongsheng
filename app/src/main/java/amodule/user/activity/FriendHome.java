@@ -368,10 +368,10 @@ public class FriendHome extends BaseActivity {
 						if ("2".equals(hasMedia)) {
 							if (!TextUtils.isEmpty(id)) {
 								UploadParentSQLite parentSQL = null;
-								int dataType = EditParentActivity.TYPE_ARTICLE;
+								int dataType = EditParentActivity.DATA_TYPE_ARTICLE;
 								if ("1".equals(type)) {
 									parentSQL = new UploadVideoSQLite(this);
-									dataType = EditParentActivity.TYPE_VIDEO;
+									dataType = EditParentActivity.DATA_TYPE_VIDEO;
 								} else if ("2".equals(type)) {
 									parentSQL = new UploadArticleSQLite(this);
 								}

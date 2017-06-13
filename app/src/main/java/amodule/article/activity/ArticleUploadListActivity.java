@@ -83,7 +83,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         initActivity("上传列表", 4, 0, R.layout.c_view_bar_title_uploadlist,R.layout.a_dish_upload_list);
         dataType = getIntent().getIntExtra("dataType",0);
         Log.i("articleUpload","ArticleUploadListActivity dataType:" + dataType);
-        if(dataType != EditParentActivity.TYPE_ARTICLE && dataType != EditParentActivity.TYPE_VIDEO){
+        if(dataType != EditParentActivity.DATA_TYPE_ARTICLE && dataType != EditParentActivity.DATA_TYPE_VIDEO){
             Tools.showToast(this,"发布数据类型为空");
             finish();
         }
@@ -186,7 +186,7 @@ public class ArticleUploadListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String showInfo = "确定取消上传文章吗？";
-                if(dataType == EditParentActivity.TYPE_ARTICLE)
+                if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
                     showInfo = "确定取消上传视频吗？";
                 String btnMsg1 = "确定";
                 String btnMsg2 = "取消";
@@ -201,9 +201,9 @@ public class ArticleUploadListActivity extends BaseActivity {
                             Intent broadIntent = new Intent();
                             broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
                             String type = "";
-                            if (dataType == EditParentActivity.TYPE_ARTICLE)
+                            if (dataType == EditParentActivity.DATA_TYPE_ARTICLE)
                                 type = "2";
-                            else if (dataType == EditParentActivity.TYPE_VIDEO)
+                            else if (dataType == EditParentActivity.DATA_TYPE_VIDEO)
                                 type = "1";
                             if (!TextUtils.isEmpty(type))
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
@@ -212,9 +212,9 @@ public class ArticleUploadListActivity extends BaseActivity {
                         isStopUpload = true;
 
                         Intent intent = new Intent();
-                        if(dataType == EditParentActivity.TYPE_ARTICLE){
+                        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE){
                             intent.setClass(ArticleUploadListActivity.this, ArticleEidtActiivty.class);
-                        }else if(dataType == EditParentActivity.TYPE_VIDEO){
+                        }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO){
                             intent.setClass(ArticleUploadListActivity.this, VideoEditActivity.class);
                         }
                         intent.putExtra("draftId",draftId);
@@ -401,9 +401,9 @@ public class ArticleUploadListActivity extends BaseActivity {
     private void goBack() {
         gotoFriendHome();
         if (!isStopUpload) {
-            if(dataType == EditParentActivity.TYPE_ARTICLE){
+            if(dataType == EditParentActivity.DATA_TYPE_ARTICLE){
                 Toast.makeText(XHApplication.in().getApplicationContext(),"文章会在后台继续上传", Toast.LENGTH_SHORT).show();
-            }else if(dataType == EditParentActivity.TYPE_VIDEO){
+            }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO){
                 Toast.makeText(XHApplication.in().getApplicationContext(),"视频会在后台继续上传", Toast.LENGTH_SHORT).show();
             }
         }
@@ -416,9 +416,9 @@ public class ArticleUploadListActivity extends BaseActivity {
             Intent broadIntent = new Intent();
             broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
             String type = "";
-            if (this.dataType == EditParentActivity.TYPE_ARTICLE)
+            if (this.dataType == EditParentActivity.DATA_TYPE_ARTICLE)
                 type = "2";
-            else if (this.dataType == EditParentActivity.TYPE_VIDEO)
+            else if (this.dataType == EditParentActivity.DATA_TYPE_VIDEO)
                 type = "1";
             if (!TextUtils.isEmpty(type))
                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
@@ -426,9 +426,9 @@ public class ArticleUploadListActivity extends BaseActivity {
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
-            if(dataType == EditParentActivity.TYPE_ARTICLE)
+            if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
                 intent.putExtra("index", 3);
-            else if(dataType == EditParentActivity.TYPE_VIDEO)
+            else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
                 intent.putExtra("index", 2);
             intent.setClass(this, FriendHome.class);
             startActivity(intent);

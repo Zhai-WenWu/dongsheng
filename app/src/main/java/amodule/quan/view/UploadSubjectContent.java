@@ -36,7 +36,7 @@ import static com.xiangha.R.id.activityLayout;
 import static com.xiangha.R.id.editText;
 
 /**
- * 发美食帖内容
+ * 发美食贴内容
  */
 public class UploadSubjectContent implements OnClickListener{
 
@@ -113,7 +113,7 @@ public class UploadSubjectContent implements OnClickListener{
 			public void afterTextChanged(Editable s) {
 				if(s.toString().length() > 0 && isOneWriteTitle && !isHaveTitle && isNewSubject){
 					isOneWriteTitle = false;
-					XHClick.onEventValue(act, "uploadQuanTitle", "uploadQuanTitle", "新帖写标题",s.toString().length());
+					XHClick.onEventValue(act, "uploadQuanTitle", "uploadQuanTitle", "新贴写标题",s.toString().length());
 				}
 				int num=titleMax-ed_uploadSubjectTitle.length();
 				if(num<=5){

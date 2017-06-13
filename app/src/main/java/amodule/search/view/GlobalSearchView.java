@@ -355,7 +355,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             case SearchConstant.SEARCH_MEISHITIE:
                 showView(tieziView);
                 tieziView.search(key);
-                XHClick.mapStat(mActivity, "a_search_input", "搜帖子", "");
+                XHClick.mapStat(mActivity, "a_search_input", "搜贴子", "");
                 break;
             default:
                 break;
@@ -468,7 +468,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         if (SearchConstant.SEARCH_HAYOU == limitSearchType) {
             edSearch.setHint("搜哈友");
         } else if (SearchConstant.SEARCH_MEISHITIE == limitSearchType) {
-            edSearch.setHint("搜帖子");
+            edSearch.setHint("搜贴子");
         } else if (secondLevelView instanceof CaidanResultView) {
             edSearch.setHint("搜菜单");
         } else if (secondLevelView instanceof ZhishiResultView) {

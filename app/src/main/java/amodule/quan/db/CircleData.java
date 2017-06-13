@@ -14,7 +14,7 @@ public class CircleData {
 	private String rule = "";
 	
 	/**
-	 * 发帖跳转位置
+	 * 发贴跳转位置
 	 *  1、填写内容 
 	 *  2、选择图片
 	 *  */

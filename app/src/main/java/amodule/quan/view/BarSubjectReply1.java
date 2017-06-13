@@ -86,7 +86,7 @@ public class BarSubjectReply1 extends LinearLayout{
 					return;
 				}
 				//统计发美食贴(计算事件)
-				XHClick.onEventValue(act, "uploadQuan", "uploadQuan", "从帖子发", 1);
+				XHClick.onEventValue(act, "uploadQuan", "uploadQuan", "从贴子发", 1);
 				
 				Intent intent = new Intent();
 				intent.putExtra("title", subjectName);

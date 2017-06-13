@@ -167,7 +167,7 @@ public abstract class UploadHelper {
 											&&!TextUtils.isEmpty(uploadData.get("videoType"))){
 										XHClick.track(XHApplication.in(),"发小视频贴成功");
 									}else{
-                                    	XHClick.track(XHApplication.in(),"发美食帖成功");
+                                    	XHClick.track(XHApplication.in(),"发美食贴成功");
 									}
                                 }else if(StringManager.api_uploadDish.equals(url)){
 									XHClick.track(XHApplication.in(),"发菜谱成功");
@@ -269,7 +269,7 @@ public abstract class UploadHelper {
 	}
 	/**
 	 * 上传过程中协助处理
-	 * 上传菜谱 和 上传美食帖 实现不同的数据处理
+	 * 上传菜谱 和 上传美食贴 实现不同的数据处理
 	 */
 	public abstract void startUploadHandle(long uploadTimeCode,final UploadData uploadData);
 	public abstract void endUploadHandle(UploadData uploadData,int flag, Object msg);

@@ -34,7 +34,7 @@ public class SubjectFloorAdvertControl {
     public void initAd() {
 //        //广点通banner广告
 //        RelativeLayout bannerLayout = (RelativeLayout) floorView.findViewById(R.id.a_subject_detail_ad_banner_bd_layout);
-//        GdtAdNew gdtAd = new GdtAdNew(mAct,"美食圈美食帖详情", bannerLayout, 0, GdtAdTools.ID_QUAN_BANNER, GdtAdNew.CREATE_AD_BANNER);
+//        GdtAdNew gdtAd = new GdtAdNew(mAct,"美食圈美食贴详情", bannerLayout, 0, GdtAdTools.ID_QUAN_BANNER, GdtAdNew.CREATE_AD_BANNER);
 
 
         //腾讯banner广告

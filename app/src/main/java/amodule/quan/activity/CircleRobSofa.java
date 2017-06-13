@@ -33,7 +33,7 @@ public class CircleRobSofa extends BaseActivity implements OnClickListener{
 	private ImageView mRefreshIcon;
 	/** 
 	 * 圈子列表的头部局
-	 * 包含置顶，公告，活动，发帖界面，发帖失败界面
+	 * 包含置顶，公告，活动，发贴界面，发贴失败界面
 	 *  */
 	private CircleHeaderView mCircleHeaderView;
 	
@@ -165,7 +165,7 @@ public class CircleRobSofa extends BaseActivity implements OnClickListener{
 	/**
 	 * 
 	 * @param code
-	 * 	帖子的code，不能为null
+	 * 	贴子的code，不能为null
 	 */
 	public static void removeSofaItem(String code){
 		if(mData != null && mAdapter != null){

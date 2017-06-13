@@ -22,7 +22,7 @@ import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
 
 /**
- * 帖子Item，只处理3图模式的。
+ * 贴子Item，只处理3图模式的。
  * Created by sll on 2017/4/18.
  */
 

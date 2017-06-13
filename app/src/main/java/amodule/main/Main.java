@@ -194,9 +194,9 @@ public class Main extends Activity implements OnClickListener {
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
 
-                boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
+                boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
                 if (!isShow)
-                    showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？");
+                    showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？");
             }
         }
 
@@ -389,7 +389,7 @@ public class Main extends Activity implements OnClickListener {
     public void onChangeSend(View v) {
         MyQuanDataControl.getNewMyQuanData(this, null);
         XHClick.mapStat(this, "a_index530", "底部导航栏", "点击底部发布按钮");
-        XHClick.mapStat(this, MainCircle.STATISTICS_ID, "发帖", null);
+        XHClick.mapStat(this, MainCircle.STATISTICS_ID, "发贴", null);
         XHClick.mapStat(this, "a_down", "+", "");
         Intent intent = new Intent(this, MainChangeSend.class);
         startActivity(intent);

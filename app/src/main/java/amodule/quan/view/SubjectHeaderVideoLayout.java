@@ -175,7 +175,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
         mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
             @Override
             public void onStatistics() {
-                XHClick.mapStat(getContext(), "a_post_detail_video", "帖子部分点击量", "播放点击量");
+                XHClick.mapStat(getContext(), "a_post_detail_video", "贴子部分点击量", "播放点击量");
             }
         });
         mVideoPlayerController.hideFullScreen();

@@ -74,7 +74,7 @@ public class VideoEditActivity extends EditParentActivity{
             if(timer != null)timer.cancel();
             Intent intent = new Intent(this, ArticleUploadListActivity.class);
             intent.putExtra("draftId", uploadArticleData.getId());
-            intent.putExtra("dataType", EditParentActivity.TYPE_VIDEO);
+            intent.putExtra("dataType", EditParentActivity.DATA_TYPE_VIDEO);
             intent.putExtra("coverPath", uploadArticleData.getImg());
             String videoPath = "";
             ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();

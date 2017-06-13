@@ -44,6 +44,7 @@ import amodule.article.view.ArticleCommentBar;
 import amodule.article.view.ArticleContentBottomView;
 import amodule.article.view.ArticleHeaderView;
 import amodule.article.view.BottomDialog;
+import amodule.article.view.RecommendItemView;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
@@ -289,12 +290,24 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                 });
         requestArticleData(false);
-        if("1".equals(getType())){
-            //请求广告数据
-            xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM},"wz_wz");
-            xhAllAdControlList = requestAdData(new String[]{ ARTICLE_RECM},"wz_list");
-            detailAdapter.setXHAllAdControl(xhAllAdControlList);
-        }
+        initAD();//初始化广告
+    }
+
+    private void initAD(){
+        //请求广告数据
+        xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM},"wz_wz");
+        xhAllAdControlList = requestAdData(new String[]{ ARTICLE_RECM},"wz_list");
+        detailAdapter.setmOnADCallback(new ArticleDetailAdapter.OnADCallback() {
+            @Override
+            public void onClick(View view, int index, String s) {
+                xhAllAdControlList.onAdClick(view, index, s);
+            }
+
+            @Override
+            public void onBind(int index, View view, String s) {
+                xhAllAdControlList.onAdBind(index, view, s);
+            }
+        });
     }
 
     private void refreshData(boolean onlyUser) {
@@ -526,7 +539,7 @@ public class ArticleDetailActivity extends BaseActivity {
             try {
                 Map<String, String> dataMap = new HashMap<>();
                 dataMap.put("datatype", String.valueOf(Type_recommed));
-                dataMap.put("idAd", "2");
+                dataMap.put("isAd", "2");
                 dataMap.put("adPosition", "0");
                 dataMap.put("title", adRcomDataMap.get("desc"));//adRcomDataMap.get("title") + " | " +
                 dataMap.put("img", adRcomDataMap.get("imgUrl"));
@@ -610,7 +623,7 @@ public class ArticleDetailActivity extends BaseActivity {
             return;
         }
 
-        barShare = new BarShare(ArticleDetailActivity.this, "1".equals(getType()) ? "文章详情" : "视频详情", "");
+        barShare = new BarShare(ArticleDetailActivity.this, TYPE_ARTICLE.equals(getType()) ? "文章详情" : "视频详情", "");
         String title = shareMap.get("title");
         String content = shareMap.get("content");
         String clickUrl = shareMap.get("url");
