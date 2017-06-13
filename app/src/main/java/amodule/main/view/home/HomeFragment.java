@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.utils.VDPlayPauseHelper;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -51,7 +50,6 @@ import amodule.main.view.item.HomeItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
 import amodule.main.view.item.HomeTxtItem;
-import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -696,8 +694,6 @@ public class HomeFragment extends Fragment{
         }
     }
 
-    private VDPlayPauseHelper mVDPlayPauseHelper;
-
     private SimpleVideoPlayerController mPlayerController;
 
     /**
@@ -789,23 +785,6 @@ public class HomeFragment extends Fragment{
             controller.resume();
             controller.start();
         }
-    }
-
-    /**
-     * 播放/暂停
-     */
-    private void playPause() {
-        if (mVDPlayPauseHelper == null)
-            mVDPlayPauseHelper = new VDPlayPauseHelper(mActivity);
-        mVDPlayPauseHelper.doClick();
-    }
-
-    /**
-     * 是否正在播放
-     * @return
-     */
-    private boolean isPlaying() {
-        return mPlayerController == null ? false : mPlayerController.isPlaying();
     }
 
     /**

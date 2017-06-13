@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
@@ -126,10 +127,17 @@ public class HomeTxtItem extends HomeItem {
                 mDataMap.put("isADShow", "1");
             }
         }
-        if (mDataMap.containsKey("img") && !TextUtils.isEmpty(mDataMap.get("img"))) {
-            if (mImgs != null)
-                mImgs.setVisibility(View.VISIBLE);
-            loadImage(mDataMap.get("img"), mImg);
+        if (mDataMap.containsKey("styleData")) {
+            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
+            if (datas != null && datas.size() > 0) {
+                Map<String, String> imgMap = datas.get(0);
+                if (imgMap != null && imgMap.size() > 0) {
+                    String imgUrl = imgMap.get("url");
+                    if (mImgs != null)
+                        mImgs.setVisibility(View.VISIBLE);
+                    loadImage(imgUrl, mImg);
+                }
+            }
         }
         if (mDataMap.containsKey("name") && !mIsAd) {
             String name = mDataMap.get("name");

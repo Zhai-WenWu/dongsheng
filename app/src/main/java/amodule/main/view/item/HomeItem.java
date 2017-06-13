@@ -458,4 +458,12 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         }
         return false;
     }
+
+    /**
+     * 获取当前Item的数据体类型
+     * @return
+     */
+    public String getDataType() {
+        return mType;
+    }
 }

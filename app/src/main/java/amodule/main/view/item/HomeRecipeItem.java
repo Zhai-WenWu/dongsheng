@@ -185,37 +185,45 @@ public class HomeRecipeItem extends HomeItem {
                     mVideoContainer.setVisibility(View.VISIBLE);
             }
         }
-        if (mDataMap.containsKey("img") && !TextUtils.isEmpty(mDataMap.get("img"))) {
-            loadImage(mDataMap.get("img"), mImg, mIsAd ? new ADImageLoadCallback() {
-                @Override
-                public void callback(Bitmap bitmap) {
-                    if (bitmap == null)
-                        return;
-                    int bitmapWidth = bitmap.getWidth();
-                    int bitmapHeight = bitmap.getHeight();
-                    int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
-                    int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
-                    mImg.setScaleType(ImageView.ScaleType.FIT_XY);
-                    mImg.setImageBitmap(bitmap);
-                    if (mContainer != null) {
-                        MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                        containerParams.width = MarginLayoutParams.MATCH_PARENT;
-                        containerParams.height = imgHeight;
-                        mContainer.setLayoutParams(containerParams);
-                    }
-                    MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-                    adImgParams.height = imgHeight;
-                    mImg.setLayoutParams(adImgParams);
-                    mLayerView.requestLayout();
-                    mLayerView.requestLayout();
-                    if (mLayerView != null) {
-                        MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-                        layerParams.width = MarginLayoutParams.MATCH_PARENT;
-                        layerParams.height = imgHeight;
-                        mLayerView.setLayoutParams(layerParams);
-                    }
+
+        if (mDataMap.containsKey("styleData")) {
+            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
+            if (datas != null && datas.size() > 0) {
+                Map<String, String> imgMap = datas.get(0);
+                if (imgMap != null && imgMap.size() > 0) {
+                    String imgUrl = imgMap.get("url");
+                    loadImage(imgUrl, mImg, mIsAd ? new ADImageLoadCallback() {
+                        @Override
+                        public void callback(Bitmap bitmap) {
+                            if (bitmap == null)
+                                return;
+                            int bitmapWidth = bitmap.getWidth();
+                            int bitmapHeight = bitmap.getHeight();
+                            int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
+                            int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
+                            mImg.setScaleType(ImageView.ScaleType.FIT_XY);
+                            mImg.setImageBitmap(bitmap);
+                            if (mContainer != null) {
+                                MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
+                                containerParams.width = MarginLayoutParams.MATCH_PARENT;
+                                containerParams.height = imgHeight;
+                                mContainer.setLayoutParams(containerParams);
+                            }
+                            MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
+                            adImgParams.height = imgHeight;
+                            mImg.setLayoutParams(adImgParams);
+                            mLayerView.requestLayout();
+                            mLayerView.requestLayout();
+                            if (mLayerView != null) {
+                                MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
+                                layerParams.width = MarginLayoutParams.MATCH_PARENT;
+                                layerParams.height = imgHeight;
+                                mLayerView.setLayoutParams(layerParams);
+                            }
+                        }
+                    } : null);
                 }
-            } : null);
+            }
         }
         if (mIsVideo && mPlayImg != null)
             mPlayImg.setVisibility(View.VISIBLE);

@@ -131,8 +131,8 @@ public class HomePostItem extends HomeItem {
             }
         }
         int imgCount = 0;
-        if (mDataMap.containsKey("imgs")) {
-            String imgs = mDataMap.get("imgs");
+        if (mDataMap.containsKey("styleData")) {
+            String imgs = mDataMap.get("styleData");
             if (!TextUtils.isEmpty(imgs)) {
                 ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(imgs);
                 if (maps != null) {
@@ -152,7 +152,7 @@ public class HomePostItem extends HomeItem {
                         if (mImgsContainerRight != null) {
                             mImgsContainerRight.setVisibility(View.VISIBLE);
                         }
-                        loadImage(maps.get(0).get(""), mImgRight);
+                        loadImage(maps.get(0).get("url"), mImgRight);
                         if (mIsAd && mLayerView != null)
                             mLayerView.setVisibility(View.VISIBLE);
                         if (mIsAd && mAdTagRight != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
@@ -176,9 +176,9 @@ public class HomePostItem extends HomeItem {
                         }
                         if (mIsAd && mAdTagCenter != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
                             mAdTagCenter.setVisibility(View.VISIBLE);
-                        loadImage(maps.get(0).get(""), mImg1);
-                        loadImage(maps.get(1).get(""), mImg2);
-                        loadImage(maps.get(2).get(""), mImg3);
+                        loadImage(maps.get(0).get("url"), mImg1);
+                        loadImage(maps.get(1).get("url"), mImg2);
+                        loadImage(maps.get(2).get("url"), mImg3);
                     }
                 }
             }
