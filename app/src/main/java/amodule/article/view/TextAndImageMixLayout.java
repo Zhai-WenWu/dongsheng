@@ -31,7 +31,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
-import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
 import amodule.upload.callback.UploadListNetCallBack;
@@ -302,7 +301,7 @@ public class TextAndImageMixLayout extends LinearLayout
      *
      * @param imagePath
      */
-    public void uploadImage(final String imagePath) {
+    private void uploadImage(final String imagePath) {
         //为空或者为服务器链接则忽略
         if (TextUtils.isEmpty(imagePath)
                 || imagePath.startsWith("http://"))
@@ -365,7 +364,7 @@ public class TextAndImageMixLayout extends LinearLayout
             addView(view, insertIndex, getChildLayoutParams());
 
         imageMap.put(imageUrl, "");
-        uploadImage(imageUrl);
+//        uploadImage(imageUrl);
         //如果网络图片则不上传，直接替换map数据
         if(imageUrl.startsWith("http")){
             imageMap.put(imageUrl,imageUrl);
@@ -388,7 +387,7 @@ public class TextAndImageMixLayout extends LinearLayout
             if (view instanceof ImageShowView) {
                 Map<String, String> map = new HashMap<>();
                 String path = ((ImageShowView) view).getImageUrl();
-                Log.i("articleUpload","getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
+                Log.i("tzy","getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
                 map.put("path", path);
                 map.put("url", imageMap.get(path));
                 arrayList.add(map);
