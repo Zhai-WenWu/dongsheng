@@ -134,7 +134,7 @@ public class HomeRecipeItem extends HomeItem {
             }
         }
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
-        containerParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_15);
+        containerParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_7);
         if (mModuleBean != null) {
             String type = mModuleBean.getType();
             if (!TextUtils.isEmpty(type)) {
