@@ -19,10 +19,11 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
+import amodule.main.adapter.AdapterListView;
 import aplug.web.ShowWeb;
 
 /**
- * 文章Item
+ * 右图，无图，样式
  * Created by sll on 2017/4/18.
  */
 
@@ -127,17 +128,21 @@ public class HomeTxtItem extends HomeItem {
                 mDataMap.put("isADShow", "1");
             }
         }
-        if (mDataMap.containsKey("styleData")) {
-            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
-            if (datas != null && datas.size() > 0) {
-                Map<String, String> imgMap = datas.get(0);
-                if (imgMap != null && imgMap.size() > 0) {
-                    String imgUrl = imgMap.get("url");
-                    if (mImgs != null)
-                        mImgs.setVisibility(View.VISIBLE);
-                    loadImage(imgUrl, mImg);
+        if(mDataMap.containsKey("style")&& String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))){//右图模式
+            if (mDataMap.containsKey("styleData")) {
+                ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
+                if (datas != null && datas.size() > 0) {
+                    Map<String, String> imgMap = datas.get(0);
+                    if (imgMap != null && imgMap.size() > 0) {
+                        String imgUrl = imgMap.get("url");
+                        if (mImgs != null)
+                            mImgs.setVisibility(View.VISIBLE);
+                        loadImage(imgUrl, mImg);
+                    }
                 }
             }
+        }else{
+            if (mImgs != null)mImgs.setVisibility(View.GONE);
         }
         if (mDataMap.containsKey("name") && !mIsAd) {
             String name = mDataMap.get("name");

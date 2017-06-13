@@ -864,23 +864,24 @@ public class HomeFragment extends Fragment{
      */
     private HomeItem handlerTopView(Map<String,String> map,int position){
         HomeItem viewTop=null;
-        if(map.containsKey("type")&&!TextUtils.isEmpty(map.get("type"))){
-            int type=Integer.parseInt(map.get("type"));
+        if(map.containsKey("style")&&!TextUtils.isEmpty(map.get("style"))){
+            int type=Integer.parseInt(map.get("style"));
             switch (type){
-                case 1:
-                case 2:
+                case AdapterListView.type_tagImage:
                     viewTop= new HomeRecipeItem(mActivity);
                     break;
-                case 3:
-                    viewTop= new HomeTxtItem(mActivity);
-                    break;
-                case 4:
+
+                case AdapterListView.type_levelImage:
                     viewTop= new HomeAlbumItem(mActivity);
                     break;
-                case 5:
+                case AdapterListView.type_threeImage:
                     viewTop= new HomePostItem(mActivity);
                     break;
-
+                case AdapterListView.type_rightImage:
+                case AdapterListView.type_noImage:
+                    default:
+                    viewTop= new HomeTxtItem(mActivity);
+                    break;
             }
             viewTop.setViewType(MODULETOPTYPE);
             viewTop.setHomeModuleBean(homeModuleBean);

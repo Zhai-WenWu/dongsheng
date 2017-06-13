@@ -19,7 +19,7 @@ import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
 
 /**
- * 专辑Item
+ * 蒙版--样式
  * Created by sll on 2017/4/18.
  */
 

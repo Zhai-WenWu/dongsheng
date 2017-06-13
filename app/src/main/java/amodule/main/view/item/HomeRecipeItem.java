@@ -24,7 +24,7 @@ import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
 
 /**
- * 菜谱Item（包括图文菜谱和视频菜谱）
+ * 大图样式
  * Created by sll on 2017/4/18.
  */
 
