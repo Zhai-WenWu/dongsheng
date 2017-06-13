@@ -74,7 +74,7 @@ public class ReqEncyptInternet extends UtilInternet {
             String data=ReqEncryptCommon.getInstance().encrypt(json,ReqEncryptCommon.password);
             callback.setEncryptparams(data);
         }
-        doGet(actionUrl,callback);
+        doPost(actionUrl,"",callback);
 
 
     }
@@ -90,8 +90,6 @@ public class ReqEncyptInternet extends UtilInternet {
         InternetCallback internetCallback= new InternetCallback(XHApplication.in()) {
             @Override
             public void loaded(int flag, String url, Object object) {
-//                flag=ReqInternet.REQ_CODE_ERROR;
-//                object="4002";
                 Log.i("zhangyujian","flag:" + flag + "   object::"+object);
                 if(flag==ReqInternet.REQ_CODE_ERROR && object != "" && isNumeric((String) object)){
                     int errorCode= Integer.parseInt((String) object);
@@ -110,7 +108,7 @@ public class ReqEncyptInternet extends UtilInternet {
             }
         };
         internetCallback.setEncryptparams(encryptparams);
-        doGet(actionUrl,internetCallback);
+        doPost(actionUrl,"",internetCallback);
 
 
     }
