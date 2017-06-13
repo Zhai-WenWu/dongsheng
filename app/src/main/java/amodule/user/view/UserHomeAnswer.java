@@ -238,7 +238,6 @@ public class UserHomeAnswer extends TabContentView {
 				currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,datas.size() == 0);
 				onDataReady(true);
 				setHeadViewHeight();
-				mAct.show();
 			}
 		});
 	}

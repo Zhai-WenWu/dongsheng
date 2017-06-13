@@ -15,6 +15,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
@@ -93,6 +94,8 @@ public class HomeTxtItem extends HomeItem {
                             intent.putExtra("code",map.get("code"));
                             intent.putExtra("module_type",isTopTypeView()?"top_info":"info");
                             XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
+                        }else{
+                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mTransferUrl,true);
                         }
                     }
                     if (v == HomeTxtItem.this)
