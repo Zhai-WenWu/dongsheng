@@ -31,12 +31,12 @@
         android:id="@+id/dish_offline_noData"
         style="@style/noDataText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="还没有离线菜谱哦~\n\n加入清单的菜谱可离线查看"
         android:textColor="#777"
         android:textSize="@dimen/sp_15"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </RelativeLayout>

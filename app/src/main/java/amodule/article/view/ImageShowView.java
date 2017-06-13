@@ -47,6 +47,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     private ImageView itemGifHint;
 
     private boolean enableEdit = false;
+    private boolean isSecondEdit = false;
     private String imageUrl = null;
     private int imageWidth = 0;
     private int imageHieght = 0;
@@ -73,6 +74,9 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         showImageGif = (ImageView) findViewById(R.id.image_gif);
         loadProgress = (ImageView) findViewById(R.id.load_progress);
         itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
+//        int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+//        int height = width * 9 / 16;
+//        showImage.setLayoutParams(new LayoutParams(width,height));
 
         showImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
@@ -104,7 +108,26 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         if (imageUrl.endsWith(".gif")) {
             type = IMAGE_GIF;
             if (enableEdit){
-                Glide.with(getContext()).load(imageUrl).asBitmap().into(showImage);
+//                Glide.with(getContext()).load(imageUrl).asBitmap().into(showImage);
+                LoadImage.with(getContext())
+                        .load(imageUrl)
+                        .build()
+                        .into(new SubBitmapTarget() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                if (bitmap != null) {
+                                    imageWidth = bitmap.getWidth();
+                                    imageHieght = bitmap.getHeight();
+
+                                    int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                                    int waith = newWaith;
+                                    if (imageWidth <= newWaith)
+                                        waith = 0;
+                                    UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+
+                                }
+                            }
+                        });
                 itemGifHint.setVisibility(VISIBLE);
             } else
                 Glide.with(getContext())
@@ -126,7 +149,10 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                                 imageHieght = bitmap.getHeight();
 
                                 int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
+                                int waith = newWaith;
+                                if (imageWidth <= newWaith)
+                                    waith = 0;
+                                UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
 
                             }
                         }
@@ -209,7 +235,11 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                             imageHieght = bitmap.getHeight();
 
                             int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                            UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
+                            int waith = newWaith;
+                            if (imageWidth <= newWaith)
+                                waith = 0;
+                            UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+
                         }
                     });
                 }
@@ -302,5 +332,13 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+    public boolean isSecondEdit() {
+        return isSecondEdit;
+    }
+
+    public void setSecondEdit(boolean secondEdit) {
+        isSecondEdit = secondEdit;
     }
 }

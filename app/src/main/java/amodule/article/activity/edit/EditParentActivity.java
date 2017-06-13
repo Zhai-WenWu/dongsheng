@@ -121,6 +121,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             rl.getWindowVisibleDisplayFrame(r);
                             int screenHeight = rl.getRootView().getHeight();
                             int heightDifference = screenHeight - (r.bottom - r.top);
+                            int heightDifference2 = screenHeight - (r.bottom - r.top);
                             isKeyboradShow = heightDifference > 200;
                             heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
                             bottomBarLayout.setPadding(0, 0, 0, heightDifference);
@@ -128,16 +129,18 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             mixLayout.getCurrentEditText().getRichText().getLocationOnScreen(location);
                             DisplayMetrics dm = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
-                            int distance = dm.heightPixels-location[1];
+                            int distance = dm.heightPixels - location[1] - (editBottomControler.isShowEditLayout() ? dp_50 + dp_64 : dp_50);
+                            Log.i("tzy","distance = " + distance);
+                            Log.i("tzy","heightDifference2 = " + heightDifference2);
                             if(isKeyboradShow
-                                    && distance <= heightDiff
+                                    && distance <= heightDifference2
                                     && !editTitle.isFocused()){
                                 scrollView.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         scrollView.scrollBy(0, dp_50);
                                     }
-                                }, 100);
+                                }, 200);
                             }
                         }
                     });
@@ -413,7 +416,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         };
         //通过code判断从数据库拿数据还是从服务端拿数据
         code = getIntent().getStringExtra("code");
-
+        if(TextUtils.isEmpty(code))
+            mixLayout.setSecondEdit(true);
         if (TextUtils.isEmpty(code)) {
             new Thread(new Runnable() {
                 @Override
@@ -500,7 +504,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         timer = new Timer();
         final Handler handler = new Handler(Looper.getMainLooper());
         TimerTask tt = new TimerTask() {
-
             @Override
             public void run() {
                 handler.post(new Runnable() {

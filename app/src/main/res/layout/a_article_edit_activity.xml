@@ -58,13 +58,13 @@
                 android:id="@+id/bootom_view1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <View
                 android:id="@+id/bootom_view2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_65"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
         </LinearLayout>
 

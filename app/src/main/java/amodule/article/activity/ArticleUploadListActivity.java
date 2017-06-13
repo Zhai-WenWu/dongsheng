@@ -332,8 +332,7 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private View getHeaderView() {
-        View view = LayoutInflater.from(ArticleUploadListActivity.this)
-                .inflate(R.layout.c_upload_list_header_item, null);
+        View view = LayoutInflater.from(ArticleUploadListActivity.this).inflate(R.layout.c_upload_list_header_item, null);
         rl_allstart = (LinearLayout) view.findViewById(R.id.ll_allstart);
         rl_allstop = (LinearLayout) view.findViewById(R.id.ll_allstop);
         rl_allstart.setOnClickListener(new View.OnClickListener() {
@@ -438,6 +437,7 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void allStartOrPause(boolean isAllStart) {
+        Log.i("articleUpload","allStartOrPause() isAllStart:" + isAllStart);
         isStopUpload = !isAllStart;
         if (isAllStart) {
             listPool.allStartOrStop(UploadListPool.TYPE_START);

@@ -137,7 +137,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     }
 
     public void doComment(String hintText) {
-        findViewById(R.id.comment_bar_fake).setVisibility(View.INVISIBLE);
+        findViewById(R.id.comment_bar_fake).setVisibility(View.GONE);
         findViewById(R.id.comment_bar_real).setVisibility(View.VISIBLE);
         editText.setHint(hintText);
         editText.requestFocus();
@@ -179,7 +179,6 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         }
         String text = editText.getText().toString();
         if (TextUtils.isEmpty(text)) {
-//            Tools.showToast(getContext(), "内容不能为空");
             return;
         }
 

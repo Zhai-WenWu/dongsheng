@@ -22,16 +22,16 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:scaleType="fitXY"
-            android:visibility="visible"
-            android:src="@drawable/i_nopic"/>
+            android:src="@drawable/i_nopic"
+            android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/video_cover_image_play"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
             android:layout_centerInParent="true"
-            android:visibility="visible"
-            android:src="@drawable/home_item_play"/>
+            android:src="@drawable/home_item_play"
+            android:visibility="visible"/>
 
         <ImageButton
             android:id="@+id/delete_image"
@@ -49,23 +49,26 @@
     <LinearLayout
         android:id="@+id/default_layout"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:background="#F7F7F7"
         android:gravity="center"
-        android:visibility="visible"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_launcher"
-            android:layout_height="wrap_content"/>
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/icon_article_add"/>
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_5"
             android:text="添加短视频"
-            android:textColor="#CCCCCC"
-            android:layout_height="wrap_content"/>
+            android:textColor="#CCCCCC"/>
 
     </LinearLayout>
 

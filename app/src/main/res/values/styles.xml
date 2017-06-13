@@ -210,7 +210,7 @@
         <item name="android:textColor">#666666</item>
         <item name="android:textSize">@dimen/sp_15</item>
         <item name="android:visibility">gone</item>
-        <item name="android:background">#ffffff</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
     <!-- find me group -->
     <style name="groupMyself">

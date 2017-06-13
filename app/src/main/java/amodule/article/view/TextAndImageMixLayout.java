@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.xiangha.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -31,7 +29,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
-import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
 import amodule.upload.callback.UploadListNetCallBack;
@@ -54,6 +51,8 @@ public class TextAndImageMixLayout extends LinearLayout
     private EditTextView currentEditText = null;
 
     private boolean isSingleVideo = false;
+
+    private boolean isSecondEdit = false;
 
     /** 图片集合 */
     //path:url
@@ -302,7 +301,7 @@ public class TextAndImageMixLayout extends LinearLayout
      *
      * @param imagePath
      */
-    public void uploadImage(final String imagePath) {
+    private void uploadImage(final String imagePath) {
         //为空或者为服务器链接则忽略
         if (TextUtils.isEmpty(imagePath)
                 || imagePath.startsWith("http://"))
@@ -348,6 +347,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
         ImageShowView view = new ImageShowView(getContext());
         view.setEnableEdit(true);
+        view.setSelected(isSecondEdit);
         view.setImageUrl(imageUrl);
         view.setmOnRemoveCallback(this);
 
@@ -365,7 +365,7 @@ public class TextAndImageMixLayout extends LinearLayout
             addView(view, insertIndex, getChildLayoutParams());
 
         imageMap.put(imageUrl, "");
-        uploadImage(imageUrl);
+//        uploadImage(imageUrl);
         //如果网络图片则不上传，直接替换map数据
         if(imageUrl.startsWith("http")){
             imageMap.put(imageUrl,imageUrl);
@@ -388,7 +388,7 @@ public class TextAndImageMixLayout extends LinearLayout
             if (view instanceof ImageShowView) {
                 Map<String, String> map = new HashMap<>();
                 String path = ((ImageShowView) view).getImageUrl();
-                Log.i("articleUpload","getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
+                Log.i("tzy","getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
                 map.put("path", path);
                 map.put("url", imageMap.get(path));
                 arrayList.add(map);
@@ -448,6 +448,7 @@ public class TextAndImageMixLayout extends LinearLayout
                 addRichText(insertIndex + 1, content);
         }
         view.setEnableEdit(true);
+        view.setSecondEdit(isSecondEdit);
         view.setVideoData(coverImageUrl, videoUrl);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);
@@ -539,22 +540,26 @@ public class TextAndImageMixLayout extends LinearLayout
 
     @Override
     public void onRemove(final BaseView view) {
-        final XhDialog dialog = new XhDialog(getContext());
-        dialog.setTitle("确定删除？");
-        dialog.setCanselButton("取消", new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        dialog.setSureButton("确定", new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeBaseView(view);
-                dialog.cancel();
-            }
-        });
-        dialog.show();
+        if(isSecondEdit){
+            removeBaseView(view);
+        }else{
+            final XhDialog dialog = new XhDialog(getContext());
+            dialog.setTitle("确定删除？");
+            dialog.setCanselButton("取消", new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.cancel();
+                }
+            });
+            dialog.setSureButton("确定", new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeBaseView(view);
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+        }
     }
 
     /**
@@ -758,6 +763,14 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setMaxTextCount(int maxTextCount) {
         this.maxTextCount = maxTextCount;
+    }
+
+    public boolean isSecondEdit() {
+        return isSecondEdit;
+    }
+
+    public void setSecondEdit(boolean secondEdit) {
+        isSecondEdit = secondEdit;
     }
 
     private String type;

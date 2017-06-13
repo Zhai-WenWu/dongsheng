@@ -97,7 +97,6 @@ public class UploadListPool {
      * @param operation TYPE_START 开始，TYPE_PAUSE 暂停
      */
     public void allStartOrStop(final int operation) {
-
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(), new UploadPoolData.LoopCallback() {
             @Override
             public boolean onLoop(UploadItemData itemData) {
