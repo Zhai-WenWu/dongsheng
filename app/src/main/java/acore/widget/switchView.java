@@ -45,6 +45,7 @@ public class switchView extends RelativeLayout{
                 if(mListener!=null){
                     mSwitchOn=!mSwitchOn;
                     mListener.onChange(mSwitchOn);
+                    setViewState();
                 }
             }
         });
@@ -62,7 +63,7 @@ public class switchView extends RelativeLayout{
         mSwitchOn=state;
         setViewState();
     }
-    private void setViewState(){
+    public void setViewState(){
         if(mSwitchOn)iv_switch.setImageResource(R.drawable.i_switch_on);
         else iv_switch.setImageResource(R.drawable.i_switch_off);
     }

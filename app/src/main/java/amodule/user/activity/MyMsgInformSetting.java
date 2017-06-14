@@ -274,6 +274,15 @@ public class MyMsgInformSetting extends BaseActivity{
 		msg_jxCaiPu_sb.mSwitchOn = jxDish.equals("1");
 		msg_informSing_sb.mSwitchOn = informSing.equals("1");
 		msg_informShork_sb.mSwitchOn = informShork.equals("1");
+
+		msg_newMSG_sb.setViewState();
+		msg_subject_sb.setViewState();
+		msg_nous_sb.setViewState();
+		msg_quan_zan_sb.setViewState();
+		msg_jxMenu_sb.setViewState();
+		msg_jxCaiPu_sb.setViewState();
+		msg_informSing_sb.setViewState();
+		msg_informShork_sb.setViewState();
 	}
 
 	private void onChange(boolean isOpen){
