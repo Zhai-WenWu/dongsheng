@@ -137,14 +137,14 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             DisplayMetrics dm = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
                             int distance = dm.heightPixels - location[1] - (editBottomControler.isShowEditLayout() ? dp_50 + dp_64 : dp_50);
-                            Log.i("tzy","distance = " + distance);
-                            Log.i("tzy","heightDifference2 = " + heightDifference2);
-                            Log.i("tzy","isKeyboradShow = " + isKeyboradShow);
-                            Log.i("tzy","preIsKeyboradShow = " + preIsKeyboradShow);
-                            if(isKeyboradShow
+                            Log.i("tzy", "distance = " + distance);
+                            Log.i("tzy", "heightDifference2 = " + heightDifference2);
+                            Log.i("tzy", "isKeyboradShow = " + isKeyboradShow);
+                            Log.i("tzy", "preIsKeyboradShow = " + preIsKeyboradShow);
+                            if (isKeyboradShow
                                     && !preIsKeyboradShow
                                     && distance <= heightDifference2
-                                    && !editTitle.isFocused()){
+                                    && !editTitle.isFocused()) {
                                 scrollView.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -194,7 +194,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("tzy","contentLayout click");
+                Log.i("tzy", "contentLayout click");
                 editTitle.clearFocus();
                 mixLayout.getCurrentEditText().getRichText().requestFocus();
                 ToolsDevice.keyboardControl(true, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
@@ -230,7 +230,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         editTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     editBottomControler.setVisibility(View.GONE);
                 }
             }
@@ -243,8 +243,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setOnFocusChangeCallback(new EditTextView.OnFocusChangeCallback() {
             @Override
             public void onFocusChange(EditTextView v, boolean hasFocus) {
-                if(hasFocus){
-                    if(editBottomControler.getVisibility() == View.GONE){
+                if (hasFocus) {
+                    if (editBottomControler.getVisibility() == View.GONE) {
                         scrollView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -259,13 +259,13 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setOnScorllEndCallback(new TextAndImageMixLayout.OnScorllEndCallback() {
             @Override
             public void onScorllEnd() {
-                scrollView.scrollTo(0,mixLayout.getHeight());
+                scrollView.scrollTo(0, mixLayout.getHeight());
             }
         });
         mixLayout.setOnSelectBoldCallback(new EditTextView.OnSelectBoldCallback() {
             @Override
             public void onSelectBold(boolean isSelected) {
-                if(editBottomControler.isShowEditLayout()){
+                if (editBottomControler.isShowEditLayout()) {
                     editBottomControler.setTextBoldImageSelection(isSelected);
                 }
             }
@@ -273,12 +273,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setOnSelectUnderlineCallback(new EditTextView.OnSelectUnderlineCallback() {
             @Override
             public void onSelectUnderline(boolean isSelected) {
-                if(editBottomControler.isShowEditLayout()){
+                if (editBottomControler.isShowEditLayout()) {
                     editBottomControler.setTextUnderlineImageSelection(isSelected);
                 }
             }
         });
-        if("2".equals(getType())){
+        if ("2".equals(getType())) {
             mixLayout.setVideo(new VideoShowView.VideoDefaultClickCallback() {
                 @Override
                 public void defaultClick() {
@@ -338,7 +338,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             }
                             Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
                             ArrayList<String> imageArray = mixLayout.getVideoArrayList();
-                            intent.putStringArrayListExtra(ArticleVideoSelectorActivity.EXTRA_UNSELECT_VIDEO,imageArray);
+                            intent.putStringArrayListExtra(ArticleVideoSelectorActivity.EXTRA_UNSELECT_VIDEO, imageArray);
                             startActivityForResult(intent, REQUEST_SELECT_VIDEO);
                             switch (mPageTag) {
                                 case mArticlePageTag:
@@ -412,15 +412,13 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         @Override
                         public void onTextBold() {
                             mixLayout.setupTextBold();
-                            if(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_BOLD))
-                                editBottomControler.setTextBoldImageSelection(true);
+                            editBottomControler.setTextBoldImageSelection(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_BOLD));
                         }
 
                         @Override
                         public void onTextUnderLine() {
                             mixLayout.setupUnderline();
-                            if(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_UNDERLINED))
-                                editBottomControler.setTextUnderlineImageSelection(true);
+                            editBottomControler.setTextUnderlineImageSelection(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_UNDERLINED));
                         }
 
                         @Override
@@ -625,8 +623,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             timer.purge();
             timer = null;
         }
-        if(isKeyboradShow)
-            ToolsDevice.keyboardControl(false,this,editTitle);
+        if (isKeyboradShow)
+            ToolsDevice.keyboardControl(false, this, editTitle);
     }
 
     @Override
@@ -650,7 +648,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     private void onClose() {
         if (TextUtils.isEmpty(code)) {
-            switch (getType()){
+            switch (getType()) {
                 case TYPE_ARTICLE:
                     if (!TextUtils.isEmpty(editTitle.getText().toString())
                             || mixLayout.hasText()

@@ -446,7 +446,9 @@ public class ArticleDetailActivity extends BaseActivity {
 
             }
         });
-        webView = manager.createWebView(0);
+        if(webView == null){
+            webView = manager.createWebView(0);
+        }
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 //        webView.loadData(mapArticle.get("html"), "text/html", "utf-8");

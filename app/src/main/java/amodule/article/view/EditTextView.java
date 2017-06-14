@@ -161,7 +161,7 @@ public class EditTextView extends BaseView {
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
-                    .append(mRichText.toHtml())
+                    .append(mRichText.toHtml())//.replaceAll("\"","\\\"")
                     .append("</p>");
             Log.i("tzy","edittext content = " + builder.toString());
             jsonObject.put("html", builder.toString());
