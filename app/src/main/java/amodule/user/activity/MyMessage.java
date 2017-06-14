@@ -56,7 +56,7 @@ public class MyMessage extends MainBaseActivity {
 		setContentView(R.layout.a_common_message);
 		Main.allMain.allTab.put("MyMessage", this);
 		init();
-		initTitle();
+//		initTitle();
 		XHClick.track(this, "浏览消息列表页");
 	}
 
