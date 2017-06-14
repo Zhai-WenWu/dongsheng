@@ -83,7 +83,7 @@ public class BindPhoneNum extends BaseLoginActivity {
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     gotoInputIdentify(BindPhoneNum.this, phone_info.getZoneCode(),
                                             phone_info.getPhoneNum(), origin);
                                 }

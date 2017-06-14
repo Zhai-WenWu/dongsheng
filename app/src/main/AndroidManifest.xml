@@ -185,6 +185,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--inmobi广告 start-->
 
+    <!--mta统计 start-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!--mta统计 start-->
 
     <application
         android:name="acore.override.XHApplication"
@@ -291,6 +299,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="com.xiangha.Welcome"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <!-- main end -->
         <activity
             android:name="third.fanli.GoodsListActivity"
@@ -321,7 +335,6 @@
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.dish.activity.ListDish"
@@ -454,7 +467,7 @@
             android:name="amodule.nous.activity.HomeNous"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
+            android:theme="@style/common_TransParentTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.nous.activity.NousInfo"
@@ -565,7 +578,6 @@
             android:name="amodule.search.avtivity.HomeSearch"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateVisible"/>
         <!-- global search end -->
 
@@ -1308,6 +1320,19 @@
             </intent-filter>
         </receiver>
         <!--inmobi 广告 end-->
+
+        <!--腾讯统计mta start-->
+        <!--<provider-->
+            <!--android:name="com.tencent.mid.api.MidProvider"-->
+            <!--android:authorities="com.xiangha"-->
+            <!--android:exported="true" >-->
+        <!--</provider>-->
+        <!--appkey-->
+        <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
+        <meta-data android:name="TA_APPKEY" android:value="Aqc1150004142" />
+        <!--Channel-->
+        <meta-data android:name="InstallChannel" android:value="xiangha" />
+        <!--腾讯统计mta start-->
 
     </application>
 

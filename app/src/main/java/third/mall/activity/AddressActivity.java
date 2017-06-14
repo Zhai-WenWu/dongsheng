@@ -533,4 +533,13 @@ public class AddressActivity extends BaseActivity implements OnClickListener{
 	private void setStatisticIndex(){
 		MallClickContorl.getInstance().setStatisticUrl(url, params,mall_stat_statistic, this);
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(handler!=null){
+			handler.removeCallbacksAndMessages(null);
+			handler=null;
+		}
+	}
 }

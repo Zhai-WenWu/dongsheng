@@ -39,7 +39,7 @@ import xh.basic.tool.UtilString;
  * 打开网页，bundle中传入url，当页面加载完会获取页面title来设置
  * @author Jerry
  */
-public class ShowWeb extends WebActivity {
+public class  ShowWeb extends WebActivity {
 	protected String url = "", htmlData = "";
 	protected Button rightBtn;
 	protected ImageView favoriteNousImageView;
@@ -53,6 +53,7 @@ public class ShowWeb extends WebActivity {
 	private long startTime=0;
 	private String data_type="";
 	private String code="";//code--首页使用功能
+	private String module_type="";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class ShowWeb extends WebActivity {
 			startTime=System.currentTimeMillis();
 			data_type = bundle.getString("data_type");
 			code= bundle.getString("code");
+			module_type= bundle.getString("module_type");
 			JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
 		}
 		
@@ -243,8 +245,8 @@ public class ShowWeb extends WebActivity {
 	@Override
 	protected void onDestroy() {
 		long nowTime=System.currentTimeMillis();
-		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(code)){
-			XHClick.saveStatictisFile("ShowWeb","info",data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(code)&&!TextUtils.isEmpty(module_type)){
+			XHClick.saveStatictisFile("ShowWeb",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
 		}
 		super.onDestroy();
 	}

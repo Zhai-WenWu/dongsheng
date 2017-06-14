@@ -89,6 +89,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                 final String newPhoneNum = phone_info.getPhoneNum();
                 if (TextUtils.isEmpty(newZoneCode) || TextUtils.isEmpty(newPhoneNum)) {
                     Toast.makeText(AddNewPhone.this, "请输入手机号", Toast.LENGTH_SHORT).show();
+                    login_identify.btnClickTrue();
                     return;
                 }
 
@@ -96,6 +97,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                 if (LoginCheck.WELL_TYPE.equals(error_type)) {
                     if (newZoneCode.equals(zoneCode) && newPhoneNum.equals(phoneNum)) {
                         Toast.makeText(AddNewPhone.this, "你已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
+                        login_identify.btnClickTrue();
                         dataStatics("方法1失败原因：已经绑定这个手机号","方法2失败原因：已经绑定这个手机号");
                         return;
                     }
@@ -105,12 +107,14 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                         @Override
                         public void onSuccess() {
                             Toast.makeText(AddNewPhone.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
+                            login_identify.btnClickTrue();
                             dataStatics("方法1失败原因：已经绑定其他账号", "方法2失败原因：已经绑定其他账号");
                         }
 
                         @Override
-                        public void onFalse() {
+                        public void onFalse(int flag) {
                             loadManager.showProgressBar();
+                            login_identify.btnClickTrue();
                             reqIdentifyCode(newZoneCode, newPhoneNum,
                                     new SMSSendCallback() {
                                         @Override
@@ -121,13 +125,15 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
 
                                         @Override
                                         public void onSendFalse() {
+                                            login_identify.btnClickTrue();
                                             loadManager.hideProgressBar();
                                             dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
                                         }
                                     });
                         }
                     });
-                }
+                }else
+                    login_identify.btnClickTrue();
             }
         });
 
@@ -153,7 +159,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
                                     dataStatics("方法1，修改失败", "方法2，修改失败");
                                     dataStatics("方法1失败原因：验证码错误", "方法2失败原因：验证码错误");
                                     Toast.makeText(AddNewPhone.this, "验证码错误", Toast.LENGTH_SHORT).show();

@@ -109,13 +109,15 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText("我的订单");
 		findViewById(R.id.back).setOnClickListener(this);
-		findViewById(R.id.feedbak_layout).setOnClickListener(this);
+//		findViewById(R.id.feedbak_layout).setOnClickListener(this);
 		ImageView imageView = (ImageView) findViewById(R.id.mall_order_favorable_img);
 //		imageView.setImageResource(R.drawable.z_home_feedback_ico);
 		imageView.setVisibility(View.GONE);
 		TextView info = (TextView) findViewById(R.id.mall_order_favorable_info);
 		info.setTextSize(Tools.getDimenSp(this,R.dimen.sp_14));
 		info.setText("优惠券");
+		info.setVisibility(View.GONE);
+		info.setClickable(false);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		viewpager = (ViewPager) findViewById(R.id.pager);

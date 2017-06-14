@@ -416,8 +416,8 @@ public class ToolsDevice {
      * @return
      */
     public static String getAndroidId(Context context) {
-        final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-        if (androidId != null) {
+         String androidId = context==null?"":context.getContentResolver()==null?"":Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+        if (!TextUtils.isEmpty(androidId)) {
             return androidId;
         } else
             return "111111111111111";

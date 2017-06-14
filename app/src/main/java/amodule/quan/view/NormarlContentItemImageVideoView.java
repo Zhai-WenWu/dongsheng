@@ -298,7 +298,8 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
                         // 图片圆角和宽高适应auther_userImg
                         if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+//                            v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+                            v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                         } else if (map.get("isPromotion") != null && map.get("isPromotion").equals("1") && UtilString.getListMapByJson(map.get("imgs")).size()==1) {
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             int waith = context.getWindowManager().getDefaultDisplay().getWidth();

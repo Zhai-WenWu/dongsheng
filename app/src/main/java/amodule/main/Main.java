@@ -13,7 +13,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -28,6 +30,8 @@ import android.widget.TextView;
 
 import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.stat.StatConfig;
+import com.tencent.stat.StatService;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -44,6 +48,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
@@ -62,6 +67,7 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.tools.InMobiAdTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
@@ -112,64 +118,96 @@ public class Main extends Activity implements OnClickListener {
     private long homebackTime;
     private boolean isForeground = true;
     private int nowTab=0;//当前选中tab
+    private boolean isInit=false;
+    public static boolean isShowWelcomeDialog=false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long endTime=System.currentTimeMillis();
+        Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
+        //腾讯统计
+        StatConfig.setDebugEnable(false);
+        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatService.setContext(this.getApplication());
+        //初始化
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InMobiAdTools.getInstance().initSdk(Main.this);
+            }
+        }).start();
         allMain = this;
-        AdControlHomeDish.getInstance();
-//        openFromOther();
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
         String[] times = FileManager.getSharedPreference(XHApplication.in(),FileManager.xmlKey_appKillTime);
         if(times != null && times.length > 1 && !TextUtils.isEmpty(times[1])){
             Tools.getApiSurTime("killback",Long.parseLong(times[1]),System.currentTimeMillis());
         }
-        initUI();
-        initData();
         LogManager.print("i", "Main -------- onCreate");
         // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
         if (savedInstanceState != null) {
             defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
-            if (defaultTab == 0 && "1".equals(mBuoy.getFloatIndex())
-                    || defaultTab == 1 && "1".equals(mBuoy.getFloatSubjectList())
+            if (defaultTab == 0 && mBuoy!=null&&!TextUtils.isEmpty(mBuoy.getFloatIndex()) &&"1".equals(mBuoy.getFloatIndex())
+                    || defaultTab == 1 && mBuoy!=null&&!TextUtils.isEmpty(mBuoy.getFloatSubjectList())&& "1".equals(mBuoy.getFloatSubjectList())
                     || defaultTab == 2
                     || defaultTab == 3) {
-                mBuoy.clearAnimation();
-                mBuoy.hide();
-                mBuoy.setClosed(true);
-                mBuoy.setMove(true);
+                if(mBuoy!=null) {
+                    mBuoy.clearAnimation();
+                    mBuoy.hide();
+                    mBuoy.setClosed(true);
+                    mBuoy.setMove(true);
+                }
             }
         }
         mainInitDataControl= new MainInitDataControl();
         WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(this) : new WelcomeDialog(this,3);
-        welcomeDialog.setDialogShowCallBack(new WelcomeDialog.DialogShowCallBack() {
-            @Override
-            public void dialogState(boolean show) {
-                if(!show){//展示后关闭
-                    if(mainInitDataControl!=null)mainInitDataControl.initMainOnResume(Main.this);
-                    showIndexActivity();
-                    WelcomeDialogstate=true;
-                    openUri();
-                    new DialogControler().showDialog();
-                    PushManager.tongjiPush();
-                }
-            }
-
-            @Override
-            public void dialogOnLayout() {
-                setCurrentTabByIndex(defaultTab);
-                init();
-                initRunTime();
-                mainInitDataControl.initWelcomeBefore(Main.this);
-                mainInitDataControl.initWelcomeOncreate();
-                mainInitDataControl.initWelcomeAfter(Main.this);
-                mainInitDataControl.iniMainAfter(Main.this);
-            }
-        });
+                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
+        long endTime1=System.currentTimeMillis();
+        Log.i("zhangyujian","main::oncreate::"+(endTime1-XHApplication.in().startTime));
     }
 
+    /**
+     * welcomeDialog的回调封装
+     */
+    private WelcomeDialog.DialogShowCallBack dialogShowCallBack=new WelcomeDialog.DialogShowCallBack() {
+        @Override
+        public void dialogState(boolean show) {
+            if(!show){//展示后关闭
+                Log.i("zhangyujian","________________________________________________________");
+                if(mainInitDataControl!=null){
+                    mainInitDataControl.initMainOnResume(Main.this);
+                    mainInitDataControl.iniMainAfter(Main.this);}
+                showIndexActivity();
+                WelcomeDialogstate=true;
+                openUri();
+                new DialogControler().showDialog();
+                PushManager.tongjiPush();
+            }
+        }
+
+        @Override
+        public void dialogOnLayout() {
+            Log.i("zhangyujian","++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            AdControlHomeDish.getInstance();
+            setCurrentTabByIndex(defaultTab);
+            init();
+            initRunTime();
+            mainInitDataControl.initWelcomeOncreate();
+            mainInitDataControl.initWelcomeAfter(Main.this);
+
+        }
+
+        @Override
+        public void dialogOnCreate() {
+            initUI();
+            initData();
+        }
+
+        @Override
+        public void dialogAdComplete() {
+        }
+    };
     /**
      * 外部传递参数
      */
@@ -187,9 +225,6 @@ public class Main extends Activity implements OnClickListener {
         }
         //外部知道吊起app
         if(this.getIntent().getData() != null){
-//            if(Main.allMain != null){
-//                Main.allMain.doExitMain();
-//            }
             url = this.getIntent().getData().toString();
             this.getIntent().setData(null);
         }
@@ -319,6 +354,8 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        long endTime=System.currentTimeMillis();
+        Log.i("zhangyujian","main::onResume::"+(endTime-XHApplication.in().startTime));
         mainOnResumeState=true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
@@ -493,27 +530,41 @@ public class Main extends Activity implements OnClickListener {
      * @param index
      */
     public void setCurrentText(int index) {
-        for (int j = 0; j < tabViews.length; j++)
+        for (int j = 0; j < tabViews.length; j++) {
             if (j == index) {
                 ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#ff533c"));
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(true);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
-                if(j == 2){
+                if (j == 2) {
                     MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
                     mainCircle.setQuanmCurrentPage();
                 }
             } else {
                 TextView textView = (TextView) tabViews[j].findViewById(R.id.textView1);
                 textView.setTextColor(Color.parseColor("#1b1b1f"));
-                if(j == 1) textView.setText(tabTitle[j]);
+                if (j == 1) textView.setText(tabTitle[j]);
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(false);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
             }
+        }
             if(index==2){//特殊美食圈的逻辑
                 changeSendLayout.setVisibility(View.VISIBLE);
             }else{
                 changeSendLayout.setVisibility(View.GONE);
             }
+        if(nowTab==0&&index!=0){//当前是首页，切换到其他页面
+            if(allTab.containsKey("MainIndex")) {
+                MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+                mainIndex.saveNowStatictis();
+                XHClick.newHomeStatictis(true,"");
+            }
+
+        }else if(nowTab!=0&&index==0){//当前是其他页面，切换到首页
+            if(allTab.containsKey("MainIndex")) {
+                MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+                mainIndex.setRecommedTime(System.currentTimeMillis());
+            }
+        }
         //特殊逻辑
 //        changeSendLayout.setVisibility(View.VISIBLE);
     }
@@ -666,7 +717,7 @@ public class Main extends Activity implements OnClickListener {
         quanRefreshState=state;
         if(state) {
             ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found_refresh);
-            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("刷新");
+            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
         }else{
             ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found);
             ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
@@ -714,7 +765,12 @@ public class Main extends Activity implements OnClickListener {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        if (hasFocus && !isInit) {
+            isInit=true;
+//            mainInitDataControl.iniMainAfter(Main.this);
+        }
         //此处可以进行分级处理:暂时无需要
+        Log.i("zhangyujian","main::onWindowFocusChanged");
     }
 
     /**
@@ -725,5 +781,11 @@ public class Main extends Activity implements OnClickListener {
             MainHome mainIndex = (MainHome) allTab.get("MainIndex");
             mainIndex.saveNowStatictis();
         }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        Log.i("zhangyujian","main::onPostCreate");
     }
 }

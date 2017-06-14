@@ -5,7 +5,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.dplus.UMADplus;
 
@@ -26,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import acore.dialogManager.VersionOp;
 import acore.logic.load.LoadManager;
@@ -126,8 +129,10 @@ public class XHClick {
     public static void mapStat(Context context, String eventID, String twoLevel, String threeLevel) {
         if (!TextUtils.isEmpty(threeLevel)) {
             onEvent(context, eventID, twoLevel, threeLevel);
+            onMtaEvent(context,eventID,twoLevel,threeLevel);//mta统计
         }
         onEvent(context, eventID, "全部", twoLevel);
+        onMtaEvent(context,eventID,"全部",twoLevel);//mta统计
     }
 
     /**
@@ -142,9 +147,13 @@ public class XHClick {
     public static void mapStat(Context context, String eventID, String twoLevel, String threeLevel, int number) {
         if (!TextUtils.isEmpty(threeLevel)) {
             onEventValue(context, eventID, twoLevel, threeLevel, number);
+            onMtaEvent(context,eventID,twoLevel,threeLevel);//mta统计
         }
         onEventValue(context, eventID, "全部", twoLevel, number);
+        onMtaEvent(context,eventID,"全部",twoLevel);//mta统计
+
     }
+
 
     /**
      * 计算事件统计
@@ -182,6 +191,29 @@ public class XHClick {
     }
 
     /**
+     * 腾讯统计
+     * @param context
+     * @param eventID
+     * @param twoLevel
+     * @param threeLevel
+     */
+    private static void onMtaEvent(Context context, String eventID,String twoLevel, String threeLevel){
+        Properties prop = new Properties();
+        prop.setProperty(twoLevel, threeLevel);
+//        StatService.trackCustomKVEvent(context,eventID,prop);
+        StatService.trackCustomEvent(context,eventID,twoLevel, threeLevel);
+    }
+    /**
+     * 百度统计
+     * @param context
+     * @param eventID
+     * @param twoLevel
+     * @param threeLevel
+     */
+    private static void onbaiduEvent(Context context, String eventID,String twoLevel, String threeLevel){
+//        com.baidu.mobstat.StatService.onEvent(context,eventID,twoLevel);
+    }
+    /**
      * 计数事件统计	(无map)
      *
      * @param context 上下文
@@ -191,6 +223,8 @@ public class XHClick {
     public static void onEvent(Context context, String eventID, String value) {
         if (isStatistics(context)) {
             MobclickAgent.onEvent(context, eventID, value);
+            StatService.trackCustomEvent(context, eventID, value);
+//            com.baidu.mobstat.StatService.onEvent(context,eventID,value);
         }
         showToast(context, "统计_计算_" + eventID + "：" + value);
     }
@@ -376,6 +410,9 @@ public class XHClick {
                             return super.getReqHeader(header, url, params);
                         }
                     });
+
+                //循环统计feed流数据
+                loopHandlerStatictis();
                 //循环计时器 每隔30秒执行一次
                 handler.postDelayed(runnable, CIRCULATION_TIME);
             }
@@ -789,6 +826,16 @@ public class XHClick {
             }
         }
     }
+
+    /**
+     *轮训统计首页请求数据
+     */
+    private static void loopHandlerStatictis(){
+        String data=FileManager.loadShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6).toString();
+        if(!TextUtils.isEmpty(data)){
+            newHomeStatictis(true,"");
+        }
+    }
 	/**
 	 * 首页统计
      * @param isResetData 是否要重置参数数据
@@ -848,9 +895,10 @@ public class XHClick {
 		}else {
 			String devices="";
 			devices += "system=and";
-			String mtype = android.os.Build.MODEL; // 手机型号
-			mtype = mtype.replace("#", "_");
-			devices += "&model=" + mtype;
+//			String mtype = android.os.Build.MODEL; // 手机型号---出现中文不使用该字段
+//			mtype = mtype.replace("#", "_");
+//			devices += "&model=" + mtype;
+			devices += "&model=";
 			String mVersion = android.os.Build.VERSION.RELEASE; // android版本号
 			devices += "&system_version=" + mVersion;
 			devices += "&app_version=" + VersionOp.getVerName(XHApplication.in());
@@ -908,12 +956,13 @@ public class XHClick {
 			params+="&position="+position;
 			params+="&button_name="+button_name;
 			params+="&deep="+deep;
-			if(TextUtils.isEmpty(data)){
+            Log.i("zhangyujian","加载数据：：："+params);
+            if(TextUtils.isEmpty(data)){
 
 				FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,params);
 			}else{
                 String[] strs= data.split("&&");
-                if(strs.length>=1000){
+                if(strs.length>=500){
                     FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,"");
 //                    Log.i("zhangyujian","数据超过1000条，请求数据");
                     new Handler(Looper.getMainLooper()).post(new Runnable() {

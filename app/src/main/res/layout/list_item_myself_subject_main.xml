@@ -116,6 +116,7 @@
 
             <LinearLayout
                 android:id="@+id/linear_imgs"
+                android:baselineAligned="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 

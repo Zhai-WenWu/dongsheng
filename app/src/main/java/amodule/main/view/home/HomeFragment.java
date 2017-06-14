@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
+import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.utils.VDPlayPauseHelper;
 import com.xiangha.R;
 
@@ -69,6 +69,8 @@ import static com.xiangha.R.id.return_top;
 public class HomeFragment extends Fragment{
     /** 保存板块信息的key */
     protected static final String MODULEDATA = "moduleData";
+    public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
+
     private HomeModuleBean homeModuleBean;//数据的结构
     private LoadManager mLoadManager = null;
     private MainBaseActivity mActivity;
@@ -122,6 +124,7 @@ public class HomeFragment extends Fragment{
     private boolean isRecom=false;//是否是推荐
     private long statrTime= -1;//开始的时间戳
     private boolean isNextUrl=true;//执行数据有问题时，数据请求，只执行一次。
+    private int upDataSize = 0;//向上刷新数据集合大小
 
     public static HomeFragment newInstance(HomeModuleBean moduleBean) {
         HomeFragment fragment = new HomeFragment();
@@ -167,7 +170,7 @@ public class HomeFragment extends Fragment{
         }
         if("recom".equals(type)){ //推荐
             isRecoment = true;
-            return AdControlHomeDish.getInstance();
+            return AdControlHomeDish.getInstance().getTwoLoadAdData();
         }else{
             AdOptionParent adControlParent = null;
             String[] adPlayIds = new String[0];
@@ -334,9 +337,9 @@ public class HomeFragment extends Fragment{
                 mLoadManager.setLoading(refreshLayout, mListview, adapterListView, true, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!TextUtils.isEmpty(statisticKey)){
-                            mAdControl.getAdData(mActivity,statisticKey);
-                        }
+//                        if(!TextUtils.isEmpty(statisticKey)){
+//                            mAdControl.getAdData(mActivity,statisticKey);
+//                        }
                         EntryptData(true);
                     }
                 }, new View.OnClickListener() {
@@ -359,7 +362,6 @@ public class HomeFragment extends Fragment{
                             //正在播放的视频滑出屏幕
                             if ((mPlayPosition + mHeaderCount) < firstVisibleItem || (mPlayPosition + mHeaderCount) > (firstVisibleItem + visibleItemCount - 1)) {
                                 stopVideo();
-                                hideReplayShareView();
                             }
                         }
                     }
@@ -478,7 +480,10 @@ public class HomeFragment extends Fragment{
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
+                                        Log.i("zhangyujian","listDatas:::"+listDatas.size());
                                         listDatas = mAdControl.getNewAdData(listDatas, true);
+
+                                        upDataSize+=listDatas.size();
                                     }
                                     mListData.addAll(0, listDatas);//插入到第一个位置
                                 } else {
@@ -502,6 +507,9 @@ public class HomeFragment extends Fragment{
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
+                                        Log.i("zhangyujian","mListData:::"+mListData.size()+"::"+upDataSize);
+                                        if(upDataSize>0 && isRecom)
+                                            mAdControl.setLimitNum(upDataSize);
                                         mListData = mAdControl.getNewAdData(mListData, false);
                                     }
                                 }
@@ -696,7 +704,7 @@ public class HomeFragment extends Fragment{
      * @param position
      */
     private void setVideoLayout(final View parentView, final int position){
-        if (parentView == null)
+        if (parentView == null || position < 0 || position >= mListData.size())
             return;
         if(mListData.get(position).containsKey("video") && !TextUtils.isEmpty(mListData.get(position).get("video"))) {
             Map<String, String> videoData = StringManager.getFirstMap(mListData.get(position).get("video"));
@@ -742,17 +750,14 @@ public class HomeFragment extends Fragment{
             mVideoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
                 @Override
                 public void setVideoClick() {
-                    playPause();
                     if (resumeView != null)
-                        resumeView.setVisibility(isPlaying() ? View.GONE : View.VISIBLE);
+                        resumeView.setVisibility(isPlaying() ? View.VISIBLE : View.GONE);
+                    playPause();
                 }
             });
             mVideoImageView.setOnPlayingCompletionListener(new VideoImageView.OnPlayingCompletionListener() {
                 @Override
-                public void onPlayingCompletion(VDVideoInfo info, int status) {
-                    View palyImg = parentView.findViewById(R.id.play_img);
-                    if (palyImg != null)
-                        palyImg.setVisibility(View.GONE);
+                public void onPlayingCompletion() {
                     showReplayShareView();
                 }
             });
@@ -778,6 +783,17 @@ public class HomeFragment extends Fragment{
     }
 
     /**
+     * 重播
+     */
+    private void restartVideo() {
+        VDVideoViewController controller = VDVideoViewController.getInstance(mActivity);
+        if (controller != null) {
+            controller.resume();
+            controller.start();
+        }
+    }
+
+    /**
      * 播放/暂停
      */
     private void playPause() {
@@ -798,12 +814,16 @@ public class HomeFragment extends Fragment{
      * 显示重播、分享界面
      */
     private void showReplayShareView() {
+        if (mVideoLayout == null)
+            return;
         if (mReplayAndShareView == null)
             mReplayAndShareView = new ReplayAndShareView(mActivity);
         mReplayAndShareView.setOnReplayClickListener(new ReplayAndShareView.OnReplayClickListener() {
             @Override
             public void onReplayClick() {
-                setVideoLayout(mPlayParentView, mPlayPosition);
+                if(mVideoLayout != null)
+                    mVideoLayout.removeView(mReplayAndShareView);
+                restartVideo();
             }
         });
         mReplayAndShareView.setOnShareClickListener(new ReplayAndShareView.OnShareClickListener() {
@@ -826,12 +846,12 @@ public class HomeFragment extends Fragment{
                 barShare.openSharePopup();
             }
         });
-        if (mVideoLayout != null && mVideoLayout.getChildCount() > 0)
-            mVideoLayout.removeAllViews();
-        mVideoLayout.addView(mReplayAndShareView);
+        if (mVideoLayout.indexOfChild(mReplayAndShareView) == -1){
+            mVideoLayout.addView(mReplayAndShareView);
+        }
         mReplayAndShareView.setVisibility(View.VISIBLE);
         mVideoLayout.requestLayout();
-//        mVideoLayout.invalidate();
+        mVideoLayout.invalidate();
     }
 
     private void hideReplayShareView() {
@@ -850,7 +870,7 @@ public class HomeFragment extends Fragment{
             int size= listmaps.size();
             for(int i=0;i<size;i++){
                 listmaps.get(i).put("isTop","2");
-                HomeItem view= handlerTopView(listmaps.get(i));
+                HomeItem view= handlerTopView(listmaps.get(i),i);
                 if(view!=null){
                     linearLayoutThree.addView(view);
                     linearLayoutThree.addView(LayoutInflater.from(mActivity).inflate(R.layout.view_home_show_line,null));
@@ -865,7 +885,7 @@ public class HomeFragment extends Fragment{
      * @param map
      * @return
      */
-    private HomeItem handlerTopView(Map<String,String> map){
+    private HomeItem handlerTopView(Map<String,String> map,int position){
         HomeItem viewTop=null;
         if(map.containsKey("type")&&!TextUtils.isEmpty(map.get("type"))){
             int type=Integer.parseInt(map.get("type"));
@@ -885,7 +905,9 @@ public class HomeFragment extends Fragment{
                     break;
 
             }
-            viewTop.setData(map,0);
+            viewTop.setViewType(MODULETOPTYPE);
+            viewTop.setHomeModuleBean(homeModuleBean);
+            viewTop.setData(map,position);
         }
         return viewTop;
     }

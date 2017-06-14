@@ -129,7 +129,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                                                     }
 
                                                     @Override
-                                                    public void onFalse() {
+                                                    public void onFalse(int flag) {
                                                         XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "忘记密码", "登录失败");
                                                     }
                                                 });
@@ -149,7 +149,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                                 }
 
                                 @Override
-                                public void onFalse() {
+                                public void onFalse(int flag) {
 
                                     if (ORIGIN_FIND_PSW.equals(path_from)) {
                                         XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "忘记密码", "失败原因：验证码错误");

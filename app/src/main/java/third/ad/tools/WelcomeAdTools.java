@@ -1,5 +1,7 @@
 package third.ad.tools;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -7,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiNative;
-
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,6 +19,7 @@ import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import amodule.main.view.WelcomeDialog;
 import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilString;
 
@@ -43,8 +45,8 @@ public class WelcomeAdTools {
     private int splashmaxs = 5 * 60;
     /** 是否二次开启 */
     private int open = OPEN;
-    /** 开启时间 */
-    private int duretimes = 4;
+   /** 开启时间 */
+    private int duretimes = WelcomeDialog.DEFAULT_TIME;
     /** 展示次数，0表示无限次 */
     private int shownum = 0;
 
@@ -58,6 +60,7 @@ public class WelcomeAdTools {
     private InMobiNativeCallback mInMobiNativeCallback;
     /** 自有AD回调 */
     private XHBannerCallback mXHBannerCallback;
+    private boolean isTwoShow=false;
 
     private WelcomeAdTools() {
         String splashConfigDataStr = AppCommon.getConfigByLocal(CONFIGKEY);
@@ -82,17 +85,23 @@ public class WelcomeAdTools {
         }
         return mInstance;
     }
-
+    public void handlerAdData(final boolean isCache){
+        this.handlerAdData(isCache,null,false);
+    }
     /**
      * 广告入口
      */
-    public void handlerAdData(final boolean isCache) {
+    public void handlerAdData(final boolean isCache,AdDataCallBack CallBack,boolean isTwoShow) {
+        this.isTwoShow=isTwoShow;
         list_ad.clear();
         ad_data.clear();
         index_ad = 0;
+        this.adDataCallBack= CallBack;
         String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-        if (TextUtils.isEmpty(data))
+        if (TextUtils.isEmpty(data)) {
+            if(adDataCallBack!=null)adDataCallBack.noAdData();
             return;
+        }
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
         Map<String, String> map = list.get(0);
         if (map.containsKey(AdPlayIdConfig.WELCOME)) {
@@ -109,7 +118,7 @@ public class WelcomeAdTools {
             }
             //开启广告
             nextAd(isCache);
-        }
+        }else{if(adDataCallBack!=null)adDataCallBack.noAdData();}
     }
 
     private void handlerData(String temp, ArrayList<String> list_ad, String banner) {
@@ -143,14 +152,21 @@ public class WelcomeAdTools {
                 if (LoginManager.isShowAd())
                     getXHBanner();
             }
+        }else{
+            if(adDataCallBack!=null)adDataCallBack.noAdData();
         }
     }
 
     //展示AD
     private void displayGdtAD() {
-        final String adid = analysData(ad_data.get(index_ad));
-        if (TextUtils.isEmpty(adid) || null == mGdtCallback)
+         String adid = isTwoShow?"2090116985265199":analysData(ad_data.get(index_ad));
+        if (TextUtils.isEmpty(adid) || null == mGdtCallback) {
+            index_ad++;
+            nextAd(false);
             return;
+        }
+        Log.i("zhangyujian","adid:::"+adid);
+
         GdtAdTools.newInstance().showSplashAD(
                 XHActivityManager.getInstance().getCurrentActivity(),
                 mGdtCallback.getADLayout(),
@@ -190,9 +206,12 @@ public class WelcomeAdTools {
      * 处理inmobi广告
      */
     private void getInMobi(final boolean isCache) {
-        String adid = analysData(ad_data.get(index_ad));
-        if (TextUtils.isEmpty(adid))
+        final String adid = analysData(ad_data.get(index_ad));
+        if (TextUtils.isEmpty(adid)) {
+            index_ad++;
+            nextAd(false);
             return;
+        }
         if (isCache) {
             welcomeNative = null;
         }
@@ -203,57 +222,63 @@ public class WelcomeAdTools {
                 return;
             }
         }
-        //
-        temporaryNative = new InMobiNative(XHActivityManager.getInstance().getCurrentActivity(),
-                Long.parseLong(adid),
-                new InMobiNative.NativeAdListener() {
-                    @Override
-                    public void onAdLoadSucceeded(InMobiNative inMobiNative) {
-                        if (isCache) {
-                            welcomeNative = inMobiNative;
-                        }
-                        Log.i("tzy", "WelcomeAdTools onAdLoadSucceeded");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdLoadSucceeded(inMobiNative);
-                        }
-                    }
+        Handler handler= new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                temporaryNative = new InMobiNative(XHActivityManager.getInstance().getCurrentActivity(),
+                        Long.parseLong(adid),
+                        new InMobiNative.NativeAdListener() {
+                            @Override
+                            public void onAdLoadSucceeded(InMobiNative inMobiNative) {
+                                if (isCache) {
+                                    welcomeNative = inMobiNative;
+                                }
+                                Log.i("tzy", "WelcomeAdTools onAdLoadSucceeded");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdLoadSucceeded(inMobiNative);
+                                }
+                            }
 
-                    @Override
-                    public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                        index_ad++;
-                        nextAd(false);
-                        Log.i("tzy", "WelcomeAdTools onAdLoadFailed");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdLoadFailed(inMobiNative, inMobiAdRequestStatus);
-                        }
-                    }
+                            @Override
+                            public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
+                                index_ad++;
+                                nextAd(false);
+                                Log.i("tzy", "WelcomeAdTools onAdLoadFailed");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdLoadFailed(inMobiNative, inMobiAdRequestStatus);
+                                }
+                            }
 
-                    @Override
-                    public void onAdDismissed(InMobiNative inMobiNative) {
-                        Log.i("tzy", "WelcomeAdTools onAdDismissed");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdDismissed(inMobiNative);
-                        }
-                    }
+                            @Override
+                            public void onAdDismissed(InMobiNative inMobiNative) {
+                                Log.i("tzy", "WelcomeAdTools onAdDismissed");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdDismissed(inMobiNative);
+                                }
+                            }
 
-                    @Override
-                    public void onAdDisplayed(InMobiNative inMobiNative) {
-                        Log.i("tzy", "WelcomeAdTools onAdDisplayed");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onAdDisplayed(inMobiNative);
-                        }
-                    }
+                            @Override
+                            public void onAdDisplayed(InMobiNative inMobiNative) {
+                                Log.i("tzy", "WelcomeAdTools onAdDisplayed");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onAdDisplayed(inMobiNative);
+                                }
+                            }
 
-                    @Override
-                    public void onUserLeftApplication(InMobiNative inMobiNative) {
-                        Log.i("tzy", "WelcomeAdTools onUserLeftApplication");
-                        if (null != mInMobiNativeCallback) {
-                            mInMobiNativeCallback.onUserLeftApplication(inMobiNative);
-                        }
-                    }
-                });
-        //加载广告
-        temporaryNative.load();
+                            @Override
+                            public void onUserLeftApplication(InMobiNative inMobiNative) {
+                                Log.i("tzy", "WelcomeAdTools onUserLeftApplication");
+                                if (null != mInMobiNativeCallback) {
+                                    mInMobiNativeCallback.onUserLeftApplication(inMobiNative);
+                                }
+                            }
+                        });
+                //加载广告
+                temporaryNative.load();
+            }
+        });
+
     }
 
     /**
@@ -261,6 +286,7 @@ public class WelcomeAdTools {
      */
     private void getXHBanner() {
         if (TextUtils.isEmpty(ad_data.get(index_ad))) {
+            index_ad++;
             nextAd(false);
             return;
         }
@@ -271,10 +297,12 @@ public class WelcomeAdTools {
             if (mapImgs != null && !TextUtils.isEmpty(mapImgs.get("indexImg1"))) {
                 url = mapImgs.get("indexImg1");
             } else {
+                index_ad++;
                 nextAd(false);
                 return;
             }
         } else {
+            index_ad++;
             nextAd(false);
             return;
         }
@@ -365,4 +393,10 @@ public class WelcomeAdTools {
     public int getShownum() {
         return shownum;
     }
+
+    public interface AdDataCallBack{
+        /*** 没有广告数据*/
+        public void noAdData();
+    }
+    private AdDataCallBack adDataCallBack;
 }

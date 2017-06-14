@@ -123,6 +123,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
             }
         });
 
+        search_header_list_view_frame.disableWhenHorizontalMove(true);
         search_header_list_view_frame.setPtrHandler(new PtrDefaultHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {

@@ -39,7 +39,6 @@ import amodule.search.avtivity.HomeSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import third.ad.tools.AdConfigTools;
 
 /**
  * 新的框架首页
@@ -142,7 +141,6 @@ public class MainHome extends MainBaseActivity {
     }
 
     private void initData() {
-        AdConfigTools.getInstance().getAdConfigInfo();
         mAdapter = new HomePagerAdapter(getSupportFragmentManager(), listBean);
         viewpager.setAdapter(mAdapter);
         viewpager.setCurrentItem(0);
@@ -409,7 +407,7 @@ public class MainHome extends MainBaseActivity {
     /**
      * 推荐列表设置开始时间
      */
-    private void setRecommedTime(long time){
+    public void setRecommedTime(long time){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments != null && fragments.size() > 0) {
             for (Fragment fragment : fragments) {

@@ -285,7 +285,8 @@ public class AdapterDishMakeOption extends BaseAdapter implements DragGridBaseAd
 							Bitmap bmp = UtilImage.imgPathToBitmap(imgUrl, wdp, 0, false, null);
 							Message msg = new Message();
 							msg.obj = bmp;
-							handler.sendMessage(msg);
+							if(msg!=null)
+								handler.sendMessage(msg);
 
 						}
 					}).start();
