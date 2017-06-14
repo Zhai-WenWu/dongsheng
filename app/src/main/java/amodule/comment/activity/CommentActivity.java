@@ -310,6 +310,16 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         commentIdStrBuffer = new StringBuffer();
         type = getIntent().getStringExtra("type");
         code = getIntent().getStringExtra("code");
+        String newsId = getIntent().getStringExtra("newsId");
+        //消息是否读过
+        if (!TextUtils.isEmpty(newsId)) {
+            String params = "type=news&p1=" + newsId;
+            ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+                @Override
+                public void loaded(int flag, String url, Object returnObj) {}
+            });
+        }
+        Log.i("FRJ","newsId:" + newsId);
         gotoCommentId = getIntent().getStringExtra("commentId");
         gotoReplayId = getIntent().getStringExtra("replayId");
         String fromType = getIntent().getStringExtra("from");
