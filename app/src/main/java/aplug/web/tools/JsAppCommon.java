@@ -710,10 +710,10 @@ public class JsAppCommon extends JsBase{
 
 	@JavascriptInterface
 	public int getStatusMes(){
-		if(mAct != null && mWebView != null && Tools.isShowTitle()) {
-			int tatusHeight = ToolsDevice.px2dp(mAct,Tools.getStatusBarHeight(mAct));
-			return tatusHeight;
-		}
+//		if(mAct != null && mWebView != null && Tools.isShowTitle()) {
+//			int tatusHeight = ToolsDevice.px2dp(mAct,Tools.getStatusBarHeight(mAct));
+//			return tatusHeight;
+//		}
 		return 0;
 	}
 

@@ -48,7 +48,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 			}
 		}
 		initView();
-		initTitle();
+//		initTitle();
 	}
 
 	private void initView() {
