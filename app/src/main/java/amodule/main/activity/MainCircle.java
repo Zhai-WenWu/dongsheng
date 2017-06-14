@@ -63,7 +63,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
 
         Main.allMain.allTab.put("MainCircle", this);
         //初始化状态栏
-        initStatusBar();
+//        initStatusBar();
         //
         initView();
 

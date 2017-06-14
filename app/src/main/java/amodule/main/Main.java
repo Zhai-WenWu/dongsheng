@@ -303,6 +303,8 @@ public class Main extends Activity implements OnClickListener {
         if (Tools.isShowTitle()) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        String color = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(color));
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
         //实例化有用到mRootLayout，必须按着顺序执行
         mBuoy = new MainBuoy(this);

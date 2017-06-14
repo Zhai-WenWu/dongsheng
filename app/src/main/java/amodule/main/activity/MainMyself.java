@@ -132,11 +132,11 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 	}
 
 	private void initUI() {
-		if(Tools.isShowTitle()) {
-			View bar_title = findViewById(R.id.my_title_bar);
-			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getStatusBarHeight(this));
-			bar_title.setLayoutParams(layout);
-		}
+//		if(Tools.isShowTitle()) {
+//			View bar_title = findViewById(R.id.my_title_bar);
+//			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getStatusBarHeight(this));
+//			bar_title.setLayoutParams(layout);
+//		}
 
 		goManagerInfo = (TextView) findViewById(R.id.goManagerInfo);
 		goManagerInfo.setText("马甲");

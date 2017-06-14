@@ -40,18 +40,6 @@
                     android:layout_marginRight="@dimen/dp_15" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#cdcdcd" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentTop="true"
-                    android:background="#cdcdcd" />
-
-                <View
                     android:id="@+id/msg_unClick"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -95,11 +83,6 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:background="#DDDDDD" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentTop="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -210,11 +193,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/dp_15" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -252,11 +230,6 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:background="#DDDDDD" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentTop="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -280,11 +253,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/dp_15" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
             </LinearLayout>
 

@@ -56,7 +56,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 //		initActivity("电商首页",2, 0, 0, R.layout.a_mall);
 		common= new MallCommon(this);
 		initView();
-		init();
+//		init();
 		XHClick.track(this,"浏览商城首页");
 	}
 	/**

@@ -368,15 +368,15 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
 
     private void initTitle() {
-        if (Tools.isShowTitle()) {
-            int dp_46 = Tools.getDimen(context, R.dimen.dp_46);
-            int height = dp_46 + Tools.getStatusBarHeight(context);
-
-            LinearLayout bar_title = (LinearLayout) findViewById(R.id.all_title_rela);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(context), 0, 0);
-        }
+//        if (Tools.isShowTitle()) {
+//            int dp_46 = Tools.getDimen(context, R.dimen.dp_46);
+//            int height = dp_46 + Tools.getStatusBarHeight(context);
+//
+//            LinearLayout bar_title = (LinearLayout) findViewById(R.id.all_title_rela);
+//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+//            bar_title.setLayoutParams(layout);
+//            bar_title.setPadding(0, Tools.getStatusBarHeight(context), 0, 0);
+//        }
     }
 
 

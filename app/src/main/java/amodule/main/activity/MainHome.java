@@ -81,7 +81,7 @@ public class MainHome extends MainBaseActivity {
         mSearch = (RelativeLayout) findViewById(R.id.ed_search_layout_main);
         mMoreBtn = (ImageView) findViewById(R.id.btn_back);
         viewpager.setOffscreenPageLimit(5);
-        initTopView();
+//        initTopView();
         addListener();
     }
 

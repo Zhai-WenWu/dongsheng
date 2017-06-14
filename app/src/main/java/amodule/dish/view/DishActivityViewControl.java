@@ -110,13 +110,13 @@ public class DishActivityViewControl {
     private void initTitle() {
         bar_title_1 = (RelativeLayout) activity.findViewById(R.id.title_rela_all_dish);
         barTitle_inner_1 = (RelativeLayout) activity.findViewById(R.id.dish_title_dish);
-        if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(activity, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(activity);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title_1.setLayoutParams(layout);
-            bar_title_1.setPadding(0, Tools.getStatusBarHeight(activity), 0, 0);
-        }
+//        if (Tools.isShowTitle()) {
+//            int dp_45 = Tools.getDimen(activity, R.dimen.dp_45);
+//            int height = dp_45 + Tools.getStatusBarHeight(activity);
+//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+//            bar_title_1.setLayoutParams(layout);
+//            bar_title_1.setPadding(0, Tools.getStatusBarHeight(activity), 0, 0);
+//        }
         barTitle_inner_1.setBackgroundColor(Color.parseColor("#00ffffff"));
         bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
     }
