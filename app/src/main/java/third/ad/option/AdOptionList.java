@@ -53,39 +53,79 @@ public abstract class  AdOptionList extends AdOptionParent {
                         adMap = adArray.get(cunrrentIndex);
                         boolean dataIsOk = getDataIsOk(adMap);
                         if(dataIsOk) {
+                            JSONArray styleData = new JSONArray();
                             //腾讯api广告不用根据上一个item样式变;101:表示返回的是一张小图、202:一个大图、301:3张小图
-                            if (XHScrollerAdParent.ADKEY_API.equals(adMap.get("adClass"))) {
-                                Log.i("FRJ","stype:" + adMap.get("stype"));
-                                if ("101".equals(adMap.get("stype"))) {
-                                    adMap.put("style", "2");
-                                } else if ("202".equals(adMap.get("stype"))) {
-                                    adMap.put("style", "1");
-                                } else if ("301".equals(adMap.get("stype"))) {
-                                    adMap.put("style", "3");
-                                }
-                            } else {
-                                int aboveIndex = index - 1; //广告要跟上一个样式保持一致
-                                if(aboveIndex < 0) aboveIndex = index;
-                                String imgs = old_list.get(aboveIndex).get("imgs");
-                                ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(imgs);
-                                String type = old_list.get(aboveIndex).get("style");
-                                if ("3".equals(type)) {
-                                    JSONArray jsonArray = new JSONArray();
-                                    JSONObject jsonObject = new JSONObject();
-                                    try {
-                                        jsonObject.put("url", adMap.get("img"));
-                                        jsonObject.put("type", "1");
-                                        jsonArray.put(jsonObject);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                            try {
+                                if (XHScrollerAdParent.ADKEY_API.equals(adMap.get("adClass"))) {
+                                    Log.i("FRJ","stype:" + adMap.get("stype"));
+                                    if ("101".equals(adMap.get("stype"))) {
+                                        adMap.put("style", "2");
+                                        JSONObject styleObject = new JSONObject();
+                                        styleObject.put("url", adMap.get("img"));
+                                        styleObject.put("type", "1");
+                                        styleData.put(styleObject);
+                                    } else if ("202".equals(adMap.get("stype"))) {
+                                        adMap.put("style", "1");
+                                        JSONObject styleObject = new JSONObject();
+                                        styleObject.put("url", adMap.get("img"));
+                                        styleObject.put("type", "1");
+                                        styleData.put(styleObject);
+                                    } else if ("301".equals(adMap.get("stype"))) {
+                                        adMap.put("style", "3");
+                                        String imgsUrl = adMap.get("imgs");
+                                        ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(imgsUrl);
+                                        if (imgsMap != null && imgsMap.size() > 0) {
+                                            for (Map<String, String> imgMap : imgsMap) {
+                                                if (imgMap != null && imgMap.get("") != null) {
+                                                    String imgUrl = imgMap.get("");
+                                                    JSONObject styleObject = new JSONObject();
+                                                    styleObject.put("url", imgUrl);
+                                                    styleObject.put("type", "1");
+                                                    styleData.put(styleObject);
+                                                }
+                                            }
+                                        }
                                     }
-                                    adMap.put("styleData", jsonArray.toString());
-                                    adMap.put("style", arrayList.size() > 1 && "3".equals(type) ? "2" : old_list.get(aboveIndex).get("style"));
-                                }else if("5".equals(type)){
-                                    adMap.put("style","1");
-                                }else
-                                    adMap.put("style",old_list.get(aboveIndex).get("style"));
+                                } else {
+                                    int aboveIndex = index - 1; //广告要跟上一个样式保持一致
+                                    if(aboveIndex < 0) aboveIndex = index;
+                                    String imgs = old_list.get(aboveIndex).get("imgs");
+                                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(imgs);
+                                    String type = old_list.get(aboveIndex).get("style");
+                                    if ("3".equals(type)) {
+                                        String imgsUrl = adMap.get("imgs");
+                                        ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(imgsUrl);
+                                        if (imgsMap != null && imgsMap.size() > 0) {
+                                            for (Map<String, String> imgMap : imgsMap) {
+                                                if (imgMap != null && imgMap.get("") != null) {
+                                                    String imgUrl = imgMap.get("");
+                                                    JSONObject styleObject = new JSONObject();
+                                                    styleObject.put("url", imgUrl);
+                                                    styleObject.put("type", "1");
+                                                    styleData.put(styleObject);
+                                                }
+                                            }
+                                        }
+                                        adMap.put("style", arrayList.size() > 1 && "3".equals(type) ? "2" : old_list.get(aboveIndex).get("style"));
+                                    }else if("5".equals(type)){
+                                        adMap.put("style","1");
+                                        JSONObject styleObject = new JSONObject();
+                                        styleObject.put("url", adMap.get("img"));
+                                        styleObject.put("type", "1");
+                                        styleData.put(styleObject);
+                                    }else {
+                                        adMap.put("style", old_list.get(aboveIndex).get("style"));
+                                        JSONObject styleObject = new JSONObject();
+                                        styleObject.put("url", adMap.get("img"));
+                                        styleObject.put("type", "1");
+                                        styleData.put(styleObject);
+                                    }
+                                }
+                            } catch (JSONException e) {
+
                             }
+
+                            adMap.put("styleData", styleData.toString());
                             Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   style:" + adMap.get("style"));
                             if(!TextUtils.isEmpty(adMap.get("style")))
                                 old_list.add(index, adMap);

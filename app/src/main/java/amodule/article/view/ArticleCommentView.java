@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,6 +83,9 @@ public class ArticleCommentView extends ItemBaseView {
             for (int index = 0; index < length; index++) {
                 final Map<String, String> dataMap = data.get(index);
                 final ViewCommentItem commentItem = new ViewCommentItem(getContext());
+                Log.i("tzy","comment dataMap = " + dataMap.toString());
+                if("0".equals(dataMap.get("fabulous_num")))
+                    dataMap.put("fabulous_num","");
                 commentItem.setData(dataMap);
                 commentItem.setOnClickListener(new OnClickListener() {
                     @Override
@@ -174,13 +178,13 @@ public class ArticleCommentView extends ItemBaseView {
             findViewById(R.id.has_comment_layout).setVisibility(GONE);
             findViewById(R.id.robsofa).setVisibility(VISIBLE);
         }
-
     }
 
     private void gotoCommentActivity(String commentId, String replayId) {
         Intent intent = new Intent(getContext(), CommentActivity.class);
         intent.putExtra("type", getType());
         intent.putExtra("code", code);
+        intent.putExtra("from", "1");
         if (!TextUtils.isEmpty(commentId))
             intent.putExtra("commentId", commentId);
         if (!TextUtils.isEmpty(replayId))

@@ -632,6 +632,7 @@ public class JsAppCommon extends JsBase{
 				//统计
 				Intent it = new Intent(mAct,PlayVideo.class);
                 String urlTemp = url;
+				Log.i("tzy","videourl = " + url);
 				it.putExtra("url", urlTemp);
 				it.putExtra("name", name);
 				it.putExtra("img", img);
@@ -651,6 +652,7 @@ public class JsAppCommon extends JsBase{
 			@Override
 			public void run() {
 				Log.i("tzy","imageUrls = " + imageUrls);
+				Log.i("tzy","index = " + index);
 				if(imageUrls == null){
 					return;
 				}

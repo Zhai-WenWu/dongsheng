@@ -254,6 +254,9 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setOnFocusChangeCallback(new EditTextView.OnFocusChangeCallback() {
             @Override
             public void onFocusChange(EditTextView v, boolean hasFocus) {
+                if(onFocusChangeCallback != null ){
+                    onFocusChangeCallback.onFocusChange(v,hasFocus);
+                }
                 if (hasFocus){
                     currentEditText = v;
                     if(indexOfChild(currentEditText) == getChildCount() - 1){
@@ -275,6 +278,8 @@ public class TextAndImageMixLayout extends LinearLayout
                 }
             }
         });
+        currentEditText.setOnSelectBoldCallback(onSelectBoldCallback);
+        currentEditText.setOnSelectUnderline(onSelectUnderlineCallback);
         if (!TextUtils.isEmpty(content)){
             view.setText(content);
             view.setSelection(view.getRichText().getText().length());
@@ -589,8 +594,13 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int i = index; i >= 0; i--) {
             View lastView = getChildAt(i);
             if (lastView instanceof EditTextView) {
-                if(!TextUtils.isEmpty(text))
-                    ((EditTextView) lastView).appendText((Editable) RichParser.fromHtml(text));
+                EditTextView editTextView = ((EditTextView) lastView);
+                if(!TextUtils.isEmpty(text)){
+                    editTextView.appendText((Editable) RichParser.fromHtml(text));
+                }
+                currentEditText = editTextView;
+                currentEditText.requestFocus();
+                currentEditText.setSelection(currentEditText.getRichText().getText().length());
                 break;
             }
         }
@@ -788,7 +798,23 @@ public class TextAndImageMixLayout extends LinearLayout
         public void onScorllEnd();
     }
 
+    private EditTextView.OnFocusChangeCallback onFocusChangeCallback;
+
+    public void setOnFocusChangeCallback(EditTextView.OnFocusChangeCallback onFocusChangeCallback) {
+        this.onFocusChangeCallback = onFocusChangeCallback;
+    }
+
     public void setOnScorllEndCallback(OnScorllEndCallback onScorllEndCallback) {
         this.onScorllEndCallback = onScorllEndCallback;
+    }
+    private EditTextView.OnSelectBoldCallback onSelectBoldCallback;
+    private EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback;
+
+    public void setOnSelectBoldCallback(EditTextView.OnSelectBoldCallback onSelectBoldCallback) {
+        this.onSelectBoldCallback = onSelectBoldCallback;
+    }
+
+    public void setOnSelectUnderlineCallback(EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback) {
+        this.onSelectUnderlineCallback = onSelectUnderlineCallback;
     }
 }

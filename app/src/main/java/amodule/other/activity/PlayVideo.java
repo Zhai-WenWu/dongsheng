@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -33,8 +34,9 @@ public class PlayVideo extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             name = bundle.getString("name");
@@ -43,13 +45,15 @@ public class PlayVideo extends BaseActivity {
         } else {
             Tools.showToast(this, "此视频不存在");
             finish();
+            return;
         }
         initActivity(name, 2, 0, 0, R.layout.a_other_play_video);
         init();
     }
 
     private void init() {
-        findViewById(R.id.leftImgBtn).setOnClickListener(new OnClickListener() {
+        initStatusBar();
+        findViewById(R.id.back).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlayVideo.this.onBackPressed();
@@ -64,6 +68,20 @@ public class PlayVideo extends BaseActivity {
         dishVidioLayout.setLayoutParams(params);
         intiVideoView();
         startPlay();
+    }
+
+    /**
+     * 初始化状态栏
+     */
+    private void initStatusBar() {
+        if (Tools.isShowTitle()) {
+            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+            int height = dp_45 + Tools.getStatusBarHeight(this);
+            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.bar_title);
+            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+            bar_title.setLayoutParams(layout);
+            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
+        }
     }
 
     private void intiVideoView() {
@@ -143,7 +161,7 @@ public class PlayVideo extends BaseActivity {
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mVDVideoView.setIsFullScreen(true);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mVDVideoView.setIsFullScreen(false);
+            mVDVideoView.setIsFullScreen(true);
         }
     }
 

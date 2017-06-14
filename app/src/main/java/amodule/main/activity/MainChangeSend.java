@@ -230,23 +230,28 @@ public class MainChangeSend extends BaseActivity {
                 break;
             //TODO
             case "6":
-                finish();
                 if (!LoginManager.isLogin()) {
+                    finish();
                     Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendArticleButton())
+                    //TODO
+                } else if (!LoginManager.isShowSendArticleButton()) {
+                    finish();
                     startActivity(new Intent(this, ArticleEidtActiivty.class));
-                else
+                } else
                     showDialog("发文章", StringManager.api_applyArticlePower);
                 break;
             case "7":
-                finish();
                 if (!LoginManager.isLogin()) {
+                    finish();
                     Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendVideoButton())
+                    //TODO
+                } else if (!LoginManager.isShowSendVideoButton()) {
+                    finish();
                     startActivity(new Intent(this, VideoEditActivity.class));
-                else
+                } else
+
                     showDialog("短视频", StringManager.api_applyVideoPower);
                 break;
         }
@@ -260,12 +265,14 @@ public class MainChangeSend extends BaseActivity {
                     public void onClick(View v) {
                         AppCommon.openUrl(MainChangeSend.this, url, true);
                         dialog.cancel();
+                        finish();
                     }
                 })
                 .setCanselButton("否", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
+                        finish();
                     }
                 })
                 .show();

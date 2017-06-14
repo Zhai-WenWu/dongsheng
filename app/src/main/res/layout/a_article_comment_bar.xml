@@ -9,7 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <ImageView
             android:layout_width="match_parent"
@@ -43,7 +46,9 @@
                 <LinearLayout
                     android:id="@+id/comment_edit_fake"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_31"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/dp_7"
+                    android:paddingBottom="@dimen/dp_7"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dp_16"
                     android:layout_toLeftOf="@+id/praise_button"
@@ -66,13 +71,13 @@
                         android:text="写评论..."
                         android:textColor="#666"
                         android:paddingRight="@dimen/dp_13"
-                        android:textSize="@dimen/sp_12"/>
+                        android:textSize="@dimen/sp_14"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/praise_button"
-                    android:layout_width="@dimen/dp_94"
+                    android:layout_width="@dimen/dp_89"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/comment_edit_fake"
                     android:layout_alignBottom="@+id/comment_edit_fake"
@@ -120,22 +125,6 @@
                     android:src="@drawable/i_comment_pen"
                     android:visibility="gone"/>
 
-                <EditText
-                    android:id="@+id/commend_write_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/comment_send_parent"
-                    android:background="@drawable/bg_round40_dbdbdb"
-                    android:gravity="center_vertical"
-                    android:hint="回复"
-                    android:maxLines="5"
-                    android:minHeight="@dimen/dp_31"
-                    android:paddingLeft="@dimen/dp_13"
-                    android:paddingRight="@dimen/dp_13"
-                    android:paddingTop="@dimen/dp_7"
-                    android:paddingBottom="@dimen/dp_7"
-                    android:textSize="@dimen/sp_12"/>
-
                 <RelativeLayout
                     android:id="@+id/comment_send_parent"
                     android:layout_width="wrap_content"
@@ -154,16 +143,36 @@
                         android:paddingRight="@dimen/dp_20"
                         android:text="发送"
                         android:textColor="#ccc"
+                        android:textSize="@dimen/sp_16"
                         android:visibility="visible"/>
 
                     <ProgressBar
                         android:id="@+id/comment_send_progress"
                         android:layout_width="@dimen/dp_22"
                         android:layout_height="@dimen/dp_22"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:paddingLeft="@dimen/dp_13"
                         android:visibility="gone"/>
                 </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/commend_write_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_round40_dbdbdb"
+                    android:gravity="center_vertical"
+                    android:hint="回复"
+                    android:maxLines="5"
+                    android:minHeight="@dimen/dp_31"
+                    android:paddingLeft="@dimen/dp_13"
+                    android:paddingRight="@dimen/dp_13"
+                    android:paddingTop="@dimen/dp_7"
+                    android:paddingBottom="@dimen/dp_7"
+                    android:textSize="@dimen/sp_14"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
             </RelativeLayout>
         </RelativeLayout>

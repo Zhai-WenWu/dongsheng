@@ -60,7 +60,11 @@ public class RecommendItemView extends ItemBaseView {
 
     public void setData(final Map<String, String> map) {
         findViewById(R.id.hander).setVisibility(map.containsKey("showheader") ? View.VISIBLE : View.GONE);
-        setViewImage(recImage, map.get("img"));
+        if(map != null && !TextUtils.isEmpty(map.get("img"))){
+            setViewImage(recImage, map.get("img"));
+            recImage.setVisibility(VISIBLE);
+        }else
+            recImage.setVisibility(GONE);
         setViewText(recTitle, map, "title", View.INVISIBLE);
         setViewText(recBrowse, map, "clickAll");
         setViewText(recComment, map, "commentNumber");

@@ -7,6 +7,7 @@ package acore.dialogManager;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.download.down.VersionUpload;
 import com.xiangha.R;
@@ -36,6 +37,11 @@ public class VersionOp extends DialogManagerParent{
 
 	private boolean mShowPro;
 	boolean isMustUpdata = false;
+
+	private boolean misSilentInstall = false;
+
+	private int appNum,hintNum;
+	private String newNum,nowNum;
 
 	private static String tongjiId = "a_silent";
 
@@ -68,7 +74,15 @@ public class VersionOp extends DialogManagerParent{
 
 	@Override
 	public void show() {
-		versionUpload.starUpdate(!mShowPro,silentListener);
+		if(isMustUpdata || !misSilentInstall) {
+			Log.i("versionOp","VersionOp show() starUpdate()");
+			versionUpload.starUpdate(!mShowPro, silentListener);
+		}else{
+			Log.i("versionOp","VersionOp show() silentInstall()");
+			File file = new File(path + apkName + "_" + newNum + ".apk");
+			VersionUpload.silentInstall(isMustUpdata,XHActivityManager.getInstance().getCurrentActivity(),Uri.fromFile(file),
+					VersionUpload.INTALL_TYPE_NEXT_STAR,true,nowNum,newNum,appNum,hintNum,silentListener);
+		}
 	}
 
 	@Override
@@ -92,23 +106,27 @@ public class VersionOp extends DialogManagerParent{
 								//当需要升级时，服务端才返回升级数据
 								if(array.size() > 0){
 									Map<String, String> map = array.get(0);
-									String nowNum = getVerName(XHActivityManager.getInstance().getCurrentActivity());
-									String newNum = map.get("code");
+									nowNum = getVerName(XHActivityManager.getInstance().getCurrentActivity());
+									newNum = map.get("code");
 									String content = map.get("content");
 									String updateUrl = map.get("url");
-									int appNum = Integer.parseInt(map.get("appNum"));
+									appNum = Integer.parseInt(map.get("appNum"));
 									int play = Integer.parseInt(map.get("play"));
-									int hintNum = Integer.parseInt(map.get("cishu"));
+									hintNum = Integer.parseInt(map.get("cishu"));
 									if(appNum == 0) isMustUpdata = true;
 									boolean isPlay = true;
 									if(play == 1) isPlay = false;
 									boolean isNeedUpdata = false;
 									if(!mShowPro){
-										isNeedUpdata = installApp(VersionUpload.INTALL_TYPE_NEXT_STAR,nowNum,newNum,appNum,hintNum);
+										misSilentInstall = isSilentInstall(isNeedUpdata,VersionUpload.INTALL_TYPE_NEXT_STAR,nowNum,newNum,appNum,hintNum);
+										isNeedUpdata = misSilentInstall;
 									}
+									Log.i("versionOp","isNeedUpdata:" + isNeedUpdata + "  isMustUpdata:" + isMustUpdata);
 									versionUpload = new VersionUpload(XHActivityManager.getInstance().getCurrentActivity(), content, R.drawable.ic_launcher,nowNum,newNum,
 											isMustUpdata, isPlay, hintNum,appNum, updateUrl, path,apkName,vsUpListener);
-									if(!isNeedUpdata) isNeedUpdata = versionUpload.isUpdata(!mShowPro);
+//									if(!misSilentInstall) isNeedUpdata = versionUpload.isUpdata();
+									if(!misSilentInstall) isNeedUpdata = versionUpload.isUpdata(!mShowPro);
+									Log.i("versionOp","isNeedUpdata:" + isNeedUpdata);
 									if(isNeedUpdata){
 										callback.onNeedUpdata();
 									}else {
@@ -203,9 +221,9 @@ public class VersionOp extends DialogManagerParent{
 	 * 按照指定type提示安装框
 	 * @param type ：弹安装框的时间
      */
-	private boolean installApp(int type,String nowNum,String newNum,int appNum,int hintNum){
+	private boolean isSilentInstall(boolean isMustUp, int type, String nowNum, String newNum, int appNum, int hintNum){
 		File file = new File(path + apkName + "_" + newNum + ".apk");
-		return VersionUpload.silentInstall(XHActivityManager.getInstance().getCurrentActivity(),Uri.fromFile(file),type,true,nowNum,newNum,appNum,hintNum,silentListener);
+		return VersionUpload.isSilentInstall(isMustUp,XHActivityManager.getInstance().getCurrentActivity(),Uri.fromFile(file),type,true,nowNum,newNum,appNum,hintNum,silentListener);
 	}
 
 

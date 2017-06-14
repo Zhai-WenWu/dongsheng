@@ -111,15 +111,18 @@
                 android:id="@+id/comment_praise_num"
                 style="@style/comment_time"
                 android:layout_toLeftOf="@+id/comment_praise"
-                android:layout_marginRight="@dimen/dp_3"
                 android:text="1331"
+                android:layout_centerVertical="true"
                 />
 
             <ImageView
                 android:id="@+id/comment_praise"
-                android:layout_width="@dimen/dp_17"
-                android:layout_height="@dimen/dp_17"
-                android:padding="@dimen/dp_2"
+                android:layout_width="@dimen/dp_19"
+                android:layout_height="@dimen/dp_19"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingRight="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/i_comment_praise"
@@ -143,21 +146,23 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="@dimen/dp_11"
-            android:paddingBottom="@dimen/dp_2"
+            android:paddingBottom="@dimen/dp_11"
             android:background="#efefef"
-            android:visibility="gone"
+            android:visibility="visible"
             />
         <TextView
             android:id="@+id/comment_item_replay_cotent_show"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp__8"
             android:background="#efefef"
+            android:lineSpacingExtra="0px"
             android:text="展现1条回复 >"
             android:textSize="@dimen/sp_13"
             android:textColor="#4180c0"
             android:paddingLeft="@dimen/dp_11"
             android:paddingBottom="@dimen/dp_11"
-            android:visibility="gone"
+            android:visibility="visible"
             />
     </LinearLayout>
 

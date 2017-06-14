@@ -23,7 +23,7 @@ public class DialogControler {
         versionOp.isShow(new DialogManagerParent.OnDialogManagerCallback() {
             @Override
             public void onShow() {
-//                Tools.showToast(XHApplication.in(),"toVersionUpdata onShow()");
+//                Tools.showToast(XHApplication.in(),"toVersionUpdata onShow() versionOp.isMustUpdata:" + versionOp.isMustUpdata);
                 isNeedUpdata = true;
                 if(versionOp.isMustUpdata){
                     versionOp.show();
@@ -42,6 +42,7 @@ public class DialogControler {
     }
 
     private void toGetGuidData(){
+//        Tools.showToast(XHApplication.in(),"toGetGuidData()");
         final GuideManager guideManager = new GuideManager();
         guideManager.isShow(new DialogManagerParent.OnDialogManagerCallback() {
             @Override

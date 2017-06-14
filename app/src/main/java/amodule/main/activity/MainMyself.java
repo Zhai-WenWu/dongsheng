@@ -314,20 +314,20 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 	private boolean onEventbranch(int index) {
 		if (LoginManager.userInfo.size() == 0) {
 			switch (index) {
-				case R.id.myself_please_login:
-				case R.id.ico_right_myself:
-				case R.id.myself_iv:
 				case R.id.ll_subject:
 				case R.id.ll_dish:
 				case R.id.ll_flow:
 				case R.id.ll_score:
-				case R.id.myself_lv: //用户等级
 				case 0: //收藏
 				case 7: //积分
 				case 3: //订单
 				case 4: //优惠券
 				case 6: //钱包
 					Tools.showToast(this,"请先登录或注册哦~");
+				case R.id.myself_lv: //用户等级
+				case R.id.myself_please_login:
+				case R.id.ico_right_myself:
+				case R.id.myself_iv:
 					XHClick.mapStat(this, tongjiId, "头部", "登录");
 					Intent intent = new Intent(MainMyself.this, LoginByAccout.class);
 					startActivity(intent);

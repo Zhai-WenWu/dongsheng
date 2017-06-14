@@ -19,6 +19,8 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
 
     private LinearLayout textEditlayout;
     private ImageView textEditImage;
+    private ImageView textBoldImage;
+    private ImageView textUnderlineImage;
 
     private OnSelectImageCallback mOnSelectImageCallback;
     private OnSelectVideoCallback mOnSelectVideoCallback;
@@ -43,15 +45,17 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
     private void init() {
         textEditlayout = (LinearLayout) findViewById(R.id.text_edit_layout);
         textEditImage = (ImageView) findViewById(R.id.edit_text);
+        textBoldImage = (ImageView) findViewById(R.id.text_bold);
+        textUnderlineImage = (ImageView) findViewById(R.id.text_underline);
 
         //设置监听
         findViewById(R.id.select_image).setOnClickListener(this);
         findViewById(R.id.select_video).setOnClickListener(this);
-        findViewById(R.id.edit_text).setOnClickListener(this);
+        textEditImage.setOnClickListener(this);
         findViewById(R.id.add_link).setOnClickListener(this);
         findViewById(R.id.keyboard_control).setOnClickListener(this);
-        findViewById(R.id.text_bold).setOnClickListener(this);
-        findViewById(R.id.text_underline).setOnClickListener(this);
+        textBoldImage.setOnClickListener(this);
+        textUnderlineImage.setOnClickListener(this);
         findViewById(R.id.text_center).setOnClickListener(this);
     }
 
@@ -146,6 +150,14 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
 
     public boolean isShowEditLayout(){
         return textEditlayout.getVisibility() == VISIBLE;
+    }
+
+    public void setTextBoldImageSelection(boolean isSelected){
+        textBoldImage.setSelected(isSelected);
+    }
+
+    public void setTextUnderlineImageSelection(boolean isSelected){
+        textUnderlineImage.setSelected(isSelected);
     }
 
     public interface OnSelectImageCallback {

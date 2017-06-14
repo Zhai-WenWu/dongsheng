@@ -2,6 +2,7 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -170,6 +171,7 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void initView() {
+        findViewById(R.id.all_content).setBackgroundColor(Color.parseColor("#ffffff"));
         tv_title = (TextView) findViewById(R.id.title);
         tv_cancel_upload = (TextView) findViewById(R.id.tv_cancel_upload);
         tv_upload_statis = (TextView) findViewById(R.id.tv_upload_statis);

@@ -2,7 +2,6 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -104,7 +103,17 @@ public class EditTextView extends BaseView {
                 }
             }
         });
-        mRichText.setOnSelectLinkCallback(new RichText.OnSelectLinkCallback() {
+        mRichText.setOnSelectTypeCallback(new RichText.OnSelectContainsType() {
+            @Override
+            public void onSelectBold(boolean isSelected) {
+                if(onSelectBoldCallback != null)onSelectBoldCallback.onSelectBold(isSelected);
+            }
+
+            @Override
+            public void onSelectUnderline(boolean isSelected) {
+                if(onSelectUnderlineCallback != null) onSelectUnderlineCallback.onSelectUnderline(isSelected);
+            }
+
             @Override
             public void onSelectLink(String url, String desc) {
                 if(isDialogShow) return;
@@ -341,8 +350,26 @@ public class EditTextView extends BaseView {
         this.onAfterTextChanged = onAfterTextChanged;
     }
 
+    public OnSelectBoldCallback onSelectBoldCallback;
+    public OnSelectUnderlineCallback onSelectUnderlineCallback;
+
+    public void setOnSelectBoldCallback(OnSelectBoldCallback onSelectBoldCallback) {
+        this.onSelectBoldCallback = onSelectBoldCallback;
+    }
+
+    public void setOnSelectUnderline(OnSelectUnderlineCallback onSelectUnderlineCallback) {
+        this.onSelectUnderlineCallback = onSelectUnderlineCallback;
+    }
+
     public interface OnAfterTextChanged{
         public void afterTextChanged(Editable s);
+    }
+
+    public interface OnSelectBoldCallback{
+        public void onSelectBold(boolean isSelected);
+    }
+    public interface OnSelectUnderlineCallback{
+        public void onSelectUnderline(boolean isSelected);
     }
 
 }

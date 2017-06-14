@@ -418,7 +418,7 @@
             android:name="amodule.other.activity.PlayVideo"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:theme="@style/common_TransParentTheme"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
         <!-- article start -->

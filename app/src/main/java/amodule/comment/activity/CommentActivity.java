@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -80,7 +80,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initView() {
-        final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.a_comment_keyboard_parent);
+        final LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.a_comment_keyboard_parent);
         final int dp45 = Tools.getDimen(this,R.dimen.dp_45);
         rl.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -239,7 +239,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     startActivity(intent);
                     return;
                 }
-                XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
+                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
                 XHClick.mapStat(CommentActivity.this,likeTongjiId,likeTwoLeven,"");
                 String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id;
                 ReqEncyptInternet.in().doEncypt(StringManager.api_likeForum, params, new InternetCallback(CommentActivity.this) {
@@ -310,6 +310,16 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         commentIdStrBuffer = new StringBuffer();
         type = getIntent().getStringExtra("type");
         code = getIntent().getStringExtra("code");
+        String newsId = getIntent().getStringExtra("newsId");
+        //消息是否读过
+        if (!TextUtils.isEmpty(newsId)) {
+            String params = "type=news&p1=" + newsId;
+            ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+                @Override
+                public void loaded(int flag, String url, Object returnObj) {}
+            });
+        }
+        Log.i("FRJ","newsId:" + newsId);
         gotoCommentId = getIntent().getStringExtra("commentId");
         gotoReplayId = getIntent().getStringExtra("replayId");
         String fromType = getIntent().getStringExtra("from");
@@ -317,6 +327,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             from = Integer.parseInt(fromType);
         }
 
+        //TODO
         if(TextUtils.isEmpty(type)) {
             type = "1";
             code = "520";
@@ -341,8 +352,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             Tools.showToast(this, "类型不对");
             finish();
         }
-
-
 
         loadManager.showProgressBar();
         loadManager.setLoading(downRefreshList, adapterSimple, true, new View.OnClickListener() {
@@ -413,7 +422,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                         adapterSimple.notifyDataSetChanged();
                         loadCount = arrayList.size();
-                        ;
                         if (everyPage == 0)
                             everyPage = loadCount;
                     }

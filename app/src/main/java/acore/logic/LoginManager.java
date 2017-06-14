@@ -5,8 +5,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tencent.android.tpush.horse.Tools;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

@@ -45,6 +45,7 @@ import amodule.article.activity.ArticleVideoSelectorActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.view.EditBottomControler;
+import amodule.article.view.EditTextView;
 import amodule.article.view.InputUrlDialog;
 import amodule.article.view.TextAndImageMixLayout;
 import amodule.article.view.VideoShowView;
@@ -73,8 +74,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public static final int DATA_TYPE_ARTICLE = 100;
     public static final int DATA_TYPE_VIDEO = 101;
 
-    private EditBottomControler editBottomControler;
     protected EditText editTitle;
+    private EditBottomControler editBottomControler;
     protected TextAndImageMixLayout mixLayout;
     private LinearLayout contentLayout;
     private ScrollView scrollView;
@@ -85,7 +86,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     private String code;
 
     private boolean isKeyboradShow = false;
-
 
     /** 定时存草稿 */
     protected Timer timer;
@@ -136,6 +136,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             int distance = dm.heightPixels - location[1] - (editBottomControler.isShowEditLayout() ? dp_50 + dp_64 : dp_50);
                             Log.i("tzy","distance = " + distance);
                             Log.i("tzy","heightDifference2 = " + heightDifference2);
+                            Log.i("tzy","isKeyboradShow = " + isKeyboradShow);
+                            Log.i("tzy","preIsKeyboradShow = " + preIsKeyboradShow);
                             if(isKeyboradShow
                                     && !preIsKeyboradShow
                                     && distance <= heightDifference2
@@ -174,8 +176,10 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_DOWN:
                         editBottomControler.setEditLayoutVisibility(false);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
                         ToolsDevice.keyboardControl(false, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                         break;
                 }
@@ -183,11 +187,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             }
         });
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
-        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this, R.dimen.dp_95) - Tools.getStatusBarHeight(this);
+        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this, R.dimen.dp_45) - Tools.getStatusBarHeight(this);
         contentLayout.setMinimumHeight(contentLayoutHeight);
         contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("tzy","contentLayout click");
                 editTitle.clearFocus();
                 mixLayout.getCurrentEditText().getRichText().requestFocus();
                 ToolsDevice.keyboardControl(true, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
@@ -223,7 +228,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         editTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                editBottomControler.setVisibility(hasFocus ? View.INVISIBLE : View.VISIBLE);
+                if(hasFocus){
+                    editBottomControler.setVisibility(View.GONE);
+                }
             }
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
@@ -231,10 +238,42 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setMaxTextCount(getMaxTextCount());
         mixLayout.setSingleVideo("2".equals(getType()));
         mixLayout.setType(getType());
+        mixLayout.setOnFocusChangeCallback(new EditTextView.OnFocusChangeCallback() {
+            @Override
+            public void onFocusChange(EditTextView v, boolean hasFocus) {
+                if(hasFocus){
+                    if(editBottomControler.getVisibility() == View.GONE){
+                        scrollView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.scrollBy(0, -dp_64);
+                            }
+                        }, 200);
+                    }
+                    editBottomControler.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         mixLayout.setOnScorllEndCallback(new TextAndImageMixLayout.OnScorllEndCallback() {
             @Override
             public void onScorllEnd() {
                 scrollView.scrollTo(0,mixLayout.getHeight());
+            }
+        });
+        mixLayout.setOnSelectBoldCallback(new EditTextView.OnSelectBoldCallback() {
+            @Override
+            public void onSelectBold(boolean isSelected) {
+                if(editBottomControler.isShowEditLayout()){
+                    editBottomControler.setTextBoldImageSelection(isSelected);
+                }
+            }
+        });
+        mixLayout.setOnSelectUnderlineCallback(new EditTextView.OnSelectUnderlineCallback() {
+            @Override
+            public void onSelectUnderline(boolean isSelected) {
+                if(editBottomControler.isShowEditLayout()){
+                    editBottomControler.setTextUnderlineImageSelection(isSelected);
+                }
             }
         });
         if("2".equals(getType())){
@@ -254,14 +293,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 }
             });
         }
-        mixLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mixLayout.getCurrentEditText().getRichText().clearFocus();
-                editTitle.requestFocus();
-                ToolsDevice.keyboardControl(true, EditParentActivity.this, editTitle);
-            }
-        });
 
         //初始化底部编辑控制
         initEditBottomControler();
@@ -415,16 +446,27 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 super.handleMessage(msg);
                 if (uploadArticleData != null) {
                     editTitle.setText(uploadArticleData.getTitle());
-                    mixLayout.setSingleVideo("2".equals(getType()));
+                    mixLayout.setSingleVideo(TYPE_VIDEO.equals(getType()));
                     mixLayout.setXHServiceData(uploadArticleData.getContent());
+
+
                 }
             }
         };
+        mixLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mixLayout.getCurrentEditText().getRichText().clearFocus();
+                editTitle.requestFocus();
+                ToolsDevice.keyboardControl(true, EditParentActivity.this, editTitle);
+            }
+        });
         //通过code判断从数据库拿数据还是从服务端拿数据
         code = getIntent().getStringExtra("code");
-        if(TextUtils.isEmpty(code))
-            mixLayout.setSecondEdit(true);
+
         if (TextUtils.isEmpty(code)) {
+            mixLayout.setSecondEdit(true);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
