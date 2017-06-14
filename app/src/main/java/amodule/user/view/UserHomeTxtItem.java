@@ -107,8 +107,8 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                 mTitle.setVisibility(View.VISIBLE);
             }
         }
-        boolean showPlayImg = false;
-        boolean showImgs = false;
+        boolean hasImg = false;
+        boolean hasVideo = false;
         String fromLocal = mDataMap.get("dataFrom");
         if ("1".equals(fromLocal)) {//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
             mUploadType = mDataMap.get("uploadType");
@@ -138,13 +138,13 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
             ArrayList<Map<String, String>> videos = StringManager.getListMapByJson(mDataMap.get("videos"));
             if (imgs != null && imgs.size() > 0) {
                 path = imgs.get(0).get("path");
+                hasImg = true;
             } else if (videos != null && videos.size() > 0) {
+                hasVideo = true;
                 path = videos.get(0).get("image");
-                if (!TextUtils.isEmpty(path))
-                    showPlayImg = true;
             }
             if (mImg != null && path != null) {
-                showImgs = true;
+                hasImg = true;
                 Glide.with(getContext())
                         .load(new File(path))
                         .override(getResources().getDimensionPixelSize(R.dimen.dp_110), getResources().getDimensionPixelSize(R.dimen.dp_72_5))
@@ -153,10 +153,22 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                 mImg.setVisibility(View.VISIBLE);
             }
         } else {
-            String imgUrl = mDataMap.get("img");
-            if (!TextUtils.isEmpty(imgUrl)) {
-                loadImage(imgUrl, mImg);
+            String styleData = mDataMap.get("styleData");
+            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(styleData);
+            if (datas != null && !datas.isEmpty()) {
+                Map<String, String> data = datas.get(0);
+                if (data != null && data.size() > 0) {
+                    String imgUrl = data.get("url");
+                    if (!TextUtils.isEmpty(imgUrl)) {
+                        hasImg = true;
+                        loadImage(imgUrl, mImg);
+                    }
+                    String type = data.get("type");
+                    if (!TextUtils.isEmpty(type) && "2".equals(type))
+                        hasVideo = true;
+                }
             }
+
             String statusInfo = mDataMap.get("status");
             if ("1".equals(statusInfo)) {
                 if (mStatusInfo != null) {
@@ -198,24 +210,11 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                     mNum1.setVisibility(View.VISIBLE);
                 }
             }
-            String video = mDataMap.get("video");
-            if (!TextUtils.isEmpty(video)) {
-                ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(video);
-                for (Map<String, String> map : maps) {
-                    if (map != null) {
-                        String videoUrl = map.get("videoUrl");
-                        if (!TextUtils.isEmpty(videoUrl)) {
-                            showPlayImg = true;
-                            showImgs = true;
-                        }
-                    }
-                }
-            }
         }
-        if (showImgs && mImgsLayout != null) {
+        if (hasImg && mImgsLayout != null) {
             mImgsLayout.setVisibility(View.VISIBLE);
         }
-        if (showPlayImg && mPlayImg != null) {
+        if (hasVideo && mPlayImg != null) {
             mPlayImg.setVisibility(View.VISIBLE);
         }
     }
