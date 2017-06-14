@@ -228,14 +228,12 @@ public class MainChangeSend extends BaseActivity {
                 videoDish.putExtra(UploadDishActivity.DISH_TYPE_KEY, UploadDishActivity.DISH_TYPE_VIDEO);
                 this.startActivity(videoDish);
                 break;
-            //TODO
             case "6":
                 if (!LoginManager.isLogin()) {
                     finish();
                     Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                    //TODO
-                } else if (!LoginManager.isShowSendArticleButton()) {
+                } else if (LoginManager.isShowSendArticleButton()) {
                     finish();
                     startActivity(new Intent(this, ArticleEidtActiivty.class));
                 } else
@@ -246,8 +244,7 @@ public class MainChangeSend extends BaseActivity {
                     finish();
                     Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                    //TODO
-                } else if (!LoginManager.isShowSendVideoButton()) {
+                } else if (LoginManager.isShowSendVideoButton()) {
                     finish();
                     startActivity(new Intent(this, VideoEditActivity.class));
                 } else

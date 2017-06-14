@@ -2,6 +2,7 @@ package amodule.article.upload;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -535,7 +536,7 @@ public class ArticleUploadListPool extends UploadListPool {
             uploadTextData.put("title", uploadArticleData.getTitle());
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
             Log.i("tzy","content = " + content);
-            uploadTextData.put("content", URLEncoder.encode(content, HTTP.UTF_8));
+            uploadTextData.put("content", Uri.encode(content, HTTP.UTF_8));
             uploadTextData.put("isOriginal", String.valueOf(uploadArticleData.getIsOriginal()));
             uploadTextData.put("repAddress", uploadArticleData.getRepAddress());
             uploadTextData.put("img", imgArray.size() > 0 ? imgArray.get(0).get("url") : "");

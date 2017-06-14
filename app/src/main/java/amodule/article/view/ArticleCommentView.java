@@ -154,8 +154,8 @@ public class ArticleCommentView extends ItemBaseView {
                     }
 
                     @Override
-                    public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
-                        gotoCommentActivity(comment_id, null);
+                    public void onContentReplayClick(String comment_id,String replay_id, String replay_user_code, String replay_user_name, String type,boolean isShowKeyBoard) {
+                        gotoCommentActivity(comment_id, replay_id);
                         statistics("评论", type);
                     }
                 });
@@ -182,9 +182,9 @@ public class ArticleCommentView extends ItemBaseView {
 
     private void gotoCommentActivity(String commentId, String replayId) {
         Intent intent = new Intent(getContext(), CommentActivity.class);
+        intent.putExtra("from", "2");
         intent.putExtra("type", getType());
         intent.putExtra("code", code);
-        intent.putExtra("from", "1");
         if (!TextUtils.isEmpty(commentId))
             intent.putExtra("commentId", commentId);
         if (!TextUtils.isEmpty(replayId))
