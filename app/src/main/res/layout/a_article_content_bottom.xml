@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="@dimen/dp_3"
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20">
 
@@ -12,9 +11,9 @@
         android:id="@+id/artilce_repint_source"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_24"
         android:visibility="gone"
         android:textColor="#B6B5B5"
+        android:paddingBottom="@dimen/dp_26"
         android:textSize="@dimen/sp_15"/>
 
     <LinearLayout
@@ -26,14 +25,13 @@
         <RelativeLayout
             android:id="@+id/ad_layout"
             android:layout_width="match_parent"
-            android:paddingTop="@dimen/dp_26"
+            android:paddingBottom="@dimen/dp_18"
             android:layout_height="wrap_content"/>
 
         <RelativeLayout
             android:layout_below="@+id/_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/dp_18"
             android:paddingBottom="@dimen/dp_20">
 
             <TextView

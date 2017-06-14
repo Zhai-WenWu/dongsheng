@@ -640,7 +640,10 @@ public class TextAndImageMixLayout extends LinearLayout
      */
     public boolean hasVideo() {
         VideoShowView view = getFirstVideoView();
-        return view != null;
+        boolean hasVideo = view != null
+                && !TextUtils.isEmpty(view.getCoverImageUrl())
+                && !TextUtils.isEmpty(view.getVideoUrl());
+        return hasVideo;
     }
 
     /**
@@ -741,7 +744,7 @@ public class TextAndImageMixLayout extends LinearLayout
      * 获取视频数据
      * @return
      */
-    public ArrayList<Map<String,String>> getVideoArray(){
+    public ArrayList<Map<String,String>> getVideoArrayMap(){
         ArrayList<Map<String,String>> dataArray = new ArrayList<>();
         for(int index = 0 ; index < getChildCount() ;index ++){
             View view = getChildAt(index);
@@ -753,6 +756,16 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
         return dataArray;
+    }
+
+    public ArrayList<String> getVideoArrayList(){
+        ArrayList<String> arrayList = new ArrayList<>();
+        for(int index = 0 ; index < getChildCount() ;index ++){
+            View view = getChildAt(index);
+            if(view instanceof VideoShowView)
+                arrayList.add(((VideoShowView)view).getVideoUrl());
+        }
+        return arrayList;
     }
 
     public EditTextView getCurrentEditText() {
