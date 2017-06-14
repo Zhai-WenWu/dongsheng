@@ -122,7 +122,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 if(View.VISIBLE == sendTv.getVisibility()) {
                     Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
                     oldUrl = currentUrl;
-                    changeKeyboard(false);
+                    changeKeyboard(false,false);
                     commend_write_et.setHint(" 写评论");
                 }
                 return false;
@@ -222,7 +222,14 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                                 if(flag >= ReqInternet.REQ_OK_STRING){
                                     listArray.remove(position);
                                     adapterSimple.notifyDataSetChanged();
-                                    changeDataChange();
+                                    if(listArray.size() == 0){
+                                        upDropPage = 1;
+                                        gotoCommentId = null;
+                                        gotoReplayId = null;
+                                        getCommentData(true);
+                                    }else {
+                                        changeDataChange();
+                                    }
                                 }
                             }
                         });
@@ -259,9 +266,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             }
 
             @Override
-            public void onContentReplayClick(String comment_id,String replay_code, String replay_name,String type) {
+            public void onContentReplayClick(String comment_id,String replay_id,String replay_code, String replay_name,String type,boolean isShowKeyBoard) {
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"回复",type);
-                changeKeyboard(true);
+                changeKeyboard(true,isShowKeyBoard);
                 Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
                 commend_write_et.setHint(" 回复" + replay_name);
                 currentUrl = StringManager.api_addReplay;
@@ -353,6 +360,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             finish();
         }
 
+
+
         loadManager.showProgressBar();
         loadManager.setLoading(downRefreshList, adapterSimple, true, new View.OnClickListener() {
             @Override
@@ -422,6 +431,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                         adapterSimple.notifyDataSetChanged();
                         loadCount = arrayList.size();
+                        ;
                         if (everyPage == 0)
                             everyPage = loadCount;
                     }
@@ -479,7 +489,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 Log.i("commentReplay","sendData() flag:" + flag + "   o:" + o);
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     commend_write_et.setText("");
-                    changeKeyboard(false);
+                    changeKeyboard(false,false);
                     if(isAddForm){
                         ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
                         Log.i("commentReplay","sendData() arrayList:" + arrayList.size());
@@ -528,13 +538,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void changeKeyboard(boolean isShow){
-        isShowKeyboard = isShow;
-        if(isShow){
+    private void changeKeyboard(boolean isShowEt,boolean isShowboard){
+        isShowKeyboard = isShowboard;
+        if(isShowEt){
             commend_write_tv.setVisibility(View.GONE);
             commend_write_et.setVisibility(View.VISIBLE);
             commend_write_et.requestFocus();
-            ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
+            if(isShowboard)ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
             sendTv.setVisibility(View.VISIBLE);
             writePen.setVisibility(View.GONE);
         }else{
@@ -550,7 +560,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onBackPressed() {
         if(isShowKeyboard){
-            changeKeyboard(false);
+            changeKeyboard(false,false);
         }else {
             super.onBackPressed();
         }
@@ -569,12 +579,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 if(!currentUrl.equals(oldUrl)){
                     commend_write_et.setText("");
                 }
-                changeKeyboard(true);
+                changeKeyboard(true,true);
                 break;
             case R.id.title:
             case R.id.activityLayout:
                 oldUrl = currentUrl;
-                changeKeyboard(false);
+                changeKeyboard(false,false);
                 commend_write_et.setHint(" 写评论");
                 break;
         }

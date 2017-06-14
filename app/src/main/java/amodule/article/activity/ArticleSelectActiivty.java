@@ -241,7 +241,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             XHClick.mapStat(this, "a_ArticleEdit", "下一步", "返回");
         } else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
             intent.setClass(this,VideoEditActivity.class);
+
+        intent.putExtra("code",uploadArticleData.getCode());
         startActivity(intent);
+        sqLite.deleteById(draftId);
         tjClosePage();
     }
 
