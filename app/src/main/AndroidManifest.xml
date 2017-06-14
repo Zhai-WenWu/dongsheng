@@ -688,6 +688,7 @@
             android:name="amodule.user.activity.FriendHome"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity

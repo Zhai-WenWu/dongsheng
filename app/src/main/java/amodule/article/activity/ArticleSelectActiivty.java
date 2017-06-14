@@ -100,6 +100,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         }else if(1 == uploadArticleData.getIsOriginal()){
             isCheck = 1;
             reprintImg.setImageResource(R.drawable.i_article_select_yes);
+            reprintLink.setText(uploadArticleData.getRepAddress());
         }
 
         data = new ArrayList<>();

@@ -663,7 +663,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         Tools.showToast(this, "内容已保存");
                     break;
             }
-
             saveDraft();
             finshActivity();
         } else {
@@ -686,6 +685,10 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     }
 
+    public Class<?> getIntentClass() {
+        return ArticleEidtActiivty.class;
+    }
+
     private void finshActivity() {
         switch (mPageTag) {
             case mVideoPageTag:
@@ -694,6 +697,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             case mArticlePageTag:
                 XHClick.mapStat(this, "a_ArticleEdit", "关闭页面", "");
                 break;
+        }
+        if(!TextUtils.isEmpty(code)) {
+            Intent intent = new Intent(EditParentActivity.this, getIntentClass());
+            intent.putExtra("code", code);
+            startActivity(intent);
         }
         EditParentActivity.this.finish();
     }

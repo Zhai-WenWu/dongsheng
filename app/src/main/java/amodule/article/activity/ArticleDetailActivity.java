@@ -26,11 +26,9 @@ import com.xiangha.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.ls.LSInput;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -627,6 +625,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 intent.putExtra("code", code);
                 startActivity(intent);
                 statistics("更多", "编辑");
+                ArticleDetailActivity.this.finish();
             }
         }).addButton("删除", new View.OnClickListener() {
             @Override

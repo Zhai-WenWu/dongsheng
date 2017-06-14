@@ -592,9 +592,11 @@ public class FriendHome extends BaseActivity {
 								}
 							}
 						}
-						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType) && !"0".equals(dataType)
-								&& !TextUtils.isEmpty(actionDel) && "2".equals(actionDel)) {
-							updateTabNum();
+						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType) && !"0".equals(dataType)) {
+							if (!TextUtils.isEmpty(actionDel) && "2".equals(actionDel))
+								updateTabNum(true);
+							else if (!TextUtils.isEmpty(state) && UploadStateChangeBroadcasterReceiver.STATE_SUCCESS.equals(state))
+								updateTabNum(false);
 						}
 						//文章、视频详情页的关注，并且是成功了才会有这个值。
 						if (!TextUtils.isEmpty(actionAtt)) {
@@ -606,15 +608,29 @@ public class FriendHome extends BaseActivity {
 		receiver.register(this);
 	}
 
-	private void updateTabNum() {
+	private void updateTabNum(boolean isDel) {
 		View view1 = tabMainMyself.getChildAt(tabIndex);
 		View view2 = tabMainMyselfFloat.getChildAt(tabIndex);
 		TextView tv = (TextView) view1.findViewById(R.id.tab_data);
 		int num1 = Integer.parseInt(tv.getText().toString());
-		tv.setText(--num1 + "");
+		if (isDel)
+			--num1;
+		else
+			++num1;
+		if (num1 > 0)
+			tv.setText(num1 + "");
+		else
+			tv.setText(0 + "");
 		TextView tv2 = (TextView) view2.findViewById(R.id.tab_data);
 		int num2 = Integer.parseInt(tv2.getText().toString());
-		tv2.setText(--num2 + "");
+		if (isDel)
+			--num2;
+		else
+			++num2;
+		if (num2 > 0)
+			tv2.setText(num2 + "");
+		else
+			tv2.setText(0 + "");
 	}
 
 	private boolean mIsRefreshUserInfo = false;
