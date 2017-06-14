@@ -31,6 +31,7 @@ import amodule.main.activity.MainHome;
 public class HomeRecipeItem extends HomeItem {
 
     private TextView mTitle;
+    private TextView mTitleTop;
     private TextView mVideoTime;
     private TextView mNum1;
     private TextView mNum2;
@@ -62,6 +63,7 @@ public class HomeRecipeItem extends HomeItem {
     protected void initView() {
         super.initView();
         mTitle = (TextView) findViewById(R.id.title);
+        mTitleTop = (TextView) findViewById(R.id.title_top);
         mNum1 = (TextView) findViewById(R.id.num1);
         mNum2 = (TextView) findViewById(R.id.num2);
         mVideoTime = (TextView) findViewById(R.id.video_time);
@@ -133,10 +135,10 @@ public class HomeRecipeItem extends HomeItem {
                 mDataMap.put("isADShow", "1");
             }
         }
+        String type = mModuleBean.getType();
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
-        containerParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_15);
+        containerParams.topMargin = getResources().getDimensionPixelSize("recomv1".equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
         if (mModuleBean != null) {
-            String type = mModuleBean.getType();
             if (!TextUtils.isEmpty(type)) {
                 if ("day".equals(type)) {
                     if (mPosition == 0)
@@ -237,7 +239,13 @@ public class HomeRecipeItem extends HomeItem {
         }
         String lineText = (TextUtils.isEmpty(desc) || TextUtils.isEmpty(title) ? "" : " | ");
         String titleText = title + lineText + desc;
-        if (!TextUtils.isEmpty(titleText) && mTitle != null) {
+        if ("recomv1".equals(type)) {
+            if (!TextUtils.isEmpty(titleText) && mTitleTop != null) {
+
+                mTitleTop.setText(titleText);
+                mTitleTop.setVisibility(View.VISIBLE);
+            }
+        } else if (!TextUtils.isEmpty(titleText) && mTitle != null) {
             mTitle.setText(titleText);
             mTitle.setVisibility(View.VISIBLE);
         }
@@ -279,6 +287,8 @@ public class HomeRecipeItem extends HomeItem {
     @Override
     protected void resetView() {
         super.resetView();
+        if (viewIsVisible(mTitleTop))
+            mTitleTop.setVisibility(View.GONE);
         if (viewIsVisible(mTitle))
             mTitle.setVisibility(View.GONE);
         if (viewIsVisible(mVideoTime))
