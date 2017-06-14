@@ -15,10 +15,14 @@
     <RelativeLayout
         android:id="@+id/bar_title"
         android:layout_width="match_parent"
-        android:background="@color/common_top_bg"
         android:layout_height="@dimen/dp_45">
 
-    <include
-        layout="@layout/c_view_bar_title"/>
+        <include
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            layout="@layout/a_bar_item_back" />
     </RelativeLayout>
 </RelativeLayout>

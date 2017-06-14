@@ -52,7 +52,7 @@ public class PlayVideo extends BaseActivity {
     }
 
     private void init() {
-        initStatusBar();
+//        initStatusBar();
         findViewById(R.id.back).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
