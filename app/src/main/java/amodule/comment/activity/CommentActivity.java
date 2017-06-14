@@ -239,7 +239,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     startActivity(intent);
                     return;
                 }
-                XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
+                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
                 XHClick.mapStat(CommentActivity.this,likeTongjiId,likeTwoLeven,"");
                 String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id;
                 ReqEncyptInternet.in().doEncypt(StringManager.api_likeForum, params, new InternetCallback(CommentActivity.this) {
@@ -327,6 +327,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             from = Integer.parseInt(fromType);
         }
 
+        //TODO
         if(TextUtils.isEmpty(type)) {
             type = "1";
             code = "520";
@@ -351,8 +352,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             Tools.showToast(this, "类型不对");
             finish();
         }
-
-
 
         loadManager.showProgressBar();
         loadManager.setLoading(downRefreshList, adapterSimple, true, new View.OnClickListener() {
@@ -423,7 +422,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
                         adapterSimple.notifyDataSetChanged();
                         loadCount = arrayList.size();
-                        ;
                         if (everyPage == 0)
                             everyPage = loadCount;
                     }

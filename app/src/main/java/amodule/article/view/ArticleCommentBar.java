@@ -109,7 +109,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
         }
         praiseNum = Integer.parseInt(map.get("likeNumber"));
-        praiseText.setText("赞" + praiseNum);
+        praiseText.setText(praiseNum == 0 ? "赞" : "" + praiseNum);
 
         String commentNum = map.get("commentNumber");
         isSofa = "0".equals(commentNum);
@@ -199,7 +199,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                         if(flag >= ReqEncyptInternet.REQ_OK_STRING){
 
                             if(onCommentSuccessCallback != null){
-                                onCommentSuccessCallback.onCommentSuccess(isSofa);
+                                onCommentSuccessCallback.onCommentSuccess(isSofa,obj);
                             }
                             if(isSofa) {
                                 isSofa = !isSofa;
@@ -268,7 +268,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     private OnCommentSuccessCallback onCommentSuccessCallback;
     public interface OnCommentSuccessCallback{
-        public void onCommentSuccess(boolean isSofa);
+        public void onCommentSuccess(boolean isSofa,Object obj);
     }
 
     public void setOnCommentSuccessCallback(OnCommentSuccessCallback onCommentSuccessCallback) {

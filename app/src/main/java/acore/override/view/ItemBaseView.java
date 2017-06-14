@@ -68,6 +68,10 @@ public class ItemBaseView extends RelativeLayout {
 
     public void setViewImage(final ImageView v, String value) {
         v.setVisibility(View.VISIBLE);
+        if(TextUtils.isEmpty(value)){
+            v.setVisibility(View.GONE);
+            return;
+        }
         // 异步请求网络图片
         if (value.indexOf("http") == 0) {
             if (value.length() < 10)

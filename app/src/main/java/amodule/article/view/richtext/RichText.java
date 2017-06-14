@@ -966,6 +966,10 @@ public class RichText extends EditText implements TextWatcher {
         if (TextUtils.isEmpty(text)) {
             return;
         }
+        if(onSelectContainsType != null)
+            onSelectContainsType.onSelectBold(contains(FORMAT_BOLD));
+        if(onSelectContainsType != null)
+            onSelectContainsType.onSelectUnderline(contains(FORMAT_UNDERLINED));
         int textLength = text.length();
         if (selStart > 0 && selStart < textLength) {
             //遍历link的array
@@ -987,8 +991,8 @@ public class RichText extends EditText implements TextWatcher {
                     CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
                     for (CharacterStyle span : spans) {
                         if (span instanceof RichURLSpan) {
-                            if (mOnSelectLinkCallback != null) {
-                                mOnSelectLinkCallback.onSelectLink(linkMap.get(KEY_URL), desc);
+                            if (onSelectContainsType != null) {
+                                onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
                             }
                             this.setSelection(textLength);
                             break;
@@ -1003,17 +1007,15 @@ public class RichText extends EditText implements TextWatcher {
         return linkMapArray;
     }
 
-    private OnSelectLinkCallback mOnSelectLinkCallback;
+    private OnSelectContainsType onSelectContainsType;
 
-    public interface OnSelectLinkCallback {
+    public void setOnSelectTypeCallback(OnSelectContainsType onSelectContainsType) {
+        this.onSelectContainsType = onSelectContainsType;
+    }
+
+    public interface OnSelectContainsType{
+        public void onSelectBold(boolean isSelected);
+        public void onSelectUnderline(boolean isSelected);
         public void onSelectLink(String url, String desc);
-    }
-
-    public OnSelectLinkCallback getOnSelectLinkCallback() {
-        return mOnSelectLinkCallback;
-    }
-
-    public void setOnSelectLinkCallback(OnSelectLinkCallback mOnSelectLinkCallback) {
-        this.mOnSelectLinkCallback = mOnSelectLinkCallback;
     }
 }

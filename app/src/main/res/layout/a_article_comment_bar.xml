@@ -9,7 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <ImageView
             android:layout_width="match_parent"
@@ -74,7 +77,7 @@
 
                 <LinearLayout
                     android:id="@+id/praise_button"
-                    android:layout_width="@dimen/dp_94"
+                    android:layout_width="@dimen/dp_89"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/comment_edit_fake"
                     android:layout_alignBottom="@+id/comment_edit_fake"
@@ -147,6 +150,7 @@
                         android:id="@+id/comment_send_progress"
                         android:layout_width="@dimen/dp_22"
                         android:layout_height="@dimen/dp_22"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:paddingLeft="@dimen/dp_13"
                         android:visibility="gone"/>
