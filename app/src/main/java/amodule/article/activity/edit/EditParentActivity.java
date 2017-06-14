@@ -58,6 +58,9 @@ import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.recordervideo.db.RecorderVideoData;
 import xh.windowview.XhDialog;
 
+import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
+import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
+
 /**
  * PackageName : amodule.article.activity
  * Created by MrTrying on 2017/5/19 09:19.
@@ -177,9 +180,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        editBottomControler.setEditLayoutVisibility(false);
-                        break;
                     case MotionEvent.ACTION_MOVE:
+                        editBottomControler.setEditLayoutVisibility(false);
                         ToolsDevice.keyboardControl(false, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
                         break;
                 }
@@ -335,6 +337,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                                 return;
                             }
                             Intent intent = new Intent(EditParentActivity.this, ArticleVideoSelectorActivity.class);
+                            ArrayList<String> imageArray = mixLayout.getVideoArrayList();
+                            intent.putStringArrayListExtra(ArticleVideoSelectorActivity.EXTRA_UNSELECT_VIDEO,imageArray);
                             startActivityForResult(intent, REQUEST_SELECT_VIDEO);
                             switch (mPageTag) {
                                 case mArticlePageTag:
@@ -408,11 +412,15 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         @Override
                         public void onTextBold() {
                             mixLayout.setupTextBold();
+                            if(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_BOLD))
+                                editBottomControler.setTextBoldImageSelection(true);
                         }
 
                         @Override
                         public void onTextUnderLine() {
                             mixLayout.setupUnderline();
+                            if(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_UNDERLINED))
+                                editBottomControler.setTextUnderlineImageSelection(true);
                         }
 
                         @Override
@@ -449,18 +457,18 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     mixLayout.setSingleVideo(TYPE_VIDEO.equals(getType()));
                     mixLayout.setXHServiceData(uploadArticleData.getContent());
 
-
+                    mixLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mixLayout.getCurrentEditText().getRichText().clearFocus();
+                            editTitle.requestFocus();
+                            ToolsDevice.keyboardControl(true, EditParentActivity.this, editTitle);
+                        }
+                    });
                 }
             }
         };
-        mixLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mixLayout.getCurrentEditText().getRichText().clearFocus();
-                editTitle.requestFocus();
-                ToolsDevice.keyboardControl(true, EditParentActivity.this, editTitle);
-            }
-        });
+
         //通过code判断从数据库拿数据还是从服务端拿数据
         code = getIntent().getStringExtra("code");
 
@@ -572,7 +580,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         Log.i("articleUpload", "saveDraft() content:" + content);
         uploadArticleData.setContent(content);
         Log.i("tzy", "content = " + content);
-        uploadArticleData.setVideoArray(mixLayout.getVideoArray());
+        uploadArticleData.setVideoArray(mixLayout.getVideoArrayMap());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());
         uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
 
@@ -617,6 +625,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             timer.purge();
             timer = null;
         }
+        if(isKeyboradShow)
+            ToolsDevice.keyboardControl(false,this,editTitle);
     }
 
     @Override

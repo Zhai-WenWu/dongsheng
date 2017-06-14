@@ -74,9 +74,6 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         showImageGif = (ImageView) findViewById(R.id.image_gif);
         loadProgress = (ImageView) findViewById(R.id.load_progress);
         itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
-//        int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-//        int height = width * 9 / 16;
-//        showImage.setLayoutParams(new LayoutParams(width,height));
 
         showImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
@@ -112,6 +109,20 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                 LoadImage.with(getContext())
                         .load(imageUrl)
                         .build()
+                        .listener(new RequestListener<GlideUrl, Bitmap>() {
+                            @Override
+                            public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
+                                int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+                                int height = width * 9 / 16;
+                                showImage.setLayoutParams(new LayoutParams(width,height));
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
+                                return false;
+                            }
+                        })
                         .into(new SubBitmapTarget() {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -141,6 +152,20 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
             LoadImage.with(getContext())
                     .load(imageUrl)
                     .build()
+                    .listener(new RequestListener<GlideUrl, Bitmap>() {
+                        @Override
+                        public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
+                            int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+                            int height = width * 9 / 16;
+                            showImage.setLayoutParams(new LayoutParams(width,height));
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
+                            return false;
+                        }
+                    })
                     .into(new SubBitmapTarget() {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -228,7 +253,22 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                 if (requestBuilder != null) {
                     itemGifHint.setVisibility(View.GONE);
                     itemGifHint.setImageResource(R.drawable.i_dish_detail_gif_hint);
-                    requestBuilder.into(new SubBitmapTarget() {
+                    requestBuilder
+                            .listener(new RequestListener<GlideUrl, Bitmap>() {
+                                @Override
+                                public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
+                                    int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+                                    int height = width * 9 / 16;
+                                    showImage.setLayoutParams(new LayoutParams(width,height));
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
+                                    return false;
+                                }
+                            })
+                            .into(new SubBitmapTarget() {
                         @Override
                         public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                             imageWidth = bitmap.getWidth();
