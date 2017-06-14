@@ -138,14 +138,6 @@ public class ChangeSendDialog extends Dialog {
 //            addButton("3", R.drawable.pulish_video, "小视频");
 //            itemNum++;
 //        }
-        if (LoginManager.isShowRecorderVideoButton()) {
-            addButton("4", R.drawable.pulish_record, "录制菜谱");
-            itemNum++;
-        }
-        if (LoginManager.isShowSendVideoDishButton()) {
-            addButton("5", R.drawable.pulish_video_dish, "发视频菜谱");
-            itemNum++;
-        }
 
         if (dishVideoMap != null && dishVideoMap.size() > 0) {
             String img = dishVideoMap.get("img");
