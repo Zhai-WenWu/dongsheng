@@ -10,9 +10,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.xiangha.R;
+
+import java.util.ArrayList;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
@@ -28,10 +31,13 @@ public class VideoPreviewActivity extends BaseActivity {
     private RelativeLayout mVideoContainer;
     private VideoView mVideoView;
     private ImageView mVideoBack;
+    private TextView mTitle;
 
     private String mVideoPath;
     private int mSeekTo;
+    private boolean mCurrVideoIsSelected = false;
 
+    private ArrayList<String> mHadSelectedVideos = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +46,17 @@ public class VideoPreviewActivity extends BaseActivity {
         initActivity("", 2, 0, 0, R.layout.video_preview_layout);
         Intent intent = getIntent();
         mVideoPath = intent.getStringExtra(MediaStore.Video.Media.DATA);
+        mHadSelectedVideos = intent.getStringArrayListExtra(ArticleVideoSelectorActivity.EXTRA_UNSELECT_VIDEO);
         initView();
         addListener();
         if (TextUtils.isEmpty(mVideoPath))
             return;
         mVideoContainer.setVisibility(View.VISIBLE);
         mVideoView.setVideoPath(mVideoPath);
+        if (!TextUtils.isEmpty(mVideoPath) && mHadSelectedVideos.size() > 0 && mHadSelectedVideos.contains(mVideoPath))
+            mCurrVideoIsSelected = true;
+        if (mCurrVideoIsSelected)
+            mTitle.setText("不能重复选择本视频");
     }
 
     private void initView() {
@@ -53,6 +64,7 @@ public class VideoPreviewActivity extends BaseActivity {
         mVideoContainer = (RelativeLayout) findViewById(R.id.video_container);
         mVideoView = (VideoView) findViewById(R.id.article_pre_videoview);
         mVideoBack = (ImageView) findViewById(R.id.video_back);
+        mTitle = (TextView) findViewById(R.id.title);
     }
 
     private void addListener() {
@@ -73,7 +85,9 @@ public class VideoPreviewActivity extends BaseActivity {
         mVideoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (!TextUtils.isEmpty(mVideoPath)) {
+                if (mCurrVideoIsSelected) {
+                    return true;
+                } else if (!TextUtils.isEmpty(mVideoPath)) {
                     Intent intent = new Intent();
                     intent.putExtra(MediaStore.Video.Media.DATA, mVideoPath);
                     intent.putExtra(RecorderVideoData.video_img_path, FileToolsCammer.getImgPath(mVideoPath));

@@ -57,7 +57,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private PopupWindow mCategoryPopup;
     private ListView mFolderListView;
     private ArticleVideoFolderAdapter mCategoryAdapter;
-    private ArrayList<String> unselectVideos = new ArrayList<>();
+    private ArrayList<String> hadSelectedVideos = new ArrayList<>();
 
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
     private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
@@ -80,7 +80,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             if(bundle.getStringArrayList(EXTRA_UNSELECT_VIDEO) != null)
-                unselectVideos.addAll(bundle.getStringArrayList(EXTRA_UNSELECT_VIDEO));
+                hadSelectedVideos.addAll(bundle.getStringArrayList(EXTRA_UNSELECT_VIDEO));
         }
     }
 
@@ -246,6 +246,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                             }
                             Intent intent = new Intent(ArticleVideoSelectorActivity.this, VideoPreviewActivity.class);
                             intent.putExtra(MediaStore.Video.Media.DATA, video.get(MediaStore.Video.Media.DATA));
+                            intent.putStringArrayListExtra(EXTRA_UNSELECT_VIDEO, hadSelectedVideos);
                             startActivityForResult(intent, SELECTED_VIDEO);
                         }
                     });
