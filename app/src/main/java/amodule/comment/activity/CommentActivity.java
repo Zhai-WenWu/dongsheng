@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -80,7 +80,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initView() {
-        final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.a_comment_keyboard_parent);
+        final LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.a_comment_keyboard_parent);
         final int dp45 = Tools.getDimen(this,R.dimen.dp_45);
         rl.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
