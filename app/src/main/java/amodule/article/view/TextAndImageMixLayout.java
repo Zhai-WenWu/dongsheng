@@ -2,6 +2,7 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -80,11 +81,7 @@ public class TextAndImageMixLayout extends LinearLayout
     /** 设置上传需要数据 */
     public void setXHServiceData(String content) {
         if(TextUtils.isEmpty(content))return;
-        try {
-            content = URLDecoder.decode(content,"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        content = Uri.decode(content);
         if(!"2".equals(type))
             removeAllViews();
 

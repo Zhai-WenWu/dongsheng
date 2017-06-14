@@ -1,5 +1,6 @@
 package amodule.article.db;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import org.apache.http.protocol.HTTP;
@@ -207,7 +208,7 @@ public class UploadArticleData {
         uploadTextData.append(getClassCode());
         uploadTextData.append("&content=");
         try {
-            uploadTextData.append(URLEncoder.encode(getContent(), HTTP.UTF_8));
+            uploadTextData.append(Uri.encode(getContent(), HTTP.UTF_8));
         }catch (Exception e){
             e.printStackTrace();
         }
