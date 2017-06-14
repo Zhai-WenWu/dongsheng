@@ -97,7 +97,7 @@ public class ShoppingOrderActivity extends BaseActivity implements OnClickListen
 		payType = new MallPayType(this);
 		initView();
 		initData();
-		initTitle();
+//		initTitle();
 		XHClick.track(this,"浏览确认订单页");
 	}
 

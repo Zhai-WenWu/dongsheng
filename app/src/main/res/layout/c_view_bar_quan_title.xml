@@ -137,6 +137,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_4"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 

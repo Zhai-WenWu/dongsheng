@@ -50,7 +50,7 @@ public class PaySuccedActvity extends BaseActivity implements OnClickListener{
 		}
 		initActivity("", 3, 0, 0, R.layout.a_mall_pay_succee);
 		initView();
-		initTitle();
+//		initTitle();
 		XHClick.track(this,"支付成功页");
 	}
 	private void initTitle() {

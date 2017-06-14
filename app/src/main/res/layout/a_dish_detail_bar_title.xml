@@ -30,6 +30,7 @@
         android:layout_centerVertical="true"
         android:baselineAligned="false"
         android:gravity="center_vertical"
+        android:layout_marginRight="@dimen/dp_8"
         android:orientation="horizontal" >
 
         <RelativeLayout
