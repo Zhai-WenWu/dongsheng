@@ -242,9 +242,8 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         } else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
             intent.setClass(this,VideoEditActivity.class);
 
-        intent.putExtra("code",uploadArticleData.getCode());
+        intent.putExtra("draftId",draftId);
         startActivity(intent);
-        sqLite.deleteById(draftId);
         tjClosePage();
     }
 

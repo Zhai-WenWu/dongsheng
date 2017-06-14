@@ -464,6 +464,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         }
                     });
                 }
+                if (TextUtils.isEmpty(code)) timingSave();
             }
         };
 
@@ -472,20 +473,20 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
         if (TextUtils.isEmpty(code)) {
             mixLayout.setSecondEdit(true);
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     int draftId = getIntent().getIntExtra("draftId", 0);
                     if (draftId > 0) {
                         uploadArticleData = sqLite.selectById(draftId);
+                        code = uploadArticleData.getCode();
                     } else {
                         uploadArticleData = sqLite.getDraftData();
+                        code = uploadArticleData.getCode();
                     }
                     handler.sendEmptyMessage(0);
                 }
             }).start();
-            timingSave();
         } else {
             StringBuilder sbuilder = new StringBuilder().append("code=").append(code).append("&type=RAW");
             ReqEncyptInternet.in().doEncypt(getEditApi(), sbuilder.toString(), new InternetCallback(this) {
@@ -676,6 +677,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     }).setCanselButton("清空并退出", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    sqLite.deleteById(uploadArticleData.getId());
                     xhDialog.cancel();
                     finshActivity();
                 }
