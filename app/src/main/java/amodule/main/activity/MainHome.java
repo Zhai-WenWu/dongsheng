@@ -398,7 +398,7 @@ public class MainHome extends MainBaseActivity {
         }
         long nowTime= System.currentTimeMillis();
         if(startTime>0){
-            XHClick.saveStatictisFile("home","recomv1","","","","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+            XHClick.saveStatictisFile("home",recommedType,"","","","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
             //置数据
             setRecommedTime(0);
         }

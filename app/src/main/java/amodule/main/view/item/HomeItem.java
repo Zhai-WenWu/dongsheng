@@ -112,7 +112,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 public void onClick(View v) {
                     if (mRefreshCallBack != null)
                         mRefreshCallBack.viewOnClick(true);
-                    if (mModuleBean != null && "recom".equals(mModuleBean.getType()))
+                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
                         XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
@@ -365,7 +365,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 String eventId = "";
                 String twoLevel = "";
                 switch (type) {
-                    case "recom":
+                    case MainHome.recommedType:
                         eventId = "a_recommend";
                         twoLevel = "点击列表内容";
                         break;
@@ -415,7 +415,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             if (!TextUtils.isEmpty(type)) {
                 String eventId = "";
                 switch (type) {
-                    case "recom":
+                    case MainHome.recommedType:
                         eventId = "a_recommend_adv";
                         break;
                     case "video":
@@ -445,7 +445,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         if(!TextUtils.isEmpty(viewType)&& HomeFragment.MODULETOPTYPE.equals(viewType)){
             return "top";
         }
-        return "recom";
+        return MainHome.recommedType;
     }
 
     /**

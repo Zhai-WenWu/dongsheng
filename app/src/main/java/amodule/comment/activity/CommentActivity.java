@@ -266,7 +266,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             }
 
             @Override
-            public void onContentReplayClick(String comment_id,String replay_id,String replay_code, String replay_name,String type,boolean isShowKeyBoard) {
+            public void onContentReplayClick(String comment_id,String replay_id,String replay_code, String replay_name,String type,boolean isShowKeyBoard,boolean isMyselft) {
+                if(isMyselft) return;
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"回复",type);
                 changeKeyboard(true,isShowKeyBoard);
                 Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
@@ -477,7 +478,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             }catch (JSONException e){
                 e.printStackTrace();
             }
-            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + jsonArray.toString();
+            newParams = "type=" + type + "&code=" + code + "&content=" + jsonArray.toString();
         }else{
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }

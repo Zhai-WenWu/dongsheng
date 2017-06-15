@@ -154,7 +154,7 @@ public class ArticleCommentView extends ItemBaseView {
                     }
 
                     @Override
-                    public void onContentReplayClick(String comment_id,String replay_id, String replay_user_code, String replay_user_name, String type,boolean isShowKeyBoard) {
+                    public void onContentReplayClick(String comment_id,String replay_id, String replay_user_code, String replay_user_name, String type,boolean isShowKeyBoard,boolean isMyselft) {
                         gotoCommentActivity(comment_id, replay_id);
                         statistics("评论", type);
                     }
