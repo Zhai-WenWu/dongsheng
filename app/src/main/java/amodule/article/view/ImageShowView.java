@@ -52,6 +52,8 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     private int imageWidth = 0;
     private int imageHieght = 0;
     private String type = IMAGE;
+    private String idStr = "";
+    private boolean isWrapContent = false;
 
     public ImageShowView(Context context) {
         this(context, null);
@@ -94,6 +96,8 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
             jsonObject.put(IMAGE_GIF.equals(type) ? "gifurl" : "imageurl", imageUrl);
             jsonObject.put("width", imageWidth);
             jsonObject.put("height", imageHieght);
+            if(!TextUtils.isEmpty(idStr))
+                jsonObject.put("id", idStr);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -131,10 +135,11 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                                     imageHieght = bitmap.getHeight();
 
                                     int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                    int waith = newWaith;
-                                    if (imageWidth <= newWaith)
-                                        waith = 0;
-                                    UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+                                    if(isWrapContent){
+                                        if (imageWidth <= newWaith)
+                                            newWaith = 0;
+                                    }
+                                    UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
 
                                 }
                             }
@@ -174,10 +179,11 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                                 imageHieght = bitmap.getHeight();
 
                                 int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                int waith = newWaith;
-                                if (imageWidth <= newWaith)
-                                    waith = 0;
-                                UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+                                if(isWrapContent){
+                                    if (imageWidth <= newWaith)
+                                        newWaith = 0;
+                                }
+                                UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
 
                             }
                         }
@@ -275,10 +281,11 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                             imageHieght = bitmap.getHeight();
 
                             int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                            int waith = newWaith;
-                            if (imageWidth <= newWaith)
-                                waith = 0;
-                            UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
+                            if(isWrapContent){
+                                if (imageWidth <= newWaith)
+                                    newWaith = 0;
+                            }
+                            UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
 
                         }
                     });
@@ -374,11 +381,27 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         }
     }
 
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String idStr) {
+        this.idStr = idStr;
+    }
+
     public boolean isSecondEdit() {
         return isSecondEdit;
     }
 
     public void setSecondEdit(boolean secondEdit) {
         isSecondEdit = secondEdit;
+    }
+
+    public boolean isWrapContent() {
+        return isWrapContent;
+    }
+
+    public void setWrapContent(boolean wrapContent) {
+        isWrapContent = wrapContent;
     }
 }

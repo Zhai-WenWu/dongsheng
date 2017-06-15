@@ -11,6 +11,8 @@
         android:id="@+id/artilce_repint_source"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:visibility="gone"
         android:textColor="#B6B5B5"
         android:paddingBottom="@dimen/dp_26"
