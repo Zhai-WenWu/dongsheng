@@ -143,7 +143,7 @@ public class ViewCommentItem extends LinearLayout {
         if("2".equals(is_anchor)){
             commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
             if (mListener != null)
-                mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字",false);
+                mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字",false,false);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -234,8 +234,8 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     String ucode = cusstomMap.get("ucode");
                     boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
-                    if (mListener != null && !isShowContentClick && !isMyselft)
-                        mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字",true);
+                    if (mListener != null && !isShowContentClick)
+                        mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字",true,isMyselft);
                     isShowContentClick = false;
                 }
             });
@@ -355,7 +355,7 @@ public class ViewCommentItem extends LinearLayout {
                 Log.i("commentReplay","is_anchor:" + is_anchor);
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
                 if(mListener != null)
-                    mListener.onContentReplayClick(comment_id,replayMap.get("replay_id"),ucode,uName,"点击楼中楼文字",false);
+                    mListener.onContentReplayClick(comment_id,replayMap.get("replay_id"),ucode,uName,"点击楼中楼文字",false,false);
                 replayMap.put("is_anchor","1");
                 isReset = true;
             }
@@ -407,8 +407,8 @@ public class ViewCommentItem extends LinearLayout {
                 @Override
                 public void onCommentClick(View v, String userCode) {
                     boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
-                    if(mListener != null && !isMyselft)
-                        mListener.onContentReplayClick(comment_id,replayMap.get("replay_id"),ucode,uName,"点击楼中楼文字",true);
+                    if(mListener != null)
+                        mListener.onContentReplayClick(comment_id,replayMap.get("replay_id"),ucode,uName,"点击楼中楼文字",true,isMyselft);
                 }
             });
             multifunctionText.addStyle(contentBuilder.getContent(), contentBuilder.build());
@@ -472,8 +472,8 @@ public class ViewCommentItem extends LinearLayout {
             public void onClick(View v) {
                 String ucode = cusstomMap.get("ucode");
                 final boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
-                if(!isDelete && mListener != null && !isMyselft)
-                    mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),"点击回复按钮",true);
+                if(!isDelete && mListener != null)
+                    mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),"点击回复按钮",true,isMyselft);
             }
         });
         commentDelete.setText(isDelete ? "删除":"举报");
@@ -536,7 +536,7 @@ public class ViewCommentItem extends LinearLayout {
          * @param replay_user_name
          * @param type ：需要回复的触发形式：点击评论文字、点击回复文字、点击楼中楼文字
          */
-        public void onContentReplayClick(String comment_id,String replay_id,String replay_user_code,String replay_user_name,String type,boolean isShowKeyBoard);
+        public void onContentReplayClick(String comment_id,String replay_id,String replay_user_code,String replay_user_name,String type,boolean isShowKeyBoard,boolean isMySelft);
     }
 
     public interface OnUserInforListener{
