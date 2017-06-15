@@ -53,6 +53,8 @@
         android:id="@+id/ed_search_layout_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="1px"
+        android:paddingBottom="1px"
         android:background="@drawable/bg_round_999999_23"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
