@@ -142,8 +142,11 @@ public class ViewCommentItem extends LinearLayout {
         String is_anchor = dataMap.get("is_anchor");
         if("2".equals(is_anchor)){
             commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
-            if (mListener != null)
-                mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字",false,false);
+            if (mListener != null) {
+                String ucode = cusstomMap.get("ucode");
+                boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
+                mListener.onContentReplayClick(comment_id, null, cusstomMap.get("ucode"), cusstomMap.get("nick_name"), "点击评论文字", false, isMyselft);
+            }
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -354,8 +357,10 @@ public class ViewCommentItem extends LinearLayout {
             if("2".equals(is_anchor)){ //是否是锚点
                 Log.i("commentReplay","is_anchor:" + is_anchor);
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
-                if(mListener != null)
-                    mListener.onContentReplayClick(comment_id,replayMap.get("replay_id"),ucode,uName,"点击楼中楼文字",false,false);
+                if(mListener != null) {
+                    boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
+                    mListener.onContentReplayClick(comment_id, replayMap.get("replay_id"), ucode, uName, "点击楼中楼文字", false, isMyselft);
+                }
                 replayMap.put("is_anchor","1");
                 isReset = true;
             }

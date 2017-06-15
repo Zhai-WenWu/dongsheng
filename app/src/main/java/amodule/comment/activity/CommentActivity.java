@@ -273,7 +273,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
                 commend_write_et.setHint(" 回复" + replay_name);
                 currentUrl = StringManager.api_addReplay;
-                currentParams = "&commentId=" + comment_id + "&replyUcode=" + replay_code;
+                currentParams = "&commentId=" + comment_id + "&replayUcode=" + replay_code;
                 replayIndex = position;
                 if(!comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
                     commend_write_et.setText("");
