@@ -156,16 +156,32 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
             String styleData = mDataMap.get("styleData");
             ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(styleData);
             if (datas != null && !datas.isEmpty()) {
-                Map<String, String> data = datas.get(0);
-                if (data != null && data.size() > 0) {
-                    String imgUrl = data.get("url");
-                    if (!TextUtils.isEmpty(imgUrl)) {
-                        hasImg = true;
-                        loadImage(imgUrl, mImg);
+                String tempUrl = null;
+                for (Map<String, String> data : datas) {
+                    if (data != null && data.size() > 0) {
+                        String type = data.get("type");
+                        String imgUrl = data.get("url");
+                        if (!TextUtils.isEmpty(type) && "1".equals(type) && !TextUtils.isEmpty(imgUrl)) {
+                            hasImg = true;
+                            tempUrl = imgUrl;
+                            break;
+                        }
                     }
-                    String type = data.get("type");
-                    if (!TextUtils.isEmpty(type) && "2".equals(type))
-                        hasVideo = true;
+                }
+                if (hasImg && tempUrl != null) {
+                    loadImage(tempUrl, mImg);
+                } else {
+                    Map<String, String> data = datas.get(0);
+                    if (data != null && data.size() > 0) {
+                        String imgUrl = data.get("url");
+                        if (!TextUtils.isEmpty(imgUrl)) {
+                            hasImg = true;
+                            loadImage(imgUrl, mImg);
+                        }
+                        String type = data.get("type");
+                        if (!TextUtils.isEmpty(type) && "2".equals(type))
+                            hasVideo = true;
+                    }
                 }
             }
 
