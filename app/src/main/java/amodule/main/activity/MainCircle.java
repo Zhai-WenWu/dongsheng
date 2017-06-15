@@ -74,8 +74,6 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
 
     /** 初始化UI */
     private void initView() {
-        String colors = Tools.getColorStr(this, R.color.common_top_bg);
-        Tools.setStatusBarColor(this, Color.parseColor(colors));
         mTabs = (PagerSlidingTabStrip) findViewById(R.id.circle_tab);
         mViewPager = (ViewPager) findViewById(R.id.circle_viewpager);
         mViewPager.setOffscreenPageLimit(5);

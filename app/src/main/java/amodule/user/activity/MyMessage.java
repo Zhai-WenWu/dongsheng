@@ -115,8 +115,6 @@ public class MyMessage extends MainBaseActivity {
 	}
 
 	private void init() {
-		String colors = Tools.getColorStr(this, R.color.common_top_bg);
-		Tools.setStatusBarColor(this, Color.parseColor(colors));
 		// title初始化
 		TextView title = (TextView) findViewById(R.id.msg_title_tv);
 		// title.setPadding(Tools.dp2px(this, 30), 0, 0, 0);

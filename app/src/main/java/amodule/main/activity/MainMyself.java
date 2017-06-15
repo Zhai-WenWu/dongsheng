@@ -138,9 +138,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 //			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getStatusBarHeight(this));
 //			bar_title.setLayoutParams(layout);
 //		}
-		String colors = Tools.getColorStr(this, R.color.common_top_bg);
-		Tools.setStatusBarColor(this, Color.parseColor(colors));
-
 		goManagerInfo = (TextView) findViewById(R.id.goManagerInfo);
 		goManagerInfo.setText("马甲");
 		goManagerInfo.setTextColor(0xffffff);
