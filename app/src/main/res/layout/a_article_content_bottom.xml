@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2017-05-25"
-                android:textColor="#DCDCDC"
+                android:textColor="#B6B5B5"
                 android:textSize="@dimen/sp_14"/>
 
             <TextView
@@ -51,7 +51,7 @@
                 android:text="阅读86425"
                 android:layout_toRightOf="@+id/article_publish_date"
                 android:layout_marginLeft="@dimen/dp_35"
-                android:textColor="#DCDCDC"
+                android:textColor="#B6B5B5"
                 android:textSize="@dimen/sp_14"/>
 
             <TextView
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="举报"
                 android:visibility="gone"
-                android:textColor="#DCDCDC"
+                android:textColor="#B6B5B5"
                 android:textSize="@dimen/sp_14"/>
 
         </RelativeLayout>
