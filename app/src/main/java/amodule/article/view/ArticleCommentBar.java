@@ -121,7 +121,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.comment_edit_fake:
-                doComment(getTextHint());
+                doComment(isSofa ? "抢沙发":getTextHint());
                 statistics("底部栏", "评论输入框");
                 break;
             case R.id.praise_button:
