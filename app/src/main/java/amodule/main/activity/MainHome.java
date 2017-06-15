@@ -2,6 +2,7 @@ package amodule.main.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -75,6 +76,8 @@ public class MainHome extends MainBaseActivity {
      * 创建View
      */
     private void initView() {
+        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
         home_tab = (acore.widget.PagerSlidingTabStrip) findViewById(R.id.home_tab);
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         mFenlei = (LinearLayout) findViewById(R.id.fenlei_linear);

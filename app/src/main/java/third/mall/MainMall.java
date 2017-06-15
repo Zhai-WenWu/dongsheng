@@ -1,6 +1,7 @@
 package third.mall;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -77,6 +78,8 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 	 * 初始化布局
 	 */
 	private void initView() {
+		String colors = Tools.getColorStr(this, R.color.common_top_bg);
+		Tools.setStatusBarColor(this, Color.parseColor(colors));
 //		RelativeLayout mall_num_rela= (RelativeLayout) findViewById(R.id.mall_num_rela);
 //		mall_num_rela.setOnClickListener(this);
 //		mall_num_rela.setVisibility(View.VISIBLE);

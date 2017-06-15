@@ -2,6 +2,7 @@ package amodule.main.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -137,6 +138,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 //			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getStatusBarHeight(this));
 //			bar_title.setLayoutParams(layout);
 //		}
+		String colors = Tools.getColorStr(this, R.color.common_top_bg);
+		Tools.setStatusBarColor(this, Color.parseColor(colors));
 
 		goManagerInfo = (TextView) findViewById(R.id.goManagerInfo);
 		goManagerInfo.setText("马甲");

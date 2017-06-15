@@ -152,6 +152,7 @@ public class Main extends Activity implements OnClickListener {
             Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
         LogManager.print("i", "Main -------- onCreate");
+
         // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
         if (savedInstanceState != null) {
             defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
@@ -300,11 +301,12 @@ public class Main extends Activity implements OnClickListener {
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
         setContentView(R.layout.xh_main);
 //        ToolsDevice.modifyStateTextColor(this);//StatusBar 背景色为深色，不需要修改文字颜色
-        if (Tools.isShowTitle()) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        String color = Tools.getColorStr(this, R.color.common_top_bg);
-        Tools.setStatusBarColor(this, Color.parseColor(color));
+//        if (Tools.isShowTitle()) {
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        }
+//        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+//        Tools.setStatusBarColor(this, Color.parseColor(colors));
+//        StatusBarCompat.setStatusBarColor(this,R.color.common_top_bg,true);
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
         //实例化有用到mRootLayout，必须按着顺序执行
         mBuoy = new MainBuoy(this);
