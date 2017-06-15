@@ -209,12 +209,15 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         editTitle = (EditText) findViewById(R.id.edit_title);
         editTitle.setHint(ss);
         editTitle.addTextChangedListener(new TextWatcher() {
+            String preStr = "";
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                preStr = s.toString();
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editTitle.setTextSize(Tools.getDimenSp(EditParentActivity.this, R.dimen.sp_24));
             }
 
             @Override
@@ -472,7 +475,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         code = getIntent().getStringExtra("code");
 
         if (TextUtils.isEmpty(code)) {
-            mixLayout.setSecondEdit(true);
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -488,6 +491,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 }
             }).start();
         } else {
+            mixLayout.setSecondEdit(true);
             StringBuilder sbuilder = new StringBuilder().append("code=").append(code).append("&type=RAW");
             ReqEncyptInternet.in().doEncypt(getEditApi(), sbuilder.toString(), new InternetCallback(this) {
                 @Override

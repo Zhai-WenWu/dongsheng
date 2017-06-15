@@ -20,7 +20,7 @@
     <style name="article_select_check">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/dp_20</item>
+        <item name="android:layout_marginLeft">@dimen/dp_14</item>
         <item name="android:layout_marginRight">@dimen/dp_20</item>
     </style>
 </resources>

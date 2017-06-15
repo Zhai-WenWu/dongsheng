@@ -372,8 +372,11 @@ public class ArticleDetailActivity extends BaseActivity {
                                     }
                                     break;
                                 case ARTICLE_RECM_1:
+                                case ARTICLE_RECM_2:
                                     if (!TextUtils.isEmpty(adStr)) {
-                                        adRcomDataArray = StringManager.getListMapByJson(adStr);
+                                        Map<String,String> adMap = StringManager.getFirstMap(adStr);
+                                        if(adMap != null)
+                                            adRcomDataArray.add(adMap);
                                         Log.i("tzy", "adRcomDataArray = " + adRcomDataArray.toString());
                                         handlerAdData();
                                         detailAdapter.notifyDataSetChanged();

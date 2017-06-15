@@ -434,6 +434,10 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param content
      */
     public void addVideo(String coverImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
+        if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
+            Tools.showToast(getContext(),"文件已损坏");
+            return;
+        }
         int videoCount = 0;
         for (int index = 0; index < getChildCount(); index++) {
             View baseView = getChildAt(index);

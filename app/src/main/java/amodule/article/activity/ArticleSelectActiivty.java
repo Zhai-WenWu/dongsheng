@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -119,13 +120,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = (TextView) view.findViewById(R.id.article_select_classify_text);
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
                 if(position % 3 == 0){
-                    layoutParams.setMargins(0,0,itemSpace - dp3,0);
+                    ((LinearLayout)textView.getParent()).setGravity(Gravity.LEFT);
                 }else if(position % 3 == 2) {
-                    layoutParams.setMargins(itemSpace - dp3,0,0,0);
-                }else{
-                    layoutParams.setMargins(itemSpace,0,itemSpace,0);
+                    ((LinearLayout)textView.getParent()).setGravity(Gravity.RIGHT);
                 }
                 if(data.get(position).get("code").equals(checkCode)){
                     textView.setBackgroundResource(R.drawable.article_select_classify_yes);
