@@ -2,6 +2,7 @@ package amodule.article.activity;
 
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -96,6 +97,15 @@ public class VideoPreviewActivity extends BaseActivity {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                Tools.showToast(VideoPreviewActivity.this, "视频文件损坏，无法预览");
+                VideoPreviewActivity.this.finish();
+                return true;
             }
         });
 

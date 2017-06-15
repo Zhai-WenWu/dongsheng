@@ -30,7 +30,7 @@
             android:layout_above="@+id/temp"
             android:layout_marginBottom="@dimen/dp_28"
             android:layout_centerHorizontal="true"
-            android:text="轻触选择"
+            android:text="轻触视频选择"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/c_white_text"/>
 
