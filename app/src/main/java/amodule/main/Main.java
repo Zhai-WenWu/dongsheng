@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -319,11 +318,12 @@ public class Main extends Activity implements OnClickListener {
         changeSendLayout.setVisibility(View.GONE);
         int btn_width = ToolsDevice.getWindowPx(this).widthPixels / 5;
         int padding = (btn_width - Tools.getDimen(this, R.dimen.dp_55)) / 2;
+        int dp_3 = Tools.getDimen(this,R.dimen.dp_3);
         int cha = padding / 4;
         cha = 0;
         changeSendLayout.getLayoutParams().width = btn_width;
         btn_changeSend.getLayoutParams().width = btn_width;
-        btn_changeSend.setPadding(padding + cha, 0, padding - cha, 0);
+        btn_changeSend.setPadding(padding + cha+dp_3, dp_3, padding - cha+dp_3, dp_3);
     }
 
     /**
