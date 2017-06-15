@@ -137,7 +137,7 @@ public class HomeRecipeItem extends HomeItem {
         }
         String type = mModuleBean.getType();
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
-        containerParams.topMargin = getResources().getDimensionPixelSize("recomv1".equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
+        containerParams.topMargin = getResources().getDimensionPixelSize(MainHome.recommedType.equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
         if (mModuleBean != null) {
             if (!TextUtils.isEmpty(type)) {
                 if ("day".equals(type)) {
@@ -239,7 +239,7 @@ public class HomeRecipeItem extends HomeItem {
         }
         String lineText = (TextUtils.isEmpty(desc) || TextUtils.isEmpty(title) ? "" : " | ");
         String titleText = title + lineText + desc;
-        if ("recomv1".equals(type)) {
+        if (MainHome.recommedType.equals(type)) {
             if (!TextUtils.isEmpty(titleText) && mTitleTop != null) {
 
                 mTitleTop.setText(titleText);

@@ -40,6 +40,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
 import amodule.main.adapter.AdapterListView;
 import amodule.main.bean.HomeModuleBean;
@@ -167,7 +168,7 @@ public class HomeFragment extends Fragment{
         if(TextUtils.isEmpty(type)){
             return null;
         }
-        if("recomv1".equals(type)){ //推荐
+        if(MainHome.recommedType.equals(type)){ //推荐
             isRecoment = true;
             return AdControlHomeDish.getInstance().getTwoLoadAdData();
         }else{
@@ -366,7 +367,7 @@ public class HomeFragment extends Fragment{
                 });
         }
         //处理推荐的置顶数据
-        if(homeModuleBean.getType().equals("recomv1")) {
+        if(homeModuleBean.getType().equals(MainHome.recommedType)) {
             String url = StringManager.API_RECOMMEND_TOP;
             ReqEncyptInternet.in().doEncyptAEC(url, "", new InternetCallback(mActivity) {
                 @Override
@@ -416,7 +417,7 @@ public class HomeFragment extends Fragment{
      */
     private void loadData(final boolean refresh, String data){
         Log.i("zhangyujian","refresh::"+refresh+"::data:"+data);
-        if (homeModuleBean != null && "recomv1".equals(homeModuleBean.getType()) && refresh)
+        if (homeModuleBean != null && MainHome.recommedType.equals(homeModuleBean.getType()) && refresh)
             XHClick.mapStat(mActivity, "a_recommend", "刷新效果", "下拉刷新");
         linearLayoutOne.removeAllViews();
         String url= StringManager.API_RECOMMEND;
@@ -441,7 +442,7 @@ public class HomeFragment extends Fragment{
                     Log.i("FRJ","获取  服务端   数据回来了-------------");
                     boolean isRecom=false;//是否是推荐
                     //只处理推荐列表
-                    if(homeModuleBean.getType().equals("recomv1"))isRecom=true;
+                    if(homeModuleBean.getType().equals(MainHome.recommedType))isRecom=true;
 
                     ArrayList<Map<String,String>> listmaps= StringManager.getListMapByJson(object);
                     //当前数据有问题，直接return数据
@@ -906,7 +907,7 @@ public class HomeFragment extends Fragment{
     }
 
     public boolean isRecom() {
-        return homeModuleBean.getType().equals("recomv1");
+        return homeModuleBean.getType().equals(MainHome.recommedType);
     }
 
     public long getStatrTime() {
@@ -969,7 +970,7 @@ public class HomeFragment extends Fragment{
      */
     public void setStatisticShowNum(){
         if(scrollDataIndex>0&&isRecom()){
-            XHClick.saveStatictisFile("home","recomv1","","",String.valueOf(scrollDataIndex),"list","","","","","");
+            XHClick.saveStatictisFile("home",MainHome.recommedType,"","",String.valueOf(scrollDataIndex),"list","","","","","");
             scrollDataIndex=-1;
         }
     }
