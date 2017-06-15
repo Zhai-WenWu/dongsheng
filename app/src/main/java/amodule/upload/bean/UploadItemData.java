@@ -134,7 +134,7 @@ public class UploadItemData {
     public void setPath(String path) {
         this.path = path;
         totleLength = (int) FileManager.getFileSize(path);
-        uniqueId = Md5Util.encode(path + UPLOAD_API);
+        uniqueId = Md5Util.encode(path + UPLOAD_API + System.currentTimeMillis());
     }
 
     public void setVideoImage(String videoImage) {
