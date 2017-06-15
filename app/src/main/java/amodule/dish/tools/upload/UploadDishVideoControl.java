@@ -830,7 +830,7 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
                 break;
             case R.id.delete_btn:
                 final XhDialog vsDialog = new XhDialog(mAct);
-                vsDialog.setMessage("是否删除这个草稿呢？")
+                vsDialog.setTitle("是否删除这个草稿呢？")
                         .setSureButton("删除", new View.OnClickListener() {
 
                             @Override

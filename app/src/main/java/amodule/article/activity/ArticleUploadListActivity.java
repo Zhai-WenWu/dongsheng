@@ -188,7 +188,7 @@ public class ArticleUploadListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String showInfo = "确定取消上传文章吗？";
-                if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
+                if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
                     showInfo = "确定取消上传视频吗？";
                 String btnMsg1 = "确定";
                 String btnMsg2 = "取消";
