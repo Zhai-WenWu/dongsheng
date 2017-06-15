@@ -195,6 +195,8 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                 });
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
+
+
         //初始化listview
         listview = (ListView) findViewById(R.id.listview);
         listview.setOnTouchListener(new View.OnTouchListener() {
@@ -210,6 +212,7 @@ public class ArticleDetailActivity extends BaseActivity {
         });
         initHeaderView();
         listview.addHeaderView(layout);
+
         mArticleCommentBar = (ArticleCommentBar) findViewById(R.id.acticle_comment_bar);
         mArticleCommentBar.setCode(code);
         mArticleCommentBar.setType(getType());
@@ -310,6 +313,10 @@ public class ArticleDetailActivity extends BaseActivity {
                         }
                     }
                 });
+        View view = new View(this);
+        view.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_40));
+        listview.addFooterView(view);
+
         requestArticleData(false);
         initAD();//初始化广告
     }
@@ -682,7 +689,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private void openDeleteDialog() {
         final XhDialog dialog = new XhDialog(this);
-        dialog.setMessage("确定删除这篇文章吗？")
+        dialog.setTitle("确定删除这篇文章吗？")
                 .setCanselButton("取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -267,7 +267,7 @@ public class ChangeSendDialog extends Dialog {
 
     private void showDialog(final String text, final String url) {
         final XhDialog dialog = new XhDialog(activity);
-        dialog.setMessage("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
+        dialog.setTitle("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
                 .setSureButton("是", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

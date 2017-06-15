@@ -362,7 +362,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }
 
 
-
         loadManager.showProgressBar();
         loadManager.setLoading(downRefreshList, adapterSimple, true, new View.OnClickListener() {
             @Override
@@ -375,7 +374,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 getCommentData(true);
             }
         });
-
+        View view = new View(this);
+        view.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_40));
+        downRefreshList.addFooterView(view);
     }
 
     private void getCommentData(final boolean isForward) {
@@ -499,6 +500,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                             if(commentIdStrBuffer.length() != 0) commentIdStrBuffer.append(",");
                             commentIdStrBuffer.append(map.get("comment_id"));
                             listArray.add(0, arrayList.get(0));
+                            if(listArray.size() == 1)
+                                changeDataChange();
                         }
                         adapterSimple.notifyDataSetChanged();
                         downRefreshList.setSelection(0);

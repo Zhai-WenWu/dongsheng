@@ -36,12 +36,10 @@ import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
-import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
-import aplug.shortvideo.activity.MediaRecorderActivity;
 import xh.windowview.XhDialog;
 
 /**
@@ -248,7 +246,7 @@ public class MainChangeSend extends BaseActivity {
 
     private void showDialog(String text, final String url) {
         final XhDialog dialog = new XhDialog(this);
-        dialog.setMessage("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
+        dialog.setTitle("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
                 .setSureButton("是", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

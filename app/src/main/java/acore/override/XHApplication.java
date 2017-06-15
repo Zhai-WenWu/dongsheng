@@ -44,7 +44,7 @@ public class XHApplication extends Application {
 
     @Override
     public void onCreate() {
-        Log.i("zhangyujian", "进程::" + getProcessName(this));
+        Log.i("zhangyujian", "进程名字::" + getProcessName(this));
         startTime = System.currentTimeMillis();
         super.onCreate();
         mAppApplication = this;

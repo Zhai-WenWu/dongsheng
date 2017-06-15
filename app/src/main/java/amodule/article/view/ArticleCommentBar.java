@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.textservice.TextInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -18,10 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,6 +71,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.a_article_comment_bar, this);
+        setBackgroundResource(R.color.transparent);
 
         editText = (EditText) findViewById(R.id.commend_write_et);
         praiseButton = (LinearLayout) findViewById(R.id.praise_button);
