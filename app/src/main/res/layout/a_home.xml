@@ -18,7 +18,7 @@
             android:id="@+id/relativeLayout_global"
             layout="@layout/c_view_top_bar_home"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_46"
+            android:layout_height="@dimen/dp_45"
             android:clickable="false" />
 
     </RelativeLayout>
