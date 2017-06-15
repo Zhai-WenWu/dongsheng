@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,8 +107,8 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         initTitle();
         setListener();
         showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
-        ToolsDevice.keyboardControl(true,mActivity,edSearch);
         edSearch.requestFocus();
+        ToolsDevice.keyboardControl(true,mActivity,edSearch);
 
     }
 
@@ -182,11 +183,11 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         defaultView.init(mActivity, defaultViewCallback, limitSearchType);
     }
 
-
     private void clearEditViewFocus(boolean isClearFocus) {
         if (isClearFocus) {
-            ToolsDevice.keyboardControl(false, mActivity, edSearch);
+            Log.i("tzy","clearEditViewFocus 执行了");
             edSearch.clearFocus();
+            ToolsDevice.keyboardControl(false, mActivity, edSearch);
         }
     }
 
@@ -360,6 +361,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             default:
                 break;
         }
+        Log.i("tzy","搜索");
         if (SearchConstant.SEARCH_CAIPU == limitSearchType) {
             clearEditViewFocus(true);
         }

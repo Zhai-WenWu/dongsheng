@@ -41,6 +41,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private String videoUrl;
     private boolean isWrapContent = true;
     private int position;
+    private String idStr = "";
 
     public VideoShowView(Context context) {
         this(context, null);
@@ -92,6 +93,8 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
             jsonObject.put("type", VIDEO);
             jsonObject.put("videosimageurl", coverImageUrl);
             jsonObject.put("videourl", videoUrl);
+            if(!TextUtils.isEmpty(idStr))
+                jsonObject.put("id", idStr);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -215,6 +218,14 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String id) {
+        this.idStr = id;
     }
 
     /** 视频view点击回调 */
