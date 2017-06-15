@@ -124,7 +124,7 @@ public class InputUrlDialog extends Dialog implements View.OnClickListener {
                     if (TextUtils.isEmpty(desc)) {
                         desc = url;
                     }
-                    if(!url.startsWith("http://")){
+                    if(!url.startsWith("http://") && !url.startsWith("https://")){
                         url = "http://" + url;
                     }
                     if (mOnReturnResultCallback != null) {

@@ -640,8 +640,10 @@ public class ArticleDetailActivity extends BaseActivity {
         Log.i("tzy", "analysRelateData");
         if (ArrayRelate.isEmpty()) return;
         for (Map<String, String> map : ArrayRelate) {
-            map.put("clickAll", map.get("clickAll") + "浏览");
-            map.put("commentNumber", map.get("commentNumber") + "评论");
+            String clickAll = map.get("clickAll");
+            map.put("clickAll", "0".equals(clickAll) ? "" : clickAll + "浏览");
+            String commentNumber = map.get("commentNumber");
+            map.put("commentNumber", "0".equals(commentNumber) ? "" : commentNumber + "评论");
         }
         if (page == 1)
             ArrayRelate.get(0).put("showheader", "1");
