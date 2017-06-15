@@ -113,7 +113,8 @@ public class AdPlayIdConfig {
 
     /**文章*/
     public static final String ARTICLE_CONTENT_BOTTOM = "wz_wz";
-    public static final String ARTICLE_RECM = "wz_tuijian1";
+    public static final String ARTICLE_RECM_1 = "wz_tuijian1";
+    public static final String ARTICLE_RECM_2 = "wz_tuijian2";
 
 
 }
