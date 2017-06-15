@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -79,7 +80,9 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void initView(){
-        findViewById(R.id.all_content).setBackgroundColor(Color.parseColor("#ffffff"));
+        RelativeLayout allContent = (RelativeLayout) findViewById(R.id.all_content);
+        if (allContent != null)
+            allContent.setBackgroundColor(Color.parseColor("#ffffff"));
         View upload = findViewById(R.id.upload);
         upload.setVisibility(View.VISIBLE);
         upload.setOnClickListener(this);
