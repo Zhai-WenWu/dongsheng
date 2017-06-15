@@ -298,8 +298,10 @@
             <ImageView
                 android:id="@+id/img_share"
                 style="@style/rightBtn"
+                android:layout_width="@dimen/dp_37"
                 android:clickable="false"
                 android:src="@drawable/z_z_topbar_ico_share"
+                android:paddingRight="@dimen/dp_7"
                 android:visibility="visible" />
 
             <TextView
