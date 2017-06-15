@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -204,6 +205,8 @@ public class ArticleDetailActivity extends BaseActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_MOVE:
+                        if(TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString()))
+                            mArticleCommentBar.setEditTextShow(false);
                         ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
                         break;
                 }
@@ -221,6 +224,7 @@ public class ArticleDetailActivity extends BaseActivity {
             public void onCommentSuccess(boolean isSofa, Object obj) {
                 try {
                     if (allDataListMap != null && allDataListMap.size() > 0) {
+                        mArticleCommentBar.setEditTextShow(false);
                         Map<String, String> newData = StringManager.getFirstMap(obj);
                         if (newData != null) {
                             int commentCount = Integer.parseInt(commentNum);
@@ -561,8 +565,11 @@ public class ArticleDetailActivity extends BaseActivity {
                     ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
                     int size = listMap.size();
                     for (int i = 0; i < size; i++) {
-                        listMap.get(i).put("datatype", String.valueOf(Type_recommed));
-                        listMap.get(i).put("idAd", "1");
+                        Map<String,String> map = listMap.get(i);
+                        map.put("datatype", String.valueOf(Type_recommed));
+                        map.put("idAd", "1");
+                        List<Map<String,String>> styleDataList = StringManager.getListMapByJson(map.get("styleData"));
+                        handlerStyleData(map,styleDataList);
                     }
                     analysRelateData(listMap);
                     handlerAdData();
@@ -571,6 +578,26 @@ public class ArticleDetailActivity extends BaseActivity {
                     toastFaildRes(flag, true, object);
             }
         });
+    }
+
+    private Map<String,String> handlerStyleData(Map<String,String> map,List<Map<String,String>> styleDataList){
+        for(int index = 0 ; index < styleDataList.size();index ++){
+            Map<String,String> data = styleDataList.get(index);
+            if("1".equals(data.get("type"))){
+                map.put("img",data.get("url"));
+                map.put("videoIconShow","1");
+                return map;
+            }
+        }
+        for(int index = 0 ; index < styleDataList.size();index ++){
+            Map<String,String> data = styleDataList.get(index);
+            if("2".equals(data.get("type"))){
+                map.put("img",data.get("url"));
+                map.put("videoIconShow","2");
+                return map;
+            }
+        }
+        return map;
     }
 
     private void handlerAdData() {

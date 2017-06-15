@@ -160,10 +160,13 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                     .listener(new RequestListener<GlideUrl, Bitmap>() {
                         @Override
                         public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
-                            int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-                            int height = width * 9 / 16;
-                            showImage.setLayoutParams(new LayoutParams(width,height));
-                            return false;
+//                            int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+//                            int height = width * 9 / 16;
+//                            showImage.setLayoutParams(new LayoutParams(width,height));
+//                            return false;
+                            removeThis();
+                            Tools.showToast(getContext(),"文件已损坏");
+                            return true;
                         }
 
                         @Override
@@ -263,10 +266,13 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                             .listener(new RequestListener<GlideUrl, Bitmap>() {
                                 @Override
                                 public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
-                                    int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-                                    int height = width * 9 / 16;
-                                    showImage.setLayoutParams(new LayoutParams(width,height));
-                                    return false;
+//                                    int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
+//                                    int height = width * 9 / 16;
+//                                    showImage.setLayoutParams(new LayoutParams(width,height));
+//                                    return false;
+                                    removeThis();
+                                    Tools.showToast(getContext(),"文件已损坏");
+                                    return true;
                                 }
 
                                 @Override
@@ -316,7 +322,9 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                         .listener(new RequestListener<String, GifDrawable>() {
                             @Override
                             public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
-                                return false;
+                                removeThis();
+                                Tools.showToast(getContext(),"文件已损坏");
+                                return true;
                             }
 
                             @Override
@@ -374,10 +382,14 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                 }
                 break;
             case R.id.delete_image:
-                if (null != mOnRemoveCallback) {
-                    mOnRemoveCallback.onRemove(this);
-                }
+                removeThis();
                 break;
+        }
+    }
+
+    public void removeThis(){
+        if (null != mOnRemoveCallback) {
+            mOnRemoveCallback.onRemove(this);
         }
     }
 

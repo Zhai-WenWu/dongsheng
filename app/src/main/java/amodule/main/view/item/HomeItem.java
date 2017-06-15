@@ -445,7 +445,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         if(!TextUtils.isEmpty(viewType)&& HomeFragment.MODULETOPTYPE.equals(viewType)){
             return "top";
         }
-        return MainHome.recommedType;
+        return MainHome.recommedType_statictus;
     }
 
     /**

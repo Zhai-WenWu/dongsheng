@@ -150,7 +150,7 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onPraiseClick(String comment_id) {
-//                        gotoCommentActivity(comment_id,null);
+                        gotoCommentActivity(comment_id,null);
                     }
 
                     @Override

@@ -15,8 +15,8 @@
         android:ellipsize="end"
         android:visibility="gone"
         android:textColor="#B6B5B5"
-        android:paddingBottom="@dimen/dp_26"
-        android:textSize="@dimen/sp_15"/>
+        android:paddingBottom="@dimen/dp_16"
+        android:textSize="@dimen/sp_14"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,6 +27,8 @@
         <RelativeLayout
             android:id="@+id/ad_layout"
             android:layout_width="match_parent"
+            android:paddingTop="@dimen/dp_10"
+            android:visibility="gone"
             android:paddingBottom="@dimen/dp_18"
             android:layout_height="wrap_content"/>
 
@@ -34,14 +36,14 @@
             android:layout_below="@+id/_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_20">
+            android:paddingBottom="@dimen/dp_10">
 
             <TextView
                 android:id="@+id/article_publish_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2017-05-25"
-                android:textColor="#DCDCDC"
+                android:textColor="#B6B5B5"
                 android:textSize="@dimen/sp_14"/>
 
             <TextView
@@ -51,7 +53,7 @@
                 android:text="阅读86425"
                 android:layout_toRightOf="@+id/article_publish_date"
                 android:layout_marginLeft="@dimen/dp_35"
-                android:textColor="#DCDCDC"
+                android:textColor="#B6B5B5"
                 android:textSize="@dimen/sp_14"/>
 
             <TextView
@@ -61,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="举报"
                 android:visibility="gone"
-                android:textColor="#DCDCDC"
+                android:textColor="#B6B5B5"
                 android:textSize="@dimen/sp_14"/>
 
         </RelativeLayout>

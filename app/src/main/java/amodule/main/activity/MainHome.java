@@ -48,6 +48,8 @@ import aplug.basic.ReqInternet;
 public class MainHome extends MainBaseActivity {
     public final static String tag = "zhangyujian";
     public final static String recommedType = "recomv1";//推荐类型
+    public final static String recommedType_statictus = "recom";//推荐类型-用于统计
+
     private PagerSlidingTabStrip home_tab;
     private ViewPager viewpager;
     private boolean isRefresh = false;
@@ -398,7 +400,7 @@ public class MainHome extends MainBaseActivity {
         }
         long nowTime= System.currentTimeMillis();
         if(startTime>0){
-            XHClick.saveStatictisFile("home",recommedType,"","","","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+            XHClick.saveStatictisFile("home",recommedType_statictus,"","","","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
             //置数据
             setRecommedTime(0);
         }

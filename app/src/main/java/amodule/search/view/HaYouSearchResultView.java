@@ -79,7 +79,7 @@ public class HaYouSearchResultView extends RelativeLayout {
                 mActivity.startActivity(intent);
             }
         });
-        customerAdapter = new AdapterSearchUser(mActivity,listView, arrayList,
+        customerAdapter = new AdapterSearchUser(mActivity, listView, arrayList,
                 R.layout.a_my_item_fans_search,
                 new String[]{"img", "nickName", "folState"},
                 new int[]{R.id.fans_user_img, R.id.fans_user_name, R.id.fans_user_item_choose});
@@ -127,7 +127,7 @@ public class HaYouSearchResultView extends RelativeLayout {
             public void loaded(int flag, String url, Object returnObj) {
                 int loadPage = 0;
                 if (flag >= UtilInternet.REQ_OK_STRING) { // 表示成功
-                    if(currentPage == 1)
+                    if (currentPage == 1)
                         arrayList.clear();
                     ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
                     Map<String, String> map = listReturn.get(0);
@@ -152,12 +152,13 @@ public class HaYouSearchResultView extends RelativeLayout {
                 if (everyPage == 0)
                     everyPage = loadPage;
                 // 如果总数据为空,显示没有消息
-                if (flag >= UtilInternet.REQ_OK_STRING && arrayList.size() == 0) {
-                    ll_noData.setVisibility(View.VISIBLE);
+                if (flag >= UtilInternet.REQ_OK_STRING) {
+                    ll_noData.setVisibility(arrayList.size() == 0 ? View.VISIBLE : View.GONE);
+                    listView.setVisibility(arrayList.size() == 0 ? View.GONE : View.VISIBLE);
                     loadManager.hideLoadFaildBar();
                 } else {
                     ll_noData.setVisibility(View.GONE);
-                    listView.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
                 }
 
                 currentPage = loadManager.changeMoreBtn(listView, flag, everyPage, loadPage, currentPage, arrayList.size() == 0);

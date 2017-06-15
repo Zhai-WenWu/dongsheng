@@ -64,7 +64,7 @@
     <LinearLayout
         android:id="@+id/text_edit_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_64"
+        android:layout_height="@dimen/dp_50"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -77,8 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_16"
-            android:paddingTop="@dimen/dp_16">
+            android:paddingBottom="@dimen/dp_9"
+            android:paddingTop="@dimen/dp_9">
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -106,6 +106,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:layout_weight="1">
 
                 <ImageView

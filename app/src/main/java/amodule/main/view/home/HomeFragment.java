@@ -970,7 +970,7 @@ public class HomeFragment extends Fragment{
      */
     public void setStatisticShowNum(){
         if(scrollDataIndex>0&&isRecom()){
-            XHClick.saveStatictisFile("home",MainHome.recommedType,"","",String.valueOf(scrollDataIndex),"list","","","","","");
+            XHClick.saveStatictisFile("home",MainHome.recommedType_statictus,"","",String.valueOf(scrollDataIndex),"list","","","","","");
             scrollDataIndex=-1;
         }
     }
