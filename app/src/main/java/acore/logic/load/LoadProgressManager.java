@@ -32,7 +32,7 @@ public class LoadProgressManager {
 	private LinearLayout mLoadFailLayout;
 	private RelativeLayout mProgressBar;
 	private View mProgressShadow;
-	private Button mLoadFailBtn;
+	private TextView mLoadFailBtn;
 	
 	public LoadProgressManager(Context context , RelativeLayout layout){
 		initProgress(context , layout);
@@ -77,7 +77,7 @@ public class LoadProgressManager {
 		mLoadFailLayout.setOrientation(LinearLayout.VERTICAL);
 		ImageView loadFaildImg = new ImageView(context);
 		TextView loadFailTv = new TextView(context);
-		mLoadFailBtn = new Button(context);
+		mLoadFailBtn = new TextView(context);
 		mLoadFailLayout.addView(loadFaildImg);
 		mLoadFailLayout.addView(loadFailTv);
 		mLoadFailLayout.addView(mLoadFailBtn);
@@ -114,8 +114,8 @@ public class LoadProgressManager {
 		mLoadFailBtn.setText("重新加载");
 		mLoadFailBtn.setTextColor(Color.parseColor(color));
 		mLoadFailBtn.setTextSize(Tools.getDimenSp(context, R.dimen.sp_14));
-		int lrDp = ToolsDevice.dp2px(context, 20);
-		int tbDp = ToolsDevice.dp2px(context, 7);
+		int lrDp = Tools.getDimen(context,R.dimen.dp_20);
+		int tbDp = Tools.getDimen(context,R.dimen.dp_7);
 		mLoadFailBtn.setPadding(lrDp, tbDp, lrDp, tbDp);
 		hideLoadFailBar();
 		layout.addView(mLoadFailLayout);

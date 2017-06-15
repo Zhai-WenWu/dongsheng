@@ -670,14 +670,16 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             saveDraft();
             finshActivity();
         } else {
+            if(isKeyboradShow)
+                ToolsDevice.keyboardControl(false,this,editTitle);//收回键盘
             final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
             xhDialog.setTitle("二次编辑的内容将不会保存到草稿箱，是否继续退出？")
-                    .setSureButton("留下编辑", new View.OnClickListener() {
+                    .setSureButton("取消", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             xhDialog.cancel();
                         }
-                    }).setCanselButton("清空并退出", new View.OnClickListener() {
+                    }).setCanselButton("退出", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     sqLite.deleteById(uploadArticleData.getId());

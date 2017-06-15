@@ -204,6 +204,8 @@ public class ArticleDetailActivity extends BaseActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_MOVE:
+                        if(TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString()))
+                            mArticleCommentBar.setEditTextShow(false);
                         ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
                         break;
                 }
@@ -221,6 +223,7 @@ public class ArticleDetailActivity extends BaseActivity {
             public void onCommentSuccess(boolean isSofa, Object obj) {
                 try {
                     if (allDataListMap != null && allDataListMap.size() > 0) {
+                        mArticleCommentBar.setEditTextShow(false);
                         Map<String, String> newData = StringManager.getFirstMap(obj);
                         if (newData != null) {
                             int commentCount = Integer.parseInt(commentNum);

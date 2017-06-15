@@ -25,8 +25,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
-        android:background="@color/common_top_bg" >
+        android:layout_height="@dimen/dp_45" >
 
         <include layout="@layout/c_view_bar_title" />
 

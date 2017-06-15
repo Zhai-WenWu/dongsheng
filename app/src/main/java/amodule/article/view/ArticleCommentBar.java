@@ -135,11 +135,15 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     }
 
     public void doComment(String hintText) {
-        findViewById(R.id.comment_bar_fake).setVisibility(View.GONE);
-        findViewById(R.id.comment_bar_real).setVisibility(View.VISIBLE);
+        setEditTextShow(true);
         editText.setHint(hintText);
         editText.requestFocus();
         ToolsDevice.keyboardControl(true, getContext(), editText);
+    }
+
+    public void setEditTextShow(boolean isShow){
+        findViewById(R.id.comment_bar_fake).setVisibility(isShow?GONE:VISIBLE);
+        findViewById(R.id.comment_bar_real).setVisibility(isShow?VISIBLE:GONE);
     }
 
     /** 点赞 */

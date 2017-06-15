@@ -89,6 +89,8 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     @Override
     public JSONObject getOutputData() {
         JSONObject jsonObject = new JSONObject();
+        if(TextUtils.isEmpty(coverImageUrl) && TextUtils.isEmpty(videoUrl))
+            return null;
         try {
             jsonObject.put("type", VIDEO);
             jsonObject.put("videosimageurl", coverImageUrl);
