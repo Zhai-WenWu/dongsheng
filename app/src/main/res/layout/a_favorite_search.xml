@@ -11,7 +11,7 @@
         <RelativeLayout
             android:id="@+id/rl_search_layout_main"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_49"
+            android:layout_height="@dimen/dp_45"
             android:gravity="center">
 
             <ImageView
@@ -19,7 +19,7 @@
                 android:layout_width="@dimen/dp_25"
                 android:layout_height="@dimen/dp_25"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_6"
+                android:layout_marginLeft="@dimen/dp_13"
                 android:layout_marginTop="@dimen/dp__2"
                 android:clickable="true"
                 android:gravity="center"
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_35"
                 android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_4"
                 android:layout_marginTop="@dimen/dp_10"
                 android:layout_toLeftOf="@+id/btn_search_main"
                 android:layout_toRightOf="@+id/btn_back"
@@ -43,7 +43,7 @@
                     android:layout_height="@dimen/dp_14"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/dp_6"
+                    android:layout_marginLeft="@dimen/dp_9"
                     android:layout_marginRight="@dimen/dp_3"
                     android:scaleType="centerCrop"
                     android:src="@drawable/z_home_real_search_icon" />
@@ -71,8 +71,8 @@
                     android:layout_height="@dimen/dp_15"
                     android:layout_alignRight="@+id/ed_search_main"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp_4"
-                    android:background="@drawable/z_quanso_topbar_input_ico_del_new"
+                    android:layout_marginRight="@dimen/dp_9"
+                    android:background="@drawable/btn_search_top_close"
                     android:padding="@dimen/dp_6"
                     android:scaleType="center"
                     android:visibility="gone" />
@@ -86,9 +86,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/dp_10"
                 android:background="@android:color/transparent"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_15"
-                android:paddingRight="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_20"
                 android:text="搜索"
                 android:textColor="@color/common_top_text"
                 android:textSize="@dimen/sp_16"
