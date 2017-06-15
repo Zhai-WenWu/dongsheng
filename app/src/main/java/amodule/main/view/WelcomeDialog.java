@@ -96,8 +96,8 @@ public class WelcomeDialog extends Dialog {
         this.mAdTime = adShowTime;
         this.dialogShowCallBack=callBack;
         Window window = this.getWindow();
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         this.view = this.getLayoutInflater().inflate(R.layout.xh_welcome, null);
         setContentView(view);

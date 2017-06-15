@@ -63,8 +63,6 @@
         android:textColor="#FFFFFE"
         android:textSize="@dimen/sp_12"
         android:visibility="gone"
-        tagTextView:sideColor="#fffffe"
-        tagTextView:sideWidth="1px"
         tagTextView:backgroundColor="#B2000000"
         tagTextView:bottomLeftRadius="@dimen/dp_20"
         tagTextView:bottomRightRadius="@dimen/dp_20"

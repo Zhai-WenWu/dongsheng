@@ -195,6 +195,7 @@ public class Main extends Activity implements OnClickListener {
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
 
+
                 boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
                 if (!isShow)
                     showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？");
@@ -304,9 +305,9 @@ public class Main extends Activity implements OnClickListener {
 //        if (Tools.isShowTitle()) {
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        }
-        String colors = Tools.getColorStr(this, R.color.common_top_bg);
-        Tools.setStatusBarColor(this, Color.parseColor(colors));
-//        StatusBarCompat.setStatusBarColor(this,R.color.common_top_bg,true);
+        String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
+        Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
+
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
         //实例化有用到mRootLayout，必须按着顺序执行
         mBuoy = new MainBuoy(this);
@@ -432,6 +433,7 @@ public class Main extends Activity implements OnClickListener {
 //        }
         GoodCommentManager.setStictis(Main.this);
         openUri();
+
     }
 
     /**
