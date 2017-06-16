@@ -10,7 +10,6 @@ import android.widget.Toast;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -533,7 +532,7 @@ public class ArticleUploadListPool extends UploadListPool {
             ArrayList<Map<String, String>> imgArray = uploadArticleData.getImgArray();
             Log.i("articleUpload", "combineParameter() uploadArticleData.getImgUrl():" + uploadArticleData.getImgUrl());
             Log.i("articleUpload", "combineParameter() uploadArticleData.getVideos():" + uploadArticleData.getVideos());
-            uploadTextData.put("title", uploadArticleData.getTitle());
+            uploadTextData.put("title", Uri.encode(uploadArticleData.getTitle(), HTTP.UTF_8));
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
             Log.i("tzy","content = " + content);
             uploadTextData.put("content", Uri.encode(content, HTTP.UTF_8));

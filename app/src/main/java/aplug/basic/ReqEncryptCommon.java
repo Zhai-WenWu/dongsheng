@@ -112,6 +112,7 @@ public class ReqEncryptCommon {
 
 
     public String getData(String params)  {
+        Log.i("FRJ","getData() params:" + params);
         try {
             Map<String,String> map=null;
             if(!TextUtils.isEmpty(params)){
@@ -120,6 +121,7 @@ public class ReqEncryptCommon {
             JSONObject jsonObject = new JSONObject();
             if(map!=null){
                 for (Map.Entry<String, String> entry : map.entrySet()) {
+                    Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
                     jsonObject.put(entry.getKey(),entry.getValue());
                }
             }
