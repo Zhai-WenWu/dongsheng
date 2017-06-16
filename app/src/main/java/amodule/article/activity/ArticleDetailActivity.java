@@ -413,22 +413,17 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 请求网络 */
     private void requestArticleData(final boolean onlyUser) {
-        String url = getInfoAPI();
-        String params = TextUtils.isEmpty(code) ? "" : "code=" + code;
-        params += "&type=HTML";
         loadManager.showProgressBar();
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(this) {
+        StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=HTML");
+        ReqEncyptInternet.in().doEncypt(getInfoAPI(), params.toString(), new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
-                    analysArticleData(onlyUser, listMap.get(0));
-                } else {
+                    analysArticleData(onlyUser, StringManager.getFirstMap(object));
+                } else
                     toastFaildRes(flag, true, object);
-                }
-                if (!onlyUser) {
+                if (!onlyUser)
                     requestForumData(false);//请求
-                }
                 linearLayoutThree.setVisibility(View.VISIBLE);
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
@@ -443,42 +438,28 @@ public class ArticleDetailActivity extends BaseActivity {
      */
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
         if (mapArticle.isEmpty()) return;
-        findViewById(R.id.rightImgBtn2).setVisibility(View.VISIBLE);
+
         if (headerView == null)
             headerView = new ArticleHeaderView(ArticleDetailActivity.this);
-        headerView.setType(getType());
-        headerView.setData(mapArticle);
         if (linearLayoutOne.getChildCount() == 0)
             linearLayoutOne.addView(headerView);
+        headerView.setType(getType());
+        headerView.setData(mapArticle);
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
         if (onlyUser)
             return;
         listview.setVisibility(View.VISIBLE);
-        commentNum = mapArticle.get("commentNumber");
-        mArticleCommentBar.setPraiseAPI(getPraiseAPI());
-        mArticleCommentBar.setData(mapArticle);
 
         WebviewManager manager = new WebviewManager(this, loadManager, true);
-        manager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
-            @Override
-            public void onLoadFinish() {
-
-            }
-        });
-        if (webView == null) {
+        if (webView == null)
             webView = manager.createWebView(0);
-        }
-        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
-        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-//        webView.loadData(mapArticle.get("html"), "text/html", "utf-8");
-        Log.i("tzy", "url = " + getMAPI() + mapArticle.get("code"));
-        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
-
         if (linearLayoutTwo.getChildCount() == 0)
             linearLayoutTwo.addView(webView);
+        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
-
 
         final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         if (!TextUtils.isEmpty(customerData.get("nickName"))) {
@@ -490,6 +471,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
+
         rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -528,6 +510,10 @@ public class ArticleDetailActivity extends BaseActivity {
             showAD(adDataMap);
 
         detailAdapter.notifyDataSetChanged();
+
+        commentNum = mapArticle.get("commentNumber");
+        mArticleCommentBar.setPraiseAPI(getPraiseAPI());
+        mArticleCommentBar.setData(mapArticle);
 
         mapArticle.remove("html");
         mapArticle.remove("content");
