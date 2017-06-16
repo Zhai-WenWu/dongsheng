@@ -249,19 +249,71 @@ public class HomeRecipeItem extends HomeItem {
             mTitle.setText(titleText);
             mTitle.setVisibility(View.VISIBLE);
         }
+        String numStr1 = null;
         if (mDataMap.containsKey("allClick")) {
             String allClick = handleNumber(mDataMap.get("allClick"));
-            if (!TextUtils.isEmpty(allClick) && mNum1 != null) {
-                mNum1.setText(allClick + (mIsVideo ? "播放" : "浏览"));
-                mNum1.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(allClick)) {
+                numStr1 = allClick + (mIsVideo ? "播放" : "浏览");
             }
         }
+        String numStr2 = null;
         if (mDataMap.containsKey("favorites")) {
-            String likeNum = handleNumber(mDataMap.get("favorites"));
-            if (!TextUtils.isEmpty(likeNum) && mNum2 != null) {
-                mNum2.setText(likeNum + "收藏");
-                mNum2.setVisibility(View.VISIBLE);
+            String favNum = handleNumber(mDataMap.get("favorites"));
+            if (!TextUtils.isEmpty(favNum)) {
+                numStr2 = favNum + "收藏";
             }
+        }
+        String numStr3 = null;
+        if (mDataMap.containsKey("likeNum")) {
+            String likeNum = handleNumber(mDataMap.get("likeNum"));
+            if (!TextUtils.isEmpty(likeNum)) {
+                numStr3 = likeNum + "点赞";
+            }
+        }
+        String numStr4 = null;
+        if (mDataMap.containsKey("commentNum")) {
+            String comStr = mDataMap.get("commentNum");
+            if (!TextUtils.isEmpty(comStr) && Integer.parseInt(comStr) > 10) {
+                String comNum = handleNumber(comStr);
+                if (!TextUtils.isEmpty(comNum)) {
+                    if (Integer.parseInt(comNum) > 10)
+                        numStr4 = comNum + "评论";
+                }
+            }
+        }
+        switch (mType) {
+            case "1"://图文菜谱
+            case "2"://视频菜谱
+                if (numStr2 != null && mNum1 != null) {
+                    mNum1.setText(numStr2);
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (numStr1 != null && mNum2 != null) {
+                    mNum2.setText(numStr1);
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
+            case "3"://文章
+                if (numStr4 != null && mNum1 != null) {
+                    mNum1.setText(numStr4);
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (numStr1 != null && mNum2 != null) {
+                    mNum2.setText(numStr1);
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
+            case "5"://帖子
+                if (numStr4 != null && mNum1 != null) {
+                    mNum1.setText(numStr4);
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (numStr3 != null && mNum2 != null) {
+                    mNum2.setText(numStr3);
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
+
         }
     }
 

@@ -343,7 +343,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mIsAd = false;
         mIsTop = false;
         mTransferUrl = null;
-        mType = null;
+        mType = "";
     }
 
     public void setHomeModuleBean(HomeModuleBean bean) {

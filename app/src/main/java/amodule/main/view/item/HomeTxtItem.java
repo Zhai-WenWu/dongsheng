@@ -131,6 +131,7 @@ public class HomeTxtItem extends HomeItem {
                 mDataMap.put("isADShow", "1");
             }
         }
+        int imgCount = 0;
         if(mDataMap.containsKey("style")&& String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))){//右图模式
             if (mDataMap.containsKey("styleData")) {
                 ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
@@ -138,6 +139,7 @@ public class HomeTxtItem extends HomeItem {
                     Map<String, String> imgMap = datas.get(0);
                     if (imgMap != null && imgMap.size() > 0) {
                         String imgUrl = imgMap.get("url");
+                        imgCount = 1;
                         if (mImgs != null)
                             mImgs.setVisibility(View.VISIBLE);
                         loadImage(imgUrl, mImg);
@@ -154,19 +156,100 @@ public class HomeTxtItem extends HomeItem {
                 mTitle.setVisibility(View.VISIBLE);
             }
         }
-        if (mDataMap.containsKey("commentNum") && !mIsTop) {
-            String val = handleNumber(mDataMap.get("commentNum"));
-            if (!TextUtils.isEmpty(val) && mNum2 != null) {
-                mNum2.setText(val + "评论");
-                mNum2.setVisibility(View.VISIBLE);
+        String comNum = null;//评论量
+        String comNumStr = mDataMap.get("commentNum");
+        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 10) {
+            String commentNum = handleNumber(comNumStr);
+            if (!TextUtils.isEmpty(commentNum)) {
+                comNum = commentNum;
             }
         }
-        if (mDataMap.containsKey("allClick")) {
-            String allClick = handleNumber(mDataMap.get("allClick"));
-            if (!TextUtils.isEmpty(allClick) && mNum1 != null) {
-                mNum1.setText(allClick + "浏览");
-                mNum1.setVisibility(View.VISIBLE);
+        String allClickNum = null;//浏览量、播放量
+        String allClickStr = mDataMap.get("allClick");
+        if (!TextUtils.isEmpty(allClickStr)) {
+            String allClickNumStr = handleNumber(allClickStr);
+            if (!TextUtils.isEmpty(allClickNumStr)) {
+                allClickNum = allClickNumStr;
             }
+        }
+        String likeNum = null;//点赞量
+        String likeNumStr = handleNumber(mDataMap.get("likeNum"));
+        if (!TextUtils.isEmpty(likeNumStr)) {
+            likeNum = likeNumStr;
+        }
+        String favNum = null;//收藏量
+        String favNumStr = handleNumber(mDataMap.get("favorites"));
+        if (!TextUtils.isEmpty(favNumStr))
+            favNum = favNumStr;
+        switch (imgCount) {
+            case 0://无图
+                if (comNum != null && mNum1 != null) {
+                    mNum1.setText(comNum + "评论");
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                switch (mType) {
+                    case "3":
+                        if (allClickNum != null && mNum2 != null) {
+                            mNum2.setText(allClickNum + "浏览");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case "5":
+                        if (likeNum != null && mNum2 != null) {
+                            mNum2.setText(likeNum + "赞");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                }
+                break;
+            case 1://右图
+                switch (mType) {
+                    case "1":
+                        if (!mIsTop) {
+                            if (favNum != null && mNum1 != null) {
+                                mNum1.setText(favNum + "收藏");
+                                mNum1.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if (allClickNum != null && mNum2 != null) {
+                            mNum2.setText(allClickNum + "浏览");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case "2":
+                        if (!mIsTop) {
+                            if (favNum != null && mNum1 != null) {
+                                mNum1.setText(favNum + "收藏");
+                                mNum1.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if (allClickNum != null && mNum2 != null) {
+                            mNum2.setText(allClickNum + "播放");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case "3":
+                        if (comNum != null && mNum1 != null) {
+                            mNum1.setText(comNum + "评论");
+                            mNum1.setVisibility(View.VISIBLE);
+                        }
+                        if (allClickNum != null && mNum2 != null) {
+                            mNum2.setText(allClickNum + "浏览");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case "5":
+                        if (comNum != null && mNum1 != null) {
+                            mNum1.setText(comNum + "评论");
+                            mNum1.setVisibility(View.VISIBLE);
+                        }
+                        if (allClickNum != null && mNum2 != null) {
+                            mNum2.setText(allClickNum + "赞");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                }
+                break;
         }
     }
 
