@@ -69,12 +69,12 @@ android {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-            storeFile file('D:/android_workspace/xiangha.keystore')
+//            storeFile file('D:/android_workspace/xiangha.keystore')
 //            storeFile file('E:/keystore/xiangha.keystore')
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
 //            yulekwok
-//            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
+            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
 //            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
             storePassword 'XH.com'
@@ -121,7 +121,7 @@ android {
     //会根据渠道号，自动执行对应的方法，默认执行main
     sourceSets {
         main {
-            res.srcDirs = ['src\\main\\res', 'src\\main\\res_normal']
+            res.srcDirs = ['src/main/res', 'src/main/res_normal']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_360']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_anzhuoapk']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_baidu']
