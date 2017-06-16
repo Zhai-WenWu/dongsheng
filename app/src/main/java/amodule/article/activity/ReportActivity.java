@@ -68,7 +68,7 @@ public class ReportActivity extends BaseActivity {
         mReportContent = intent.getStringExtra("reportContent");
         //获取举报内容列表参数 1、主题；2、评论；3、回复（默认2）
         mReportType = intent.getStringExtra("reportType");
-        initTitle();
+//        initTitle();
         initView();
         addListener();
     }
