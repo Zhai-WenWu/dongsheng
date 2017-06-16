@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -79,7 +81,9 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void initView(){
-        findViewById(R.id.all_content).setBackgroundColor(Color.parseColor("#ffffff"));
+        RelativeLayout allContent = (RelativeLayout) findViewById(R.id.all_content);
+        if (allContent != null)
+            allContent.setBackgroundColor(Color.parseColor("#ffffff"));
         View upload = findViewById(R.id.upload);
         upload.setVisibility(View.VISIBLE);
         upload.setOnClickListener(this);
@@ -100,6 +104,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         }else if(1 == uploadArticleData.getIsOriginal()){
             isCheck = 1;
             reprintImg.setImageResource(R.drawable.i_article_select_yes);
+            reprintLink.setText(uploadArticleData.getRepAddress());
         }
 
         data = new ArrayList<>();
@@ -115,13 +120,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView textView = (TextView) view.findViewById(R.id.article_select_classify_text);
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
                 if(position % 3 == 0){
-                    layoutParams.setMargins(0,0,itemSpace - dp3,0);
+                    ((LinearLayout)textView.getParent()).setGravity(Gravity.LEFT);
                 }else if(position % 3 == 2) {
-                    layoutParams.setMargins(itemSpace - dp3,0,0,0);
-                }else{
-                    layoutParams.setMargins(itemSpace,0,itemSpace,0);
+                    ((LinearLayout)textView.getParent()).setGravity(Gravity.RIGHT);
                 }
                 if(data.get(position).get("code").equals(checkCode)){
                     textView.setBackgroundResource(R.drawable.article_select_classify_yes);
@@ -241,6 +243,8 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             XHClick.mapStat(this, "a_ArticleEdit", "下一步", "返回");
         } else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
             intent.setClass(this,VideoEditActivity.class);
+
+        intent.putExtra("draftId",draftId);
         startActivity(intent);
         tjClosePage();
     }

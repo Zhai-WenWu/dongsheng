@@ -1,6 +1,7 @@
 package amodule.user.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,7 +57,7 @@ public class MyMessage extends MainBaseActivity {
 		setContentView(R.layout.a_common_message);
 		Main.allMain.allTab.put("MyMessage", this);
 		init();
-		initTitle();
+//		initTitle();
 		XHClick.track(this, "浏览消息列表页");
 	}
 

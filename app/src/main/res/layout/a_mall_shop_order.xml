@@ -40,6 +40,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0.5"
+                android:visibility="gone"
                 android:layout_alignParentBottom="true"
                 android:background="#e1e2e4" />
         </RelativeLayout>

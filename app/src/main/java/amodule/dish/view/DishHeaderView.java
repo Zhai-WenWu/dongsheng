@@ -152,9 +152,9 @@ public class DishHeaderView extends LinearLayout {
     private void initVideoAd(){
         adLayout = (FrameLayout) view_oneImage.findViewById(R.id.dishvideo_ad);
         int distance = Tools.getDimen(activity, R.dimen.dp_45);
-        if (Tools.isShowTitle()) {
-            distance += Tools.getStatusBarHeight(activity);
-        }
+//        if (Tools.isShowTitle()) {
+//            distance += Tools.getStatusBarHeight(activity);
+//        }
         adLayout.setPadding(0,distance,0,0);
 
         ArrayList<String> list= new ArrayList<>();
@@ -297,9 +297,9 @@ public class DishHeaderView extends LinearLayout {
                     && videoUrl.startsWith("http")) {
                 LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.dishvideo_img);
                 int distance = Tools.getDimen(activity, R.dimen.dp_45);
-                if (Tools.isShowTitle()) {
-                    distance += Tools.getStatusBarHeight(activity);
-                }
+//                if (Tools.isShowTitle()) {
+//                    distance += Tools.getStatusBarHeight(activity);
+//                }
                 dishVidioLayout.setPadding(0, distance, 0, 0);
 //                dishvideo_img.addView(new DishVideoImageView(activity).setData(img, selfVideoMap.get("duration")));
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
@@ -351,9 +351,9 @@ public class DishHeaderView extends LinearLayout {
                 String userUnique = dishBurden.get("uu");
                 LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.dishvideo_img);
                 int distance = Tools.getDimen(activity, R.dimen.dp_45);
-                if (Tools.isShowTitle()) {
-                    distance += Tools.getStatusBarHeight(activity);
-                }
+//                if (Tools.isShowTitle()) {
+//                    distance += Tools.getStatusBarHeight(activity);
+//                }
                 dishVidioLayout.setPadding(0, distance, 0, 0);
 //                dishvideo_img.addView(new DishVideoImageView(activity).setData(img, dishBurden.get("duration")));
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);

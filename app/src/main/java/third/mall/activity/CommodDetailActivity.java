@@ -149,7 +149,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 		common = new MallCommon(this);
 		initView();
 		initData();
-		initTitle();
+//		initTitle();
 		XHClick.track(this,"浏览商品");
 	}
 

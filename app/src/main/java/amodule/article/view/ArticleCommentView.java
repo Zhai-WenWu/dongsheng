@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,6 +83,9 @@ public class ArticleCommentView extends ItemBaseView {
             for (int index = 0; index < length; index++) {
                 final Map<String, String> dataMap = data.get(index);
                 final ViewCommentItem commentItem = new ViewCommentItem(getContext());
+                Log.i("tzy","comment dataMap = " + dataMap.toString());
+                if("0".equals(dataMap.get("fabulous_num")))
+                    dataMap.put("fabulous_num","");
                 commentItem.setData(dataMap);
                 commentItem.setOnClickListener(new OnClickListener() {
                     @Override
@@ -146,12 +150,12 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onPraiseClick(String comment_id) {
-//                        gotoCommentActivity(comment_id,null);
+                        gotoCommentActivity(comment_id,null);
                     }
 
                     @Override
-                    public void onContentReplayClick(String comment_id, String replay_user_code, String replay_user_name, String type) {
-                        gotoCommentActivity(comment_id, null);
+                    public void onContentReplayClick(String comment_id,String replay_id, String replay_user_code, String replay_user_name, String type,boolean isShowKeyBoard,boolean isMyselft) {
+                        gotoCommentActivity(comment_id, replay_id);
                         statistics("评论", type);
                     }
                 });
@@ -174,11 +178,11 @@ public class ArticleCommentView extends ItemBaseView {
             findViewById(R.id.has_comment_layout).setVisibility(GONE);
             findViewById(R.id.robsofa).setVisibility(VISIBLE);
         }
-
     }
 
     private void gotoCommentActivity(String commentId, String replayId) {
         Intent intent = new Intent(getContext(), CommentActivity.class);
+        intent.putExtra("from", "2");
         intent.putExtra("type", getType());
         intent.putExtra("code", code);
         if (!TextUtils.isEmpty(commentId))

@@ -36,12 +36,10 @@ import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
-import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
-import aplug.shortvideo.activity.MediaRecorderActivity;
 import xh.windowview.XhDialog;
 
 /**
@@ -109,14 +107,6 @@ public class MainChangeSend extends BaseActivity {
 //            addButton("3", R.drawable.pulish_video, "小视频");
 //            itemNum++;
 //        }
-        if (LoginManager.isShowRecorderVideoButton()) {
-            addButton("4", R.drawable.pulish_record, "录制菜谱");
-            itemNum++;
-        }
-        if (LoginManager.isShowSendVideoDishButton()) {
-            addButton("5", R.drawable.pulish_video_dish, "发视频菜谱");
-            itemNum++;
-        }
 
         if (dishVideoMap != null && dishVideoMap.size() > 0) {
             String img = dishVideoMap.get("img");
@@ -228,25 +218,27 @@ public class MainChangeSend extends BaseActivity {
                 videoDish.putExtra(UploadDishActivity.DISH_TYPE_KEY, UploadDishActivity.DISH_TYPE_VIDEO);
                 this.startActivity(videoDish);
                 break;
-            //TODO
             case "6":
-                finish();
                 if (!LoginManager.isLogin()) {
+                    finish();
                     Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendArticleButton())
+                } else if (LoginManager.isShowSendArticleButton()) {
+                    finish();
                     startActivity(new Intent(this, ArticleEidtActiivty.class));
-                else
+                } else
                     showDialog("发文章", StringManager.api_applyArticlePower);
                 break;
             case "7":
-                finish();
                 if (!LoginManager.isLogin()) {
+                    finish();
                     Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendVideoButton())
+                } else if (LoginManager.isShowSendVideoButton()) {
+                    finish();
                     startActivity(new Intent(this, VideoEditActivity.class));
-                else
+                } else
+
                     showDialog("短视频", StringManager.api_applyVideoPower);
                 break;
         }
@@ -254,18 +246,20 @@ public class MainChangeSend extends BaseActivity {
 
     private void showDialog(String text, final String url) {
         final XhDialog dialog = new XhDialog(this);
-        dialog.setMessage("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
+        dialog.setTitle("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
                 .setSureButton("是", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         AppCommon.openUrl(MainChangeSend.this, url, true);
                         dialog.cancel();
+                        finish();
                     }
                 })
                 .setCanselButton("否", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.cancel();
+                        finish();
                     }
                 })
                 .show();

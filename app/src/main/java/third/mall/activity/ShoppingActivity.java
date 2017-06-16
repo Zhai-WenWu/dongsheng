@@ -106,7 +106,7 @@ public class ShoppingActivity extends BaseActivity implements OnClickListener{
 		common=new MallCommon(this);
 		initView();
 		initData();
-		initTitle();
+//		initTitle();
 		XHClick.track(this,"浏览购物车页");
 	}
 

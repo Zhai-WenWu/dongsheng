@@ -51,15 +51,15 @@ public class FavoriteSearch extends BaseActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		initActivity("",2,0,0,R.layout.a_favorite_search);
 		init();
-		initTitle();
+//		initTitle();
 	}
 	/**
 	 * 初始化区分数据模块
 	 */
 	private void initTitle() {
 		if(Tools.isShowTitle()) {
-			int dp_49 = Tools.getDimen(this, R.dimen.dp_49);
-			int height = dp_49 + Tools.getStatusBarHeight(this);
+			int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+			int height = dp_45 + Tools.getStatusBarHeight(this);
 
 			RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.all_title_rela);
 			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);

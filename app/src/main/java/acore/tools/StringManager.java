@@ -263,7 +263,7 @@ public class StringManager extends UtilString {
     public final static String API_GET_LEVEL = apiUrl + "Main7/Recommend/getLevel"; //获取首页层级数据
     public final static String API_RECOMMEND = apiUrl + "Main7/Recommend/recommend"; //获取首页数据
     public final static String API_LOGIN_APP = apiUrl + "Main7/public/loginApp"; //获取首页数据
-    public final static String API_RECOMMEND_TOP = apiUrl + "Main7/Recommend/top"; //获取推荐置顶数据
+    public final static String API_RECOMMEND_TOP = apiUrl + "Main7/Recommend/topv1"; //获取推荐置顶数据
 
     /*** 个人主页：（视频、文章、问答）接口*/
     public final static String API_USERMAIN_LEVEL = apiUrl + "Main7/Article/getClassList";//获取个人主页导航数据

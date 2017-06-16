@@ -22,6 +22,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.widget.SwitchButton;
 import acore.widget.SwitchButton.OnChangeListener;
+import acore.widget.switchView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import xh.basic.tool.UtilFile;
@@ -31,14 +32,14 @@ import xh.basic.tool.UtilFile;
  * @author luomin
  */
 public class MyMsgInformSetting extends BaseActivity{
-	private SwitchButton msg_newMSG_sb;//接收全部消息通知
-	private SwitchButton msg_nous_sb;//香哈头条推荐
-	private SwitchButton msg_subject_sb;//美食贴通知
-	private SwitchButton msg_jxMenu_sb;//精选菜单通知
-	private SwitchButton msg_jxCaiPu_sb;//精选菜谱通知
-	private SwitchButton msg_quan_zan_sb;//美食圈评论.点赞
-	private SwitchButton msg_informSing_sb;//通知声音
-	private SwitchButton msg_informShork_sb;//通知震动
+	private switchView msg_newMSG_sb;//接收全部消息通知
+	private switchView msg_nous_sb;//香哈头条推荐
+	private switchView msg_subject_sb;//美食贴通知
+	private switchView msg_jxMenu_sb;//精选菜单通知
+	private switchView msg_jxCaiPu_sb;//精选菜谱通知
+	private switchView msg_quan_zan_sb;//美食圈评论.点赞
+	private switchView msg_informSing_sb;//通知声音
+	private switchView msg_informShork_sb;//通知震动
 	private LinearLayout msgInform_ll;//通知开关所在总布局
 	private RelativeLayout login_hint;//登录提示
 	private View msg_unClick;//遮罩
@@ -109,18 +110,18 @@ public class MyMsgInformSetting extends BaseActivity{
 	 */
 	private void setListener() {
 		//http://api.huher.com/home5/setInfoSwitch?isc=caipu&ope=2
-		msg_newMSG_sb.setOnChangeListener(new OnChangeListener() {
+		msg_newMSG_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, final boolean state) {
+			public void onChange(final boolean state) {
 				PushManager.requestPermission();
 			}
 			
 		});
-		msg_subject_sb.setOnChangeListener(new OnChangeListener() {
+		msg_subject_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, final boolean state) {
+			public void onChange( final boolean state) {
 				doMSGSetting(state,FileManager.quan);
 				if (state) {
 					quan = "1";
@@ -130,10 +131,10 @@ public class MyMsgInformSetting extends BaseActivity{
 			}
 
 		});
-		msg_nous_sb.setOnChangeListener(new OnChangeListener() {
+		msg_nous_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, boolean state) {
+			public void onChange( boolean state) {
 				doMSGSetting(state,FileManager.zhishi);
 				if (state) {
 					nous = "1";
@@ -142,10 +143,10 @@ public class MyMsgInformSetting extends BaseActivity{
 				}
 			}
 		});
-		msg_quan_zan_sb.setOnChangeListener(new OnChangeListener() {
+		msg_quan_zan_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, boolean state) {
+			public void onChange(boolean state) {
 				doMSGSetting(state,FileManager.zan);
 				if (state) {
 					zan = "1";
@@ -154,10 +155,10 @@ public class MyMsgInformSetting extends BaseActivity{
 				}
 			}
 		});
-		msg_jxMenu_sb.setOnChangeListener(new OnChangeListener() {
+		msg_jxMenu_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, boolean state) {
+			public void onChange( boolean state) {
 				doMSGSetting(state,FileManager.menu);
 				if (state) {
 					jxMenu = "1";
@@ -166,10 +167,10 @@ public class MyMsgInformSetting extends BaseActivity{
 				}
 			}
 		});
-		msg_jxCaiPu_sb.setOnChangeListener(new OnChangeListener() {
+		msg_jxCaiPu_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, boolean state) {
+			public void onChange( boolean state) {
 				doMSGSetting(state,FileManager.caipu);
 				if (state) {
 					jxDish = "1";
@@ -178,18 +179,18 @@ public class MyMsgInformSetting extends BaseActivity{
 				}
 			}
 		});
-		msg_informSing_sb.setOnChangeListener(new OnChangeListener() {
+		msg_informSing_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, boolean state) {
+			public void onChange( boolean state) {
 				informSing = state ? "1" : "2";
 				UtilFile.saveShared(getApplicationContext(), FileManager.msgInform, FileManager.informSing, informSing);
 			}
 		});
-		msg_informShork_sb.setOnChangeListener(new OnChangeListener() {
+		msg_informShork_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
 			
 			@Override
-			public void onChange(SwitchButton sb, boolean state) {
+			public void onChange( boolean state) {
 				informShork = state ? "1" : "2";
 				UtilFile.saveShared(getApplicationContext(), FileManager.msgInform, FileManager.informShork, informShork);
 			}
@@ -200,14 +201,14 @@ public class MyMsgInformSetting extends BaseActivity{
 		ScrollView scrollView = (ScrollView) findViewById(R.id.msg_inform_scrollview);
 		scrollView.setVisibility(View.VISIBLE);
 		loadManager.hideProgressBar();
-		msg_newMSG_sb = (SwitchButton) findViewById(R.id.msg_newMSG_sb);
-		msg_subject_sb = (SwitchButton) findViewById(R.id.msg_subject_sb);
-		msg_nous_sb = (SwitchButton) findViewById(R.id.msg_nous_sb);
-		msg_jxCaiPu_sb = (SwitchButton) findViewById(R.id.msg_jxCaiPu_sb);
-		msg_jxMenu_sb = (SwitchButton) findViewById(R.id.msg_jxMenu_sb);
-		msg_quan_zan_sb = (SwitchButton) findViewById(R.id.msg_quan_zan_sb);
-		msg_informSing_sb = (SwitchButton) findViewById(R.id.msg_informsing_sb);
-		msg_informShork_sb = (SwitchButton) findViewById(R.id.msg_informshork_sb);
+		msg_newMSG_sb = (switchView) findViewById(R.id.msg_newMSG_sb);
+		msg_subject_sb = (switchView) findViewById(R.id.msg_subject_sb);
+		msg_nous_sb = (switchView) findViewById(R.id.msg_nous_sb);
+		msg_jxCaiPu_sb = (switchView) findViewById(R.id.msg_jxCaiPu_sb);
+		msg_jxMenu_sb = (switchView) findViewById(R.id.msg_jxMenu_sb);
+		msg_quan_zan_sb = (switchView) findViewById(R.id.msg_quan_zan_sb);
+		msg_informSing_sb = (switchView) findViewById(R.id.msg_informsing_sb);
+		msg_informShork_sb = (switchView) findViewById(R.id.msg_informshork_sb);
 		msgInform_ll = (LinearLayout) findViewById(R.id.msgInform_ll);
 		login_hint = (RelativeLayout) findViewById(R.id.login_hint);
 		msg_unClick = findViewById(R.id.msg_unClick);
@@ -273,6 +274,15 @@ public class MyMsgInformSetting extends BaseActivity{
 		msg_jxCaiPu_sb.mSwitchOn = jxDish.equals("1");
 		msg_informSing_sb.mSwitchOn = informSing.equals("1");
 		msg_informShork_sb.mSwitchOn = informShork.equals("1");
+
+		msg_newMSG_sb.setViewState();
+		msg_subject_sb.setViewState();
+		msg_nous_sb.setViewState();
+		msg_quan_zan_sb.setViewState();
+		msg_jxMenu_sb.setViewState();
+		msg_jxCaiPu_sb.setViewState();
+		msg_informSing_sb.setViewState();
+		msg_informShork_sb.setViewState();
 	}
 
 	private void onChange(boolean isOpen){

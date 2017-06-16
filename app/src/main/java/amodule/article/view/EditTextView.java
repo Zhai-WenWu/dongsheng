@@ -2,7 +2,6 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -44,6 +43,7 @@ public class EditTextView extends BaseView {
     //CENTER_HORIZONTAL
     private boolean isCenterHorizontal = false;
 
+    /** emoji拦截 */
     private InputFilter emojiFilter = new InputFilter() {
         Pattern emoji = Pattern.compile(
                 "[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",
@@ -99,15 +99,26 @@ public class EditTextView extends BaseView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(onAfterTextChanged != null){
+                if (onAfterTextChanged != null) {
                     onAfterTextChanged.afterTextChanged(s);
                 }
             }
         });
-        mRichText.setOnSelectLinkCallback(new RichText.OnSelectLinkCallback() {
+        mRichText.setOnSelectTypeCallback(new RichText.OnSelectContainsType() {
+            @Override
+            public void onSelectBold(boolean isSelected) {
+                if (onSelectBoldCallback != null) onSelectBoldCallback.onSelectBold(isSelected);
+            }
+
+            @Override
+            public void onSelectUnderline(boolean isSelected) {
+                if (onSelectUnderlineCallback != null)
+                    onSelectUnderlineCallback.onSelectUnderline(isSelected);
+            }
+
             @Override
             public void onSelectLink(String url, String desc) {
-                if(isDialogShow) return;
+                if (isDialogShow) return;
                 isDialogShow = true;
                 final int start = mRichText.getSelectionStart();
                 final int end = mRichText.getSelectionEnd();
@@ -140,8 +151,6 @@ public class EditTextView extends BaseView {
 
     @Override
     public JSONObject getOutputData() {
-        if(TextUtils.isEmpty(mRichText.getText()))
-            return null;
         JSONObject jsonObject = new JSONObject();
         try {
             //正则处理html标签
@@ -152,9 +161,9 @@ public class EditTextView extends BaseView {
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
-                    .append(mRichText.toHtml())
+                    .append(TextUtils.isEmpty(mRichText.getText()) ? "<br>" : mRichText.toHtml())//.replaceAll("\"","\\\"")
                     .append("</p>");
-            Log.i("tzy","edittext content = " + builder.toString());
+            Log.i("tzy", "edittext content = " + builder.toString());
             jsonObject.put("html", builder.toString());
             jsonObject.put("type", TEXT);
         } catch (JSONException e) {
@@ -181,8 +190,8 @@ public class EditTextView extends BaseView {
             mRichText.setText(text);
     }
 
-    public void setSelection(int index){
-        if(mRichText != null)
+    public void setSelection(int index) {
+        if (mRichText != null)
             mRichText.setSelection(index);
     }
 
@@ -242,7 +251,7 @@ public class EditTextView extends BaseView {
     public void setCenterHorizontal(boolean isCenterHorizontal) {
         this.isCenterHorizontal = isCenterHorizontal;
         mRichText.setGravity(isCenterHorizontal ?
-                 Gravity.CENTER_HORIZONTAL : Gravity.TOP | Gravity.START);
+                Gravity.CENTER_HORIZONTAL : Gravity.TOP | Gravity.START);
     }
 
     public void setupTextCenter() {
@@ -341,8 +350,27 @@ public class EditTextView extends BaseView {
         this.onAfterTextChanged = onAfterTextChanged;
     }
 
-    public interface OnAfterTextChanged{
+    public OnSelectBoldCallback onSelectBoldCallback;
+    public OnSelectUnderlineCallback onSelectUnderlineCallback;
+
+    public void setOnSelectBoldCallback(OnSelectBoldCallback onSelectBoldCallback) {
+        this.onSelectBoldCallback = onSelectBoldCallback;
+    }
+
+    public void setOnSelectUnderline(OnSelectUnderlineCallback onSelectUnderlineCallback) {
+        this.onSelectUnderlineCallback = onSelectUnderlineCallback;
+    }
+
+    public interface OnAfterTextChanged {
         public void afterTextChanged(Editable s);
+    }
+
+    public interface OnSelectBoldCallback {
+        public void onSelectBold(boolean isSelected);
+    }
+
+    public interface OnSelectUnderlineCallback {
+        public void onSelectUnderline(boolean isSelected);
     }
 
 }

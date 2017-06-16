@@ -1,6 +1,7 @@
 package amodule.main.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -63,7 +64,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
 
         Main.allMain.allTab.put("MainCircle", this);
         //初始化状态栏
-        initStatusBar();
+//        initStatusBar();
         //
         initView();
 

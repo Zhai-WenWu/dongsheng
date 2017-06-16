@@ -56,7 +56,7 @@ public class FileManager extends UtilFile{
 	public static final String file_hotwords = "hotWords";
 
 	public static final String xmlFile_userInfo = "common";
-	public static final String xmlFile_wake = "wake";
+	public static final String xmlFile_wake = "wake2";
 	public static final String xmlFile_appInfo = "appInfo2";
 	public static final String xmlFile_appUrl = "appUrl";
 	public static final String xmlFile_localPushTag = "localPushTag";
@@ -68,7 +68,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_isIndexData = "isIndexData";
 	public static final String xmlKey_device = "device";
 	public static final String xmlKey_device_statictis = "device_statictis";
-	public static final String xmlKey_firstStart = "firstStart";
+	public static final String xmlKey_firstStart_v2 = "firstStart_v2";
 	public static final String xmlKey_downDishLimit = "downDishLimit";
 	public static final String xmlKey_upFavorTime = "upFavorTime";
 	public static final String xmlKey_crashTime = "crashTime";

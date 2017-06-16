@@ -81,7 +81,7 @@ public class UserHomeShare extends Activity implements View.OnClickListener{
                     UserHomeShare.this.startActivity(intent);
                 }else{
                     ShareTools barShare = ShareTools.getBarShare(UserHomeShare.this);
-                    barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom,mFrom,mParent);
+                    barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom,"个人主页",mParent);
                 }
                 UserHomeShare.this.finish();
             }

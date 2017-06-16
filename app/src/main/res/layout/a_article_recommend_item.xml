@@ -112,7 +112,6 @@
                 android:ellipsize="end"
                 android:lineSpacingExtra="@dimen/dp_4"
                 android:maxLines="2"
-                android:text="七年老鸭"
                 android:textColor="@color/c_black_text"
                 android:textSize="@dimen/sp_17"
                 android:visibility="visible"/>
@@ -149,7 +148,6 @@
                         android:layout_marginRight="@dimen/dp_1"
                         android:maxLength="5"
                         android:maxLines="1"
-                        android:text="七年老鸭"
                         android:textColor="#b5b4b4"
                         android:textSize="@dimen/sp_11"
                         android:visibility="visible"/>
@@ -159,7 +157,7 @@
                         android:layout_width="@dimen/dp_11"
                         android:layout_height="@dimen/dp_11"
                         android:src="@drawable/home_item_gourmet_icon"
-                        android:visibility="visible"/>
+                        android:visibility="gone"/>
                 </LinearLayout>
 
                 <TextView
@@ -167,7 +165,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/dp_14"
-                    android:text="七年老鸭"
                     android:textColor="#b5b4b4"
                     android:textSize="@dimen/sp_11"
                     android:visibility="visible"/>
@@ -176,7 +173,6 @@
                     android:id="@+id/rec_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="七年老鸭"
                     android:textColor="#b5b4b4"
                     android:textSize="@dimen/sp_11"
                     android:visibility="visible"/>
@@ -201,6 +197,15 @@
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/video_icon"
+                android:layout_width="@dimen/dp_34"
+                android:layout_height="@dimen/dp_34"
+                android:layout_centerInParent="true"
+                android:src="@drawable/home_item_play"
+                android:background="@color/transparent"
+                android:visibility="gone"/>
 
             <View
                 android:id="@+id/layer_view"

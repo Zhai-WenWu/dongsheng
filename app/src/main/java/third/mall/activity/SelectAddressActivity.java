@@ -53,7 +53,7 @@ public class SelectAddressActivity extends BaseActivity implements OnClickListen
 		initActivity("选择地址", 3, 0, 0, R.layout.a_mall_select_address);
 		initView();
 		initData();
-		initTitle();
+//		initTitle();
 	}
 
 	private void initTitle() {

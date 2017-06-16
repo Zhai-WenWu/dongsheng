@@ -1,6 +1,7 @@
 package third.mall;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -56,7 +57,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 //		initActivity("电商首页",2, 0, 0, R.layout.a_mall);
 		common= new MallCommon(this);
 		initView();
-		init();
+//		init();
 		XHClick.track(this,"浏览商城首页");
 	}
 	/**

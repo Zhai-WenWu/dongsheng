@@ -632,6 +632,7 @@ public class JsAppCommon extends JsBase{
 				//统计
 				Intent it = new Intent(mAct,PlayVideo.class);
                 String urlTemp = url;
+				Log.i("tzy","videourl = " + url);
 				it.putExtra("url", urlTemp);
 				it.putExtra("name", name);
 				it.putExtra("img", img);
@@ -651,6 +652,7 @@ public class JsAppCommon extends JsBase{
 			@Override
 			public void run() {
 				Log.i("tzy","imageUrls = " + imageUrls);
+				Log.i("tzy","index = " + index);
 				if(imageUrls == null){
 					return;
 				}
@@ -708,10 +710,10 @@ public class JsAppCommon extends JsBase{
 
 	@JavascriptInterface
 	public int getStatusMes(){
-		if(mAct != null && mWebView != null && Tools.isShowTitle()) {
-			int tatusHeight = ToolsDevice.px2dp(mAct,Tools.getStatusBarHeight(mAct));
-			return tatusHeight;
-		}
+//		if(mAct != null && mWebView != null && Tools.isShowTitle()) {
+//			int tatusHeight = ToolsDevice.px2dp(mAct,Tools.getStatusBarHeight(mAct));
+//			return tatusHeight;
+//		}
 		return 0;
 	}
 

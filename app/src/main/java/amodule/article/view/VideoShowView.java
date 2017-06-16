@@ -41,6 +41,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     private String videoUrl;
     private boolean isWrapContent = true;
     private int position;
+    private String idStr = "";
 
     public VideoShowView(Context context) {
         this(context, null);
@@ -65,6 +66,8 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
         int height = width * 9 / 16;
         defaultLayout.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+        coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        coverImage.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
         defaultLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,10 +89,14 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     @Override
     public JSONObject getOutputData() {
         JSONObject jsonObject = new JSONObject();
+        if(TextUtils.isEmpty(coverImageUrl) && TextUtils.isEmpty(videoUrl))
+            return null;
         try {
             jsonObject.put("type", VIDEO);
             jsonObject.put("videosimageurl", coverImageUrl);
             jsonObject.put("videourl", videoUrl);
+            if(!TextUtils.isEmpty(idStr))
+                jsonObject.put("id", idStr);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -213,6 +220,14 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+    }
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String id) {
+        this.idStr = id;
     }
 
     /** 视频view点击回调 */

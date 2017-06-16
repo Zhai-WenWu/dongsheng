@@ -296,7 +296,6 @@
     <style name="welcomeDialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowFullscreen">true</item>
         <!--<item name="android:windowBackground">@android:color/transparent</item>-->
     </style>
     <style name="progress_dialog" parent="@android:style/Theme.Dialog">

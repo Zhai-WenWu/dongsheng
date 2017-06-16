@@ -418,7 +418,7 @@
             android:name="amodule.other.activity.PlayVideo"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:theme="@style/common_TransParentTheme"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
         <!-- article start -->
@@ -431,12 +431,6 @@
         <activity
             android:name="amodule.article.activity.edit.VideoEditActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name="amodule.article.activity.SelectClassicfyActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
@@ -655,7 +649,7 @@
             android:name="amodule.search.avtivity.HomeSearch"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"/>
+            android:windowSoftInputMode="adjustResize"/>
         <!-- global search end -->
 
 
@@ -690,6 +684,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+            <!--android:launchMode="singleTask"-->
         <activity
             android:name="amodule.user.activity.GourmetList"
             android:configChanges="orientation|keyboardHidden"
@@ -916,7 +911,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="aplug.web.FullScreenWeb"
             android:configChanges="orientation|keyboardHidden"

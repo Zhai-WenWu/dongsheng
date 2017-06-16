@@ -100,7 +100,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		payType= new MallPayType(this);
 		initView();
 		initData();
-		initTitle();
+//		initTitle();
 		XHClick.track(this,"浏览订单详情");
 	}
 	private void initTitle() {

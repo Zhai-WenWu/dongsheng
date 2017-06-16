@@ -8,6 +8,7 @@ package acore.override.activity.base;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -97,13 +98,13 @@ public class BaseActivity extends Activity {
 			RelativeLayout all_content= (RelativeLayout) view_all.findViewById(R.id.all_content);
 			all_content.addView(control.setCommonBottonView(className,this,contentXml));
 			View view_title = LayoutInflater.from(this).inflate(barTitleXml,null);
-			if(Tools.isShowTitle()&&showStateColor(className)) {
-				int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-				int height = dp_45 + Tools.getStatusBarHeight(this);
-				RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-				all_title.setLayoutParams(layout);
-				all_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-			}
+//			if(Tools.isShowTitle()&&showStateColor(className)) {
+//				int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+//				int height = dp_45 + Tools.getStatusBarHeight(this);
+//				RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+//				all_title.setLayoutParams(layout);
+//				all_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
+//			}
 			all_title.addView(view_title);
 			setContentView(view_all);
 
@@ -143,6 +144,8 @@ public class BaseActivity extends Activity {
 		if(Tools.isShowTitle()&&showStateColor(className)) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 		}
+		String colors = Tools.getColorStr(this, R.color.common_top_bg);
+		Tools.setStatusBarColor(this, Color.parseColor(colors));
 		setCommonStyle();
 
 	}

@@ -2,6 +2,7 @@ package amodule.main.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,11 +23,11 @@ import third.ad.control.AdControlParent;
  */
 public class AdapterListView extends BaseAdapter{
 
-    public final static int type_tagImage = 1;//大图
-    public final static int type_rightImage = 2;//右图
-    public final static int type_threeImage = 3;//三图
-    public final static int type_noImage = 4;//无图
-    public final static int type_levelImage = 5;//蒙版图
+    public final static String type_tagImage = "1";//大图
+    public final static String type_rightImage = "2";//右图
+    public final static String type_threeImage = "3";//三图
+    public final static String type_noImage = "4";//无图
+    public final static String type_levelImage = "5";//蒙版图
 
     private ArrayList<Map<String,String>> mapArrayList;
     private Context context;
@@ -62,7 +63,8 @@ public class AdapterListView extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Map<String, String> map = mapArrayList.get(position);
-        switch (getItemViewType(position)){
+        String itemType = getItemType(position);
+        switch (itemType){
             case type_tagImage://大图
                 ViewDishViewHolder viewHolder = null;
                 if (convertView == null
@@ -73,7 +75,7 @@ public class AdapterListView extends BaseAdapter{
                 } else {
                     viewHolder = (ViewDishViewHolder) convertView.getTag();
                 }
-                if (getItemViewType(position) == type_tagImage) {
+                if (type_tagImage.equals(itemType)) {
                     viewHolder.view.setVideoClickCallBack(new HomeRecipeItem.VideoClickCallBack() {
                         @Override
                         public void videoOnClick(int position) {
@@ -135,10 +137,11 @@ public class AdapterListView extends BaseAdapter{
         return 9;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return Integer.parseInt(getItem(position).get("style"));
+    public String getItemType(int position) {
+        Map<String, String> item = getItem(position);
+        return (item == null || item.size() <= 0 || !item.containsKey("style") || TextUtils.isEmpty(item.get("style"))) ? type_noImage : item.get("style");
     }
+
     /**
      * 专辑
      */

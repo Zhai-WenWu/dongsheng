@@ -81,7 +81,7 @@ public class MyFavorite extends BaseActivity {
 		initData();
 		init();
 		setTop();
-		initTitle();
+//		initTitle();
 	}
 
 	/**

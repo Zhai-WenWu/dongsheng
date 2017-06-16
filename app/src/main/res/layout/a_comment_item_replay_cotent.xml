@@ -3,7 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/dp_5"
     >
 
     <acore.widget.multifunction.view.MultifunctionTextView
@@ -12,6 +11,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/dp_11"
         android:paddingRight="@dimen/dp_11"
+        android:paddingTop="@dimen/dp_2"
+        android:gravity="center_vertical"
         android:text="米西"
         android:textSize="@dimen/sp_13"
         android:lineSpacingExtra="@dimen/dp_4"

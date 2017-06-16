@@ -36,6 +36,7 @@ public class RecommendItemView extends ItemBaseView {
     private TextView recCustomerName;
     private TextView recBrowse;
     private TextView recComment;
+    private ImageView videoIcon;
 
     public RecommendItemView(Context context) {
         super(context, R.layout.a_article_recommend_item);
@@ -52,6 +53,7 @@ public class RecommendItemView extends ItemBaseView {
     @Override
     public void init() {
         recImage = (ImageView) findViewById(R.id.rec_image);
+        videoIcon = (ImageView) findViewById(R.id.video_icon);
         recTitle = (TextView) findViewById(R.id.rec_title);
         recCustomerName = (TextView) findViewById(R.id.rec_customer_name);
         recBrowse = (TextView) findViewById(R.id.rec_browse);
@@ -60,10 +62,18 @@ public class RecommendItemView extends ItemBaseView {
 
     public void setData(final Map<String, String> map) {
         findViewById(R.id.hander).setVisibility(map.containsKey("showheader") ? View.VISIBLE : View.GONE);
-        setViewImage(recImage, map.get("img"));
+        if(map != null && !TextUtils.isEmpty(map.get("img"))){
+            setViewImage(recImage, map.get("img"));
+            recImage.setVisibility(VISIBLE);
+        }else
+            recImage.setVisibility(GONE);
         setViewText(recTitle, map, "title", View.INVISIBLE);
         setViewText(recBrowse, map, "clickAll");
         setViewText(recComment, map, "commentNumber");
+        if(map.containsKey("styleData")){
+            Map<String,String> styleDataMap = StringManager.getFirstMap(map.get("styleData"));
+            videoIcon.setVisibility("2".equals(styleDataMap.get("type")) ? VISIBLE:GONE);
+        }else videoIcon.setVisibility(GONE);
         if (map.containsKey("customer")) {
             Map<String, String> customer = StringManager.getFirstMap(map.get("customer"));
             setViewText(recCustomerName, customer, "nickName");

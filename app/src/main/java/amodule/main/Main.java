@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -152,6 +151,7 @@ public class Main extends Activity implements OnClickListener {
             Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
         LogManager.print("i", "Main -------- onCreate");
+
         // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
         if (savedInstanceState != null) {
             defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
@@ -193,6 +193,7 @@ public class Main extends Activity implements OnClickListener {
                 new DialogControler().showDialog();
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
+
 
                 boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
                 if (!isShow)
@@ -300,9 +301,12 @@ public class Main extends Activity implements OnClickListener {
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
         setContentView(R.layout.xh_main);
 //        ToolsDevice.modifyStateTextColor(this);//StatusBar 背景色为深色，不需要修改文字颜色
-        if (Tools.isShowTitle()) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+//        if (Tools.isShowTitle()) {
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        }
+        String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
+        Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
+
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
         //实例化有用到mRootLayout，必须按着顺序执行
         mBuoy = new MainBuoy(this);
@@ -314,11 +318,12 @@ public class Main extends Activity implements OnClickListener {
         changeSendLayout.setVisibility(View.GONE);
         int btn_width = ToolsDevice.getWindowPx(this).widthPixels / 5;
         int padding = (btn_width - Tools.getDimen(this, R.dimen.dp_55)) / 2;
+        int dp_3 = Tools.getDimen(this,R.dimen.dp_3);
         int cha = padding / 4;
         cha = 0;
         changeSendLayout.getLayoutParams().width = btn_width;
         btn_changeSend.getLayoutParams().width = btn_width;
-        btn_changeSend.setPadding(padding + cha, 0, padding - cha, 0);
+        btn_changeSend.setPadding(padding + cha+dp_3, dp_3, padding - cha+dp_3, dp_3);
     }
 
     /**
@@ -428,6 +433,7 @@ public class Main extends Activity implements OnClickListener {
 //        }
         GoodCommentManager.setStictis(Main.this);
         openUri();
+
     }
 
     /**

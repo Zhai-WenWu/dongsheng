@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         android:overScrollMode="never"
         android:scrollbars="none"
-        android:visibility="visible"
-        android:paddingBottom="@dimen/dp_69">
+        android:visibility="visible">
     </acore.widget.DownRefreshList>
 
     <LinearLayout

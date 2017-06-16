@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.textservice.TextInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -18,10 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,6 +71,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.a_article_comment_bar, this);
+        setBackgroundResource(R.color.transparent);
 
         editText = (EditText) findViewById(R.id.commend_write_et);
         praiseButton = (LinearLayout) findViewById(R.id.praise_button);
@@ -109,7 +105,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
         }
         praiseNum = Integer.parseInt(map.get("likeNumber"));
-        praiseText.setText("赞" + praiseNum);
+        praiseText.setText(praiseNum == 0 ? "赞" : "" + praiseNum);
 
         String commentNum = map.get("commentNumber");
         isSofa = "0".equals(commentNum);
@@ -121,7 +117,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.comment_edit_fake:
-                doComment(getTextHint());
+                doComment(isSofa ? "抢沙发":getTextHint());
                 statistics("底部栏", "评论输入框");
                 break;
             case R.id.praise_button:
@@ -139,11 +135,15 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     }
 
     public void doComment(String hintText) {
-        findViewById(R.id.comment_bar_fake).setVisibility(View.GONE);
-        findViewById(R.id.comment_bar_real).setVisibility(View.VISIBLE);
+        setEditTextShow(true);
         editText.setHint(hintText);
         editText.requestFocus();
         ToolsDevice.keyboardControl(true, getContext(), editText);
+    }
+
+    public void setEditTextShow(boolean isShow){
+        findViewById(R.id.comment_bar_fake).setVisibility(isShow?GONE:VISIBLE);
+        findViewById(R.id.comment_bar_real).setVisibility(isShow?VISIBLE:GONE);
     }
 
     /** 点赞 */
@@ -166,7 +166,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                 });
 
         praiseNum++;
-        praiseText.setText("赞" + praiseNum);
+        praiseText.setText(praiseNum);
         praiseButton.setEnabled(false);
         praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
 
@@ -199,7 +199,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                         if(flag >= ReqEncyptInternet.REQ_OK_STRING){
 
                             if(onCommentSuccessCallback != null){
-                                onCommentSuccessCallback.onCommentSuccess(isSofa);
+                                onCommentSuccessCallback.onCommentSuccess(isSofa,obj);
                             }
                             if(isSofa) {
                                 isSofa = !isSofa;
@@ -268,7 +268,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
     private OnCommentSuccessCallback onCommentSuccessCallback;
     public interface OnCommentSuccessCallback{
-        public void onCommentSuccess(boolean isSofa);
+        public void onCommentSuccess(boolean isSofa,Object obj);
     }
 
     public void setOnCommentSuccessCallback(OnCommentSuccessCallback onCommentSuccessCallback) {

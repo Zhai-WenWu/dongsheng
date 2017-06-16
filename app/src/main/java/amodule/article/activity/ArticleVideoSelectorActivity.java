@@ -39,6 +39,7 @@ import aplug.recordervideo.tools.FileToolsCammer;
 
 
 public class ArticleVideoSelectorActivity extends BaseActivity implements View.OnClickListener{
+    public static final String EXTRA_UNSELECT_VIDEO = "extraUnselectVideo";
 
     private final int SELECTED_VIDEO = 1;
 
@@ -56,6 +57,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private PopupWindow mCategoryPopup;
     private ListView mFolderListView;
     private ArticleVideoFolderAdapter mCategoryAdapter;
+    private ArrayList<String> hadSelectedVideos = new ArrayList<>();
 
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
     private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
@@ -68,9 +70,18 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         initActivity("",2,0,0,R.layout.articlevideo_seletor_activity);
 
         mCategoryAdapter = new ArticleVideoFolderAdapter(this);
+        initData();
         initView();
         addListener();
         contentLoad();
+    }
+
+    private void initData() {
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            if(bundle.getStringArrayList(EXTRA_UNSELECT_VIDEO) != null)
+                hadSelectedVideos.addAll(bundle.getStringArrayList(EXTRA_UNSELECT_VIDEO));
+        }
     }
 
     private void addListener() {
@@ -149,17 +160,17 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     }
 
     private void initTitle() {
-        if(Tools.isShowTitle()) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        if(Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-            RelativeLayout bar_title = (RelativeLayout)findViewById(R.id.title_rela_all);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
+//        if(Tools.isShowTitle()) {
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        }
+//        if(Tools.isShowTitle()) {
+//            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+//            int height = dp_45 + Tools.getStatusBarHeight(this);
+//            RelativeLayout bar_title = (RelativeLayout)findViewById(R.id.title_rela_all);
+//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+//            bar_title.setLayoutParams(layout);
+//            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
+//        }
     }
 
     @Override
@@ -235,6 +246,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                             }
                             Intent intent = new Intent(ArticleVideoSelectorActivity.this, VideoPreviewActivity.class);
                             intent.putExtra(MediaStore.Video.Media.DATA, video.get(MediaStore.Video.Media.DATA));
+                            intent.putStringArrayListExtra(EXTRA_UNSELECT_VIDEO, hadSelectedVideos);
                             startActivityForResult(intent, SELECTED_VIDEO);
                         }
                     });

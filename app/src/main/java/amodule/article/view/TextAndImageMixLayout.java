@@ -2,6 +2,7 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -73,34 +74,30 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private void init() {
         setOrientation(VERTICAL);
-        setPadding(0,0,0,Tools.getDimen(getContext(), R.dimen.dp_80));
+        setPadding(0, 0, 0, Tools.getDimen(getContext(), R.dimen.dp_80));
         addRichText(-1, "");
     }
 
     /** 设置上传需要数据 */
     public void setXHServiceData(String content) {
-        if(TextUtils.isEmpty(content))return;
-        try {
-            content = URLDecoder.decode(content,"utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        if(!"2".equals(type))
+        if (TextUtils.isEmpty(content)) return;
+        content = Uri.decode(content);
+        if (!"2".equals(type))
             removeAllViews();
 
         List<Map<String, String>> dataArray = StringManager.getListMapByJson(content);
-        Log.i("tzy","dataArray = " + dataArray.toString());
-        for (int index = 0 ; index < dataArray.size() ; index ++) {
+        Log.i("tzy", "dataArray = " + dataArray.toString());
+        for (int index = 0; index < dataArray.size(); index++) {
             Map<String, String> map = dataArray.get(index);
-            Log.i("tzy","map = " + map.toString());
-            if(!map.containsKey("type")
-                    || TextUtils.isEmpty(map.get("type"))){
+            Log.i("tzy", "map = " + map.toString());
+            if (!map.containsKey("type")
+                    || TextUtils.isEmpty(map.get("type"))) {
                 continue;
             }
             boolean isLast = index == dataArray.size() - 1;
-            if(index + 1 < dataArray.size()){
-                Map<String,String> nextMap = dataArray.get(index + 1);
-                if(!BaseView.TEXT.equals(nextMap.get("type"))){
+            if (index + 1 < dataArray.size()) {
+                Map<String, String> nextMap = dataArray.get(index + 1);
+                if (!BaseView.TEXT.equals(nextMap.get("type"))) {
                     isLast = true;
                 }
             }
@@ -109,13 +106,13 @@ public class TextAndImageMixLayout extends LinearLayout
                     handlerTextData(map.get("html"));
                     break;
                 case BaseView.IMAGE:
-                    addImage(map.get("imageurl"), isLast, "");
+                    addImage(map.get("imageurl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.IMAGE_GIF:
-                    addImage(map.get("gifurl"), isLast, "");
+                    addImage(map.get("gifurl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.VIDEO:
-                    addVideo(map.get("videosimageurl"), map.get("videourl"), isLast, "");
+                    addVideo(map.get("videosimageurl"), map.get("videourl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.URLS:
                     //do nothing
@@ -124,10 +121,10 @@ public class TextAndImageMixLayout extends LinearLayout
                     break;
             }
         }
-        if(getChildCount() == 0)
-            addRichText(-1,"");
-        else if(isSingleVideo){
-            for(int index = getChildCount() -1 ; index > 1  ; index--){
+        if (getChildCount() == 0)
+            addRichText(-1, "");
+        else if (isSingleVideo) {
+            for (int index = getChildCount() - 1; index > 1; index--) {
                 removeViewAt(index);
             }
         }
@@ -140,13 +137,13 @@ public class TextAndImageMixLayout extends LinearLayout
      */
     private void handlerTextData(String html) {
         EditTextView editTextView = null;
-        if(getChildCount() - 1 >= 0){
+        if (getChildCount() - 1 >= 0) {
             View view = getChildAt(getChildCount() - 1);
-            if(view instanceof EditTextView){
-                editTextView = (EditTextView)view;
+            if (view instanceof EditTextView) {
+                editTextView = (EditTextView) view;
             }
         }
-        if(editTextView == null)
+        if (editTextView == null)
             editTextView = addRichText(-1, "");
         boolean isCenter = false;
         StringBuilder htmlTmep = new StringBuilder(html);
@@ -161,8 +158,9 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
 
-        if(htmlTmep.indexOf(">") + 1 >= 0)
-            html = htmlTmep.substring(htmlTmep.indexOf(">") + 1,htmlTmep.length());
+        if (htmlTmep.indexOf(">") + 1 >= 0)
+            html = htmlTmep.substring(htmlTmep.indexOf(">") + 1, htmlTmep.length());
+        Log.i("tzy","html = " + html);
         //处理<a></a>
         while (htmlTmep.indexOf("<a") >= 0) {
             int startIndex = htmlTmep.indexOf("<a");
@@ -180,18 +178,21 @@ public class TextAndImageMixLayout extends LinearLayout
                         break;
                     }
                 }
-                Log.i("tzy","htmlTmep = "+htmlTmep);
-                Log.i("tzy","title = "+title);
-                Log.i("tzy","url = "+url);
+                Log.i("tzy", "htmlTmep = " + htmlTmep);
+                Log.i("tzy", "title = " + title);
+                Log.i("tzy", "url = " + url);
                 if (!TextUtils.isEmpty(title)
                         && !TextUtils.isEmpty(url))
                     editTextView.addLinkToData(url, title);
-                htmlTmep = htmlTmep.replace(htmlTmep.indexOf(aTagData),htmlTmep.indexOf(aTagData) + aTagData.length(), "");
+                htmlTmep = htmlTmep.replace(htmlTmep.indexOf(aTagData), htmlTmep.indexOf(aTagData) + aTagData.length(), "");
             }
         }
         //删除<p></p>
-        html = html.replace(propertyStr,"");
-        html = html.replace("</p>","");
+        html = html.replace(propertyStr, "");
+        html = html.replace("</p>", "");
+        if("<br>".equals(html)){
+            html = "";
+        }
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
         editTextView.setSelection(editTextView.getRichText().getText().length());
@@ -208,9 +209,9 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int index = 0; index < length; index++) {
             BaseView baseView = (BaseView) getChildAt(index);
             JSONObject jsonObject = baseView.getOutputData();
-            if(jsonObject != null)
+            if (jsonObject != null)
                 jsonArray.put(jsonObject);
-            Log.i("tzy",jsonArray.toString());
+            Log.i("tzy", jsonArray.toString());
         }
         jsonArray.put(getUrlsJsonObj());
         return jsonArray.toString();
@@ -254,10 +255,13 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setOnFocusChangeCallback(new EditTextView.OnFocusChangeCallback() {
             @Override
             public void onFocusChange(EditTextView v, boolean hasFocus) {
-                if (hasFocus){
+                if (onFocusChangeCallback != null) {
+                    onFocusChangeCallback.onFocusChange(v, hasFocus);
+                }
+                if (hasFocus) {
                     currentEditText = v;
-                    if(indexOfChild(currentEditText) == getChildCount() - 1){
-                        if(onScorllEndCallback != null)
+                    if (indexOfChild(currentEditText) == getChildCount() - 1) {
+                        if (onScorllEndCallback != null)
                             onScorllEndCallback.onScorllEnd();
                     }
                 }
@@ -267,19 +271,21 @@ public class TextAndImageMixLayout extends LinearLayout
             @Override
             public void afterTextChanged(Editable s) {
                 int value = getTextCount() - maxTextCount;
-                if(value > 0){
-                    currentEditText.setText(s.subSequence(0,s.length() - value));
+                if (value > 0) {
+                    currentEditText.setText(s.subSequence(0, s.length() - value));
                     currentEditText.setSelection(currentEditText.getText().length());
-                    Tools.showToast(getContext(),"内容最多" + maxTextCount + "字");
-                    ToolsDevice.keyboardControl(false,getContext(),currentEditText);
+                    Tools.showToast(getContext(), "内容最多" + maxTextCount + "字");
+                    ToolsDevice.keyboardControl(false, getContext(), currentEditText);
                 }
             }
         });
-        if (!TextUtils.isEmpty(content)){
+        currentEditText.setOnSelectBoldCallback(onSelectBoldCallback);
+        currentEditText.setOnSelectUnderline(onSelectUnderlineCallback);
+        if (!TextUtils.isEmpty(content)) {
             view.setText(content);
             view.setSelection(view.getRichText().getText().length());
         }
-        view.getRichText().setHint(indexOfChild(view) == 0?"添加内容":"");
+        view.getRichText().setHint(indexOfChild(view) == 0 ? "添加内容" : "");
         return view;
     }
 
@@ -307,7 +313,7 @@ public class TextAndImageMixLayout extends LinearLayout
                 || imagePath.startsWith("http://"))
             return;
         //上传图片
-        new BreakPointControl(getContext(),"",imagePath,TYPE_IMG).start(new UploadListNetCallBack() {
+        new BreakPointControl(getContext(), "", imagePath, TYPE_IMG).start(new UploadListNetCallBack() {
             @Override
             public void onProgress(double progress, String uniqueId) {
 
@@ -337,10 +343,22 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 添加图片
-     *
      * @param imageUrl
+     * @param ifAddText
+     * @param content
      */
     public void addImage(String imageUrl, boolean ifAddText, CharSequence content) {
+        addImage(imageUrl, "",ifAddText, content);
+    }
+
+    /**
+     * 添加图片
+     * @param imageUrl
+     * @param idStr
+     * @param ifAddText
+     * @param content
+     */
+    public void addImage(String imageUrl,String idStr, boolean ifAddText, CharSequence content) {
         if (TextUtils.isEmpty(imageUrl))
             return;
         final int insertIndex = getFoucsIndex() + 1;
@@ -349,26 +367,27 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setEnableEdit(true);
         view.setSelected(isSecondEdit);
         view.setImageUrl(imageUrl);
+        view.setIdStr(idStr);
         view.setmOnRemoveCallback(this);
 
-        if(insertIndex >= getChildCount()){
-            if(getChildCount() == 0){
-                addRichText(-1,"");
-            }else{
+        if (insertIndex >= getChildCount()) {
+            if (getChildCount() == 0) {
+                addRichText(-1, "");
+            } else {
                 View preView = getChildAt(getChildCount() - 1);
-                if(!(preView instanceof EditTextView)){
-                    addRichText(-1,"");
+                if (!(preView instanceof EditTextView)) {
+                    addRichText(-1, "");
                 }
             }
-            addView(view,getChildLayoutParams());
+            addView(view, getChildLayoutParams());
         } else
             addView(view, insertIndex, getChildLayoutParams());
 
         imageMap.put(imageUrl, "");
 //        uploadImage(imageUrl);
         //如果网络图片则不上传，直接替换map数据
-        if(imageUrl.startsWith("http")){
-            imageMap.put(imageUrl,imageUrl);
+        if (imageUrl.startsWith("http")) {
+            imageMap.put(imageUrl, imageUrl);
         }
 
         //默认插入edit
@@ -388,7 +407,7 @@ public class TextAndImageMixLayout extends LinearLayout
             if (view instanceof ImageShowView) {
                 Map<String, String> map = new HashMap<>();
                 String path = ((ImageShowView) view).getImageUrl();
-                Log.i("tzy","getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
+                Log.i("tzy", "getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
                 map.put("path", path);
                 map.put("url", imageMap.get(path));
                 arrayList.add(map);
@@ -401,19 +420,36 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 添加视频
-     *
      * @param coverImageUrl
      * @param videoUrl
+     * @param ifAddText
+     * @param content
      */
     public void addVideo(String coverImageUrl, String videoUrl, boolean ifAddText, CharSequence content) {
+        addVideo(coverImageUrl, videoUrl,"", ifAddText, content);;
+    }
+
+    /**
+     * 添加视频
+     * @param coverImageUrl
+     * @param videoUrl
+     * @param idStr
+     * @param ifAddText
+     * @param content
+     */
+    public void addVideo(String coverImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
+        if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
+            Tools.showToast(getContext(),"文件已损坏");
+            return;
+        }
         int videoCount = 0;
         for (int index = 0; index < getChildCount(); index++) {
             View baseView = getChildAt(index);
             if (baseView instanceof VideoShowView)
                 videoCount++;
         }
-        if(videoCount >= maxVideoCount && !isSingleVideo){
-            Tools.showToast(getContext(),"最多可选择" + maxVideoCount + "视频");
+        if (videoCount >= maxVideoCount && !isSingleVideo) {
+            Tools.showToast(getContext(), "最多可选择" + maxVideoCount + "视频");
             return;
         }
         final int insertIndex = getFoucsIndex() + 1;
@@ -430,16 +466,16 @@ public class TextAndImageMixLayout extends LinearLayout
         }
         if (null == view) {
             view = new VideoShowView(getContext());
-            if(insertIndex >= getChildCount()){
-                if(getChildCount() == 0){
-                    addRichText(-1,"");
-                }else{
+            if (insertIndex >= getChildCount()) {
+                if (getChildCount() == 0) {
+                    addRichText(-1, "");
+                } else {
                     View preView = getChildAt(getChildCount() - 1);
-                    if(!(preView instanceof EditTextView)){
-                        addRichText(-1,"");
+                    if (!(preView instanceof EditTextView)) {
+                        addRichText(-1, "");
                     }
                 }
-                addView(view,getChildLayoutParams());
+                addView(view, getChildLayoutParams());
             } else
                 addView(view, insertIndex, getChildLayoutParams());
 
@@ -450,22 +486,23 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setEnableEdit(true);
         view.setSecondEdit(isSecondEdit);
         view.setVideoData(coverImageUrl, videoUrl);
+        view.setIdStr(idStr);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);
     }
 
-    public void setVideo(VideoShowView.VideoDefaultClickCallback callback){
+    public void setVideo(VideoShowView.VideoDefaultClickCallback callback) {
         VideoShowView view = new VideoShowView(getContext());
         LayoutParams layoutparams = getChildLayoutParams();
-        int dp_20 = Tools.getDimen(getContext(),R.dimen.dp_20);
+        int dp_20 = Tools.getDimen(getContext(), R.dimen.dp_20);
 //        view.setPadding(dp_20,dp_20,dp_20,0);
-        layoutparams.setMargins(0,dp_20,0,0);
+        layoutparams.setMargins(0, dp_20, 0, 0);
         addView(view, 0, layoutparams);
         view.setEnableEdit(true);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);
         view.setWrapContent(false);
-        if(callback != null)
+        if (callback != null)
             view.setVideoDefaultClickCallback(callback);
         currentEditText.getRichText().setHint("添加视频介绍");
     }
@@ -540,9 +577,9 @@ public class TextAndImageMixLayout extends LinearLayout
 
     @Override
     public void onRemove(final BaseView view) {
-        if(isSecondEdit){
+        if (isSecondEdit) {
             removeBaseView(view);
-        }else{
+        } else {
             final XhDialog dialog = new XhDialog(getContext());
             dialog.setTitle("确定删除？");
             dialog.setCanselButton("取消", new OnClickListener() {
@@ -568,16 +605,16 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param view
      */
     private void removeBaseView(BaseView view) {
-        if("2".equals(type)
-                && (view instanceof VideoShowView)){
-            ((VideoShowView)view).resetData();
+        if ("2".equals(type)
+                && (view instanceof VideoShowView)) {
+            ((VideoShowView) view).resetData();
             return;
         }
         final int index = indexOfChild(view);
         String text = "";
         if (index + 1 < getChildCount()) {
             View removeView = getChildAt(index + 1);
-            if (removeView instanceof EditTextView){
+            if (removeView instanceof EditTextView) {
                 text = ((EditTextView) removeView).getTextHtml();
                 removeViewAt(index + 1);
             }
@@ -589,8 +626,13 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int i = index; i >= 0; i--) {
             View lastView = getChildAt(i);
             if (lastView instanceof EditTextView) {
-                if(!TextUtils.isEmpty(text))
-                    ((EditTextView) lastView).appendText((Editable) RichParser.fromHtml(text));
+                EditTextView editTextView = ((EditTextView) lastView);
+                if (!TextUtils.isEmpty(text)) {
+                    editTextView.appendText((Editable) RichParser.fromHtml(text));
+                }
+                currentEditText = editTextView;
+                currentEditText.requestFocus();
+                currentEditText.setSelection(currentEditText.getRichText().getText().length());
                 break;
             }
         }
@@ -630,7 +672,10 @@ public class TextAndImageMixLayout extends LinearLayout
      */
     public boolean hasVideo() {
         VideoShowView view = getFirstVideoView();
-        return view != null;
+        boolean hasVideo = view != null
+                && !TextUtils.isEmpty(view.getCoverImageUrl())
+                && !TextUtils.isEmpty(view.getVideoUrl());
+        return hasVideo;
     }
 
     /**
@@ -667,7 +712,7 @@ public class TextAndImageMixLayout extends LinearLayout
         return null;
     }
 
-    public int getTextCount(){
+    public int getTextCount() {
         StringBuilder sbuilder = new StringBuilder();
         for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
@@ -679,7 +724,7 @@ public class TextAndImageMixLayout extends LinearLayout
         return sbuilder.length();
     }
 
-    public int getURLCount(){
+    public int getURLCount() {
         int count = 0;
         for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
@@ -707,21 +752,21 @@ public class TextAndImageMixLayout extends LinearLayout
         return imageUrlArray;
     }
 
-    public int getImageCount(){
+    public int getImageCount() {
         int imageCount = 0;
-        for(int index = 0;index< getChildCount();index++){
+        for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
-            if(view instanceof ImageShowView)
+            if (view instanceof ImageShowView)
                 imageCount++;
         }
         return imageCount;
     }
 
-    public int getVideoCount(){
+    public int getVideoCount() {
         int imageCount = 0;
-        for(int index = 0;index< getChildCount();index++){
+        for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
-            if(view instanceof VideoShowView)
+            if (view instanceof VideoShowView)
                 imageCount++;
         }
         return imageCount;
@@ -729,20 +774,31 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 获取视频数据
+     *
      * @return
      */
-    public ArrayList<Map<String,String>> getVideoArray(){
-        ArrayList<Map<String,String>> dataArray = new ArrayList<>();
-        for(int index = 0 ; index < getChildCount() ;index ++){
+    public ArrayList<Map<String, String>> getVideoArrayMap() {
+        ArrayList<Map<String, String>> dataArray = new ArrayList<>();
+        for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
-            if(view instanceof VideoShowView){
-                Map<String,String> map = new HashMap<>();
-                map.put("video",((VideoShowView)view).getVideoUrl());
-                map.put("image",((VideoShowView)view).getCoverImageUrl());
+            if (view instanceof VideoShowView) {
+                Map<String, String> map = new HashMap<>();
+                map.put("video", ((VideoShowView) view).getVideoUrl());
+                map.put("image", ((VideoShowView) view).getCoverImageUrl());
                 dataArray.add(map);
             }
         }
         return dataArray;
+    }
+
+    public ArrayList<String> getVideoArrayList() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int index = 0; index < getChildCount(); index++) {
+            View view = getChildAt(index);
+            if (view instanceof VideoShowView)
+                arrayList.add(((VideoShowView) view).getVideoUrl());
+        }
+        return arrayList;
     }
 
     public EditTextView getCurrentEditText() {
@@ -779,16 +835,35 @@ public class TextAndImageMixLayout extends LinearLayout
     }
 
     private String type;
+
     public void setType(String type) {
         this.type = type;
     }
 
     private OnScorllEndCallback onScorllEndCallback;
-    public interface OnScorllEndCallback{
+
+    public interface OnScorllEndCallback {
         public void onScorllEnd();
+    }
+
+    private EditTextView.OnFocusChangeCallback onFocusChangeCallback;
+
+    public void setOnFocusChangeCallback(EditTextView.OnFocusChangeCallback onFocusChangeCallback) {
+        this.onFocusChangeCallback = onFocusChangeCallback;
     }
 
     public void setOnScorllEndCallback(OnScorllEndCallback onScorllEndCallback) {
         this.onScorllEndCallback = onScorllEndCallback;
+    }
+
+    private EditTextView.OnSelectBoldCallback onSelectBoldCallback;
+    private EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback;
+
+    public void setOnSelectBoldCallback(EditTextView.OnSelectBoldCallback onSelectBoldCallback) {
+        this.onSelectBoldCallback = onSelectBoldCallback;
+    }
+
+    public void setOnSelectUnderlineCallback(EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback) {
+        this.onSelectUnderlineCallback = onSelectUnderlineCallback;
     }
 }

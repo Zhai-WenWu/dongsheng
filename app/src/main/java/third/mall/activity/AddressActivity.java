@@ -70,7 +70,7 @@ public class AddressActivity extends BaseActivity implements OnClickListener{
 		initView();
 		initData();
 		setListener();
-		initTitle();
+//		initTitle();
 	}
 
 	private void initTitle() {

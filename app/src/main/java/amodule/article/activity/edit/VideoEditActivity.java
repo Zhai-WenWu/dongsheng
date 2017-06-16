@@ -11,6 +11,7 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.activity.ArticleUploadListActivity;
+import amodule.article.activity.VideoDetailActivity;
 import amodule.article.db.UploadVideoSQLite;
 
 /**
@@ -102,5 +103,10 @@ public class VideoEditActivity extends EditParentActivity{
             return "文字最多" + getMaxTextCount() + "字";
         }
         return null;
+    }
+
+    @Override
+    public Class<?> getIntentClass() {
+        return VideoDetailActivity.class;
     }
 }

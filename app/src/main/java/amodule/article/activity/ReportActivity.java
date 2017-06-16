@@ -202,35 +202,35 @@ public class ReportActivity extends BaseActivity {
 
     private void addView(final ViewGroup parentView, Map<String, String> map) {
         if (map != null && !map.isEmpty() && parentView != null) {
-            for (int i = 0; i < map.size(); i ++) {
-                if (parentView == mReportContainer) {
-                    String key = String.valueOf(i + 1);
-                    String value = map.get(key);
-                    if (!TextUtils.isEmpty(value)) {
-                        int index = parentView.getChildCount();
-                        ReportItem item = getItemView(parentView, key, value, index);
-                        if (item != null)
-                            parentView.addView(item, index);
+            if (parentView == mReportContainer) {
+                for (int i = 0; i < map.size(); i ++) {
+                    if (parentView == mReportContainer) {
+                        String key = String.valueOf(i + 1);
+                        String value = map.get(key);
+                        if (!TextUtils.isEmpty(value)) {
+                            int index = parentView.getChildCount();
+                            ReportItem item = getItemView(parentView, key, value, index);
+                            if (item != null)
+                                parentView.addView(item, index);
 
-                    }
-                } else if (parentView == mAdminContainer) {
-                    if (i == 0) {
-                        String value = map.get("40");
-                        if (!TextUtils.isEmpty(value)) {
-                            int index = parentView.getChildCount();
-                            ReportItem item = getItemView(parentView, "40", value, index);
-                            if (item != null)
-                                parentView.addView(item, index);
                         }
-                    } else if (i == 1) {
-                        String value = map.get("20");
-                        if (!TextUtils.isEmpty(value)) {
-                            int index = parentView.getChildCount();
-                            ReportItem item = getItemView(parentView, "20", value, index);
-                            if (item != null)
-                                parentView.addView(item, index);
-                        }
+                    } else if (parentView == mAdminContainer) {
                     }
+                }
+            } else if (parentView == mAdminContainer) {
+                String value1 = map.get("40");
+                if (!TextUtils.isEmpty(value1)) {
+                    int index = parentView.getChildCount();
+                    ReportItem item = getItemView(parentView, "40", value1, index);
+                    if (item != null)
+                        parentView.addView(item, index);
+                }
+                String value = map.get("20");
+                if (!TextUtils.isEmpty(value)) {
+                    int index = parentView.getChildCount();
+                    ReportItem item = getItemView(parentView, "20", value, index);
+                    if (item != null)
+                        parentView.addView(item, index);
                 }
             }
         }

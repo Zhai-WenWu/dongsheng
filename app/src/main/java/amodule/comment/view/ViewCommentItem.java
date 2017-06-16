@@ -142,6 +142,22 @@ public class ViewCommentItem extends LinearLayout {
         String is_anchor = dataMap.get("is_anchor");
         if("2".equals(is_anchor)){
             commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
+            if (mListener != null) {
+                String ucode = cusstomMap.get("ucode");
+                boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
+                mListener.onContentReplayClick(comment_id, null, cusstomMap.get("ucode"), cusstomMap.get("nick_name"), "点击评论文字", false, isMyselft);
+            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dataMap.put("is_anchor","1");
+                }
+            }).start();
         }
         else commentContent.setBackgroundColor(Color.parseColor("#00fffae3"));
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
@@ -221,8 +237,8 @@ public class ViewCommentItem extends LinearLayout {
                 public void onClick(View v) {
                     String ucode = cusstomMap.get("ucode");
                     boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
-                    if (mListener != null && !isShowContentClick && !isMyselft)
-                        mListener.onContentReplayClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字");
+                    if (mListener != null && !isShowContentClick)
+                        mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"), cusstomMap.get("nick_name"),"点击评论文字",true,isMyselft);
                     isShowContentClick = false;
                 }
             });
@@ -319,6 +335,7 @@ public class ViewCommentItem extends LinearLayout {
         Log.i("commentReplay","addReplayView() replayArray.size:" + replayArray.size());
         View view;
         MultifunctionTextView replayTv;
+        boolean isReset = false;
         for(final Map<String, String> replayMap:replayArray) {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
@@ -340,6 +357,12 @@ public class ViewCommentItem extends LinearLayout {
             if("2".equals(is_anchor)){ //是否是锚点
                 Log.i("commentReplay","is_anchor:" + is_anchor);
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
+                if(mListener != null) {
+                    boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
+                    mListener.onContentReplayClick(comment_id, replayMap.get("replay_id"), ucode, uName, "点击楼中楼文字", false, isMyselft);
+                }
+                replayMap.put("is_anchor","1");
+                isReset = true;
             }
             else view.setBackgroundColor(Color.parseColor("#00fffae3"));
 
@@ -389,8 +412,8 @@ public class ViewCommentItem extends LinearLayout {
                 @Override
                 public void onCommentClick(View v, String userCode) {
                     boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
-                    if(mListener != null && !isMyselft)
-                        mListener.onContentReplayClick(comment_id,ucode,uName,"点击楼中楼文字");
+                    if(mListener != null)
+                        mListener.onContentReplayClick(comment_id,replayMap.get("replay_id"),ucode,uName,"点击楼中楼文字",true,isMyselft);
                 }
             });
             multifunctionText.addStyle(contentBuilder.getContent(), contentBuilder.build());
@@ -413,6 +436,19 @@ public class ViewCommentItem extends LinearLayout {
             commentReplay.setVisibility(View.VISIBLE);
             commentReplayImg.setVisibility(View.VISIBLE);
             commentReplay.addView(view);
+        }
+        if(isReset){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dataMap.put("replay",StringManager.getJsonByArrayList(replayArray).toString());
+                }
+            }).start();
         }
     }
 
@@ -441,8 +477,8 @@ public class ViewCommentItem extends LinearLayout {
             public void onClick(View v) {
                 String ucode = cusstomMap.get("ucode");
                 final boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
-                if(!isDelete && mListener != null && !isMyselft)
-                    mListener.onContentReplayClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),"点击回复按钮");
+                if(!isDelete && mListener != null)
+                    mListener.onContentReplayClick(comment_id,null,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),"点击回复按钮",true,isMyselft);
             }
         });
         commentDelete.setText(isDelete ? "删除":"举报");
@@ -505,7 +541,7 @@ public class ViewCommentItem extends LinearLayout {
          * @param replay_user_name
          * @param type ：需要回复的触发形式：点击评论文字、点击回复文字、点击楼中楼文字
          */
-        public void onContentReplayClick(String comment_id,String replay_user_code,String replay_user_name,String type);
+        public void onContentReplayClick(String comment_id,String replay_id,String replay_user_code,String replay_user_name,String type,boolean isShowKeyBoard,boolean isMySelft);
     }
 
     public interface OnUserInforListener{
