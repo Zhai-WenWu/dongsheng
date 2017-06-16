@@ -156,6 +156,10 @@ public class HomeTxtItem extends HomeItem {
                 mTitle.setVisibility(View.VISIBLE);
             }
         }
+        if (imgCount == 1) {
+            mTitle.setLines(2);
+            mTitle.setMaxLines(Integer.MAX_VALUE);
+        }
         String comNum = null;//评论量
         String comNumStr = mDataMap.get("commentNum");
         if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 10) {
@@ -263,6 +267,10 @@ public class HomeTxtItem extends HomeItem {
         super.resetView();
         if (viewIsVisible(mTitle))
             mTitle.setVisibility(View.GONE);
+        if (mTitle != null) {
+            mTitle.setLines(1);
+            mTitle.setMaxLines(2);
+        }
         if (viewIsVisible(mNum1))
             mNum1.setVisibility(View.GONE);
         if (viewIsVisible(mNum2))

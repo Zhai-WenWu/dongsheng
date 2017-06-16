@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -94,6 +97,25 @@ public class ArticleDetailActivity extends BaseActivity {
     private boolean isAdShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
+
+    public final int ARTICLE_BOTTOM = 1;
+    public final int ARTICLE_RECOMMEND = 2;
+    private Handler adHandler  = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch(msg.what){
+                case ARTICLE_BOTTOM:
+                    showAD(adDataMap);
+                    detailAdapter.notifyDataSetChanged();
+                    break;
+                case ARTICLE_RECOMMEND:
+                    handlerAdData();
+                    detailAdapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -324,7 +346,8 @@ public class ArticleDetailActivity extends BaseActivity {
         listview.addFooterView(view);
 
         requestArticleData(false);
-        initAD();//初始化广告
+        //初始化广告
+        initAD();
     }
 
     private void initAD() {
@@ -379,8 +402,7 @@ public class ArticleDetailActivity extends BaseActivity {
                                         adDataMap = StringManager.getFirstMap(adStr);
                                         Log.i("tzy", "adDataMap = " + adDataMap.toString());
                                         if (adDataMap != null && adDataMap.size() > 0) {
-                                            showAD(adDataMap);
-                                            detailAdapter.notifyDataSetChanged();
+                                            adHandler.sendEmptyMessage(ARTICLE_BOTTOM);
                                         }
                                     }
                                     break;
@@ -390,9 +412,8 @@ public class ArticleDetailActivity extends BaseActivity {
                                         Map<String,String> adMap = StringManager.getFirstMap(adStr);
                                         if(adMap != null)
                                             adRcomDataArray.add(adMap);
+                                        adHandler.sendEmptyMessage(ARTICLE_RECOMMEND);
                                         Log.i("tzy", "adRcomDataArray = " + adRcomDataArray.toString());
-                                        handlerAdData();
-                                        detailAdapter.notifyDataSetChanged();
                                     }
                                     break;
                             }

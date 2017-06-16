@@ -210,6 +210,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         editTitle.setHint(ss);
         editTitle.addTextChangedListener(new TextWatcher() {
             String preStr = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 preStr = s.toString();
@@ -670,23 +671,25 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             saveDraft();
             finshActivity();
         } else {
-            if(isKeyboradShow)
-                ToolsDevice.keyboardControl(false,this,editTitle);//收回键盘
+            if (isKeyboradShow)
+                ToolsDevice.keyboardControl(false, this, editTitle);//收回键盘
             final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
             xhDialog.setTitle("二次编辑的内容将不会保存到草稿箱，是否继续退出？")
-                    .setSureButton("取消", new View.OnClickListener() {
+                    .setCanselButton("取消", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             xhDialog.cancel();
                         }
-                    }).setCanselButton("退出", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sqLite.deleteById(uploadArticleData.getId());
-                    xhDialog.cancel();
-                    finshActivity();
-                }
-            }).show();
+                    })
+                    .setSureButtonTextColor("#333333")
+                    .setSureButton("退出", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sqLite.deleteById(uploadArticleData.getId());
+                            xhDialog.cancel();
+                            finshActivity();
+                        }
+                    }).show();
         }
 
     }
@@ -704,7 +707,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 XHClick.mapStat(this, "a_ArticleEdit", "关闭页面", "");
                 break;
         }
-        if(!TextUtils.isEmpty(code)) {
+        if (!TextUtils.isEmpty(code)) {
             Intent intent = new Intent(EditParentActivity.this, getIntentClass());
             intent.putExtra("code", code);
             startActivity(intent);

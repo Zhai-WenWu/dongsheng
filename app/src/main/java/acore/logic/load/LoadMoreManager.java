@@ -21,7 +21,7 @@ public class LoadMoreManager {
 	
 	public LoadMoreManager(Context context){
 		this.mContext = context;
-		mHeightLoadmore = Tools.getDimen(mContext, R.dimen.dp_60);
+		mHeightLoadmore = Tools.getDimen(mContext, R.dimen.dp_100);
 		mTextSize = Tools.getDimenSp(mContext, R.dimen.sp_12);
 	}
 
