@@ -73,7 +73,7 @@
     <acore.widget.TagTextView xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ad_skip"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dp_28"
+        android:layout_height="@dimen/dp_26"
         android:layout_below="@+id/welcome_one"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_15"
