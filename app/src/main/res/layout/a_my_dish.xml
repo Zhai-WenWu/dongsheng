@@ -6,7 +6,8 @@
     <TextView
         android:id="@+id/tv_noData"
         style="@style/noDataText"
-        android:text="还没有上传过菜谱哦~" />
+        android:text="还没有上传过菜谱哦~"
+        android:background="#ffffff"/>
 
     <acore.widget.DownRefreshList
         android:id="@+id/lv_myDish"
