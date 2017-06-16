@@ -281,10 +281,6 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutThree);
 
         listview.addHeaderView(layout);
-
-        View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
-        listview.addFooterView(view);
     }
 
     /** 数据初始化 **/
@@ -345,6 +341,9 @@ public class ArticleDetailActivity extends BaseActivity {
                         }
                     }
                 });
+        View view = new View(this);
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
+        listview.addFooterView(view);
         //请求文章数据
         requestArticleData(false);
         //初始化广告
