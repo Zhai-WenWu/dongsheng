@@ -73,6 +73,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private ListView listview;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;//头部view
+    private TextView mTitle;
     private ImageView rightButton;
     private PtrClassicFrameLayout refreshLayout;
     private ArticleContentBottomView articleContentBottomView;
@@ -142,8 +143,8 @@ public class ArticleDetailActivity extends BaseActivity {
         imageView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
         Glide.with(this).load(dataMap.get("imgUrl")).centerCrop().into(imageView);
         //加载title
-        TextView title = (TextView) adView.findViewById(R.id.title);
-        title.setText(new StringBuilder().append(dataMap.get("title")).append(" | ").append(dataMap.get("desc")));
+        TextView adTitle = (TextView) adView.findViewById(R.id.title);
+        adTitle.setText(new StringBuilder().append(dataMap.get("title")).append(" | ").append(dataMap.get("desc")));
         //设置ad点击
         adView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,6 +183,7 @@ public class ArticleDetailActivity extends BaseActivity {
         String color = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(color));
         //初始化title
+        mTitle = (TextView) findViewById(R.id.title);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
         ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
@@ -470,6 +472,10 @@ public class ArticleDetailActivity extends BaseActivity {
 
 
         final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
+        if(!TextUtils.isEmpty(customerData.get("nickName"))){
+            mTitle.setText(customerData.get("nickName"));
+            mTitle.setVisibility(View.VISIBLE);
+        }
         final String userCode = customerData.get("code");
         final boolean isAuthor = LoginManager.isLogin()
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
@@ -597,6 +603,17 @@ public class ArticleDetailActivity extends BaseActivity {
                 return map;
             }
         }
+        //特殊处理gif图时，img字段没有值的情况
+        if(TextUtils.isEmpty(map.get("img"))){
+            for(int index = 0 ; index < styleDataList.size();index ++){
+                Map<String,String> data = styleDataList.get(index);
+                if("3".equals(data.get("type"))){
+                    map.put("img",data.get("url"));
+                    map.put("videoIconShow","1");
+                    return map;
+                }
+            }
+        }
         return map;
     }
 
@@ -653,6 +670,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void showBottomDialog() {
+        ToolsDevice.keyboardControl(false,this,mArticleCommentBar);
         BottomDialog dialog = new BottomDialog(this);
         dialog.addButton("分享", new View.OnClickListener() {
             @Override

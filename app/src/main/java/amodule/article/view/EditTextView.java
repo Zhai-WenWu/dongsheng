@@ -151,8 +151,6 @@ public class EditTextView extends BaseView {
 
     @Override
     public JSONObject getOutputData() {
-        if (TextUtils.isEmpty(mRichText.getText()))
-            return null;
         JSONObject jsonObject = new JSONObject();
         try {
             //正则处理html标签
@@ -163,7 +161,7 @@ public class EditTextView extends BaseView {
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
-                    .append(mRichText.toHtml())//.replaceAll("\"","\\\"")
+                    .append(TextUtils.isEmpty(mRichText.getText()) ? "<br>" : mRichText.toHtml())//.replaceAll("\"","\\\"")
                     .append("</p>");
             Log.i("tzy", "edittext content = " + builder.toString());
             jsonObject.put("html", builder.toString());

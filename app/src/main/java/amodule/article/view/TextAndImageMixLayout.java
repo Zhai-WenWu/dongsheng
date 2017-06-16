@@ -160,6 +160,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
         if (htmlTmep.indexOf(">") + 1 >= 0)
             html = htmlTmep.substring(htmlTmep.indexOf(">") + 1, htmlTmep.length());
+        Log.i("tzy","html = " + html);
         //处理<a></a>
         while (htmlTmep.indexOf("<a") >= 0) {
             int startIndex = htmlTmep.indexOf("<a");
@@ -189,6 +190,9 @@ public class TextAndImageMixLayout extends LinearLayout
         //删除<p></p>
         html = html.replace(propertyStr, "");
         html = html.replace("</p>", "");
+        if("<br>".equals(html)){
+            html = "";
+        }
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
         editTextView.setSelection(editTextView.getRichText().getText().length());
