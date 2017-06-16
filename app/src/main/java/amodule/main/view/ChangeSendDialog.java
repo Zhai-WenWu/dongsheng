@@ -241,7 +241,6 @@ public class ChangeSendDialog extends Dialog {
                 videoDish.putExtra(UploadDishActivity.DISH_TYPE_KEY, UploadDishActivity.DISH_TYPE_VIDEO);
                 activity.startActivity(videoDish);
                 break;
-            //TODO
             case "6":
                 closeDialog();
                 if(!LoginManager.isLogin()) {
