@@ -139,12 +139,14 @@ public class HomePostItem extends HomeItem {
                     imgCount = maps.size();
                     RelativeLayout.LayoutParams postContainerParams = (LayoutParams) mPostContainer.getLayoutParams();
                     if (imgCount == 0) {
+                        mPostContainer.setMinimumHeight(0);
                         postContainerParams.height = LayoutParams.WRAP_CONTENT;
                         postContainerParams.topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                         postContainerParams.bottomMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                     } else if (imgCount < 3) {
                         if (mPostContainer != null) {
-                            postContainerParams.height = getContext().getResources().getDimensionPixelSize(R.dimen.dp_74_5);
+                            mPostContainer.setMinimumHeight(getContext().getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+                            postContainerParams.height = LayoutParams.WRAP_CONTENT;
                             postContainerParams.topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                             postContainerParams.bottomMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_15);
                             mPostContainer.setLayoutParams(postContainerParams);
@@ -159,6 +161,7 @@ public class HomePostItem extends HomeItem {
                             mAdTagRight.setVisibility(View.VISIBLE);
                     } else {
                         if (mPostContainer != null) {
+                            mPostContainer.setMinimumHeight(0);
                             postContainerParams.height = LayoutParams.WRAP_CONTENT;
                             postContainerParams.topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                             postContainerParams.bottomMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
@@ -201,7 +204,9 @@ public class HomePostItem extends HomeItem {
             } else if (imgCount >= 3) {
                 mTitle.setMaxLines(2);
             } else {
-                titleParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dp_1);
+                mTitle.setLines(2);
+                mTitle.setMaxLines(Integer.MAX_VALUE);
+                titleParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dp_5);
             }
             mTitle.setLayoutParams(titleParams);
             mTitle.setVisibility(View.VISIBLE);
