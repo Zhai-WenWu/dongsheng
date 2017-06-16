@@ -97,11 +97,7 @@ public class CoreService extends NormalService {
     }
 
     private boolean isOpenActivity() {
-        String timeStr = FileManager.loadShared(getApplicationContext(), FileManager.xmlFile_appInfo, FileManager.xmlKey_firstStart_v2).toString();
-        if (TextUtils.isEmpty(timeStr)) {
-            timeStr = String.valueOf(System.currentTimeMillis());
-            FileManager.saveShared(getApplicationContext(), FileManager.xmlFile_appInfo, FileManager.xmlKey_firstStart_v2, timeStr);
-        }
+        String timeStr = getAppFirstStartTime();
 
         long millis = Long.parseLong(timeStr);
         int dayCount = getGapCount(millis);
