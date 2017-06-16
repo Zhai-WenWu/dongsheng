@@ -166,7 +166,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                 });
 
         praiseNum++;
-        praiseText.setText(praiseNum);
+        praiseText.setText(String.valueOf(praiseNum));
         praiseButton.setEnabled(false);
         praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
 

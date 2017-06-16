@@ -50,7 +50,7 @@
         android:lineSpacingExtra="@dimen/dp_4"
         android:maxLines="2"
         android:textColor="#535353"
-        android:textSize="@dimen/sp_17"
+        android:textSize="@dimen/sp_16"
         android:visibility="visible"/>
 
 </RelativeLayout>
