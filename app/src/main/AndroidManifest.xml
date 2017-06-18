@@ -338,6 +338,7 @@
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.dish.activity.ListDish"
@@ -649,6 +650,7 @@
             android:name="amodule.search.avtivity.HomeSearch"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
         <!-- global search end -->
 

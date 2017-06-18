@@ -33,6 +33,7 @@ import acore.tools.ToolsDevice;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.tools.ADDishContorl;
+import amodule.main.Main;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
@@ -46,7 +47,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 
 public class DishActivityViewControl {
     private Activity activity;
-    private RelativeLayout bar_title_1,barTitle_inner_1;
+    private RelativeLayout bar_title_1;
     private ListView listview;
     private DishTitleViewControl dishTitleViewControl;
     private DishHeaderView dishHeaderView;
@@ -85,8 +86,8 @@ public class DishActivityViewControl {
     public DishActivityViewControl(Activity activity){
         this.activity= activity;
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
-        topRedundant = Tools.getDimen(activity,R.dimen.dp_45) + Tools.getStatusBarHeight(activity);
-        bottomRedundant = Tools.getDimen(activity,R.dimen.dp_50);
+        topRedundant = Tools.getDimen(activity,R.dimen.dp_45) ;
+        bottomRedundant = 0;
     }
 
     public void init(String state,LoadManager loadManager,String code,DishViewCallBack callBack) {
@@ -108,8 +109,7 @@ public class DishActivityViewControl {
      * 处理标题状态栏
      */
     private void initTitle() {
-        bar_title_1 = (RelativeLayout) activity.findViewById(R.id.title_rela_all_dish);
-        barTitle_inner_1 = (RelativeLayout) activity.findViewById(R.id.dish_title_dish);
+        bar_title_1 = (RelativeLayout) activity.findViewById(R.id.dish_title_dish);
 //        if (Tools.isShowTitle()) {
 //            int dp_45 = Tools.getDimen(activity, R.dimen.dp_45);
 //            int height = dp_45 + Tools.getStatusBarHeight(activity);
@@ -117,7 +117,8 @@ public class DishActivityViewControl {
 //            bar_title_1.setLayoutParams(layout);
 //            bar_title_1.setPadding(0, Tools.getStatusBarHeight(activity), 0, 0);
 //        }
-        barTitle_inner_1.setBackgroundColor(Color.parseColor("#00ffffff"));
+//        bar_title_1.setBackgroundColor(Color.parseColor("#00ffffff"));
+//        bar_title_1.setBackgroundResource(R.drawable.bar_dish_gradient);
         bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
     }
 
@@ -538,15 +539,17 @@ public class DishActivityViewControl {
 
                     }
                 });
-            }else bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
+            }
+            else bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
         }
     }
 
     public void onResume() {
+        if(dishHeaderView!=null)
         dishHeaderView.onResume();
     }
     public void onPause() {
-        dishHeaderView.onPause();
+        if(dishHeaderView!=null)dishHeaderView.onPause();
     }
 
     /**
@@ -567,6 +570,7 @@ public class DishActivityViewControl {
      * @return
      */
     public DishTitleViewControl getDishTitleViewControl(){
+
         return dishTitleViewControl;
     }
 

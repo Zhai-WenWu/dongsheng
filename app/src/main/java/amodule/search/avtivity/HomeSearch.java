@@ -1,5 +1,6 @@
 package amodule.search.avtivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import amodule.search.data.SearchConstant;
 import amodule.search.view.GlobalSearchView;
 import amodule.search.view.SearchResultAdDataProvider;
@@ -63,18 +65,20 @@ public class HomeSearch extends BaseActivity {
     }
 
     private void initTitle() {
-        if (Tools.isShowTitle()) {
-            LinearLayout linearView = new LinearLayout(this);
-//            int dp_46 = Tools.getDimen(getApplicationContext(), R.dimen.dp_46);
-            int height = /*dp_46 + */Tools.getStatusBarHeight(getApplicationContext());
-            linearView.setBackgroundColor(getResources().getColor(R.color.common_top_bg));
-            linearView.setOrientation(LinearLayout.VERTICAL);
-            RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
-            RelativeLayout activityLayout = (RelativeLayout) findViewById(R.id.activityLayout);
-            activityLayout.addView(linearView,0,params);//
-        }else{
+//        if (Tools.isShowTitle()) {
+//            LinearLayout linearView = new LinearLayout(this);
+////            int dp_46 = Tools.getDimen(getApplicationContext(), R.dimen.dp_46);
+//            int height = /*dp_46 + */Tools.getStatusBarHeight(getApplicationContext());
+//            linearView.setBackgroundColor(getResources().getColor(R.color.common_top_bg));
+//            linearView.setOrientation(LinearLayout.VERTICAL);
+//            RelativeLayout.LayoutParams params =new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+//            RelativeLayout activityLayout = (RelativeLayout) findViewById(R.id.activityLayout);
+//            activityLayout.addView(linearView,0,params);//
+//        }else{
             findViewById(R.id.all_title_rela).setBackgroundColor(getResources().getColor(R.color.common_top_bg));
-        }
+//        }
+        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
     }
 
     @Override

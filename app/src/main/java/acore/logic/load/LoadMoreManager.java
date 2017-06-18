@@ -36,7 +36,7 @@ public class LoadMoreManager {
 		Button loadMoreBtn = new Button(mContext);
 		loadMoreBtn.setHeight(mHeightLoadmore);
 		loadMoreBtn.setGravity(Gravity.CENTER);
-		loadMoreBtn.setText("加载更多");
+		loadMoreBtn.setText("点击加载更多");
 		loadMoreBtn.setTextSize(mTextSize);
 		loadMoreBtn.setTextColor(Color.parseColor("#AEAEAE"));
 		loadMoreBtn.setBackgroundResource(R.drawable.btn_nocolor);
