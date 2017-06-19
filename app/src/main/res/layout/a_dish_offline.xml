@@ -37,6 +37,6 @@
         android:text="还没有离线菜谱哦~\n\n加入清单的菜谱可离线查看"
         android:textColor="#777"
         android:textSize="@dimen/sp_15"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>
