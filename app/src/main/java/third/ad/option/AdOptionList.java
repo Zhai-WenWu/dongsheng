@@ -105,6 +105,11 @@ public abstract class  AdOptionList extends AdOptionParent {
                                                     styleData.put(styleObject);
                                                 }
                                             }
+                                        } else {
+                                            JSONObject styleObject = new JSONObject();
+                                            styleObject.put("url", adMap.get("img"));
+                                            styleObject.put("type", "1");
+                                            styleData.put(styleObject);
                                         }
                                         adMap.put("style", arrayList.size() > 1 && "3".equals(type) ? "2" : old_list.get(aboveIndex).get("style"));
                                     }else if("5".equals(type)){
