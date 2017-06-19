@@ -36,6 +36,7 @@ public class HomeTxtItem extends HomeItem {
     private ImageView mImg;
     private ImageView mAdTag;
     private RelativeLayout mImgs;
+    private RelativeLayout mContainer;
     private View mLayerView;
 
     public HomeTxtItem(Context context) {
@@ -59,6 +60,7 @@ public class HomeTxtItem extends HomeItem {
         mImg = (ImageView) findViewById(R.id.img);
         mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mImgs = (RelativeLayout) findViewById(R.id.imgs);
+        mContainer = (RelativeLayout) findViewById(R.id.txt_container);
         mLayerView = findViewById(R.id.layer_view);
         addListener();
     }
@@ -155,6 +157,14 @@ public class HomeTxtItem extends HomeItem {
                 mTitle.setText(name);
                 mTitle.setVisibility(View.VISIBLE);
             }
+        }
+        RelativeLayout.LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
+        if (imgCount <= 0) {
+            containerParams.height = LayoutParams.WRAP_CONTENT;
+            mContainer.setMinimumHeight(0);
+//            mContainer.setLayoutParams(containerParams);
+        } else {
+            mContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
         }
         if (imgCount == 1) {
             mTitle.setLines(2);

@@ -56,6 +56,10 @@ public abstract class  AdOptionList extends AdOptionParent {
                             JSONArray styleData = new JSONArray();
                             //腾讯api广告不用根据上一个item样式变;101:表示返回的是一张小图、202:一个大图、301:3张小图
                             try {
+
+
+                                Log.e("SLL", "adMap = " + adMap.toString());
+
                                 if (XHScrollerAdParent.ADKEY_API.equals(adMap.get("adClass"))) {
                                     Log.i("FRJ","stype:" + adMap.get("stype"));
                                     if ("101".equals(adMap.get("stype"))) {
@@ -105,6 +109,11 @@ public abstract class  AdOptionList extends AdOptionParent {
                                                     styleData.put(styleObject);
                                                 }
                                             }
+                                        } else {
+                                            JSONObject styleObject = new JSONObject();
+                                            styleObject.put("url", adMap.get("img"));
+                                            styleObject.put("type", "1");
+                                            styleData.put(styleObject);
                                         }
                                         adMap.put("style", arrayList.size() > 1 && "3".equals(type) ? "2" : old_list.get(aboveIndex).get("style"));
                                     }else if("5".equals(type)){
@@ -126,6 +135,9 @@ public abstract class  AdOptionList extends AdOptionParent {
                             }
 
                             adMap.put("styleData", styleData.toString());
+
+                            Log.e("SLL", "adMap1 = " + adMap.toString());
+
                             Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   style:" + adMap.get("style"));
                             if(!TextUtils.isEmpty(adMap.get("style")))
                                 old_list.add(index, adMap);
