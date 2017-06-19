@@ -92,6 +92,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     /** 定时存草稿 */
     protected Timer timer;
+    protected TimerTask mTimerTask;
     private int taskTime = 30 * 1000;
 
     private String mPageTag = "EditParentActivity";
@@ -553,17 +554,17 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             if (isFist) {
                 isFist = false;
                 Tools.showToast(EditParentActivity.this, "内容已保存");
-                saveDraft();
-            } else {
-                saveDraft();
             }
+            saveDraft();
         }
     }
 
     private void timingSave() {
+        if(timer != null)return;
+        Log.i("timeSave","timingSave()");
         timer = new Timer();
         final Handler handler = new Handler(Looper.getMainLooper());
-        TimerTask tt = new TimerTask() {
+        mTimerTask = new TimerTask() {
             @Override
             public void run() {
                 handler.post(new Runnable() {
@@ -574,7 +575,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 });
             }
         };
-        timer.schedule(tt, taskTime, taskTime);
+        timer.schedule(mTimerTask, taskTime, taskTime);
     }
 
     protected int saveDraft() {
@@ -622,12 +623,25 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (TextUtils.isEmpty(code)) timingSave();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+        if(TextUtils.isEmpty(code)) saveDraft();
         if (timer != null) {
             timer.cancel();
             timer.purge();
             timer = null;
+            Log.i("timeSave","timer.cancel()");
+        }
+        if(mTimerTask != null){
+            mTimerTask.cancel();
+            mTimerTask = null;
+            Log.i("timeSave","mTimerTask.cancel()");
         }
         if (isKeyboradShow)
             ToolsDevice.keyboardControl(false, this, editTitle);
