@@ -153,6 +153,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
         }
         if(!LoginManager.isLogin()){
             ToolsDevice.keyboardControl(false, getContext(), editText);
+            Tools.showToast(getContext(),"请先登录或注册哦~");
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }
@@ -166,7 +167,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                 });
 
         praiseNum++;
-        praiseText.setText(praiseNum);
+        praiseText.setText(String.valueOf(praiseNum));
         praiseButton.setEnabled(false);
         praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
 
@@ -176,6 +177,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
     private void sentComment() {
         if(!LoginManager.isLogin()){
             ToolsDevice.keyboardControl(false, getContext(), editText);
+            Tools.showToast(getContext(),"请先登录或注册哦~");
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }

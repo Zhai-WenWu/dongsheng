@@ -26,6 +26,8 @@ import third.push.umeng.UMPushServer;
 import static com.sina.sinavideo.coreplayer.util.AndroidUtil.getProcessName;
 
 public class XHApplication extends Application {
+    /**包名*/
+    private static final String PACKAGE_NAME = "com.xiangha";
     private static XHApplication mAppApplication;
 
     //仿造单例，获取application对象
@@ -51,7 +53,7 @@ public class XHApplication extends Application {
         initUmengPush();
         String processName = getProcessName(this);
         if (processName != null) {
-            if (processName.equals("com.xiangha")) {//多进程多初始化，只对xiangha进程进行初始化
+            if (processName.equals(PACKAGE_NAME)) {//多进程多初始化，只对xiangha进程进行初始化
                 initData();
             }
         }

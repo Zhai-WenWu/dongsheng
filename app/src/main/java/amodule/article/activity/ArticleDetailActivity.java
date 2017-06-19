@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -72,7 +75,8 @@ public class ArticleDetailActivity extends BaseActivity {
     public static final String TYPE_VIDEO = "2";
 
     private ListView listview;
-    private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;//头部view
+    /** 头部view */
+    private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
     private TextView mTitle;
     private ImageView rightButton;
     private PtrClassicFrameLayout refreshLayout;
@@ -80,13 +84,14 @@ public class ArticleDetailActivity extends BaseActivity {
     private ArticleHeaderView headerView;
     private XHWebView webView;
     private ArticleCommentBar mArticleCommentBar;
-    private XHAllAdControl xhAllAdControlBootom;
-    private XHAllAdControl xhAllAdControlList;
+    private View adView;
+
+    private XHAllAdControl xhAllAdControlBootom, xhAllAdControlList;
     private ArticleDetailAdapter detailAdapter;
 
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
-    private Map<String, String> adDataMap;
     private ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
+    private Map<String, String> adDataMap;
     private Map<String, String> commentMap;
     private Map<String, String> shareMap = new HashMap<>();
     private String commentNum;
@@ -94,6 +99,26 @@ public class ArticleDetailActivity extends BaseActivity {
     private boolean isAdShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
+
+    public final int ARTICLE_BOTTOM = 1;
+    public final int ARTICLE_RECOMMEND = 2;
+    private Handler adHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case ARTICLE_BOTTOM:
+                    showAD(adDataMap);
+                    detailAdapter.notifyDataSetChanged();
+                    break;
+                case ARTICLE_RECOMMEND:
+                    handlerAdData();
+                    detailAdapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,12 +151,376 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 初始化 **/
     private void init() {
-        initActivity(getTitleText(), 2, 0, 0, R.layout.a_article_detail);
         initView();
         initData();
     }
 
-    private View adView;
+    /** View部分初始化 **/
+    private void initView() {
+        initActivity(getTitleText(), 2, 0, 0, R.layout.a_article_detail);
+        //处理状态栏引发的问题
+        initStatusBar();
+        //初始化title
+        initTitle();
+        //初始化刷新layout
+        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
+        //初始化listview
+        initListView();
+        //初始化评论框
+        initCommentBar();
+    }
+
+    private void initStatusBar() {
+        if (Tools.isShowTitle()) {
+            final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
+            //设置layout监听，处理键盘弹出的高度问题
+            rl.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        public void onGlobalLayout() {
+                            int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+                            Rect r = new Rect();
+                            rl.getWindowVisibleDisplayFrame(r);
+                            int screenHeight = rl.getRootView().getHeight();
+                            int heightDifference = screenHeight - (r.bottom - r.top);
+                            isKeyboradShow = heightDifference > 200;
+                            heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
+                            bottomBarLayout.setPadding(0, 0, 0, heightDifference);
+                        }
+                    });
+        }
+        String color = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(color));
+    }
+
+    /** 初始化title */
+    private void initTitle() {
+        mTitle = (TextView) findViewById(R.id.title);
+        rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
+        ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
+        layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
+        leftImage.setLayoutParams(layoutParams);
+
+        findViewById(R.id.back).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
+    }
+
+    /** 初始化评论框 */
+    private void initCommentBar() {
+        mArticleCommentBar = (ArticleCommentBar) findViewById(R.id.acticle_comment_bar);
+        mArticleCommentBar.setCode(code);
+        mArticleCommentBar.setType(getType());
+        mArticleCommentBar.setOnCommentSuccessCallback(new ArticleCommentBar.OnCommentSuccessCallback() {
+            @Override
+            public void onCommentSuccess(boolean isSofa, Object obj) {
+                try {
+                    if (allDataListMap != null && allDataListMap.size() > 0) {
+                        mArticleCommentBar.setEditTextShow(false);
+                        Map<String, String> newData = StringManager.getFirstMap(obj);
+                        if (newData != null) {
+                            int commentCount = Integer.parseInt(commentNum);
+                            commentMap.put("commentNum", "" + ++commentCount);
+                            commentNum = String.valueOf(commentCount);
+                            Map<String, String> dataMap = StringManager.getFirstMap(commentMap.get("data"));
+                            ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get("list"));
+                            list.add(0, newData);
+                            JSONArray jsonArray = StringManager.getJsonByArrayList(list);
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("list", jsonArray);
+                            commentMap.put("data", jsonObject.toString());
+                            detailAdapter.notifyDataSetChanged();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /** 初始化ListView */
+    private void initListView() {
+        listview = (ListView) findViewById(R.id.listview);
+        listview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    //设置触摸收起键盘
+                    case MotionEvent.ACTION_MOVE:
+                        if (TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString()))
+                            mArticleCommentBar.setEditTextShow(false);
+                        ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
+                        break;
+                }
+                return false;
+            }
+        });
+        //initListView
+        layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        linearLayoutOne = new LinearLayout(this);
+        linearLayoutOne.setOrientation(LinearLayout.VERTICAL);
+
+        linearLayoutTwo = new LinearLayout(this);
+        linearLayoutTwo.setOrientation(LinearLayout.VERTICAL);
+
+        linearLayoutThree = new LinearLayout(this);
+        linearLayoutThree.setOrientation(LinearLayout.VERTICAL);
+
+        linearLayoutOne.setVisibility(View.GONE);
+        linearLayoutTwo.setVisibility(View.GONE);
+        linearLayoutThree.setVisibility(View.GONE);
+        layout.addView(linearLayoutOne);
+        layout.addView(linearLayoutTwo);
+        layout.addView(linearLayoutThree);
+
+        listview.addHeaderView(layout);
+    }
+
+    /** 数据初始化 **/
+    private void initData() {
+        if (TextUtils.isEmpty(code)) {
+            Tools.showToast(this, "当前数据错误，请重新请求");
+            return;
+        }
+        //初始化Adapter
+        detailAdapter = new ArticleDetailAdapter(this, allDataListMap, getType(), code);
+        detailAdapter.setOnRabSofaCallback(new ArticleDetailAdapter.OnRabSofaCallback() {
+            @Override
+            public void onRabSoaf() {
+                mArticleCommentBar.doComment("抢沙发");
+            }
+        });
+        detailAdapter.setmOnADCallback(new ArticleDetailAdapter.OnADCallback() {
+            @Override
+            public void onClick(View view, int index, String s) {
+                if (xhAllAdControlList != null) xhAllAdControlList.onAdClick(view, index, s);
+            }
+
+            @Override
+            public void onBind(int index, View view, String s) {
+                if (xhAllAdControlList != null) xhAllAdControlList.onAdBind(index, view, s);
+            }
+        });
+        //设置
+        loadManager.setLoading(refreshLayout, listview, detailAdapter, true,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        refreshData(false);
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (page >= 1) requestRelateData();
+                    }
+                }, new AutoLoadMore.OnListScrollListener() {
+                    int srceenHeight = ToolsDevice.getWindowPx(ArticleDetailActivity.this).heightPixels;
+
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        if (adView != null && !isAdShow) {
+                            int[] location = new int[2];
+                            adView.getLocationOnScreen(location);
+                            if (location[1] > 0
+                                    && location[1] < srceenHeight * 3 / 4) {
+                                isAdShow = true;
+                                xhAllAdControlBootom.onAdBind(0, adView, "0");
+                            }
+                        }
+                    }
+                });
+        View view = new View(this);
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
+        listview.addFooterView(view);
+        //请求文章数据
+        requestArticleData(false);
+        //初始化广告
+        initAD();
+    }
+
+    private void initAD() {
+        //请求广告数据
+        xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM}, "wz_wz");
+        xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1, ARTICLE_RECM_2}, "wz_list");
+    }
+
+    /**
+     * 刷新数据
+     *
+     * @param onlyUser 是否只刷新用户数据
+     */
+    private void refreshData(boolean onlyUser) {
+        if (!onlyUser)
+            resetData();
+        requestArticleData(onlyUser);
+        //请求广告数据
+//        requestAdData();
+    }
+
+    /** 重置数据 */
+    private void resetData() {
+        page = 0;
+        shareMap.clear();
+        if (commentMap != null) commentMap.clear();
+        allDataListMap.clear();
+        if (detailAdapter != null) detailAdapter.notifyDataSetChanged();
+    }
+
+    private XHAllAdControl requestAdData(final String[] ads, String id) {
+        ArrayList<String> adData = new ArrayList<>();
+        for (String str : ads)
+            adData.add(str);
+        return new XHAllAdControl(adData, new XHAllAdControl.XHBackIdsDataCallBack() {
+            @Override
+            public void callBack(Map<String, String> map) {
+                for (String key : ads) {
+                    String adStr = map.get(key);
+                    switch (key) {
+                        case ARTICLE_CONTENT_BOTTOM:
+                            if (!TextUtils.isEmpty(adStr)) {
+                                adDataMap = StringManager.getFirstMap(adStr);
+                                if (adDataMap != null && adDataMap.size() > 0)
+                                    adHandler.sendEmptyMessage(ARTICLE_BOTTOM);
+                            }
+                            break;
+                        case ARTICLE_RECM_1:
+                        case ARTICLE_RECM_2:
+                            if (!TextUtils.isEmpty(adStr)) {
+                                Map<String, String> adMap = StringManager.getFirstMap(adStr);
+                                if (adMap != null)
+                                    adRcomDataArray.add(adMap);
+                                adHandler.sendEmptyMessage(ARTICLE_RECOMMEND);
+                            }
+                            break;
+                    }
+                }
+            }
+        }, this, id);
+    }
+
+    /** 请求网络 */
+    private void requestArticleData(final boolean onlyUser) {
+        loadManager.showProgressBar();
+        StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=HTML");
+        ReqEncyptInternet.in().doEncypt(getInfoAPI(), params.toString(), new InternetCallback(this) {
+            @Override
+            public void loaded(int flag, String url, Object object) {
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    analysArticleData(onlyUser, StringManager.getFirstMap(object));
+                } else
+                    toastFaildRes(flag, true, object);
+                if (!onlyUser)
+                    requestForumData(false);//请求
+                linearLayoutThree.setVisibility(View.VISIBLE);
+                refreshLayout.refreshComplete();
+                loadManager.hideProgressBar();
+            }
+        });
+    }
+
+    /**
+     * 解析文章数据
+     *
+     * @param mapArticle
+     */
+    private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
+        if (mapArticle.isEmpty()) return;
+
+        if (headerView == null)
+            headerView = new ArticleHeaderView(ArticleDetailActivity.this);
+        if (linearLayoutOne.getChildCount() == 0)
+            linearLayoutOne.addView(headerView);
+        headerView.setType(getType());
+        headerView.setData(mapArticle);
+        linearLayoutOne.setVisibility(View.VISIBLE);
+        detailAdapter.notifyDataSetChanged();
+        if (onlyUser)
+            return;
+        listview.setVisibility(View.VISIBLE);
+
+        WebviewManager manager = new WebviewManager(this, loadManager, true);
+        if (webView == null)
+            webView = manager.createWebView(0);
+        if (linearLayoutTwo.getChildCount() == 0)
+            linearLayoutTwo.addView(webView);
+        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
+        linearLayoutTwo.setVisibility(View.VISIBLE);
+
+        final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
+        if (!TextUtils.isEmpty(customerData.get("nickName"))) {
+            mTitle.setText(customerData.get("nickName"));
+            mTitle.setVisibility(View.VISIBLE);
+        }
+        final String userCode = customerData.get("code");
+        final boolean isAuthor = LoginManager.isLogin()
+                && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                && !TextUtils.isEmpty(userCode)
+                && userCode.equals(LoginManager.userInfo.get("code"));
+
+        rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isAuthor) {
+                    showBottomDialog();
+                } else {
+                    openShare();
+                    statistics("分享", "");
+                }
+            }
+        });
+        rightButton.setVisibility(View.VISIBLE);
+        if (articleContentBottomView == null)
+            articleContentBottomView = new ArticleContentBottomView(this);
+        if (linearLayoutThree.getChildCount() == 0)
+            linearLayoutThree.addView(articleContentBottomView);
+        articleContentBottomView.setData(mapArticle);
+
+        if (!isAuthor) {
+            articleContentBottomView.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
+                @Override
+                public void onReportClick() {
+                    Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
+                    intent.putExtra("code", code);
+                    intent.putExtra("type", getType());
+                    intent.putExtra("userCode", userCode);
+                    intent.putExtra("reportName", customerData.get("nickName"));
+                    intent.putExtra("reportContent", mapArticle.get("title"));
+                    intent.putExtra("reportType", "1");
+                    startActivity(intent);
+                }
+            });
+        }
+        if (adDataMap != null)
+            showAD(adDataMap);
+
+        detailAdapter.notifyDataSetChanged();
+
+        commentNum = mapArticle.get("commentNumber");
+        mArticleCommentBar.setPraiseAPI(getPraiseAPI());
+        mArticleCommentBar.setData(mapArticle);
+
+        mapArticle.remove("html");
+        mapArticle.remove("content");
+        mapArticle.remove("raw");
+        //处理分享数据
+        shareMap = StringManager.getFirstMap(mapArticle.get("share"));
+        handlerShareData();
+    }
 
     private void showAD(Map<String, String> dataMap) {
         if (articleContentBottomView == null || isFinishing()) return;
@@ -161,373 +550,6 @@ public class ArticleDetailActivity extends BaseActivity {
         articleContentBottomView.addViewToAdLayout(adView);
     }
 
-    /** View部分初始化 **/
-    private void initView() {
-        //处理状态栏引发的问题
-        if (Tools.isShowTitle()) {
-            final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
-            rl.getViewTreeObserver().addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
-                        public void onGlobalLayout() {
-                            int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
-                            Rect r = new Rect();
-                            rl.getWindowVisibleDisplayFrame(r);
-                            int screenHeight = rl.getRootView().getHeight();
-                            int heightDifference = screenHeight - (r.bottom - r.top);
-                            isKeyboradShow = heightDifference > 200;
-                            heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
-                            bottomBarLayout.setPadding(0, 0, 0, heightDifference);
-                        }
-                    });
-        }
-        String color = Tools.getColorStr(this, R.color.common_top_bg);
-        Tools.setStatusBarColor(this, Color.parseColor(color));
-        //初始化title
-        mTitle = (TextView) findViewById(R.id.title);
-        rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
-        ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
-        layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
-        leftImage.setLayoutParams(layoutParams);
-
-        findViewById(R.id.back).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onBackPressed();
-                    }
-                });
-        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
-
-
-        //初始化listview
-        listview = (ListView) findViewById(R.id.listview);
-        listview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        if(TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString()))
-                            mArticleCommentBar.setEditTextShow(false);
-                        ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
-                        break;
-                }
-                return false;
-            }
-        });
-        initHeaderView();
-        listview.addHeaderView(layout);
-
-        mArticleCommentBar = (ArticleCommentBar) findViewById(R.id.acticle_comment_bar);
-        mArticleCommentBar.setCode(code);
-        mArticleCommentBar.setType(getType());
-        mArticleCommentBar.setOnCommentSuccessCallback(new ArticleCommentBar.OnCommentSuccessCallback() {
-            @Override
-            public void onCommentSuccess(boolean isSofa, Object obj) {
-                try {
-                    if (allDataListMap != null && allDataListMap.size() > 0) {
-                        mArticleCommentBar.setEditTextShow(false);
-                        Map<String, String> newData = StringManager.getFirstMap(obj);
-                        if (newData != null) {
-                            int commentCount = Integer.parseInt(commentNum);
-                            commentMap.put("commentNum", "" + ++commentCount);
-                            commentNum = String.valueOf(commentCount);
-                            Map<String, String> dataMap = StringManager.getFirstMap(commentMap.get("data"));
-                            ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get("list"));
-                            list.add(0, newData);
-                            JSONArray jsonArray = StringManager.getJsonByArrayList(list);
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("list", jsonArray);
-                            commentMap.put("data", jsonObject.toString());
-                            detailAdapter.notifyDataSetChanged();
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-    }
-
-    /** 初始化header布局 */
-    private void initHeaderView() {
-        //initHeaderView
-        layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-        linearLayoutOne = new LinearLayout(this);
-        linearLayoutOne.setOrientation(LinearLayout.VERTICAL);
-
-        linearLayoutTwo = new LinearLayout(this);
-        linearLayoutTwo.setOrientation(LinearLayout.VERTICAL);
-
-        linearLayoutThree = new LinearLayout(this);
-        linearLayoutThree.setOrientation(LinearLayout.VERTICAL);
-
-        linearLayoutOne.setVisibility(View.GONE);
-        linearLayoutTwo.setVisibility(View.GONE);
-        linearLayoutThree.setVisibility(View.GONE);
-        layout.addView(linearLayoutOne);
-        layout.addView(linearLayoutTwo);
-        layout.addView(linearLayoutThree);
-    }
-
-    /** 数据初始化 **/
-    private void initData() {
-        if (TextUtils.isEmpty(code)) {
-            Tools.showToast(this, "当前数据错误，请重新请求");
-            return;
-        }
-        detailAdapter = new ArticleDetailAdapter(this, allDataListMap, getType(), code);
-        detailAdapter.setOnRabSofaCallback(new ArticleDetailAdapter.OnRabSofaCallback() {
-            @Override
-            public void onRabSoaf() {
-                mArticleCommentBar.doComment("抢沙发");
-            }
-        });
-        loadManager.setLoading(refreshLayout, listview, detailAdapter, true,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        refreshData(false);
-                    }
-                },
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (page >= 1)
-                            requestRelateData();
-                    }
-                }, new AutoLoadMore.OnListScrollListener() {
-                    int srceenHeight = ToolsDevice.getWindowPx(ArticleDetailActivity.this).heightPixels;
-
-                    @Override
-                    public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    }
-
-                    @Override
-                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                        if (adView != null && !isAdShow) {
-                            int[] location = new int[2];
-                            adView.getLocationOnScreen(location);
-                            if (location[1] > 0
-                                    && location[1] < srceenHeight * 3 / 4) {
-                                isAdShow = true;
-                                xhAllAdControlBootom.onAdBind(0, adView, "0");
-                            }
-                        }
-                    }
-                });
-        View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_40));
-        listview.addFooterView(view);
-
-        requestArticleData(false);
-        initAD();//初始化广告
-    }
-
-    private void initAD() {
-        //请求广告数据
-        xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM}, "wz_wz");
-        xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1,ARTICLE_RECM_2}, "wz_list");
-        detailAdapter.setmOnADCallback(new ArticleDetailAdapter.OnADCallback() {
-            @Override
-            public void onClick(View view, int index, String s) {
-                xhAllAdControlList.onAdClick(view, index, s);
-            }
-
-            @Override
-            public void onBind(int index, View view, String s) {
-                xhAllAdControlList.onAdBind(index, view, s);
-            }
-        });
-    }
-
-    private void refreshData(boolean onlyUser) {
-        if (!onlyUser)
-            resetData();
-        requestArticleData(onlyUser);
-        //请求广告数据
-//        requestAdData();
-    }
-
-    private void resetData() {
-//        isAdShow = false;
-        page = 0;
-        allDataListMap.clear();
-        if (commentMap != null)
-            commentMap.clear();
-        shareMap.clear();
-        if (detailAdapter != null)
-            detailAdapter.notifyDataSetChanged();
-    }
-
-    private XHAllAdControl requestAdData(final String[] ads, String id) {
-        ArrayList<String> adData = new ArrayList<>();
-        for (String str : ads)
-            adData.add(str);
-        return new XHAllAdControl(adData,
-                new XHAllAdControl.XHBackIdsDataCallBack() {
-                    @Override
-                    public void callBack(Map<String, String> map) {
-                        for (String key : ads) {
-                            String adStr = map.get(key);
-                            switch (key) {
-                                case ARTICLE_CONTENT_BOTTOM:
-                                    if (!TextUtils.isEmpty(adStr)) {
-                                        adDataMap = StringManager.getFirstMap(adStr);
-                                        Log.i("tzy", "adDataMap = " + adDataMap.toString());
-                                        if (adDataMap != null && adDataMap.size() > 0) {
-                                            showAD(adDataMap);
-                                            detailAdapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                    break;
-                                case ARTICLE_RECM_1:
-                                case ARTICLE_RECM_2:
-                                    if (!TextUtils.isEmpty(adStr)) {
-                                        Map<String,String> adMap = StringManager.getFirstMap(adStr);
-                                        if(adMap != null)
-                                            adRcomDataArray.add(adMap);
-                                        Log.i("tzy", "adRcomDataArray = " + adRcomDataArray.toString());
-                                        handlerAdData();
-                                        detailAdapter.notifyDataSetChanged();
-                                    }
-                                    break;
-                            }
-
-                        }
-                    }
-                }, this, id);
-    }
-
-    /** 请求网络 */
-    private void requestArticleData(final boolean onlyUser) {
-        String url = getInfoAPI();
-        String params = TextUtils.isEmpty(code) ? "" : "code=" + code;
-        params += "&type=HTML";
-        loadManager.showProgressBar();
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(this) {
-            @Override
-            public void loaded(int flag, String url, Object object) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
-                    analysArticleData(onlyUser, listMap.get(0));
-                } else {
-                    toastFaildRes(flag, true, object);
-                }
-                if(!onlyUser){
-                    requestForumData(false);//请求
-                }
-                linearLayoutThree.setVisibility(View.VISIBLE);
-                refreshLayout.refreshComplete();
-                loadManager.hideProgressBar();
-            }
-        });
-    }
-
-    /**
-     * 解析文章数据
-     *
-     * @param mapArticle
-     */
-    private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
-        if (mapArticle.isEmpty()) return;
-        findViewById(R.id.rightImgBtn2).setVisibility(View.VISIBLE);
-        if (headerView == null)
-            headerView = new ArticleHeaderView(ArticleDetailActivity.this);
-        headerView.setType(getType());
-        headerView.setData(mapArticle);
-        if (linearLayoutOne.getChildCount() == 0)
-            linearLayoutOne.addView(headerView);
-        linearLayoutOne.setVisibility(View.VISIBLE);
-        detailAdapter.notifyDataSetChanged();
-        if (onlyUser)
-            return;
-        listview.setVisibility(View.VISIBLE);
-        commentNum = mapArticle.get("commentNumber");
-        mArticleCommentBar.setPraiseAPI(getPraiseAPI());
-        mArticleCommentBar.setData(mapArticle);
-
-        WebviewManager manager = new WebviewManager(this, loadManager, true);
-        manager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
-            @Override
-            public void onLoadFinish() {
-
-            }
-        });
-        if(webView == null){
-            webView = manager.createWebView(0);
-        }
-        manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
-        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-//        webView.loadData(mapArticle.get("html"), "text/html", "utf-8");
-        Log.i("tzy", "url = " + getMAPI() + mapArticle.get("code"));
-        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
-
-        if (linearLayoutTwo.getChildCount() == 0)
-            linearLayoutTwo.addView(webView);
-        linearLayoutTwo.setVisibility(View.VISIBLE);
-
-
-        final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
-        if(!TextUtils.isEmpty(customerData.get("nickName"))){
-            mTitle.setText(customerData.get("nickName"));
-            mTitle.setVisibility(View.VISIBLE);
-        }
-        final String userCode = customerData.get("code");
-        final boolean isAuthor = LoginManager.isLogin()
-                && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
-                && !TextUtils.isEmpty(userCode)
-                && userCode.equals(LoginManager.userInfo.get("code"));
-        rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
-        rightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isAuthor) {
-                    showBottomDialog();
-                } else {
-                    openShare();
-                    statistics("分享", "");
-                }
-            }
-        });
-        rightButton.setVisibility(View.VISIBLE);
-        if(articleContentBottomView == null)
-            articleContentBottomView = new ArticleContentBottomView(this);
-        if (linearLayoutThree.getChildCount() == 0)
-            linearLayoutThree.addView(articleContentBottomView);
-        articleContentBottomView.setData(mapArticle);
-
-        if (!isAuthor) {
-            articleContentBottomView.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
-                @Override
-                public void onReportClick() {
-                    Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
-                    intent.putExtra("code", code);
-                    intent.putExtra("type", getType());
-                    intent.putExtra("userCode", userCode);
-                    intent.putExtra("reportName", customerData.get("nickName"));
-                    intent.putExtra("reportContent", mapArticle.get("title"));
-                    intent.putExtra("reportType", "1");
-                    startActivity(intent);
-                }
-            });
-        }
-        if (adDataMap != null)
-            showAD(adDataMap);
-
-        detailAdapter.notifyDataSetChanged();
-
-        mapArticle.remove("html");
-        mapArticle.remove("content");
-        mapArticle.remove("raw");
-        //处理分享数据
-        shareMap = StringManager.getFirstMap(mapArticle.get("share"));
-        handlerShareData();
-    }
-
     /** 请求评论列表 */
     private void requestForumData(final boolean isRefresh) {
         String url = StringManager.api_forumList;
@@ -536,7 +558,7 @@ public class ArticleDetailActivity extends BaseActivity {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    analysForumData(isRefresh,object);
+                    analysForumData(isRefresh, object);
                 } else
                     toastFaildRes(flag, true, object);
                 if (page < 1)
@@ -545,7 +567,7 @@ public class ArticleDetailActivity extends BaseActivity {
         });
     }
 
-    private void analysForumData(boolean isRefresh,Object object){
+    private void analysForumData(boolean isRefresh, Object object) {
         commentMap = StringManager.getFirstMap(object);
         commentMap.put("datatype", String.valueOf(Type_comment));
         commentMap.put("data", object.toString());
@@ -554,9 +576,9 @@ public class ArticleDetailActivity extends BaseActivity {
             int commentCount = Integer.parseInt(commentNum);
             commentMap.put("commentNum", "" + ++commentCount);
         }
-        if(commentMap != null && allDataListMap.indexOf(commentMap) < 0)
+        if (commentMap != null && allDataListMap.indexOf(commentMap) < 0)
             allDataListMap.add(commentMap);
-        Log.i("tzy","index = " + allDataListMap.indexOf(commentMap));
+        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
         detailAdapter.notifyDataSetChanged();
     }
 
@@ -571,11 +593,11 @@ public class ArticleDetailActivity extends BaseActivity {
                     ArrayList<Map<String, String>> listMap = StringManager.getListMapByJson(object);
                     int size = listMap.size();
                     for (int i = 0; i < size; i++) {
-                        Map<String,String> map = listMap.get(i);
+                        Map<String, String> map = listMap.get(i);
                         map.put("datatype", String.valueOf(Type_recommed));
                         map.put("idAd", "1");
-                        List<Map<String,String>> styleDataList = StringManager.getListMapByJson(map.get("styleData"));
-                        handlerStyleData(map,styleDataList);
+                        List<Map<String, String>> styleDataList = StringManager.getListMapByJson(map.get("styleData"));
+                        handlerStyleData(map, styleDataList);
                     }
                     analysRelateData(listMap);
                     handlerAdData();
@@ -586,30 +608,30 @@ public class ArticleDetailActivity extends BaseActivity {
         });
     }
 
-    private Map<String,String> handlerStyleData(Map<String,String> map,List<Map<String,String>> styleDataList){
-        for(int index = 0 ; index < styleDataList.size();index ++){
-            Map<String,String> data = styleDataList.get(index);
-            if("1".equals(data.get("type"))){
-                map.put("img",data.get("url"));
-                map.put("videoIconShow","1");
+    private Map<String, String> handlerStyleData(Map<String, String> map, List<Map<String, String>> styleDataList) {
+        for (int index = 0; index < styleDataList.size(); index++) {
+            Map<String, String> data = styleDataList.get(index);
+            if ("1".equals(data.get("type"))) {
+                map.put("img", data.get("url"));
+                map.put("videoIconShow", "1");
                 return map;
             }
         }
-        for(int index = 0 ; index < styleDataList.size();index ++){
-            Map<String,String> data = styleDataList.get(index);
-            if("2".equals(data.get("type"))){
-                map.put("img",data.get("url"));
-                map.put("videoIconShow","2");
+        for (int index = 0; index < styleDataList.size(); index++) {
+            Map<String, String> data = styleDataList.get(index);
+            if ("2".equals(data.get("type"))) {
+                map.put("img", data.get("url"));
+                map.put("videoIconShow", "2");
                 return map;
             }
         }
         //特殊处理gif图时，img字段没有值的情况
-        if(TextUtils.isEmpty(map.get("img"))){
-            for(int index = 0 ; index < styleDataList.size();index ++){
-                Map<String,String> data = styleDataList.get(index);
-                if("3".equals(data.get("type"))){
-                    map.put("img",data.get("url"));
-                    map.put("videoIconShow","1");
+        if (TextUtils.isEmpty(map.get("img"))) {
+            for (int index = 0; index < styleDataList.size(); index++) {
+                Map<String, String> data = styleDataList.get(index);
+                if ("3".equals(data.get("type"))) {
+                    map.put("img", data.get("url"));
+                    map.put("videoIconShow", "1");
                     return map;
                 }
             }
@@ -622,9 +644,9 @@ public class ArticleDetailActivity extends BaseActivity {
                 && allDataListMap.size() > 1) {
             Log.i("tzy", "handlerAdData 执行了");
             try {
-                int[] adPositionInList = {2,5};
+                int[] adPositionInList = {2, 5};
                 final int length = adPositionInList.length > adRcomDataArray.size() ? adRcomDataArray.size() : adPositionInList.length;
-                for(int index = 0 ; index < length ; index ++){
+                for (int index = 0; index < length; index++) {
                     Map<String, String> adMap = adRcomDataArray.get(index);
                     Map<String, String> dataMap = new HashMap<>();
                     dataMap.put("datatype", String.valueOf(Type_recommed));
@@ -670,7 +692,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void showBottomDialog() {
-        ToolsDevice.keyboardControl(false,this,mArticleCommentBar);
+        ToolsDevice.keyboardControl(false, this, mArticleCommentBar);
         BottomDialog dialog = new BottomDialog(this);
         dialog.addButton("分享", new View.OnClickListener() {
             @Override

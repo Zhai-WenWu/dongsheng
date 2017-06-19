@@ -41,7 +41,7 @@
         android:layout_below="@+id/article_select_gridview"
         android:layout_marginTop="@dimen/dp_85"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
         <RelativeLayout
@@ -79,10 +79,11 @@
                 android:background="@null"
                 android:hint="输入来源"
                 android:maxEms="200"
+                android:gravity="bottom"
                 android:textColor="#666666"
                 android:textColorHint="#ccc"
-                android:textCursorDrawable="@null"
                 android:textSize="@dimen/sp_14"
+                android:lineSpacingExtra="@dimen/dp_2"
                 />
 
             <View

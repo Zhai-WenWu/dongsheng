@@ -58,6 +58,7 @@
                     android:id="@+id/text_image_mix_ayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_15"
                     android:minHeight="@dimen/dp_120"/>
 
             </LinearLayout>

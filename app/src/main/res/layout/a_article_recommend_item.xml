@@ -31,7 +31,7 @@
                 android:layout_marginLeft="@dimen/dp_12"
                 android:layout_marginRight="@dimen/dp_12"
                 android:text="相关推荐"
-                android:textColor="#999999"
+                android:textColor="#B6B5B5"
                 android:textSize="@dimen/sp_14"/>
 
             <View

@@ -92,6 +92,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     /** 定时存草稿 */
     protected Timer timer;
+    protected TimerTask mTimerTask;
     private int taskTime = 30 * 1000;
 
     private String mPageTag = "EditParentActivity";
@@ -210,6 +211,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         editTitle.setHint(ss);
         editTitle.addTextChangedListener(new TextWatcher() {
             String preStr = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 preStr = s.toString();
@@ -552,17 +554,17 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             if (isFist) {
                 isFist = false;
                 Tools.showToast(EditParentActivity.this, "内容已保存");
-                saveDraft();
-            } else {
-                saveDraft();
             }
+            saveDraft();
         }
     }
 
     private void timingSave() {
+        if(timer != null)return;
+        Log.i("timeSave","timingSave()");
         timer = new Timer();
         final Handler handler = new Handler(Looper.getMainLooper());
-        TimerTask tt = new TimerTask() {
+        mTimerTask = new TimerTask() {
             @Override
             public void run() {
                 handler.post(new Runnable() {
@@ -573,7 +575,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 });
             }
         };
-        timer.schedule(tt, taskTime, taskTime);
+        timer.schedule(mTimerTask, taskTime, taskTime);
     }
 
     protected int saveDraft() {
@@ -621,12 +623,25 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (TextUtils.isEmpty(code)) timingSave();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+        if(TextUtils.isEmpty(code)) saveDraft();
         if (timer != null) {
             timer.cancel();
             timer.purge();
             timer = null;
+            Log.i("timeSave","timer.cancel()");
+        }
+        if(mTimerTask != null){
+            mTimerTask.cancel();
+            mTimerTask = null;
+            Log.i("timeSave","mTimerTask.cancel()");
         }
         if (isKeyboradShow)
             ToolsDevice.keyboardControl(false, this, editTitle);
@@ -670,23 +685,25 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             saveDraft();
             finshActivity();
         } else {
-            if(isKeyboradShow)
-                ToolsDevice.keyboardControl(false,this,editTitle);//收回键盘
+            if (isKeyboradShow)
+                ToolsDevice.keyboardControl(false, this, editTitle);//收回键盘
             final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
             xhDialog.setTitle("二次编辑的内容将不会保存到草稿箱，是否继续退出？")
-                    .setSureButton("取消", new View.OnClickListener() {
+                    .setCanselButton("取消", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             xhDialog.cancel();
                         }
-                    }).setCanselButton("退出", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sqLite.deleteById(uploadArticleData.getId());
-                    xhDialog.cancel();
-                    finshActivity();
-                }
-            }).show();
+                    })
+                    .setSureButtonTextColor("#333333")
+                    .setSureButton("退出", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sqLite.deleteById(uploadArticleData.getId());
+                            xhDialog.cancel();
+                            finshActivity();
+                        }
+                    }).show();
         }
 
     }
@@ -704,7 +721,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 XHClick.mapStat(this, "a_ArticleEdit", "关闭页面", "");
                 break;
         }
-        if(!TextUtils.isEmpty(code)) {
+        if (!TextUtils.isEmpty(code)) {
             Intent intent = new Intent(EditParentActivity.this, getIntentClass());
             intent.putExtra("code", code);
             startActivity(intent);

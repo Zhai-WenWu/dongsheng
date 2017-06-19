@@ -186,6 +186,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                         findViewById(R.id.article_select_classify).setVisibility(View.VISIBLE);
                         gridView.setVisibility(View.VISIBLE);
                         findViewById(R.id.article_select_other).setVisibility(View.VISIBLE);
+                        reprintLink.clearFocus();
                         loadManager.hideProgressBar();
                         isLoading = false;
                         return;

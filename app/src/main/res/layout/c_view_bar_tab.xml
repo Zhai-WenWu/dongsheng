@@ -43,7 +43,7 @@
          android:layout_marginLeft="@dimen/dp_9"
         android:layout_alignLeft="@+id/tab_center"
         android:layout_marginTop="@dimen/dp_5"
-        android:src="@drawable/tv_circle_red_20"
+        android:src="@drawable/tv_circle_ff533c_20"
 		android:visibility="gone"/>
 
     <TextView
@@ -54,7 +54,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="@dimen/bar_tab_marginright"
         android:layout_marginTop="@dimen/dp_2"
-        android:background="@drawable/tv_circle_red_20"
+        android:background="@drawable/tv_circle_ff533c_20"
         android:gravity="center_horizontal|center_vertical"
         android:text="1"
         android:textColor="#FFFFFF"
@@ -69,7 +69,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="@dimen/bar_tab_marginright"
         android:layout_marginTop="@dimen/dp_2"
-        android:background="@drawable/tv_circle_red_20"
+        android:background="@drawable/tv_circle_ff533c_20"
         android:gravity="center_horizontal|center_vertical"
         android:minWidth="@dimen/dp_18"
         android:paddingLeft="@dimen/dp_5"

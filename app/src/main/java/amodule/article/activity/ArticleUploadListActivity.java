@@ -481,17 +481,17 @@ public class ArticleUploadListActivity extends BaseActivity {
 
     private void hintNetWork(){
         final XhDialog xhDialog = new XhDialog(ArticleUploadListActivity.this);
-        xhDialog.setTitle("当前不是wifi环境，已暂停上传~")
-                .setCanselButton("继续上传", new View.OnClickListener() {
+        xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
+                .setCanselButton("取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         xhDialog.cancel();
-                        allStartOrPause(true);
                     }
-                }).setSureButton("知道了", new View.OnClickListener() {
+                }).setSureButton("确定", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 xhDialog.cancel();
+                allStartOrPause(true);
             }
         }).show();
     }

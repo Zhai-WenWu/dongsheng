@@ -103,6 +103,9 @@ public class CoreService extends NormalService {
         int dayCount = getGapCount(millis);
         //获取当前时间
         int todayCount = getTodayCount();
+        //TODO 测试
+        if(dayCount <= 0) return todayCount <=4;
+        //正式逻辑
         if (dayCount >= 1
                 || dayCount < 4) {
             //
