@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -55,11 +56,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private ArrayList<Map<String, String>> listArray;
     private String type, code;
     private int currentPage = 0, everyPage = 0;
-    private int dropPage = 1,upDropPage = 1,downDropPage = 1,slide = 1,from = 1;
+    private int dropPage = 1,upDropPage = 1,downDropPage = 1,slide = 1,from = 1,source = 1;
 
     private EditText commend_write_et;
     private ImageView writePen;
     private TextView sendTv,commend_write_tv;
+    private LinearLayout titleLayout;
+    private TextView titleTv;
 
     private String gotoCommentId,gotoReplayId;
 
@@ -80,6 +83,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initView() {
+        titleLayout = (LinearLayout) findViewById(R.id.comment_title_layout);
+        titleTv = (TextView) findViewById(R.id.comment_title);
         final LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.a_comment_keyboard_parent);
         final int dp45 = Tools.getDimen(this,R.dimen.dp_45);
         rl.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -135,7 +140,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 final ViewCommentItem viewCommentItem = (ViewCommentItem) view.findViewById(R.id.comment_item);
                 viewCommentItem.setCommentItemListener(getCommentItenListener(viewCommentItem,position));
                 viewCommentItem.setUserInforListenr(getUserInforListener());
-                viewCommentItem.setNormBackColor(getResources().getColor(R.color.common_bg));
+//                viewCommentItem.setNormBackColor(getResources().getColor(R.color.common_bg));
                 viewCommentItem.setData(listArray.get(position));
                 return view;
             }
@@ -334,6 +339,10 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         if(!TextUtils.isEmpty(fromType)){
             from = Integer.parseInt(fromType);
         }
+        String sourceType = getIntent().getStringExtra("source");
+        if(!TextUtils.isEmpty(sourceType)){
+            source = Integer.parseInt(sourceType);
+        }
 
         //TODO
         if(TextUtils.isEmpty(type)) {
@@ -402,7 +411,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             params +=  "&commentId=" + gotoCommentId;
         if(!TextUtils.isEmpty(gotoReplayId))
             params += "&replayId=" + gotoReplayId;;
-        params += "&from=" + from + "&slide=" + slide + "&dropPage=" + dropPage;
+        params += "&from=" + from + "&source=" + source + "&slide=" + slide + "&dropPage=" + dropPage;
         Log.i("commentReplay","getCommentData() params:" + params);
         ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback(this) {
             @Override
@@ -410,11 +419,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 int loadCount = 0;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     from = 1;
+                    source = 1;
                     ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
                     if(arrayList.size() > 0) {
                         Map<String,String> dataMap = arrayList.get(0);
                         String dataList = dataMap.get("list");
                         String dataPage = dataMap.get("page");
+                        String titleInfo = dataMap.get("info");
                         arrayList = getListMapByJson(dataList);
                         if(isForward){
                             if(dropPage == 1){
@@ -425,11 +436,32 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         }else{
                             listArray.addAll(arrayList);
                         }
-                        if(!TextUtils.isEmpty(dataPage) && !"null".equals(dataPage))
-                            if(isForward)
+                        if(!TextUtils.isEmpty(dataPage) && !"null".equals(dataPage)) {
+                            if (isForward)
                                 upDropPage = Integer.parseInt(dataPage);
                             else
                                 downDropPage = Integer.parseInt(dataPage);
+                        }
+                        if(!TextUtils.isEmpty(titleInfo)){
+                            ArrayList<Map<String,String>> titleArray = StringManager.getListMapByJson(titleInfo);
+                            if(titleArray.size() > 0){
+                                Map<String,String> map = titleArray.get(0);
+                                String title = map.get("title");
+                                final String clickUrl = map.get("url");
+                                if(!TextUtils.isEmpty(title)){
+                                    titleLayout.setVisibility(View.VISIBLE);
+                                    titleTv.setText(title);
+                                    if(!TextUtils.isEmpty(clickUrl)) {
+                                        titleLayout.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                AppCommon.openUrl(CommentActivity.this, clickUrl, true);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
 
                         adapterSimple.notifyDataSetChanged();
                         loadCount = arrayList.size();

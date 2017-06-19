@@ -3,14 +3,45 @@
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="#fff"
     >
+
+    <LinearLayout
+        android:id="@+id/comment_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:background="#f7f7f7"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        >
+        <TextView
+            android:id="@+id/comment_title"
+            style="@style/singleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#000"
+            android:textSize="@dimen/sp_16"
+            />
+        <TextView
+            android:id="@+id/comment_goto_detial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看详情>>"
+            android:textColor="#5c809c"
+            android:textSize="@dimen/sp_16"
+            />
+    </LinearLayout>
 
     <acore.widget.DownRefreshList
         android:id="@+id/comment_listview"
         style="@style/listView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/comment_title_layout"
         android:background="@android:color/transparent"
         android:divider="@null"
         android:paddingLeft="0dp"
@@ -50,7 +81,7 @@
             android:id="@+id/a_comment_keyboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f9F7F7F7"
+            android:background="#f9ffffff"
             android:paddingLeft="@dimen/dp_20"
             android:paddingTop="@dimen/dp_6"
             android:paddingRight="@dimen/dp_20"
