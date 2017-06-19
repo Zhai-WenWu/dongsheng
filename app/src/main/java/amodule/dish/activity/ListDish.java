@@ -25,6 +25,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.adapter.AdapterListDish;
+import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.share.BarShare;
@@ -40,7 +41,7 @@ import xh.basic.tool.UtilString;
 @SuppressLint("InflateParams")
 public class ListDish extends BaseActivity {
 
-	private TextView dishTitle, dishInfo,dishName;
+	private TextView authorName, dishInfo,dishName;
 	
 	private AdapterListDish adapter = null;
 	private ArrayList<Map<String, String>> arrayList = null;
@@ -93,8 +94,8 @@ public class ListDish extends BaseActivity {
 			title_time.setText("" + Tools.getAssignTime("yyyy-MM-dd",0));
 		} else {
 			View view = LayoutInflater.from(ListDish.this).inflate(R.layout.a_dish_head_caidan_view, null);
-			dishTitle = (TextView) view.findViewById(R.id.dish_menu_name);
-			dishName = (TextView) view.findViewById(R.id.dish_menu_classify_name);
+			dishName = (TextView) view.findViewById(R.id.dish_menu_name);
+			authorName = (TextView) view.findViewById(R.id.dish_menu_author_name);
 			dishInfo = (TextView) view.findViewById(R.id.dish_menu_info);
 			dishInfo.setClickable(true);
 			listView.addHeaderView(view, null, false);
@@ -102,10 +103,10 @@ public class ListDish extends BaseActivity {
 		arrayList = new ArrayList<Map<String, String>>();
 		// 绑定列表数据
 		adapter = new AdapterListDish(this, listView, arrayList, 
-				R.layout.a_dish_item_menu, 
-				new String[] {"name","allClick", "favorites", "nickName" ,"isToday"},
-				new int[] { R.id.dish_recom_tv_name,	R.id.dish_recom_tv_allClick, R.id.dish_recom_tv_favorites,
-					R.id.dish_recom_tv_nickName, R.id.dish_recom_item_today},
+				R.layout.a_dish_item_menu_new,
+				new String[] {"info", "nickName", "allClick", "favorites", "isToday"},
+				new int[] {R.id.title, R.id.user_name, R.id.num1,
+					R.id.num2, R.id.dish_recom_item_today},
 				type);
 		adapter.imgWidth = ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this.getApplicationContext(), R.dimen.dp_20);//20=10*2
 		adapter.scaleType = ScaleType.CENTER_CROP;
@@ -164,49 +165,38 @@ public class ListDish extends BaseActivity {
 				if (flag >= UtilInternet.REQ_OK_STRING) {
 					ArrayList<Map<String, String>> returnList = UtilString.getListMapByJson(returnObj);
 					if (!type.equals("recommend") && !type.equals("typeRecommend")) {
-						String title = returnList.get(0).get("classifyName");
 						String classifyName = returnList.get(0).get("name");
-						int dp_20 = Tools.getDimen(ListDish.this.getApplicationContext(), R.dimen.dp_20);
-						if (title != null && title.length() > 0) {
-							dishTitle.setText(title);
-							dishTitle.setPadding(0, dp_20, 0, 0);
-							dishName.setPadding(0, 0, 0, 0);
+						String customer = returnList.get(0).get("customer");
+						final ArrayList<Map<String, String>> customers = StringManager.getListMapByJson(customer);
+						String authorName = customers.get(0).get("nickName");
+						String info = returnList.get(0).get("info");
+						if (!TextUtils.isEmpty(classifyName)) {
+							ListDish.this.dishName.setText(classifyName);
 						} else {
-							dishTitle.setVisibility(View.GONE);
-							dishName.setPadding(0, dp_20, 0, 0);
+							ListDish.this.dishName.setVisibility(View.GONE);
+						}
+						if (!TextUtils.isEmpty(authorName)) {
+							ListDish.this.authorName.setText(authorName);
+							findViewById(R.id.from_container).setVisibility(View.VISIBLE);
+							ListDish.this.authorName.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(ListDish.this, FriendHome.class);
+									Bundle bundle = new Bundle();
+									bundle.putString("code", customers.get(0).get("code"));
+									intent.putExtras(bundle);
+									ListDish.this.startActivity(intent);
+								}
+							});
+						} else {
+							ListDish.this.authorName.setVisibility(View.GONE);
+						}
+						if (!TextUtils.isEmpty(info)) {
+							ListDish.this.dishInfo.setText(info);
+						} else {
+							ListDish.this.dishInfo.setVisibility(View.GONE);
 						}
 						shareName = classifyName;
-						dishName.setText(classifyName);
-						if (!infoVoer) {
-							String info = returnList.get(0).get("info");
-							if (info.length() > 5) {
-								int dp_15 = Tools.getDimen(ListDish.this.getApplicationContext(), R.dimen.dp_15);
-								dishInfo.setPadding(dp_15 , dp_15 , dp_15 , 0);
-								dishInfo.setLineSpacing(Tools.getDimen(ListDish.this.getApplicationContext(), R.dimen.dp_8), 1);
-								info = info.replace("\n", "\n\t\t\t\t");
-								info = "\t\t\t\t" + info;
-								final String oldText = info;
-								if (oldText.length() > 200) {
-									final String newText = oldText.substring(0, 150) + "……查看更多>>";
-									dishInfo.setText(newText);
-									dishInfo.setOnClickListener(new OnClickListener() {
-										@Override
-										public void onClick(View v) {
-											if (moreFlag) {
-												moreFlag = false;
-												dishInfo.setText(oldText);
-											} else {
-												moreFlag = true;
-												dishInfo.setText(newText);
-											}
-										}
-									});
-								} else
-									dishInfo.setText(oldText);
-							} else 
-								dishInfo.setVisibility(View.GONE);
-							infoVoer=true;
-						}
 						returnList = UtilString.getListMapByJson(returnList.get(0).get("dishs"));
 					}
 					for (int i = 0; i < returnList.size(); i++) {
