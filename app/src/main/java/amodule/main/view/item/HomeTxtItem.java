@@ -160,47 +160,22 @@ public class HomeTxtItem extends HomeItem {
             mTitle.setLines(2);
             mTitle.setMaxLines(Integer.MAX_VALUE);
         }
-        String comNum = null;//评论量
-        String comNumStr = mDataMap.get("commentNum");
-        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 10) {
-            String commentNum = handleNumber(comNumStr);
-            if (!TextUtils.isEmpty(commentNum)) {
-                comNum = commentNum;
-            }
-        }
-        String allClickNum = null;//浏览量、播放量
-        String allClickStr = mDataMap.get("allClick");
-        if (!TextUtils.isEmpty(allClickStr)) {
-            String allClickNumStr = handleNumber(allClickStr);
-            if (!TextUtils.isEmpty(allClickNumStr)) {
-                allClickNum = allClickNumStr;
-            }
-        }
-        String likeNum = null;//点赞量
-        String likeNumStr = handleNumber(mDataMap.get("likeNum"));
-        if (!TextUtils.isEmpty(likeNumStr)) {
-            likeNum = likeNumStr;
-        }
-        String favNum = null;//收藏量
-        String favNumStr = handleNumber(mDataMap.get("favorites"));
-        if (!TextUtils.isEmpty(favNumStr))
-            favNum = favNumStr;
         switch (imgCount) {
             case 0://无图
-                if (comNum != null && mNum1 != null) {
-                    mNum1.setText(comNum + "评论");
+                if (mComNum != null && mNum1 != null) {
+                    mNum1.setText(mComNum + "评论");
                     mNum1.setVisibility(View.VISIBLE);
                 }
                 switch (mType) {
                     case "3":
-                        if (allClickNum != null && mNum2 != null) {
-                            mNum2.setText(allClickNum + "浏览");
+                        if (mAllClickNum != null && mNum2 != null) {
+                            mNum2.setText(mAllClickNum + "浏览");
                             mNum2.setVisibility(View.VISIBLE);
                         }
                         break;
                     case "5":
-                        if (likeNum != null && mNum2 != null) {
-                            mNum2.setText(likeNum + "赞");
+                        if (mLikeNum != null && mNum2 != null) {
+                            mNum2.setText(mLikeNum + "赞");
                             mNum2.setVisibility(View.VISIBLE);
                         }
                         break;
@@ -210,45 +185,45 @@ public class HomeTxtItem extends HomeItem {
                 switch (mType) {
                     case "1":
                         if (!mIsTop) {
-                            if (favNum != null && mNum1 != null) {
-                                mNum1.setText(favNum + "收藏");
+                            if (mFavNum != null && mNum1 != null) {
+                                mNum1.setText(mFavNum + "收藏");
                                 mNum1.setVisibility(View.VISIBLE);
                             }
                         }
-                        if (allClickNum != null && mNum2 != null) {
-                            mNum2.setText(allClickNum + "浏览");
+                        if (mAllClickNum != null && mNum2 != null) {
+                            mNum2.setText(mAllClickNum + "浏览");
                             mNum2.setVisibility(View.VISIBLE);
                         }
                         break;
                     case "2":
                         if (!mIsTop) {
-                            if (favNum != null && mNum1 != null) {
-                                mNum1.setText(favNum + "收藏");
+                            if (mFavNum != null && mNum1 != null) {
+                                mNum1.setText(mFavNum + "收藏");
                                 mNum1.setVisibility(View.VISIBLE);
                             }
                         }
-                        if (allClickNum != null && mNum2 != null) {
-                            mNum2.setText(allClickNum + "播放");
+                        if (mAllClickNum != null && mNum2 != null) {
+                            mNum2.setText(mAllClickNum + "播放");
                             mNum2.setVisibility(View.VISIBLE);
                         }
                         break;
                     case "3":
-                        if (comNum != null && mNum1 != null) {
-                            mNum1.setText(comNum + "评论");
+                        if (mComNum != null && mNum1 != null) {
+                            mNum1.setText(mComNum + "评论");
                             mNum1.setVisibility(View.VISIBLE);
                         }
-                        if (allClickNum != null && mNum2 != null) {
-                            mNum2.setText(allClickNum + "浏览");
+                        if (mAllClickNum != null && mNum2 != null) {
+                            mNum2.setText(mAllClickNum + "浏览");
                             mNum2.setVisibility(View.VISIBLE);
                         }
                         break;
                     case "5":
-                        if (comNum != null && mNum1 != null) {
-                            mNum1.setText(comNum + "评论");
+                        if (mComNum != null && mNum1 != null) {
+                            mNum1.setText(mComNum + "评论");
                             mNum1.setVisibility(View.VISIBLE);
                         }
-                        if (allClickNum != null && mNum2 != null) {
-                            mNum2.setText(allClickNum + "赞");
+                        if (mLikeNum != null && mNum2 != null) {
+                            mNum2.setText(mLikeNum + "赞");
                             mNum2.setVisibility(View.VISIBLE);
                         }
                         break;

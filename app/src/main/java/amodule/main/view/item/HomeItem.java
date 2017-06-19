@@ -73,6 +73,11 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected String mTransferUrl;
     protected String mType;
 
+    protected String mComNum = null;//评论量
+    protected String mLikeNum = null;//点赞量
+    protected String mFavNum = null;//收藏量
+    protected String mAllClickNum = null;//浏览/播放量
+
     protected HomeModuleBean mModuleBean;
     private AdapterHome.ViewClickCallBack mRefreshCallBack;
 
@@ -317,6 +322,27 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         }
         if (mDataMap.containsKey("url"))
             mTransferUrl = mDataMap.get("url");
+        String comNumStr = mDataMap.get("commentNum");
+        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 10) {
+            String commentNum = handleNumber(comNumStr);
+            if (!TextUtils.isEmpty(commentNum)) {
+                mComNum = commentNum;
+            }
+        }
+        String allClickStr = mDataMap.get("allClick");
+        if (!TextUtils.isEmpty(allClickStr)) {
+            String allClickNumStr = handleNumber(allClickStr);
+            if (!TextUtils.isEmpty(allClickNumStr)) {
+                mAllClickNum = allClickNumStr;
+            }
+        }
+        String likeNumStr = handleNumber(mDataMap.get("likeNum"));
+        if (!TextUtils.isEmpty(likeNumStr)) {
+            mLikeNum = likeNumStr;
+        }
+        String favNumStr = handleNumber(mDataMap.get("favorites"));
+        if (!TextUtils.isEmpty(favNumStr))
+            mFavNum = favNumStr;
     }
 
     protected void resetView() {
@@ -344,6 +370,10 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mIsTop = false;
         mTransferUrl = null;
         mType = "";
+        mComNum = null;
+        mLikeNum = null;
+        mFavNum = null;
+        mAllClickNum = null;
     }
 
     public void setHomeModuleBean(HomeModuleBean bean) {

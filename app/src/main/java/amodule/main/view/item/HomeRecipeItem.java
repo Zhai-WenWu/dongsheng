@@ -249,67 +249,44 @@ public class HomeRecipeItem extends HomeItem {
             mTitle.setText(titleText);
             mTitle.setVisibility(View.VISIBLE);
         }
-        String numStr1 = null;
-        if (mDataMap.containsKey("allClick")) {
-            String allClick = handleNumber(mDataMap.get("allClick"));
-            if (!TextUtils.isEmpty(allClick)) {
-                numStr1 = allClick + (mIsVideo ? "播放" : "浏览");
-            }
-        }
-        String numStr2 = null;
-        if (mDataMap.containsKey("favorites")) {
-            String favNum = handleNumber(mDataMap.get("favorites"));
-            if (!TextUtils.isEmpty(favNum)) {
-                numStr2 = favNum + "收藏";
-            }
-        }
-        String numStr3 = null;
-        if (mDataMap.containsKey("likeNum")) {
-            String likeNum = handleNumber(mDataMap.get("likeNum"));
-            if (!TextUtils.isEmpty(likeNum)) {
-                numStr3 = likeNum + "点赞";
-            }
-        }
-        String numStr4 = null;
-        if (mDataMap.containsKey("commentNum")) {
-            String comStr = mDataMap.get("commentNum");
-            if (!TextUtils.isEmpty(comStr) && Integer.parseInt(comStr) > 10) {
-                String comNum = handleNumber(comStr);
-                if (!TextUtils.isEmpty(comNum)) {
-                    if (Integer.parseInt(comNum) > 10)
-                        numStr4 = comNum + "评论";
-                }
-            }
-        }
+
         switch (mType) {
             case "1"://图文菜谱
-            case "2"://视频菜谱
-                if (numStr2 != null && mNum1 != null) {
-                    mNum1.setText(numStr2);
+                if (mFavNum != null && mNum1 != null) {
+                    mNum1.setText(mFavNum + "收藏");
                     mNum1.setVisibility(View.VISIBLE);
                 }
-                if (numStr1 != null && mNum2 != null) {
-                    mNum2.setText(numStr1);
+                if (mAllClickNum != null && mNum2 != null) {
+                    mNum2.setText(mAllClickNum + "浏览");
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+            case "2"://视频菜谱
+                if (mFavNum != null && mNum1 != null) {
+                    mNum1.setText(mFavNum + "收藏");
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (mAllClickNum != null && mNum2 != null) {
+                    mNum2.setText(mAllClickNum + "播放");
                     mNum2.setVisibility(View.VISIBLE);
                 }
                 break;
             case "3"://文章
-                if (numStr4 != null && mNum1 != null) {
-                    mNum1.setText(numStr4);
+                if (mComNum != null && mNum1 != null) {
+                    mNum1.setText(mComNum + "评论");
                     mNum1.setVisibility(View.VISIBLE);
                 }
-                if (numStr1 != null && mNum2 != null) {
-                    mNum2.setText(numStr1);
+                if (mAllClickNum != null && mNum2 != null) {
+                    mNum2.setText(mAllClickNum + "浏览");
                     mNum2.setVisibility(View.VISIBLE);
                 }
                 break;
             case "5"://帖子
-                if (numStr4 != null && mNum1 != null) {
-                    mNum1.setText(numStr4);
+                if (mComNum != null && mNum1 != null) {
+                    mNum1.setText(mComNum + "评论");
                     mNum1.setVisibility(View.VISIBLE);
                 }
-                if (numStr3 != null && mNum2 != null) {
-                    mNum2.setText(numStr3);
+                if (mLikeNum != null && mNum2 != null) {
+                    mNum2.setText(mLikeNum + "赞");
                     mNum2.setVisibility(View.VISIBLE);
                 }
                 break;
