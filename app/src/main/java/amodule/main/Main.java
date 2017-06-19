@@ -694,6 +694,7 @@ public class Main extends Activity implements OnClickListener {
                 } else if (i == 1 && allTab.containsKey("MainMall") && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
                     MainMall mall = (MainMall) allTab.get("MainMall");
                     mall.scrollTop();
+                    MainMall.reloadWebView();
 //                    if (MallCommon.click_state)
 //                        mall.refresh();
 //                    MainCircle nous = (MainCircle) allTab.get("MainCircle");
