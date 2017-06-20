@@ -109,15 +109,20 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
 
         String commentNum = map.get("commentNumber");
         isSofa = "0".equals(commentNum);
-        hintComment.setText(isSofa ? "抢沙发":"写评论");
+        hintComment.setText(isSofa ? "抢沙发" : "写评论");
 
+    }
+
+    public void resetHintComment() {
+        isSofa = false;
+        hintComment.setText(isSofa ? "抢沙发" : "写评论");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.comment_edit_fake:
-                doComment(isSofa ? "抢沙发":getTextHint());
+                doComment(isSofa ? "抢沙发" : getTextHint());
                 statistics("底部栏", "评论输入框");
                 break;
             case R.id.praise_button:
@@ -141,19 +146,19 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
         ToolsDevice.keyboardControl(true, getContext(), editText);
     }
 
-    public void setEditTextShow(boolean isShow){
-        findViewById(R.id.comment_bar_fake).setVisibility(isShow?GONE:VISIBLE);
-        findViewById(R.id.comment_bar_real).setVisibility(isShow?VISIBLE:GONE);
+    public void setEditTextShow(boolean isShow) {
+        findViewById(R.id.comment_bar_fake).setVisibility(isShow ? GONE : VISIBLE);
+        findViewById(R.id.comment_bar_real).setVisibility(isShow ? VISIBLE : GONE);
     }
 
     /** 点赞 */
     private void doPraise() {
-        if(TextUtils.isEmpty(praiseAPI)){
+        if (TextUtils.isEmpty(praiseAPI)) {
             return;
         }
-        if(!LoginManager.isLogin()){
+        if (!LoginManager.isLogin()) {
             ToolsDevice.keyboardControl(false, getContext(), editText);
-            Tools.showToast(getContext(),"请先登录或注册哦~");
+            Tools.showToast(getContext(), "请先登录或注册哦~");
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }
@@ -175,9 +180,9 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
 
     /** 发评论 */
     private void sentComment() {
-        if(!LoginManager.isLogin()){
+        if (!LoginManager.isLogin()) {
             ToolsDevice.keyboardControl(false, getContext(), editText);
-            Tools.showToast(getContext(),"请先登录或注册哦~");
+            Tools.showToast(getContext(), "请先登录或注册哦~");
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }
@@ -193,22 +198,22 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
         sbuild.append("type=").append(type).append("&")
                 .append("code=").append(code).append("&")
                 .append("content=").append(getContent());
-        Log.i("tzy",sbuild.toString());
+        Log.i("tzy", sbuild.toString());
         ReqEncyptInternet.in().doEncypt(StringManager.api_addForum, sbuild.toString(),
                 new InternetCallback(getContext()) {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
-                        if(flag >= ReqEncyptInternet.REQ_OK_STRING){
-
-                            if(onCommentSuccessCallback != null){
-                                onCommentSuccessCallback.onCommentSuccess(isSofa,obj);
+                        if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                            resetHintComment();
+                            if (onCommentSuccessCallback != null) {
+                                onCommentSuccessCallback.onCommentSuccess(isSofa, obj);
                             }
-                            if(isSofa) {
+                            if (isSofa) {
                                 isSofa = !isSofa;
                                 editText.setHint(getTextHint());
                             }
-                        }else{
-                            Tools.showToast(context,"评论失败，请重试");
+                        } else {
+                            Tools.showToast(context, "评论失败，请重试");
                         }
                         sendComment.setVisibility(VISIBLE);
                         progressBar.setVisibility(GONE);
@@ -219,8 +224,8 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
                 });
     }
 
-    private String getTextHint(){
-        return  "写评论";
+    private String getTextHint() {
+        return "写评论";
     }
 
     public String getContent() {
@@ -269,7 +274,8 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
     }
 
     private OnCommentSuccessCallback onCommentSuccessCallback;
-    public interface OnCommentSuccessCallback{
+
+    public interface OnCommentSuccessCallback {
         public void onCommentSuccess(boolean isSofa, Object obj);
     }
 

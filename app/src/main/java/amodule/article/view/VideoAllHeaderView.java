@@ -1,9 +1,8 @@
 package amodule.article.view;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -12,7 +11,6 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.view.DishHeaderView;
@@ -25,31 +23,34 @@ import third.video.VideoPlayerController;
  */
 
 public class VideoAllHeaderView extends LinearLayout {
+    private Activity activity;
     private VideoHeaderView videoHeaderView;
     private CustomerView customerView;
     private VideoInfoView videoInfoView;
 
     public VideoAllHeaderView(Context context) {
         super(context);
+        if(context instanceof Activity)
+            this.activity = (Activity) context;
         this.setOrientation(LinearLayout.VERTICAL);
         initView();
     }
-
-    public VideoAllHeaderView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        this.setOrientation(LinearLayout.VERTICAL);
-        initView();
-    }
-
-    public VideoAllHeaderView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.setOrientation(LinearLayout.VERTICAL);
-        initView();
-    }
+//
+//    public VideoAllHeaderView(Context context, @Nullable AttributeSet attrs) {
+//        super(context, attrs);
+//        this.setOrientation(LinearLayout.VERTICAL);
+//        initView();
+//    }
+//
+//    public VideoAllHeaderView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+//        super(context, attrs, defStyleAttr);
+//        this.setOrientation(LinearLayout.VERTICAL);
+//        initView();
+//    }
 
     private void initView(){
         videoHeaderView = new VideoHeaderView(getContext());
-        videoHeaderView.initView(XHActivityManager.getInstance().getCurrentActivity());
+        videoHeaderView.initView(activity);
         addView(videoHeaderView);
 
         videoInfoView = new VideoInfoView(getContext());
