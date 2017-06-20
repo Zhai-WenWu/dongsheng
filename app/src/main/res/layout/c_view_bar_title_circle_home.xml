@@ -15,16 +15,14 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/singleText"
+        style="@style/top_title_singleText"
         android:layout_width="wrap_content"
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_13"
         android:clickable="true"
         android:gravity="center"
-        android:text="生活圈"
-        android:textColor="@color/common_top_text"
-        android:textSize="@dimen/sp_19" />
+        android:text="生活圈" />
 
     <ImageView
         android:id="@+id/circle_share"
