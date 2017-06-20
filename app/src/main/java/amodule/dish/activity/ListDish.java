@@ -82,7 +82,7 @@ public class ListDish extends BaseActivity {
 		System.gc();
 		long nowTime=System.currentTimeMillis();
 		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
-			XHClick.saveStatictisFile("ListDish",module_type,data_type,type,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+			XHClick.saveStatictisFile("ListDish",module_type,data_type,g1,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
 		}
 	}
 
