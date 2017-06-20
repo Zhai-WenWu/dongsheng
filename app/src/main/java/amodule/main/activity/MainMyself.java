@@ -2,7 +2,6 @@ package amodule.main.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -58,17 +57,15 @@ import third.push.xg.XGPushServer;
  * @date: 2016年11月13日 下午15:22:50
  */
 public class MainMyself extends MainBaseActivity implements OnClickListener {
-	private int id = 0;
 	// 布局
 	private RelativeLayout right_myself, userPage;
 	private LinearLayout gourp1, gourp2,gourp3;
 	private String[] name1 = {"我的收藏","浏览历史","本地下载"},
 			name2 = {"我的订单","优惠券","我的会员","我的钱包","我的积分"},
 			name3 = {"帮助与反馈","系统设置"};
-
-//	private int[] img1 = {R.drawable.z_me_list_ico_collect,R.drawable.z_me_list_ico_download,R.drawable.z_me_list_ico_see
-//			,R.drawable.z_me_list_ico_integral,R.drawable.z_me_list_ico_order},
-//			img2 = {R.drawable.z_me_list_ico_setting,R.drawable.z_me_list_ico_vip,R.drawable.z_me_list_ico_money};
+	private String[] clickTag1 = {"favor","hitstory","download"},
+			clickTag2 = {"order","coupon","vip","money","score"},
+			clickTag3 = {"helpe","setting"};
 
 	private final String tongjiId = "a_mine";
 
@@ -162,9 +159,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 		gourp3 = (LinearLayout) findViewById(R.id.myself_gourp3);
 
 		LayoutInflater layoutInfater = LayoutInflater.from(this);
-		itemInfalter(layoutInfater,gourp1 , name1);
-		itemInfalter(layoutInfater,gourp2 , name2);
-		itemInfalter(layoutInfater,gourp3 , name3);
+		itemInfalter(layoutInfater,gourp1 , name1,clickTag1);
+		itemInfalter(layoutInfater,gourp2 , name2,clickTag2);
+		itemInfalter(layoutInfater,gourp3 , name3,clickTag3);
 
 		Object isShowVip = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowVip");
 		Object isShowMoney = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowMoney");
@@ -284,11 +281,11 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 		});
 	}
 
-	private void itemInfalter(LayoutInflater layoutInfater,LinearLayout parent, String[] groupNames) {
+	private void itemInfalter(LayoutInflater layoutInfater,LinearLayout parent, String[] groupNames,String[] clickTags) {
 		for (int i = 0; i < groupNames.length; i++) {
 			View itemView =  layoutInfater.inflate(R.layout.a_common_myself_item, null);
 			itemView.setClickable(true);
-			itemView.setTag("" + id++);
+			itemView.setTag(clickTags[i]);
 			itemView.setOnClickListener(this);
 
 			TextView text = (TextView) itemView.findViewById(R.id.text_myself);
@@ -304,8 +301,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (v.getTag() != null) {
-			if (!onEventbranch(Integer.valueOf(v.getTag().toString())))
-				onEventCommon(Integer.valueOf(v.getTag().toString()));
+			onListEventCommon(String.valueOf(v.getTag()));
 		} else {
 			onEventbranch(v.getId());
 		}
@@ -318,11 +314,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 				case R.id.ll_dish:
 				case R.id.ll_flow:
 				case R.id.ll_score:
-				case 0: //收藏
-				case 7: //积分
-				case 3: //订单
-				case 4: //优惠券
-				case 6: //钱包
 					Tools.showToast(this,"请先登录或注册哦~");
 				case R.id.myself_lv: //用户等级
 				case R.id.myself_please_login:
@@ -383,6 +374,91 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 			}
 		}
 		return false;
+	}
+
+	private void onListEventCommon(String clickTag){
+		if (LoginManager.userInfo.size() == 0) {
+			switch (clickTag) {
+				case "favor": //收藏
+				case "score": //积分
+				case "order": //订单
+				case "coupon": //优惠券
+				case "money": //钱包
+					Tools.showToast(this, "请先登录或注册哦~");
+					XHClick.mapStat(this, tongjiId, "头部", "登录");
+					Intent intent = new Intent(MainMyself.this, LoginByAccout.class);
+					startActivity(intent);
+					break;
+			}
+		}else{
+			switch (clickTag) {
+				case "favor"://收藏
+					XHClick.track(getApplicationContext(), "点击我的页面的收藏");
+					XHClick.mapStat(this, tongjiId,"列表","收藏");
+					Intent intent_fav = new Intent(MainMyself.this, MyFavorite.class);
+					startActivity(intent_fav);
+//				Intent intent = new Intent(this,CommentActivity.class);
+//				startActivity(intent);
+					break;
+				case "hitstory"://浏览记录
+					XHClick.mapStat(this, tongjiId,"列表","看过");
+					Intent intent_history = new Intent(MainMyself.this, BrowseHistory.class);
+					startActivity(intent_history);
+					break;
+				case "download"://离线菜谱
+					// 统计
+					XHClick.track(getApplicationContext(), "点击我的页面的下载");
+					XHClick.mapStat(this, tongjiId,"列表","下载");
+					Intent intent_off = new Intent(MainMyself.this, OfflineDish.class);
+					startActivity(intent_off);
+					break;
+				case "order":
+					XHClick.mapStat(this, tongjiId,"列表", "订单");
+					Intent intent_order = new Intent(this,MyOrderActivity.class);
+					startActivity(intent_order);
+					break;
+				case "coupon":
+					XHClick.mapStat(this, tongjiId,"列表", "优惠券");
+					Intent intent_coupon = new Intent(this,MallMyFavorableActivity.class);
+					startActivity(intent_coupon);
+					break;
+				case "vip": //会员
+					XHClick.mapStat(this, tongjiId,"列表", "我的会员");
+					AppCommon.openUrl(MainMyself.this,StringManager.api_vip,true);
+					FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowVip","2");
+					gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+					gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+					break;
+				case "money"://钱包
+					XHClick.mapStat(this, tongjiId,"列表", "我的钱包");
+					AppCommon.openUrl(MainMyself.this,StringManager.api_money,true);
+					FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowMoney","2");
+					gourp2.getChildAt(3).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+					gourp2.getChildAt(3).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+					break;
+				case "score":
+					XHClick.track(getApplicationContext(), "点击我的页面的积分");
+					XHClick.mapStat(this, tongjiId,"列表", "积分商城");
+//			AppCommon.openUrl(this, StringManager.api_scoreStore + "?code=" + LoginManager.userInfo.get("code"), true);
+					Intent scoreStore = new Intent(MainMyself.this, ScoreStore.class);
+					startActivity(scoreStore);
+					break;
+				case "helpe"://意见反馈
+					FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowOpinion","2");
+					gourp3.getChildAt(0).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+					gourp3.getChildAt(0).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+					Intent intent2 = new Intent(MainMyself.this, Feedback.class);
+					startActivity(intent2);
+					break;
+				case "setting"://设置
+					XHClick.track(getApplicationContext(), "点击我的页面的设置");
+					XHClick.mapStat(this, tongjiId, "设置", "");
+					Intent intent_setting = new Intent(MainMyself.this, Setting.class);
+					intent_setting.putExtra("isGoManagerInfo",goManagerInfo.getVisibility() == View.VISIBLE);
+					startActivity(intent_setting);
+					break;
+			}
+		}
 	}
 
 	public void onEventCommon(int index) {
