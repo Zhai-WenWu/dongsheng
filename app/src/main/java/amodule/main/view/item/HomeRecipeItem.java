@@ -260,6 +260,7 @@ public class HomeRecipeItem extends HomeItem {
                     mNum2.setText(mAllClickNum + "浏览");
                     mNum2.setVisibility(View.VISIBLE);
                 }
+                break;
             case "2"://视频菜谱
                 if (mFavNum != null && mNum1 != null) {
                     mNum1.setText(mFavNum + "收藏");
