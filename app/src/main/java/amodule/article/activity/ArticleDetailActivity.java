@@ -348,7 +348,9 @@ public class ArticleDetailActivity extends BaseActivity {
             @Override
             public void onListAdData(Map<String, String> adDataMap) {
                 adRcomDataArray.add(adDataMap);
-                mArticleAdContrler.handlerAdData(adRcomDataArray,allDataListMap);
+                if(isRelateDataOk){
+                    mArticleAdContrler.handlerAdData(adRcomDataArray,allDataListMap);
+                }
             }
         });
     }
@@ -582,6 +584,7 @@ public class ArticleDetailActivity extends BaseActivity {
         return map;
     }
 
+    private boolean isRelateDataOk = false;
     /**
      * 解析推荐数据
      *
@@ -598,6 +601,7 @@ public class ArticleDetailActivity extends BaseActivity {
         if (page == 1)
             ArrayRelate.get(0).put("showheader", "1");
         allDataListMap.addAll(ArrayRelate);
+        isRelateDataOk = true;
 
         detailAdapter.notifyDataSetChanged();
     }

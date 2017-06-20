@@ -147,8 +147,9 @@ public class ArticleAdContrler {
             try {
                 int[] adPositionInList = {2, 5};
                 final int length = adPositionInList.length > adRcomDataArray.size() ? adRcomDataArray.size() : adPositionInList.length;
-                for (int index = 0; index < length && allDataListMap.size() >= adPositionInList[index] - 1; index++) {
-                    if (allDataListMap.get(adPositionInList[index]) != null
+                for (int index = 0; index < length && allDataListMap.size() >= adPositionInList[index]; index++) {
+                    if (allDataListMap.size() > adPositionInList[index]
+                            && allDataListMap.get(adPositionInList[index]) != null
                             && "2".equals(allDataListMap.get(adPositionInList[index]).get("isAd"))) {
                         continue;
                     }
@@ -163,7 +164,11 @@ public class ArticleAdContrler {
                     dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
                     dataMap.put("clickAll", Tools.getRandom(1000, 60000) + "浏览");
                     dataMap.put("commentNumber", "广告");
-                    allDataListMap.add(adPositionInList[index], dataMap);
+                    if(adPositionInList[index] < allDataListMap.size())
+                        allDataListMap.add(adPositionInList[index], dataMap);
+                    else if(adPositionInList[index] == allDataListMap.size()){
+                        allDataListMap.add(dataMap);
+                    }
                     Log.i("tzy", "ADmap = " + dataMap.toString());
                 }
             } catch (JSONException e) {
