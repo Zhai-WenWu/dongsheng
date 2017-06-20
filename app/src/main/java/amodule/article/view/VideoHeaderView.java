@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -31,7 +32,6 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishHeaderView;
 import amodule.dish.view.DishVideoImageView;
@@ -183,7 +183,7 @@ public class VideoHeaderView extends RelativeLayout {
             }
         });
         //初始化倒计时
-        final Handler handler = new Handler() {
+        final Handler handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -262,7 +262,12 @@ public class VideoHeaderView extends RelativeLayout {
             mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                 @Override
                 public void onclick() {
-                    setVideoAdData(mapAd, adLayout);
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            setVideoAdData(mapAd, adLayout);
+                        }
+                    });
                 }
             });
             dishvideo_img.setVisibility(View.GONE);
