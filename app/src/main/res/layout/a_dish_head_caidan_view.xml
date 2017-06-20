@@ -8,12 +8,14 @@
         android:id="@+id/dish_menu_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_35"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:layout_marginBottom="@dimen/dp_18"
         android:gravity="center"
-        android:textSize="@dimen/sp_28"
+        android:textSize="@dimen/sp_24"
+        android:lineSpacingExtra="@dimen/dp_3"
+        android:textStyle="bold"
         android:textColor="#494949"/>
 
     <LinearLayout
@@ -52,7 +54,8 @@
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:textColor="#535353"
+        android:lineSpacingExtra="@dimen/dp_7"
         android:textSize="@dimen/sp_16"
-        android:layout_marginBottom="@dimen/dp_34"/>
+        android:layout_marginBottom="@dimen/dp_24"/>
 
 </LinearLayout>

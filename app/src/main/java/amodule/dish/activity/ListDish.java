@@ -70,7 +70,7 @@ public class ListDish extends BaseActivity {
 		if ("recommend".equals(type) || "typeRecommend".equals(type))
 			initActivity(name, 2, 0, R.layout.c_view_bar_title_time, R.layout.a_dish_caidan_list);
 		else
-			initActivity(type.equals("caidan") ? "精选菜单" : name, 2, 0, R.layout.c_view_bar_title, R.layout.a_dish_caidan_list);
+			initActivity("", 2, 0, R.layout.c_view_bar_title, R.layout.a_dish_caidan_list);
 		initMenu();
 		initBarView();
 	}
@@ -175,7 +175,16 @@ public class ListDish extends BaseActivity {
 						} else {
 							ListDish.this.dishName.setVisibility(View.GONE);
 						}
+						TextView title = (TextView)findViewById(R.id.title);
 						if (!TextUtils.isEmpty(authorName)) {
+							if (title != null) {
+								String str = "";
+								if (authorName.length() > 11)
+									str = authorName.substring(0, 11) + "...";
+								else
+									str = authorName;
+								title.setText(str);
+							}
 							ListDish.this.authorName.setText(authorName);
 							findViewById(R.id.from_container).setVisibility(View.VISIBLE);
 							ListDish.this.authorName.setOnClickListener(new OnClickListener() {
@@ -189,6 +198,8 @@ public class ListDish extends BaseActivity {
 								}
 							});
 						} else {
+							if (title != null)
+								title.setText("精选菜单");
 							ListDish.this.authorName.setVisibility(View.GONE);
 						}
 						if (!TextUtils.isEmpty(info)) {
