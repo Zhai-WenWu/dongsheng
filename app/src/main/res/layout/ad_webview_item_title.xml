@@ -14,9 +14,7 @@
         android:gravity="center"
         android:paddingLeft="@dimen/dp_55"
         android:paddingRight="@dimen/dp_55"
-        android:text="title"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/sp_17" />
+        android:text="title" />
 
     <include
         android:id="@+id/ll_back"
