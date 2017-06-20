@@ -109,8 +109,6 @@ public class PushManager extends DialogManagerParent {
                 rightText = map.get("rightText");
                 showNum = Integer.parseInt(map.get("showNumber"));
                 spaceTime = Integer.parseInt(map.get("spaceTime"));
-                showNum = 100;
-                spaceTime = 1;
             }catch (Exception e){
                 return false;
             }
