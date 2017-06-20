@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -31,6 +32,7 @@ import xh.basic.tool.UtilImage;
 
 public class RecommendItemView extends ItemBaseView {
 
+    private RelativeLayout adLayout;
     private ImageView recImage;
     private TextView recTitle;
     private TextView recCustomerName;
@@ -52,6 +54,7 @@ public class RecommendItemView extends ItemBaseView {
 
     @Override
     public void init() {
+        adLayout = (RelativeLayout) findViewById(R.id.ad_layout);
         recImage = (ImageView) findViewById(R.id.rec_image);
         videoIcon = (ImageView) findViewById(R.id.video_icon);
         recTitle = (TextView) findViewById(R.id.rec_title);
@@ -140,6 +143,10 @@ public class RecommendItemView extends ItemBaseView {
                 }
             }
         };
+    }
+
+    public RelativeLayout getAdLayout() {
+        return adLayout;
     }
 
     private OnAdClickCallback onAdClickCallback;

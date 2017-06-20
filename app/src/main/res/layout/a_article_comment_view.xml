@@ -79,6 +79,7 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_11"
         android:layout_below="@+id/content_layout"
