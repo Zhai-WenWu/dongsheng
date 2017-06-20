@@ -3,6 +3,7 @@ package amodule.user.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -161,14 +162,16 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     }
 
     protected void initTitle() {
-        if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_rela_all);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
+//        if (Tools.isShowTitle()) {
+//            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+//            int height = dp_45 + Tools.getStatusBarHeight(this);
+//            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_rela_all);
+//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+//            bar_title.setLayoutParams(layout);
+//            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
+//        }
+        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
     }
 
 
