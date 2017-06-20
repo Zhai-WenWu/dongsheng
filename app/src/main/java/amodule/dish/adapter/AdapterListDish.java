@@ -55,21 +55,29 @@ public class AdapterListDish extends AdapterSimple {
 		if (TextUtils.isEmpty(title))
 			title = map.get("name");
 		parseTitle(view, title);
-		parseToday(view, map.get("isToday"));
+		String video = map.get("video");
+		ArrayList<Map<String, String>> videos = StringManager.getListMapByJson(video);
+		parseVideoTime(view, (videos == null || videos.size() <= 0) ? "" : videos.get(0).get("duration"));
 		setOnclick(map, view);
 		parsePlayImg(view, map.get("hasVideo"));
 		return view;
 	}
 
 	/**
-	 * 显示往期推荐
+	 * 显示视频时长
 	 * @param view
-	 * @param isToday
+	 * @param videoTime
 	 */
-	private void parseToday(View view, String isToday) {
+	private void parseVideoTime(View view, String videoTime) {
 		if (view == null)
 			return;
-		view.findViewById(R.id.dish_recom_item_today_layout).setVisibility("2".equals(isToday) ? View.VISIBLE : View.GONE);
+		TextView videoTv = (TextView) view.findViewById(R.id.video_time);
+		if (!TextUtils.isEmpty(videoTime)) {
+			videoTv.setText(videoTime);
+			videoTv.setVisibility(View.VISIBLE);
+		} else {
+			videoTv.setVisibility(View.GONE);
+		}
 	}
 
 	/**
