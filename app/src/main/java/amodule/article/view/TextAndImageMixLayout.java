@@ -493,10 +493,11 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setVideo(VideoShowView.VideoDefaultClickCallback callback) {
         VideoShowView view = new VideoShowView(getContext());
-        LayoutParams layoutparams = getChildLayoutParams();
-        int dp_20 = Tools.getDimen(getContext(), R.dimen.dp_20);
+        LinearLayout.LayoutParams layoutparams = getChildLayoutParams();
+        int dp_5 = Tools.getDimen(getContext(), R.dimen.dp_5);
+        int dp_15 = Tools.getDimen(getContext(), R.dimen.dp_15);
 //        view.setPadding(dp_20,dp_20,dp_20,0);
-        layoutparams.setMargins(0, dp_20, 0, 0);
+        layoutparams.setMargins(0, dp_5, 0, 0);
         addView(view, 0, layoutparams);
         view.setEnableEdit(true);
         view.setmOnRemoveCallback(this);
@@ -505,6 +506,9 @@ public class TextAndImageMixLayout extends LinearLayout
         if (callback != null)
             view.setVideoDefaultClickCallback(callback);
         currentEditText.getRichText().setHint("添加视频介绍");
+        layoutparams = (LayoutParams) currentEditText.getLayoutParams();
+        layoutparams.setMargins(0, dp_15, 0, 0);
+        currentEditText.setLayoutParams(layoutparams);
     }
 
     //=============文本操作=====================================
@@ -571,8 +575,8 @@ public class TextAndImageMixLayout extends LinearLayout
      *
      * @return
      */
-    private LayoutParams getChildLayoutParams() {
-        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    private LinearLayout.LayoutParams getChildLayoutParams() {
+        return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 
     @Override

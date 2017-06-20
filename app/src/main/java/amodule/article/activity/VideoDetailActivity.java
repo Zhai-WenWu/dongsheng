@@ -2,17 +2,21 @@ package amodule.article.activity;
 
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -39,11 +43,10 @@ import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.adapter.VideoDetailAdapter;
-import amodule.article.tools.ArticleAdContrler;
 import amodule.article.tools.VideoAdContorler;
 import amodule.article.view.BottomDialog;
 import amodule.article.view.CommentBar;
-import amodule.article.view.VideoHeaderView;
+import amodule.article.view.VideoAllHeaderView;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
@@ -54,6 +57,7 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.share.BarShare;
+import third.video.VideoPlayerController;
 import xh.windowview.XhDialog;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_VIDEO;
@@ -73,12 +77,12 @@ public class VideoDetailActivity extends BaseActivity {
     private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
     /** 头部view */
-    private VideoHeaderView mHaederLayout;
+    private VideoAllHeaderView mHaederLayout;
     private CommentBar mCommentBar;
 
     private VideoDetailAdapter detailAdapter;
     private VideoAdContorler mVideoAdContorler;
-
+    private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
     private Map<String, String> commentMap;
     private Map<String, String> shareMap = new HashMap<>();
@@ -88,16 +92,46 @@ public class VideoDetailActivity extends BaseActivity {
 
     private String commentNum;
     private boolean isKeyboradShow = false;
-    private boolean isAdShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //保持高亮
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        },5 * 60 * 1000);
+        //sufureView页面闪烁
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         initBundle();
         initView();
         initData();
+    }
+    //**********************************************Activity生命周期方法**************************************************
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mVideoPlayerController != null && !mVideoPlayerController.isError) {
+            return mVideoPlayerController.onVDKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mVideoPlayerController != null) {
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                mVideoPlayerController.setIsFullScreen(true);
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                mVideoPlayerController.setIsFullScreen(false);
+            }
+        }
     }
 
     @Override
@@ -111,13 +145,31 @@ public class VideoDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Rect outRect = new Rect();
+        this.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.onResume();
+        }
+        mHaederLayout.onResume();
         Glide.with(this).resumeRequests();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.onPause();
+        }
+        mHaederLayout.onPause();
         Glide.with(this).pauseRequests();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.onDestroy();
+        }
     }
 
     private void initBundle() {
@@ -127,7 +179,8 @@ public class VideoDetailActivity extends BaseActivity {
     }
 
     private void initView() {
-        initActivity(getTitleText(), 2, 0, 0, R.layout.a_video_detail);
+        initActivity("", 2, 0, 0, R.layout.a_video_detail);
+
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
@@ -200,15 +253,26 @@ public class VideoDetailActivity extends BaseActivity {
             }
         });
         //initListView
-        mHaederLayout = new VideoHeaderView(this);
-        listView.addHeaderView(mHaederLayout);
+        mHaederLayout = new VideoAllHeaderView(this);
+        mHaederLayout.setCallBack(new VideoAllHeaderView.VideoViewCallBack() {
+            @Override
+            public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
+                VideoDetailActivity.this.mVideoPlayerController = mVideoPlayerController;
+            }
+
+            @Override
+            public void gotoRequest() {
+
+            }
+        });
+        listView.addHeaderView(mHaederLayout,null,false);
     }
 
     /** 初始化评论框 */
     private void initCommentBar() {
         mCommentBar = (CommentBar) findViewById(R.id.comment_bar);
         mCommentBar.setCode(code);
-        mCommentBar.setType(getType());
+        mCommentBar.setType(TYPE_VIDEO);
         mCommentBar.setOnCommentSuccessCallback(new CommentBar.OnCommentSuccessCallback() {
             @Override
             public void onCommentSuccess(boolean isSofa, Object obj) {
@@ -244,7 +308,7 @@ public class VideoDetailActivity extends BaseActivity {
             return;
         }
         //初始化Adapter
-        detailAdapter = new VideoDetailAdapter(this, allDataListMap, getType(), code);
+        detailAdapter = new VideoDetailAdapter(this, allDataListMap, TYPE_VIDEO, code);
         detailAdapter.setOnRabSofaCallback(new ArticleDetailAdapter.OnRabSofaCallback() {
             @Override
             public void onRabSoaf() {
@@ -351,8 +415,8 @@ public class VideoDetailActivity extends BaseActivity {
 
     private void requestVideoData(final boolean onlyUser) {
         loadManager.showProgressBar();
-        StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=HTML");
-        ReqEncyptInternet.in().doEncypt(getInfoAPI(), params.toString(), new InternetCallback(this) {
+        StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=RAW");
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params.toString(), new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -376,7 +440,7 @@ public class VideoDetailActivity extends BaseActivity {
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
-        mHaederLayout.setType(getType());
+        mHaederLayout.setType(TYPE_VIDEO);
         mHaederLayout.setData(mapVideo);
 
         rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
@@ -409,9 +473,8 @@ public class VideoDetailActivity extends BaseActivity {
     }
 
     private void requestRelateData(boolean onlyUser) {
-        String url = getRelatedAPI();
         String param = "code=" + code + "&page=" + ++page + "&pagesize=10";
-        ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoRelated, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -501,7 +564,7 @@ public class VideoDetailActivity extends BaseActivity {
     /** 请求评论列表 */
     private void requestForumData(final boolean isRefresh) {
         String url = StringManager.api_forumList;
-        String param = "from=1&type=" + getType() + "&code=" + code;
+        String param = "from=1&type=" + TYPE_VIDEO + "&code=" + code;
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
@@ -633,27 +696,6 @@ public class VideoDetailActivity extends BaseActivity {
                     }
                 });
     }
-
-    public String getType() {
-        return TYPE_VIDEO;
-    }
-
-    public String getTitleText() {
-        return "视频详情页";
-    }
-
-    public String getInfoAPI() {
-        return StringManager.api_getVideoInfo;
-    }
-
-    public String getRelatedAPI() {
-        return StringManager.api_getVideoRelated;
-    }
-
-    public String getPraiseAPI() {
-        return StringManager.api_likeVideo;
-    }
-
 
     private void statistics(String twoLevel, String threeLevel) {
         XHClick.mapStat(this, "a_ShortVideoDetail", twoLevel, threeLevel);

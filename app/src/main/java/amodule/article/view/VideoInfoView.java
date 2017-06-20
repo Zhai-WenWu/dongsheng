@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -18,6 +20,7 @@ import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import amodule.article.activity.ReportActivity;
 import amodule.article.activity.VideoDetailActivity;
+import amodule.article.view.richtext.RichParser;
 
 /**
  * PackageName : amodule.article.view
@@ -60,9 +63,11 @@ public class VideoInfoView extends ItemBaseView {
                 if (arrow.isSelected()) {
                     content.setVisibility(GONE);
                     arrow.setSelected(false);
+                    arrow.setImageResource(R.drawable.arrow_down);
                 } else {
                     content.setVisibility(VISIBLE);
                     arrow.setSelected(true);
+                    arrow.setImageResource(R.drawable.arrow_up);
                 }
             }
         });
@@ -76,8 +81,18 @@ public class VideoInfoView extends ItemBaseView {
 
         setVisibility(VISIBLE);
 
-        contentText = videoMap.get("content");
-        if(!TextUtils.isEmpty(contentText) && !"[]".equals(content)){
+        StringBuilder stringBuilder = new StringBuilder();
+        String rawStr = videoMap.get("raw");
+        List<Map<String,String>> array = StringManager.getListMapByJson(rawStr);
+        for(Map<String,String> map:array){
+            if("text".equals(map.get("type"))){
+                stringBuilder.append(map.get("html"));
+            }
+        }
+        contentText = RichParser.fromHtml(stringBuilder.toString()).toString().trim();
+        Log.i("tzy","contentText = " +contentText);
+//        contentText = "两年半之前，在一个由四个人组成的 Android 团队的帮助下，我开始从后端开发转向移动开发。一年之后，我加入了一个已经完成了B轮融资的初创公司，在那里主要做 Android 开发的工作。在一个小团队里工作，既能很好地保持独立，还不耽误向同事学习。";
+        if(!TextUtils.isEmpty(contentText)){
             arrow.setVisibility(VISIBLE);
             content.setText(contentText);
         }else arrow.setVisibility(GONE);

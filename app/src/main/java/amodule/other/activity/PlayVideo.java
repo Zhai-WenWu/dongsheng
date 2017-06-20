@@ -2,7 +2,6 @@ package amodule.other.activity;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -61,7 +60,7 @@ public class PlayVideo extends BaseActivity {
         });
 
         //设置播放界面16:9
-        dishVidioLayout = (LinearLayout) findViewById(R.id.dishVidio);
+        dishVidioLayout = (LinearLayout) findViewById(R.id.video_layout);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) dishVidioLayout.getLayoutParams();
         params.height = Tools.getPhoneHeight();
         params.width = Tools.getPhoneWidth();
