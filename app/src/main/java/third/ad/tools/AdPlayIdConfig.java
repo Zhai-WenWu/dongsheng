@@ -115,6 +115,7 @@ public class AdPlayIdConfig {
     public static final String ARTICLE_CONTENT_BOTTOM = "wz_wz";
     public static final String ARTICLE_RECM_1 = "wz_tuijian1";
     public static final String ARTICLE_RECM_2 = "wz_tuijian2";
+    public static final String ARTICLE_TIEPIAN = "wz_tiepian";
 
 
 }

@@ -1,6 +1,5 @@
 package amodule.article.activity;
 
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -346,7 +345,6 @@ public class VideoDetailActivity extends BaseActivity {
 //                new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//
 //                    }
 //                },
 //                new View.OnClickListener() {
@@ -488,6 +486,8 @@ public class VideoDetailActivity extends BaseActivity {
                         handlerStyleData(map, styleDataList);
                     }
                     analysRelateData(listMap);
+                    mVideoAdContorler.handlerAdData(adRcomDataArray,allDataListMap);
+                    detailAdapter.notifyDataSetChanged();
 //                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
                     toastFaildRes(flag, true, object);
@@ -628,10 +628,6 @@ public class VideoDetailActivity extends BaseActivity {
             shareMap.put("img", String.valueOf(R.drawable.umen_share_launch));
             shareMap.put("imgType", BarShare.IMG_TYPE_RES);
         }
-    }
-
-    public String getMAPI() {
-        return StringManager.replaceUrl(StringManager.api_article);
     }
 
     private void openShare() {

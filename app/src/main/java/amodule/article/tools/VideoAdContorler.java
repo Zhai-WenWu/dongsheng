@@ -163,8 +163,13 @@ public class VideoAdContorler {
                     dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
                     dataMap.put("clickAll", Tools.getRandom(1000, 60000) + "浏览");
                     dataMap.put("commentNumber", "广告");
+                    dataMap.put("showheader", "1");
                     allDataListMap.add(adPositionInList[index], dataMap);
                     Log.i("tzy", "ADmap = " + dataMap.toString());
+                }
+                for(int index = 1 ; index < allDataListMap.size() ; index ++){
+                    if(allDataListMap.get(index).containsKey("showheader"))
+                        allDataListMap.get(index).remove("showheader");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -50,4 +50,11 @@ public class DishVideoImageView extends ItemBaseView {
         }else time_tv.setVisibility(View.GONE);
         return this;
     }
+
+    public View setDataNoTime(String img){
+        setViewImage(imageview_rela,img);
+        findViewById(R.id.play_layout_1).setVisibility(GONE);
+        findViewById(R.id.play_layout_2).setVisibility(VISIBLE);
+        return this;
+    }
 }

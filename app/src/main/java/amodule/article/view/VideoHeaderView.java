@@ -41,8 +41,6 @@ import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
-
 /**
  * PackageName : amodule.article.view
  * Created by MrTrying on 2017/6/20 11:55.
@@ -127,17 +125,15 @@ public class VideoHeaderView extends RelativeLayout {
 
     private void initVideoAd() {
         adLayout = (FrameLayout) findViewById(R.id.video_ad_layout);
-//        int distance = Tools.getDimen(activity, R.dimen.dp_45);
-//        adLayout.setPadding(0, distance, 0, 0);
 
         ArrayList<String> list = new ArrayList<>();
-        String key = AdPlayIdConfig.DISH_MEDIA;
+        String key = AdPlayIdConfig.ARTICLE_TIEPIAN;
         list.add(key);
 
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(Map<String, String> maps) {
-                String temp = maps.get(AdPlayIdConfig.DISH_MEDIA);
+                String temp = maps.get(AdPlayIdConfig.ARTICLE_TIEPIAN);
                 mapAd = StringManager.getFirstMap(temp);
                 Log.i("tzy", "needVideoControl time = " + System.currentTimeMillis());
                 if (mapAd != null && mapAd.size() > 0
@@ -147,7 +143,7 @@ public class VideoHeaderView extends RelativeLayout {
                 if (isAutoPaly && mVideoPlayerController != null)
                     mVideoPlayerController.setOnClick();
             }
-        }, activity, "result_media");
+        }, activity, "wz_tiepian");
 
     }
 
@@ -245,27 +241,20 @@ public class VideoHeaderView extends RelativeLayout {
     private boolean setSelfVideo(final Map<String, String> selfVideoMap) {
         initVideoAd();
         boolean isUrlVaild = false;
-        tongjiId = "a_menu_detail_video430";
         String videoUrl = selfVideoMap.get("url");
         String img = selfVideoMap.get("videoImg");
         if (!TextUtils.isEmpty(videoUrl)
                 && videoUrl.startsWith("http")) {
             LinearLayout dishvideo_img = (LinearLayout) findViewById(R.id.video_img_layout);
-            int distance = Tools.getDimen(activity, R.dimen.dp_45);
-//                if (Tools.isShowTitle()) {
-//                    distance += Tools.getStatusBarHeight(activity);
-//                }
-//            dishVidioLayout.setPadding(0, distance, 0, 0);
-//                dishvideo_img.addView(new DishVideoImageView(activity).setData(img, selfVideoMap.get("duration")));
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
-            dishVideoImageView.setData(img, selfVideoMap.get("duration"));
+            dishVideoImageView.setDataNoTime(img);
             mVideoPlayerController.setNewView(dishVideoImageView);
             mVideoPlayerController.initVideoView2(videoUrl, selfVideoMap.get("title"), dishVideoImageView);
             mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
                 @Override
                 public void onStatistics() {
-                    XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "视频播放按钮点击");
+                    XHClick.mapStat(getContext(), "a_ShortVideoDetail", "视频内容", "播放视频");
                     callBack.videoImageOnClick();
                 }
             });
@@ -279,7 +268,6 @@ public class VideoHeaderView extends RelativeLayout {
             dishvideo_img.setVisibility(View.GONE);
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, this);
             callBack.videoImageOnClick();
-//                mVideoPlayerController.setOnClick();
             isUrlVaild = true;
         }
         return isUrlVaild;
