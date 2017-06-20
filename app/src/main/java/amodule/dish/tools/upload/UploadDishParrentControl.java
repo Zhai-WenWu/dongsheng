@@ -54,7 +54,7 @@ public abstract class UploadDishParrentControl {
         inflater = LayoutInflater.from(mAct);
         mAct.initActivity("", 6, 0, 0, R.layout.a_dish_upload_new_layout);
         View viewParent = inflater.inflate(contentXml, null);
-        initTitle(viewParent);
+//        initTitle(viewParent);
         RelativeLayout relativeLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);
         relativeLayout.addView(viewParent);
 
