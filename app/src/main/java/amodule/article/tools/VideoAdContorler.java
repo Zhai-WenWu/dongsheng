@@ -114,6 +114,8 @@ public class VideoAdContorler {
     }
 
     public View getBigAdView(Map<String, String> dataMap) {
+        if(dataMap == null || dataMap.isEmpty())
+            return new View(XHActivityManager.getInstance().getCurrentActivity());
         final View adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad, null);
         //加载图片
         ImageView imageView = (ImageView) adView.findViewById(R.id.img);
