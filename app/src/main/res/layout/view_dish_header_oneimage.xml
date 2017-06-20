@@ -18,7 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_300"
         android:orientation="vertical"
-        android:background="#898989" />
+        android:background="#898989"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <include
         android:id="@+id/dishvideo_ad"
