@@ -168,8 +168,11 @@ public class ListDish extends BaseActivity {
 						String classifyName = returnList.get(0).get("name");
 						String customer = returnList.get(0).get("customer");
 						final ArrayList<Map<String, String>> customers = StringManager.getListMapByJson(customer);
-						String authorName = customers.get(0).get("nickName");
 						String info = returnList.get(0).get("info");
+						String authorName = "";
+						if (customers != null && customers.size() > 0) {
+							authorName = customers.get(0).get("nickName");
+						}
 						if (!TextUtils.isEmpty(classifyName)) {
 							ListDish.this.dishName.setText(classifyName);
 						} else {
