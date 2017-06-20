@@ -1,6 +1,5 @@
 package aplug.service;
 
-import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
@@ -86,7 +85,6 @@ public class CoreService extends NormalService {
     private void openActivity() {
         if (isOpenActivity()) {
             //记录
-            FileManager.saveShared(getApplicationContext(), FileManager.xmlFile_wake, "date", getCurrentDate());
             int todayCount = getTodayCount();
             FileManager.saveShared(getApplicationContext(), FileManager.xmlFile_wake, "count", String.valueOf(++todayCount));
             Intent intent = new Intent(this, ServiceOpenActivity.class);
@@ -104,23 +102,23 @@ public class CoreService extends NormalService {
         //获取当前时间
         int todayCount = getTodayCount();
         //TODO 测试
-        if(dayCount <= 0) return todayCount <=4;
+        if(dayCount <= 0) return todayCount <4;
         //正式逻辑
         if (dayCount >= 1
                 || dayCount < 4) {
             //
-            return todayCount <= 4;
+            return todayCount < 4;
         } else if (dayCount >= 4
                 || dayCount < 7) {
             //
-            return todayCount <= 3;
+            return todayCount < 3;
         } else if (dayCount >= 7
                 || dayCount < 14) {
             //
-            return todayCount <= 2;
+            return todayCount < 2;
         } else if (dayCount >= 14) {
             //
-            return todayCount <= 1;
+            return todayCount < 1;
         }
         return false;
     }
@@ -138,6 +136,9 @@ public class CoreService extends NormalService {
         if (getCurrentDate().equals(date)) {
             String countStr = FileManager.loadShared(getApplicationContext(), FileManager.xmlFile_wake, "count").toString();
             todayCount = TextUtils.isEmpty(countStr) ? 0 : Integer.parseInt(countStr);
+        }else{
+            FileManager.saveShared(getApplicationContext(), FileManager.xmlFile_wake, "date", getCurrentDate());
+            FileManager.saveShared(getApplicationContext(), FileManager.xmlFile_wake, "count", "0");
         }
         return todayCount;
     }
