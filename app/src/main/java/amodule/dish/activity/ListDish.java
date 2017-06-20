@@ -104,9 +104,9 @@ public class ListDish extends BaseActivity {
 		// 绑定列表数据
 		adapter = new AdapterListDish(this, listView, arrayList, 
 				R.layout.a_dish_item_menu_new,
-				new String[] {"info", "nickName", "allClick", "favorites", "isToday"},
+				new String[] {"info", "nickName", "allClick", "favorites"},
 				new int[] {R.id.title, R.id.user_name, R.id.num1,
-					R.id.num2, R.id.dish_recom_item_today},
+					R.id.num2},
 				type);
 		adapter.imgWidth = ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this.getApplicationContext(), R.dimen.dp_20);//20=10*2
 		adapter.scaleType = ScaleType.CENTER_CROP;
