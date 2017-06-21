@@ -226,7 +226,7 @@ public class AppCommon {
                     }
                 }
                 if (!TextUtils.isEmpty(url) && urls.length > 1) {
-                    //TODO 不会有.app了，变成包名加类名啦
+                    //不会有.app了，变成包名加类名啦
                     int indexs = url.indexOf(".app");
                     String data = url.substring(0, indexs + 4); //+4是为了加上.app4个字符
                     XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
