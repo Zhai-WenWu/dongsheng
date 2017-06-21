@@ -184,8 +184,10 @@ public class TagTextView extends TextView {
 	 */
 	public void setBackgroundColor(int mBackgroundColor) {
 		this.mBackgroundColor = mBackgroundColor;
-		gradientDrawable.setColor(mBackgroundColor);
-		setBackgroundDrawable(gradientDrawable);
+		if(gradientDrawable != null){
+			gradientDrawable.setColor(mBackgroundColor);
+			setBackgroundDrawable(gradientDrawable);
+		}
 	}
 
 	/**
