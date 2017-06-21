@@ -79,7 +79,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 	private TextView moneyNum,scoreNum, couponNum;
 	private TagTextView my_renzheng,my_vip;
 
-	private TextView vipInfo;
+	private TextView vipInfo,vipNewHint;
 	private ImageView vipIcon;
 
 	@Override
@@ -180,8 +180,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 
 		vipInfo = (TextView) gourp2.getChildAt(0).findViewById(R.id.text_right_myself);
 		vipIcon = (ImageView) gourp2.getChildAt(0).findViewById(R.id.ico_right_myself);
+		vipNewHint = (TextView) gourp2.getChildAt(0).findViewById(R.id.my_new_info);
 		if(isShowVip == null || TextUtils.isEmpty(String.valueOf(isShowVip))){
-			gourp2.getChildAt(0).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
+			vipNewHint.setVisibility(View.VISIBLE);
 			vipIcon.setVisibility(View.GONE);
 		}
 
@@ -260,7 +261,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 							String vipData = vipMap.get("text");
 							if (TextUtils.isEmpty(vipData)) {
 								vipInfo.setVisibility(View.GONE);
-								vipIcon.setVisibility(View.VISIBLE);
+								if(vipNewHint.getVisibility() != View.VISIBLE) vipIcon.setVisibility(View.VISIBLE);
 							} else {
 								vipInfo.setText(vipData);
 								vipInfo.setVisibility(View.VISIBLE);
@@ -492,8 +493,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 					XHClick.mapStat(this, tongjiId,"列表", "我的会员");
 					AppCommon.openUrl(MainMyself.this,StringManager.api_vip,true);
 					FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowVip","2");
-					gourp2.getChildAt(0).findViewById(R.id.my_new_info).setVisibility(View.GONE);
-					gourp2.getChildAt(0).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+					vipNewHint.setVisibility(View.GONE);
+					if(vipInfo.getVisibility() != View.VISIBLE) vipIcon.setVisibility(View.VISIBLE);
 					break;
 				case "helpe"://意见反馈
 					FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowOpinion","2");
