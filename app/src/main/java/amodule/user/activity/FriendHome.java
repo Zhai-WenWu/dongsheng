@@ -60,6 +60,7 @@ import xh.basic.tool.UtilString;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_ATT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_DEL;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.DATA_TYPE;
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.STATE_KEY;
 
 @SuppressLint("CutPasteId")
@@ -573,6 +574,7 @@ public class FriendHome extends BaseActivity {
 				new UploadStateChangeBroadcasterReceiver.ReceiveBack() {
 					@Override
 					public void onGetReceive(Intent intent) {
+                        String isSecondEdit = intent.getStringExtra(SECONDE_EDIT);
 						String state = intent.getStringExtra(STATE_KEY);
 						String dataType = intent.getStringExtra(DATA_TYPE);
 						String actionDel = intent.getStringExtra(ACTION_DEL);
@@ -595,7 +597,7 @@ public class FriendHome extends BaseActivity {
 						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType) && !"0".equals(dataType)) {
 							if (!TextUtils.isEmpty(actionDel) && "2".equals(actionDel))
 								updateTabNum(true);
-							else if (!TextUtils.isEmpty(state) && UploadStateChangeBroadcasterReceiver.STATE_SUCCESS.equals(state))
+							else if (!TextUtils.isEmpty(state) && UploadStateChangeBroadcasterReceiver.STATE_SUCCESS.equals(state) && !"2".equals(isSecondEdit))
 								updateTabNum(false);
 						}
 						//文章、视频详情页的关注，并且是成功了才会有这个值。

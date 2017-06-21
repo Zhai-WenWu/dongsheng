@@ -130,6 +130,10 @@ public class ArticleUploadListActivity extends BaseActivity {
             return;
         }
         isSecondEdit = !TextUtils.isEmpty(articleData.getCode());
+
+        if (listPool instanceof ArticleUploadListPool) {
+            ((ArticleUploadListPool)listPool).setIsSecondEdit(isSecondEdit);
+        }
         dishName = uploadPoolData.getTitle();
         arrayList = uploadPoolData.getListData();
         if(!TextUtils.isEmpty(dishName)) {
@@ -432,7 +436,6 @@ public class ArticleUploadListActivity extends BaseActivity {
                 type = "1";
             if (!TextUtils.isEmpty(type))
                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
-            broadIntent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
             Main.allMain.sendBroadcast(broadIntent);
         } else {
             Intent intent = new Intent();
@@ -441,7 +444,6 @@ public class ArticleUploadListActivity extends BaseActivity {
                 intent.putExtra("index", 3);
             else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
                 intent.putExtra("index", 2);
-            intent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
             intent.setClass(this, FriendHome.class);
             startActivity(intent);
         }

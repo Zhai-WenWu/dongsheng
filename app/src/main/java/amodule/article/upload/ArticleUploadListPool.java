@@ -54,6 +54,17 @@ public class ArticleUploadListPool extends UploadListPool {
 
     private int dataType;
 
+    //是否是二次编辑上传的文章
+    private String isSecondEdit;//1:否 2:是
+
+    /**
+     * 设置是否二次编辑上传的文章
+     * @param isSecondEdit
+     */
+    public void setIsSecondEdit(boolean isSecondEdit) {
+        this.isSecondEdit = isSecondEdit ? "2" : "1";
+    }
+
     @Override
     protected void initData(int dataType,int draftId, String coverPath, String finalVideoPath, String timestamp, UploadListUICallBack callback) {
         super.initData(draftId, coverPath, finalVideoPath, timestamp, callback);
@@ -138,6 +149,9 @@ public class ArticleUploadListPool extends UploadListPool {
                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
             broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
                     flag ? UploadStateChangeBroadcasterReceiver.STATE_SUCCESS : UploadStateChangeBroadcasterReceiver.STATE_FAIL);
+            if (flag && !TextUtils.isEmpty(isSecondEdit)) {
+                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.SECONDE_EDIT, isSecondEdit);
+            }
             Main.allMain.sendBroadcast(broadIntent);
         } else if (Tools.isForward(XHApplication.in())) {
             Activity act = XHActivityManager.getInstance().getCurrentActivity();
