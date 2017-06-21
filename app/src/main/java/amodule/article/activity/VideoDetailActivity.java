@@ -672,7 +672,7 @@ public class VideoDetailActivity extends BaseActivity {
     }
 
     private void deleteThis() {
-        ReqEncyptInternet.in().doEncypt(StringManager.api_articleDel, "code=" + code,
+        ReqEncyptInternet.in().doEncypt(StringManager.api_videoDel, "code=" + code,
                 new InternetCallback(VideoDetailActivity.this) {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
