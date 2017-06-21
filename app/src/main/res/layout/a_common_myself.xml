@@ -96,7 +96,6 @@
                                 android:textColor="@color/common_top_text"
                                 android:textSize="@dimen/sp_16"
                                 android:textStyle="bold"
-                                android:text="牛牛的妈妈"
                                 />
 
                             <ImageView
@@ -135,14 +134,13 @@
                             android:paddingLeft="@dimen/dp_9"
                             android:paddingRight="@dimen/dp_9"
                             android:paddingTop="@dimen/dp_1"
-                            android:text="开通会员"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/sp_12"
                             app:backgroundColor="@android:color/transparent"
                             app:radius="@dimen/dp_3"
                             app:sideColor="#FFFFFF"
                             app:sideWidth="1px"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             />
                         <acore.widget.TagTextView
                             android:id="@+id/my_renzheng"
@@ -157,14 +155,13 @@
                             android:paddingLeft="@dimen/dp_9"
                             android:paddingRight="@dimen/dp_9"
                             android:paddingTop="@dimen/dp_1"
-                            android:text="已认证"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/sp_12"
                             app:backgroundColor="@android:color/transparent"
                             app:radius="@dimen/dp_3"
                             app:sideColor="#FFFFFF"
                             app:sideWidth="1px"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             />
                     </RelativeLayout>
 
