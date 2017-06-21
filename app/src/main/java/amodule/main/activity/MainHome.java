@@ -199,7 +199,7 @@ public class MainHome extends MainBaseActivity {
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         String moduleJson = FileManager.readFile(modulePath);
         if (TextUtils.isEmpty(moduleJson)) {
-            moduleJson = FileManager.getFromAssets(this, FileManager.file_homeTopModle);
+            moduleJson = FileManager.getFromAssets(this, "homeTopModle");
 //            Log.i(tag, "moduleJson::内置：：：" + moduleJson);
             final String finalModuleJson = moduleJson;
             FileManager.saveFileToCompletePath(modulePath, finalModuleJson.toString(), false);
