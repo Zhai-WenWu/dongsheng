@@ -176,7 +176,12 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 		itemInfalter(layoutInfater,gourp3 , name3,clickTag3);
 
 		Object isShowVip = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowVip");
+		Object isShowMoney = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowMoney");
 		Object isShowOpinion = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowOpinion");
+
+		if(isShowMoney == null || TextUtils.isEmpty(String.valueOf(isShowMoney))){
+			findViewById(R.id.my_money_hint).setVisibility(View.VISIBLE);
+		}
 
 		vipInfo = (TextView) gourp2.getChildAt(0).findViewById(R.id.text_right_myself);
 		vipIcon = (ImageView) gourp2.getChildAt(0).findViewById(R.id.ico_right_myself);
@@ -429,6 +434,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 					XHClick.mapStat(this, tongjiId,"列表", "我的钱包");
 					AppCommon.openUrl(MainMyself.this,StringManager.api_money,true);
 					FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowMoney","2");
+					findViewById(R.id.my_money_hint).setVisibility(View.GONE);
 					break;
 				case R.id.ll_score:
 					XHClick.track(getApplicationContext(), "点击我的页面的积分");

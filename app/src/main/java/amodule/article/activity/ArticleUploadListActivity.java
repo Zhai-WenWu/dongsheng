@@ -35,6 +35,7 @@ import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
+import amodule.article.db.UploadArticleData;
 import amodule.article.upload.ArticleUploadListPool;
 import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
@@ -47,6 +48,8 @@ import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
+
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 
 /**
  * 文章上传列表页
@@ -77,6 +80,8 @@ public class ArticleUploadListActivity extends BaseActivity {
     private String finalVideoPath;
 
     private int dataType;
+
+    private boolean isSecondEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,10 +124,12 @@ public class ArticleUploadListActivity extends BaseActivity {
                         draftId,coverPath,finalVideoPath,timesStamp, generateUiCallback());
         uploadPoolData = listPool.getUploadPoolData();
 
-        if(uploadPoolData.getUploadArticleData() == null){
+        UploadArticleData articleData = uploadPoolData.getUploadArticleData();
+        if(articleData == null){
             finish();
             return;
         }
+        isSecondEdit = !TextUtils.isEmpty(articleData.getCode());
         dishName = uploadPoolData.getTitle();
         arrayList = uploadPoolData.getListData();
         if(!TextUtils.isEmpty(dishName)) {
@@ -425,6 +432,7 @@ public class ArticleUploadListActivity extends BaseActivity {
                 type = "1";
             if (!TextUtils.isEmpty(type))
                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+            broadIntent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
             Main.allMain.sendBroadcast(broadIntent);
         } else {
             Intent intent = new Intent();
@@ -433,6 +441,7 @@ public class ArticleUploadListActivity extends BaseActivity {
                 intent.putExtra("index", 3);
             else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
                 intent.putExtra("index", 2);
+            intent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
             intent.setClass(this, FriendHome.class);
             startActivity(intent);
         }

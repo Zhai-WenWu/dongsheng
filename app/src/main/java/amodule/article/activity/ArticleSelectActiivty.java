@@ -47,6 +47,8 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
 
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
+
 /**
  * Created by Fang Ruijiao on 2017/5/22.
  */
@@ -66,6 +68,8 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
 
     private int dataType;
     private int draftId;
+
+    private boolean isSecondEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +171,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         draftId = getIntent().getIntExtra("draftId",-1);
         uploadArticleData = sqLite.selectById(draftId);
         checkCode = uploadArticleData.getClassCode();
+        isSecondEdit = !TextUtils.isEmpty(uploadArticleData.getCode());
     }
 
     private boolean isLoading = false;
@@ -326,6 +331,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void gotoFriendHome() {
+        Log.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
             Intent broadIntent = new Intent();
@@ -337,6 +343,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 type = "1";
             if (!TextUtils.isEmpty(type))
                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+            broadIntent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
             Main.allMain.sendBroadcast(broadIntent);
         } else {
             Intent intent = new Intent();
@@ -345,6 +352,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 intent.putExtra("index", 3);
             else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
                 intent.putExtra("index", 2);
+            intent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
             intent.setClass(this, FriendHome.class);
             startActivity(intent);
         }

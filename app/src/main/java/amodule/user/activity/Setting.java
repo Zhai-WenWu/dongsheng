@@ -23,12 +23,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.dialogManager.VersionOp;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
-import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -42,7 +41,6 @@ import amodule.user.view.LeftAndRightTextView;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
-import aplug.basic.XHConf;
 import aplug.web.ApiShowWeb;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
@@ -237,10 +235,8 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
     private void showItemGrop() {
 
-        //如果是调试模式或者是管理员，就显示‘后台’和端口切换
-
-        if (XHConf.log_isDebug || LoginManager.isManager()
-                || "ceshi".equals(ChannelUtil.getChannel(this))) {
+        //如果是四位数或者是管理员，就显示‘后台’和端口切换
+        if (VersionOp.getVerName(this).length() > 5 || LoginManager.isManager()) {
             ll_internal_used.setVisibility(View.VISIBLE);
         } else {
             ll_internal_used.setVisibility(View.GONE);
