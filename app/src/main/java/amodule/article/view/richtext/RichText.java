@@ -16,6 +16,8 @@
 
 package amodule.article.view.richtext;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
@@ -35,6 +37,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -43,6 +46,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_BOLD = 0x01;
@@ -55,6 +60,7 @@ public class RichText extends EditText implements TextWatcher {
 
     private final String KEY_URL = "url";
     private final String KEY_TITLE = "title";
+    private Context mContext;
 
     private int bulletColor = 0;
     private int bulletRadius = 0;
@@ -78,22 +84,26 @@ public class RichText extends EditText implements TextWatcher {
 
     public RichText(Context context) {
         super(context);
+        this.mContext = context;
         init(null);
     }
 
     public RichText(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mContext = context;
         init(attrs);
     }
 
     public RichText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.mContext = context;
         init(attrs);
     }
 
     @SuppressWarnings("NewApi")
     public RichText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        this.mContext = context;
         init(attrs);
     }
 
@@ -243,6 +253,8 @@ public class RichText extends EditText implements TextWatcher {
             return getEditableText().subSequence(start, end).toString().equals(builder.toString());
         }
     }
+
+//    public void center
 
     // UnderlineSpan ===============================================================================
 
@@ -698,10 +710,10 @@ public class RichText extends EditText implements TextWatcher {
             getEditableText().removeSpan(span);
         }
         styleInvalid(Typeface.BOLD, start, end);
-        underlineInvalid(start,end);
+        underlineInvalid(start, end);
     }
 
-    public boolean containLink(){
+    public boolean containLink() {
         int start = getSelectionStart();
         int end = getSelectionEnd();
         if (start == end) {
@@ -773,9 +785,9 @@ public class RichText extends EditText implements TextWatcher {
                     continue;
                 }
                 int endIdex = startIndex + desc.length();
-                Log.i("tzy","seletionIndex = " + seletionIndex);
-                Log.i("tzy","startIndex = " + startIndex);
-                Log.i("tzy","endIdex = " + endIdex);
+                Log.i("tzy", "seletionIndex = " + seletionIndex);
+                Log.i("tzy", "startIndex = " + startIndex);
+                Log.i("tzy", "endIdex = " + endIdex);
                 //判断当前光标位置
                 if (seletionIndex > startIndex && seletionIndex <= endIdex) {
                     CharacterStyle[] spans = getText().getSpans(startIndex, endIdex, CharacterStyle.class);
@@ -966,9 +978,9 @@ public class RichText extends EditText implements TextWatcher {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        if(onSelectContainsType != null)
+        if (onSelectContainsType != null)
             onSelectContainsType.onSelectBold(contains(FORMAT_BOLD));
-        if(onSelectContainsType != null)
+        if (onSelectContainsType != null)
             onSelectContainsType.onSelectUnderline(contains(FORMAT_UNDERLINED));
         int textLength = text.length();
         if (selStart > 0 && selStart < textLength) {
@@ -977,7 +989,7 @@ public class RichText extends EditText implements TextWatcher {
                 Map<String, String> linkMap = linkMapArray.get(index);
                 String desc = linkMap.get(KEY_TITLE);
                 int startIndex = text.indexOf(linkMap.get(KEY_TITLE));
-                Log.i("tzy","startIndex = " + startIndex);
+                Log.i("tzy", "startIndex = " + startIndex);
                 //找不到则remove
                 if (startIndex < 0) {
                     linkMapArray.remove(linkMap);
@@ -1003,6 +1015,36 @@ public class RichText extends EditText implements TextWatcher {
         }
     }
 
+    @Override
+    public boolean onTextContextMenuItem(int id) {
+        switch (id) {
+            case android.R.id.cut:
+                //剪切
+                break;
+            case android.R.id.copy:
+                //复制
+                break;
+            case android.R.id.paste:
+                //粘帖
+                final ClipboardManager manager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
+                String pasteText = getClipFirstText(manager);
+                Log.i("tzy", "copied text: " + pasteText);
+                ClipData clip = ClipData.newPlainText("simple text copy", TextUtils.isEmpty(pasteText) ? "" : pasteText);
+                manager.setPrimaryClip(clip);
+                break;
+        }
+
+        return super.onTextContextMenuItem(id);
+    }
+
+    private String getClipFirstText(ClipboardManager manager) {
+        String addedText = "";
+        if (manager.hasPrimaryClip() && manager.getPrimaryClip().getItemCount() > 0) {
+            addedText = manager.getPrimaryClip().getItemAt(0).getText() + "";
+        }
+        return addedText;
+    }
+
     public List<Map<String, String>> getLinkMapArray() {
         return linkMapArray;
     }
@@ -1013,9 +1055,11 @@ public class RichText extends EditText implements TextWatcher {
         this.onSelectContainsType = onSelectContainsType;
     }
 
-    public interface OnSelectContainsType{
+    public interface OnSelectContainsType {
         public void onSelectBold(boolean isSelected);
+
         public void onSelectUnderline(boolean isSelected);
+
         public void onSelectLink(String url, String desc);
     }
 }
