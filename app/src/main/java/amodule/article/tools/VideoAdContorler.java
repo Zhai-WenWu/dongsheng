@@ -64,7 +64,7 @@ public class VideoAdContorler {
     public void initADData() {
         //请求广告数据
         xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM}, "wz_wz");
-        xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1, ARTICLE_RECM_2}, "wz_list");
+        xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1}, "wz_list");
     }
 
     private XHAllAdControl requestAdData(final String[] ads, String id) {
@@ -81,7 +81,6 @@ public class VideoAdContorler {
                             sendAdMessage(adStr, ARTICLE_BOTTOM);
                             break;
                         case ARTICLE_RECM_1:
-                        case ARTICLE_RECM_2:
                             sendAdMessage(adStr, ARTICLE_RECOMMEND);
                             break;
                     }

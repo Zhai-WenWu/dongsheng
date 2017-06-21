@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
@@ -41,9 +43,13 @@ import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_2;
 
 public class ArticleAdContrler {
     private XHAllAdControl xhAllAdControlBootom, xhAllAdControlList;
-
-    public final int ARTICLE_BOTTOM = 1;
-    public final int ARTICLE_RECOMMEND = 2;
+    private ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
+    private SparseArray<Boolean> adInsteredArray = new SparseArray<>();
+    public final int ARTICLE_BOTTOM = 101;
+    private final int[] adPositionInList = {1, 4};
+    //adPosition 的 index 值
+    public final int ARTICLE_RECOMMEND_1 = 0;
+    public final int ARTICLE_RECOMMEND_2 = 1;
     private Handler adHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -53,13 +59,24 @@ public class ArticleAdContrler {
                     if (onBigAdCallback != null)
                         onBigAdCallback.onBigAdData((Map<String, String>) msg.obj);
                     break;
-                case ARTICLE_RECOMMEND:
-                    if (onListAdCallback != null)
-                        onListAdCallback.onListAdData((Map<String, String>) msg.obj);
+                case ARTICLE_RECOMMEND_1:
+                case ARTICLE_RECOMMEND_2:
+                    handlerArticleRecData(msg.what, msg.obj);
                     break;
             }
         }
     };
+
+    private void handlerArticleRecData(int index, Object obj) {
+        if (obj != null) {
+            Map<String, String> data = (Map<String, String>) obj;
+            data.put("adPosition", String.valueOf(adPositionInList[index]));
+            adInsteredArray.append(index, false);
+            adRcomDataArray.add(data);
+            if (onListAdCallback != null)
+                onListAdCallback.onListAdData(data);
+        }
+    }
 
     public void initADData() {
         //请求广告数据
@@ -81,8 +98,10 @@ public class ArticleAdContrler {
                             sendAdMessage(adStr, ARTICLE_BOTTOM);
                             break;
                         case ARTICLE_RECM_1:
+//                            sendAdMessage(adStr, ARTICLE_RECOMMEND_1);
+                            break;
                         case ARTICLE_RECM_2:
-                            sendAdMessage(adStr, ARTICLE_RECOMMEND);
+                            sendAdMessage(adStr, ARTICLE_RECOMMEND_2);
                             break;
                     }
                 }
@@ -140,41 +159,46 @@ public class ArticleAdContrler {
         return adView;
     }
 
-    public void handlerAdData(List<Map<String, String>> adRcomDataArray, List<Map<String, String>> allDataListMap) {
-        if (adRcomDataArray != null
-                && allDataListMap.size() > 1) {
-            Log.i("tzy", "handlerAdData 执行了");
-            try {
-                int[] adPositionInList = {2, 5};
-                final int length = adPositionInList.length > adRcomDataArray.size() ? adRcomDataArray.size() : adPositionInList.length;
-                for (int index = 0; index < length && allDataListMap.size() >= adPositionInList[index]; index++) {
-                    if (allDataListMap.size() > adPositionInList[index]
-                            && allDataListMap.get(adPositionInList[index]) != null
-                            && "2".equals(allDataListMap.get(adPositionInList[index]).get("isAd"))) {
-                        continue;
-                    }
+    public void handlerAdData(List<Map<String, String>> allDataListMap) {
+        if (adRcomDataArray != null && allDataListMap.size() > 1) {
+            final int lastIndex = adPositionInList[adPositionInList.length - 1];
+            for (int index = 0, length = adRcomDataArray.size(); index < length; index++) {
+                //
+                if (adInsteredArray.get(index) != null && adInsteredArray.get(index)) continue;
 
-                    Map<String, String> adMap = adRcomDataArray.get(index);
-                    Map<String, String> dataMap = new HashMap<>();
-                    dataMap.put("datatype", String.valueOf(Type_recommed));
-                    dataMap.put("isAd", "2");
-                    dataMap.put("adPosition", String.valueOf(index));
-                    dataMap.put("title", adMap.get("desc"));//adMap.get("title") + " | " +
-                    dataMap.put("img", adMap.get("imgUrl"));
-                    dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
-                    dataMap.put("clickAll", Tools.getRandom(1000, 60000) + "浏览");
-                    dataMap.put("commentNumber", "广告");
-                    if(adPositionInList[index] < allDataListMap.size())
-                        allDataListMap.add(adPositionInList[index], dataMap);
-                    else if(adPositionInList[index] == allDataListMap.size()){
+                Map<String, String> adMap = adRcomDataArray.get(index);
+                final int adPosition = Integer.parseInt(adMap.get("adPosition")) + 1;
+                Map<String, String> dataMap = getAdMap(adMap, index);
+                if (!dataMap.isEmpty()) {
+                    if (allDataListMap.size() > adPosition) {
+                        allDataListMap.add(adPosition, dataMap);
+                        adInsteredArray.put(index, true);
+                        //特殊处理最后一个广告
+                    } else if (allDataListMap.size() - adPosition <= 1 && adPosition == lastIndex + 1) {
                         allDataListMap.add(dataMap);
+                        adInsteredArray.put(index, true);
                     }
-                    Log.i("tzy", "ADmap = " + dataMap.toString());
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                Log.i("tzy", "ADmap = " + dataMap.toString());
             }
         }
+    }
+
+    private Map<String, String> getAdMap(Map<String, String> adMap, int index) {
+        Map<String, String> dataMap = new HashMap<>();
+        try {
+            dataMap.put("datatype", String.valueOf(Type_recommed));
+            dataMap.put("isAd", "2");
+            dataMap.put("adPosition", String.valueOf(index));
+            dataMap.put("title", adMap.get("desc"));//adMap.get("title") + " | " +
+            dataMap.put("img", adMap.get("imgUrl"));
+            dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
+            dataMap.put("clickAll", Tools.getRandom(1000, 60000) + "浏览");
+            dataMap.put("commentNumber", "广告");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return dataMap;
     }
 
     public interface OnBigAdCallback {

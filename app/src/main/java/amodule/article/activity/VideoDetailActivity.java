@@ -654,7 +654,7 @@ public class VideoDetailActivity extends BaseActivity {
 
     private void openDeleteDialog() {
         final XhDialog dialog = new XhDialog(this);
-        dialog.setTitle("确定删除这篇文章吗？")
+        dialog.setTitle("确定删除这个视频吗？")
                 .setCanselButton("取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
