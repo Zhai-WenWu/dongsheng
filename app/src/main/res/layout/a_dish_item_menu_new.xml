@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/dish_recom_item_root"
-    android:background="@color/transparent">
+    android:background="#FFFFFF">
 
     <RelativeLayout
         android:id="@+id/container"
@@ -137,7 +137,7 @@
         android:layout_below="@+id/top_container"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
-        android:layout_marginBottom="@dimen/dp_7"
+        android:layout_marginBottom="@dimen/dp_5"
         android:layout_alignParentLeft="true"
         android:lineSpacingExtra="@dimen/dp_6"
         android:maxLines="2"
@@ -216,7 +216,7 @@
     <View
         android:id="@+id/line_bottom"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="@dimen/dp_1"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:layout_below="@+id/user_container"
