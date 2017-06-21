@@ -461,6 +461,12 @@ public class HomeFragment extends Fragment{
                         //当前只有向上刷新，并且服务端确认可以刷新数据
                         if (compelClearData || (refresh && !TextUtils.isEmpty(listmaps.get(0).get("reset")) && "2".equals(listmaps.get(0).get("reset")))) {
                             mListData.clear();
+                            //强制刷新，重置数据
+                            if(!TextUtils.isEmpty(listmaps.get(0).get("backurl")))
+                                backUrl = listmaps.get(0).get("backurl");
+                            if(!TextUtils.isEmpty(listmaps.get(0).get("nexturl")))
+                                nextUrl = listmaps.get(0).get("nexturl");
+
                         }
                         //初始化二级
                         initContextView(listmaps.get(0).get("trigger_two_type"));
