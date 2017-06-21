@@ -202,7 +202,7 @@ public class ListDish extends BaseActivity {
 							});
 						} else {
 							if (title != null)
-								title.setText("精选菜单");
+								title.setText("菜单");
 							ListDish.this.authorName.setVisibility(View.GONE);
 						}
 						if (!TextUtils.isEmpty(info)) {
