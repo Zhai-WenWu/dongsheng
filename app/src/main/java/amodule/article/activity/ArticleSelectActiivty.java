@@ -22,8 +22,9 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.XHClick;
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
@@ -37,6 +38,10 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
+import amodule.main.Main;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
+import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -221,8 +226,13 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         }else{
             InternetCallback internetCallback = new InternetCallback(ArticleSelectActiivty.this) {
                 @Override
-                public void loaded(int i, String s, Object o) {
-
+                public void loaded(int flag, String s, Object o) {
+                    if(flag >= ReqInternet.REQ_OK_STRING){
+                        sqLite.deleteById(draftId);
+                    }else{
+                        uploadArticleData.setUploadType(UploadDishData.UPLOAD_FAIL);
+                        sqLite.update(draftId,uploadArticleData);
+                    }
                 }
             };
             if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
@@ -230,6 +240,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO) {
                 uploadArticleData.upload(StringManager.api_videoAdd,internetCallback);
             }
+            gotoFriendHome();
         }
         finish();
         tjClosePage();
@@ -258,24 +269,11 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     Tools.showToast(ArticleSelectActiivty.this,"请选择分类");
                     return;
                 }
-                if(isCheck > 0){
-                    if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActiivty.this))) {
+                if(isCheck > 0) {
+                    if (sqLite.checkHasMedia(draftId)){
                         upload();
                     }else{
-                        final XhDialog xhDialog = new XhDialog(ArticleSelectActiivty.this);
-                        xhDialog.setTitle("当前不是WiFi环境，是否发布？")
-                                .setCanselButton("暂不发布", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        xhDialog.cancel();
-                                    }
-                                }).setSureButton("继续", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                upload();
-                                xhDialog.cancel();
-                            }
-                        }).show();
+                        hintDilog();
                     }
                 }else{
                     Tools.showToast(ArticleSelectActiivty.this,"请选择原创/转载");
@@ -304,6 +302,53 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 break;
 
         }
+    }
+
+    private void hintDilog(){
+        if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActiivty.this))) {
+            upload();
+        }else{
+            final XhDialog xhDialog = new XhDialog(ArticleSelectActiivty.this);
+            xhDialog.setTitle("当前不是WiFi环境，是否发布？")
+                    .setCanselButton("取消", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            xhDialog.cancel();
+                        }
+                    }).setSureButton("确定", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    upload();
+                    xhDialog.cancel();
+                }
+            }).show();
+        }
+    }
+
+    private void gotoFriendHome() {
+        Main.colse_level = 5;
+        if (FriendHome.isAlive) {
+            Intent broadIntent = new Intent();
+            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+            String type = "";
+            if (this.dataType == EditParentActivity.DATA_TYPE_ARTICLE)
+                type = "2";
+            else if (this.dataType == EditParentActivity.DATA_TYPE_VIDEO)
+                type = "1";
+            if (!TextUtils.isEmpty(type))
+                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+            Main.allMain.sendBroadcast(broadIntent);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("code", LoginManager.userInfo.get("code"));
+            if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
+                intent.putExtra("index", 3);
+            else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
+                intent.putExtra("index", 2);
+            intent.setClass(this, FriendHome.class);
+            startActivity(intent);
+        }
+        finish();
     }
 
     //统计 关闭发布页面
