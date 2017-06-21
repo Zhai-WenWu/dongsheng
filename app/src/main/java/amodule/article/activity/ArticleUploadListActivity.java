@@ -133,6 +133,7 @@ public class ArticleUploadListActivity extends BaseActivity {
             allStartOrPause(true);
         } else {
             allStartOrPause(false);
+            hintNetWork();
         }
 
         loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, 1, true);
