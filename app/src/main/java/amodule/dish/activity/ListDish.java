@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,8 +24,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import amodule.dish.adapter.AdapterListDish;
+import amodule.dish.adapter.ListDishAdapter;
 import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -47,7 +45,7 @@ public class ListDish extends BaseActivity {
 
 	private TextView authorName, dishInfo,dishName;
 	
-	private AdapterListDish adapter = null;
+	private ListDishAdapter adapter = null;
 	private ArrayList<Map<String, String>> arrayList = null;
 
 	private int currentPage = 0,everyPage = 0, loadPage = 0 ;
@@ -154,16 +152,7 @@ public class ListDish extends BaseActivity {
 		}
 		arrayList = new ArrayList<Map<String, String>>();
 		// 绑定列表数据
-		adapter = new AdapterListDish(this, listView, arrayList, 
-				R.layout.a_dish_item_menu_new,
-				new String[] {"info", "nickName", "allClick", "favorites"},
-				new int[] {R.id.title, R.id.user_name, R.id.num1,
-						R.id.num2},
-				type);
-		adapter.imgWidth = ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this.getApplicationContext(), R.dimen.dp_20);//20=10*2
-		adapter.scaleType = ScaleType.CENTER_CROP;
-		adapter.isAnimate = true;
-		
+		adapter = new ListDishAdapter(this);
 		
 		loadManager.setLoading(listView, adapter, true, new OnClickListener() {
 			@Override
@@ -293,7 +282,7 @@ public class ListDish extends BaseActivity {
 						arrayList.add(map);
 					}
 					Log.i("zhangyujian","展示数据集合：："+arrayList.size());
-
+					adapter.setData(arrayList);
 					adapter.notifyDataSetChanged();
 				} else {
 					toastFaildRes(flag,true,returnObj);

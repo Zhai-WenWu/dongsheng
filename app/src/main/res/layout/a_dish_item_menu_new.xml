@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/dish_recom_item_root"
-    android:background="@color/transparent">
+    android:background="#FFFFFF">
 
     <RelativeLayout
         android:id="@+id/container"
@@ -53,30 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#19ffffff"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/img_sole"
-            android:layout_width="@dimen/dp_35"
-            android:layout_height="@dimen/dp_20"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_10"
-            android:src="@drawable/icon_sole"
-            android:visibility="gone"/>
-
-        <RelativeLayout
-            android:id="@+id/video_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/resume_img"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
-            android:layout_centerInParent="true"
-            android:src="@drawable/home_item_play"
-            android:background="@color/transparent"
             android:visibility="gone"/>
 
         <ImageView
@@ -137,7 +112,7 @@
         android:layout_below="@+id/top_container"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
-        android:layout_marginBottom="@dimen/dp_7"
+        android:layout_marginBottom="@dimen/dp_5"
         android:layout_alignParentLeft="true"
         android:lineSpacingExtra="@dimen/dp_6"
         android:maxLines="2"
@@ -156,14 +131,6 @@
         android:layout_marginRight="@dimen/dp_20"
         android:layout_marginBottom="@dimen/dp_13"
         android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/top_tag"
-            android:layout_width="@dimen/dp_26"
-            android:layout_height="@dimen/dp_14"
-            android:layout_marginRight="@dimen/dp_4"
-            android:src="@drawable/top"
-            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/name_gourmet"
@@ -216,7 +183,7 @@
     <View
         android:id="@+id/line_bottom"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="@dimen/dp_1"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:layout_below="@+id/user_container"
