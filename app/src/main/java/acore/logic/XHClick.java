@@ -169,6 +169,7 @@ public class XHClick {
             Map<String, String> map = new HashMap<String, String>();
             map.put(map_key, map_value);
             MobclickAgent.onEventValue(context, eventID, map, value);
+            onMtaEvent(context,eventID,map_key,map_value);//mta统计
         }
         showToast(context, "统计_计算_" + eventID + "：" + map_key + "，" + map_value + "，" + value);
     }

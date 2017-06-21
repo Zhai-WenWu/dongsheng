@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 
+import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 
 import acore.logic.XHClick;
@@ -46,12 +47,14 @@ public class ServiceOpenActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		MobclickAgent.onResume(this);
+		StatService.onResume(this);//mta腾讯统计
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		MobclickAgent.onPause(this);
+		StatService.onPause(this);//mta腾讯统计
 		screenObserver.shutdownObserver();
 	}
 
