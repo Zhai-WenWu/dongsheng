@@ -276,7 +276,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 					AppCommon.setLvImage(Integer.valueOf(listMap.get("lv")), myself_lv);
 					boolean isVip = AppCommon.setVip(MainMyself.this,isVipImg,listMap.get("vip"),tongjiId,"头部");
 					if(isVip){
-						my_vip.setText("续费会员");
+						my_vip.setText("会员续费");
 						my_vip.setSideColor(Color.parseColor("#ffffff"));
 						my_vip.setTextColor(Color.parseColor("#3e3e3e"));
 						my_vip.setBackgroundColor(Color.parseColor("#ffffff"));
