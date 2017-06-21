@@ -156,8 +156,9 @@ public class EditTextView extends BaseView {
             //正则处理html标签
             SpannableStringBuilder ssbuilder = new SpannableStringBuilder();
             ssbuilder.append(delHTMLTag(mRichText.getText()));
+            final int selecttionEnd = mRichText.getSelectionEnd();
             mRichText.setText(ssbuilder);
-            mRichText.setSelection(ssbuilder.length());
+            mRichText.setSelection(selecttionEnd < ssbuilder.length() ? selecttionEnd : ssbuilder.length());
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
