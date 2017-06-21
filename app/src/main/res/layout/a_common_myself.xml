@@ -43,13 +43,13 @@
                     android:id="@+id/rl_userPage"
                     android:layout_below="@+id/my_title_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_106"
+                    android:layout_height="@dimen/dp_100"
                     android:gravity="center_vertical">
 
                     <ImageView
                         android:id="@+id/myself_iv"
-                        android:layout_width="@dimen/dp_56"
-                        android:layout_height="@dimen/dp_56"
+                        android:layout_width="@dimen/dp_57"
+                        android:layout_height="@dimen/dp_57"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_20"
                         android:background="@drawable/bg_user_round80_fff"
@@ -89,7 +89,7 @@
 
                             <TextView
                                 android:id="@+id/myself_name"
-                                style="@style/singleText"
+                                style="@style/top_title_singleText"
                                 android:layout_width="wrap_content"
                                 android:clickable="false"
                                 android:maxWidth="@dimen/dp_145"
@@ -125,14 +125,12 @@
 
                         <acore.widget.TagTextView
                             android:id="@+id/my_vip"
-                            android:layout_width="@dimen/dp_76"
-                            android:layout_height="@dimen/dp_22"
+                            android:layout_width="@dimen/dp_68"
+                            android:layout_height="@dimen/dp_22.5"
                             android:layout_below="@+id/ll_myself"
-                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_7"
                             android:gravity="center"
                             android:paddingBottom="@dimen/dp_1"
-                            android:paddingLeft="@dimen/dp_9"
-                            android:paddingRight="@dimen/dp_9"
                             android:paddingTop="@dimen/dp_1"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/sp_12"
@@ -144,17 +142,17 @@
                             />
                         <acore.widget.TagTextView
                             android:id="@+id/my_renzheng"
-                            android:layout_width="@dimen/dp_60"
-                            android:layout_height="@dimen/dp_22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_22.5"
                             android:layout_below="@+id/ll_myself"
                             android:layout_toRightOf="@+id/my_vip"
-                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_7"
                             android:layout_marginLeft="@dimen/dp_10"
                             android:gravity="center"
-                            android:paddingBottom="@dimen/dp_1"
-                            android:paddingLeft="@dimen/dp_9"
-                            android:paddingRight="@dimen/dp_9"
+                            android:paddingLeft="@dimen/dp_10"
                             android:paddingTop="@dimen/dp_1"
+                            android:paddingRight="@dimen/dp_10"
+                            android:paddingBottom="@dimen/dp_1"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/sp_12"
                             app:backgroundColor="@android:color/transparent"
@@ -226,7 +224,7 @@
                             style="@style/myTabText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="美食贴"/>
+                            android:text="贴子"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -281,7 +279,7 @@
                     android:orientation="horizontal"
                     android:background="#fff"
                     >
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/ll_money"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -290,17 +288,37 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/my_money_hint"
+                            android:layout_width="@dimen/dp_6"
+                            android:layout_height="@dimen/dp_6"
+                            android:layout_toRightOf="@+id/my_money_text"
+                            android:layout_marginLeft="@dimen/dp_1"
+                            android:layout_marginTop="@dimen/dp_1"
+                            android:background="@drawable/btn_circle_red"
+                            android:clickable="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/sp_10"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/my_money_text"
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
                             android:text="钱包(香包)"/>
+
                         <TextView
                             android:id="@+id/my_money"
                             style="@style/myTab2Title"
-                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/my_money_text"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:text="0"/>
-                    </LinearLayout>
+
+                    </RelativeLayout>
                     <LinearLayout
                         android:id="@+id/ll_score"
                         android:layout_width="0dp"
