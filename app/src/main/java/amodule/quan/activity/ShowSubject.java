@@ -466,6 +466,10 @@ public class ShowSubject extends BaseActivity {
 				Log.i("zhangyujian","onScrollStateChanged:::"+scrollState);
 			}
 		});
+		//填充底部footer避免遮盖
+		View fillFooterView = new View(this);
+		fillFooterView.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_45));
+		listSubject.addFooterView(fillFooterView,null,false);
 	}
 
 	/**

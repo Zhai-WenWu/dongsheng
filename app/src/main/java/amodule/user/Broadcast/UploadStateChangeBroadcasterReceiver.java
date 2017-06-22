@@ -27,6 +27,9 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     //详情页的关注操作
     public static final String ACTION_ATT = "actionAtt";//表示“关注”操作
 
+    public static final String SECONDE_EDIT = "secondEdit";//是否二次编辑 1：否 2：是
+
+
     public UploadStateChangeBroadcasterReceiver(ReceiveBack callback){
         this.callback = callback;
     }

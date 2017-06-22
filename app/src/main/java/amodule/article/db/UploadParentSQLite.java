@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -246,21 +247,20 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
     }
 
     public boolean checkHasMedia(int id){
-//        Cursor cur = null;
-//        SQLiteDatabase readableDatabase = null;
-//        try {
-//            readableDatabase = getReadableDatabase();
-//            String content = null;
-//            cur = readableDatabase.query(TB_NAME, null,
-//                    UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)}, null, null, null);// 查询并获得游标
-//            if (cur.moveToFirst()) {// 判断游标是否为空
-//                content = cur.getString(cur.getColumnIndex(UploadArticleData.article_content));
-//            }
-//            return !TextUtils.isEmpty(content) && (content.contains("image") || content.contains("video"));
-//        } finally {
-//            close(cur, readableDatabase);
-//        }
-        return true;
+        Cursor cur = null;
+        SQLiteDatabase readableDatabase = null;
+        try {
+            readableDatabase = getReadableDatabase();
+            String content = null;
+            cur = readableDatabase.query(TB_NAME, null,
+                    UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)}, null, null, null);// 查询并获得游标
+            if (cur.moveToFirst()) {// 判断游标是否为空
+                content = cur.getString(cur.getColumnIndex(UploadArticleData.article_content));
+            }
+            return !TextUtils.isEmpty(content) && (content.contains("image") || content.contains("video"));
+        } finally {
+            close(cur, readableDatabase);
+        }
     }
 
     /**

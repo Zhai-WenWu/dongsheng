@@ -9,6 +9,7 @@
     <style name="myTab2Text" parent="android:Theme.Light">
         <item name="android:textColor">#000000</item>
         <item name="android:textSize">@dimen/sp_13</item>
+        <item name="android:textSize">@dimen/sp_14</item>
         <item name="android:alpha">0.6</item>
         <item name="android:clickable">false</item>
     </style>
@@ -22,6 +23,9 @@
         <item name="android:textSize">@dimen/sp_15</item>
         <item name="android:clickable">false</item>
         <item name="android:paddingTop">@dimen/dp_6</item>
+        <item name="android:textSize">@dimen/sp_17</item>
+        <item name="android:clickable">false</item>
+        <item name="android:paddingTop">@dimen/dp_2</item>
     </style>
 
     <style name="myTabLine" >

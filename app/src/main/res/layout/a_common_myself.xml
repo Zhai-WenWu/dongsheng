@@ -44,12 +44,19 @@
                     android:layout_below="@+id/my_title_bar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_106"
+                    android:layout_height="@dimen/dp_100"
+>>>>>>> develop_530_article（废掉）
                     android:gravity="center_vertical">
 
                     <ImageView
                         android:id="@+id/myself_iv"
+<<<<<<< HEAD
                         android:layout_width="@dimen/dp_56"
                         android:layout_height="@dimen/dp_56"
+=======
+                        android:layout_width="@dimen/dp_57"
+                        android:layout_height="@dimen/dp_57"
+>>>>>>> develop_530_article（废掉）
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_20"
                         android:background="@drawable/bg_user_round80_fff"
@@ -93,6 +100,8 @@
                                 android:layout_width="wrap_content"
                                 android:clickable="false"
                                 android:maxWidth="@dimen/dp_145"
+                                android:textColor="@color/common_top_text"
+                                android:textSize="@dimen/sp_16"
                                 android:textStyle="bold"
                                 />
 
@@ -123,14 +132,17 @@
 
                         <acore.widget.TagTextView
                             android:id="@+id/my_vip"
+<<<<<<< HEAD
                             android:layout_width="@dimen/dp_76"
                             android:layout_height="@dimen/dp_22"
+=======
+                            android:layout_width="@dimen/dp_68"
+                            android:layout_height="@dimen/dp_22.5"
+>>>>>>> develop_530_article（废掉）
                             android:layout_below="@+id/ll_myself"
-                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_7"
                             android:gravity="center"
                             android:paddingBottom="@dimen/dp_1"
-                            android:paddingLeft="@dimen/dp_9"
-                            android:paddingRight="@dimen/dp_9"
                             android:paddingTop="@dimen/dp_1"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/sp_12"
@@ -142,6 +154,7 @@
                             />
                         <acore.widget.TagTextView
                             android:id="@+id/my_renzheng"
+<<<<<<< HEAD
                             android:layout_width="@dimen/dp_60"
                             android:layout_height="@dimen/dp_22"
                             android:layout_below="@+id/ll_myself"
@@ -153,6 +166,19 @@
                             android:paddingLeft="@dimen/dp_9"
                             android:paddingRight="@dimen/dp_9"
                             android:paddingTop="@dimen/dp_1"
+=======
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_22.5"
+                            android:layout_below="@+id/ll_myself"
+                            android:layout_toRightOf="@+id/my_vip"
+                            android:layout_marginTop="@dimen/dp_7"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:gravity="center"
+                            android:paddingLeft="@dimen/dp_10"
+                            android:paddingTop="@dimen/dp_1"
+                            android:paddingRight="@dimen/dp_10"
+                            android:paddingBottom="@dimen/dp_1"
+>>>>>>> develop_530_article（废掉）
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/sp_12"
                             app:backgroundColor="@android:color/transparent"
@@ -184,7 +210,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:clickable="false"
-                        android:src="@drawable/z_find_home_ico_go"/>
+                        android:src="@drawable/z_my_ico_go"/>
 
                     <TextView
                         android:id="@+id/goManagerInfo"
@@ -224,7 +250,7 @@
                             style="@style/myTabText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="美食贴"/>
+                            android:text="美食记"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -279,7 +305,11 @@
                     android:orientation="horizontal"
                     android:background="#fff"
                     >
+<<<<<<< HEAD
                     <LinearLayout
+=======
+                    <RelativeLayout
+>>>>>>> develop_530_article（废掉）
                         android:id="@+id/ll_money"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -288,6 +318,7 @@
                         android:orientation="vertical">
 
                         <TextView
+<<<<<<< HEAD
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -299,6 +330,39 @@
                             android:layout_height="wrap_content"
                             android:text="0"/>
                     </LinearLayout>
+=======
+                            android:id="@+id/my_money_hint"
+                            android:layout_width="@dimen/dp_6"
+                            android:layout_height="@dimen/dp_6"
+                            android:layout_toRightOf="@+id/my_money_text"
+                            android:layout_marginLeft="@dimen/dp_1"
+                            android:layout_marginTop="@dimen/dp_1"
+                            android:background="@drawable/btn_circle_red"
+                            android:clickable="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/sp_10"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/my_money_text"
+                            style="@style/myTab2Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:text="钱包(香豆)"/>
+
+                        <TextView
+                            android:id="@+id/my_money"
+                            style="@style/myTab2Title"
+                            android:layout_below="@+id/my_money_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="0"/>
+
+                    </RelativeLayout>
+>>>>>>> develop_530_article（废掉）
                     <LinearLayout
                         android:id="@+id/ll_score"
                         android:layout_width="0dp"

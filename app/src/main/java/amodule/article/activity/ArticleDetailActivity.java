@@ -92,7 +92,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private ArticleDetailAdapter detailAdapter;
 
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
-    private ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
+
     private Map<String, String> adDataMap;
     private Map<String, String> commentMap;
     private Map<String, String> shareMap = new HashMap<>();
@@ -347,9 +347,9 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleAdContrler.setOnListAdCallback(new ArticleAdContrler.OnListAdCallback() {
             @Override
             public void onListAdData(Map<String, String> adDataMap) {
-                adRcomDataArray.add(adDataMap);
+
                 if(isRelateDataOk){
-                    mArticleAdContrler.handlerAdData(adRcomDataArray,allDataListMap);
+                    mArticleAdContrler.handlerAdData(allDataListMap);
                 }
             }
         });
@@ -545,7 +545,7 @@ public class ArticleDetailActivity extends BaseActivity {
                         handlerStyleData(map, styleDataList);
                     }
                     analysRelateData(listMap);
-                    mArticleAdContrler.handlerAdData(adRcomDataArray,allDataListMap);
+                    mArticleAdContrler.handlerAdData(allDataListMap);
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
                     toastFaildRes(flag, true, object);
@@ -673,7 +673,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private void openDeleteDialog() {
         final XhDialog dialog = new XhDialog(this);
-        dialog.setTitle("确定删除本视频吗？")
+        dialog.setTitle("确定删除这篇文章吗？")
                 .setCanselButton("取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

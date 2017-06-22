@@ -17,7 +17,7 @@
             android:layout_width="@dimen/dp_18"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_15"
             android:padding="@dimen/dp_5"
             android:scaleType="centerInside"
             android:src="@drawable/z_z_topbar_ico_back_white"/>
@@ -45,9 +45,10 @@
 
         <ImageView
             android:id="@+id/leftClose"
-            android:layout_width="@dimen/dp_45"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/dp_5"
+            android:scaleType="centerInside"
             android:padding="@dimen/dp_15"
             android:src="@drawable/image_selector_close"
             android:visibility="gone"/>

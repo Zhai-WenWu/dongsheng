@@ -214,7 +214,7 @@ public class Main extends Activity implements OnClickListener {
                                 sqLite.update(uploadArticleData.getId(),uploadArticleData);
                                 xhDialog.cancel();
                             }
-                        }).setSureButton(" 继续", new OnClickListener() {
+                        }).setSureButton("确定", new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);

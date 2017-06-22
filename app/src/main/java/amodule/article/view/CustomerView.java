@@ -174,6 +174,7 @@ public class CustomerView extends ItemBaseView {
 
     public void setType(String type) {
         mCurrType = type;
+        findViewById(R.id.interval).setVisibility("2".equals(mCurrType) ? VISIBLE : GONE);
     }
 
     //统计

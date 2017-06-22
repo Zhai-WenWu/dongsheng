@@ -35,6 +35,7 @@ import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
+import amodule.article.db.UploadArticleData;
 import amodule.article.upload.ArticleUploadListPool;
 import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
@@ -47,6 +48,8 @@ import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
+
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 
 /**
  * 文章上传列表页
@@ -77,6 +80,8 @@ public class ArticleUploadListActivity extends BaseActivity {
     private String finalVideoPath;
 
     private int dataType;
+
+    private boolean isSecondEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +124,15 @@ public class ArticleUploadListActivity extends BaseActivity {
                         draftId,coverPath,finalVideoPath,timesStamp, generateUiCallback());
         uploadPoolData = listPool.getUploadPoolData();
 
-        if(uploadPoolData.getUploadArticleData() == null){
+        UploadArticleData articleData = uploadPoolData.getUploadArticleData();
+        if(articleData == null){
             finish();
             return;
+        }
+        isSecondEdit = !TextUtils.isEmpty(articleData.getCode());
+
+        if (listPool instanceof ArticleUploadListPool) {
+            ((ArticleUploadListPool)listPool).setIsSecondEdit(isSecondEdit);
         }
         dishName = uploadPoolData.getTitle();
         arrayList = uploadPoolData.getListData();
@@ -133,6 +144,7 @@ public class ArticleUploadListActivity extends BaseActivity {
             allStartOrPause(true);
         } else {
             allStartOrPause(false);
+            hintNetWork();
         }
 
         loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, 1, true);

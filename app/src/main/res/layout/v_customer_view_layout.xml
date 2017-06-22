@@ -105,8 +105,10 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/interval"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_11"
+        android:visibility="gone"
         android:layout_below="@+id/customer_layout"
         android:background="@color/common_bg"/>
 </RelativeLayout>

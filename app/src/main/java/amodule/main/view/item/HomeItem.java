@@ -323,7 +323,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         if (mDataMap.containsKey("url"))
             mTransferUrl = mDataMap.get("url");
         String comNumStr = mDataMap.get("commentNum");
-        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 10) {
+        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 0) {
             String commentNum = handleNumber(comNumStr);
             if (!TextUtils.isEmpty(commentNum)) {
                 mComNum = commentNum;
