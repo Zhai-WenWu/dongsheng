@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import amodule.dish.view.ListDishItemView;
+import third.ad.scrollerAd.XHAllAdControl;
 
 /**
  *
@@ -18,15 +19,15 @@ import amodule.dish.view.ListDishItemView;
 public class ListDishAdapter extends BaseAdapter {
 	private ArrayList<Map<String, String>> mDatas;
 	private Context mContext;
+	private XHAllAdControl xhAllControl;
 
-	public ListDishAdapter(Context context) {
+	public ListDishAdapter(Context context,ArrayList<Map<String, String>> datas) {
 		mContext = context;
+             	mDatas = datas;
 	}
-
-	public void setData(ArrayList<Map<String, String>> datas) {
-		mDatas = datas;
+	public void setXHAllControl(XHAllAdControl xhAllControl){
+		this.xhAllControl=xhAllControl;
 	}
-
 
 	@Override
 	public int getCount() {
@@ -54,7 +55,7 @@ public class ListDishAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		if (mDatas != null && mDatas.size() > position)
-			holder.setData(mDatas.get(position));
+			holder.setData(mDatas.get(position),position);
 		return convertView;
 	}
 
@@ -64,10 +65,16 @@ public class ListDishAdapter extends BaseAdapter {
 			mItemView = itemView;
 		}
 
-		public void setData(Map<String, String> data) {
+		public void setData(Map<String, String> data,int position) {
 			if (data == null || data.size() <= 0 || mItemView == null)
 				return;
 			mItemView.setData(data);
+			if(xhAllControl!=null&&data.containsKey("adStyle")&&"1".equals(data.get("adStyle"))
+			&&!(data.containsKey("adshow")&&"1".equals(data.get("adshow")))){
+				int adposition=Integer.parseInt(data.get("adPosition"));
+				xhAllControl.onAdBind(adposition,mItemView,String.valueOf(adposition+1));
+				data.put("adshow","1");
+		}
 		}
 	}
 }

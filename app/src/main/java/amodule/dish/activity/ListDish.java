@@ -124,6 +124,7 @@ public class ListDish extends BaseActivity {
                 });
             }
         }, statisticKey);
+        adapter.setXHAllControl(xhAllAdControl);
 
     }
 
@@ -154,7 +155,7 @@ public class ListDish extends BaseActivity {
         }
         arrayList = new ArrayList<Map<String, String>>();
         // 绑定列表数据
-        adapter = new ListDishAdapter(this);
+        adapter = new ListDishAdapter(this,arrayList);
 
 //		loadManager.setLoading(listView, adapter, true, new OnClickListener() {
 //			@Override
@@ -170,6 +171,7 @@ public class ListDish extends BaseActivity {
                 if (!type.equals("recommend") && !type.equals("typeRecommend"))
                     position--;
                 if (position > -1 && position < arrayList.size()) {
+
                     intent.putExtra("code", arrayList.get(position).get("code"));
                     intent.putExtra("name", arrayList.get(position).get("name"));
                     startActivity(intent);
@@ -285,8 +287,6 @@ public class ListDish extends BaseActivity {
                             map.put("nickName", "hide");
                         arrayList.add(map);
                     }
-                    Log.i("zhangyujian", "展示数据集合：：" + arrayList.size());
-                    adapter.setData(arrayList);
                     adapter.notifyDataSetChanged();
                 } else {
                     toastFaildRes(flag, true, returnObj);
