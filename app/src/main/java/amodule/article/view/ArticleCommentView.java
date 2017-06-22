@@ -83,14 +83,14 @@ public class ArticleCommentView extends ItemBaseView {
             for (int index = 0; index < length; index++) {
                 final Map<String, String> dataMap = data.get(index);
                 final ViewCommentItem commentItem = new ViewCommentItem(getContext());
-                Log.i("tzy","comment dataMap = " + dataMap.toString());
-                if("0".equals(dataMap.get("fabulous_num")))
-                    dataMap.put("fabulous_num","");
+                Log.i("tzy", "comment dataMap = " + dataMap.toString());
+                if ("0".equals(dataMap.get("fabulous_num")))
+                    dataMap.put("fabulous_num", "");
                 commentItem.setData(dataMap);
                 commentItem.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        gotoCommentActivity(dataMap.get("comment_id"),null);
+                        gotoCommentActivity(dataMap.get("comment_id"), null);
                     }
                 });
                 commentItem.setCommentItemListener(new ViewCommentItem.OnCommentItenListener() {
@@ -150,11 +150,11 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onPraiseClick(String comment_id) {
-                        gotoCommentActivity(comment_id,null);
+                        gotoCommentActivity(comment_id, null);
                     }
 
                     @Override
-                    public void onContentReplayClick(String comment_id,String replay_id, String replay_user_code, String replay_user_name, String type,boolean isShowKeyBoard,boolean isMyselft) {
+                    public void onContentReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String type, boolean isShowKeyBoard, boolean isMyselft) {
                         gotoCommentActivity(comment_id, replay_id);
                         statistics("评论", type);
                     }
@@ -178,6 +178,7 @@ public class ArticleCommentView extends ItemBaseView {
             findViewById(R.id.has_comment_layout).setVisibility(GONE);
             findViewById(R.id.robsofa).setVisibility(VISIBLE);
         }
+        findViewById(R.id.bottom_line).setVisibility("2".equals(getType()) ? GONE : VISIBLE);
     }
 
     private void gotoCommentActivity(String commentId, String replayId) {

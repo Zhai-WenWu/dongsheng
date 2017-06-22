@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@android:color/transparent"
+    >
+
+    <SurfaceView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/all_title_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_top_bg"
+        >
+
+        <include
+            android:id="@+id/relativeLayout_global"
+            layout="@layout/c_view_bar_title_article"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_46"
+            android:clickable="false"/>
+
+    </RelativeLayout>
+
+    <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refresh_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_bg"
+        android:layout_below="@+id/all_title_rela"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="500"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
+        cube_ptr:ptr_resistance="1.7">
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="#fffffe"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:listSelector="@android:color/transparent"
+            android:overScrollMode="never"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:scrollbars="none"
+            android:visibility="gone"/>
+
+    </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/edit_controler_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        >
+
+        <amodule.article.view.CommentBar
+            android:id="@+id/comment_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

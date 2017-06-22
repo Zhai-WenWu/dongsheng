@@ -186,11 +186,11 @@
     <!--inmobi广告 start-->
 
     <!--mta统计 start-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!--mta统计 start-->
 
@@ -443,16 +443,17 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.article.activity.VideoDetailActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.article.activity.ArticleVideoSelectorActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.article.activity.ArticleSelectActiivty"
@@ -483,8 +484,8 @@
         <activity
             android:name="amodule.article.activity.VideoPreviewActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Video_Preview_Theme"
             android:windowSoftInputMode="adjustPan"/>
 
@@ -686,7 +687,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-            <!--android:launchMode="singleTask"-->
+        <!--android:launchMode="singleTask"-->
         <activity
             android:name="amodule.user.activity.GourmetList"
             android:configChanges="orientation|keyboardHidden"
@@ -1401,15 +1402,19 @@
         </activity>
         <!--腾讯统计mta start-->
         <!--<provider-->
-            <!--android:name="com.tencent.mid.api.MidProvider"-->
-            <!--android:authorities="com.xiangha"-->
-            <!--android:exported="true" >-->
+        <!--android:name="com.tencent.mid.api.MidProvider"-->
+        <!--android:authorities="com.xiangha"-->
+        <!--android:exported="true" >-->
         <!--</provider>-->
         <!--appkey-->
         <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
-        <meta-data android:name="TA_APPKEY" android:value="Aqc1150004142" />
+        <meta-data
+            android:name="TA_APPKEY"
+            android:value="Aqc1150004142"/>
         <!--Channel-->
-        <meta-data android:name="InstallChannel" android:value="xiangha" />
+        <meta-data
+            android:name="InstallChannel"
+            android:value="xiangha"/>
         <!--腾讯统计mta start-->
 
     </application>

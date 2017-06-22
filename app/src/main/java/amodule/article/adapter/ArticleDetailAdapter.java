@@ -8,11 +8,15 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -20,7 +24,10 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.view.ArticleCommentView;
 import amodule.article.view.CommodityItemView;
 import amodule.article.view.DishItemView;
@@ -145,7 +152,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         String dataTypeStr = getItem(position).get("datatype");
-        if(TextUtils.isEmpty(dataTypeStr)){
+        if (TextUtils.isEmpty(dataTypeStr)) {
             return 0;
         }
         return Integer.parseInt(dataTypeStr);
@@ -224,9 +231,9 @@ public class ArticleDetailAdapter extends BaseAdapter {
             if (view != null) {
                 map.put("type", type);
                 view.setData(map);
-                if("2".equals(map.get("isAd"))
+                if ("2".equals(map.get("isAd"))
                         && view != null
-                        && mOnADCallback != null){
+                        && mOnADCallback != null) {
                     final int index = Integer.parseInt(map.get("adPosition"));
                     mOnADCallback.onBind(index, view, "");
                     view.setOnAdClickCallback(new RecommendItemView.OnAdClickCallback() {
@@ -236,8 +243,22 @@ public class ArticleDetailAdapter extends BaseAdapter {
                         }
                     });
                 }
+                if ("2".equals(map.get("hasAd"))
+                        && view != null) {
+                    View adView = getBigAdView(StringManager.getFirstMap(map.get("adData")));
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(0, Tools.getDimen(context, R.dimen.dp_17), 0, Tools.getDimen(context, R.dimen.dp_17));
+                    view.getAdLayout().addView(adView, layoutParams);
+                }
             }
         }
+    }
+
+    private View getBigAdView(Map<String, String> map) {
+        View view = new View(context);
+        if (mOnGetBigAdView != null)
+            view = mOnGetBigAdView.getBigAdView(map);
+        return view;
     }
 
     private OnADCallback mOnADCallback;
@@ -246,6 +267,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
         public void onClick(View view, int index, String s);
 
         public void onBind(int index, View view, String s);
+
     }
 
     public OnADCallback getmOnADCallback() {
@@ -254,5 +276,19 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
     public void setmOnADCallback(OnADCallback mOnADCallback) {
         this.mOnADCallback = mOnADCallback;
+    }
+
+    private OnGetBigAdView mOnGetBigAdView;
+
+    public interface OnGetBigAdView {
+        public View getBigAdView(Map<String, String> map);
+    }
+
+    public OnGetBigAdView getOnGetBigAdView() {
+        return mOnGetBigAdView;
+    }
+
+    public void setOnGetBigAdView(OnGetBigAdView mOnGetBigAdView) {
+        this.mOnGetBigAdView = mOnGetBigAdView;
     }
 }

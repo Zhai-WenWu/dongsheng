@@ -115,7 +115,7 @@ public class AdsShow {
 				adParents = handlerStringData(temp, adParents, ads);
 			}
 		}
-		//TODO 优化代码，未测试
+		//优化代码，未测试
 //        ArrayList<AdParent> adParents = new ArrayList<>();
 //        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
 //        Map<String, String> map = StringManager.getFirstMap(data);

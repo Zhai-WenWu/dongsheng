@@ -28,14 +28,14 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/dishVidio"
+                android:id="@+id/video_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dp_220"
                 android:visibility="gone" />
             <!--  -->
             <LinearLayout
                 style="@style/layout"
-                android:layout_below="@+id/dishVidio"
+                android:layout_below="@+id/video_layout"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/dp_20">
 

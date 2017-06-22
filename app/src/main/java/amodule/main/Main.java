@@ -135,6 +135,7 @@ public class Main extends Activity implements OnClickListener {
         //腾讯统计
         StatConfig.setDebugEnable(false);
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
         StatService.setContext(this.getApplication());
         //初始化
         new Thread(new Runnable() {

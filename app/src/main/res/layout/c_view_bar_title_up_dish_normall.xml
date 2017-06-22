@@ -15,11 +15,9 @@
         android:orientation="horizontal">
         <TextView
             android:id="@+id/title"
-            style="@style/singleText"
+            style="@style/top_title_singleText"
             android:clickable="true"
             android:gravity="center_horizontal"
-            android:textColor="@color/common_top_text"
-            android:textSize="@dimen/sp_17"
             android:text="发菜谱"/>
 
         <ImageView

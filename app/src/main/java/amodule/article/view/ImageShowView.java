@@ -351,12 +351,12 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     private void setImageWH(ImageView imgView, int imgHeight) {
         imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         int dp_290 = Tools.getDimen(getContext(), R.dimen.dp_290);
-        RelativeLayout.LayoutParams layoutParams;
+        LayoutParams layoutParams;
         if (IMAGE_GIF.equals(type)) {
             imgView.setMinimumHeight(0);
-            layoutParams = new RelativeLayout.LayoutParams((int) (imgHeight / 9.0 * 16), imgHeight);
+            layoutParams = new LayoutParams((int) (imgHeight / 9.0 * 16), imgHeight);
         } else
-            layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
+            layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
         int dp_12 = Tools.getDimen(getContext(), R.dimen.dp_12);
         int dp_23 = Tools.getDimen(getContext(), R.dimen.dp_23);
         layoutParams.setMargins(0, dp_12, dp_23, 0);

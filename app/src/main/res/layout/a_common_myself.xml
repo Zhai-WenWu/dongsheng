@@ -89,12 +89,10 @@
 
                             <TextView
                                 android:id="@+id/myself_name"
-                                style="@style/singleText"
+                                style="@style/top_title_singleText"
                                 android:layout_width="wrap_content"
                                 android:clickable="false"
                                 android:maxWidth="@dimen/dp_145"
-                                android:textColor="@color/common_top_text"
-                                android:textSize="@dimen/sp_16"
                                 android:textStyle="bold"
                                 />
 

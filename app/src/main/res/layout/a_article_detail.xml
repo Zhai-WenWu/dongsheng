@@ -57,7 +57,7 @@
         android:background="@android:color/transparent"
         >
 
-        <amodule.article.view.ArticleCommentBar
+        <amodule.article.view.CommentBar
             android:id="@+id/acticle_comment_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

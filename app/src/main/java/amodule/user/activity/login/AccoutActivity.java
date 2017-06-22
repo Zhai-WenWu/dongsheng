@@ -590,7 +590,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
      */
     public void thirdAuth(final String platform, final String type) {
         loadManager.showProgressBar();
-        Tools.showToast(mAct, "授权开始...");
+//        Tools.showToast(mAct, "授权开始...");
         ShareSDK.initSDK(mAct);
         Platform pf = ShareSDK.getPlatform(mAct, platform);
         if (pf.isValid()) {
@@ -609,7 +609,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                     @Override
                     public void run() {
                         XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败");
-                        Tools.showToast(AccoutActivity.this, "授权出错...");
+//                        Tools.showToast(AccoutActivity.this, "授权出错...");
                         loadManager.hideProgressBar();
                         UtilLog.reportError("用户授权出错", null);
                     }
@@ -670,7 +670,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
             @Override
             public void onCancel(Platform arg0, int arg1) {
-                Tools.showToast(AccoutActivity.this, "取消授权...");
+                Tools.showToast(AccoutActivity.this, "登录失败");
                 loadManager.hideProgressBar();
             }
         });
