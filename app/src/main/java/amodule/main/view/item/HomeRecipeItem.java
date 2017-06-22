@@ -33,8 +33,6 @@ public class HomeRecipeItem extends HomeItem {
     private TextView mTitle;
     private TextView mTitleTop;
     private TextView mVideoTime;
-    private TextView mNum1;
-    private TextView mNum2;
     private ImageView mImg;
     private ImageView mSole;
     private ImageView mAdTag;
@@ -64,8 +62,6 @@ public class HomeRecipeItem extends HomeItem {
         super.initView();
         mTitle = (TextView) findViewById(R.id.title);
         mTitleTop = (TextView) findViewById(R.id.title_top);
-        mNum1 = (TextView) findViewById(R.id.num1);
-        mNum2 = (TextView) findViewById(R.id.num2);
         mVideoTime = (TextView) findViewById(R.id.video_time);
         mImg = (ImageView) findViewById(R.id.img);
         mSole = (ImageView) findViewById(R.id.img_sole);
@@ -249,41 +245,6 @@ public class HomeRecipeItem extends HomeItem {
             mTitle.setText(titleText);
             mTitle.setVisibility(View.VISIBLE);
         }
-
-        switch (mType) {
-            case "1"://图文菜谱
-                if (mAllClickNum != null && mNum1 != null) {
-                    mNum1.setText(mAllClickNum + "浏览");
-                    mNum1.setVisibility(View.VISIBLE);
-                }
-                if (mFavNum != null && mNum2 != null) {
-                    mNum2.setText(mFavNum + "收藏");
-                    mNum2.setVisibility(View.VISIBLE);
-                }
-                break;
-            case "2"://视频菜谱
-                if (mAllClickNum != null && mNum1 != null) {
-                    mNum1.setText(mAllClickNum + "播放");
-                    mNum1.setVisibility(View.VISIBLE);
-                }
-                if (mFavNum != null && mNum2 != null) {
-                    mNum2.setText(mFavNum + "收藏");
-                    mNum2.setVisibility(View.VISIBLE);
-                }
-                break;
-            case "3"://文章
-            case "5"://帖子
-                if (mAllClickNum != null && mNum1 != null) {
-                    mNum1.setText(mAllClickNum + "浏览");
-                    mNum1.setVisibility(View.VISIBLE);
-                }
-                if (mComNum != null && mNum2 != null) {
-                    mNum2.setText(mComNum + "评论");
-                    mNum2.setVisibility(View.VISIBLE);
-                }
-                break;
-
-        }
     }
 
     @Override
@@ -314,10 +275,6 @@ public class HomeRecipeItem extends HomeItem {
             mTitle.setVisibility(View.GONE);
         if (viewIsVisible(mVideoTime))
             mVideoTime.setVisibility(View.GONE);
-        if (viewIsVisible(mNum1))
-            mNum1.setVisibility(View.GONE);
-        if (viewIsVisible(mNum2))
-            mNum2.setVisibility(View.GONE);
         if (viewIsVisible(mImg))
             mImg.setVisibility(View.GONE);
         if (viewIsVisible(mSole))
