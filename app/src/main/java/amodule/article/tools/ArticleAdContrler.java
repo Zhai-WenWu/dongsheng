@@ -3,7 +3,6 @@ package amodule.article.tools;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
@@ -30,6 +28,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import third.ad.scrollerAd.XHAllAdControl;
 
+import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_1;
@@ -42,15 +41,16 @@ import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_2;
  */
 
 public class ArticleAdContrler {
-    private XHAllAdControl xhAllAdControlBootom, xhAllAdControlList;
-    private ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
-    private SparseArray<Boolean> adInsteredArray = new SparseArray<>();
+    protected XHAllAdControl xhAllAdControlBootom, xhAllAdControlList;
+    protected ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
+    protected SparseArray<Boolean> adInsteredArray = new SparseArray<>();
     public final int ARTICLE_BOTTOM = 101;
-    private final int[] adPositionInList = {1, 4};
+    //广告跟随相关推荐的数据位置
+    protected final int[] adPositionInList = {0, 2};
     //adPosition 的 index 值
     public final int ARTICLE_RECOMMEND_1 = 0;
     public final int ARTICLE_RECOMMEND_2 = 1;
-    private Handler adHandler = new Handler(Looper.getMainLooper()) {
+    protected Handler adHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -67,10 +67,10 @@ public class ArticleAdContrler {
         }
     };
 
-    private void handlerArticleRecData(int index, Object obj) {
+    protected void handlerArticleRecData(int index, Object obj) {
         if (obj != null) {
             Map<String, String> data = (Map<String, String>) obj;
-            data.put("adPosition", String.valueOf(adPositionInList[index]));
+            data.put("adFollowPosition", String.valueOf(adPositionInList[index]));
             adInsteredArray.append(index, false);
             adRcomDataArray.add(data);
             if (onListAdCallback != null)
@@ -84,7 +84,7 @@ public class ArticleAdContrler {
         xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1, ARTICLE_RECM_2}, "wz_list");
     }
 
-    private XHAllAdControl requestAdData(final String[] ads, String id) {
+    protected XHAllAdControl requestAdData(final String[] ads, String id) {
         ArrayList<String> adData = new ArrayList<>();
         for (String str : ads)
             adData.add(str);
@@ -109,7 +109,7 @@ public class ArticleAdContrler {
         }, XHActivityManager.getInstance().getCurrentActivity(), id);
     }
 
-    private void sendAdMessage(String adStr, int type) {
+    protected void sendAdMessage(String adStr, int type) {
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
         if (adDataMap != null && adDataMap.size() > 0) {
             Message message = adHandler.obtainMessage();
@@ -159,42 +159,54 @@ public class ArticleAdContrler {
         return adView;
     }
 
+    /**
+     * @param allDataListMap 所有数据
+     */
     public void handlerAdData(List<Map<String, String>> allDataListMap) {
-        if (adRcomDataArray != null && allDataListMap.size() > 1) {
-            final int lastIndex = adPositionInList[adPositionInList.length - 1];
-            for (int index = 0, length = adRcomDataArray.size(); index < length; index++) {
-                //
-                if (adInsteredArray.get(index) != null && adInsteredArray.get(index)) continue;
-
-                Map<String, String> adMap = adRcomDataArray.get(index);
-                final int adPosition = Integer.parseInt(adMap.get("adPosition")) + 1;
-                Map<String, String> dataMap = getAdMap(adMap, index);
-                if (!dataMap.isEmpty()) {
-                    if (allDataListMap.size() > adPosition) {
-                        allDataListMap.add(adPosition, dataMap);
-                        adInsteredArray.put(index, true);
-                        //特殊处理最后一个广告
-                    } else if (allDataListMap.size() - adPosition <= 1 && adPosition == lastIndex + 1) {
-                        allDataListMap.add(dataMap);
-                        adInsteredArray.put(index, true);
-                        break;
+        if (adRcomDataArray != null && !adRcomDataArray.isEmpty()
+                && allDataListMap != null && !allDataListMap.isEmpty()) {
+            //循环ad数据
+            for (int adIndex = 0, adLength = adRcomDataArray.size(); adIndex < adLength; adIndex++) {
+                //验证是否已经插入
+                if (adInsteredArray.get(adIndex) != null && adInsteredArray.get(adIndex)) continue;
+                //获取广告map
+                Map<String, String> adMap = getAdMap(adRcomDataArray.get(adIndex), adIndex);
+                //遍历原始数据体插入数据
+                for (int oriDataIndex = 0, recIndex = 0,allDataSize = allDataListMap.size(); oriDataIndex < allDataSize; oriDataIndex++) {
+                    Map<String,String> oriData = allDataListMap.get(oriDataIndex);
+                    if(String.valueOf(Type_recommed).equals(oriData.get(TYPE_KEY))
+                            && "1".equals(oriData.get("isAd"))){
+                        int adFollowPosiont = Integer.parseInt(adMap.get("adFollowPosition"));
+                        int adInsertPosition = oriDataIndex + 1;
+                        if(adFollowPosiont == recIndex){
+                            if(allDataListMap.size() > adInsertPosition){
+                                allDataListMap.add(adInsertPosition,adMap);
+                                adInsteredArray.put(adIndex, true);
+                                break;
+                            }else if(allDataListMap.size() == adInsertPosition){
+                                allDataListMap.add(adMap);
+                                adInsteredArray.put(adIndex, true);
+                                break;
+                            }
+                        }
+                        recIndex++;
                     }
                 }
-                Log.i("tzy", "ADmap = " + dataMap.toString());
             }
         }
     }
 
-    private Map<String, String> getAdMap(Map<String, String> adMap, int index) {
+    protected Map<String, String> getAdMap(Map<String, String> adMap, int index) {
         Map<String, String> dataMap = new HashMap<>();
         try {
-            dataMap.put("datatype", String.valueOf(Type_recommed));
+            dataMap.put(TYPE_KEY, String.valueOf(Type_recommed));
             dataMap.put("isAd", "2");
             dataMap.put("adPosition", String.valueOf(index));
+            dataMap.put("adFollowPosition", adMap.get("adFollowPosition"));
             dataMap.put("title", adMap.get("desc"));//adMap.get("title") + " | " +
             dataMap.put("img", adMap.get("imgUrl"));
             dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
-            dataMap.put("clickAll", Tools.getRandom(1000, 60000) + "浏览");
+            dataMap.put("clickAll", Tools.getRandom(200, 5000) + "浏览");
             dataMap.put("commentNumber", "广告");
         } catch (JSONException e) {
             e.printStackTrace();
