@@ -439,7 +439,7 @@ public class VideoDetailActivity extends BaseActivity {
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
         mHaederLayout.setType(TYPE_VIDEO);
-        mHaederLayout.setData(mapVideo);
+        mHaederLayout.setData(onlyUser,mapVideo);
 
         rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {

@@ -48,6 +48,10 @@ import third.video.VideoPlayerController;
  */
 
 public class VideoHeaderView extends RelativeLayout {
+    //转码状态1-未转，2-正转，3-已转
+    private final static String STATUS_UNTRANSCOD = "1";
+    private final static String STATUS_TRANSCODING = "1";
+    private final static String STATUS_TRANSCODED = "1";
     private Activity activity;
 
     private RelativeLayout dishVidioLayout;
@@ -102,6 +106,7 @@ public class VideoHeaderView extends RelativeLayout {
 
         try {
             Map<String, String> videoData = StringManager.getFirstMap(data.get("video"));
+            final String status = videoData.get("status");
             videoData.put("title", data.get("title"));
             Map<String, String> videoUrlData = StringManager.getFirstMap(videoData.get("videoUrl"));
             String url = "";

@@ -65,30 +65,28 @@ public class VideoAllHeaderView extends LinearLayout {
 
     }
 
-    public void setData(Map<String, String> mapVideo){
+    public void setData(boolean  isOnlyUser,Map<String, String> mapVideo){
         if(mapVideo == null){
             setVisibility(GONE);
             return;
         }
 
         setVisibility(VISIBLE);
-        videoHeaderView.setData(mapVideo, new DishHeaderView.DishHeaderVideoCallBack() {
-            @Override
-            public void videoImageOnClick() {
+        if(!isOnlyUser){
+            videoHeaderView.setData(mapVideo, new DishHeaderView.DishHeaderVideoCallBack() {
+                @Override
+                public void videoImageOnClick() {
+                }
 
-            }
+                @Override
+                public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
+                    callBack.getVideoPlayerController(mVideoPlayerController);
+                }
+            });
+            //设置videoinfo数据
+            videoInfoView.setData(mapVideo);
+        }
 
-            @Override
-            public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
-                callBack.getVideoPlayerController(mVideoPlayerController);
-//                dishVidioLayout=dishVidioLayouts;
-//                view_oneImage=view_oneImages;
-//                setViewOneState();
-//                dishTitleViewControl.setVideoContrl(mVideoPlayerController);
-            }
-        });
-        //设置videoinfo数据
-        videoInfoView.setData(mapVideo);
         //设置用户数据
         if (mapVideo.containsKey("customer") && !TextUtils.isEmpty(mapVideo.get("customer"))) {
             Map<String, String> mapUser = StringManager.getFirstMap(mapVideo.get("customer"));

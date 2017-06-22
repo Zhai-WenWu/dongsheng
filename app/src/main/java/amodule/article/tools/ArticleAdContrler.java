@@ -98,7 +98,7 @@ public class ArticleAdContrler {
                             sendAdMessage(adStr, ARTICLE_BOTTOM);
                             break;
                         case ARTICLE_RECM_1:
-//                            sendAdMessage(adStr, ARTICLE_RECOMMEND_1);
+                            sendAdMessage(adStr, ARTICLE_RECOMMEND_1);
                             break;
                         case ARTICLE_RECM_2:
                             sendAdMessage(adStr, ARTICLE_RECOMMEND_2);
@@ -177,6 +177,7 @@ public class ArticleAdContrler {
                     } else if (allDataListMap.size() - adPosition <= 1 && adPosition == lastIndex + 1) {
                         allDataListMap.add(dataMap);
                         adInsteredArray.put(index, true);
+                        break;
                     }
                 }
                 Log.i("tzy", "ADmap = " + dataMap.toString());
