@@ -172,6 +172,11 @@ public class ListDishItemView extends RelativeLayout {
             mNum2.setVisibility(View.VISIBLE);
         } else
             mNum2.setVisibility(View.GONE);
+        if(mData.containsKey("adStyle")&&"1".equals(mData.get("adStyle"))){
+            mIconSearch.setVisibility(GONE);
+        }else{
+            mIconSearch.setVisibility(VISIBLE);
+        }
     }
 
     private void loadImage() {
