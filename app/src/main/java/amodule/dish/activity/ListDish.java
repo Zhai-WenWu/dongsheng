@@ -4,30 +4,32 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import amodule.dish.adapter.AdapterListDish;
+import amodule.dish.adapter.ListDishAdapter;
 import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import third.ad.scrollerAd.XHAllAdControl;
+import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -43,7 +45,7 @@ public class ListDish extends BaseActivity {
 
 	private TextView authorName, dishInfo,dishName;
 	
-	private AdapterListDish adapter = null;
+	private ListDishAdapter adapter = null;
 	private ArrayList<Map<String, String>> arrayList = null;
 
 	private int currentPage = 0,everyPage = 0, loadPage = 0 ;
@@ -54,6 +56,11 @@ public class ListDish extends BaseActivity {
 	private String data_type = "";//推荐列表过来的数据
 	private String module_type = "";//推荐列表过来的数据
 	private Long startTime;//统计使用的时间
+	private ArrayList<String> adIds;
+	private XHAllAdControl xhAllAdControl;
+	private static final Integer[] AD_INSTERT_INDEX = new Integer[]{3,9,16,24,32,40,48,56,64,72};//插入广告的位置。
+	private ArrayList<Map<String,String>> adData;
+	private ListView listView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,9 +79,55 @@ public class ListDish extends BaseActivity {
 		else
 			initActivity("", 2, 0, R.layout.c_view_bar_title, R.layout.a_dish_caidan_list);
 		initMenu();
+		initAdData();
 		initBarView();
+
 	}
-	
+
+	/**
+	 * 初始化广告数据
+	 */
+	private void initAdData() {
+		String[] ids= AdPlayIdConfig.MAIN_HOME_WEEK_GOOD_LIST;
+		adIds= new ArrayList<>();
+		adData= new ArrayList<>();//广告数据集合
+		for(String id:ids)adIds.add(id);
+
+		String statisticKey = "jz_list";
+		Log.i("zhangyujian","adids:::"+adIds.size());
+		xhAllAdControl= new XHAllAdControl(adIds, new XHAllAdControl.XHBackIdsDataCallBack() {
+			@Override
+			public void callBack(Map<String, String> map) {
+				//处理广告数据
+				int size= adIds.size();
+				Log.i("zhangyujian","size11::"+size);
+				for(int i=0;i<size;i++){
+					if(map.containsKey(adIds.get(i))&&!TextUtils.isEmpty(map.get(adIds.get(i)))){
+						String object = map.get(adIds.get(i));
+						Map<String,String> tempMap = StringManager.getFirstMap(object);
+						//进行数据拼装
+						Log.i("zhangyujian","测试数据：：："+object);
+						tempMap.put("adStyle","1");
+						tempMap.put("info",tempMap.get("desc"));
+						tempMap.put("name",tempMap.get("title"));
+						tempMap.put("img",tempMap.get("imgUrl"));
+						adData.add(tempMap);
+
+					}else{
+						adData.add(new HashMap<String, String>());
+					}
+				}
+				loadManager.setLoading(listView, adapter, true, new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						loadData();
+					}
+				});
+			}
+		},statisticKey);
+
+	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -88,7 +141,7 @@ public class ListDish extends BaseActivity {
 
 	//初始化
 	private void initMenu() {
-		ListView listView = (ListView) findViewById(R.id.dish_menu_listview);
+		listView = (ListView) findViewById(R.id.dish_menu_listview);
 		if (type.equals("recommend") || type.equals("typeRecommend")) {
 			TextView title_time = (TextView) findViewById(R.id.title_time);
 			title_time.setText("" + Tools.getAssignTime("yyyy-MM-dd",0));
@@ -102,23 +155,14 @@ public class ListDish extends BaseActivity {
 		}
 		arrayList = new ArrayList<Map<String, String>>();
 		// 绑定列表数据
-		adapter = new AdapterListDish(this, listView, arrayList, 
-				R.layout.a_dish_item_menu_new,
-				new String[] {"info", "nickName", "allClick", "favorites"},
-				new int[] {R.id.title, R.id.user_name, R.id.num1,
-						R.id.num2},
-				type);
-		adapter.imgWidth = ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this.getApplicationContext(), R.dimen.dp_20);//20=10*2
-		adapter.scaleType = ScaleType.CENTER_CROP;
-		adapter.isAnimate = true;
+		adapter = new ListDishAdapter(this);
 		
-		
-		loadManager.setLoading(listView, adapter, true, new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				loadData();
-			}
-		});
+//		loadManager.setLoading(listView, adapter, true, new OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				loadData();
+//			}
+//		});
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -212,12 +256,22 @@ public class ListDish extends BaseActivity {
 						}
 						shareName = classifyName;
 						returnList = UtilString.getListMapByJson(returnList.get(0).get("dishs"));
+
+					}
+					loadPage = returnList.size();
+					if(!type.equals("recommend") && !type.equals("typeRecommend")) {
+						Log.i("zhangyujian", "当前数据大小zz：：" + returnList.size());
+						//插入广告。
+						returnList = handlerAdData(returnList);
+						Log.i("zhangyujian", "当前数据大小zz：：" + returnList.size());
 					}
 					for (int i = 0; i < returnList.size(); i++) {
 						Map<String, String> map = returnList.get(i);
 						if (i == 0) shareImg = returnList.get(i).get("img");
-						map.put("allClick", map.get("allClick") + "浏览");
-						map.put("favorites", map.get("favorites") + "收藏");
+						if(map.containsKey("allClick")&&!TextUtils.isEmpty(map.get("allClick")))
+							map.put("allClick", map.get("allClick") + "浏览");
+						if(map.containsKey("favorites")&&!TextUtils.isEmpty(map.get("favorites")))
+							map.put("favorites", map.get("favorites") + "收藏");
 						if(type.equals("typeRecommend") && map.get("isToday").equals("1") && !isToday){
 							map.put("isToday", "往期推荐");
 							isToday=true;
@@ -232,7 +286,8 @@ public class ListDish extends BaseActivity {
 							map.put("nickName", "hide");
 						arrayList.add(map);
 					}
-					loadPage = returnList.size();
+					Log.i("zhangyujian","展示数据集合：："+arrayList.size());
+					adapter.setData(arrayList);
 					adapter.notifyDataSetChanged();
 				} else {
 					toastFaildRes(flag,true,returnObj);
@@ -277,5 +332,34 @@ public class ListDish extends BaseActivity {
 		}
 		barShare.setShare(imgType, title, content, shareImg, clickUrl);
 		barShare.openShare();
+	}
+
+	/**
+	 * 拼装广告数据
+	 * @param listData
+	 * @return
+	 */
+	private ArrayList<Map<String,String>> handlerAdData(ArrayList<Map<String,String>> listData){
+		Log.i("zhangyujian","adData:::"+adData.size());
+		if(adData==null||adData.size()<=0){
+			return listData;
+		}
+		for(int i= 0;i<listData.size();i++){
+			int lenght= AD_INSTERT_INDEX.length;
+			for(int j=0;j<lenght;j++){
+				if(i==AD_INSTERT_INDEX[j]){//是要插广告的位置
+					Log.i("zhangyujian","i::"+i);
+					//数据无不是广告直接插入广告
+					if(!listData.get(i).containsKey("adStyle")||TextUtils.isEmpty(listData.get(i).get("adStyle"))){
+						//插入广告
+						if(adData.get(j)!=null&&adData.get(j).size()>0){//数据
+							Log.i("zhangyujian","数据：："+adData.get(j));
+							listData.add(i-1,adData.get(j));
+						}
+					}//不进行如何操作。
+				}
+			}
+		}
+		return listData;
 	}
 }
