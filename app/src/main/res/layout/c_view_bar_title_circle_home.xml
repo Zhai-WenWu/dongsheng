@@ -29,7 +29,7 @@
         style="@style/rightBtn"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginRight="@dimen/dp_10"
         android:layout_centerVertical="true"
         android:visibility="visible"
         android:src="@drawable/z_z_topbar_ico_share" />

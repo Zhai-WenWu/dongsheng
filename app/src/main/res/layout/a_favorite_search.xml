@@ -16,15 +16,16 @@
 
             <ImageView
                 android:id="@+id/btn_back"
-                android:layout_width="@dimen/dp_25"
+                android:layout_width="@dimen/dp_19"
                 android:layout_height="@dimen/dp_25"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_13"
+                android:layout_marginLeft="@dimen/dp_15"
                 android:layout_marginTop="@dimen/dp__2"
+                android:padding="@dimen/dp_5"
                 android:clickable="true"
                 android:gravity="center"
                 android:scaleType="fitXY"
-                android:src="@drawable/z_me_mypage_ico_back" />
+                android:src="@drawable/z_z_topbar_ico_back_white" />
 
             <RelativeLayout
                 android:id="@+id/ed_search_layout_main"
@@ -88,7 +89,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_15"
-                android:paddingRight="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_18"
                 android:text="搜索"
                 android:textColor="@color/common_top_text"
                 android:textSize="@dimen/sp_16"

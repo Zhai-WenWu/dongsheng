@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:padding="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_10"
             android:layout_alignBottom="@+id/a_user_home_title_back"
             android:src="@drawable/i_ad_more"/>
 
