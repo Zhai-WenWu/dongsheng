@@ -717,6 +717,6 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void statistics(String twoLevel, String threeLevel) {
-        XHClick.mapStat(this, "a_ShortVideoDetail", twoLevel, threeLevel);
+        XHClick.mapStat(this, "a_ArticleDetail", twoLevel, threeLevel);
     }
 }
