@@ -171,10 +171,16 @@ public class ListDish extends BaseActivity {
                 if (!type.equals("recommend") && !type.equals("typeRecommend"))
                     position--;
                 if (position > -1 && position < arrayList.size()) {
-
+                    if(arrayList.get(position).containsKey("adStyle")&&"1".equals(arrayList.get(position).get("adStyle"))){
+                        if(xhAllAdControl!=null){
+                            int adPosition= Integer.parseInt(arrayList.get(position).get("adPosition"));
+                            xhAllAdControl.onAdClick(adPosition,String.valueOf(adPosition+1));
+                        }
+                    }else{
                     intent.putExtra("code", arrayList.get(position).get("code"));
                     intent.putExtra("name", arrayList.get(position).get("name"));
                     startActivity(intent);
+                    }
                 }
             }
         });
@@ -261,10 +267,8 @@ public class ListDish extends BaseActivity {
                     }
                     loadPage = returnList.size();
                     if (!type.equals("recommend") && !type.equals("typeRecommend")) {
-                        Log.i("zhangyujian", "当前数据大小zz：：" + returnList.size());
                         //插入广告。
                         returnList = handlerAdData(returnList);
-                        Log.i("zhangyujian", "当前数据大小zz：：" + returnList.size());
                     }
                     for (int i = 0; i < returnList.size(); i++) {
                         Map<String, String> map = returnList.get(i);
