@@ -32,6 +32,7 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishHeaderView;
 import amodule.dish.view.DishVideoImageView;
@@ -65,6 +66,7 @@ public class VideoHeaderView extends RelativeLayout {
     private boolean isOnResuming = false;//默认自动播放
     private XHAllAdControl xhAllAdControl;
     private int num = 4;
+    private String status = "1";
 
     public VideoHeaderView(Context context) {
         super(context);
@@ -106,7 +108,7 @@ public class VideoHeaderView extends RelativeLayout {
 
         try {
             Map<String, String> videoData = StringManager.getFirstMap(data.get("video"));
-            final String status = videoData.get("status");
+            status = videoData.get("status");
             videoData.put("title", data.get("title"));
             Map<String, String> videoUrlData = StringManager.getFirstMap(videoData.get("videoUrl"));
             String url = "";
@@ -244,16 +246,16 @@ public class VideoHeaderView extends RelativeLayout {
     }
 
     private boolean setSelfVideo(final Map<String, String> selfVideoMap) {
-        initVideoAd();
+        if (STATUS_TRANSCODED.equals(status))
+            initVideoAd();
         boolean isUrlVaild = false;
         String videoUrl = selfVideoMap.get("url");
         String img = selfVideoMap.get("videoImg");
         if (!TextUtils.isEmpty(videoUrl)
                 && videoUrl.startsWith("http")) {
-            LinearLayout dishvideo_img = (LinearLayout) findViewById(R.id.video_img_layout);
-            mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
             dishVideoImageView.setDataNoTime(img);
+            mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
             mVideoPlayerController.setNewView(dishVideoImageView);
             mVideoPlayerController.initVideoView2(videoUrl, selfVideoMap.get("title"), dishVideoImageView);
             mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
@@ -275,9 +277,17 @@ public class VideoHeaderView extends RelativeLayout {
                     });
                 }
             });
-            dishvideo_img.setVisibility(View.GONE);
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, this);
             callBack.videoImageOnClick();
+            //转码未完成，重新设置点击
+            if (!STATUS_TRANSCODED.equals(status)) {
+                dishVideoImageView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Tools.showToast(getContext(), "视频转码中，请稍后再试");
+                    }
+                });
+            }
             isUrlVaild = true;
         }
         return isUrlVaild;
