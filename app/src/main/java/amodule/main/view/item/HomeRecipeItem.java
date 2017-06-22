@@ -252,42 +252,33 @@ public class HomeRecipeItem extends HomeItem {
 
         switch (mType) {
             case "1"://图文菜谱
-                if (mFavNum != null && mNum1 != null) {
-                    mNum1.setText(mFavNum + "收藏");
+                if (mAllClickNum != null && mNum1 != null) {
+                    mNum1.setText(mAllClickNum + "浏览");
                     mNum1.setVisibility(View.VISIBLE);
                 }
-                if (mAllClickNum != null && mNum2 != null) {
-                    mNum2.setText(mAllClickNum + "浏览");
+                if (mFavNum != null && mNum2 != null) {
+                    mNum2.setText(mFavNum + "收藏");
                     mNum2.setVisibility(View.VISIBLE);
                 }
                 break;
             case "2"://视频菜谱
-                if (mFavNum != null && mNum1 != null) {
-                    mNum1.setText(mFavNum + "收藏");
+                if (mAllClickNum != null && mNum1 != null) {
+                    mNum1.setText(mAllClickNum + "播放");
                     mNum1.setVisibility(View.VISIBLE);
                 }
-                if (mAllClickNum != null && mNum2 != null) {
-                    mNum2.setText(mAllClickNum + "播放");
+                if (mFavNum != null && mNum2 != null) {
+                    mNum2.setText(mFavNum + "收藏");
                     mNum2.setVisibility(View.VISIBLE);
                 }
                 break;
             case "3"://文章
-                if (mComNum != null && mNum1 != null) {
-                    mNum1.setText(mComNum + "评论");
-                    mNum1.setVisibility(View.VISIBLE);
-                }
-                if (mAllClickNum != null && mNum2 != null) {
-                    mNum2.setText(mAllClickNum + "浏览");
-                    mNum2.setVisibility(View.VISIBLE);
-                }
-                break;
             case "5"://帖子
-                if (mComNum != null && mNum1 != null) {
-                    mNum1.setText(mComNum + "评论");
+                if (mAllClickNum != null && mNum1 != null) {
+                    mNum1.setText(mAllClickNum + "浏览");
                     mNum1.setVisibility(View.VISIBLE);
                 }
-                if (mLikeNum != null && mNum2 != null) {
-                    mNum2.setText(mLikeNum + "赞");
+                if (mComNum != null && mNum2 != null) {
+                    mNum2.setText(mComNum + "评论");
                     mNum2.setVisibility(View.VISIBLE);
                 }
                 break;
