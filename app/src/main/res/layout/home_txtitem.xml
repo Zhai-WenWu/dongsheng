@@ -78,7 +78,7 @@
             android:ellipsize="end"
             android:textColor="#999999"
             android:textSize="@dimen/sp_14"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/user_container"
