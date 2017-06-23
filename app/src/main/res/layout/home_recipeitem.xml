@@ -258,24 +258,14 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/num1"
+        <LinearLayout
+            android:id="@+id/numInfoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_0.5"
-            android:layout_marginRight="@dimen/dp_14"
-            android:textColor="#b5b4b4"
-            android:textSize="@dimen/sp_11"
-            android:visibility="gone" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/num2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_0.5"
-            android:textColor="#b5b4b4"
-            android:textSize="@dimen/sp_11"
-            android:visibility="gone" />
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -43,15 +43,6 @@ import xh.basic.tool.UtilImage;
 
 public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickListener {
 
-    private final int TAG_ID = R.string.tag;
-    private int mImgResource = R.drawable.i_nopic;
-    private int mRoundImgPixels = 0, mImgWidth = 0, mImgHeight = 0,// 以像素为单位
-            mRoundType = 1; // 1为全圆角，2上半部分圆角
-    private boolean mImgZoom = false; // 是否允许图片拉伸来适应设置的宽或高
-    private String mImgLevel = FileManager.save_cache; // 图片保存等级
-    private ImageView.ScaleType mScaleType = ImageView.ScaleType.CENTER_CROP;
-    private boolean mIsAnimate = false;// 控制图片渐渐显示
-
     //用户信息和置顶view
     private ImageView mTopTag;
     private ImageView mUserGourmet;
@@ -59,6 +50,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected View mDot;
     protected TextView mTopTxt;
 
+    protected LinearLayout mNumInfoLayout;
     protected LinearLayout mTimeTagContainer;
     protected TextView mTimeTag;
     protected View mLineTop;
@@ -73,13 +65,10 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected String mTransferUrl;
     protected String mType;
 
-    protected String mComNum = null;//评论量
-    protected String mLikeNum = null;//点赞量
-    protected String mFavNum = null;//收藏量
-    protected String mAllClickNum = null;//浏览/播放量
-
     protected HomeModuleBean mModuleBean;
     private AdapterHome.ViewClickCallBack mRefreshCallBack;
+
+    protected HomeItemBottomView mHomeItemBottomView;
 
     public HomeItem(Context context, int layoutId) {
         super(context);
@@ -109,6 +98,11 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mUserGourmet = (ImageView) findViewById(R.id.gourmet_icon);
         mUserName = (TextView) findViewById(R.id.user_name);
         mNameGourmet = (LinearLayout) findViewById(R.id.name_gourmet);
+        mNumInfoLayout = (LinearLayout) findViewById(R.id.numInfoLayout);
+        mHomeItemBottomView = new HomeItemBottomView(getContext());
+        if (mNumInfoLayout != null)
+            mNumInfoLayout.addView(mHomeItemBottomView);
+        mHomeItemBottomView.setVisibility(View.GONE);
 
         mTimeTagContainer = (LinearLayout) findViewById(R.id.time_tag_container);
         if (mTimeTagContainer != null)
@@ -135,62 +129,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         setViewImage(view, url);
     }
 
-    public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
-        this.mRefreshCallBack = callBack;
-    }
-
-    private void setViewImage(final ImageView v, String value) {
-        v.setVisibility(View.VISIBLE);
-        // 异步请求网络图片
-        if (value.indexOf("http") == 0) {
-            if (v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(value))
-                return;
-            if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
-                mRoundImgPixels = ToolsDevice.dp2px(v.getContext(), 500);
-                v.setImageResource(R.drawable.bg_round_user_icon);
-            } else {
-                v.setImageResource(mImgResource);
-            }
-            v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            if (value.length() < 10)
-                return;
-            v.setTag(TAG_ID, value);
-            if (v.getContext() == null) return;
-            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(v.getContext())
-                    .load(value)
-                    .setSaveType(mImgLevel)
-                    .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(getTarget(v, value));
-        }
-        // 直接设置为内部图片
-        else if (value.indexOf("ico") == 0) {
-            InputStream is = v.getResources().openRawResource(Integer.parseInt(value.replace("ico", "")));
-            Bitmap bitmap = UtilImage.inputStreamTobitmap(is);
-            bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, mRoundType, mRoundImgPixels);
-            UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
-        }
-        // 隐藏
-        else if (value.equals("hide") || value.length() == 0)
-            v.setVisibility(View.GONE);
-            // 直接加载本地图片
-        else if (!value.equals("ignore")) {
-            if (v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(value))
-                return;
-            v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            v.setImageResource(mImgResource);
-            v.setTag(TAG_ID, value);
-            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(v.getContext())
-                    .load(value)
-                    .setSaveType(mImgLevel)
-                    .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(getTarget(v, value));
-        }
-        // 如果为ignore,则忽略图片
-    }
-
-    private SubBitmapTarget getTarget(final ImageView v, final String url) {
+    @Override
+    protected SubBitmapTarget getTarget(final ImageView v, final String url) {
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
@@ -206,21 +146,18 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                     // 图片圆角和宽高适应auther_userImg
                     if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                         v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//						bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(context, 500));
-//                        v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
                         v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                     } else {
                         v.setScaleType(mScaleType);
                         UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
-                        if (mIsAnimate) {
-//							AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-//							alphaAnimation.setDuration(300);
-//							v.setAnimation(alphaAnimation);
-                        }
                     }
                 }
             }
         };
+    }
+
+    public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
+        this.mRefreshCallBack = callBack;
     }
 
     public interface ADImageLoadCallback {
@@ -257,7 +194,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         resetData();
         resetView();
         //时间标签
-
         if (mDataMap.containsKey("refreshTime")) {
             String refreshTime = mDataMap.get("refreshTime");
             if (!TextUtils.isEmpty(refreshTime) && mTimeTag != null) {
@@ -322,27 +258,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         }
         if (mDataMap.containsKey("url"))
             mTransferUrl = mDataMap.get("url");
-        String comNumStr = mDataMap.get("commentNum");
-        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 0) {
-            String commentNum = handleNumber(comNumStr);
-            if (!TextUtils.isEmpty(commentNum)) {
-                mComNum = commentNum;
-            }
-        }
-        String allClickStr = mDataMap.get("allClick");
-        if (!TextUtils.isEmpty(allClickStr)) {
-            String allClickNumStr = handleNumber(allClickStr);
-            if (!TextUtils.isEmpty(allClickNumStr)) {
-                mAllClickNum = allClickNumStr;
-            }
-        }
-        String likeNumStr = handleNumber(mDataMap.get("likeNum"));
-        if (!TextUtils.isEmpty(likeNumStr)) {
-            mLikeNum = likeNumStr;
-        }
-        String favNumStr = handleNumber(mDataMap.get("favorites"));
-        if (!TextUtils.isEmpty(favNumStr))
-            mFavNum = favNumStr;
+        mHomeItemBottomView.setData(StringManager.getListMapByJson(mDataMap.get("numInfo")));
     }
 
     protected void resetView() {
@@ -370,10 +286,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mIsTop = false;
         mTransferUrl = null;
         mType = "";
-        mComNum = null;
-        mLikeNum = null;
-        mFavNum = null;
-        mAllClickNum = null;
     }
 
     public void setHomeModuleBean(HomeModuleBean bean) {
