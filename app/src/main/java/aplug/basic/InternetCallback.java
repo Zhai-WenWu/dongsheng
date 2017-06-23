@@ -223,12 +223,6 @@ public abstract class InternetCallback extends InterCallback {
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }
-        try {
-			String ua = "imei=" + ToolsDevice.getXhIMEI(context) + ";";
-			ua += "device=" + ToolsDevice.getDevice(context) + ";";
-			ua += "AndroidId=" + ToolsDevice.getAndroidId(context) + ";";
-			header.put("ua", ua);
-		}catch (Exception e){e.printStackTrace();}
 
 		if (!header.containsKey("Connection"))
 			header.put("Connection", "keep-alive");
