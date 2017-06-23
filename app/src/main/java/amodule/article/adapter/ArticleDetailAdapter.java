@@ -8,15 +8,12 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -24,10 +21,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
-import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.view.ArticleCommentView;
 import amodule.article.view.CommodityItemView;
 import amodule.article.view.DishItemView;
@@ -40,7 +34,7 @@ import amodule.article.view.richtext.RichURLSpan;
  * 文章详情页adapter
  */
 public class ArticleDetailAdapter extends BaseAdapter {
-
+    public final static String TYPE_KEY = "datatype";
     public final static int Type_recommed = 1;//推荐类型
     public final static int Type_text = 2;//文本
     public final static int Type_image = 3;//图片
@@ -48,6 +42,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
     public final static int Type_caipu = 6;//菜谱
     public final static int Type_ds = 7;//电商
     public final static int Type_comment = 8;//评论
+    public final static int Type_bigAd = 9;//评论
 
     private Context context;
     private ArrayList<Map<String, String>> listMap;
@@ -115,6 +110,9 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
                 viewHolder.setData(map, position);
                 break;
+            case Type_bigAd:
+                convertView = getBigAdView(map);
+                break;
         }
         return convertView;
     }
@@ -134,16 +132,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
         return view;
     }
 
-    private OnRabSofaCallback onRabSofaCallback;
-
-    public interface OnRabSofaCallback {
-        public void onRabSoaf();
-    }
-
-    public void setOnRabSofaCallback(OnRabSofaCallback onRabSofaCallback) {
-        this.onRabSofaCallback = onRabSofaCallback;
-    }
-
     @Override
     public int getViewTypeCount() {
         return 11;
@@ -151,7 +139,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        String dataTypeStr = getItem(position).get("datatype");
+        String dataTypeStr = getItem(position).get(TYPE_KEY);
         if (TextUtils.isEmpty(dataTypeStr)) {
             return 0;
         }
@@ -243,22 +231,21 @@ public class ArticleDetailAdapter extends BaseAdapter {
                         }
                     });
                 }
-                if ("2".equals(map.get("hasAd"))
-                        && view != null) {
-                    View adView = getBigAdView(StringManager.getFirstMap(map.get("adData")));
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setMargins(0, Tools.getDimen(context, R.dimen.dp_17), 0, Tools.getDimen(context, R.dimen.dp_17));
-                    view.getAdLayout().addView(adView, layoutParams);
-                }
             }
         }
     }
 
     private View getBigAdView(Map<String, String> map) {
+        RelativeLayout layout = new RelativeLayout(context);
         View view = new View(context);
         if (mOnGetBigAdView != null)
             view = mOnGetBigAdView.getBigAdView(map);
-        return view;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        int dp_17 = Tools.getDimen(context, R.dimen.dp_17);
+        int dp_20 = Tools.getDimen(context, R.dimen.dp_20);
+        layoutParams.setMargins(dp_20, dp_17, dp_20, dp_17);
+        layout.addView(view, layoutParams);
+        return layout;
     }
 
     private OnADCallback mOnADCallback;
@@ -268,10 +255,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
         public void onBind(int index, View view, String s);
 
-    }
-
-    public OnADCallback getmOnADCallback() {
-        return mOnADCallback;
     }
 
     public void setmOnADCallback(OnADCallback mOnADCallback) {
@@ -284,11 +267,17 @@ public class ArticleDetailAdapter extends BaseAdapter {
         public View getBigAdView(Map<String, String> map);
     }
 
-    public OnGetBigAdView getOnGetBigAdView() {
-        return mOnGetBigAdView;
-    }
-
     public void setOnGetBigAdView(OnGetBigAdView mOnGetBigAdView) {
         this.mOnGetBigAdView = mOnGetBigAdView;
+    }
+
+    private OnRabSofaCallback onRabSofaCallback;
+
+    public interface OnRabSofaCallback {
+        public void onRabSoaf();
+    }
+
+    public void setOnRabSofaCallback(OnRabSofaCallback onRabSofaCallback) {
+        this.onRabSofaCallback = onRabSofaCallback;
     }
 }

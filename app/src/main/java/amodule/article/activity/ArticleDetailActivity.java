@@ -61,15 +61,12 @@ import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import third.ad.scrollerAd.XHAllAdControl;
 import third.share.BarShare;
 import xh.windowview.XhDialog;
 
+import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
-import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
-import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_1;
-import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_2;
 
 /** 文章详情 */
 public class ArticleDetailActivity extends BaseActivity {
@@ -515,7 +512,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private void analysForumData(boolean isRefresh, Object object) {
         commentMap = StringManager.getFirstMap(object);
-        commentMap.put("datatype", String.valueOf(Type_comment));
+        commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
         commentMap.put("data", object.toString());
         commentMap.put("commentNum", commentNum);
         if (isRefresh) {
@@ -539,8 +536,8 @@ public class ArticleDetailActivity extends BaseActivity {
                     int size = listMap.size();
                     for (int i = 0; i < size; i++) {
                         Map<String, String> map = listMap.get(i);
-                        map.put("datatype", String.valueOf(Type_recommed));
-                        map.put("idAd", "1");
+                        map.put(TYPE_KEY, String.valueOf(Type_recommed));
+                        map.put("isAd", "1");
                         List<Map<String, String>> styleDataList = StringManager.getListMapByJson(map.get("styleData"));
                         handlerStyleData(map, styleDataList);
                     }
@@ -598,6 +595,7 @@ public class ArticleDetailActivity extends BaseActivity {
             String commentNumber = map.get("commentNumber");
             map.put("commentNumber", "0".equals(commentNumber) ? "" : commentNumber + "评论");
         }
+        ArrayRelate.remove(ArrayRelate.size() - 1);
         if (page == 1)
             ArrayRelate.get(0).put("showheader", "1");
         allDataListMap.addAll(ArrayRelate);

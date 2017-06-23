@@ -60,6 +60,8 @@ import third.video.VideoPlayerController;
 import xh.windowview.XhDialog;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_VIDEO;
+import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
+import static amodule.article.adapter.ArticleDetailAdapter.Type_bigAd;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 
@@ -87,7 +89,6 @@ public class VideoDetailActivity extends BaseActivity {
     private Map<String, String> shareMap = new HashMap<>();
 
     private Map<String, String> adDataMap;
-    private ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
 
     private String commentNum;
     private boolean isKeyboradShow = false;
@@ -371,24 +372,19 @@ public class VideoDetailActivity extends BaseActivity {
                 if(adDataMap == null || adDataMap.isEmpty())
                     return;
                 VideoDetailActivity.this.adDataMap = adDataMap;
-                if(isRelateOver)
-                    for(Map<String, String> map : allDataListMap){
-                        if("2".equals(map.get("hasAd"))){
-                            map.put("adData",Tools.map2Json(adDataMap));
-                            detailAdapter.notifyDataSetChanged();
-                            break;
-                        }
-                    }
+                addADMapToData();
+            }
+        });
+    }
 
-            }
-        });
-        mVideoAdContorler.setOnListAdCallback(new VideoAdContorler.OnListAdCallback() {
-            @Override
-            public void onListAdData(Map<String, String> adDataMap) {
-                adRcomDataArray.add(adDataMap);
-                mVideoAdContorler.handlerAdData(adRcomDataArray,allDataListMap);
-            }
-        });
+    private void addADMapToData(){
+        if(isRelateOver
+                && adDataMap != null
+                && !adDataMap.isEmpty()){
+            adDataMap.put(TYPE_KEY,String.valueOf(Type_bigAd));
+            allDataListMap.add(adDataMap);
+            detailAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -480,13 +476,14 @@ public class VideoDetailActivity extends BaseActivity {
                     int size = listMap.size();
                     for (int i = 0; i < size; i++) {
                         Map<String, String> map = listMap.get(i);
-                        map.put("datatype", String.valueOf(Type_recommed));
-                        map.put("idAd", "1");
+                        map.put(TYPE_KEY, String.valueOf(Type_recommed));
+                        map.put("isAd", "1");
                         List<Map<String, String>> styleDataList = StringManager.getListMapByJson(map.get("styleData"));
                         handlerStyleData(map, styleDataList);
                     }
                     analysRelateData(listMap);
-                    mVideoAdContorler.handlerAdData(adRcomDataArray,allDataListMap);
+                    mVideoAdContorler.handlerAdData(allDataListMap);
+                    addADMapToData();
                     detailAdapter.notifyDataSetChanged();
 //                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
@@ -540,7 +537,6 @@ public class VideoDetailActivity extends BaseActivity {
      * @param ArrayRelate
      */
     private void analysRelateData(@NonNull ArrayList<Map<String, String>> ArrayRelate) {
-        Log.i("tzy", "analysRelateData");
         if (ArrayRelate.isEmpty()) return;
         for (Map<String, String> map : ArrayRelate) {
             String clickAll = map.get("clickAll");
@@ -550,11 +546,6 @@ public class VideoDetailActivity extends BaseActivity {
         }
         if (page == 1)
             ArrayRelate.get(0).put("showheader", "1");
-        if(adDataMap != null){
-            ArrayRelate.get(ArrayRelate.size() - 1).put("hasAd","2");
-            if(!adDataMap.isEmpty())
-                ArrayRelate.get(ArrayRelate.size() - 1).put("adData",Tools.map2Json(adDataMap));
-        }
         allDataListMap.addAll(ArrayRelate);
         isRelateOver = true;
 
@@ -578,7 +569,7 @@ public class VideoDetailActivity extends BaseActivity {
 
     private void analysForumData(boolean isRefresh, Object object) {
         commentMap = StringManager.getFirstMap(object);
-        commentMap.put("datatype", String.valueOf(Type_comment));
+        commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
         commentMap.put("data", object.toString());
         commentMap.put("commentNum", commentNum);
         if (isRefresh) {

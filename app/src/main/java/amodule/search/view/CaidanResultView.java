@@ -147,13 +147,11 @@ public class CaidanResultView extends RelativeLayout {
                     if (mCurrentPage == 1) {
                         mListData.clear();
                     }
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
-                    HashMap<String, String> tempMap;
-                    if (listReturn != null && listReturn.size() > 0) {
-                        Map<String, String> map = listReturn.get(0);
+                    Map<String, String> tempMap;
+                    Map<String, String> map = StringManager.getFirstMap(returnObj);
                         if (map != null && map.size() > 0) {
                             if (map.containsKey("caidan") && !map.get("caidan").equals("null")) {
-                                listReturn = UtilString.getListMapByJson(map.get("caidan"));
+                                ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(map.get("caidan"));
                                 for (Map<String, String> returnMap : listReturn) {
                                     tempMap = new HashMap<>();
                                     ArrayList<Map<String, String>> imgs = UtilString.getListMapByJson(returnMap.get("imgs"));
@@ -178,7 +176,6 @@ public class CaidanResultView extends RelativeLayout {
                                 }
                             }
                         }
-                    }
                 } else {
                     toastFaildRes(flag, true, returnObj);
                 }

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import amodule.main.bean.HomeModuleBean;
-import amodule.main.view.item.HomeADItem;
 import amodule.main.view.item.HomeAlbumItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
@@ -200,23 +199,6 @@ public class AdapterListView extends BaseAdapter{
     public class ViewTxtViewHolder{
         HomeTxtItem view;
         public ViewTxtViewHolder(HomeTxtItem view){
-            this.view=view;
-        }
-        public void setData(Map<String,String> map, int position){
-            if(view!=null){
-                view.setHomeModuleBean(moduleBean);
-                view.setAdControl(mAdControlParent);
-                view.setData(map, position);
-                if(viewClickCallBack!=null)view.setRefreshTag(viewClickCallBack);
-            }
-        }
-    }
-    /**
-     * View Ad类型
-     */
-    public class ViewAdViewHolder{
-        HomeADItem view;
-        public ViewAdViewHolder(HomeADItem view){
             this.view=view;
         }
         public void setData(Map<String,String> map, int position){
