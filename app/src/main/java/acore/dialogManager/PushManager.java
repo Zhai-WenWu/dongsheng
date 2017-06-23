@@ -82,7 +82,7 @@ public class PushManager extends DialogManagerParent {
         if(!TextUtils.isEmpty(pushNmuberStr)){
             currentShowNumber = Integer.parseInt(pushNmuberStr);
         }
-        if (currentShowNumber <= showNum && currentShowNumber < maxNumInVersion) {
+        if (currentShowNumber < showNum && currentShowNumber < maxNumInVersion) {
             String pushTime = String.valueOf(FileManager.loadShared(XHApplication.in(),FileManager.PUSH_INFO,FileManager.PUSH_TIME));
             if(TextUtils.isEmpty(pushTime)){
                 return true;
