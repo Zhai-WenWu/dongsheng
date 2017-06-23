@@ -129,14 +129,13 @@ public class HaYouSearchResultView extends RelativeLayout {
                 if (flag >= UtilInternet.REQ_OK_STRING) { // 表示成功
                     if (currentPage == 1)
                         arrayList.clear();
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
-                    Map<String, String> map = listReturn.get(0);
+                    Map<String, String> map = StringManager.getFirstMap(returnObj);
                     if (map.containsKey("soCi")) {
-                        listReturn = UtilString.getListMapByJson(map.get("soCi"));
+                        ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(map.get("soCi"));
                         customerAdapter.setSearchWords(getSoCiArray(listReturn));
                     }
                     if (map.containsKey("customers") && !map.get("customers").equals("null")) {
-                        listReturn = UtilString.getListMapByJson(map.get("customers"));
+                        ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(map.get("customers"));
                         for (Map<String, String> mapReturn : listReturn) {
                             mapReturn.put("folState", "folState" + mapReturn.get("folState"));
                             mapReturn.put("lv", "lv" + mapReturn.get("lv"));
