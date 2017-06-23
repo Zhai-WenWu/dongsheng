@@ -249,7 +249,7 @@ public class StringManager extends UtilString {
     public final static String api_getUserPowers = apiUrl + urlSection.get("user6") + "permissions"; //获取用户权限按钮
     public final static String api_getUserInfo = apiUrl + urlSection.get("home5") + "getUser"; //用户登录
     public final static String api_appmenu = apiUrl + urlSection.get("user6") + "appmenu"; //我的界面
-    public final static String api_smsReport = apiUrl + "sms/report"; //验证码获取错误
+    public final static String api_smsReport = apiUrl + "sms/report"; //验证0码获取错误
     public final static String api_setSecret = apiUrl + urlSection.get("user6") + "modifyPassword"; //设置，修改密码
     public final static String api_getThirdBind = apiUrl + urlSection.get("user6") + "thirdPartyList"; //获取第三方账号绑定
     public final static String api_unbindThirdParty = apiUrl + urlSection.get("user6") + "unbindThirdParty"; //第三方账号解绑
@@ -258,6 +258,7 @@ public class StringManager extends UtilString {
     public final static String api_checkPhoneRegisterState = apiUrl + urlSection.get("auth6") + "checkPhoneIsRegistered"; //手机号是否注册
     public final static String api_checkEmailRegisterState = apiUrl + urlSection.get("auth6") + "checkEmailIsRegistered"; //邮箱是否注册
     public final static String api_modifyPhone = apiUrl + urlSection.get("user6") + "modifyPhone"; //注册手机号
+    public final static String api_sendVoiceVerify = apiUrl + "Main7/User/sendVoiceVerify"; //获取语音验证码
 
     /*** 新首页接口*/
     public final static String API_GET_LEVEL = apiUrl + "Main7/Recommend/getLevel"; //获取首页层级数据

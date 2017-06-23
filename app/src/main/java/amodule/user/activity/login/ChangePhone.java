@@ -11,9 +11,13 @@ import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
+import amodule.user.view.SpeechaIdentifyInputView;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import xh.windowview.XhDialog;
 
 /**
@@ -22,13 +26,16 @@ import xh.windowview.XhDialog;
 
 public class ChangePhone extends BaseLoginActivity implements View.OnClickListener {
 
-    private IdentifyInputView phone_identify;
+    private IdentifyInputView login_identify;
+    private SpeechaIdentifyInputView speechaIdentifyInputView;
     private NextStepView btn_next_step;
     private TextView tv_identify_info;
     private String zoneCode;
     private String phoneNum;
     private TextView tv_help;
     private TextView tv_phone_missed;
+
+    private boolean isFirst = true;
 
 
     @Override
@@ -49,7 +56,8 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
 
     private void initView() {
 
-        phone_identify = (IdentifyInputView) findViewById(R.id.phone_identify);
+        login_identify = (IdentifyInputView) findViewById(R.id.phone_identify);
+        speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
         tv_help = (TextView) findViewById(R.id.tv_help);
         tv_phone_missed = (TextView) findViewById(R.id.tv_phone_missed);
@@ -59,11 +67,32 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
                 + hidePhoneNum(phoneNum) + "，请获取验证码");
         tv_help.setOnClickListener(this);
         tv_phone_missed.setOnClickListener(this);
+        speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speechaIdentifyInputView.setState(false);
+                login_identify.setOnBtnClickState(false);
+                login_identify.startCountDown();
+                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(ChangePhone.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
 
-        phone_identify.init("验证码", new IdentifyInputView.IdentifyInputViewCallback() {
+                    }
+                });
+            }
+        });
+
+        login_identify.init("验证码", new IdentifyInputView.IdentifyInputViewCallback() {
             @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnState();
+                if("86".equals(zoneCode)) {
+                    if (isFirst) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                    }
+                    speechaIdentifyInputView.setState(true);
+                }
             }
 
             @Override
@@ -75,19 +104,21 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
             public void onCliclSendIdentify() {
 
                 XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "方法1验证码页，点获取验证码");
-                phone_identify.startCountDown();
+                login_identify.startCountDown();
                 loadManager.showProgressBar();
                 reqIdentifyCode(zoneCode, phoneNum, new SMSSendCallback() {
                     @Override
                     public void onSendSuccess() {
                         loadManager.hideProgressBar();
-                        phone_identify.startCountDown();
+                        login_identify.startCountDown();
+                        speechaIdentifyInputView.setState(false);
                     }
 
                     @Override
                     public void onSendFalse() {
                         loadManager.hideProgressBar();
-                        phone_identify.btnClickTrue();
+                        login_identify.setOnBtnClickState(true);
+                        speechaIdentifyInputView.setState(true);
                     }
                 });
 
@@ -97,9 +128,8 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
         btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
-
                 XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "方法1验证码页，点下一步");
-                checkIdentifyCode(ChangePhone.this, zoneCode, phoneNum, phone_identify.getIdentify(),
+                checkIdentifyCode(ChangePhone.this, zoneCode, phoneNum, login_identify.getIdentify(),
                         new BaseLoginCallback() {
                             @Override
                             public void onSuccess() {
@@ -127,7 +157,7 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
 
 
     private void refreshNextStepBtnState() {
-        String identify = phone_identify.getIdentify();
+        String identify = login_identify.getIdentify();
         if (TextUtils.isEmpty(identify)) {
             btn_next_step.setClickCenterable(false);
         } else {

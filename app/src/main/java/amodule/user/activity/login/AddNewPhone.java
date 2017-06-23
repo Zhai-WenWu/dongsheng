@@ -12,10 +12,14 @@ import com.xiangha.R;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
+import amodule.user.view.SpeechaIdentifyInputView;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 
 /**
  * Created by ：fei_teng on 2017/2/22 21:31.
@@ -24,12 +28,15 @@ import amodule.user.view.PhoneNumInputView;
 public class AddNewPhone extends BaseLoginActivity implements View.OnClickListener {
 
     private IdentifyInputView login_identify;
+    private SpeechaIdentifyInputView speechaIdentifyInputView;
     private NextStepView btn_next_step;
     private PhoneNumInputView phone_info;
     private TextView tv_help;
     private String zoneCode;
     private String phoneNum;
     private String motifyType;
+
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +58,25 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
     private void initView() {
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
         login_identify = (IdentifyInputView) findViewById(R.id.login_identify);
+        speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
         tv_help = (TextView) findViewById(R.id.tv_help);
         tv_help.setOnClickListener(this);
+        speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speechaIdentifyInputView.setState(false);
+                login_identify.setOnBtnClickState(false);
+                login_identify.startCountDown();
+                String phoneNum = phone_info.getPhoneNum();
+                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(AddNewPhone.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+
+                    }
+                });
+            }
+        });
 
         phone_info.init("手机号", "86", "",
                 new PhoneNumInputView.PhoneNumInputViewCallback() {
@@ -74,6 +97,14 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
             @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnStat();
+                final String zoneCode = phone_info.getZoneCode();
+                if("86".equals(zoneCode)) {
+                    if (isFirst) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                    }
+                    speechaIdentifyInputView.setState(true);
+                }
             }
 
             @Override
@@ -89,7 +120,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                 final String newPhoneNum = phone_info.getPhoneNum();
                 if (TextUtils.isEmpty(newZoneCode) || TextUtils.isEmpty(newPhoneNum)) {
                     Toast.makeText(AddNewPhone.this, "请输入手机号", Toast.LENGTH_SHORT).show();
-                    login_identify.btnClickTrue();
+                    login_identify.setOnBtnClickState(true);
                     return;
                 }
 
@@ -97,7 +128,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                 if (LoginCheck.WELL_TYPE.equals(error_type)) {
                     if (newZoneCode.equals(zoneCode) && newPhoneNum.equals(phoneNum)) {
                         Toast.makeText(AddNewPhone.this, "你已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
-                        login_identify.btnClickTrue();
+                        login_identify.setOnBtnClickState(true);
                         dataStatics("方法1失败原因：已经绑定这个手机号","方法2失败原因：已经绑定这个手机号");
                         return;
                     }
@@ -107,33 +138,38 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                         @Override
                         public void onSuccess() {
                             Toast.makeText(AddNewPhone.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
-                            login_identify.btnClickTrue();
+                            login_identify.setOnBtnClickState(true);
                             dataStatics("方法1失败原因：已经绑定其他账号", "方法2失败原因：已经绑定其他账号");
                         }
 
                         @Override
                         public void onFalse(int flag) {
                             loadManager.showProgressBar();
-                            login_identify.btnClickTrue();
+                            login_identify.setOnBtnClickState(true);
                             reqIdentifyCode(newZoneCode, newPhoneNum,
                                     new SMSSendCallback() {
                                         @Override
                                         public void onSendSuccess() {
                                             loadManager.hideProgressBar();
                                             login_identify.startCountDown();
+                                            speechaIdentifyInputView.setState(false);
                                         }
 
                                         @Override
                                         public void onSendFalse() {
-                                            login_identify.btnClickTrue();
+                                            login_identify.setOnBtnClickState(true);
                                             loadManager.hideProgressBar();
+                                            speechaIdentifyInputView.setState(true);
                                             dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
                                         }
-                                    });
+                                    }
+                            );
                         }
                     });
-                }else
-                    login_identify.btnClickTrue();
+                }else {
+                    login_identify.setOnBtnClickState(true);
+                    speechaIdentifyInputView.setState(true);
+                }
             }
         });
 

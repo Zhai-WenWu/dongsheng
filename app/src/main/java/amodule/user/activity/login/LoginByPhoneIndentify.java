@@ -3,7 +3,6 @@ package amodule.user.activity.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,10 +12,14 @@ import com.xiangha.R;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
+import amodule.user.view.SpeechaIdentifyInputView;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -30,10 +33,12 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
     private IdentifyInputView login_identify;
     private NextStepView btn_next_step;
     private PhoneNumInputView phone_info;
+    private SpeechaIdentifyInputView speechaIdentifyInputView;
     private TextView tv_help;
     private String zoneCode;
     private String phoneNum;
 
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +62,26 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
     private void initView() {
 
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
+        speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
         login_identify = (IdentifyInputView) findViewById(R.id.login_identify);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
         tv_help = (TextView) findViewById(R.id.tv_help);
         tv_help.setOnClickListener(this);
+        speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speechaIdentifyInputView.setState(false);
+                login_identify.setOnBtnClickState(false);
+                login_identify.startCountDown();
+                String phoneNum = phone_info.getPhoneNum();
+                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(LoginByPhoneIndentify.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+
+                    }
+                });
+            }
+        });
 
         if (TextUtils.isEmpty(zoneCode)) {
             zoneCode = lastLoginAccout.getAreaCode();
@@ -86,11 +107,18 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
             @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnStat();
+                final String zoneCode = phone_info.getZoneCode();
+                if("86".equals(zoneCode)) {
+                    if (isFirst) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                    }
+                    speechaIdentifyInputView.setState(true);
+                }
             }
 
             @Override
             public void onInputDataChanged() {
-
                 refreshNextStepBtnStat();
             }
 
@@ -101,7 +129,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                 if (TextUtils.isEmpty(zoneCode) || TextUtils.isEmpty(phoneNum)) {
                     XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录", "输入手机号，点击获取验证码");
                     Toast.makeText(LoginByPhoneIndentify.this, "请输入手机号", Toast.LENGTH_SHORT).show();
-                    login_identify.btnClickTrue();
+                    login_identify.setOnBtnClickState(true);
                     return;
                 }
 
@@ -116,12 +144,14 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                                 public void onSendSuccess() {
                                     loadManager.hideProgressBar();
                                     login_identify.startCountDown();
+                                    speechaIdentifyInputView.setState(false);
                                 }
 
                                 @Override
                                 public void onSendFalse() {
                                     loadManager.hideProgressBar();
-                                    login_identify.btnClickTrue();
+                                    login_identify.setOnBtnClickState(true);
+                                    speechaIdentifyInputView.setState(true);
                                     XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
                                             "失败原因：验证码超限");
                                 }
@@ -131,7 +161,8 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
 
                         @Override
                         public void onFalse(int flag) {
-                            login_identify.btnClickTrue();
+                            login_identify.setOnBtnClickState(true);
+                            speechaIdentifyInputView.setState(true);
                             if(flag>= UtilInternet.REQ_OK_STRING) {
                                 final XhDialog xhDialog = new XhDialog(LoginByPhoneIndentify.this);
                                 xhDialog.setTitle("该手机号尚未注册，" + "\n是否注册新账号？")
@@ -159,7 +190,8 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                         }
                     });
                 }else{
-                    login_identify.btnClickTrue();
+                    login_identify.setOnBtnClickState(true);
+                    speechaIdentifyInputView.setState(true);
                 }
             }
         });
@@ -210,10 +242,8 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
 
 
     private void refreshNextStepBtnStat() {
-
-        boolean canClickNextBtn = false;
-        canClickNextBtn = !phone_info.isDataAbsence()
-                && !login_identify.isIdentifyCodeEmpty();
+        boolean canClickNextBtn;
+        canClickNextBtn = !phone_info.isDataAbsence() && !login_identify.isIdentifyCodeEmpty();
         btn_next_step.setClickCenterable(canClickNextBtn);
     }
 
@@ -223,8 +253,6 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
             case R.id.tv_help:
                 XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录", "点击遇到问题");
                 gotoFeedBack();
-                break;
-            default:
                 break;
         }
     }
