@@ -31,15 +31,6 @@ import xh.basic.tool.UtilImage;
 
 public class UserHomeItem extends BaseItemView {
 
-    private final int TAG_ID = R.string.tag;
-    private int mImgResource = R.drawable.i_nopic;
-    private int mRoundImgPixels = 0, mImgWidth = 0, mImgHeight = 0,// 以像素为单位
-            mRoundType = 1; // 1为全圆角，2上半部分圆角
-    private boolean mImgZoom = false; // 是否允许图片拉伸来适应设置的宽或高
-    private String mImgLevel = FileManager.save_cache; // 图片保存等级
-    private ImageView.ScaleType mScaleType = ImageView.ScaleType.CENTER_CROP;
-    private boolean mIsAnimate = false;// 控制图片渐渐显示
-
     protected AdControlParent mAdControlParent;
     private View mLineTop;
 
