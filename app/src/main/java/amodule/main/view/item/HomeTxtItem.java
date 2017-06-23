@@ -24,13 +24,14 @@ import amodule.main.adapter.AdapterListView;
 import aplug.web.ShowWeb;
 
 /**
- * 右图，无图，样式
+ * 右图，无图，样式, 带有标题，描述等信息
  * Created by sll on 2017/4/18.
  */
 
 public class HomeTxtItem extends HomeItem {
 
     private TextView mTitle;
+    private TextView mDesc;
     private ImageView mImg;
     private ImageView mAdTag;
     private RelativeLayout mImgs;
@@ -53,6 +54,7 @@ public class HomeTxtItem extends HomeItem {
     public void initView() {
         super.initView();
         mTitle = (TextView) findViewById(R.id.title);
+        mDesc = (TextView) findViewById(R.id.desc);
         mImg = (ImageView) findViewById(R.id.img);
         mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mImgs = (RelativeLayout) findViewById(R.id.imgs);
@@ -160,8 +162,14 @@ public class HomeTxtItem extends HomeItem {
         } else {
             mContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
         }
+        String content = mDataMap.get("content");
+        if (!TextUtils.isEmpty(content)) {
+            mDesc.setText(content);
+            mDesc.setVisibility(View.VISIBLE);
+        }
         if (imgCount == 1) {
-            mTitle.setLines(2);
+            if (TextUtils.isEmpty(content))
+                mTitle.setLines(2);
             mTitle.setMaxLines(Integer.MAX_VALUE);
         }
     }
@@ -188,5 +196,7 @@ public class HomeTxtItem extends HomeItem {
             mAdTag.setVisibility(View.GONE);
         if (viewIsVisible(mLayerView))
             mLayerView.setVisibility(View.GONE);
+        if (viewIsVisible(mDesc))
+            mDesc.setVisibility(View.GONE);
     }
 }

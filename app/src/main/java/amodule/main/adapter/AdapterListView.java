@@ -12,6 +12,7 @@ import java.util.Map;
 
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.item.HomeAlbumItem;
+import amodule.main.view.item.HomeAnyImgStyleItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
 import amodule.main.view.item.HomeTxtItem;
@@ -27,6 +28,7 @@ public class AdapterListView extends BaseAdapter{
     public final static String type_threeImage = "3";//三图
     public final static String type_noImage = "4";//无图
     public final static String type_levelImage = "5";//蒙版图
+    public final static String type_anyImage = "6";//任意图 限宽不限高
 
     private ArrayList<Map<String,String>> mapArrayList;
     private Context context;
@@ -109,6 +111,18 @@ public class AdapterListView extends BaseAdapter{
                     viewTiziViewHolder = (ViewTiziViewHolder) convertView.getTag();
                 }
                 viewTiziViewHolder.setData(map, position);
+                break;
+            case type_anyImage:
+                ViewAnyImgViewHolder anyImgViewHolder = null;
+                if (convertView == null
+                        || !(convertView.getTag() instanceof ViewAnyImgViewHolder)) {
+                    anyImgViewHolder = new ViewAnyImgViewHolder(new HomeAnyImgStyleItem(context));
+                    convertView = anyImgViewHolder.view;
+                    convertView.setTag(anyImgViewHolder);
+                } else {
+                    anyImgViewHolder = (ViewAnyImgViewHolder) convertView.getTag();
+                }
+                anyImgViewHolder.setData(map, position);
                 break;
 
             case type_rightImage://右图
@@ -199,6 +213,24 @@ public class AdapterListView extends BaseAdapter{
     public class ViewTxtViewHolder{
         HomeTxtItem view;
         public ViewTxtViewHolder(HomeTxtItem view){
+            this.view=view;
+        }
+        public void setData(Map<String,String> map, int position){
+            if(view!=null){
+                view.setHomeModuleBean(moduleBean);
+                view.setAdControl(mAdControlParent);
+                view.setData(map, position);
+                if(viewClickCallBack!=null)view.setRefreshTag(viewClickCallBack);
+            }
+        }
+    }
+
+    /**
+     * 任意图 限宽不限高
+     */
+    public class ViewAnyImgViewHolder{
+        HomeAnyImgStyleItem view;
+        public ViewAnyImgViewHolder(HomeAnyImgStyleItem view){
             this.view=view;
         }
         public void setData(Map<String,String> map, int position){
