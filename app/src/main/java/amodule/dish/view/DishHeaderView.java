@@ -71,6 +71,8 @@ public class DishHeaderView extends LinearLayout {
     private boolean isAutoPaly=false;//默认自动播放
     private boolean isOnResuming=false;//默认自动播放
 
+    private int distance;
+
     public DishHeaderView(Context context) {
         super(context);
         this.context = context;
@@ -96,9 +98,12 @@ public class DishHeaderView extends LinearLayout {
      */
     public void initView(Activity activitys) {
         this.activity = activitys;
+        distance = Tools.getDimen(activity, R.dimen.dp_45);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
         view_oneImage = LayoutInflater.from(activity).inflate(R.layout.view_dish_header_oneimage, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * 9 / 16 + distance);
+        view_oneImage.setLayoutParams(params);
         dishVidioLayout = (RelativeLayout) view_oneImage.findViewById(R.id.video_layout);
 
         //处理简介
@@ -296,7 +301,6 @@ public class DishHeaderView extends LinearLayout {
             if (!TextUtils.isEmpty(videoUrl)
                     && videoUrl.startsWith("http")) {
                 LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.video_img_layout);
-                int distance = Tools.getDimen(activity, R.dimen.dp_45);
 //                if (Tools.isShowTitle()) {
 //                    distance += Tools.getStatusBarHeight(activity);
 //                }
