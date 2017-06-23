@@ -131,8 +131,38 @@ public class HomeRecipeItem extends HomeItem {
                 mDataMap.put("isADShow", "1");
             }
         }
+        if (mDataMap.containsKey("video")) {
+            String video = mDataMap.get("video");
+            if (!TextUtils.isEmpty(video)) {
+                ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(video);
+                for (Map<String, String> map : maps) {
+                    if (map != null) {
+                        if (map.containsKey("videoTime")) {
+                            String videoTime = map.get("videoTime");
+                            if (!TextUtils.isEmpty(videoTime) && !"00:00".equals(videoTime) && mVideoTime != null) {
+                                mVideoTime.setText(videoTime);
+                                mVideoTime.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if (map.containsKey("isVideo")) {
+                            String isVideo = map.get("isVideo");
+                            if (!TextUtils.isEmpty(isVideo) && isVideo.equals("2"))
+                                mIsVideo = true;
+                        }
+                    }
+                }
+                if (mVideoContainer != null)
+                    mVideoContainer.setVisibility(View.VISIBLE);
+            }
+        }
         String type = mModuleBean.getType();
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
+        if (mIsVideo) {
+            int fixedH = 9, fixedW = 16;
+            int w = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
+            int h = w * fixedH / fixedW;
+            containerParams.height = h;
+        }
         containerParams.topMargin = getResources().getDimensionPixelSize(MainHome.recommedType.equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
         if (mModuleBean != null) {
             if (!TextUtils.isEmpty(type)) {
@@ -159,31 +189,6 @@ public class HomeRecipeItem extends HomeItem {
             if (!TextUtils.isEmpty(isSole) && "2".equals(isSole) && mSole != null)
                 mSole.setVisibility(View.VISIBLE);
         }
-        if (mDataMap.containsKey("video")) {
-            String video = mDataMap.get("video");
-            if (!TextUtils.isEmpty(video)) {
-                ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(video);
-                for (Map<String, String> map : maps) {
-                    if (map != null) {
-                        if (map.containsKey("videoTime")) {
-                            String videoTime = map.get("videoTime");
-                            if (!TextUtils.isEmpty(videoTime) && !"00:00".equals(videoTime) && mVideoTime != null) {
-                                mVideoTime.setText(videoTime);
-                                mVideoTime.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        if (map.containsKey("isVideo")) {
-                            String isVideo = map.get("isVideo");
-                            if (!TextUtils.isEmpty(isVideo) && isVideo.equals("2"))
-                                mIsVideo = true;
-                        }
-                    }
-                }
-                if (mVideoContainer != null)
-                    mVideoContainer.setVisibility(View.VISIBLE);
-            }
-        }
-
         if (mDataMap.containsKey("styleData")) {
             ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
             if (datas != null && datas.size() > 0) {
@@ -210,13 +215,13 @@ public class HomeRecipeItem extends HomeItem {
                             MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
                             adImgParams.height = imgHeight;
                             mImg.setLayoutParams(adImgParams);
-                            mLayerView.requestLayout();
-                            mLayerView.requestLayout();
+
                             if (mLayerView != null) {
                                 MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
                                 layerParams.width = MarginLayoutParams.MATCH_PARENT;
                                 layerParams.height = imgHeight;
                                 mLayerView.setLayoutParams(layerParams);
+                                mLayerView.requestLayout();
                             }
                         }
                     } : null);
@@ -262,7 +267,6 @@ public class HomeRecipeItem extends HomeItem {
         MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
         adImgParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         mImg.setLayoutParams(adImgParams);
-        mLayerView.requestLayout();
         mLayerView.requestLayout();
     }
 

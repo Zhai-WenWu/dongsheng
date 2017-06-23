@@ -86,14 +86,15 @@
             android:ellipsize="end"
             android:textColor="@color/c_black_text"
             android:textSize="@dimen/sp_18"
-            android:visibility="visible" />
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/icon_search_container"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_21"
             android:layout_alignTop="@+id/title_top"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/icon_search"
@@ -120,7 +121,7 @@
         android:ellipsize="end"
         android:textColor="#999999"
         android:textSize="@dimen/sp_14"
-        android:visibility="visible" />
+        android:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/user_container"
@@ -130,7 +131,7 @@
         android:layout_below="@+id/title"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
-        android:layout_marginBottom="@dimen/dp_13"
+        android:layout_marginBottom="@dimen/dp_5"
         android:gravity="center_vertical">
 
         <LinearLayout
@@ -185,6 +186,7 @@
         android:id="@+id/line_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"
+        android:layout_marginTop="@dimen/dp_8"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:layout_below="@+id/user_container"
