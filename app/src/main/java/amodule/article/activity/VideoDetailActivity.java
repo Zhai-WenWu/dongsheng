@@ -217,7 +217,18 @@ public class VideoDetailActivity extends BaseActivity {
 
     /** 初始化title */
     private void initTitle() {
+        View leftClose = findViewById(R.id.leftClose);
+        leftClose.setVisibility(View.VISIBLE);
+        leftClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Main.colse_level = 1;
+                VideoDetailActivity.this.finish();
+            }
+        });
         mTitle = (TextView) findViewById(R.id.title);
+        int dp85 = Tools.getDimen(this,R.dimen.dp_85);
+        mTitle.setPadding(dp85,0,dp85,0);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
         ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();

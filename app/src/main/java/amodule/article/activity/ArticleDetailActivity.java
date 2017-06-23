@@ -5,13 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -35,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
@@ -44,13 +39,12 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
-import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.tools.ArticleAdContrler;
-import amodule.article.view.CommentBar;
 import amodule.article.view.ArticleContentBottomView;
 import amodule.article.view.ArticleHeaderView;
 import amodule.article.view.BottomDialog;
+import amodule.article.view.CommentBar;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
@@ -174,7 +168,18 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 初始化title */
     private void initTitle() {
+        View leftClose = findViewById(R.id.leftClose);
+        leftClose.setVisibility(View.VISIBLE);
+        leftClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Main.colse_level = 1;
+                ArticleDetailActivity.this.finish();
+            }
+        });
         mTitle = (TextView) findViewById(R.id.title);
+        int dp85 = Tools.getDimen(this,R.dimen.dp_85);
+        mTitle.setPadding(dp85,0,dp85,0);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
         ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();

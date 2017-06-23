@@ -68,13 +68,14 @@
             android:id="@+id/login_identify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_11"/>
+            android:layout_marginTop="@dimen/dp_11"
+            android:layout_marginBottom="@dimen/dp_3"
+            />
 
         <amodule.user.view.SpeechaIdentifyInputView
             android:id="@+id/login_speeach_identify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_15"
             android:visibility="gone"
             />
 
@@ -82,7 +83,7 @@
             android:id="@+id/btn_next_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_44"/>
+            android:layout_marginTop="@dimen/dp_41"/>
 
 
         <TextView
