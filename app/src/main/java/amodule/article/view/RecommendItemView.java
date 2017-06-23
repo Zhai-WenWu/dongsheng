@@ -33,6 +33,7 @@ import xh.basic.tool.UtilImage;
 public class RecommendItemView extends ItemBaseView {
 
     private RelativeLayout adLayout;
+    private RelativeLayout txtContainer;
     private ImageView recImage;
     private TextView recTitle;
     private TextView recCustomerName;
@@ -54,6 +55,7 @@ public class RecommendItemView extends ItemBaseView {
 
     @Override
     public void init() {
+        txtContainer = (RelativeLayout) findViewById(R.id.txt_container);
         adLayout = (RelativeLayout) findViewById(R.id.ad_layout);
         recImage = (ImageView) findViewById(R.id.rec_image);
         videoIcon = (ImageView) findViewById(R.id.video_icon);
@@ -66,13 +68,18 @@ public class RecommendItemView extends ItemBaseView {
     public void setData(final Map<String, String> map) {
         findViewById(R.id.hander).setVisibility(map.containsKey("showheader") ? View.VISIBLE : View.GONE);
         if(map != null && !TextUtils.isEmpty(map.get("img"))){
+            txtContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+            recTitle.setLines(2);
             setViewImage(recImage, map.get("img"));
             recImage.setVisibility(VISIBLE);
             findViewById(R.id.imgs).setVisibility(VISIBLE);
         }else{
+            txtContainer.setMinimumHeight(0);
+            recTitle.setLines(1);
             recImage.setVisibility(GONE);
             findViewById(R.id.imgs).setVisibility(GONE);
         }
+        recTitle.setMaxLines(Integer.MAX_VALUE);
         setViewText(recTitle, map, "title", View.INVISIBLE);
         setViewText(recBrowse, map, "clickAll");
         setViewText(recComment, map, "commentNumber");

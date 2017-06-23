@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20"
-    android:background="@color/transparent">
+    android:background="@color/transparent_fe">
 
     <View
         android:id="@+id/line_top"
@@ -81,7 +81,7 @@
                     android:id="@+id/img1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/transparent"/>
+                    android:background="@color/transparent_fe"/>
                 <View
                     android:id="@+id/layer_view1"
                     android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                     android:id="@+id/img2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/transparent"/>
+                    android:background="@color/transparent_fe"/>
                 <View
                     android:id="@+id/layer_view2"
                     android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                     android:id="@+id/img3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/transparent"/>
+                    android:background="@color/transparent_fe"/>
 
                 <View
                     android:id="@+id/layer_view3"
@@ -139,7 +139,7 @@
             android:layout_marginTop="@dimen/dp_8"
             android:layout_below="@+id/imgs_container_center"
             android:layout_alignParentBottom="true"
-            android:background="@color/transparent"
+            android:background="@color/transparent_fe"
             android:gravity="bottom">
 
             <LinearLayout
