@@ -286,9 +286,6 @@ public class ListDish extends BaseActivity {
                         if (!map.containsKey("hasVideo")) {
                             map.put("hasVideo", "1");
                         }
-                        String nickName = map.get("nickName");
-                        if (nickName == null || nickName.equals("") || nickName.equals("null"))
-                            map.put("nickName", "hide");
                         arrayList.add(map);
                     }
                     adapter.notifyDataSetChanged();

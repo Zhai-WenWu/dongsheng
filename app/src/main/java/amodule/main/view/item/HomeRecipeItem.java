@@ -210,13 +210,13 @@ public class HomeRecipeItem extends HomeItem {
                             MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
                             adImgParams.height = imgHeight;
                             mImg.setLayoutParams(adImgParams);
-                            mLayerView.requestLayout();
-                            mLayerView.requestLayout();
+
                             if (mLayerView != null) {
                                 MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
                                 layerParams.width = MarginLayoutParams.MATCH_PARENT;
                                 layerParams.height = imgHeight;
                                 mLayerView.setLayoutParams(layerParams);
+                                mLayerView.requestLayout();
                             }
                         }
                     } : null);
@@ -262,7 +262,6 @@ public class HomeRecipeItem extends HomeItem {
         MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
         adImgParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         mImg.setLayoutParams(adImgParams);
-        mLayerView.requestLayout();
         mLayerView.requestLayout();
     }
 
