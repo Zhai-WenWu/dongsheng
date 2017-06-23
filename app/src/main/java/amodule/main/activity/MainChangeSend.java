@@ -30,7 +30,6 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -165,7 +164,6 @@ public class MainChangeSend extends BaseActivity {
                     this.startActivity(dishIntent);
                     XHClick.track(this, "发菜谱");
                 } else {
-                    Tools.showToast(this, "请登录");
                     Intent intent = new Intent(this, LoginByAccout.class);
                     startActivity(intent);
                 }
@@ -221,7 +219,6 @@ public class MainChangeSend extends BaseActivity {
             case "6":
                 if (!LoginManager.isLogin()) {
                     finish();
-                    Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
                 } else if (LoginManager.isShowSendArticleButton()) {
                     finish();
@@ -232,7 +229,6 @@ public class MainChangeSend extends BaseActivity {
             case "7":
                 if (!LoginManager.isLogin()) {
                     finish();
-                    Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
                 } else if (LoginManager.isShowSendVideoButton()) {
                     finish();

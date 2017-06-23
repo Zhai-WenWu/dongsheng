@@ -373,7 +373,6 @@ public class ShowSubject extends BaseActivity {
 
 	//登录
 	private void goLogin() {
-		Tools.showToast(getApplicationContext(), "请先登录");
 		Intent intent = new Intent(this, LoginByAccout.class);
 		startActivity(intent);
 	}

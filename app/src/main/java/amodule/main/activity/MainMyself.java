@@ -28,7 +28,6 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
 import amodule.dish.activity.OfflineDish;
@@ -371,7 +370,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case R.id.ll_money:
                 case R.id.ll_score:
                 case R.id.ll_coupon:
-                    Tools.showToast(this,"请先登录或注册哦~");
                 case R.id.myself_lv: //用户等级
                 case R.id.myself_please_login:
                 case R.id.ico_right_myself:
@@ -462,7 +460,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case "coupon": //优惠券
                 case "money": //钱包
                     isOption = true;
-                    Tools.showToast(this, "请先登录或注册哦~");
                     XHClick.mapStat(this, tongjiId, "头部", "登录");
                     Intent intent = new Intent(MainMyself.this, LoginByAccout.class);
                     startActivity(intent);

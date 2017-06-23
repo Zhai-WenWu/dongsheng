@@ -15,7 +15,6 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.db.BrowseHistorySqlite;
@@ -84,7 +83,6 @@ public class NousInfo extends ApiShowWeb {
 						}
 					});
 				} else {
-					Tools.showToast(getApplicationContext(), "请先登录");
 					Intent intent = new Intent(NousInfo.this, LoginByAccout.class);
 					startActivity(intent);
 				}

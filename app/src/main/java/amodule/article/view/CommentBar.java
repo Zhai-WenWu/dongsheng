@@ -158,7 +158,6 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
         }
         if (!LoginManager.isLogin()) {
             ToolsDevice.keyboardControl(false, getContext(), editText);
-            Tools.showToast(getContext(), "请先登录或注册哦~");
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }
@@ -182,7 +181,6 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
     private void sentComment() {
         if (!LoginManager.isLogin()) {
             ToolsDevice.keyboardControl(false, getContext(), editText);
-            Tools.showToast(getContext(), "请先登录或注册哦~");
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
             return;
         }

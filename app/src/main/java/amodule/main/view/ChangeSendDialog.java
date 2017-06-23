@@ -179,7 +179,6 @@ public class ChangeSendDialog extends Dialog {
                 break;
             case "2": //发菜谱
                 if (!LoginManager.isLogin()) {
-                    Tools.showToast(activity, "请登录");
                     Intent intent = new Intent(activity, LoginByAccout.class);
                     activity.startActivity(intent);
                     return;
@@ -244,7 +243,6 @@ public class ChangeSendDialog extends Dialog {
             case "6":
                 closeDialog();
                 if(!LoginManager.isLogin()) {
-                    Tools.showToast(activity, "请登录");
                     activity.startActivity(new Intent(activity, LoginByAccout.class));
                 }else if (LoginManager.isShowSendArticleButton())
                     activity.startActivity(new Intent(activity, ArticleEidtActiivty.class));
@@ -254,7 +252,6 @@ public class ChangeSendDialog extends Dialog {
             case "7":
                 closeDialog();
                 if(!LoginManager.isLogin()) {
-                    Tools.showToast(activity, "请登录");
                     activity.startActivity(new Intent(activity, LoginByAccout.class));
                 }else if (LoginManager.isShowSendVideoButton())
                     activity.startActivity(new Intent(activity, VideoEditActivity.class));

@@ -249,7 +249,6 @@ public class UploadDishNormalControl extends UploadDishParrentControl implements
                 mUploadDishControl.startUpload(uploadDishData);
                 XHClick.track(mAct,"发菜谱");
             }else {
-                Tools.showToast(mAct, "请先登录");
                 Intent it = new Intent(mAct, LoginByAccout.class);
                 mAct.startActivity(it);
             }

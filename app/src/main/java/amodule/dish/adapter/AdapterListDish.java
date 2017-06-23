@@ -111,7 +111,6 @@ public class AdapterListDish extends AdapterSimple {
                 } else {
                     Intent intent = new Intent(mAct, LoginByAccout.class);
                     mAct.startActivity(intent);
-                    Tools.showToast(mAct, "请先登录");
                 }
             }
         });

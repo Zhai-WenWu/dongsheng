@@ -301,7 +301,6 @@ public class DishTitleViewControl implements View.OnClickListener{
                                         String url = StringManager.api_getCustomerRank + "?code=" + LoginManager.userInfo.get("code");
                                         AppCommon.openUrl(detailDish, url, true);
                                     } else {
-                                        Tools.showToast(detailDish, "登录后即可查看您的等级");
                                         detailDish.startActivity(new Intent(detailDish, LoginByAccout.class));
                                     }
                                 }

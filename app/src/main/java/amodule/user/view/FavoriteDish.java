@@ -20,7 +20,6 @@ import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MenuDish;
@@ -147,7 +146,6 @@ public class FavoriteDish {
 		if (!LoginManager.isLogin()) {
 			Intent intent = new Intent(mAct, LoginByAccout.class);
 			mAct.startActivity(intent);
-			Tools.showToast(mAct, "请登录");
 			return;
 		}
 		if (isForward) {
