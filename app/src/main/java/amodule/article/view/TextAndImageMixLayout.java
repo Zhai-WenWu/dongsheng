@@ -279,7 +279,8 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         });
         currentEditText.setOnSelectBoldCallback(onSelectBoldCallback);
-        currentEditText.setOnSelectUnderline(onSelectUnderlineCallback);
+        currentEditText.setOnSelectUnderlineCallback(onSelectUnderlineCallback);
+        currentEditText.setOnSelectCenterCallback(onSelectCenterCallback);
         if (!TextUtils.isEmpty(content)) {
             view.setText(content);
             view.setSelection(view.getRichText().getText().length());
@@ -861,6 +862,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private EditTextView.OnSelectBoldCallback onSelectBoldCallback;
     private EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback;
+    private EditTextView.OnSelectCenterCallback onSelectCenterCallback;
 
     public void setOnSelectBoldCallback(EditTextView.OnSelectBoldCallback onSelectBoldCallback) {
         this.onSelectBoldCallback = onSelectBoldCallback;
@@ -868,5 +870,9 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setOnSelectUnderlineCallback(EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback) {
         this.onSelectUnderlineCallback = onSelectUnderlineCallback;
+    }
+
+    public void setOnSelectCenterCallback(EditTextView.OnSelectCenterCallback onSelectCenterCallback) {
+        this.onSelectCenterCallback = onSelectCenterCallback;
     }
 }

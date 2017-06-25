@@ -40,7 +40,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -264,7 +263,6 @@ public class RichText extends EditText implements TextWatcher {
         final int centerSelectionStart = getCenterSelectionStart();
         final int centerSelectionEnd = getCenterSelectionEnd();
 
-        Log.i("tzy","centerSelectionStart = " + centerSelectionStart + " ; centerSelectionEnd = " + centerSelectionEnd);
         if(valid){
             centerValid(centerSelectionStart,centerSelectionEnd);
         }else{
@@ -311,10 +309,13 @@ public class RichText extends EditText implements TextWatcher {
         final int cursorStart = getSelectionStart();
 
         int firstLineBreak = cursorStart;
-        boolean isFind = false;
         String allStr = getText().toString();
+        if(firstLineBreak == 0)
+            return 0;
+        else if(firstLineBreak == allStr.length())
+            firstLineBreak--;
+        boolean isFind = false;
         while (!isFind && firstLineBreak > 0 && firstLineBreak < allStr.length()){
-
             char c = allStr.charAt(firstLineBreak);
             isFind = '\n' == c;
             if(isFind) break;
@@ -327,9 +328,11 @@ public class RichText extends EditText implements TextWatcher {
         final int cursorEnd = getSelectionEnd();
 
         int lastLineBreak = cursorEnd;
-        boolean isFind = false;
         String allStr = getText().toString();
-        while (!isFind && lastLineBreak > 0 && lastLineBreak < allStr.length()){
+        if(lastLineBreak == allStr.length())
+            return allStr.length();
+        boolean isFind = false;
+        while (!isFind && lastLineBreak >= 0 && lastLineBreak < allStr.length()){
             char c = allStr.charAt(lastLineBreak);
             isFind = '\n' == c;
             if(isFind) break;
@@ -893,9 +896,6 @@ public class RichText extends EditText implements TextWatcher {
                     continue;
                 }
                 int endIdex = startIndex + desc.length();
-                Log.i("tzy", "seletionIndex = " + seletionIndex);
-                Log.i("tzy", "startIndex = " + startIndex);
-                Log.i("tzy", "endIdex = " + endIdex);
                 //判断当前光标位置
                 if (seletionIndex > startIndex && seletionIndex <= endIdex) {
                     CharacterStyle[] spans = getText().getSpans(startIndex, endIdex, CharacterStyle.class);
@@ -1062,7 +1062,7 @@ public class RichText extends EditText implements TextWatcher {
             AlignmentSpan span = alignSpans[index];
             int spanStart = editable.getSpanStart(span);
             int spanEnd = editable.getSpanEnd(span);
-            if(0<spanStart - 1 && spanStart < editable.length() && editable.charAt(spanStart -1) == '\n'){
+            if(0 <= spanStart - 1 && spanStart < editable.length() && editable.charAt(spanStart -1) == '\n'){
                 editable.delete(spanStart - 1,spanStart);
                 spanStart--;
                 spanEnd--;
@@ -1070,6 +1070,10 @@ public class RichText extends EditText implements TextWatcher {
             }
             if(0 < spanEnd && spanEnd + 1 <= editable.length() && editable.charAt(spanEnd) == '\n'){
                 editable.delete(spanEnd,spanEnd + 1);
+                end--;
+            }else if(0 < spanEnd && spanEnd - 1 < editable.length() && editable.charAt(spanEnd - 1) == '\n'){
+                editable.delete(spanEnd - 1,spanEnd);
+                spanEnd--;
                 end--;
             }
             editable.removeSpan(span);
@@ -1114,6 +1118,8 @@ public class RichText extends EditText implements TextWatcher {
             onSelectContainsType.onSelectBold(contains(FORMAT_BOLD));
         if (onSelectContainsType != null)
             onSelectContainsType.onSelectUnderline(contains(FORMAT_UNDERLINED));
+        if (onSelectContainsType != null)
+            onSelectContainsType.onSelecrCenter(contains(FORMAT_CENTER));
         int textLength = text.length();
         if (selStart > 0 && selStart < textLength) {
             //遍历link的array
@@ -1193,5 +1199,7 @@ public class RichText extends EditText implements TextWatcher {
         public void onSelectUnderline(boolean isSelected);
 
         public void onSelectLink(String url, String desc);
+
+        public void onSelecrCenter(boolean isSelected);
     }
 }

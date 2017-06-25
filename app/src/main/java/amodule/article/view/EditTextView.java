@@ -92,7 +92,7 @@ public class EditTextView extends BaseView {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 needRefreshCenter = after == 0
                             && start  >= 0
-                            && start < s.toString().length()
+                            && start + 1< s.toString().length()
                             && '\n' == s.charAt(start);
             }
 
@@ -120,6 +120,12 @@ public class EditTextView extends BaseView {
             public void onSelectUnderline(boolean isSelected) {
                 if (onSelectUnderlineCallback != null)
                     onSelectUnderlineCallback.onSelectUnderline(isSelected);
+            }
+
+            @Override
+            public void onSelecrCenter(boolean isSelected) {
+                if (onSelectCenterCallback != null)
+                    onSelectCenterCallback.onSelectCenter(isSelected);
             }
 
             @Override
@@ -358,13 +364,18 @@ public class EditTextView extends BaseView {
 
     public OnSelectBoldCallback onSelectBoldCallback;
     public OnSelectUnderlineCallback onSelectUnderlineCallback;
+    public OnSelectCenterCallback onSelectCenterCallback;
 
     public void setOnSelectBoldCallback(OnSelectBoldCallback onSelectBoldCallback) {
         this.onSelectBoldCallback = onSelectBoldCallback;
     }
 
-    public void setOnSelectUnderline(OnSelectUnderlineCallback onSelectUnderlineCallback) {
+    public void setOnSelectUnderlineCallback(OnSelectUnderlineCallback onSelectUnderlineCallback) {
         this.onSelectUnderlineCallback = onSelectUnderlineCallback;
+    }
+
+    public void setOnSelectCenterCallback(OnSelectCenterCallback onSelectCenterCallback) {
+        this.onSelectCenterCallback = onSelectCenterCallback;
     }
 
     public interface OnAfterTextChanged {
@@ -377,6 +388,10 @@ public class EditTextView extends BaseView {
 
     public interface OnSelectUnderlineCallback {
         public void onSelectUnderline(boolean isSelected);
+    }
+
+    public interface OnSelectCenterCallback{
+        public void onSelectCenter(boolean callback);
     }
 
 }
