@@ -18,11 +18,11 @@ import xh.basic.tool.UtilString;
 public class StringManager extends UtilString {
     //固定URL基础配置
     public final static String defaultDomain = ".xiangha.com";
-    public final static String apiTitle = "http://api";
-    public final static String appWebTitle = "http://appweb";
-    public final static String wwwTitle = "http://www";
-    public final static String mmTitle = "http://mm";
-    public final static String mTitle = "http://m";
+    public final static String apiTitle = "https://api";
+    public final static String appWebTitle = "https://appweb";
+    public final static String wwwTitle = "https://www";
+    public final static String mmTitle = "https://mm";
+    public final static String mTitle = "https://m";
     //当前域名
     public static String domain = defaultDomain;
     //API请求地址
