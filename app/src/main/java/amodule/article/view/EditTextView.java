@@ -37,6 +37,7 @@ public class EditTextView extends BaseView {
 
     boolean isDialogShow = false;
     private RichText mRichText;
+    boolean needRefreshCenter = false;
 
     private OnFocusChangeCallback mOnFocusChangeCallback;
 
@@ -89,7 +90,10 @@ public class EditTextView extends BaseView {
         mRichText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                needRefreshCenter = after == 0
+                            && start  >= 0
+                            && start < s.toString().length()
+                            && '\n' == s.charAt(start);
             }
 
             @Override
@@ -99,6 +103,8 @@ public class EditTextView extends BaseView {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if(needRefreshCenter)
+                    mRichText.center(!mRichText.contains(RichText.FORMAT_CENTER));
                 if (onAfterTextChanged != null) {
                     onAfterTextChanged.afterTextChanged(s);
                 }
@@ -165,6 +171,7 @@ public class EditTextView extends BaseView {
                     .append(TextUtils.isEmpty(mRichText.getText()) ? "<br>" : mRichText.toHtml())//.replaceAll("\"","\\\"")
                     .append("</p>");
             Log.i("tzy", "edittext content = " + builder.toString());
+//            jsonObject.put("html", TextUtils.htmlEncode(builder.toString()));
             jsonObject.put("html", builder.toString());
             jsonObject.put("type", TEXT);
         } catch (JSONException e) {
@@ -256,9 +263,7 @@ public class EditTextView extends BaseView {
     }
 
     public void setupTextCenter() {
-        mRichText.setGravity(isCenterHorizontal ?
-                Gravity.TOP | Gravity.START : Gravity.CENTER_HORIZONTAL);
-        isCenterHorizontal = !isCenterHorizontal;
+        mRichText.center(!mRichText.contains(RichText.FORMAT_CENTER));
     }
 
     public int getSelectionStart() {

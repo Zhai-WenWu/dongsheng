@@ -188,8 +188,7 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
         //删除<p></p>
-        html = html.replace(propertyStr, "");
-        html = html.replace("</p>", "");
+        html = new String(html.replace(propertyStr, "").replace("</p>", ""));
         if("<br>".equals(html)){
             html = "";
         }

@@ -21,11 +21,14 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.Parcel;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.AlignmentSpan;
 import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.QuoteSpan;
@@ -57,6 +60,7 @@ public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_BULLET = 0x05;
     public static final int FORMAT_QUOTE = 0x06;
     public static final int FORMAT_LINK = 0x07;
+    public static final int FORMAT_CENTER= 0x08;
 
     private final String KEY_URL = "url";
     private final String KEY_TITLE = "title";
@@ -254,7 +258,111 @@ public class RichText extends EditText implements TextWatcher {
         }
     }
 
-//    public void center
+    // AlignmentSpan ===============================================================================
+
+    public void center(boolean valid){
+        final int centerSelectionStart = getCenterSelectionStart();
+        final int centerSelectionEnd = getCenterSelectionEnd();
+
+        Log.i("tzy","centerSelectionStart = " + centerSelectionStart + " ; centerSelectionEnd = " + centerSelectionEnd);
+        if(valid){
+            centerValid(centerSelectionStart,centerSelectionEnd);
+        }else{
+            centerInvalid(centerSelectionStart,centerSelectionEnd);
+        }
+    }
+
+    private void centerValid(int start, int end) {
+        if (start >= end) {
+            return;
+        }
+
+        getEditableText().setSpan(new RichCenterAlignmentSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private void centerInvalid(int start, int end) {
+        if (start >= end) {
+            return;
+        }
+
+        RichCenterAlignmentSpan[] spans = getEditableText().getSpans(start, end, RichCenterAlignmentSpan.class);
+        List<RichPart> list = new ArrayList<>();
+
+        for (AlignmentSpan span : spans) {
+            list.add(new RichPart(getEditableText().getSpanStart(span), getEditableText().getSpanEnd(span)));
+            getEditableText().removeSpan(span);
+        }
+
+        for (RichPart part : list) {
+            if (part.isValid()) {
+                if (part.getStart() < start) {
+                    centerValid(part.getStart(), start);
+                }
+
+                if (part.getEnd() > end) {
+                    centerValid(end, part.getEnd());
+                }
+            }
+        }
+
+    }
+
+    private int getCenterSelectionStart() {
+        final int cursorStart = getSelectionStart();
+
+        int firstLineBreak = cursorStart;
+        boolean isFind = false;
+        String allStr = getText().toString();
+        while (!isFind && firstLineBreak > 0 && firstLineBreak < allStr.length()){
+
+            char c = allStr.charAt(firstLineBreak);
+            isFind = '\n' == c;
+            if(isFind) break;
+            firstLineBreak--;
+        }
+        return firstLineBreak;
+    }
+
+    private int getCenterSelectionEnd() {
+        final int cursorEnd = getSelectionEnd();
+
+        int lastLineBreak = cursorEnd;
+        boolean isFind = false;
+        String allStr = getText().toString();
+        while (!isFind && lastLineBreak > 0 && lastLineBreak < allStr.length()){
+            char c = allStr.charAt(lastLineBreak);
+            isFind = '\n' == c;
+            if(isFind) break;
+            lastLineBreak++;
+        }
+        return lastLineBreak;
+    }
+
+    protected boolean containCenter(int start, int end) {
+        if (start > end) {
+            return false;
+        }
+
+        if (start == end) {
+            if (start - 1 < 0 || start + 1 > getEditableText().length()) {
+                return false;
+            } else {
+                RichCenterAlignmentSpan[] before = getEditableText().getSpans(start - 1, start, RichCenterAlignmentSpan.class);
+                RichCenterAlignmentSpan[] after = getEditableText().getSpans(start, start + 1, RichCenterAlignmentSpan.class);
+                return before.length > 0 && after.length > 0;
+            }
+        } else {
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = start; i < end; i++) {
+                if (getEditableText().getSpans(i, i + 1, RichCenterAlignmentSpan.class).length > 0) {
+                    builder.append(getEditableText().subSequence(i, i + 1).toString());
+                }
+            }
+
+            return getEditableText().subSequence(start, end).toString().equals(builder.toString());
+        }
+    }
 
     // UnderlineSpan ===============================================================================
 
@@ -910,6 +1018,8 @@ public class RichText extends EditText implements TextWatcher {
                 return containQuote();
             case FORMAT_LINK:
                 return containLink(getSelectionStart(), getSelectionEnd());
+            case FORMAT_CENTER:
+                return containCenter(getCenterSelectionStart(),getCenterSelectionEnd());
             default:
                 return false;
         }
@@ -934,8 +1044,10 @@ public class RichText extends EditText implements TextWatcher {
 
     public void fromHtml(String source) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
+        //------------
         builder.append(RichParser.fromHtml(source));
         switchToKnifeStyle(builder, 0, builder.length());
+        //------------
         setText(builder);
     }
 
@@ -943,7 +1055,27 @@ public class RichText extends EditText implements TextWatcher {
         return RichParser.toHtml(getEditableText());
     }
 
+
     protected void switchToKnifeStyle(Editable editable, int start, int end) {
+        AlignmentSpan[] alignSpans = editable.getSpans(start, end, AlignmentSpan.class);
+        for(int index = 0 ; index < alignSpans.length ; alignSpans = editable.getSpans(start, end, AlignmentSpan.class),index ++){
+            AlignmentSpan span = alignSpans[index];
+            int spanStart = editable.getSpanStart(span);
+            int spanEnd = editable.getSpanEnd(span);
+            if(0<spanStart - 1 && spanStart < editable.length() && editable.charAt(spanStart -1) == '\n'){
+                editable.delete(spanStart - 1,spanStart);
+                spanStart--;
+                spanEnd--;
+                end--;
+            }
+            if(0 < spanEnd && spanEnd + 1 <= editable.length() && editable.charAt(spanEnd) == '\n'){
+                editable.delete(spanEnd,spanEnd + 1);
+                end--;
+            }
+            editable.removeSpan(span);
+            editable.setSpan(new RichCenterAlignmentSpan(), spanStart, spanEnd,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
         BulletSpan[] bulletSpans = editable.getSpans(start, end, BulletSpan.class);
         for (BulletSpan span : bulletSpans) {
             int spanStart = editable.getSpanStart(span);

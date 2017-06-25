@@ -549,7 +549,8 @@ public class ArticleUploadListPool extends UploadListPool {
             uploadTextData.put("title", Uri.encode(uploadArticleData.getTitle(), HTTP.UTF_8));
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
             Log.i("tzy","content = " + content);
-            uploadTextData.put("content", Uri.encode(content, HTTP.UTF_8));
+            Log.i("tzy","content2 = " + new String(TextUtils.htmlEncode(Uri.encode(content, HTTP.UTF_8))));
+            uploadTextData.put("content", new String(TextUtils.htmlEncode(Uri.encode(content, HTTP.UTF_8))));
             uploadTextData.put("isOriginal", String.valueOf(uploadArticleData.getIsOriginal()));
             uploadTextData.put("repAddress", uploadArticleData.getRepAddress());
             uploadTextData.put("img", imgArray.size() > 0 ? imgArray.get(0).get("url") : "");

@@ -19,8 +19,10 @@ package amodule.article.view.richtext;
 
 import android.graphics.Typeface;
 import android.text.Html;
+import android.text.Layout;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AlignmentSpan;
 import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ImageSpan;
@@ -30,10 +32,15 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 
 public class RichParser {
     public static Spanned fromHtml(String source) {
-        return Html.fromHtml(source, null, new RichTagHandler());
+        Log.i("tzy","source = " + source);
+        String sourceAfter = new String(source.replaceAll("&lt;div align=\"center\"&gt;","<center>")
+                .replaceAll("&lt;/div&gt;","</center>"));
+        Log.i("tzy","sourceAfter = " + sourceAfter);
+        return Html.fromHtml(sourceAfter, null, new RichTagHandler());
     }
 
     public static String toHtml(Spanned text) {
@@ -47,8 +54,22 @@ public class RichParser {
 
         for (int i = 0; i < text.length(); i = next) {
             next = text.nextSpanTransition(i, text.length(), ParagraphStyle.class);
-
             ParagraphStyle[] styles = text.getSpans(i, next, ParagraphStyle.class);
+            boolean needDiv = false;
+
+            for(int j = 0; j < styles.length; j++) {
+                if (styles[j] instanceof AlignmentSpan) {
+                    Layout.Alignment align = ((AlignmentSpan) styles[j]).getAlignment();
+                    if (align == Layout.Alignment.ALIGN_CENTER) {
+                        needDiv = true;
+                    }
+                }
+            }
+
+            if (needDiv) {
+                out.append("<center>");
+            }
+
             if (styles.length == 2) {
                 if (styles[0] instanceof BulletSpan && styles[1] instanceof QuoteSpan) {
                     // Let a <br> follow the BulletSpan or QuoteSpan end, so next++
@@ -69,6 +90,15 @@ public class RichParser {
             } else {
                 withinContent(out, text, i, next);
             }
+
+            if (needDiv) {
+                out.append("</center>");
+            }
+        }
+        String tag = "</center><center>";
+        while(out.indexOf(tag) >=0
+                && out.indexOf(tag) < out.length()){
+            out = out.replace(out.indexOf(tag),out.indexOf(tag) + tag.length(),"");
         }
     }
 
@@ -124,11 +154,20 @@ public class RichParser {
         }
     }
 
+    /**
+     *
+     * @param out 拼接字符串的builder
+     * @param text 文本
+     * @param start 起始位置
+     * @param end 结束位置
+     */
     private static void withinContent(StringBuilder out, Spanned text, int start, int end) {
         int next;
 
         for (int i = start; i < end; i = next) {
+            //在 text 文本中，i~end 之间寻找 '\n' 的位置下标
             next = TextUtils.indexOf(text, '\n', i, end);
+            //如果没有找到，next 为 end
             if (next < 0) {
                 next = end;
             }
@@ -258,6 +297,9 @@ public class RichParser {
     }
 
     private static String tidy(String html) {
-        return html.replaceAll("</ul>(<br>)?", "</ul>").replaceAll("</blockquote>(<br>)?", "</blockquote>");
+        return html.replaceAll("</ul>(<br>)?", "</ul>")
+                .replaceAll("</blockquote>(<br>)?", "</blockquote>")
+                .replaceAll("<center>", "&lt;div align=\\\"center\\\"&gt;")
+                .replaceAll("</center>","&lt;/div&gt;");
     }
 }

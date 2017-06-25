@@ -448,6 +448,10 @@ public class VideoDetailActivity extends BaseActivity {
         mHaederLayout.setType(TYPE_VIDEO);
         mHaederLayout.setData(onlyUser,mapVideo);
 
+        if(!TextUtils.isEmpty(customerData.get("nickName"))){
+            mTitle.setText(customerData.get("nickName"));
+            mTitle.setVisibility(View.VISIBLE);
+        }
         rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override

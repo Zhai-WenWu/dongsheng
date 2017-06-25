@@ -208,7 +208,7 @@ public class UploadArticleData {
         uploadTextData.append(getClassCode());
         uploadTextData.append("&content=");
         try {
-            uploadTextData.append(Uri.encode(getContent(), HTTP.UTF_8));
+            uploadTextData.append(TextUtils.htmlEncode(Uri.encode(getContent(), HTTP.UTF_8)));
         }catch (Exception e){
             e.printStackTrace();
         }

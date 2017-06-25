@@ -59,6 +59,7 @@ import aplug.recordervideo.db.RecorderVideoData;
 import xh.windowview.XhDialog;
 
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
+import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
 
 /**
@@ -429,6 +430,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         @Override
                         public void onTextCenter() {
                             mixLayout.setupTextCenter();
+                            editBottomControler.setTextCenterImageSelection(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_CENTER));
                         }
                     });
     }
