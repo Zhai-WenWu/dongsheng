@@ -208,7 +208,6 @@ public class HomeRecipeItem extends HomeItem {
                             mImg.setImageBitmap(bitmap);
                             if (mContainer != null) {
                                 MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                                containerParams.width = MarginLayoutParams.MATCH_PARENT;
                                 containerParams.height = imgHeight;
                                 mContainer.setLayoutParams(containerParams);
                             }
@@ -218,10 +217,12 @@ public class HomeRecipeItem extends HomeItem {
 
                             if (mLayerView != null) {
                                 MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-                                layerParams.width = MarginLayoutParams.MATCH_PARENT;
                                 layerParams.height = imgHeight;
                                 mLayerView.setLayoutParams(layerParams);
-                                mLayerView.requestLayout();
+                            }
+                            if (mContainer != null) {
+                                mContainer.requestLayout();
+                                mContainer.invalidate();
                             }
                         }
                     } : null);
@@ -257,17 +258,16 @@ public class HomeRecipeItem extends HomeItem {
         super.resetData();
         mIsVideo = false;
         MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-        containerParams.width = MarginLayoutParams.MATCH_PARENT;
         containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         mContainer.setLayoutParams(containerParams);
         MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-        layerParams.width = MarginLayoutParams.MATCH_PARENT;
         layerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         mLayerView.setLayoutParams(layerParams);
         MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
         adImgParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         mImg.setLayoutParams(adImgParams);
-        mLayerView.requestLayout();
+        mContainer.requestLayout();
+        mContainer.invalidate();
     }
 
     @Override
