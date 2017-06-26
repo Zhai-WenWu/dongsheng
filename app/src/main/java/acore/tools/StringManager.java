@@ -262,7 +262,7 @@ public class StringManager extends UtilString {
     public final static String api_checkPhoneRegisterState = apiUrl + urlSection.get("auth6") + "checkPhoneIsRegistered"; //手机号是否注册
     public final static String api_checkEmailRegisterState = apiUrl + urlSection.get("auth6") + "checkEmailIsRegistered"; //邮箱是否注册
     public final static String api_modifyPhone = apiUrl + urlSection.get("user6") + "modifyPhone"; //注册手机号
-    public final static String api_sendVoiceVerify = apiUrl + "Main7/User/sendVoiceVerify"; //获取语音验证码
+    public final static String api_sendVoiceVerify = apiUrl + "Main7/VoiceVerify/send"; //获取语音验证码
 
     /*** 新首页接口*/
     public final static String API_GET_LEVEL = apiUrl + "Main7/Recommend/getLevel"; //获取首页层级数据

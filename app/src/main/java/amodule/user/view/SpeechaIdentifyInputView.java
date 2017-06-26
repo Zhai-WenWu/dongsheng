@@ -33,6 +33,7 @@ public class SpeechaIdentifyInputView extends RelativeLayout implements View.OnC
     public SpeechaIdentifyInputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
+        setBackgroundResource(R.color.transparent);
         LayoutInflater.from(context).inflate(R.layout.a_login_speecha_identify, this, true);
         speechaTv = (TextView) findViewById(R.id.user_login_speeach_tv);
         speechaTv.setText(Html.fromHtml("<u>语音验证码</u>"));
