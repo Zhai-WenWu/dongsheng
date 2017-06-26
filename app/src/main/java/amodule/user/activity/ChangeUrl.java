@@ -70,7 +70,7 @@ public class ChangeUrl extends BaseActivity {
                 RadioButton rb = (RadioButton) ChangeUrl.this.findViewById(radioButtonId);
                 state_xiangha = true;
                 protocol = rb.getText().toString();
-                tv_nowProtocol.setText(protocol);
+                tv_nowProtocol.setText("当前选择协议：" + protocol);
                 setUrl();
                 isChangeUrlState = true;
             }
