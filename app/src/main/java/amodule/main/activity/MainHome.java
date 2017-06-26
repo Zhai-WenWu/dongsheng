@@ -35,6 +35,7 @@ import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
 import amodule.main.view.HomeGuidancePage;
+import amodule.main.view.home.BaseHomeFragment;
 import amodule.main.view.home.HomeFragment;
 import amodule.other.activity.ClassifyHealthActivity;
 import amodule.search.avtivity.HomeSearch;
@@ -120,9 +121,9 @@ public class MainHome extends MainBaseActivity {
                         XHClick.mapStat(MainHome.this, "a_index530", "顶部", "点击发布按钮");
                         new ChangeSendDialog(MainHome.this).show();
                         if ("video".equals(listBean.get(itemPosition).getType())) {
-                            HomeFragment homeFragment = getFragmentByPos(itemPosition);
-                            if (homeFragment != null)
-                                homeFragment.stopVideo();
+                            BaseHomeFragment homeFragment = getFragmentByPos(itemPosition);
+                            if (homeFragment != null && homeFragment instanceof HomeFragment)
+                                ((HomeFragment)homeFragment).stopVideo();
                         }
                         break;
 
@@ -166,9 +167,9 @@ public class MainHome extends MainBaseActivity {
                     }
                 }
                 if (itemPosition != position && "video".equals(listBean.get(itemPosition).getType())) {
-                    HomeFragment homeFragment = getFragmentByPos(itemPosition);
-                    if (homeFragment != null)
-                        homeFragment.stopVideo();
+                    BaseHomeFragment homeFragment = getFragmentByPos(itemPosition);
+                    if (homeFragment != null && homeFragment instanceof HomeFragment)
+                        ((HomeFragment)homeFragment).stopVideo();
                 }
                 itemPosition = position;
 //                setFragmentCurrentPage(position);
@@ -249,6 +250,7 @@ public class MainHome extends MainBaseActivity {
             HomeModuleBean bean = new HomeModuleBean();
             bean.setTitle(listModule.get(i).get("title"));
             bean.setType(listModule.get(i).get("type"));
+            bean.setWebUrl(listModule.get(i).get("webUrl"));
             String level = listModule.get(i).get("level");
             if (!TextUtils.isEmpty(level)) {
                 bean.setTwoData(level);//设置二级数据内容
@@ -306,7 +308,14 @@ public class MainHome extends MainBaseActivity {
         @Override
         public Fragment getItem(int position) {
             HomeModuleBean plateData = mPlates.get(position);
-            HomeFragment fragment = HomeFragment.newInstance(plateData);
+            BaseHomeFragment fragment = null;
+            if (fragment == null) {
+                if ("H5".equals(plateData.getType())) {
+                    fragment = BaseHomeFragment.instance(plateData);
+                } else {
+                    fragment = HomeFragment.newInstance(plateData);
+                }
+            }
             Bundle bundle = fragment.getArguments();
             fragment.setArguments(bundle);
             return fragment;
@@ -325,11 +334,16 @@ public class MainHome extends MainBaseActivity {
      */
     private void refreshFragment(final int position) {
         //调用页面的刷新方法
-        HomeFragment homeFragment = getFragmentByPos(position);
+        BaseHomeFragment homeFragment = getFragmentByPos(position);
         if (homeFragment == null)
             return;
-        homeFragment.returnListTop();
-        homeFragment.refresh();
+        if (homeFragment instanceof HomeFragment) {
+            HomeFragment fragment = (HomeFragment) homeFragment;
+            fragment.returnListTop();
+            fragment.refresh();
+        } else if (homeFragment instanceof BaseHomeFragment) {
+            homeFragment.loadWebData(true);
+        }
     }
 
     /**
@@ -337,7 +351,7 @@ public class MainHome extends MainBaseActivity {
      * @param position
      * @return 如果不存在，则返回null。
      */
-    private HomeFragment getFragmentByPos(int position) {
+    private BaseHomeFragment getFragmentByPos(int position) {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments != null && fragments.size() > 0) {
             for (Fragment fragment : fragments) {
@@ -346,6 +360,11 @@ public class MainHome extends MainBaseActivity {
                     if (homeFragment.getmoduleBean().getPosition() == position) {
                         return homeFragment;
                     }
+                } else if (fragment instanceof BaseHomeFragment) {
+                    BaseHomeFragment homeFragment = (BaseHomeFragment) fragment;
+                    if (homeFragment.getModuleBean().getPosition() == position)
+                        return homeFragment;
+
                 }
             }
         }

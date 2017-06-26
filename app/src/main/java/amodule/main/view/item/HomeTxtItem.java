@@ -163,7 +163,7 @@ public class HomeTxtItem extends HomeItem {
             mContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
         }
         String content = mDataMap.get("content");
-        if (!TextUtils.isEmpty(content)) {
+        if (!TextUtils.isEmpty(content) && !mIsAd) {
             mDesc.setText(content);
             mDesc.setVisibility(View.VISIBLE);
         }

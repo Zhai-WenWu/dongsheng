@@ -1,14 +1,10 @@
 package amodule.main.view.item;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,11 +14,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.XHClick;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Tools.ImageUtility;
-import amodule.main.activity.MainHome;
 
 /**
  * 任意图 样式：限宽不限高
@@ -58,7 +53,7 @@ public class HomeAnyImgStyleItem extends HomeItem {
         OnClickListener clickListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mTransferUrl,true);
             }
         };
         this.setOnClickListener(clickListener);
