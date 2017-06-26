@@ -3,6 +3,7 @@ package third.growingio;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.growingio.android.sdk.collection.Configuration;
 import com.growingio.android.sdk.collection.GrowingIO;
@@ -116,6 +117,13 @@ public class GrowingIOController {
      * @return
      */
     private boolean isGrowingUser(Context context) {
+        //指令强制开启
+        String isInputOrder = FileManager.loadShared(context,FileManager.file_appData,FileManager.xmlKey_growingioopen).toString();
+        if("true".equals(isInputOrder)){
+            Log.i("tzy","GrowingIO is open");
+            return true;
+        }
+        //正常判断
         final String key = "GrowingIO";
         String value = FileManager.loadShared(context, FileManager.xmlFile_appInfo, key).toString();
         boolean isInited = !TextUtils.isEmpty(value);
