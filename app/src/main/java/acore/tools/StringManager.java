@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -18,23 +19,26 @@ import xh.basic.tool.UtilString;
 public class StringManager extends UtilString {
     //固定URL基础配置
     public final static String defaultDomain = ".xiangha.com";
-    public final static String apiTitle = "https://api";
-    public final static String appWebTitle = "https://appweb";
-    public final static String wwwTitle = "https://www";
-    public final static String mmTitle = "https://mm";
-    public final static String mTitle = "https://m";
+    public final static String defaultProtocol = "https://";
+    public final static String apiTitle = "api";
+    public final static String appWebTitle = "appweb";
+    public final static String wwwTitle = "www";
+    public final static String mmTitle = "mm";
+    public final static String mTitle = "m";
     //当前域名
     public static String domain = defaultDomain;
+    //当前协议
+    public static String protocol = defaultProtocol;
     //API请求地址
-    public static String apiUrl = apiTitle + defaultDomain + "/";
+    public static String apiUrl = defaultProtocol + apiTitle + defaultDomain + "/";
     //app网页地址
-    public static String appWebUrl = appWebTitle + defaultDomain + "/";
+    public static String appWebUrl = defaultProtocol + appWebTitle + defaultDomain + "/";
     //PC主网页地址
-    public static String wwwUrl = wwwTitle + defaultDomain + "/";
+    public static String wwwUrl = defaultProtocol + wwwTitle + defaultDomain + "/";
     //手机管理平台地址
-    public static String mmUrl = mmTitle + defaultDomain + "/";
+    public static String mmUrl = defaultProtocol + mmTitle + defaultDomain + "/";
 
-    public static String mUrl = mTitle + defaultDomain + "/";
+    public static String mUrl = defaultProtocol + mTitle + defaultDomain + "/";
 
     public static final Map<String, String> urlSection = new HashMap<String, String>();
 
@@ -308,16 +312,16 @@ public class StringManager extends UtilString {
 
     public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
     public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
-    public final static String api_article = mUrl +  "article/";//文章详情页m
-    public final static String api_Video = mUrl +  "videoInfo/";//视频详情页m
+    public final static String api_article = mUrl + "article/";//文章详情页m
+    public final static String api_Video = mUrl + "videoInfo/";//视频详情页m
 
     //替换url
     public final static String replaceUrl(String url) {
-        if (defaultDomain != domain) {
-            String[] find = {apiTitle, appWebTitle, wwwTitle, mmTitle,mTitle};
-            String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl,mUrl};
+        if (defaultDomain != domain || defaultProtocol != protocol) {
+            String[] find = {apiTitle, appWebTitle, wwwTitle, mmTitle, mTitle};
+            String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl, mUrl};
             for (int i = 0; i < find.length; i++) {
-                String findStr = find[i] + defaultDomain + "/";
+                String findStr = defaultProtocol + find[i] + defaultDomain + "/";
                 if (url.indexOf(findStr) == 0 && url.indexOf(api_uploadImg) != 0) {
                     return url.replace(findStr, replace[i]);
                 }
@@ -327,15 +331,16 @@ public class StringManager extends UtilString {
     }
 
     //更换url
-    public final static void changeUrl(String newDomain) {
-        if (newDomain.length() > 1) {
-            domain = newDomain;
-            apiUrl = apiTitle + domain + "/";
-            appWebUrl = appWebTitle + domain + "/";
-            wwwUrl = wwwTitle + domain + "/";
-            mmUrl = mmTitle + domain + "/";
-            mUrl = mTitle + domain + "/";
-        }
+    public final static void changeUrl(String newProtocol, String newDomain) {
+        if (!TextUtils.isEmpty(newDomain))
+            domain = new String(newDomain);
+        if (!TextUtils.isEmpty(newProtocol))
+            protocol = new String(newProtocol);
+        apiUrl = protocol + apiTitle + domain + "/";
+        appWebUrl = protocol + appWebTitle + domain + "/";
+        wwwUrl = protocol + wwwTitle + domain + "/";
+        mmUrl = protocol + mmTitle + domain + "/";
+        mUrl = protocol + mTitle + domain + "/";
     }
 
     /**
@@ -398,8 +403,8 @@ public class StringManager extends UtilString {
             JSONObject jsonObject;
             for (Map<String, String> map : arrayList) {
                 jsonObject = new JSONObject();
-                for(String key : map.keySet()){
-                    jsonObject.put(key,map.get(key));
+                for (String key : map.keySet()) {
+                    jsonObject.put(key, map.get(key));
                 }
                 jsonArray.put(jsonObject);
             }
