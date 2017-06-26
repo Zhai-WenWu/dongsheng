@@ -61,7 +61,8 @@ public class XHConf extends BasicConf {
 	
 		//设置url和域名配置
 		String domain= UtilFile.loadShared(context, FileManager.xmlFile_appInfo,FileManager.xmlKey_domain).toString();
-		StringManager.changeUrl(domain);
+		String protocol= UtilFile.loadShared(context, FileManager.xmlFile_appInfo,FileManager.xmlKey_protocol).toString();
+		StringManager.changeUrl(protocol,domain);
 		//设置电商url切换
 		String mall_domain= UtilFile.loadShared(context, FileManager.xmlFile_appInfo,FileManager.xmlKey_mall_domain).toString();
 		MallStringManager.changeUrl(mall_domain);

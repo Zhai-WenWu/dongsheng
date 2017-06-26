@@ -307,7 +307,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:gravity="center"
-                            android:text="钱包(香豆)"/>
+                            android:text="我的香豆"/>
 
                         <TextView
                             android:id="@+id/my_money"
@@ -331,7 +331,7 @@
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="积分"/>
+                            android:text="我的积分"/>
                         <TextView
                             android:id="@+id/my_score"
                             style="@style/myTab2Title"
@@ -351,7 +351,7 @@
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="优惠券(张)"/>
+                            android:text="优惠券"/>
                         <TextView
                             android:id="@+id/my_coupon"
                             style="@style/myTab2Title"
