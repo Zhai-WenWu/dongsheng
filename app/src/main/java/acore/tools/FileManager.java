@@ -65,6 +65,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlFile_adIsShow = "adIsShow";
 	public static final String xmlKey_XGToken = "token";
 	public static final String xmlKey_showNum = "showNum";
+	public static final String xmlKey_protocol = "protocol";
 	public static final String xmlKey_domain = "domain";
 	public static final String xmlKey_mall_domain = "mall_domain";
 	public static final String xmlKey_isIndexData = "isIndexData";
