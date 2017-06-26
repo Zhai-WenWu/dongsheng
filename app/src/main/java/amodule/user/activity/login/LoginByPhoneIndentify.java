@@ -60,7 +60,6 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
 
 
     private void initView() {
-
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
         speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
         login_identify = (IdentifyInputView) findViewById(R.id.login_identify);

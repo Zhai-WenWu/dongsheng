@@ -40,7 +40,7 @@
 
         <Button
             android:id="@+id/btn_identify_request"
-            android:layout_width="@dimen/dp_90"
+            android:layout_width="@dimen/dp_92"
             android:layout_height="@dimen/dp_28"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
