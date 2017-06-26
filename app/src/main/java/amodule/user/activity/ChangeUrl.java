@@ -127,7 +127,7 @@ public class ChangeUrl extends BaseActivity {
     }
 
     private void setUrl() {
-        tv_nowDomain.setText("当前选择：" + protocol + "api" + domain + port);
+        tv_nowDomain.setText("当前选择：" + domain + port);
     }
 
     /**
