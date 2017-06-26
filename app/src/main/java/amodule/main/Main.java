@@ -230,7 +230,9 @@ public class Main extends Activity implements OnClickListener {
                         startActivity(intent);
                         xhDialog.cancel();
                     }
-                }).show();
+                }).setSureButtonTextColor("#333333")
+                        .setCancelButtonTextColor("#333333")
+                        .show();
                 return true;
             }
             return false;

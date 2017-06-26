@@ -722,7 +722,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             xhDialog.cancel();
                         }
                     })
-                    .setSureButtonTextColor("#333333")
                     .setSureButton("退出", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -730,7 +729,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             xhDialog.cancel();
                             finshActivity();
                         }
-                    }).show();
+                    }).setSureButtonTextColor("#333333")
+                    .setCancelButtonTextColor("#333333")
+                    .show();
         }
 
     }

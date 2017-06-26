@@ -326,7 +326,9 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     upload();
                     xhDialog.cancel();
                 }
-            }).show();
+            }).setSureButtonTextColor("#333333")
+                    .setCancelButtonTextColor("#333333")
+                    .show();
         }
     }
 
