@@ -2,6 +2,7 @@ package acore.dialogManager;
 
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import acore.override.XHApplication;
 import acore.tools.FileManager;
@@ -63,8 +64,23 @@ public class DialogControler {
                 if(isNeedUpdata){
                     versionOp.show();
                 }else{
-                    toGetGoodData();
+                    toADPopwindowData();
                 }
+            }
+        });
+    }
+
+    private void toADPopwindowData(){
+        ADPopwindiwManager adPopwindiwManager = new ADPopwindiwManager();
+        adPopwindiwManager.isShow(new DialogManagerParent.OnDialogManagerCallback() {
+            @Override
+            public void onShow() {
+                //什么都不用做，只是回调
+            }
+
+            @Override
+            public void onGone() {
+                toGetGoodData();
             }
         });
     }
