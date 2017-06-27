@@ -78,6 +78,7 @@ public class BaseHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = new RelativeLayout(container.getContext());
+        mRootView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         LoadOver = false;
         initView();
         return mRootView;
@@ -112,7 +113,7 @@ public class BaseHomeFragment extends Fragment {
             cookieManager.setCookie(cookieKey, cookie[i]);
         }
         CookieSyncManager.getInstance().sync();
-        mRootView.addView(mWebview);
+        mRootView.addView(mWebview, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
     }
 
     private void loadWeb(boolean isVisibleToUser) {
