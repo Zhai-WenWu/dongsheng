@@ -120,9 +120,9 @@ public abstract class  AdOptionList extends AdOptionParent {
                                         switch (type) {
                                             case "1"://大图
                                             case "5"://蒙版
+                                            case "6"://任意图
                                                 adMap.put("style", TextUtils.isEmpty(adImg) && (imgsMap == null || imgsMap.isEmpty()) ? "4" : "1");
                                                 break;
-//                                            case "6"://任意图
 //                                            case "2"://右图
 //                                            case "3"://三图
 //                                            case "4"://无图

@@ -69,12 +69,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp__2"
+            android:layout_marginBottom="@dimen/dp_6"
             android:layout_alignParentLeft="true"
-            android:lineSpacingExtra="@dimen/dp_6"
+            android:lineSpacingExtra="@dimen/dp_5"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textColor="#999999"
+            android:textColor="#666666"
             android:textSize="@dimen/sp_14"
             android:visibility="gone"/>
 
