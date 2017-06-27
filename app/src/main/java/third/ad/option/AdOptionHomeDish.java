@@ -10,14 +10,14 @@ import java.util.Map;
 import acore.tools.Tools;
 
 /**
- * Created by Fang Ruijiao on 2016/12/26.
+ *拼装数据
  */
 public class AdOptionHomeDish extends AdOptionList {
 
     private int index = 0;
 
-    public AdOptionHomeDish(String[] adPlayIds, Integer[] adIndexs) {
-        super(adPlayIds,adIndexs);
+    public AdOptionHomeDish(String[] adPlayIds) {
+        super(adPlayIds);
     }
 
     /**

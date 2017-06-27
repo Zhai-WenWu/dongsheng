@@ -29,6 +29,7 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.load.AutoLoadMore;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
@@ -50,6 +51,7 @@ import third.ad.AdsShow;
 
 import static amodule.main.Main.allMain;
 import static com.xiangha.R.id.return_top;
+import static third.ad.control.AdControlHomeDish.tag_yu;
 
 /**
  * PackageName : amodule.main.view.circle
@@ -346,7 +348,7 @@ public class CircleMainFragment extends Fragment {
                     });
             LoadOver = true;
         }
-        quanAdvertControl= new QuanAdvertControl();
+        quanAdvertControl= new QuanAdvertControl(mActivity);
 //        quanAdvertControl.getGdtData(mActivity);
 //        quanAdvertControl.getTencentApiAd(mActivity);
         quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
@@ -440,6 +442,7 @@ public class CircleMainFragment extends Fragment {
             mStartTime = "";
             getSpareUser(isRefresh);
             getTopUser();
+            refreshAdData();
         }
         mCurrentPage++;
         String url = StringManager.api_circleSubjectList + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid();
@@ -707,6 +710,29 @@ public class CircleMainFragment extends Fragment {
 
     public void setIsLocation(String isLocation) {
         this.isLocation = isLocation;
+    }
+
+    /**
+     * 刷新广告数据
+     */
+    public void refreshAdData(){
+//        if(quanAdvertControl==null)return;
+//        boolean state= quanAdvertControl.isNeedRefresh();
+//        if(state){
+//            //删除集合中的广告，
+//            int size= mListData.size();
+//            ArrayList<Map<String,String>> listTemp = new ArrayList<>();
+//            for(int i=0;i<size;i++){
+//                if(mListData.get(i).containsKey("isPromotion")&&"1".equals(mListData.get(i).get("isPromotion"))){
+//                    listTemp.add(mListData.get(i));
+//                }
+//            }
+//            Log.i(tag_yu,"删除广告");
+//            if(listTemp.size()>0){
+//                mListData.removeAll(listTemp);
+//            }
+//        }
+
     }
 
 }

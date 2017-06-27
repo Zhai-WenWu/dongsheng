@@ -75,7 +75,8 @@ public class AdPlayIdConfig {
     /**
      * 三餐推荐位
      */
-    public static final String[] COMMEND_THREE_MEALS = new String[]{"sc_liebiao"};
+    public static final String[] COMMEND_THREE_MEALS = new String[]{"sc_liebiao","sc_liebiao2","sc_liebiao3","sc_liebiao4","sc_liebiao5"
+            ,"sc_liebiao6","sc_liebiao7","sc_liebiao8","sc_liebiao9","sc_liebiao10"};
 
 
     /**

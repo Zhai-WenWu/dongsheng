@@ -84,9 +84,7 @@ public class MainHome extends MainBaseActivity {
         addListener();
     }
 
-    /*
-     * 初始化顶部布局
-     */
+    /**初始化顶部布局 */
     private void initTopView() {
         if (Tools.isShowTitle()) {
             int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
@@ -98,9 +96,7 @@ public class MainHome extends MainBaseActivity {
         }
     }
 
-    /**
-     * 添加监听事件
-     */
+    /** 添加监听事件 */
     private void addListener() {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -161,6 +157,7 @@ public class MainHome extends MainBaseActivity {
                         setRecommedTime(System.currentTimeMillis());
                     } else {//重复点击推荐列表
                         //暂不处理
+
                     }
                 }
                 if (itemPosition != position && "video".equals(listBean.get(itemPosition).getType())) {
@@ -221,7 +218,7 @@ public class MainHome extends MainBaseActivity {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     //moduleData处理模块数据
 //                    initHomeModuleData(o);
-                   FileManager.saveFileToCompletePath(modulePath, o.toString(), false);
+                    FileManager.saveFileToCompletePath(modulePath, o.toString(), false);
 
                 } else {
                     Log.i(tag, "object::" + o);
@@ -442,6 +439,21 @@ public class MainHome extends MainBaseActivity {
                             break;
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * 刷新广告策略。
+     */
+    public void refreshAdData(){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        int size= fragments.size();
+        for(int position=0;position<size;position++) {
+            if (fragments != null && fragments.size() > position) {
+                if (fragments.get(position) instanceof HomeFragment) {
+                    ((HomeFragment) fragments.get(position)).isNeedRefresh();
                 }
             }
         }

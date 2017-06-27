@@ -48,6 +48,9 @@ public class XHAllAdControl {
     private boolean isQuanList = false;//是否是生活圈列表结构。
     private int getCountGdtData = 6;//获取广点通数据个数，默认6个
 
+    private boolean isNeedRefersh = false;//是否需要刷新
+    private long oneAdTime;//第一次请求广告的时间。
+    public long showTime= 30*60*1000;//广告的过期时间。30分钟
 
     /**
      * 初始化
@@ -239,6 +242,7 @@ public class XHAllAdControl {
      */
     private void startAdRequest() {
         int size = listAdContrls.size();
+        if(size>0) oneAdTime = System.currentTimeMillis();//第一时间。
         for (int i = 0; i < size; i++) {
             if (listAdContrls.get(i) != null) {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
@@ -374,5 +378,17 @@ public class XHAllAdControl {
                     listAdContrls.get(i).releaseView();
             }
         }
+    }
+
+    /**
+     * 是否需要刷新
+     * @return
+     */
+    public boolean isNeedRefersh() {
+        long nowTime = System.currentTimeMillis();
+        if(nowTime-oneAdTime>=showTime){//当前广告已过期
+            return true;
+        }
+        return false;
     }
 }

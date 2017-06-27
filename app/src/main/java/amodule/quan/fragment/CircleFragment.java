@@ -284,7 +284,7 @@ public class CircleFragment extends Fragment {
                     });
             LoadOver = true;
         }
-        quanAdvertControl= new QuanAdvertControl();
+        quanAdvertControl= new QuanAdvertControl(mActivity);
         quanAdvertControl.getAdData(mActivity);
         quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
             @Override

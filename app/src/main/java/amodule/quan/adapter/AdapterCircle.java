@@ -224,7 +224,7 @@ public class AdapterCircle extends AdapterSimple {
                     public void onAdShow(View view) {
                         if (map.containsKey("isPromotion")) {
                             if (!"2".equals(map.get("isShow"))) {
-                                quanAdvertControl.getXhAllAdControl().onAdBind(Integer.valueOf(map.get("indexInData")), view,
+                                quanAdvertControl.onAdBind(map.get("controlTag"),Integer.valueOf(map.get("indexInData")), view,
                                         map.get("promotionIndex"));
                                 map.put("isShow", "2");
                             }
@@ -234,7 +234,7 @@ public class AdapterCircle extends AdapterSimple {
                     @Override
                     public void onAdClick(View view) {
 
-                        quanAdvertControl.getXhAllAdControl().onAdClick(view,Integer.valueOf(map.get("indexInData")),
+                        quanAdvertControl.onAdClick(map.get("controlTag"),view,Integer.valueOf(map.get("indexInData")),
                                 map.get("promotionIndex"));
                     }
                 });
@@ -242,9 +242,10 @@ public class AdapterCircle extends AdapterSimple {
 
                     @Override
                     public void onAdHintListener(View view, String eventID) {
-
-                        AppCommon.onAdHintClick(mContext,quanAdvertControl.getXhAllAdControl(),Integer.valueOf(map.get("indexInData")), map.get("promotionIndex")
-                                ,eventID,"第" + map.get("promotionIndex") + "位广告按钮");
+                        if(map.containsKey("controlTag")&&!TextUtils.isEmpty(map.get("controlTag"))){
+                            AppCommon.onAdHintClick(mContext,quanAdvertControl.getXhAllAdControl(map.get("controlTag")),Integer.valueOf(map.get("indexInData")), map.get("promotionIndex")
+                                    ,eventID,"第" + map.get("promotionIndex") + "位广告按钮");
+                        }
                     }
                 });
                 //先写回调在执行展示代码
