@@ -47,11 +47,11 @@ public class HomeRecipeItem extends HomeItem {
     private boolean mIsVideo;
 
     public HomeRecipeItem(Context context) {
-        super(context, R.layout.home_recipeitem);
+        this(context, null);
     }
 
     public HomeRecipeItem(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.home_recipeitem);
+        this(context, attrs, 0);
     }
 
     public HomeRecipeItem(Context context, AttributeSet attrs, int defStyleAttr) {

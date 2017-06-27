@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -42,11 +41,11 @@ public class HomePostItem extends HomeItem {
     private View mLayerView3;
 
     public HomePostItem(Context context) {
-        super(context, R.layout.home_postitem);
+        this(context, null);
     }
 
     public HomePostItem(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.home_postitem);
+        this(context, attrs,0);
     }
 
     public HomePostItem(Context context, AttributeSet attrs, int defStyleAttr) {

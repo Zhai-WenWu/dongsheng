@@ -13,25 +13,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.home.HomeFragment;
-import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.control.AdControlParent;
 import xh.basic.tool.UtilImage;
@@ -71,15 +64,15 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected HomeItemBottomView mHomeItemBottomView;
 
     public HomeItem(Context context, int layoutId) {
-        super(context);
-        LayoutInflater.from(context).inflate(layoutId, this, true);
-        initView();
+        this(context,null,layoutId);
+//        LayoutInflater.from(context).inflate(layoutId, this, true);
+//        initView();
     }
 
     public HomeItem(Context context, AttributeSet attrs, int layoutId) {
-        super(context, attrs);
-        LayoutInflater.from(context).inflate(layoutId, this, true);
-        initView();
+        this(context, attrs,0,layoutId);
+//        LayoutInflater.from(context).inflate(layoutId, this, true);
+//        initView();
     }
 
     public HomeItem(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {

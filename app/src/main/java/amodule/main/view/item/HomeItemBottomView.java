@@ -25,13 +25,11 @@ public class HomeItemBottomView extends LinearLayout {
 
     private ArrayList<Map<String, String>> mDatas;
     public HomeItemBottomView(Context context) {
-        super(context);
-        initView(context);
+        this(context,null);
     }
 
     public HomeItemBottomView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        initView(context);
+        this(context, attrs,0);
     }
 
     public HomeItemBottomView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {

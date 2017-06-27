@@ -19,7 +19,6 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Tools.ImageUtility;
-import amodule.main.activity.MainHome;
 
 /**
  * 任意图 样式：限宽不限高
@@ -36,11 +35,11 @@ public class HomeAnyImgStyleItem extends HomeItem {
     private View mLayerView;
 
     public HomeAnyImgStyleItem(Context context) {
-        super(context, R.layout.home_anyimg_style_item);
+        this(context, null);
     }
 
     public HomeAnyImgStyleItem(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.home_anyimg_style_item);
+        this(context, attrs, 0);
     }
 
     public HomeAnyImgStyleItem(Context context, AttributeSet attrs, int defStyleAttr) {

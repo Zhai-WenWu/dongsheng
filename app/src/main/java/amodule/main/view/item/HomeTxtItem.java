@@ -40,11 +40,11 @@ public class HomeTxtItem extends HomeItem {
     private View mLayerView;
 
     public HomeTxtItem(Context context) {
-        super(context, R.layout.home_txtitem);
+        this(context, null);
     }
 
     public HomeTxtItem(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.home_txtitem);
+        this(context, attrs, 0);
     }
 
     public HomeTxtItem(Context context, AttributeSet attrs, int defStyleAttr) {

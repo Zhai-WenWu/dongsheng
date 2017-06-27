@@ -32,11 +32,11 @@ public class HomeAlbumItem extends HomeItem {
     private View mLayerView;
 
     public HomeAlbumItem(Context context) {
-        super(context, R.layout.home_albumitem);
+        this(context, null);
     }
 
     public HomeAlbumItem(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.home_albumitem);
+        this(context, attrs, 0);
     }
 
     public HomeAlbumItem(Context context, AttributeSet attrs, int defStyleAttr) {
