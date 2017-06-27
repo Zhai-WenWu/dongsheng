@@ -322,7 +322,7 @@ public class StringManager extends UtilString {
             String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl, mUrl};
             for (int i = 0; i < find.length; i++) {
                 String findStr = defaultProtocol + find[i] + defaultDomain + "/";
-                if (url.indexOf(findStr) == 0 && url.indexOf(api_uploadImg) != 0) {
+                if (url != null && url.indexOf(findStr) == 0 && url.indexOf(api_uploadImg) != 0) {
                     return url.replace(findStr, replace[i]);
                 }
             }

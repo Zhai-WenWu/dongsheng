@@ -594,7 +594,7 @@ public class FriendHome extends BaseActivity {
 								}
 							}
 						}
-						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType) && !"0".equals(dataType)) {
+						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType)) {
 							if (!TextUtils.isEmpty(actionDel) && "2".equals(actionDel))
 								updateTabNum(true);
 							else if (!TextUtils.isEmpty(state) && UploadStateChangeBroadcasterReceiver.STATE_SUCCESS.equals(state) && !"2".equals(isSecondEdit))

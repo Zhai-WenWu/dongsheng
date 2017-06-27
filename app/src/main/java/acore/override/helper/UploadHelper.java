@@ -1,6 +1,7 @@
 package acore.override.helper;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -20,6 +21,9 @@ import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.UploadImg;
+import amodule.main.Main;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
+import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
@@ -159,9 +163,9 @@ public abstract class UploadHelper {
 							public void loaded(int flag, String url, Object msg) {
 								Log.i("zhangyujian","url::::"+url);
 								//统计
-								if(StringManager.api_uploadFloor.equals(url)){
+								if(StringManager.replaceUrl(StringManager.api_uploadFloor).equals(url)){
 									XHClick.track(XHApplication.in(),"美食贴评论");
-								}else if(StringManager.api_uploadSubject.equals(url)){
+								}else if(StringManager.replaceUrl(StringManager.api_uploadSubject).equals(url)){
 									if(uploadData.containsKey("video")&&uploadData.containsKey("videoSImg")&&uploadData.containsKey("videoType")
 											&&!TextUtils.isEmpty(uploadData.get("video"))&&!TextUtils.isEmpty(uploadData.get("videoSImg"))
 											&&!TextUtils.isEmpty(uploadData.get("videoType"))){
@@ -169,7 +173,14 @@ public abstract class UploadHelper {
 									}else{
                                     	XHClick.track(XHApplication.in(),"发美食贴成功");
 									}
-                                }else if(StringManager.api_uploadDish.equals(url)){
+                                }else if(StringManager.replaceUrl(StringManager.api_uploadDish).equals(url)){
+									if (FriendHome.isAlive) {
+										Intent broadIntent = new Intent();
+										broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+										broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+										broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY, UploadStateChangeBroadcasterReceiver.STATE_SUCCESS);
+										Main.allMain.sendBroadcast(broadIntent);
+									}
 									XHClick.track(XHApplication.in(),"发菜谱成功");
 								}
 								endUpload(uploadTimeCode,flag,msg);
