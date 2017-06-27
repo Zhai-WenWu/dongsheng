@@ -863,7 +863,10 @@ public class XHClick {
 					}
 				}
 				jsonObject.put("log_data",jsonArray);
-			}
+			}else
+            {
+                return;
+            }
 
 			ReqInternet.in().doPost(url, RequestBody.create(MediaType.parse("application/json"),jsonObject.toString().getBytes()),map, new InternetCallback(XHApplication.in()) {
 				@Override
