@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import com.xiangha.R;
 
 import acore.override.activity.base.WebActivity;
-import acore.tools.ToolsDevice;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -26,7 +25,7 @@ public class FullScreenWeb extends WebActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
-        ToolsDevice.modifyStateTextColor(this);
+//        ToolsDevice.modifyStateTextColor(this);
         initActivity("",0,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用

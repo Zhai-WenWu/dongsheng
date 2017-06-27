@@ -304,7 +304,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                             my_renzheng.setSideColor(getResources().getColor(R.color.comment_color));
                             my_renzheng.setTextColor(getResources().getColor(R.color.comment_color));
                         }else{
-                            my_renzheng.setText("认证");
+                            my_renzheng.setText("申请认证");
                             my_renzheng.setTextColor(getResources().getColor(R.color.common_top_text));
                             my_renzheng.setSideColor(getResources().getColor(R.color.common_top_text));
                         }

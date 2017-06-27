@@ -11,15 +11,12 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import acore.tools.Tools;
-
 /**
  * Created by Fang Ruijiao on 2017/6/22.
  */
 
 public class SpeechaIdentifyInputView extends RelativeLayout implements View.OnClickListener {
 
-    private Context mContext;
     private TextView speechaTv;
 
     public SpeechaIdentifyInputView(Context context) {
@@ -32,7 +29,6 @@ public class SpeechaIdentifyInputView extends RelativeLayout implements View.OnC
 
     public SpeechaIdentifyInputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
         setBackgroundResource(R.color.transparent);
         LayoutInflater.from(context).inflate(R.layout.a_login_speecha_identify, this, true);
         speechaTv = (TextView) findViewById(R.id.user_login_speeach_tv);
@@ -60,7 +56,7 @@ public class SpeechaIdentifyInputView extends RelativeLayout implements View.OnC
 
     @Override
     public void onClick(View v) {
-        Tools.showToast(mContext,"获取语音验证码");
+//        Tools.showToast(mContext,"获取语音验证码");
         if(mListener != null) mListener.onClick(this);
     }
 }

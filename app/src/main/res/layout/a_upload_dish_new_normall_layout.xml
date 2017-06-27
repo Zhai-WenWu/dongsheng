@@ -3,16 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/title_all_rela"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/common_top_bg">
-        <include
-            android:id="@+id/dish_upload_title"
-            layout="@layout/c_view_bar_title_up_dish_normall" />
-    </RelativeLayout>
-
     <acore.widget.ScrollviewDish
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -35,5 +25,18 @@
 
         </LinearLayout>
     </acore.widget.ScrollviewDish>
+
+    <RelativeLayout
+        android:id="@+id/title_all_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_top_bg"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <include
+            android:id="@+id/dish_upload_title"
+            layout="@layout/c_view_bar_title_up_dish_normall" />
+    </RelativeLayout>
 
 </RelativeLayout>
