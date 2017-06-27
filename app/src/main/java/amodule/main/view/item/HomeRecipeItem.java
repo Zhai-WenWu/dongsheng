@@ -34,6 +34,7 @@ public class HomeRecipeItem extends HomeItem {
     private TextView mTitleTop;
     private TextView mVideoTime;
     private ImageView mImg;
+    private ImageView mVIP;
     private ImageView mSole;
     private ImageView mAdTag;
     private ImageView mPlayImg;
@@ -63,6 +64,7 @@ public class HomeRecipeItem extends HomeItem {
         mTitle = (TextView) findViewById(R.id.title);
         mTitleTop = (TextView) findViewById(R.id.title_top);
         mVideoTime = (TextView) findViewById(R.id.video_time);
+        mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
         mSole = (ImageView) findViewById(R.id.img_sole);
         mAdTag = (ImageView) findViewById(R.id.ad_tag);
@@ -155,7 +157,6 @@ public class HomeRecipeItem extends HomeItem {
                     mVideoContainer.setVisibility(View.VISIBLE);
             }
         }
-        String type = mModuleBean.getType();
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
         if (mIsVideo) {
             int fixedH = 9, fixedW = 16;
@@ -163,24 +164,25 @@ public class HomeRecipeItem extends HomeItem {
             int h = w * fixedH / fixedW;
             containerParams.height = h;
         }
+        String type = null;
+        if (mModuleBean != null)
+            type = mModuleBean.getType();
         containerParams.topMargin = getResources().getDimensionPixelSize(MainHome.recommedType.equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
-        if (mModuleBean != null) {
-            if (!TextUtils.isEmpty(type)) {
-                if ("day".equals(type)) {
-                    if (mPosition == 0)
-                        containerParams.topMargin = 0;
-                    if (mDataMap.containsKey("pastRecommed") && !TextUtils.isEmpty(mDataMap.get("pastRecommed"))) {
-                        if (mLineTop != null)
-                            mLineTop.setVisibility(View.GONE);
-                        if (mRecommendLine != null)
-                            mRecommendLine.setVisibility(View.VISIBLE);
-                        if (mRecommendTag != null)
-                            mRecommendTag.setVisibility(View.VISIBLE);
-                    }
-                } else if ("video".equals(type) && mPosition == 0)
+        if (!TextUtils.isEmpty(type)) {
+            if ("day".equals(type)) {
+                if (mPosition == 0)
                     containerParams.topMargin = 0;
+                if (mDataMap.containsKey("pastRecommed") && !TextUtils.isEmpty(mDataMap.get("pastRecommed"))) {
+                    if (mLineTop != null)
+                        mLineTop.setVisibility(View.GONE);
+                    if (mRecommendLine != null)
+                        mRecommendLine.setVisibility(View.VISIBLE);
+                    if (mRecommendTag != null)
+                        mRecommendTag.setVisibility(View.VISIBLE);
+                }
+            } else if ("video".equals(type) && mPosition == 0)
+                containerParams.topMargin = 0;
 
-            }
         }
         mContainer.setLayoutParams(containerParams);
 
@@ -189,43 +191,50 @@ public class HomeRecipeItem extends HomeItem {
             if (!TextUtils.isEmpty(isSole) && "2".equals(isSole) && mSole != null)
                 mSole.setVisibility(View.VISIBLE);
         }
+        if (mVIP != null && !mIsAd && "2".equals(mDataMap.get("isVip"))) {
+            mVIP.setVisibility(View.VISIBLE);
+        }
         if (mDataMap.containsKey("styleData")) {
             ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
             if (datas != null && datas.size() > 0) {
                 Map<String, String> imgMap = datas.get(0);
                 if (imgMap != null && imgMap.size() > 0) {
                     String imgUrl = imgMap.get("url");
-                    loadImage(imgUrl, mImg, mIsAd ? new ADImageLoadCallback() {
-                        @Override
-                        public void callback(Bitmap bitmap) {
-                            if (bitmap == null)
-                                return;
-                            int bitmapWidth = bitmap.getWidth();
-                            int bitmapHeight = bitmap.getHeight();
-                            int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
-                            int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
-                            mImg.setScaleType(ImageView.ScaleType.FIT_XY);
-                            mImg.setImageBitmap(bitmap);
-                            if (mContainer != null) {
-                                MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                                containerParams.height = imgHeight;
-                                mContainer.setLayoutParams(containerParams);
-                            }
-                            MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-                            adImgParams.height = imgHeight;
-                            mImg.setLayoutParams(adImgParams);
+                    if (!TextUtils.isEmpty(imgUrl)) {
+                        if (mContainer != null)
+                            mContainer.setVisibility(View.VISIBLE);
+                        loadImage(imgUrl, mImg, mIsAd ? new ADImageLoadCallback() {
+                            @Override
+                            public void callback(Bitmap bitmap) {
+                                if (bitmap == null)
+                                    return;
+                                int bitmapWidth = bitmap.getWidth();
+                                int bitmapHeight = bitmap.getHeight();
+                                int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
+                                int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
+                                mImg.setScaleType(ImageView.ScaleType.FIT_XY);
+                                mImg.setImageBitmap(bitmap);
+                                if (mContainer != null) {
+                                    MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
+                                    containerParams.height = imgHeight;
+                                    mContainer.setLayoutParams(containerParams);
+                                }
+                                MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
+                                adImgParams.height = imgHeight;
+                                mImg.setLayoutParams(adImgParams);
 
-                            if (mLayerView != null) {
-                                MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-                                layerParams.height = imgHeight;
-                                mLayerView.setLayoutParams(layerParams);
+                                if (mLayerView != null) {
+                                    MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
+                                    layerParams.height = imgHeight;
+                                    mLayerView.setLayoutParams(layerParams);
+                                }
+                                if (mContainer != null) {
+                                    mContainer.requestLayout();
+                                    mContainer.invalidate();
+                                }
                             }
-                            if (mContainer != null) {
-                                mContainer.requestLayout();
-                                mContainer.invalidate();
-                            }
-                        }
-                    } : null);
+                        } : null);
+                    }
                 }
             }
         }
@@ -281,6 +290,8 @@ public class HomeRecipeItem extends HomeItem {
             mVideoTime.setVisibility(View.GONE);
         if (viewIsVisible(mImg))
             mImg.setVisibility(View.GONE);
+        if (viewIsVisible(mVIP))
+            mVIP.setVisibility(View.GONE);
         if (viewIsVisible(mSole))
             mSole.setVisibility(View.GONE);
         if (viewIsVisible(mAdTag))
@@ -295,6 +306,8 @@ public class HomeRecipeItem extends HomeItem {
             mVideoContainer.setVisibility(View.GONE);
         if (viewIsVisible(mLayerView))
             mLayerView.setVisibility(View.GONE);
+        if (viewIsVisible(mContainer))
+            mContainer.setVisibility(View.GONE);
     }
 
     /**

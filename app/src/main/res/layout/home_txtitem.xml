@@ -161,6 +161,17 @@
             android:visibility="visible"/>
 
         <ImageView
+            android:id="@+id/vip"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_16"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_3"
+            android:layout_marginTop="@dimen/dp_3"
+            android:src="@drawable/vip"
+            android:scaleType="fitXY"
+            android:visibility="gone"/>
+
+        <ImageView
             android:id="@+id/ad_tag"
             android:layout_width="@dimen/dp_35"
             android:layout_height="@dimen/dp_16.5"

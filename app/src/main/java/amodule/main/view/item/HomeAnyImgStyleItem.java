@@ -19,6 +19,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Tools.ImageUtility;
+import amodule.main.activity.MainHome;
 
 /**
  * 任意图 样式：限宽不限高
@@ -29,6 +30,7 @@ public class HomeAnyImgStyleItem extends HomeItem {
 
     private TextView mTitleTop;
     private ImageView mImg;
+    private ImageView mVIP;
     private ImageView mADTag;
     private RelativeLayout mContainer;
     private View mLayerView;
@@ -49,6 +51,7 @@ public class HomeAnyImgStyleItem extends HomeItem {
     protected void initView() {
         super.initView();
         mTitleTop = (TextView) findViewById(R.id.title_top);
+        mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
         mADTag = (ImageView) findViewById(R.id.ad_tag);
         mContainer = (RelativeLayout) findViewById(R.id.container);
@@ -93,6 +96,9 @@ public class HomeAnyImgStyleItem extends HomeItem {
         }
         if (mIsAd && mADTag != null)
             mADTag.setVisibility(View.VISIBLE);
+        if (mModuleBean != null && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip"))) {
+            mVIP.setVisibility(View.VISIBLE);
+        }
         ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
         if (datas != null && datas.size() > 0) {
             Map<String, String> imgMap = datas.get(0);
@@ -169,6 +175,8 @@ public class HomeAnyImgStyleItem extends HomeItem {
             mTitleTop.setVisibility(View.GONE);
         if (viewIsVisible(mImg))
             mImg.setVisibility(View.GONE);
+        if (viewIsVisible(mVIP))
+            mVIP.setVisibility(View.GONE);
         if (viewIsVisible(mADTag))
             mADTag.setVisibility(View.GONE);
         if (viewIsVisible(mLayerView))
