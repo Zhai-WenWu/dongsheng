@@ -14,7 +14,7 @@ import acore.tools.StringManager;
 import third.ad.scrollerAd.XHScrollerAdParent;
 
 /**
- * Created by Fang Ruijiao on 2017/4/25.
+ *条件拼装数据
  */
 public abstract class  AdOptionList extends AdOptionParent {
 
@@ -151,5 +151,7 @@ public abstract class  AdOptionList extends AdOptionParent {
             old_list.addAll(0,tempList);
         }
         return old_list;
+    public AdOptionList(String[] adPlayIds) {
+        super(adPlayIds);
     }
 }

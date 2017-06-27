@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,10 +24,12 @@ import third.ad.scrollerAd.XHScrollerAdParent;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 
+import static third.ad.control.AdControlNormalDish.tag_yu;
+
 /**
  * 美食圈数据控制
- * --单例模式
  *
+ *----------无限加载使用最简单的方式，直接保存当前的数据和对象，并对广告对象进行分别打tag，并管理
  * @author yujian
  */
 public class QuanAdvertControl {
@@ -40,12 +43,16 @@ public class QuanAdvertControl {
     private ArrayList<Map<String, String>> mAdList = new ArrayList<Map<String, String>>();
     private ArrayList<Integer> ad_list = new ArrayList<Integer>();
     private DataCallBack callBack;
-    private  XHAllAdControl xhAllAdControl;
-
+    private Map<String,XHAllAdControl> mapAd= new HashMap<>();//存储广告集合
+    private int nowIndex=0;//当前使用对广告位置，
+    private Context context;
     public void setCallBack(DataCallBack callBacks) {
         this.callBack = callBacks;
     }
 
+    public QuanAdvertControl(Context context){
+        this.context= context;
+    }
 
     /**
      * 数据中加入广告数据
@@ -85,12 +92,13 @@ public class QuanAdvertControl {
         if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {
             return old_list;
         }
+        Log.i(tag_yu,"old_list.size::"+old_list.size()+"::cid:::"+cid+":mid::"+mid+"::beforeNum:"+beforeNum);
         return getBdData(old_list, cid, mid, beforeNum);
     }
 
 
     private ArrayList<Map<String, String>> getBdData(ArrayList<Map<String, String>> old_list, String cid, String mid, int beforeNum) {
-        logtzy("tzy", "showCid::" + cid + "::showMid::" + mid + ":::广告集合大小：：" + mAdList.size());
+        logtzy(tag_yu, "showCid::" + cid + "::showMid::" + mid + ":::广告集合大小：：" + mAdList.size());
         if ("17".equals(mid)) {//活跃榜不显示广告
             return old_list;
         }
@@ -107,16 +115,23 @@ public class QuanAdvertControl {
                     temp.add(map);
                 }
             }
-            logtzy("tzy", "temp size:" + temp.size());
+            logtzy(tag_yu, "temp size:" + temp.size());
             if (temp.size() > 0) {
                 for (int i = 0, size = temp.size(); i < size; i++) {
                     int index = ad_list.get(i);
-                    logtzy("tzy", "index:" + index);
+                    logtzy(tag_yu, "index:" + index);
                     if (i == ad_list.size() - 1) {
                         ad_list.add(ad_list.get(i) + 10 + ad_list.size() - 1);
                     }
                     if (index >= beforeNum && index <= old_list.size()) {
+                        nowIndex=i;
                         old_list.add(index, temp.get(i));
+                        if(nowIndex<6&&nowIndex==4){
+                            getAdData(context,"1");
+                        }else if(nowIndex%6==4){
+                            int num= nowIndex/6;
+                            getAdData(context,String.valueOf(num+1));
+                        }
                     }
                 }
             }
@@ -136,7 +151,7 @@ public class QuanAdvertControl {
      */
     private void setAdList(final String index, final String indexInData, final String title,
                            final String desc, final String iconUrl, String imageUrl,
-                           final String adstyle,String adTag) {
+                           final String adstyle,String adTag,String controlTag) {
         String url = "";
         if (!TextUtils.isEmpty(imageUrl)) {
             url = imageUrl;
@@ -144,9 +159,8 @@ public class QuanAdvertControl {
             url = iconUrl;
         }
         final String imgUrl = url;
-        logtzy("tzy", "imageUrl url:" + url);
-        logtzy("tzy", "iconUrl url:" + url);
         Map<String, String> map = new HashMap<>();
+        map.put("controlTag",controlTag);
         map.put("title", "");
         map.put("hideAdTag", adTag);
         map.put("isPromotion", "1");
@@ -194,14 +208,27 @@ public class QuanAdvertControl {
     }
 
 
+    /**
+     * 获取数据---第一次。
+     * @param context
+     */
     public void getAdData(final Context context) {
         mAdList.clear();
+        mapAd.clear();
+        getAdData(context,"0");
+    }
+
+    /**
+     * 获取数据---第一次。
+     * @param context
+     */
+    public void getAdData(final Context context, final String controlTag) {
         ArrayList<String> adPosList = new ArrayList<>();
 
         for (String posStr : AD_IDS) {
             adPosList.add(posStr);
         }
-        xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
+        XHAllAdControl xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
 
             @Override
             public void callBack(Map<String, String> map) {
@@ -215,10 +242,10 @@ public class QuanAdvertControl {
                             if (homeAdMap != null && homeAdMap.size() > 0) {
                                 if (XHScrollerAdParent.ADKEY_BANNER.equals(homeAdMap.get("type"))) {
                                     setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
-                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl2"), "ad", homeAdMap.get("adType"));
+                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl2"), "ad", homeAdMap.get("adType"),controlTag);
                                 } else {
                                     setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
-                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"), "ad", homeAdMap.get("adType"));
+                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"), "ad", homeAdMap.get("adType"),controlTag);
                                 }
                             }
                         }
@@ -227,24 +254,71 @@ public class QuanAdvertControl {
                         SyntaxTools.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                    callBack.dataBack();
+                                callBack.dataBack();
                             }
                         });
                     }
                 }
             }
         }, (Activity) context, "community_list");
+        mapAd.put(controlTag,xhAllAdControl);
     }
-
-    public XHAllAdControl getXhAllAdControl(){
-        return xhAllAdControl;
-    }
-
     private void logtzy(String tag, String info) {
         Log.i(tag, info);
     }
 
     public interface DataCallBack {
         void dataBack();
+    }
+
+    /**
+     * 广告的展示
+     * @param controlTag
+     * @param indexInData
+     * @param view
+     * @param promotionIndex
+     */
+    public void onAdBind(String controlTag,int indexInData,View view,String promotionIndex){
+        if(!TextUtils.isEmpty(controlTag))
+            mapAd.get(controlTag).onAdBind(indexInData,view,promotionIndex);
+    }
+
+    /**
+     * 广告的点击
+     * @param controlTag
+     * @param view
+     * @param indexInData
+     * @param promotionIndex
+     */
+    public void onAdClick(String controlTag,View view,int indexInData,String promotionIndex){
+        if(!TextUtils.isEmpty(controlTag))
+            mapAd.get(controlTag).onAdClick(view,indexInData,promotionIndex);
+    }
+
+    /**
+     * 获取xhallcontrol对象
+     * @param controlTag
+     * @return
+     */
+    public XHAllAdControl getXhAllAdControl(String controlTag){
+        return mapAd.get(controlTag);
+    }
+
+    /**
+     * 判断是否要刷新
+     * @return
+     */
+    public boolean isNeedRefresh(){
+        if(mapAd.size()>0){
+            return mapAd.get("0").isNeedRefersh();
+        }
+        return false;
+    }
+
+    /**
+     * 刷新
+     */
+    public void refreshData(){
+        getAdData(context);
     }
 }
