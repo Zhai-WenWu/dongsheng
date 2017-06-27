@@ -667,7 +667,7 @@
             android:name="amodule.user.activity.ChangeUrl"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.user.activity.ChooseDish"

@@ -34,6 +34,7 @@ public class HomeTxtItem extends HomeItem {
     private TextView mDesc;
     private ImageView mImg;
     private ImageView mAdTag;
+    private ImageView mVIP;
     private RelativeLayout mImgs;
     private RelativeLayout mContainer;
     private View mLayerView;
@@ -55,6 +56,7 @@ public class HomeTxtItem extends HomeItem {
         super.initView();
         mTitle = (TextView) findViewById(R.id.title);
         mDesc = (TextView) findViewById(R.id.desc);
+        mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
         mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mImgs = (RelativeLayout) findViewById(R.id.imgs);
@@ -141,6 +143,8 @@ public class HomeTxtItem extends HomeItem {
                         imgCount = 1;
                         if (mImgs != null)
                             mImgs.setVisibility(View.VISIBLE);
+                        if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()) && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
+                            mVIP.setVisibility(View.VISIBLE);
                         loadImage(imgUrl, mImg);
                     }
                 }
@@ -163,7 +167,7 @@ public class HomeTxtItem extends HomeItem {
             mContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
         }
         String content = mDataMap.get("content");
-        if (!TextUtils.isEmpty(content)) {
+        if (!TextUtils.isEmpty(content) && !mIsAd) {
             mDesc.setText(content);
             mDesc.setVisibility(View.VISIBLE);
         }
@@ -188,6 +192,8 @@ public class HomeTxtItem extends HomeItem {
             mTitle.setLines(1);
             mTitle.setMaxLines(2);
         }
+        if (viewIsVisible(mVIP))
+            mVIP.setVisibility(View.GONE);
         if (viewIsVisible(mImg))
             mImg.setVisibility(View.GONE);
         if (viewIsVisible(mImgs))

@@ -25,6 +25,7 @@ import amodule.main.activity.MainHome;
 
 public class HomeAlbumItem extends HomeItem {
 
+    private ImageView mVIP;
     private ImageView mImg;
     private TextView mTitle;
     private TextView mNum1;
@@ -45,6 +46,7 @@ public class HomeAlbumItem extends HomeItem {
     @Override
     protected void initView() {
         super.initView();
+        mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
         mTitle = (TextView) findViewById(R.id.title);
         mNum1 = (TextView) findViewById(R.id.num1);
@@ -75,6 +77,8 @@ public class HomeAlbumItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
+        if (mModuleBean != null && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
+            mVIP.setVisibility(View.VISIBLE);
         if (mDataMap.containsKey("styleData")) {
             ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
             if (datas != null && datas.size() > 0) {
@@ -112,6 +116,8 @@ public class HomeAlbumItem extends HomeItem {
             mNum1.setVisibility(View.GONE);
         if (viewIsVisible(mLayerView))
             mLayerView.setVisibility(View.GONE);
+        if (viewIsVisible(mVIP))
+            mVIP.setVisibility(View.GONE);
 
     }
 }

@@ -36,6 +36,15 @@
             tagTextView:backgroundColor="@color/dish_yellow_bg_title"
             tagTextView:radius="@dimen/dp_1"/>
 
+        <ImageView
+            android:id="@+id/vip"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_3"
+            android:layout_marginTop="@dimen/dp_3"
+            android:src="@drawable/vip"
+            android:scaleType="fitXY"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.dialogManager.ADPopwindiwManager;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -83,7 +83,7 @@ public class AdConfigTools {
 									}catch(Exception ignored){
 
 									}
-									AppCommon.saveWelcomeInfo(array.toString());
+									ADPopwindiwManager.saveWelcomeInfo(array.toString());
 								}
 							}
 						}

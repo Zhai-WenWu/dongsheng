@@ -90,7 +90,7 @@
 
                     <EditText
                         android:id="@+id/et_input1"
-                        android:layout_width="@dimen/dp_60"
+                        android:layout_width="@dimen/dp_80"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:hint="80"
@@ -160,7 +160,7 @@
 
                     <EditText
                         android:id="@+id/mall_et_input1"
-                        android:layout_width="@dimen/dp_60"
+                        android:layout_width="@dimen/dp_80"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:hint="80"
