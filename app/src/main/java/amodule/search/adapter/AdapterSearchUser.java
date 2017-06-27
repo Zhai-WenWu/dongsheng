@@ -55,7 +55,6 @@ public class AdapterSearchUser extends AdapterSearch {
 				if (!LoginManager.isLogin()) {
 					Intent intent = new Intent(mParent.getContext(), LoginByAccout.class);
 					mParent.getContext().startActivity(intent);
-					Tools.showToast(mParent.getContext(), "请先登录");
 					return;
 				}
 				AppCommon.onAttentionClick(map.get("code"),"follow");

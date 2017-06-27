@@ -75,7 +75,6 @@ public class FollowView extends LinearLayout{
 				if (!LoginManager.isLogin()) {
 					Intent intent = new Intent(mCon, LoginByAccout.class);
 					mCon.startActivity(intent);
-					Tools.showToast(mCon, "请先登录");
 					return;
 				}
 				onAttentionClick();

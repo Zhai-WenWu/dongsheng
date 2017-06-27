@@ -11,9 +11,13 @@ import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
+import amodule.user.view.SpeechaIdentifyInputView;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import xh.windowview.XhDialog;
 
 /**
@@ -24,12 +28,15 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
 
     private ImageView top_left_view;
     private TextView tv_identify_info;
-    private IdentifyInputView phone_identify;
+    private IdentifyInputView login_identify;
+    private SpeechaIdentifyInputView speechaIdentifyInputView;
     private NextStepView btn_next_step;
     private String zoneCode;
     private String phoneNum;
     private TextView tv_help;
     private String origin;
+
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                 @Override
                 public void onSendSuccess() {
                     loadManager.hideProgressBar();
-                    phone_identify.startCountDown();
+                    login_identify.startCountDown();
                     tv_identify_info.setText("短信验证码已发送至 +" + zoneCode + " " + hidePhoneNum(phoneNum));
                     tv_identify_info.setVisibility(View.VISIBLE);
                 }
@@ -72,16 +79,38 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
         top_left_view = (ImageView) findViewById(R.id.top_left_view);
         tv_identify_info = (TextView) findViewById(R.id.tv_identify_info);
         tv_help = (TextView) findViewById(R.id.tv_help);
-        phone_identify = (IdentifyInputView) findViewById(R.id.phone_identify);
+        login_identify = (IdentifyInputView) findViewById(R.id.phone_identify);
+        speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
         top_left_view.setOnClickListener(this);
         tv_help.setOnClickListener(this);
         tv_identify_info.setVisibility(View.INVISIBLE);
+        speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speechaIdentifyInputView.setState(false);
+                login_identify.setOnBtnClickState(false);
+                login_identify.startCountDown();
+                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(InputIdentifyCode.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
 
-        phone_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback() {
+                    }
+                });
+            }
+        });
+
+        login_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback() {
             @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnState();
+                if("86".equals(zoneCode)) {
+                    if (isFirst) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                    }
+                    speechaIdentifyInputView.setState(true);
+                }
             }
 
             @Override
@@ -104,7 +133,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                     @Override
                     public void onSendSuccess() {
                         loadManager.hideProgressBar();
-                        phone_identify.startCountDown();
+                        login_identify.startCountDown();
                         tv_identify_info.setText("短信验证码已发送至 +" + zoneCode + " " + formatPhone(phoneNum));
                         if (ORIGIN_REGISTER.equals(origin) || ORIGIN_REGISTER.equals(origin)) {
                             tv_identify_info.setText("短信验证码已发送至 +" + zoneCode + " " + hidePhoneNum(phoneNum));
@@ -113,12 +142,14 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                         }
 
                         tv_identify_info.setVisibility(View.VISIBLE);
+                        speechaIdentifyInputView.setState(false);
                     }
 
                     @Override
                     public void onSendFalse() {
                         loadManager.hideProgressBar();
-                        phone_identify.btnClickTrue();
+                        login_identify.setOnBtnClickState(true);
+                        speechaIdentifyInputView.setState(true);
                         if (ORIGIN_FIND_PSW.equals(origin)) {
                             XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "忘记密码", "失败原因：验证码超限");
                         } else if (ORIGIN_REGISTER.equals(origin)) {
@@ -148,11 +179,11 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                 }
 
                 if (ORIGIN_REGISTER.equals(origin)) {
-                    logInByIdentify(InputIdentifyCode.this, zoneCode, phoneNum, phone_identify.getIdentify(),
+                    logInByIdentify(InputIdentifyCode.this, zoneCode, phoneNum, login_identify.getIdentify(),
                             new BaseLoginCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    gotoSetSecrt(zoneCode, phoneNum, origin, phone_identify.getIdentify());
+                                    gotoSetSecrt(zoneCode, phoneNum, origin, login_identify.getIdentify());
                                     if (ORIGIN_REGISTER.equals(origin)) {
                                         XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "注册成功");
                                     }
@@ -169,12 +200,12 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                 } else if (ORIGIN_BIND_PHONE_NUM.equals(origin) || ORIGIN_BIND_FROM_WEB.equals(origin)) {
 
                     bindPhone(InputIdentifyCode.this, zoneCode, phoneNum,
-                            phone_identify.getIdentify(),
+                            login_identify.getIdentify(),
                             new BaseLoginCallback() {
                                 @Override
                                 public void onSuccess() {
 
-                                    gotoSetSecrt(zoneCode, phoneNum, origin, phone_identify.getIdentify());
+                                    gotoSetSecrt(zoneCode, phoneNum, origin, login_identify.getIdentify());
                                     if(ORIGIN_BIND_PHONE_NUM.equals(origin)){
                                         XHClick.mapStat(InputIdentifyCode.this, TAG_ACCOCUT, "绑定手机号", "绑定成功");
                                     }
@@ -196,10 +227,10 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                 } else {
 
                     checkIdentifyCode(InputIdentifyCode.this, zoneCode, phoneNum,
-                            phone_identify.getIdentify(), new BaseLoginCallback() {
+                            login_identify.getIdentify(), new BaseLoginCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    gotoSetSecrt(zoneCode, phoneNum, origin, phone_identify.getIdentify());
+                                    gotoSetSecrt(zoneCode, phoneNum, origin, login_identify.getIdentify());
                                 }
 
                                 @Override
@@ -228,7 +259,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
 
 
     private void refreshNextStepBtnState() {
-        String identify = phone_identify.getIdentify();
+        String identify = login_identify.getIdentify();
         if (TextUtils.isEmpty(identify)) {
             btn_next_step.setClickCenterable(false);
         } else {

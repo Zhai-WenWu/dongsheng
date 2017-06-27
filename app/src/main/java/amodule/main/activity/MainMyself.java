@@ -28,7 +28,6 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
 import amodule.dish.activity.OfflineDish;
@@ -285,7 +284,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                         my_vip.setText("会员续费");
                         my_vip.setSideColor(Color.parseColor("#ffffff"));
                         my_vip.setTextColor(Color.parseColor("#3e3e3e"));
-                        my_vip.setBackgroundColor(Color.parseColor("#ffffff"));
                     }else{
                         isVipImg.setVisibility(View.VISIBLE);
                         isVipImg.setImageResource(R.drawable.i_user_home_unvip);
@@ -293,8 +291,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                         my_vip.setText("开通会员");
                         my_vip.setTextColor(getResources().getColor(R.color.common_top_text));
                         my_vip.setSideColor(getResources().getColor(R.color.common_top_text));
-                        my_vip.setTextColor(Color.parseColor("#ffffff"));
-                        my_vip.setBackgroundColor(getResources().getColor(R.color.transparent));
                     }
                     my_vip.setVisibility(View.VISIBLE);
 
@@ -305,7 +301,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                             my_renzheng.setSideColor(getResources().getColor(R.color.comment_color));
                             my_renzheng.setTextColor(getResources().getColor(R.color.comment_color));
                         }else{
-                            my_renzheng.setText("认证");
+                            my_renzheng.setText("申请认证");
                             my_renzheng.setTextColor(getResources().getColor(R.color.common_top_text));
                             my_renzheng.setSideColor(getResources().getColor(R.color.common_top_text));
                         }
@@ -371,7 +367,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case R.id.ll_money:
                 case R.id.ll_score:
                 case R.id.ll_coupon:
-                    Tools.showToast(this,"请先登录或注册哦~");
                 case R.id.myself_lv: //用户等级
                 case R.id.myself_please_login:
                 case R.id.ico_right_myself:
@@ -462,7 +457,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case "coupon": //优惠券
                 case "money": //钱包
                     isOption = true;
-                    Tools.showToast(this, "请先登录或注册哦~");
                     XHClick.mapStat(this, tongjiId, "头部", "登录");
                     Intent intent = new Intent(MainMyself.this, LoginByAccout.class);
                     startActivity(intent);

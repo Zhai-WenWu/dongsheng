@@ -105,7 +105,6 @@ public class DishExplainView extends ItemBaseView {
     public void doUpload() {
         // 若用户还没登陆则先登陆
         if (!LoginManager.isLogin()) {
-            Tools.showToast(context, "请先登录");
             Intent intent = new Intent(context, LoginByAccout.class);
             context.startActivity(intent);
             return;

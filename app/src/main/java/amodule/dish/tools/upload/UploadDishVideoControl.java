@@ -527,7 +527,6 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
                 handleIntent.putExtra("uploadDishData",uploadDishData);
                 mAct.startActivity(handleIntent);
             }else {
-                Tools.showToast(mAct, "请先登录");
                 Intent it = new Intent(mAct, LoginByAccout.class);
                 mAct.startActivity(it);
             }

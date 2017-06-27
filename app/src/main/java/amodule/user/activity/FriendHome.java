@@ -420,7 +420,7 @@ public class FriendHome extends BaseActivity {
 									articleData.upload(StringManager.api_articleAdd, new InternetCallback(this) {
 										@Override
 										public void loaded(int i, String s, Object o) {
-											if (i > UtilInternet.REQ_OK_STRING) {
+											if (i >= UtilInternet.REQ_OK_STRING) {
 												dataMap.put("uploadType", UploadDishData.UPLOAD_SUCCESS);
 												itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_SUCCESS);
 												articleData.setUploadType(UploadDishData.UPLOAD_SUCCESS);
@@ -594,7 +594,7 @@ public class FriendHome extends BaseActivity {
 								}
 							}
 						}
-						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType) && !"0".equals(dataType)) {
+						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType)) {
 							if (!TextUtils.isEmpty(actionDel) && "2".equals(actionDel))
 								updateTabNum(true);
 							else if (!TextUtils.isEmpty(state) && UploadStateChangeBroadcasterReceiver.STATE_SUCCESS.equals(state) && !"2".equals(isSecondEdit))

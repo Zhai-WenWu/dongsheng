@@ -18,6 +18,7 @@
     <color name="backgroup_color">#fefefe</color>
     <color name="classify_health_titlecolor">#1f1f22</color>
 
+    <color name="transparent_fe">#00fffffe</color>
     <color name="transparent">#00ffffff</color>
     <color name="c_title_text_color">@color/comment_color</color>
     <color name="c_white_bg_title">#FFFFFF</color>

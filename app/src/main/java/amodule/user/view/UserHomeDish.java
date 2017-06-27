@@ -35,6 +35,7 @@ import amodule.dish.db.UploadDishData;
 import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Main;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.MyDraft;
 import amodule.user.adapter.AdapterUserDish;
@@ -115,6 +116,13 @@ public class UserHomeDish extends TabContentView {
                         if (flag >= UtilInternet.REQ_OK_STRING) {
                             listDataMyDish.remove(index);
                             adapter.notifyDataSetChanged();
+                            if (FriendHome.isAlive) {
+                                Intent broadIntent = new Intent();
+                                broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
+                                Main.allMain.sendBroadcast(broadIntent);
+                            }
                         }
                     }
                 });

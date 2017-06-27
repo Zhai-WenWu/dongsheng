@@ -50,7 +50,7 @@
                         android:id="@+id/myself_iv"
                         android:layout_width="@dimen/dp_57"
                         android:layout_height="@dimen/dp_57"
-                        android:layout_centerVertical="true"
+                        android:layout_marginTop="@dimen/dp_24.5"
                         android:layout_marginLeft="@dimen/dp_20"
                         android:background="@drawable/bg_user_round80_fff"
                         android:clickable="false"
@@ -89,7 +89,7 @@
 
                             <TextView
                                 android:id="@+id/myself_name"
-                                style="@style/top_title_singleText"
+                                style="@style/singleText"
                                 android:layout_width="wrap_content"
                                 android:clickable="false"
                                 android:maxWidth="@dimen/dp_145"
@@ -125,17 +125,17 @@
 
                         <acore.widget.TagTextView
                             android:id="@+id/my_vip"
-                            android:layout_width="@dimen/dp_68"
-                            android:layout_height="@dimen/dp_22.5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_14"
                             android:layout_below="@+id/ll_myself"
                             android:layout_marginTop="@dimen/dp_7"
                             android:gravity="center"
-                            android:paddingBottom="@dimen/dp_1"
-                            android:paddingTop="@dimen/dp_1"
+                            android:paddingLeft="@dimen/dp_4"
+                            android:paddingRight="@dimen/dp_4"
                             android:textColor="#FFFFFF"
-                            android:textSize="@dimen/sp_12"
+                            android:textSize="@dimen/sp_10"
                             app:backgroundColor="@android:color/transparent"
-                            app:radius="@dimen/dp_3"
+                            app:radius="@dimen/dp_1"
                             app:sideColor="#FFFFFF"
                             app:sideWidth="1px"
                             android:visibility="gone"
@@ -143,20 +143,18 @@
                         <acore.widget.TagTextView
                             android:id="@+id/my_renzheng"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dp_22.5"
+                            android:layout_height="@dimen/dp_14"
                             android:layout_below="@+id/ll_myself"
                             android:layout_toRightOf="@+id/my_vip"
                             android:layout_marginTop="@dimen/dp_7"
-                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginLeft="@dimen/dp_7"
                             android:gravity="center"
-                            android:paddingLeft="@dimen/dp_10"
-                            android:paddingTop="@dimen/dp_1"
-                            android:paddingRight="@dimen/dp_10"
-                            android:paddingBottom="@dimen/dp_1"
+                            android:paddingLeft="@dimen/dp_4"
+                            android:paddingRight="@dimen/dp_4"
                             android:textColor="#FFFFFF"
-                            android:textSize="@dimen/sp_12"
+                            android:textSize="@dimen/sp_10"
                             app:backgroundColor="@android:color/transparent"
-                            app:radius="@dimen/dp_3"
+                            app:radius="@dimen/dp_1"
                             app:sideColor="#FFFFFF"
                             app:sideWidth="1px"
                             android:visibility="gone"
@@ -274,7 +272,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_63"
+                    android:layout_height="@dimen/dp_60"
                     android:layout_below="@+id/myself_ll_tab"
                     android:orientation="horizontal"
                     android:background="#fff"
@@ -307,7 +305,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:gravity="center"
-                            android:text="钱包(香豆)"/>
+                            android:text="我的香豆"/>
 
                         <TextView
                             android:id="@+id/my_money"
@@ -331,7 +329,7 @@
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="积分"/>
+                            android:text="我的积分"/>
                         <TextView
                             android:id="@+id/my_score"
                             style="@style/myTab2Title"
@@ -351,7 +349,7 @@
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="优惠券(张)"/>
+                            android:text="优惠券"/>
                         <TextView
                             android:id="@+id/my_coupon"
                             style="@style/myTab2Title"

@@ -70,9 +70,8 @@ import static amodule.main.activity.MainHome.tag;
 import static com.xiangha.R.id.return_top;
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
-public class HomeFragment extends Fragment{
-    /** 保存板块信息的key */
-    protected static final String MODULEDATA = "moduleData";
+public class HomeFragment extends BaseHomeFragment{
+
     public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
 
     private HomeModuleBean homeModuleBean;//数据的结构

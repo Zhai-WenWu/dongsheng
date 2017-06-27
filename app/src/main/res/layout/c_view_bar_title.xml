@@ -121,7 +121,7 @@
         android:id="@+id/rightImgBtn2"
         style="@style/rightBtn"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/dp_13"/>
+        android:layout_marginRight="@dimen/dp_11"/>
 
     <ImageView
         android:id="@+id/rightImgBtn4"

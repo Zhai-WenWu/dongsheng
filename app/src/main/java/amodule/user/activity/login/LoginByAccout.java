@@ -65,7 +65,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
     private static final int INFO_ERROR = 4;
 
 
-    public static Map<String, String> userInfo = new HashMap<String, String>(); // 当前登录用户信息
+    public static Map<String, String> userInfo = new HashMap<>(); // 当前登录用户信息
     private String mPlatformName;
     private String platform;
     private String loginType = "";

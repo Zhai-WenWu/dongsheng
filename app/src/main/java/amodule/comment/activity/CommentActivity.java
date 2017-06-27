@@ -246,7 +246,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onPraiseClick(String comment_id) {
                 if(!LoginManager.isLogin()){
-                    Tools.showToast(CommentActivity.this,"请先登录或注册哦~");
                     Intent intent = new Intent(CommentActivity.this, LoginByAccout.class);
                     startActivity(intent);
                     return;
@@ -482,13 +481,11 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private synchronized void sendData(){
         if(isSend)return;
         if(!LoginManager.isLogin()){
-            Tools.showToast(this,"请先登录或注册哦~");
             ToolsDevice.keyboardControl(false,CommentActivity.this,commend_write_et);
             Intent intent = new Intent(CommentActivity.this, LoginByAccout.class);
             startActivity(intent);
             return;
         }
-        isSend = true;
         String content = commend_write_et.getText().toString();
         if(content.length() == 0){
             Tools.showToast(this,"发送内容不能为空");
@@ -498,6 +495,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             Tools.showToast(this,"发送内容不能超过2000字");
             return;
         }
+        isSend = true;
 
         String newParams;
         isAddForm = false;

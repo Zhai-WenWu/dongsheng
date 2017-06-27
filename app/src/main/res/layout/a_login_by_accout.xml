@@ -59,7 +59,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="欢迎来香哈"
+                        android:text="请登录香哈"
                         android:textColor="@color/c_black_text"
                         android:textSize="@dimen/sp_26"
                         android:textStyle="bold"/>

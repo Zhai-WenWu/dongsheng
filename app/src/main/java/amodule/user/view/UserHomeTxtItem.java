@@ -32,6 +32,7 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
 
     private TextView mTitle;
     private RelativeLayout mImgsLayout;
+    private RelativeLayout mTxtContainer;
     private ImageView mImg;
     private View mLayerView;
     private ImageView mADTag;
@@ -59,6 +60,7 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
         super.initView();
         mTitle = (TextView) findViewById(R.id.title);
         mImgsLayout = (RelativeLayout) findViewById(R.id.imgs);
+        mTxtContainer = (RelativeLayout) findViewById(R.id.txt_container);
         mImg = (ImageView) findViewById(R.id.img);
         mLayerView = findViewById(R.id.layer_view);
         mADTag = (ImageView) findViewById(R.id.ad_tag);
@@ -227,8 +229,12 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                 }
             }
         }
-        if (hasImg && mImgsLayout != null) {
-            mImgsLayout.setVisibility(View.VISIBLE);
+        if (hasImg) {
+            mTxtContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+            if (mImgsLayout != null)
+                mImgsLayout.setVisibility(View.VISIBLE);
+        } else {
+            mTxtContainer.setMinimumHeight(0);
         }
         if (hasVideo && mPlayImg != null) {
             mPlayImg.setVisibility(View.VISIBLE);

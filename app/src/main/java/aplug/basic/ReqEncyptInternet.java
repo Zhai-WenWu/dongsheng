@@ -32,6 +32,7 @@ public class ReqEncyptInternet extends UtilInternet {
         super(context);
     }
     private int loginNum=0;
+    private long now_login_time;
     public static ReqEncyptInternet init(Context context) {
         initContext=context;
         return in();
@@ -50,20 +51,34 @@ public class ReqEncyptInternet extends UtilInternet {
      * @param callback
      */
     public void doEncypt(String actionUrl, String param, InternetCallback callback){
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        if(!TextUtils.isEmpty(param)){
+             map=StringManager.getMapByString(param,"&","=");
+        }
+        doEncypt(actionUrl,map,callback);
+    }
+
+    /**
+     * 加密策略：传递参数使用，map,
+     * @param actionUrl
+     * @param map
+     * @param callback
+     */
+    public void doEncypt(String actionUrl, LinkedHashMap<String,String> map, InternetCallback callback){
         loginNum=0;
         //处理数据
         long time= System.currentTimeMillis();
         if(!isLoginSign && ReqEncryptCommon.getInstance().isencrypt()&&
                 (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=time){
-            setRequest(actionUrl,param,callback);
+            setRequest(actionUrl,map,callback);
         }else{
-            getLoginApp(actionUrl,param,callback);
+            getLoginApp(actionUrl,map,callback);
         }
     }
 
     /**
 
-    /**
+     /**
      * 加密策略,只执行AEC加密
      * @param actionUrl
      * @param param
@@ -84,11 +99,21 @@ public class ReqEncyptInternet extends UtilInternet {
     /**
      * 处理请求。
      * @param actionUrl
-     * @param param
+     * @param map
      */
-    private void setRequest(final String actionUrl, final String param, final InternetCallback callback){
-        //处理请求
-        String encryptparams=ReqEncryptCommon.getInstance().getData(param);
+    private void setRequest(final String actionUrl, final LinkedHashMap <String,String> map, final InternetCallback callback){
+        long now_request_time=System.currentTimeMillis();
+        int time= (int) (now_request_time-now_login_time)/1000;
+        //处理当前sign，获取要传输的sign
+        String sign_no= ReqEncryptCommon.decrypt(ReqEncryptCommon.getInstance().getSign(),ReqEncryptCommon.password);
+        String sign_yes= ReqEncryptCommon.encrypt(sign_no+"_"+time,ReqEncryptCommon.password);
+        String now_parms="";
+
+        Log.i("zhangyujian","sign_no::"+sign_no);
+        Log.i("zhangyujian","sign_yes::"+sign_yes);
+        Log.i("zhangyujian","time::"+time);
+        Log.i("zhangyujian","now_parms::"+now_parms);
+        String encryptparams=ReqEncryptCommon.getInstance().getData(now_parms,sign_yes);
         InternetCallback internetCallback= new InternetCallback(XHApplication.in()) {
             @Override
             public void loaded(int flag, String url, Object object) {
@@ -96,7 +121,7 @@ public class ReqEncyptInternet extends UtilInternet {
                 if(flag==ReqInternet.REQ_CODE_ERROR && object != "" && isNumeric((String) object)){
                     int errorCode= Integer.parseInt((String) object);
                     if(errorCode>4000){//请求签名错误
-                        getLoginApp(actionUrl,param,callback);
+                        getLoginApp(actionUrl,map,callback);
                     }else if(errorCode>2000){//不能救
                         Tools.showToast(XHApplication.in(),"请呼叫技术支持");
                         callback.loaded(flag,url,object);
@@ -110,7 +135,7 @@ public class ReqEncyptInternet extends UtilInternet {
             }
         };
         internetCallback.setEncryptparams(encryptparams);
-        doPost(actionUrl,isChangeUrlState?param:"",internetCallback);
+        doPost(actionUrl,map,internetCallback);
 
 
     }
@@ -122,7 +147,7 @@ public class ReqEncyptInternet extends UtilInternet {
 
     @Override
     public void doPost(String actionUrl, String param, InterCallback callback) {
-		 actionUrl = StringManager.replaceUrl(actionUrl);
+        actionUrl = StringManager.replaceUrl(actionUrl);
         super.doPost(actionUrl, param, callback);
     }
 
@@ -132,7 +157,7 @@ public class ReqEncyptInternet extends UtilInternet {
         super.doPost(actionUrl, map, callback);
     }
 
-    public void getLoginApp( String actionUrl, String actionParam, InternetCallback actionCallback) {
+    public void getLoginApp( String actionUrl, LinkedHashMap<String,String> mapParam, InternetCallback actionCallback) {
         try {
             Log.i("zhangyujian","loginNum:::"+loginNum);
             if(loginNum>=3){//最多3次请求
@@ -141,7 +166,7 @@ public class ReqEncyptInternet extends UtilInternet {
             ++loginNum;
             HashMap<String,Object> map= new HashMap<>();
             map.put("url",actionUrl);
-            map.put("param",actionParam);
+            map.put("param",mapParam);
             map.put("callback",actionCallback);
             listInternet.add(map);
             if(isLoginSign){//当前已经请求
@@ -157,6 +182,8 @@ public class ReqEncyptInternet extends UtilInternet {
                     Log.i("zhangyujian","getLoginApp() falg:" + flag + "  url:" + url + "  object:" + object);
                     isLoginSign=false;
                     if (flag >= ReqInternet.REQ_OK_STRING) {
+                        //loginApp的的时间戳。
+                        now_login_time=System.currentTimeMillis();
                         Map<String, String> map = StringManager.getFirstMap(object);
                         if (map.containsKey("gy")) {
                             ReqEncryptCommon.getInstance().setNowTime(System.currentTimeMillis());
@@ -180,7 +207,7 @@ public class ReqEncyptInternet extends UtilInternet {
                                         InternetCallback callback = (InternetCallback) mapurl.get("callback");
                                         if(callback!=null) {
                                             Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
-                                            setRequest((String)mapurl.get("url"),(String)mapurl.get("param"),callback);
+                                            setRequest((String)mapurl.get("url"),(LinkedHashMap)mapurl.get("param"),callback);
                                         }
                                     }
 
@@ -200,7 +227,7 @@ public class ReqEncyptInternet extends UtilInternet {
                                     InternetCallback callback = (InternetCallback) mapurl.get("callback");
                                     if(callback!=null) {
                                         Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
-                                        setRequest((String)mapurl.get("url"),(String)mapurl.get("param"),callback);
+                                        setRequest((String)mapurl.get("url"),(LinkedHashMap)mapurl.get("param"),callback);
                                     }
                                 }
 

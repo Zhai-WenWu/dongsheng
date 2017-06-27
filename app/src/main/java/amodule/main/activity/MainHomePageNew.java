@@ -90,8 +90,6 @@ public class MainHomePageNew extends MainBaseActivity {
 		if(onResumeNum == 1){
 			SpecialWebControl.initSpecialWeb(this,"index","","");
 		}
-		//初始化弹框推广位
-		craeteAD();
 		if(mAds != null){
 			for(AdsShow ad : mAds){
 				ad.onResumeAd();
@@ -144,112 +142,6 @@ public class MainHomePageNew extends MainBaseActivity {
 		//今日佳作列表加载数据,
 		mHomeDish.loadData(mHeaderAndListControl.getListView(), mHeaderAndListControl.getScrollLinearListLayout());
 
-	}
-	/**
-	 * 设置弹框推广位
-	 */
-	private void craeteAD(){
-		if(!adOnce){
-			adOnce = true;
-			if(isShowAD(AdPlayIdConfig.FULLSCREEN, AdParent.ADKEY_BANNER)){
-				//广告
-				final Map<String,String> map = AppCommon.getWelcomeInfo();
-				// 设置welcome图片
-				if (map != null && map.get("img") != null && map.get("img").length() > 10) {
-					//显示几次
-					String showNumStr = TextUtils.isEmpty(map.get("showNum")) ? "0" : map.get("showNum");
-					int showNum = Integer.parseInt(TextUtils.isEmpty(showNumStr) ? "0" : showNumStr);
-					String currentShowNumStr =  (String) FileManager.loadShared(this, FileManager.xmlFile_appInfo, FileManager.xmlKey_showNum);
-					//当前已经显示了几次
-					int currentShowNum = Integer.parseInt(TextUtils.isEmpty(currentShowNumStr) ? "0" : currentShowNumStr);
-					if((showNum == 0 || currentShowNum < showNum)){
-						if(showNum != 0){
-							currentShowNum++;
-						}
-						FileManager.saveShared(this, FileManager.xmlFile_appInfo, FileManager.xmlKey_showNum, currentShowNum + "");
-						BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(this)
-							.load(map.get("img"))
-							.setSaveType(LoadImage.SAVE_LONG)
-							.build();
-						if(bitmapRequest != null)
-							bitmapRequest.into(new SubBitmapTarget() {
-								@Override
-								public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-									adShow(map,bitmap);
-								}
-							});
-					}
-				}else{
-					final XHADView adScrollView = XHADView.getInstence(MainHomePageNew.this);
-					if(adScrollView != null){
-						adScrollView.hide();
-					}
-				}
-			}
-		}
-	}
-
-	private boolean isShowAD(String adPlayId,String adKey) {
-		Map<String,String> mData = AdConfigTools.getInstance().getAdConfigData(adPlayId);
-		if (!TextUtils.isEmpty(adPlayId) && AdPlayIdConfig.FULLSCREEN.equals(adPlayId) && !TextUtils.isEmpty(adKey) && AdParent.ADKEY_BANNER.equals(adKey)) {
-			if (mData.containsKey("adConfig")) {
-				String valueConfig = mData.get("adConfig");
-				if (!TextUtils.isEmpty(valueConfig)) {
-					ArrayList<Map<String, String>> configMaps = StringManager.getListMapByJson(valueConfig);
-					if (configMaps != null && configMaps.size() > 0) {
-						for (Map<String, String> map : configMaps) {
-							if (map != null) {
-								String keyNum = "";
-								if (map.containsKey("1")) {
-									keyNum = String.valueOf(1);
-								} else if (map.containsKey("2")) {
-									keyNum = String.valueOf(2);
-								} else if (map.containsKey("3")) {
-									keyNum = String.valueOf(3);
-								} else if (map.containsKey("4")) {
-									keyNum = String.valueOf(4);
-								}
-								String valueNum = map.get(keyNum);
-								if (!TextUtils.isEmpty(valueNum) && "2".equals(StringManager.getFirstMap(valueNum).get("open")) && "personal".equals(StringManager.getFirstMap(valueNum).get("type")))
-									return true;
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-	
-	//显示AD
-	private void adShow(final Map<String,String> map , Bitmap bmp) {
-		if(bmp == null
-				||TextUtils.isEmpty(map.get("times")) 
-				|| TextUtils.isEmpty(map.get("delay"))){
-			return;
-		}
-		//需要时activity的context
-		final XHADView adScrollView = XHADView.getInstence(MainHomePageNew.this);
-		if(adScrollView != null){
-			adScrollView.refreshContext(MainHomePageNew.this);
-			adScrollView.setImage(bmp);
-			//展示统计
-			XHClick.mapStat(MainHomePageNew.this, "ad_show_index", "全屏", "xh");
-			adScrollView.setADClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					//点击统计
-					XHClick.mapStat(MainHomePageNew.this, "ad_click_index", "全屏", "xh");
-					AppCommon.openUrl(MainHomePageNew.this, map.get("url"), true);
-					adScrollView.hide();
-				}
-			});
-			int displayTime = Integer.parseInt(map.get("times"));
-			int delay = Integer.parseInt(map.get("delay"));
-			//必须调用该方法初始化
-			adScrollView.initTimer(delay * 1000, displayTime * 1000);
-//	adScrollView.initTimer(0, 0);
-		}
 	}
 
 	/**

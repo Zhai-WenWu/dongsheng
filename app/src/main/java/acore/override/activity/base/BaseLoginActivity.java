@@ -167,10 +167,10 @@ public class BaseLoginActivity extends BaseActivity {
                                 JSONObject object = new JSONObject(throwable.getMessage());
                                 String des = object.optString("detail");//错误描述
                                 int status = object.optInt("status");//错误代码
-                                if (462 == status
-                                        || 472 == status) {
+                                Log.i("login","sendSMS() status:" + status);
+                                Log.i("login","sendSMS() des:" + des);
+                                if (462 == status || 472 == status) {
                                     Toast.makeText(mAct, "请勿频繁发送验证码", Toast.LENGTH_SHORT).show();
-
                                 } else if (463 == status
                                         || 464 == status
                                         || 465 == status

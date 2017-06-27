@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.dialogManager.ADPopwindiwManager;
 import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -427,7 +428,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 UtilFile.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_appData);
                 UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
                 AppCommon.deleteIndexData();
-                AppCommon.saveWelcomeInfo(null);
+                ADPopwindiwManager.saveWelcomeInfo(null);
                 Setting.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

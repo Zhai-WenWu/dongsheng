@@ -6,8 +6,8 @@ public class MallStringManager extends UtilString{
 
 	public final static String defaultDomain = ".ds.xiangha.com";
 //	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
-	public final static String apiTitle = "http://api";
-	public final static String appWebTitle = "http://m";
+	public final static String apiTitle = "https://api";
+	public final static String appWebTitle = "https://m";
 	//当前域名
 	public static String domain = defaultDomain;
 	//API请求地址
@@ -50,7 +50,7 @@ public class MallStringManager extends UtilString{
 	public final static String mall_web_classify = mall_web_apiUrl + "/v1/classify/classifyInfo";
 	
 	//获取dsToken
-	public final static String mall_getDsToken="http://oauth.xiangha.com/ds/getDsToken";
+	public final static String mall_getDsToken="https://oauth.xiangha.com/ds/getDsToken";
 	//购物车
 	public final static String mall_getCartProductNum=mall_apiUrl+"/v1/cart/getCartProductNum";
 	public final static String mall_getCartInfo=mall_apiUrl+"/v1/cart/getCartInfo";

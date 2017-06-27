@@ -9,7 +9,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,9 +21,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
@@ -46,7 +42,6 @@ import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
-import acore.tools.ImgManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -62,9 +57,7 @@ import amodule.quan.db.CircleSqlite;
 import amodule.user.activity.ChangeUrl;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
-import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
-import aplug.basic.SubBitmapTarget;
 import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
@@ -492,52 +485,6 @@ public class AppCommon {
         return jsonStr;
     }
 
-    // 保存welcome页数据
-    public static void saveWelcomeInfo(String json) {
-        Map<String, String> map = getWelcomeInfo();
-        if (json == null || json.length() < 10) {
-            delWelcomeInfo(map);
-        } else {
-            String file_content = FileManager.readFile(FileManager.getDataDir() + FileManager.file_welcome);
-            file_content = file_content.trim();
-            if (!file_content.equals(json)) {
-                delWelcomeInfo(map);
-                FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_showNum, "0");
-                FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_welcome, json, false);
-                if (map != null && map.containsKey("img")) {
-                    String imgUrl = map.get("img");
-                    BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
-                            .load(imgUrl)
-                            .setSaveType(LoadImage.SAVE_LONG)
-                            .build();
-                    if (bitmapRequest != null) {
-                        bitmapRequest.into(new SubBitmapTarget() {
-                            @Override
-                            public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    }
-
-    // 删除welcome页数据
-    private static void delWelcomeInfo(Map<String, String> map) {
-        if (map != null && map.get("img") != null)
-            ImgManager.delImg(map.get("img"));
-        FileManager.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_welcome);
-    }
-
-    // 从文件获取welcome页数据
-    public static Map<String, String> getWelcomeInfo() {
-        String file_content = FileManager.readFile(FileManager.getDataDir() + FileManager.file_welcome);
-        if (file_content.length() > 10)
-            return getListMapByJson(file_content).get(0);
-        return null;
-    }
-
     /**
      * 关注请求
      *
@@ -762,9 +709,7 @@ public class AppCommon {
 
     public synchronized static void saveUrlRuleFile(Context context) {
         final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
-//		/**
-//		 * 方便测试 
-//		 */
+		//TODO 方便测试
 //		if(FileManager.ifFileModifyByCompletePath(urlRulePath, -1) == null){
 //			String urlRuleData = FileManager.getFromAssets(context, FileManager.file_urlRule);
 //			FileManager.saveFileToCompletePath(urlRulePath, urlRuleData, false);

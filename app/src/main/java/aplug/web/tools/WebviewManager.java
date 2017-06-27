@@ -192,8 +192,8 @@ public class WebviewManager {
             // 当前页打开
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+                Log.i("tzy","url = " + url);
                 if (state) {
-                    Log.i("tzy","url = " + url);
                     loadManager.setLoading(new OnClickListener() {
                         @Override
                         public void onClick(View v) {

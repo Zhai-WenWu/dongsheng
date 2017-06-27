@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_240"
         android:orientation="vertical"
+        android:visibility="gone"
         android:background="#898989"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

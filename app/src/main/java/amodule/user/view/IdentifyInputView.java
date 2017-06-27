@@ -23,12 +23,15 @@ import com.xiangha.R;
 
 public class IdentifyInputView extends RelativeLayout implements View.OnClickListener {
 
-
-    private final Context context;
     private final EditText et_identify;
     private final Button btn_identify_request;
     private final CountDownTimer countDownTimer;
     private IdentifyInputViewCallback callback;
+
+    /**
+     * 等待验证码时间：秒
+     */
+    private int waitTime = 90;
 
     public IdentifyInputView(Context context) {
         this(context, null);
@@ -41,7 +44,6 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
     public IdentifyInputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.a_login_identify, this, true);
-        this.context = context;
         et_identify = (EditText) findViewById(R.id.et_identify);
         et_identify.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         btn_identify_request = (Button) findViewById(R.id.btn_identify_request);
@@ -50,32 +52,24 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
 
         et_identify.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-
                 callback.onInputDataChanged();
             }
         });
 
-
-
-        countDownTimer = new CountDownTimer(90000, 1000) {
+        countDownTimer = new CountDownTimer(waitTime * 1000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
+                Log.i("FRJ","millisUntilFinished:" + millisUntilFinished);
                 btn_identify_request.setBackgroundResource(R.drawable.bg_round_gray_identify);
                 btn_identify_request.setTextColor(Color.parseColor("#999999"));
                 btn_identify_request.setClickable(false);
-                btn_identify_request.setText("重新获取(" + (int)(millisUntilFinished) / 1000 + ")");
+                btn_identify_request.setText("重新获取(" + (int)(millisUntilFinished / 1000) + ")");
             }
 
             @Override
@@ -101,7 +95,6 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.btn_identify_request:
                 btn_identify_request.setClickable(false);
@@ -117,8 +110,8 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
     }
 
     /*** 设置获取验证码可点击*/
-    public void btnClickTrue(){
-        btn_identify_request.setClickable(true);
+    public void setOnBtnClickState(boolean state){
+        btn_identify_request.setClickable(state);
     }
 
     public String getIdentify() {
@@ -131,10 +124,19 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
 
     public interface IdentifyInputViewCallback {
 
+        /**
+         * 倒计时完成后回调
+         */
         void onCountDownEnd();
 
+        /**
+         * 验证码内容变化后回调
+         */
         void onInputDataChanged();
 
+        /**
+         * 点击获取验证码后回调
+         */
         void onCliclSendIdentify();
     }
 

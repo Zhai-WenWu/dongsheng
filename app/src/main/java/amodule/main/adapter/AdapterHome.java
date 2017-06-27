@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import acore.override.adapter.AdapterSimple;
-import amodule.main.view.item.HomeADItem;
 import amodule.main.view.item.HomeAlbumItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
@@ -138,21 +137,6 @@ public class AdapterHome extends AdapterSimple{
     public class ViewTxtViewHolder{
         HomeTxtItem view;
         public ViewTxtViewHolder(HomeTxtItem view){
-            this.view=view;
-        }
-        public void setData(Map<String,String> map, int position){
-            if(view!=null){
-                view.setData(map, position);
-                if(viewClickCallBack!=null)view.setRefreshTag(viewClickCallBack);
-            }
-        }
-    }
-    /**
-     * View Ad类型
-     */
-    public class ViewAdViewHolder{
-        HomeADItem view;
-        public ViewAdViewHolder(HomeADItem view){
             this.view=view;
         }
         public void setData(Map<String,String> map, int position){

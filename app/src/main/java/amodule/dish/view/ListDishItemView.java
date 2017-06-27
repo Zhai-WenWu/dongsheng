@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,7 +56,12 @@ public class ListDishItemView extends RelativeLayout {
     private TextView mNum1;
     private TextView mNum2;
     private RelativeLayout mIconSearch;
+    private RelativeLayout mContainer;
+    private RelativeLayout mTopContainer;
+    private LinearLayout mUserContainer;
     private View mLayerView;
+
+    private boolean mIsAD;
 
     private Map<String, String> mData;
 
@@ -91,6 +97,9 @@ public class ListDishItemView extends RelativeLayout {
         mNum1 = (TextView) findViewById(R.id.num1);
         mNum2 = (TextView) findViewById(R.id.num2);
         mIconSearch = (RelativeLayout) findViewById(R.id.icon_search_container);
+        mContainer = (RelativeLayout) findViewById(R.id.container);
+        mTopContainer = (RelativeLayout) findViewById(R.id.top_container);
+        mUserContainer = (LinearLayout) findViewById(R.id.user_container);
         mLayerView = findViewById(R.id.layer_view);
         addListener();
     }
@@ -126,6 +135,8 @@ public class ListDishItemView extends RelativeLayout {
     }
 
     private void bindView() {
+        resetContainer();
+        boolean showUserContainer = false;
         String title = mData.get("alias");
         if (TextUtils.isEmpty(title))
             title = mData.get("name");
@@ -146,14 +157,16 @@ public class ListDishItemView extends RelativeLayout {
             if (customer != null) {
                 String name = customer.get("nickName");
                 if (!TextUtils.isEmpty(name)) {
+                    showUserContainer = true;
                     mUserName.setText(name);
                     mUserName.setVisibility(View.VISIBLE);
                 } else
                     mUserName.setVisibility(View.GONE);
                 String isGourmet = customer.get("isGourmet");
-                if ("2".equals(isGourmet))
+                if ("2".equals(isGourmet)) {
+                    showUserContainer = true;
                     mGourmetIcon.setVisibility(View.VISIBLE);
-                else
+                } else
                     mGourmetIcon.setVisibility(View.GONE);
             }
         } else {
@@ -162,21 +175,55 @@ public class ListDishItemView extends RelativeLayout {
         }
         String allClick = mData.get("allClick");
         if (!TextUtils.isEmpty(allClick)) {
+            showUserContainer = true;
             mNum1.setText(allClick);
             mNum1.setVisibility(View.VISIBLE);
         } else
             mNum1.setVisibility(View.GONE);
         String favorites = mData.get("favorites");
         if (!TextUtils.isEmpty(favorites)) {
+            showUserContainer = true;
             mNum2.setText(favorites);
             mNum2.setVisibility(View.VISIBLE);
         } else
             mNum2.setVisibility(View.GONE);
-        if(mData.containsKey("adStyle")&&"1".equals(mData.get("adStyle"))){
-            mIconSearch.setVisibility(GONE);
-        }else{
-            mIconSearch.setVisibility(VISIBLE);
+        mUserContainer.setVisibility(showUserContainer ? View.VISIBLE : View.GONE);
+        mPlayImg.setVisibility("2".equals(mData.get("hasVideo")) ? View.VISIBLE : View.GONE);
+        ArrayList<Map<String, String>> videos = StringManager.getListMapByJson(mData.get("video"));
+        if (videos != null && !videos.isEmpty()) {
+            String duration = videos.get(0).get("duration");
+            if (!TextUtils.isEmpty(duration)) {
+                mDurationTime.setText(duration);
+                mDurationTime.setVisibility(View.VISIBLE);
+            } else
+                mDurationTime.setVisibility(View.GONE);
+        } else {
+            mDurationTime.setVisibility(View.GONE);
         }
+        mIsAD = "1".equals(mData.get("adStyle"));
+        mIconSearch.setVisibility(mIsAD ? View.GONE : View.VISIBLE);
+        mLayerView.setVisibility(mIsAD ? View.VISIBLE : View.GONE);
+        mADTag.setVisibility(mIsAD ? View.VISIBLE : View.GONE);
+
+        if (mTitleTop.getVisibility() == View.VISIBLE || mIconSearch.getVisibility() == View.VISIBLE)
+            mTopContainer.setVisibility(View.VISIBLE);
+        else
+            mTopContainer.setVisibility(View.GONE);
+    }
+
+    private void resetContainer() {
+        MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
+        containerParams.width = MarginLayoutParams.MATCH_PARENT;
+        containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
+        mContainer.setLayoutParams(containerParams);
+        MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
+        layerParams.width = MarginLayoutParams.MATCH_PARENT;
+        layerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
+        mLayerView.setLayoutParams(layerParams);
+        MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
+        adImgParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
+        mImg.setLayoutParams(adImgParams);
+        mLayerView.requestLayout();
     }
 
     private void loadImage() {
@@ -239,6 +286,10 @@ public class ListDishItemView extends RelativeLayout {
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                if (mIsAD) {
+                    onAdImageReady(bitmap);
+                    return;
+                }
                 ImageView img = null;
                 if (v.getTag(TAG_ID).equals(url))
                     img = v;
@@ -248,5 +299,32 @@ public class ListDishItemView extends RelativeLayout {
                 }
             }
         };
+    }
+
+    private void onAdImageReady(Bitmap bitmap) {
+        if (bitmap == null)
+            return;
+        int bitmapWidth = bitmap.getWidth();
+        int bitmapHeight = bitmap.getHeight();
+        int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
+        int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
+        mImg.setScaleType(ImageView.ScaleType.FIT_XY);
+        mImg.setImageBitmap(bitmap);
+        if (mContainer != null) {
+            MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
+            containerParams.width = MarginLayoutParams.MATCH_PARENT;
+            containerParams.height = imgHeight;
+            mContainer.setLayoutParams(containerParams);
+        }
+        MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
+        adImgParams.height = imgHeight;
+        mImg.setLayoutParams(adImgParams);
+        if (mLayerView != null) {
+            MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
+            layerParams.width = MarginLayoutParams.MATCH_PARENT;
+            layerParams.height = imgHeight;
+            mLayerView.setLayoutParams(layerParams);
+            mLayerView.requestLayout();
+        }
     }
 }

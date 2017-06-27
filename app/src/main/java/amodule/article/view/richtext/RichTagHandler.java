@@ -22,8 +22,10 @@ package amodule.article.view.richtext;
 
 import android.text.Editable;
 import android.text.Html;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.style.AlignmentSpan;
 import android.text.style.BulletSpan;
 import android.text.style.StrikethroughSpan;
 
@@ -34,28 +36,44 @@ public class RichTagHandler implements Html.TagHandler {
     private static final String STRIKETHROUGH_S = "s";
     private static final String STRIKETHROUGH_STRIKE = "strike";
     private static final String STRIKETHROUGH_DEL = "del";
+    private static final String CENTER = "center";
 
     private static class Li {}
     private static class Strike {}
+    private static class Center {}
 
     @Override
     public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+        //opening start
         if (opening) {
-            if (tag.equalsIgnoreCase(BULLET_LI)) {
+            if(tag.equalsIgnoreCase(CENTER)){
+//                if (output.length() > 0 && output.charAt(output.length() - 1) != '\n') {
+                    output.append("\n");
+//                }
+                start(output, new Center());
+            }else if (tag.equalsIgnoreCase(BULLET_LI)) {
                 if (output.length() > 0 && output.charAt(output.length() - 1) != '\n') {
                     output.append("\n");
                 }
                 start(output, new Li());
-            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S) || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE) || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
+            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S)
+                    || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE)
+                    || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
                 start(output, new Strike());
             }
+            //end
         } else {
-            if (tag.equalsIgnoreCase(BULLET_LI)) {
+            if(tag.equalsIgnoreCase(CENTER)){
+                output.append("\n");
+                end(output, Center.class, new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER));
+            }else if (tag.equalsIgnoreCase(BULLET_LI)) {
                 if (output.length() > 0 && output.charAt(output.length() - 1) != '\n') {
                     output.append("\n");
                 }
                 end(output, Li.class, new BulletSpan());
-            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S) || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE) || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
+            } else if (tag.equalsIgnoreCase(STRIKETHROUGH_S)
+                    || tag.equalsIgnoreCase(STRIKETHROUGH_STRIKE)
+                    || tag.equalsIgnoreCase(STRIKETHROUGH_DEL)) {
                 end(output, Strike.class, new StrikethroughSpan());
             }
         }
@@ -71,10 +89,36 @@ public class RichTagHandler implements Html.TagHandler {
         int end = output.length();
         output.removeSpan(last);
 
-        if (start != end) {
+        if (start < end) {
             for (Object replace : replaces) {
                 output.setSpan(replace, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
+        }
+    }
+
+    /**
+     * Modified from {@link android.text.Html}
+     */
+    private void end2(Editable output, Class kind, boolean paragraphStyle, Object... replaces) {
+        Object obj = getLast(output, kind);
+        // start of the tag
+        int where = output.getSpanStart(obj);
+        // end of the tag
+        int len = output.length();
+
+        output.removeSpan(obj);
+
+        if (where != len) {
+            int thisLen = len;
+            // paragraph styles like AlignmentSpan need to end with a new line!
+            if (paragraphStyle) {
+                output.append("\n");
+                thisLen++;
+            }
+            for (Object replace : replaces) {
+                output.setSpan(replace, where, thisLen, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
         }
     }
 

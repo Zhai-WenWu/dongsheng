@@ -59,6 +59,7 @@ import aplug.recordervideo.db.RecorderVideoData;
 import xh.windowview.XhDialog;
 
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
+import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
 
 /**
@@ -270,17 +271,19 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         mixLayout.setOnSelectBoldCallback(new EditTextView.OnSelectBoldCallback() {
             @Override
             public void onSelectBold(boolean isSelected) {
-                if (editBottomControler.isShowEditLayout()) {
-                    editBottomControler.setTextBoldImageSelection(isSelected);
-                }
+                setupTextBoldImageSelection(isSelected);
             }
         });
         mixLayout.setOnSelectUnderlineCallback(new EditTextView.OnSelectUnderlineCallback() {
             @Override
             public void onSelectUnderline(boolean isSelected) {
-                if (editBottomControler.isShowEditLayout()) {
-                    editBottomControler.setTextUnderlineImageSelection(isSelected);
-                }
+                setupTextUnderlineImageSelection(isSelected);
+            }
+        });
+        mixLayout.setOnSelectCenterCallback(new EditTextView.OnSelectCenterCallback() {
+            @Override
+            public void onSelectCenter(boolean isSelected) {
+                setupTextCenterImageSelection(isSelected);
             }
         });
         if ("2".equals(getType())) {
@@ -303,6 +306,24 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
         //初始化底部编辑控制
         initEditBottomControler();
+    }
+
+    private void setupTextBoldImageSelection(boolean isSelected){
+        if (editBottomControler.isShowEditLayout()) {
+            editBottomControler.setTextBoldImageSelection(isSelected);
+        }
+    }
+
+    private void setupTextUnderlineImageSelection(boolean isSelected){
+        if (editBottomControler.isShowEditLayout()) {
+            editBottomControler.setTextUnderlineImageSelection(isSelected);
+        }
+    }
+
+    private void setupTextCenterImageSelection(boolean isSelected){
+        if (editBottomControler.isShowEditLayout()) {
+            editBottomControler.setTextCenterImageSelection(isSelected);
+        }
     }
 
     /** 初始化底部编辑控制 */
@@ -412,6 +433,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                                     XHClick.mapStat(mCurrentContext, "a_ArticleEdit", "编辑文章内容", "字体样式");
                                     break;
                             }
+                            if(isShow){
+                                setupTextBoldImageSelection(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_BOLD));
+                                setupTextUnderlineImageSelection(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_UNDERLINED));
+                                setupTextCenterImageSelection(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_CENTER));
+                            }
                         }
 
                         @Override
@@ -429,6 +455,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         @Override
                         public void onTextCenter() {
                             mixLayout.setupTextCenter();
+                            editBottomControler.setTextCenterImageSelection(mixLayout.getCurrentEditText().getRichText().contains(FORMAT_CENTER));
                         }
                     });
     }
@@ -695,7 +722,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             xhDialog.cancel();
                         }
                     })
-                    .setSureButtonTextColor("#333333")
                     .setSureButton("退出", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -703,7 +729,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             xhDialog.cancel();
                             finshActivity();
                         }
-                    }).show();
+                    }).setSureButtonTextColor("#333333")
+                    .setCancelButtonTextColor("#333333")
+                    .show();
         }
 
     }

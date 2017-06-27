@@ -49,8 +49,6 @@ import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
 
-import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
-
 /**
  * 文章上传列表页
  * Created by Fang Ruijiao on 2017/5/23.
@@ -505,7 +503,9 @@ public class ArticleUploadListActivity extends BaseActivity {
                 xhDialog.cancel();
                 allStartOrPause(true);
             }
-        }).show();
+        }).setSureButtonTextColor("#333333")
+                .setCancelButtonTextColor("#333333")
+                .show();
     }
 
 
