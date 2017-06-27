@@ -420,7 +420,7 @@ public class FriendHome extends BaseActivity {
 									articleData.upload(StringManager.api_articleAdd, new InternetCallback(this) {
 										@Override
 										public void loaded(int i, String s, Object o) {
-											if (i > UtilInternet.REQ_OK_STRING) {
+											if (i >= UtilInternet.REQ_OK_STRING) {
 												dataMap.put("uploadType", UploadDishData.UPLOAD_SUCCESS);
 												itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_SUCCESS);
 												articleData.setUploadType(UploadDishData.UPLOAD_SUCCESS);
