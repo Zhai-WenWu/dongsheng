@@ -2,6 +2,7 @@ package amodule.main.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -45,7 +47,9 @@ import aplug.basic.ReqInternet;
  */
 public class MainHome extends MainBaseActivity {
     public final static String tag = "zhangyujian";
-    public final static String recommedType = "recom";//推荐类型
+    public final static String recommedType = "recomv1";//推荐类型
+    public final static String recommedType_statictus = "recom";//推荐类型-用于统计
+
     private PagerSlidingTabStrip home_tab;
     private ViewPager viewpager;
     private boolean isRefresh = false;
@@ -74,13 +78,15 @@ public class MainHome extends MainBaseActivity {
      * 创建View
      */
     private void initView() {
+//        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+//        Tools.setStatusBarColor(this, Color.parseColor(colors));
         home_tab = (acore.widget.PagerSlidingTabStrip) findViewById(R.id.home_tab);
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         mFenlei = (LinearLayout) findViewById(R.id.fenlei_linear);
         mSearch = (RelativeLayout) findViewById(R.id.ed_search_layout_main);
         mMoreBtn = (ImageView) findViewById(R.id.btn_back);
         viewpager.setOffscreenPageLimit(5);
-        initTopView();
+//        initTopView();
         addListener();
     }
 
@@ -194,7 +200,7 @@ public class MainHome extends MainBaseActivity {
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         String moduleJson = FileManager.readFile(modulePath);
         if (TextUtils.isEmpty(moduleJson)) {
-            moduleJson = FileManager.getFromAssets(this, FileManager.file_homeTopModle);
+            moduleJson = FileManager.getFromAssets(this, "homeTopModle");
 //            Log.i(tag, "moduleJson::内置：：：" + moduleJson);
             final String finalModuleJson = moduleJson;
             FileManager.saveFileToCompletePath(modulePath, finalModuleJson.toString(), false);
@@ -212,7 +218,7 @@ public class MainHome extends MainBaseActivity {
     private void setRequestModuleData() {
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         String url = StringManager.API_GET_LEVEL;
-        ReqEncyptInternet.in().doEncyptAEC(url, "", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncyptAEC(url, "version=" + "v1", new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, final Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -395,7 +401,7 @@ public class MainHome extends MainBaseActivity {
         }
         long nowTime= System.currentTimeMillis();
         if(startTime>0){
-            XHClick.saveStatictisFile("home","recom","","","","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+            XHClick.saveStatictisFile("home",recommedType_statictus,"","","","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
             //置数据
             setRecommedTime(0);
         }

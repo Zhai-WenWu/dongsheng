@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -56,6 +57,8 @@ public class UserHomeSubject extends TabContentView {
 	private int headerCount=0;//存在listview头数据
 
 	private TextView subjectNum;
+	private LinearLayout mTabMainMyself;
+	private TextView mEmpty;
 
 	public UserHomeSubject(FriendHome act, String code) {
 		view = View.inflate(act, R.layout.myself_subject, null);
@@ -78,14 +81,15 @@ public class UserHomeSubject extends TabContentView {
 		super.onResume(tag);
 		theListView.setSelection(1);
 		if(subjectNum == null) {
-			LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
-			subjectNum = (TextView) tabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
+			mTabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
+			subjectNum = (TextView) mTabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
 		}
 	}
 
 	private void init() {
 		// 结果显示
 		loadManager = mAct.loadManager;
+		mEmpty = (TextView) view.findViewById(R.id.tv_noData);
 		theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
 		theListView.setDivider(null);
 		listDataMySb = new ArrayList<>();
@@ -114,10 +118,7 @@ public class UserHomeSubject extends TabContentView {
 	public void initLoad() {
 		currentPage = 0;
 		isRefresh = true;
-		// listDataMySb.clear();
-		// theListView.setVisibility(View.GONE);
-		// final int tabHost_h =
-		// Tools.getTargetHeight(FriendHome.showUser.tabMainMyself);
+		theListView.setVisibility(View.GONE);
 		if (theListView.getAdapter() == null) {
 			headView = new View(mAct);
 			setHeadViewHeight();
@@ -265,7 +266,6 @@ public class UserHomeSubject extends TabContentView {
 			public void loaded(int flag, String url, Object returnObj) {
 				loadData(flag, returnObj);
 				setHeadViewHeight();
-				mAct.show();
 			}
 		});
 	}
@@ -302,14 +302,17 @@ public class UserHomeSubject extends TabContentView {
 				if (isMyselft) map.put("isMe", "2");
 				else map.put("isMe", "1");
 				if (!TextUtils.isEmpty(map.get("num")) && !map.get("num").equals("1"))
-					map.put("title", "【跟帖】" + map.get("title"));
+					map.put("title", "【跟贴】" + map.get("title"));
 				listDataMySb.add(map);
 			}
 		}
-		// 如果总数据为空,显示没有美食帖
+		// 如果总数据为空,显示没有美食贴
 		if (listDataMySb.size() == 0) {
-			view.findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
+			RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmpty.getLayoutParams();
+			emptyParams.topMargin = mTabMainMyself.getTop() + mTabMainMyself.getHeight();
+			mEmpty.setVisibility(View.VISIBLE);
 		} else {
+			mEmpty.setVisibility(View.GONE);
 			adapter.notifyDataSetChanged();
 			theListView.setVisibility(View.VISIBLE);
 		}

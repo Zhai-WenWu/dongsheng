@@ -17,6 +17,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import acore.logic.SetDataView;
 import acore.logic.XHClick;
@@ -31,7 +32,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 /**
  * 主辅料
  */
-public class DishDataShow extends DishBaseView {
+public class DishDataShow extends ItemBaseView {
     private LinearLayout linear_data;
     private LinearLayout recommendAd_linear;
     private Activity activity;

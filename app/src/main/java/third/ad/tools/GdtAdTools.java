@@ -49,7 +49,7 @@ public class GdtAdTools {
      */
     public void showSplashAD(Activity act, ViewGroup parent, View skipContainer, String adid,
                              final GdtSplashAdListener gdtListener) {
-        new SplashAD(act, parent, skipContainer, APPID, adid,
+        SplashAD splashAD = new SplashAD(act, parent, skipContainer, APPID, adid,
                 new SplashADListener() {
                     @Override
                     public void onADDismissed() {
@@ -136,7 +136,7 @@ public class GdtAdTools {
                 new NativeAD.NativeAdListener() {
                     @Override
                     public void onADLoaded(List<NativeADDataRef> list) {
-                        Log.i("tzy", "GDT NactiveAD loaded");
+//                        Log.i("tzy", "GDT NactiveAD loaded");
                         if (null != callback) {
                             callback.onNativeLoad(list);
                         }
@@ -144,7 +144,7 @@ public class GdtAdTools {
 
                     @Override
                     public void onNoAD(int i) {
-                        Log.i("tzy", "GDT NactiveAD onNoAD");
+//                        Log.i("tzy", "GDT NactiveAD onNoAD");
                         if (null != callback) {
                             callback.onNativeFail(null, "onNoAD:code = " + i);
                         }
@@ -152,7 +152,7 @@ public class GdtAdTools {
 
                     @Override
                     public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
-                        Log.i("tzy", "GDT NactiveAD onADStatusChanged");
+//                        Log.i("tzy", "GDT NactiveAD onADStatusChanged");
                         if (null != callback) {
                             callback.onADStatusChanged(nativeADDataRef);
                         }
@@ -160,13 +160,13 @@ public class GdtAdTools {
 
                     @Override
                     public void onADError(NativeADDataRef nativeADDataRef, int i) {
-                        Log.i("tzy", "GDT NactiveAD onADError");
+//                        Log.i("tzy", "GDT NactiveAD onADError");
                         if (null != callback) {
                             callback.onNativeFail(nativeADDataRef, "adError:code = " + i);
                         }
                     }
                 });
-        Log.i("tzy", "GDT NactiveAD start load");
+//        Log.i("tzy", "GDT NactiveAD start load");
         nativeAD.loadAD(adCount);// 一次拉取的广告条数：范围1-30
     }
 

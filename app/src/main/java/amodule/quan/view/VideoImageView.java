@@ -320,7 +320,7 @@ public class VideoImageView extends RelativeLayout{
         }
     }
 
-    protected void onDestroy() {
+    public void onDestroy() {
         if (vdVideoView != null)
             vdVideoView.release(false);
     }
@@ -362,4 +362,6 @@ public class VideoImageView extends RelativeLayout{
     public void setVideoCycle(boolean cycle) {
         mIsCycle = cycle;
     }
+
+
 }

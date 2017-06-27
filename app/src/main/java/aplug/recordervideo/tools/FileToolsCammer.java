@@ -2,9 +2,11 @@ package aplug.recordervideo.tools;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -283,5 +286,98 @@ public class FileToolsCammer {
 
     public interface OnCammerFileListener{
         public void loadOver(ArrayList<Map<String,String>> orderArrayLis);
+    }
+
+    public static String formatVideoTimeByMills(long millis) {
+        if (millis <= 0)
+            return "00:00";
+        int hours = (int) (millis / (1000 * 60 * 60));
+        int mins = (int) ((millis - hours * 60 * 60 * 1000) / (1000 * 60));
+        int secos = (int) ((millis - hours * 60 * 60 * 1000 - mins * 60 * 1000) / 1000);
+        StringBuffer buffer = new StringBuffer();
+        if (hours >= 10)
+            buffer.append(hours + ":");
+        else if (hours > 0)
+            buffer.append("0" + hours + ":");
+        if (mins >= 10)
+            buffer.append(mins + ":");
+        else if (mins > 0)
+            buffer.append("0" + mins + ":");
+        else
+            buffer.append("00:");
+        if (secos >= 10)
+            buffer.append(secos);
+        else if (secos > 0)
+            buffer.append("0" + secos);
+        else
+            buffer.append("00");
+        return buffer.toString();
+    }
+
+    /**
+     * 获取本地所有视频
+     */
+    public static ArrayList<Map<String, String>> getLocalMediasLimitFormats(ArrayList<String> formats) {
+        ArrayList<Map<String, String>> videos = new ArrayList<Map<String, String>>();
+        Cursor cursor = XHApplication.in().getApplicationContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Video.Media.DATE_ADDED + " DESC");
+        try {
+            while (cursor.moveToNext()) {
+                Map<String, String> map = new HashMap<String, String>();
+                String mimeType =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
+                String data = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)); // 路径
+                String[] strs = mimeType.split("/");
+                if (formats != null && !formats.contains(strs[1])) {
+                    continue;
+                }
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)); // id
+                String title =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+                String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM)); // 专辑
+                if (TextUtils.isEmpty(album))
+                    album = "Camera";
+                String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST)); // 艺术家
+                String displayName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)); // 显示名称
+                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)); // 时长
+                long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)); // 大小
+                String resolution =cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION));//分辨率
+                map.put(MediaStore.Video.Media._ID, String.valueOf(id));
+                map.put(MediaStore.Video.Media.TITLE, title);
+                map.put(MediaStore.Video.Media.ALBUM, album);
+                map.put(MediaStore.Video.Media.ARTIST, artist);
+                map.put(MediaStore.Video.Media.DISPLAY_NAME, displayName);
+                map.put(MediaStore.Video.Media.MIME_TYPE, mimeType);
+                map.put(MediaStore.Video.Media.DATA, data);
+                map.put(MediaStore.Video.Media.DURATION, String.valueOf(duration));
+                map.put(MediaStore.Video.Media.SIZE, String.valueOf(size));
+                map.put(MediaStore.Video.Media.RESOLUTION, resolution);
+                videos.add(map);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+            return videos;
+        }
+    }
+
+    /**
+     * 获取视频首图
+     * @param videoPath 视频路径
+     * @param kind MINI_KIND or MICRO_KIND
+     * @return 返回首图路径
+     */
+    public static String getVideoThumbnailPath(String videoPath, int kind) {
+        if(TextUtils.isEmpty(videoPath) || (kind != MediaStore.Images.Thumbnails.MINI_KIND && kind != MediaStore.Images.Thumbnails.MICRO_KIND))
+            return null;
+        String imgPath = null;
+        //如果有辞视频，但是没有次视频的封面图
+        if(new File(videoPath).exists()) {
+            String bitmapName = StringManager.toMD5(videoPath,false);
+            imgPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
+            if(!new File(imgPath).exists()) {
+                Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
+                FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
+            }
+        }
+        return imgPath;
     }
 }

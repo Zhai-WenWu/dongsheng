@@ -187,7 +187,6 @@ public class MediaInfo {
      }
      public void release()
      {
-    	 //TODO nothing 
     	 getSuccess=false;
      }
      

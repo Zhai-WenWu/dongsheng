@@ -39,6 +39,7 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import aplug.imageselector.ImgWallActivity;
 import aplug.web.view.XHWebView;
 import third.mall.activity.ShoppingActivity;
 import third.mall.alipay.MallAlipay;
@@ -58,7 +59,6 @@ import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_VIDEO;
 
 public class JsAppCommon extends JsBase{
 	public Activity mAct;
-	private Handler handler;
 	private XHWebView mWebView;
 	private LoadManager mLoadManager = null;
 	private BarShare mBarShare = null;
@@ -70,7 +70,6 @@ public class JsAppCommon extends JsBase{
 		this.mWebView = webView;
 		this.mLoadManager = loadManager;
 		this.mBarShare = barShare;
-		handler = new Handler();
 		TAG = "appCommon";
 	}
 
@@ -152,7 +151,7 @@ public class JsAppCommon extends JsBase{
 	 *        JS 返回后，在之前页面执行JS
 	 *        no 返回后，在之前页面不执行操作
 	 */
-	@JavascriptInterface
+	@android.webkit.JavascriptInterface
 	public void setGoBack(String backAction) {
 		JSAction.backAction = backAction;
 	}
@@ -632,10 +631,39 @@ public class JsAppCommon extends JsBase{
 			public void run() {
 				//统计
 				Intent it = new Intent(mAct,PlayVideo.class);
-				it.putExtra("url", url);
+                String urlTemp = url;
+				Log.i("tzy","videourl = " + url);
+				it.putExtra("url", urlTemp);
 				it.putExtra("name", name);
 				it.putExtra("img", img);
 				mAct.startActivity(it);
+			}
+		});
+	}
+
+	/**
+	 * 打开图片墙
+	 * @param imageUrls
+	 * @param index
+	 */
+	@JavascriptInterface
+	public void doShowImages(final String[] imageUrls,final int index){
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				Log.i("tzy","imageUrls = " + imageUrls);
+				Log.i("tzy","index = " + index);
+				if(imageUrls == null){
+					return;
+				}
+				ArrayList<String> data = new ArrayList<>();
+				for(String url:imageUrls){
+					data.add(url);
+				}
+				Intent intent = new Intent(mAct, ImgWallActivity.class);
+				intent.putStringArrayListExtra("images",data);
+				intent.putExtra("index",index);
+				mAct.startActivity(intent);
 			}
 		});
 	}
@@ -682,10 +710,10 @@ public class JsAppCommon extends JsBase{
 
 	@JavascriptInterface
 	public int getStatusMes(){
-		if(mAct != null && mWebView != null && Tools.isShowTitle()) {
-			int tatusHeight = ToolsDevice.px2dp(mAct,Tools.getStatusBarHeight(mAct));
-			return tatusHeight;
-		}
+//		if(mAct != null && mWebView != null && Tools.isShowTitle()) {
+//			int tatusHeight = ToolsDevice.px2dp(mAct,Tools.getStatusBarHeight(mAct));
+//			return tatusHeight;
+//		}
 		return 0;
 	}
 

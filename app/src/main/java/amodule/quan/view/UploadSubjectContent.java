@@ -33,9 +33,10 @@ import core.xiangha.emj.view.EditTextShow;
 import xh.basic.tool.UtilString;
 
 import static com.xiangha.R.id.activityLayout;
+import static com.xiangha.R.id.editText;
 
 /**
- * 发美食帖内容
+ * 发美食贴内容
  */
 public class UploadSubjectContent implements OnClickListener{
 
@@ -112,7 +113,7 @@ public class UploadSubjectContent implements OnClickListener{
 			public void afterTextChanged(Editable s) {
 				if(s.toString().length() > 0 && isOneWriteTitle && !isHaveTitle && isNewSubject){
 					isOneWriteTitle = false;
-					XHClick.onEventValue(act, "uploadQuanTitle", "uploadQuanTitle", "新帖写标题",s.toString().length());
+					XHClick.onEventValue(act, "uploadQuanTitle", "uploadQuanTitle", "新贴写标题",s.toString().length());
 				}
 				int num=titleMax-ed_uploadSubjectTitle.length();
 				if(num<=5){
@@ -163,6 +164,7 @@ public class UploadSubjectContent implements OnClickListener{
 		        	  act.getWindowManager().getDefaultDisplay().getMetrics(dm);
 		        	  Log.v("键盘", "键盘弹出状态");
 		        	  int distance= dm.heightPixels-FocusLocation;
+					  Log.i("tzy","heightDiff = " +heightDiff);
 		        	  if(distance<=heightDiff){
 		        		  final int dp_50=(int) act.getResources().getDimension(R.dimen.dp_50);
 		        		  final int src_distance= heightDiff-distance;
@@ -196,7 +198,7 @@ public class UploadSubjectContent implements OnClickListener{
 	/**
 	 * 控件放到界面
 	 * 
-	 * @param listMapByJson
+	 * @param imageTextList
 	 * @param state true 当前编辑控件在最后一个，false 当前控件为第一个
 	 * @param isInsert true是否是插入数据，false添加数据
 	 */

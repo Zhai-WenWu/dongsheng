@@ -532,7 +532,7 @@ public class ImgTextCombineLayout extends RelativeLayout {
 	}
 
 	/**
-	 * 设置帖子详情页图片宽度
+	 * 设置贴子详情页图片宽度
 	 */
 	public void setViewWaith() {
 		view_waith = ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_76);

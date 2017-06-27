@@ -1,5 +1,7 @@
 package amodule.upload;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 import java.util.List;
@@ -54,14 +56,23 @@ public class UploadListPool {
     /**
      *  * 临时方法，处理步骤视频，最终视频路径，大图路径丢失
      * 处理完数据库数据丢失问题后应该删除该方法
-     *
-     *
      * 初始化，设置定时刷新
-     *
      * @param draftId
      * @param callback
      */
     protected void initData(int draftId,String coverPath,String finalVideoPath,String timestamp,
+                            final UploadListUICallBack callback) {
+        setUiCallback(callback);
+    }
+
+    /**
+     *  * 临时方法，处理步骤视频，最终视频路径，大图路径丢失
+     * 处理完数据库数据丢失问题后应该删除该方法
+     * 初始化，设置定时刷新
+     * @param draftId
+     * @param callback
+     */
+    protected void initData(int dataType,int draftId,String coverPath,String finalVideoPath,String timestamp,
                             final UploadListUICallBack callback) {
         setUiCallback(callback);
     }
@@ -86,11 +97,11 @@ public class UploadListPool {
      * @param operation TYPE_START 开始，TYPE_PAUSE 暂停
      */
     public void allStartOrStop(final int operation) {
-
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(), new UploadPoolData.LoopCallback() {
             @Override
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getState() != UploadItemData.STATE_SUCCESS) {
+                    Log.i("articleUpload","allStartOrStop " + itemData.getPos() + "   " + itemData.getPath());
                     startOrStop(itemData.getPos(), itemData.getIndex(), operation);
                 }
                 return false;
@@ -115,7 +126,6 @@ public class UploadListPool {
      * @param operation TYPE_START 开始，TYPE_PAUSE 停止
      */
     public void oneStartOrStop(int pos, int index, int operation) {
-
         startOrStop(pos, index, operation);
         if (operation == TYPE_PAUSE) {
             UploadListControl.getUploadListControlInstance().startWaitingUpload();
@@ -131,17 +141,15 @@ public class UploadListPool {
      * @param operation TYPE_START 开始，TYPE_PAUSE 停止
      */
     public void startOrStop(int pos, int index, int operation) {
-
         List<UploadItemData> itemDatas = uploadPoolData.getUploadItemDataList(pos);
         UploadItemData itemData = itemDatas.get(index);
+        Log.i("articleUpload","startOrStop() pos:" + pos + "   path:" + itemData.getPath());
+        Log.i("articleUpload","startOrStop() operation:" + operation + "   itemData.getType():" + itemData.getType());
         if (operation == TYPE_START) {
             if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
                 uploadLast();
-            } else if (itemData.getType() == UploadItemData.TYPE_IMG
-                    || itemData.getType() == UploadItemData.TYPE_VIDEO) {
-
-                int state = UploadListControl.getUploadListControlInstance()
-                        .startUpload(itemData, uploadPoolData.getNetCallback());
+            } else if (itemData.getType() == UploadItemData.TYPE_IMG || itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG || itemData.getType() == UploadItemData.TYPE_VIDEO) {
+                int state = UploadListControl.getUploadListControlInstance().startUpload(itemData, uploadPoolData.getNetCallback());
                 itemData.setState(state);
             }
         } else {
@@ -173,7 +181,6 @@ public class UploadListPool {
      * @param jsonObject
      */
     protected void uploadThingOver(boolean flag, final String uniquId, String responseStr, JSONObject jsonObject) {
-
         UploadListControl.getUploadListControlInstance().startWaitingUpload();
     }
 
@@ -228,10 +235,12 @@ public class UploadListPool {
      * 解除UI绑定
      */
     public void unBindUI() {
-
-        timer.cancel();
-        timer = null;
-
+        if(timer!=null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+        if(uploadPoolData!=null){
         uploadPoolData.setUiCallback(new UploadListUICallBack() {
 
             @Override
@@ -248,7 +257,7 @@ public class UploadListPool {
             public void uploadOver(boolean flag, String responseStr) {
 
             }
-        });
+        });}
     }
 
     public void setUiCallback(UploadListUICallBack callback) {
@@ -270,12 +279,22 @@ public class UploadListPool {
 
             @Override
             public void onSuccess(String responseStr, String uniquId, JSONObject jsonObject) {
+                Log.i("articleUpload","getUploadListNetCallBack() onSuccess() responseStr:" + responseStr + "  uniquId:" + uniquId + "   jsonObject:" + jsonObject);
+//                UploadItemData speciaItem = uploadPoolData.getSpeciaItem(uniquId);
+//                if (speciaItem != null) {
+//                    speciaItem.setState(UploadItemData.STATE_SUCCESS);
+//                }
                 uploadThingOver(true, uniquId, responseStr, jsonObject);
             }
 
 
             @Override
             public void onFaild(String faild, String uniqueId) {
+//                Log.i("articleUpload","getUploadListNetCallBack() onFaild()");
+//                UploadItemData speciaItem = uploadPoolData.getSpeciaItem(uniqueId);
+//                if (speciaItem != null) {
+//                    speciaItem.setState(UploadItemData.STATE_FAILD);
+//                }
                 uploadThingOver(false, uniqueId, faild, null);
             }
 

@@ -50,11 +50,11 @@ public class SubjectHeaderTitle extends RelativeLayout {
      */
     public void setTitle(String title,String type, String isJingHua){
         JinghuaStyleBuilder jinghuaBuilder = null;
-        if ("3".equals(type) || "5".equals(type)) {//菜谱帖子
+        if ("3".equals(type) || "5".equals(type)) {//菜谱贴子
             jinghuaBuilder = new JinghuaStyleBuilder(getContext(), "菜谱", R.drawable.round_red);
-        } else if ("4".equals(type)) {//知识帖子
+        } else if ("4".equals(type)) {//知识贴子
             jinghuaBuilder = new JinghuaStyleBuilder(getContext(), "知识", R.drawable.round_red);
-        } else if ("2".equals(isJingHua)) {//精华帖子
+        } else if ("2".equals(isJingHua)) {//精华贴子
             jinghuaBuilder = new JinghuaStyleBuilder(getContext(), "精华", R.drawable.round_red);
         }
 

@@ -2,6 +2,7 @@ package aplug.basic;
 
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -26,7 +27,7 @@ public class ReqEncryptCommon {
     private String GY="";//公钥
     private boolean isencrypt=false;//是否加密
     private String sign="";//sign值
-    private long timeLength=-1;//时间长度
+    private long timeLength=-1;//时间长度,当前是秒，使用要*1000
     private long nowTime=-1;//当前获取公钥成功的请求时间
     private static ReqEncryptCommon reqEncryptCommon=null;
     public static ReqEncryptCommon getInstance(){
@@ -111,6 +112,7 @@ public class ReqEncryptCommon {
 
 
     public String getData(String params)  {
+        Log.i("FRJ","getData() params:" + params);
         try {
             Map<String,String> map=null;
             if(!TextUtils.isEmpty(params)){
@@ -119,12 +121,29 @@ public class ReqEncryptCommon {
             JSONObject jsonObject = new JSONObject();
             if(map!=null){
                 for (Map.Entry<String, String> entry : map.entrySet()) {
+                    Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
                     jsonObject.put(entry.getKey(),entry.getValue());
                }
             }
             jsonObject.put("sign",sign);
+            Log.i("FRJ","getData() jsonObject:" + jsonObject);
             GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
             GY=GY.replace("-----END PUBLIC KEY-----","");
+            byte[] data=jsonObject.toString().getBytes();
+
+            return RSAUtils.encryptByPublicKey(data,GY);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+    }
+    public String getData(JSONObject jsonObject)  {
+        try {
+            jsonObject.put("sign",sign);
+            GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
+            GY=GY.replace("-----END PUBLIC KEY-----","");
+            Log.i("articleUpload","getData() jsonObject:" + jsonObject);
             byte[] data=jsonObject.toString().getBytes();
 
             return RSAUtils.encryptByPublicKey(data,GY);

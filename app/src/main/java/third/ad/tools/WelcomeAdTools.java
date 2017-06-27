@@ -102,8 +102,7 @@ public class WelcomeAdTools {
             if(adDataCallBack!=null)adDataCallBack.noAdData();
             return;
         }
-        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
-        Map<String, String> map = list.get(0);
+        Map<String, String> map = StringManager.getFirstMap(data);
         if (map.containsKey(AdPlayIdConfig.WELCOME)) {
             ArrayList<Map<String, String>> listTemp = StringManager.getListMapByJson(map.get(AdPlayIdConfig.WELCOME));
             if (!listTemp.get(0).containsKey("adConfig")) {

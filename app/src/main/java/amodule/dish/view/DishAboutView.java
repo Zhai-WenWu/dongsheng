@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -40,7 +41,7 @@ import static com.xiangha.R.id.caipu_follow_rela;
 /**
  * 简介
  */
-public class DishAboutView extends DishBaseView{
+public class DishAboutView extends ItemBaseView {
     private boolean showExplainState= false;
     private TextView caipu_work_exp_tv;
     private Map<String,String> mapAbout;

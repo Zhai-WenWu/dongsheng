@@ -43,6 +43,12 @@
         <!--Activity切换动画效果-->
     </style>
 
+    <style name="Video_Preview_Theme">
+        <item name="android:windowBackground">@color/video_preview_transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="titleTheme" parent="android:Theme.Light">
         <item name="android:windowTitleSize">@dimen/dp_45</item>
         <item name="android:windowTitleBackgroundStyle">@style/titleBarBackground</item>
@@ -91,7 +97,7 @@
     <!-- 单行text -->
     <style name="singleText">
         <item name="android:layout_width">wrap_content</item>
-         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
@@ -201,9 +207,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">#999</item>
-        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">@dimen/sp_15</item>
         <item name="android:visibility">gone</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
     <!-- find me group -->
     <style name="groupMyself">
@@ -289,7 +296,6 @@
     <style name="welcomeDialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowFullscreen">true</item>
         <!--<item name="android:windowBackground">@android:color/transparent</item>-->
     </style>
     <style name="progress_dialog" parent="@android:style/Theme.Dialog">

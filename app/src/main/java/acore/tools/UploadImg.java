@@ -55,7 +55,7 @@ public class UploadImg {
 						}
 						else{ //没有机会,回调失败
 //								String data = Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0) + ":" + returnObj.toString() + "\n\n";
-//								UtilFile.saveFileToCompletePath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/发帖失败日志.txt",  data, true);
+//								UtilFile.saveFileToCompletePath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/发贴失败日志.txt",  data, true);
 							uploadLog("上传图片失败",returnObj);
 							state = FAIL;
 							UtilLog.print("d","上传图片失败：" + returnObj);

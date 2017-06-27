@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import acore.override.XHApplication;
-import acore.tools.StringManager;
 import acore.tools.UploadImg;
 import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
@@ -19,6 +18,7 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 
@@ -85,25 +85,24 @@ public class UploadListControl {
 //    }
 
 
-
     /**
      * 临时方法，处理步骤视频，最终视频，大图路径丢失
      * 处理完数据库数据丢失问题后应该删除
-     *
-     *
+     * <p>
+     * <p>
      * 上传池类型，草稿id，上传池UI回调,获取上传池，
      * 上传池已存在，无需创建，否则创建
      *
-     * @param poolType 上传池类型
+     * @param poolType       上传池类型
      * @param draftId
-     * @param coverPath 大图路径
+     * @param coverPath      大图路径
      * @param finalVideoPath 最终视频路径
-     * @param timestamp 时间戳
+     * @param timestamp      时间戳
      * @param callback
      * @return UploadListPool 上传池
      */
     public UploadListPool add(Class<? extends UploadListPool> poolType, int draftId,
-                              String coverPath,String finalVideoPath,String timestamp,
+                              String coverPath, String finalVideoPath, String timestamp,
                               UploadListUICallBack callback) {
         UploadListPool pool;
         String poolKey = poolType.getSimpleName() + draftId;
@@ -111,7 +110,46 @@ public class UploadListControl {
         if (pool == null) {
             try {
                 pool = poolType.newInstance();
-                pool.initData(draftId, coverPath,finalVideoPath,timestamp,callback);
+                pool.initData(draftId, coverPath, finalVideoPath, timestamp, callback);
+                HashMap<String, UploadListPool> poolHashMap = new HashMap<>();
+                poolHashMap.put(poolKey, pool);
+                uploadPoolList.add(poolHashMap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            pool.setUiCallback(callback);
+        }
+
+        return pool;
+    }
+
+    /**
+     * 临时方法，处理步骤视频，最终视频，大图路径丢失
+     * 处理完数据库数据丢失问题后应该删除
+     * <p>
+     * <p>
+     * 上传池类型，草稿id，上传池UI回调,获取上传池，
+     * 上传池已存在，无需创建，否则创建
+     *
+     * @param poolType       上传池类型
+     * @param draftId
+     * @param coverPath      大图路径
+     * @param finalVideoPath 最终视频路径
+     * @param timestamp      时间戳
+     * @param callback
+     * @return UploadListPool 上传池
+     */
+    public UploadListPool add(int dataType,Class<? extends UploadListPool> poolType, int draftId,
+                              String coverPath, String finalVideoPath, String timestamp,
+                              UploadListUICallBack callback) {
+        UploadListPool pool;
+        String poolKey = poolType.getSimpleName() + draftId;
+        pool = getPool(poolKey);
+        if (pool == null) {
+            try {
+                pool = poolType.newInstance();
+                pool.initData(dataType,draftId, coverPath, finalVideoPath, timestamp, callback);
                 HashMap<String, UploadListPool> poolHashMap = new HashMap<>();
                 poolHashMap.put(poolKey, pool);
                 uploadPoolList.add(poolHashMap);
@@ -142,6 +180,9 @@ public class UploadListControl {
             case UploadItemData.TYPE_VIDEO:
                 progress = initUploadVideo(data);
                 break;
+            case UploadItemData.TYPE_BREAKPOINT_IMG:
+                progress = initUploadImage(data);
+                break;
             default:
                 progress = 0;
                 break;
@@ -158,6 +199,15 @@ public class UploadListControl {
         return (int) (breakPointContorl.getProgress() * 100);
     }
 
+    private int initUploadImage(UploadItemData data) {
+        BreakPointControl breakPointContorl
+                = new BreakPointControl(XHApplication.in().getApplicationContext(),
+                data.getUniqueId(),
+                data.getPath(), BreakPointUploadManager.TYPE_IMG);
+        uploaderMap.put(data.getUniqueId(), breakPointContorl);
+        return (int) (breakPointContorl.getProgress() * 100);
+    }
+
 
     //考虑由回调，返回状态
 
@@ -169,7 +219,6 @@ public class UploadListControl {
      * @return state 上传状态
      */
     public int startUpload(UploadItemData data, UploadListNetCallBack callback) {
-
         int state = 0;
         if (!TextUtils.isEmpty(data.getRecMsg())) {
             state = UploadItemData.STATE_SUCCESS;
@@ -202,14 +251,21 @@ public class UploadListControl {
 
     }
 
+    /**
+     * 上传视频，以断点续传方式上传
+     *
+     * @param data
+     * @param callback
+     * @return
+     */
     private int startUploadVideo(UploadItemData data, UploadListNetCallBack callback) {
-
         int state = 0;
         if (isUploadingOutLimit()) {
             state = UploadItemData.STATE_WAITING;
         } else {
             BreakPointControl uploader = uploaderMap.get(data.getUniqueId());
             if (uploader != null) {
+                //------断点开始上传
                 uploader.start(callback);
                 state = UploadItemData.STATE_RUNNING;
             }
@@ -225,7 +281,17 @@ public class UploadListControl {
      * @return
      */
     private int startUploadBreakPointImg(UploadItemData data, UploadListNetCallBack callback) {
-        int state = UploadItemData.STATE_RUNNING;
+        int state = 0;
+        if (isUploadingOutLimit()) {
+            state = UploadItemData.STATE_WAITING;
+        } else {
+            BreakPointControl uploader = uploaderMap.get(data.getUniqueId());
+            if (uploader != null) {
+                //------断点开始上传
+                uploader.start(callback);
+                state = UploadItemData.STATE_RUNNING;
+            }
+        }
         return state;
     }
 
@@ -237,13 +303,16 @@ public class UploadListControl {
      * @return
      */
     private int startUploadImg(final UploadItemData itemData, final UploadListNetCallBack callback) {
+        Log.i("articleUpload", "startUploadImg() path:" + itemData.getPath());
         new UploadImg("", itemData.getPath(), new InternetCallback(XHApplication.in().getApplicationContext()) {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
+                    Log.i("articleUpload", "startUploadImg() onSuccess()" + url);
                     callback.onSuccess((String) msg, itemData.getUniqueId(), null);
                 } else {
                     callback.onFaild((String) msg, itemData.getUniqueId());
+                    Log.i("articleUpload", "startUploadImg() onFaild()" + url);
                 }
             }
         }).uploadImg();
@@ -295,7 +364,6 @@ public class UploadListControl {
      * 开启等待中的上传
      */
     public void startWaitingUpload() {
-
         for (final Map<String, UploadListPool> poolMap : uploadPoolList) {
             for (final UploadListPool pool : poolMap.values()) {
                 UploadPoolData uploadPoolData = pool.getUploadPoolData();
@@ -326,7 +394,6 @@ public class UploadListControl {
 
 
     public int startUploadLast(final Class<? extends UploadListPool> poolType, final int draftId) {
-
         retryNum = 0;
         uploadLastInfo(poolType, draftId);
         return UploadItemData.STATE_RUNNING;
@@ -334,11 +401,11 @@ public class UploadListControl {
 
 
     private void uploadLastInfo(final Class<? extends UploadListPool> poolType, final int draftId) {
-
+        Log.i("articleUpload", "uploadLastInfo() draftId:" + draftId);
         final UploadListPool pool = getPool(poolType.getSimpleName() + draftId);
-        if(pool == null){
-            Log.e("uploadLastInfo","数据丢失");
-            Toast.makeText(XHApplication.in(),"上传最后一步，数据丢失",Toast.LENGTH_SHORT).show();
+        if (pool == null) {
+//            Log.e("uploadLastInfo", "数据丢失");
+//            Toast.makeText(XHApplication.in(), "上传最后一步，数据丢失", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -347,29 +414,55 @@ public class UploadListControl {
             @Override
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
-                    ReqInternet.in().doPost(StringManager.api_uploadDish,
-                            itemData.getUploadMsg(), new InternetCallback(XHApplication.in()) {
-
-                                @Override
-                                public void loaded(int flag, String url, Object msg) {
-                                    if (flag >= UtilInternet.REQ_OK_STRING) {
-                                        retryNum = 0;
-                                        pool.getUploadPoolData().getNetCallback().onLastUploadOver(true, (String) msg);
-                                    } else {
-                                        if (retryNum < MAX_RETRY_NUM) {
-                                            retryNum++;
-                                            uploadLastInfo(poolType, draftId);
-                                        } else {
-                                            pool.getUploadPoolData().getNetCallback().onLastUploadOver(false, (String) msg);
-                                        }
-                                    }
+                    if (TextUtils.isEmpty(itemData.getUploadUrl())) {
+                        Log.e("articleUpload", "上传url为空");
+                        Toast.makeText(XHApplication.in(), "上传最后一步，上传url为空", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                    String path = itemData.getUploadUrl();
+                    Log.i("articleUpload", "uploadLastInfo() getUploadUrl:" + path);
+                    InternetCallback internetCallback = new InternetCallback(XHApplication.in()) {
+                        @Override
+                        public void loaded(int flag, String url, Object msg) {
+                            if (flag >= UtilInternet.REQ_OK_STRING) {
+                                retryNum = 0;
+                                pool.getUploadPoolData().getNetCallback().onLastUploadOver(true, (String) msg);
+                            } else {
+                                if (retryNum < MAX_RETRY_NUM) {
+                                    retryNum++;
+                                    uploadLastInfo(poolType, draftId);
+                                } else {
+                                    pool.getUploadPoolData().getNetCallback().onLastUploadOver(false, (String) msg);
                                 }
-                            });
+                            }
+                        }
+                    };
+                    Log.i("articleUpload", "uploadLastInfo() params:" + MapToString(itemData.getUploadMsg(), "&", "="));
+                    if (path.contains("Main7")) {
+                        ReqEncyptInternet.in().doEncypt(path, MapToString(itemData.getUploadMsg(), "&", "="), internetCallback);
+                    } else {
+                        ReqInternet.in().doPost(path, itemData.getUploadMsg(), internetCallback);
+                    }
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    public String MapToString(Map<String, String> map, String line1, String line2) {
+        StringBuffer str = new StringBuffer();
+        int index = 0;
+        for (String key : map.keySet()) {
+            if (index != 0) {
+                str.append(line1);
+            }
+            str.append(key);
+            str.append(line2);
+            str.append(map.get(key));
+            index++;
+        }
+        return str.toString();
     }
 
 
@@ -410,7 +503,7 @@ public class UploadListControl {
     }
 
     //从数组中删除上传池
-    private void removeSpecPool(String poolKey){
+    private void removeSpecPool(String poolKey) {
         Map<String, UploadListPool> poolMap = null;
         for (Map<String, UploadListPool> map : uploadPoolList) {
             if (map.containsKey(poolKey)) {

@@ -236,7 +236,7 @@ public class PulishVideo extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 设置@人的数据到帖子内容中
+     * 设置@人的数据到贴子内容中
      *
      * @param data 数据
      */

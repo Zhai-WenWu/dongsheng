@@ -88,41 +88,59 @@ public class BreakPointControl {
         FileSize = fileDataSize(filePath);
         startProgress();
         ReqBreakPointUploadInternet.isCancel = false;
-        breakPointUploadInternet.breakPointUpload(filePath, key, BreakPointUploadManager.getInstance().getToken(type), new BreakPointUploadCallBack() {
-            @Override
-            public void loaded(int flag, String key, double progress, JSONObject jsonObject) {
-                if (flag == BreakPointUploadInternet.REQ_UPLOAD) {//上传中
-                    now_progress = progress;
-                    reqState = "3";
-                    if (progress > 0) setProgress(progress);
-                    if (uploadListNetCallBack != null)
-                        uploadListNetCallBack.onProgress(progress, uniqueId);
-                    Log.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n percent::::" + progress);
-                } else if (flag == BreakPointUploadInternet.REQ_UPLOAD_OK) {//上传完成
-                    timer = null;
-                    reqState = "4";
-                    retryNum = 0;
-                    BreakPointUploadManager.getInstance().delBreakPointUpload(filePath);
-                    if (uploadListNetCallBack != null)
-                        uploadListNetCallBack.onSuccess(BreakPointUploadManager.getInstance().getDomain(type) + "/" + key, uniqueId, jsonObject);
-                    Log.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
-                } else {//上传失败
-                    if (!isPause() &&
-                            getRetryNum() < MAX_RETRY_NUM) {
-                        setRetryNum(getRetryNum() + 1);
-                        startBreakPointUpload();
-                    } else {
-                        setRetryNum(0);
+
+        if(filePath.indexOf("http") == 0){
+            timer = null;
+            reqState = "4";
+            retryNum = 0;
+            BreakPointUploadManager.getInstance().delBreakPointUpload(filePath);
+            if (uploadListNetCallBack != null) {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("hash", Md5Util.encode(filePath));
+                    jsonObject.put("key",filePath);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                uploadListNetCallBack.onSuccess(filePath, uniqueId, jsonObject);
+            }
+        }else {
+            breakPointUploadInternet.breakPointUpload(filePath, key, BreakPointUploadManager.getInstance().getToken(type), new BreakPointUploadCallBack() {
+                @Override
+                public void loaded(int flag, String key, double progress, JSONObject jsonObject) {
+                    if (flag == BreakPointUploadInternet.REQ_UPLOAD) {//上传中
+                        now_progress = progress;
+                        reqState = "3";
+                        if (progress > 0) setProgress(progress);
+                        if (uploadListNetCallBack != null)
+                            uploadListNetCallBack.onProgress(progress, uniqueId);
+                        Log.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n percent::::" + progress);
+                    } else if (flag == BreakPointUploadInternet.REQ_UPLOAD_OK) {//上传完成
                         timer = null;
-                        reqState = "5";
+                        reqState = "4";
+                        retryNum = 0;
                         BreakPointUploadManager.getInstance().delBreakPointUpload(filePath);
                         if (uploadListNetCallBack != null)
-                            uploadListNetCallBack.onFaild(jsonObject == null ? "未知错误" : jsonObject.toString(), uniqueId);
-                        Log.i("zhangyujian", uniqueId + "::" + flag + ":::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
+                            uploadListNetCallBack.onSuccess(BreakPointUploadManager.getInstance().getDomain(type) + "/" + key, uniqueId, jsonObject);
+                        Log.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
+                    } else {//上传失败
+                        if (!isPause() &&
+                                getRetryNum() < MAX_RETRY_NUM) {
+                            setRetryNum(getRetryNum() + 1);
+                            startBreakPointUpload();
+                        } else {
+                            setRetryNum(0);
+                            timer = null;
+                            reqState = "5";
+                            BreakPointUploadManager.getInstance().delBreakPointUpload(filePath);
+                            if (uploadListNetCallBack != null)
+                                uploadListNetCallBack.onFaild(jsonObject == null ? "未知错误" : jsonObject.toString(), uniqueId);
+                            Log.i("zhangyujian", uniqueId + "::" + flag + ":::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**

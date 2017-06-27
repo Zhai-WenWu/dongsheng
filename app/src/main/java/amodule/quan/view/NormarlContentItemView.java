@@ -66,7 +66,7 @@ public abstract class NormarlContentItemView extends CircleItemBaseRelativeLayou
 
     /**
      * 设置view的状态---是否上传，还是标准数据
-     * @param state true表示当前正常，上传成功的帖子 false 真在 上传中
+     * @param state true表示当前正常，上传成功的贴子 false 真在 上传中
      */
     public abstract void setShowUpload(boolean state);
 
@@ -104,7 +104,7 @@ public abstract class NormarlContentItemView extends CircleItemBaseRelativeLayou
                             if ("a_quan_homepage".equals(normarlContentData.getStatisID()))
                                 XHClick.mapStat(context, normarlContentData.getStatisID(), normarlContentData.getModuleName(), "点击内容");
                             if (!TextUtils.isEmpty(normarlContentData.getCircleName())) {
-                                XHClick.mapStat(context, STATISTICS_ID, normarlContentData.getCircleName(), normarlContentData.getModuleName() + "_帖子内容");
+                                XHClick.mapStat(context, STATISTICS_ID, normarlContentData.getCircleName(), normarlContentData.getModuleName() + "_贴子内容");
                             }
                         }
                         onClickCallback(typeSubject,statisValue);

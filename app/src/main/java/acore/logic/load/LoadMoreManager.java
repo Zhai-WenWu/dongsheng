@@ -2,6 +2,7 @@ package acore.logic.load;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -21,7 +22,7 @@ public class LoadMoreManager {
 	
 	public LoadMoreManager(Context context){
 		this.mContext = context;
-		mHeightLoadmore = Tools.getDimen(mContext, R.dimen.dp_60);
+		mHeightLoadmore = Tools.getDimen(mContext, R.dimen.dp_100);
 		mTextSize = Tools.getDimenSp(mContext, R.dimen.sp_12);
 	}
 
@@ -34,7 +35,8 @@ public class LoadMoreManager {
 	public Button newLoadMoreBtn(Object key, OnClickListener clicker) {
 		Button loadMoreBtn = new Button(mContext);
 		loadMoreBtn.setHeight(mHeightLoadmore);
-		loadMoreBtn.setText("加载更多");
+		loadMoreBtn.setGravity(Gravity.CENTER);
+		loadMoreBtn.setText("点击加载更多");
 		loadMoreBtn.setTextSize(mTextSize);
 		loadMoreBtn.setTextColor(Color.parseColor("#AEAEAE"));
 		loadMoreBtn.setBackgroundResource(R.drawable.btn_nocolor);

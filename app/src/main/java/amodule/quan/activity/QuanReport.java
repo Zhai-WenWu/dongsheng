@@ -336,8 +336,8 @@ public class QuanReport extends BaseActivity{
 	 */
 	private void doTongJi() {
 		if (repType.equals("1")) {
-			//统计 举报帖(计算事件)
-			XHClick.onEventValue(this,"quanOperate","quanOperate","举报帖",1);
+			//统计 举报贴(计算事件)
+			XHClick.onEventValue(this,"quanOperate","quanOperate","举报贴",1);
 		}else if (repType.equals("2")) {
 			//统计 举报楼(计算事件)
 			XHClick.onEventValue(this,"quanOperate","quanOperate","举报楼",1);

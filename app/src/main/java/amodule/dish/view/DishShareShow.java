@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.XHClick;
 import acore.tools.ToolsDevice;
 import third.share.ShareNewActivity;
@@ -25,7 +26,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
  * 分享标签
  */
 
-public class DishShareShow extends DishBaseView{
+public class DishShareShow extends ItemBaseView {
     public static String DISH_STYLE_SHARE="dish_style_share";
     public static int DISH_STYLE_SHARE_INDEX=3;
     private ArrayList<Map<String,String>> mData ;

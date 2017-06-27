@@ -11,7 +11,7 @@ import acore.tools.StringManager;
 import amodule.quan.view.ImgTextCombineLayout;
 
 /**
- * 美食帖数据
+ * 美食贴数据
  */
 public class SubjectData extends UploadData {
 	private static final long serialVersionUID = 3685228578020151014L;
@@ -26,7 +26,7 @@ public class SubjectData extends UploadData {
 	public static final int UPLOAD_DRAF = 3003;
 	/** 发布失败 */
 	public static final int UPLOAD_FAIL = 3004;
-	/** 发帖 */
+	/** 发贴 */
 	public static final String TYPE_UPLOAD = "upload";
 	/** 带图回复 */
 	public static final String TYPE_REPLY = "reply";
@@ -62,8 +62,8 @@ public class SubjectData extends UploadData {
 	private int titleCanModify = TRUE;
 	/** 位置 */
 	private String location = "";
-	/** 发布帖子类型 
-	 * 发帖 upload
+	/** 发布贴子类型
+	 * 发贴 upload
 	 * 带图回复 reply
 	 * */
 	private String type = "";

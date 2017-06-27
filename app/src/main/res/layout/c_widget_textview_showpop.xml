@@ -16,6 +16,14 @@
             android:orientation="vertical"
             android:visibility="visible" >
 
+            <ImageView
+                android:id="@+id/textview_showpop_up_arrow"
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_5"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/z_ico_up_arrow"
+                android:visibility="gone"/>
+
             <LinearLayout
                 android:id="@+id/ll_left"
                 android:layout_width="match_parent"
@@ -45,15 +53,19 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/textview_showpop_down_arrow"
                 android:layout_width="@dimen/dp_12"
                 android:layout_height="@dimen/dp_5"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/z_ico_down_arrow" />
+                android:background="@drawable/z_ico_down_arrow"
+                />
         </LinearLayout>
 
         <View
+            android:id="@+id/center_line"
             android:layout_width="@dimen/dp_0.5"
             android:layout_height="match_parent"
+            android:visibility="visible"
             android:layout_centerHorizontal="true"
             android:background="#FFFFFF" />
     </RelativeLayout>

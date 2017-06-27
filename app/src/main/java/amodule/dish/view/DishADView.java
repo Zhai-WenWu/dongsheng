@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
+import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
 import third.ad.AdParent;
 import third.ad.AdsShow;
@@ -21,7 +22,7 @@ import static third.ad.tools.TencenApiAdTools.TX_ID_DISH_DETAIL_BURDEN_TOP;
  * 广告处理——————合并View
  */
 
-public class DishADView extends DishBaseView{
+public class DishADView extends ItemBaseView {
     private Activity activity;
     private RelativeLayout adBurdenLayout;
     private RelativeLayout bannerGdtLayout;

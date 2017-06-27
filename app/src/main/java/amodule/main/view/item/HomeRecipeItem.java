@@ -24,13 +24,14 @@ import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
 
 /**
- * 菜谱Item（包括图文菜谱和视频菜谱）
+ * 大图样式
  * Created by sll on 2017/4/18.
  */
 
 public class HomeRecipeItem extends HomeItem {
 
     private TextView mTitle;
+    private TextView mTitleTop;
     private TextView mVideoTime;
     private TextView mNum1;
     private TextView mNum2;
@@ -62,6 +63,7 @@ public class HomeRecipeItem extends HomeItem {
     protected void initView() {
         super.initView();
         mTitle = (TextView) findViewById(R.id.title);
+        mTitleTop = (TextView) findViewById(R.id.title_top);
         mNum1 = (TextView) findViewById(R.id.num1);
         mNum2 = (TextView) findViewById(R.id.num2);
         mVideoTime = (TextView) findViewById(R.id.video_time);
@@ -133,10 +135,10 @@ public class HomeRecipeItem extends HomeItem {
                 mDataMap.put("isADShow", "1");
             }
         }
+        String type = mModuleBean.getType();
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
-        containerParams.topMargin = getResources().getDimensionPixelSize(R.dimen.dp_15);
+        containerParams.topMargin = getResources().getDimensionPixelSize(MainHome.recommedType.equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
         if (mModuleBean != null) {
-            String type = mModuleBean.getType();
             if (!TextUtils.isEmpty(type)) {
                 if ("day".equals(type)) {
                     if (mPosition == 0)
@@ -185,37 +187,45 @@ public class HomeRecipeItem extends HomeItem {
                     mVideoContainer.setVisibility(View.VISIBLE);
             }
         }
-        if (mDataMap.containsKey("img") && !TextUtils.isEmpty(mDataMap.get("img"))) {
-            loadImage(mDataMap.get("img"), mImg, mIsAd ? new ADImageLoadCallback() {
-                @Override
-                public void callback(Bitmap bitmap) {
-                    if (bitmap == null)
-                        return;
-                    int bitmapWidth = bitmap.getWidth();
-                    int bitmapHeight = bitmap.getHeight();
-                    int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
-                    int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
-                    mImg.setScaleType(ImageView.ScaleType.FIT_XY);
-                    mImg.setImageBitmap(bitmap);
-                    if (mContainer != null) {
-                        MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                        containerParams.width = MarginLayoutParams.MATCH_PARENT;
-                        containerParams.height = imgHeight;
-                        mContainer.setLayoutParams(containerParams);
-                    }
-                    MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-                    adImgParams.height = imgHeight;
-                    mImg.setLayoutParams(adImgParams);
-                    mLayerView.requestLayout();
-                    mLayerView.requestLayout();
-                    if (mLayerView != null) {
-                        MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-                        layerParams.width = MarginLayoutParams.MATCH_PARENT;
-                        layerParams.height = imgHeight;
-                        mLayerView.setLayoutParams(layerParams);
-                    }
+
+        if (mDataMap.containsKey("styleData")) {
+            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
+            if (datas != null && datas.size() > 0) {
+                Map<String, String> imgMap = datas.get(0);
+                if (imgMap != null && imgMap.size() > 0) {
+                    String imgUrl = imgMap.get("url");
+                    loadImage(imgUrl, mImg, mIsAd ? new ADImageLoadCallback() {
+                        @Override
+                        public void callback(Bitmap bitmap) {
+                            if (bitmap == null)
+                                return;
+                            int bitmapWidth = bitmap.getWidth();
+                            int bitmapHeight = bitmap.getHeight();
+                            int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
+                            int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
+                            mImg.setScaleType(ImageView.ScaleType.FIT_XY);
+                            mImg.setImageBitmap(bitmap);
+                            if (mContainer != null) {
+                                MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
+                                containerParams.width = MarginLayoutParams.MATCH_PARENT;
+                                containerParams.height = imgHeight;
+                                mContainer.setLayoutParams(containerParams);
+                            }
+                            MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
+                            adImgParams.height = imgHeight;
+                            mImg.setLayoutParams(adImgParams);
+                            mLayerView.requestLayout();
+                            mLayerView.requestLayout();
+                            if (mLayerView != null) {
+                                MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
+                                layerParams.width = MarginLayoutParams.MATCH_PARENT;
+                                layerParams.height = imgHeight;
+                                mLayerView.setLayoutParams(layerParams);
+                            }
+                        }
+                    } : null);
                 }
-            } : null);
+            }
         }
         if (mIsVideo && mPlayImg != null)
             mPlayImg.setVisibility(View.VISIBLE);
@@ -229,23 +239,59 @@ public class HomeRecipeItem extends HomeItem {
         }
         String lineText = (TextUtils.isEmpty(desc) || TextUtils.isEmpty(title) ? "" : " | ");
         String titleText = title + lineText + desc;
-        if (!TextUtils.isEmpty(titleText) && mTitle != null) {
+        if (MainHome.recommedType.equals(type)) {
+            if (!TextUtils.isEmpty(titleText) && mTitleTop != null) {
+
+                mTitleTop.setText(titleText);
+                mTitleTop.setVisibility(View.VISIBLE);
+            }
+        } else if (!TextUtils.isEmpty(titleText) && mTitle != null) {
             mTitle.setText(titleText);
             mTitle.setVisibility(View.VISIBLE);
         }
-        if (mDataMap.containsKey("allClick")) {
-            String allClick = handleNumber(mDataMap.get("allClick"));
-            if (!TextUtils.isEmpty(allClick) && mNum1 != null) {
-                mNum1.setText(allClick + (mIsVideo ? "播放" : "浏览"));
-                mNum1.setVisibility(View.VISIBLE);
-            }
-        }
-        if (mDataMap.containsKey("favorites")) {
-            String likeNum = handleNumber(mDataMap.get("favorites"));
-            if (!TextUtils.isEmpty(likeNum) && mNum2 != null) {
-                mNum2.setText(likeNum + "收藏");
-                mNum2.setVisibility(View.VISIBLE);
-            }
+
+        switch (mType) {
+            case "1"://图文菜谱
+                if (mFavNum != null && mNum1 != null) {
+                    mNum1.setText(mFavNum + "收藏");
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (mAllClickNum != null && mNum2 != null) {
+                    mNum2.setText(mAllClickNum + "浏览");
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
+            case "2"://视频菜谱
+                if (mFavNum != null && mNum1 != null) {
+                    mNum1.setText(mFavNum + "收藏");
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (mAllClickNum != null && mNum2 != null) {
+                    mNum2.setText(mAllClickNum + "播放");
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
+            case "3"://文章
+                if (mComNum != null && mNum1 != null) {
+                    mNum1.setText(mComNum + "评论");
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (mAllClickNum != null && mNum2 != null) {
+                    mNum2.setText(mAllClickNum + "浏览");
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
+            case "5"://帖子
+                if (mComNum != null && mNum1 != null) {
+                    mNum1.setText(mComNum + "评论");
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (mLikeNum != null && mNum2 != null) {
+                    mNum2.setText(mLikeNum + "赞");
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
+
         }
     }
 
@@ -271,6 +317,8 @@ public class HomeRecipeItem extends HomeItem {
     @Override
     protected void resetView() {
         super.resetView();
+        if (viewIsVisible(mTitleTop))
+            mTitleTop.setVisibility(View.GONE);
         if (viewIsVisible(mTitle))
             mTitle.setVisibility(View.GONE);
         if (viewIsVisible(mVideoTime))

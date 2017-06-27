@@ -413,16 +413,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 				} else {
 					// 判断选择数量问题
 					if (mDefaultCount == resultList.size()) {
-						final XhDialog dialog = new XhDialog(this);
-						dialog.setTitle("最多可以选择" + mDefaultCount + "张图片")
-								.setSureButton("我知道了", new OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										dialog.cancel();
-									}
-								});
-						dialog.show();
-//						Tools.showToast(this, "最多可以选择" + mDefaultCount + "张图片");
+						Tools.showToast(this, "一次只能选" + mDefaultCount + "张图片", Gravity.CENTER);
 						return;
 					}
 					onImageSelected(image.path);
@@ -621,7 +612,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			if (resultList != null && resultList.size() > 0) {
 				commit();
 			}else{
-				Tools.showToast(this, "请选择图片");
+				finish();
 			}
 			break;
 		}

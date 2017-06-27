@@ -15,7 +15,7 @@
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
         android:paddingTop="@dimen/dp_4"
-        android:text="美食帖"
+        android:text="美食贴"
         android:textColor="@drawable/quan_tab_select"
         android:textSize="@dimen/sp_13" />
 

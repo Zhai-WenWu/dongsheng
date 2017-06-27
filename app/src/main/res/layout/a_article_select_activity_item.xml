@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    
+    <TextView
+        android:id="@+id/article_select_classify_text"
+        style="@style/singleText"
+        android:layout_width="@dimen/dp_97"
+        android:layout_height="@dimen/dp_30"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_5"
+        android:text="鸡丁肉"
+        android:textColor="#333"
+        android:textSize="@dimen/sp_14"
+        android:visibility="visible"
+        android:background="@drawable/article_select_classify_no"
+        />
+
+</LinearLayout>

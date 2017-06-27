@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:background="@drawable/i_nopic"
+        android:scaleType="fitXY"/>
+
+    <ImageView
+        android:id="@+id/image_gif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/i_nopic"
+        android:visibility="gone"
+        android:scaleType="centerCrop"/>
+
+    <ImageButton
+        android:id="@+id/delete_image"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
+        android:visibility="visible"
+        android:layout_alignRight="@+id/image"
+        android:padding="@dimen/dp_6"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"
+        android:src="@drawable/delete_image_icon"/>
+
+    <ImageView
+        android:id="@+id/load_progress"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/dp_11"
+        android:layout_marginTop="@dimen/dp_6"
+        android:visibility="gone"
+        android:src="@drawable/image_progress"/>
+
+    <ImageView
+        android:id="@+id/dish_step_gif_hint"
+        android:layout_width="@dimen/dp_54"
+        android:layout_height="@dimen/dp_22"
+        android:visibility="gone"
+        android:layout_alignLeft="@+id/image"
+        android:src="@drawable/i_dish_detail_gif_hint"
+        android:layout_alignBottom="@+id/image"/>
+
+</RelativeLayout>

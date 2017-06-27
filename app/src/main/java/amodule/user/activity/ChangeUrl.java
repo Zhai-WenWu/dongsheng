@@ -28,6 +28,7 @@ public class ChangeUrl extends BaseActivity{
 	private EditText mall_et_input1;
 	private boolean state_xiangha=false;
 	private boolean state_mall=false;
+	public static boolean isChangeUrlState=false;
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -56,6 +57,7 @@ public class ChangeUrl extends BaseActivity{
                 state_xiangha=true;
                 domain=rb.getText().toString();
                 setUrl();
+		   isChangeUrlState=true;
             }
         });
 		et_port.setOnKeyListener(new OnKeyListener() {

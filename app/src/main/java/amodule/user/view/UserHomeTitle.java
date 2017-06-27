@@ -92,7 +92,7 @@ public class UserHomeTitle {
     private void initTitle() {
         if (Tools.isShowTitle()) {
             mAct.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            int dp_200 = ToolsDevice.dp2px(mAct,200);
+            int dp_200 = mAct.getResources().getDimensionPixelSize(R.dimen.dp_200);
             int height = dp_200 + Tools.getStatusBarHeight(mAct);
 
             RelativeLayout bar_title = (RelativeLayout) mParentTitleView.findViewById(R.id.a_user_home_title_img_layout);
@@ -263,7 +263,7 @@ public class UserHomeTitle {
     private void changeFollow(String folState) {
         switch (Integer.parseInt(folState)) {
             case 1:
-                tv_follow.setText("个人信息");
+                tv_follow.setText("编辑资料");
                 tv_follow.setTextColor(Color.parseColor("#FFFFFF"));
                 tv_follow.setBackgroundResource(R.drawable.user_home_btn_folow);
                 break;
@@ -296,5 +296,12 @@ public class UserHomeTitle {
 //            startActivity(intent);
 //            return;
 //        }
+    }
+
+    public void notifyAttentionInfo() {
+        if (userinfo_map != null && userinfo_map.containsKey("folState")) {
+            userinfo_map.put("folState", "3");
+            changeFollow("3");
+        }
     }
 }

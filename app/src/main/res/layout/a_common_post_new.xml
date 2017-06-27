@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activityLayout"
+    android:background="#FFFFFE"
     style="@style/layout">
 
     <include
@@ -15,6 +16,8 @@
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
         android:layout_below="@+id/title_rela">
 
         <LinearLayout
@@ -95,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_toRightOf="@+id/common_post_new_line"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <include
                         android:id="@+id/agreement_ll"
@@ -133,7 +136,10 @@
         android:id="@+id/post_emoji"
         layout="@layout/a_quan_upload_item_edit_tool_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <LinearLayout
         android:id="@+id/post_sub_item_top_module"

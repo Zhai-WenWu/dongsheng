@@ -11,9 +11,7 @@
         android:layout_centerInParent="true"
         android:clickable="true"
         android:gravity="center_horizontal"
-        android:paddingLeft="@dimen/dp_10"
-        android:textColor="@color/common_top_text"
-        android:textSize="@dimen/sp_17" />
+        android:paddingLeft="@dimen/dp_10" />
 
     <View
         android:id="@+id/title_dian"

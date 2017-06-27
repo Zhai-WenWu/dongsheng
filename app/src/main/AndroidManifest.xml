@@ -12,11 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-
-
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -36,11 +33,12 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 
     <!-- umeng dplus -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- umeng dplus -->
+
 
     <!-- 百度AD -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -81,7 +79,7 @@
     <uses-permission android:name="android.permission."/>
     <!-- ###################声明SDK使用的相关权限###################### -->
     <!-- 信鸽 -->
-    <!-- 【必须】 信鸽SDK所需权限   -->
+    <!-- 【必须】 信鸽SDK所需权限 -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -104,25 +102,25 @@
     <!-- end -->
     <!-- 百度位置 -->
     <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!-- 这个权限用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- SD卡读取权限，用户写入离线定位数据 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- 允许应用读取低级别的系统日志文件 -->
-    <uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <!-- 百度位置 end -->
     <!-- Mob分享 -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
@@ -170,10 +168,11 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <!-- end 讯飞语音 -->
 
-    <!--小米账号-->
+
+    <!-- 小米账号 -->
     <uses-permission android:name="com.xiaomi.permission.AUTH_SERVICE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <!--inmobi广告 start-->
+    <!-- inmobi广告 start -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -183,17 +182,19 @@
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <!--inmobi广告 start-->
 
     <!--mta统计 start-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!--mta统计 start-->
 
+    <!-- inmobi广告 start -->
     <application
         android:name="acore.override.XHApplication"
         android:allowBackup="false"
@@ -236,6 +237,7 @@
             <!-- GrowingIO 启动圈选接口 -->
             <intent-filter>
                 <data android:scheme="growing.e3205a1fdf7cb86e"/>
+
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -243,8 +245,8 @@
             </intent-filter>
             <!-- GrowingIO 启动圈选接口 -->
         </activity>
-        <!--小米账号-->
-        <!--<activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" />-->
+        <!-- 小米账号 -->
+        <!-- <activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" /> -->
         <!-- main start -->
         <service
             android:name="com.inmobi.signals.activityrecognition.ActivityRecognitionManager"
@@ -255,12 +257,12 @@
             android:value="8487000"/>
 
         <activity
-        android:name="amodule.main.Main"
-        android:configChanges="orientation|keyboardHidden"
-        android:launchMode="singleTask"
-        android:screenOrientation="portrait"
-        android:theme="@style/AppMainTheme"
-        android:windowSoftInputMode="adjustPan"/>
+            android:name="amodule.main.Main"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.main.activity.MainChangeSend"
             android:configChanges="orientation|keyboardHidden"
@@ -312,9 +314,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-        <!-- Fanli star-->
+        <!-- Fanli star -->
 
-        <!-- Fanli end-->
+
+        <!-- Fanli end -->
 
 
         <!-- dish start -->
@@ -335,6 +338,7 @@
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.dish.activity.ListDish"
@@ -403,7 +407,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-        <!--网络切换广播接受-->
+        <!-- 网络切换广播接受 -->
         <receiver android:name="amodule.dish.BrocastReceiver.NetChangeBrocastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
@@ -415,8 +419,78 @@
             android:name="amodule.other.activity.PlayVideo"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:theme="@style/common_TransParentTheme"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+
+        <!-- article start -->
+        <activity
+            android:name="amodule.article.activity.edit.ArticleEidtActiivty"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.article.activity.edit.VideoEditActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.article.activity.ArticleDetailActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.article.activity.VideoDetailActivity"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.article.activity.ArticleVideoSelectorActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.article.activity.ArticleSelectActiivty"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.article.activity.ArticleUploadListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.comment.activity.CommentActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name="amodule.article.activity.ReportActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name="amodule.article.activity.VideoPreviewActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Video_Preview_Theme"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <!--article end-->
+
 
         <!-- health start -->
         <activity
@@ -493,7 +567,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.quan.activity.CircleRobSofa"
             android:configChanges="orientation|keyboardHidden"
@@ -578,7 +651,8 @@
             android:name="amodule.search.avtivity.HomeSearch"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"/>
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
         <!-- global search end -->
 
 
@@ -613,6 +687,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <!--android:launchMode="singleTask"-->
         <activity
             android:name="amodule.user.activity.GourmetList"
             android:configChanges="orientation|keyboardHidden"
@@ -668,7 +743,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.user.activity.login.AccoutActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -735,7 +809,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.user.activity.login.SetSecretActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -754,7 +827,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.user.activity.login.BindPhone"
             android:configChanges="orientation|keyboardHidden"
@@ -773,7 +845,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.user.activity.login.UserSetting"
             android:configChanges="orientation|keyboardHidden"
@@ -816,6 +887,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <!-- other end -->
 
+
         <!-- aplug start -->
         <activity
             android:name="aplug.imageselector.ShowImageActivity"
@@ -842,7 +914,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="aplug.web.FullScreenWeb"
             android:configChanges="orientation|keyboardHidden"
@@ -850,7 +922,7 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-        <!--X5浏览器-->
+        <!-- X5浏览器 -->
         <activity
             android:name="aplug.web.VideoShowWeb"
             android:configChanges="orientation|keyboardHidden"
@@ -898,7 +970,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="aplug.shortvideo.activity.SelectVideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -928,13 +999,12 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-
         <service
             android:name="aplug.service.base.ProtectService"
-            android:process=":pro"></service>
+            android:process=":pro"/>
         <service
             android:name="aplug.service.CoreService"
-            android:process=":core"></service>
+            android:process=":core"/>
         <!-- aplug end -->
         <!-- mall start -->
         <activity
@@ -1029,7 +1099,6 @@
             android:windowSoftInputMode="adjustPan"/>
         <!-- ad end -->
 
-
         <activity
             android:name="amodule.dish.activity.upload.UploadDishListActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -1041,20 +1110,23 @@
 
 
         <!-- *************************************** fanli appKey  *************************************** -->
-        <!--<meta-data android:name="com.yidonglianjie.applicationid" android:value="app-fdj9l1d"/>-->
+        <!-- <meta-data android:name="com.yidonglianjie.applicationid" android:value="app-fdj9l1d"/> -->
         <!-- *************************************** fanli end *************************************** -->
 
-        <!-- *************************************** START umeng *************************************** -->
-        <!--<meta-data-->
-        <!--android:name="UMENG_APPKEY"-->
-        <!--android:value="545aeac6fd98c565c20004ad">-->
 
-        <!--&lt;!&ndash;服务王 57726be2e0f55a1c900000ff&ndash;&gt;-->
-        <!--&lt;!&ndash;菜谱 545aeac6fd98c565c20004ad&ndash;&gt;-->
-        <!--</meta-data>-->
-        <!--<meta-data-->
-        <!--android:name="UMENG_CHANNEL"-->
-        <!--android:value="${UMENG_CHANNEL_VALUE}"/>-->
+        <!-- *************************************** START umeng *************************************** -->
+        <!-- <meta-data -->
+        <!-- android:name="UMENG_APPKEY" -->
+        <!-- android:value="545aeac6fd98c565c20004ad"> -->
+
+
+        <!-- &lt;!&ndash;服务王 57726be2e0f55a1c900000ff&ndash;&gt; -->
+        <!-- &lt;!&ndash;菜谱 545aeac6fd98c565c20004ad&ndash;&gt; -->
+        <!-- </meta-data> -->
+        <!-- <meta-data -->
+        <!-- android:name="UMENG_CHANNEL" -->
+        <!-- android:value="${UMENG_CHANNEL_VALUE}"/> -->
+
 
         <!-- *************************************** END-umeng *************************************** -->
         <!-- ***************Mob分享*************** -->
@@ -1117,12 +1189,12 @@
         <!-- 微信分享回调 end -->
         <!-- ***********Mob分享 end*************** -->
 
-        <!-- PUSH start-->
+
+        <!-- PUSH start -->
         <!-- umeng push -->
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
             android:value="35d47e62d87d5038bc9f85b9f62a370a">
-
         </meta-data>
 
         <service android:name="third.push.umeng.UMPushService"/>
@@ -1168,6 +1240,7 @@
             android:name="com.tencent.android.tpush.XGPushReceiver"
             android:process=":xg_service_v3">
             <intent-filter android:priority="0x7fffffff">
+
                 <!-- 【必须】 信鸽SDK的内部广播 -->
                 <action android:name="com.tencent.android.tpush.action.SDK"/>
                 <action android:name="com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE"/>
@@ -1204,6 +1277,7 @@
             android:name="com.tencent.android.tpush.rpc.XGRemoteService"
             android:exported="true">
             <intent-filter>
+
                 <!-- 【必须】 请修改为当前APP包名 .PUSH_ACTION, 如demo的包名为：com.qq.xgdemo -->
                 <action android:name="com.xiangha.PUSH_ACTION"/>
             </intent-filter>
@@ -1212,17 +1286,17 @@
             android:name="com.tencent.android.tpush.service.XGDaemonService"
             android:process=":xg_service_v3"/>
 
-        <!-- 【必须】 【注意】authorities修改为 包名.AUTH_XGPUSH, 如demo的包名为：com.qq.xgdemo-->
+        <!-- 【必须】 【注意】authorities修改为 包名.AUTH_XGPUSH, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.android.tpush.XGPushProvider"
             android:authorities="com.xiangha.AUTH_XGPUSH"
             android:exported="true"/>
-        <!-- 【必须】 【注意】authorities修改为 包名.TPUSH_PROVIDER, 如demo的包名为：com.qq.xgdemo-->
+        <!-- 【必须】 【注意】authorities修改为 包名.TPUSH_PROVIDER, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.android.tpush.SettingsContentProvider"
             android:authorities="com.xiangha.TPUSH_PROVIDER"
             android:exported="false"/>
-        <!-- 【必须】 【注意】authorities修改为 包名.TENCENT.MID.V3, 如demo的包名为：com.qq.xgdemo-->
+        <!-- 【必须】 【注意】authorities修改为 包名.TENCENT.MID.V3, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.mid.api.MidProvider"
             android:authorities="com.xiangha.TENCENT.MID.V3"
@@ -1234,6 +1308,7 @@
             android:name="third.push.xg.XGMessageReceiver"
             android:exported="false">
             <intent-filter>
+
                 <!-- 接收消息透传 -->
                 <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE"/>
                 <!-- 监听注册、反注册、设置/删除标签、通知被点击等处理结果 -->
@@ -1253,19 +1328,21 @@
             android:name="XG_V2_SECRET_KEY"
             android:value="a5de78b3fc7c2ac8b5a8ef85d36ad334"/>
         <!-- END 信鸽 -->
-        <!-- PUSH end-->
+        <!-- PUSH end -->
+
 
         <!-- end -->
         <!-- 百度定位 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote"/>
         <!-- meta-data需要写在application中 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="oZh3u5UWWjpihB2NfyhiU3Y7"/>
         <!-- 百度定位 end -->
+
 
         <!-- alipay sdk begin -->
         <activity
@@ -1273,20 +1350,20 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <!-- alipay sdk end -->
         <!-- 魅族  账号 -->
         <activity
             android:name="sdk.meizu.auth.ui.AuthActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <!-- 魅族 end -->
         <!-- 广点通广告 -->
         <service
@@ -1302,7 +1379,7 @@
             android:name="xh.basic.internet.img.module.DiskCacheModule"
             android:value="GlideModule"/>
 
-        <!--inmobi 广告 start  //太坑爹，文档竟然没有写-->
+        <!-- inmobi 广告 start  //太坑爹，文档竟然没有写 -->
         <activity
             android:name="com.inmobi.rendering.InMobiAdActivity"
             android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize|screenLayout"
@@ -1319,19 +1396,25 @@
                 <action android:name="com.inmobi.share.id"/>
             </intent-filter>
         </receiver>
-        <!--inmobi 广告 end-->
+        <!-- inmobi 广告 end -->
 
+        <activity android:name="amodule.comment.activity.PublishCommentActivity">
+        </activity>
         <!--腾讯统计mta start-->
         <!--<provider-->
-            <!--android:name="com.tencent.mid.api.MidProvider"-->
-            <!--android:authorities="com.xiangha"-->
-            <!--android:exported="true" >-->
+        <!--android:name="com.tencent.mid.api.MidProvider"-->
+        <!--android:authorities="com.xiangha"-->
+        <!--android:exported="true" >-->
         <!--</provider>-->
         <!--appkey-->
         <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
-        <meta-data android:name="TA_APPKEY" android:value="Aqc1150004142" />
+        <meta-data
+            android:name="TA_APPKEY"
+            android:value="Aqc1150004142"/>
         <!--Channel-->
-        <meta-data android:name="InstallChannel" android:value="xiangha" />
+        <meta-data
+            android:name="InstallChannel"
+            android:value="xiangha"/>
         <!--腾讯统计mta start-->
 
     </application>

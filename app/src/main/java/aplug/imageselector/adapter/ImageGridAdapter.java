@@ -280,7 +280,7 @@ public class ImageGridAdapter extends BaseAdapter {
                         .load(data.path)
                         .error(R.drawable.default_error)
     					.placeholder(R.drawable.mall_recommed_product_backgroup)
-                        .override(mItemSize, mItemSize)
+                        .override(mItemSize /2, mItemSize/2)
                         .centerCrop()
                         .into(image);
             }

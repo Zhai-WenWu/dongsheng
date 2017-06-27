@@ -73,6 +73,11 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected String mTransferUrl;
     protected String mType;
 
+    protected String mComNum = null;//评论量
+    protected String mLikeNum = null;//点赞量
+    protected String mFavNum = null;//收藏量
+    protected String mAllClickNum = null;//浏览/播放量
+
     protected HomeModuleBean mModuleBean;
     private AdapterHome.ViewClickCallBack mRefreshCallBack;
 
@@ -112,7 +117,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 public void onClick(View v) {
                     if (mRefreshCallBack != null)
                         mRefreshCallBack.viewOnClick(true);
-                    if (mModuleBean != null && "recom".equals(mModuleBean.getType()))
+                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
                         XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
@@ -317,6 +322,27 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         }
         if (mDataMap.containsKey("url"))
             mTransferUrl = mDataMap.get("url");
+        String comNumStr = mDataMap.get("commentNum");
+        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 0) {
+            String commentNum = handleNumber(comNumStr);
+            if (!TextUtils.isEmpty(commentNum)) {
+                mComNum = commentNum;
+            }
+        }
+        String allClickStr = mDataMap.get("allClick");
+        if (!TextUtils.isEmpty(allClickStr)) {
+            String allClickNumStr = handleNumber(allClickStr);
+            if (!TextUtils.isEmpty(allClickNumStr)) {
+                mAllClickNum = allClickNumStr;
+            }
+        }
+        String likeNumStr = handleNumber(mDataMap.get("likeNum"));
+        if (!TextUtils.isEmpty(likeNumStr)) {
+            mLikeNum = likeNumStr;
+        }
+        String favNumStr = handleNumber(mDataMap.get("favorites"));
+        if (!TextUtils.isEmpty(favNumStr))
+            mFavNum = favNumStr;
     }
 
     protected void resetView() {
@@ -343,23 +369,12 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mIsAd = false;
         mIsTop = false;
         mTransferUrl = null;
-        mType = null;
+        mType = "";
+        mComNum = null;
+        mLikeNum = null;
+        mFavNum = null;
+        mAllClickNum = null;
     }
-
-    protected boolean viewIsVisible(View view) {
-        return view == null ? false : view.getVisibility() == View.VISIBLE;
-    }
-
-    protected String handleNumber(String num) {
-        if (TextUtils.isEmpty(num))
-            return "";
-        if (Integer.parseInt(num) < 10000)
-            return num;
-        BigDecimal bd = new BigDecimal(Integer.parseInt(num) * 1.0 / 10000);
-        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-        return bd + "万";
-    }
-
 
     public void setHomeModuleBean(HomeModuleBean bean) {
         mModuleBean = bean;
@@ -380,7 +395,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 String eventId = "";
                 String twoLevel = "";
                 switch (type) {
-                    case "recom":
+                    case MainHome.recommedType:
                         eventId = "a_recommend";
                         twoLevel = "点击列表内容";
                         break;
@@ -430,7 +445,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             if (!TextUtils.isEmpty(type)) {
                 String eventId = "";
                 switch (type) {
-                    case "recom":
+                    case MainHome.recommedType:
                         eventId = "a_recommend_adv";
                         break;
                     case "video":
@@ -460,7 +475,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         if(!TextUtils.isEmpty(viewType)&& HomeFragment.MODULETOPTYPE.equals(viewType)){
             return "top";
         }
-        return "recom";
+        return MainHome.recommedType_statictus;
     }
 
     /**
@@ -472,5 +487,13 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取当前Item的数据体类型
+     * @return
+     */
+    public String getDataType() {
+        return mType;
     }
 }

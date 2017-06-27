@@ -15,7 +15,7 @@
      <TextView
         android:id="@+id/quan_list_search_noData"
         style="@style/noDataText"
-        android:text="没有找到您想要的美食帖哦~"
+        android:text="没有找到您想要的美食贴哦~"
         android:textColor="#777"
         android:textSize="@dimen/sp_20" />
 

@@ -2,6 +2,7 @@ package amodule.main.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,11 +23,11 @@ import third.ad.control.AdControlParent;
  */
 public class AdapterListView extends BaseAdapter{
 
-    public final static int type_image_txt = 1;//图文
-    public final static int type_video = 2;//视频
-    public final static int type_acticle = 3;//文章
-    public final static int type_album = 4;//专辑
-    public final static int type_subject = 5;//美食帖
+    public final static String type_tagImage = "1";//大图
+    public final static String type_rightImage = "2";//右图
+    public final static String type_threeImage = "3";//三图
+    public final static String type_noImage = "4";//无图
+    public final static String type_levelImage = "5";//蒙版图
 
     private ArrayList<Map<String,String>> mapArrayList;
     private Context context;
@@ -62,9 +63,9 @@ public class AdapterListView extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Map<String, String> map = mapArrayList.get(position);
-        switch (getItemViewType(position)){
-            case type_image_txt://图文
-            case type_video://视频
+        String itemType = getItemType(position);
+        switch (itemType){
+            case type_tagImage://大图
                 ViewDishViewHolder viewHolder = null;
                 if (convertView == null
                         || !(convertView.getTag() instanceof ViewDishViewHolder)) {
@@ -74,7 +75,7 @@ public class AdapterListView extends BaseAdapter{
                 } else {
                     viewHolder = (ViewDishViewHolder) convertView.getTag();
                 }
-                if (getItemViewType(position) == type_video) {
+                if (type_tagImage.equals(itemType)) {
                     viewHolder.view.setVideoClickCallBack(new HomeRecipeItem.VideoClickCallBack() {
                         @Override
                         public void videoOnClick(int position) {
@@ -86,19 +87,7 @@ public class AdapterListView extends BaseAdapter{
                 }
                 viewHolder.setData(map, position);
                 break;
-            case type_acticle://文章
-                ViewTxtViewHolder viewTxtViewHolder = null;
-                if (convertView == null
-                        || !(convertView.getTag() instanceof ViewTxtViewHolder)) {
-                    viewTxtViewHolder = new ViewTxtViewHolder(new HomeTxtItem(context));
-                    convertView = viewTxtViewHolder.view;
-                    convertView.setTag(viewTxtViewHolder);
-                } else {
-                    viewTxtViewHolder = (ViewTxtViewHolder) convertView.getTag();
-                }
-                viewTxtViewHolder.setData(map, position);
-                break;
-            case type_album://专辑
+            case type_levelImage://蒙版
                 ViewAlbumViewHolder viewAlbumViewHolder = null;
                 if (convertView == null
                         || !(convertView.getTag() instanceof ViewAlbumViewHolder)) {
@@ -110,7 +99,7 @@ public class AdapterListView extends BaseAdapter{
                 }
                 viewAlbumViewHolder.setData(map, position);
                 break;
-            case type_subject://美食帖
+            case type_threeImage://美食贴
                 ViewTiziViewHolder viewTiziViewHolder = null;
                 if (convertView == null
                         || !(convertView.getTag() instanceof ViewTiziViewHolder)) {
@@ -122,19 +111,37 @@ public class AdapterListView extends BaseAdapter{
                 }
                 viewTiziViewHolder.setData(map, position);
                 break;
+
+            case type_rightImage://右图
+            case type_noImage://无图
+            default://找不到样式类型，指定默认-----无图样式
+
+                ViewTxtViewHolder viewTxtViewHolder = null;
+                if (convertView == null
+                        || !(convertView.getTag() instanceof ViewTxtViewHolder)) {
+                    viewTxtViewHolder = new ViewTxtViewHolder(new HomeTxtItem(context));
+                    convertView = viewTxtViewHolder.view;
+                    convertView.setTag(viewTxtViewHolder);
+                } else {
+                    viewTxtViewHolder = (ViewTxtViewHolder) convertView.getTag();
+                }
+                viewTxtViewHolder.setData(map, position);
+                break;
         }
         return convertView;
     }
 
-    @Override
-    public int getViewTypeCount() {
-        return 7;
-    }
 
     @Override
-    public int getItemViewType(int position) {
-        return Integer.parseInt(getItem(position).get("type"));
+    public int getViewTypeCount() {
+        return 9;
     }
+
+    public String getItemType(int position) {
+        Map<String, String> item = getItem(position);
+        return (item == null || item.size() <= 0 || !item.containsKey("style") || TextUtils.isEmpty(item.get("style"))) ? type_noImage : item.get("style");
+    }
+
     /**
      * 专辑
      */
@@ -154,7 +161,7 @@ public class AdapterListView extends BaseAdapter{
     }
 
     /**
-     * 帖子
+     * 贴子
      */
     public class ViewTiziViewHolder{
         HomePostItem view;

@@ -18,6 +18,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,6 +33,9 @@ import acore.widget.multifunction.base.StyleConfig;
  * E_mail : ztanzeyu@gmail.com
  */
 public class MultifunctionTextView extends TextView {
+
+	private boolean isLongClick = false;
+
 	/** 长按事件 */
 	protected TextViewTagLongClick mTextViewTagLongClick;
 
@@ -52,11 +56,27 @@ public class MultifunctionTextView extends TextView {
 
 		//初始化长按监听
 		mTextViewTagLongClick = new TextViewTagLongClick(context, this);
+		mTextViewTagLongClick.setOnLongClickListener(new TextViewTagLongClick.OnLongClickListener() {
+			@Override
+			public void onLongClick() {
+				if (mMultifunctionText == null) {
+					return;
+				}
+				String text = mMultifunctionText.getText();
+				Log.i("commentReplay","MultifunctionTextView  onLongClick（）:");
+				//背景色
+				SpannableStringBuilder style = new SpannableStringBuilder(text);
+//				MultifunctionTextView.this.getText();
+				style = parseTextStyle(style,mMultifunctionText.getConfigs(),true);
+				MultifunctionTextView.this.setText(style,BufferType.NORMAL);
+				isLongClick = true;
+			}
+		});
 	}
 
 	public void setText(SpannableStringBuilder style) {
 		if (mMultifunctionText != null) {
-			style = parseTextStyle(style, mMultifunctionText.getConfigs());
+			style = parseTextStyle(style, mMultifunctionText.getConfigs(),false);
 		}
 		super.setText(style,BufferType.NORMAL);
 	}
@@ -70,23 +90,40 @@ public class MultifunctionTextView extends TextView {
 		if (text != null) {
 			//解析Emoji
 			SpannableStringBuilder style = new SpannableStringBuilder(text);
-			style = parseTextStyle(style, mMultifunctionText.getConfigs());
+			style = parseTextStyle(style, mMultifunctionText.getConfigs(),false);
 			super.setText(style, BufferType.NORMAL);
 		}
 	}
 
+	@Override
+	public void setOnClickListener(OnClickListener l) {
+		if(isLongClick){
+			isLongClick = false;
+			return;
+		}
+		super.setOnClickListener(l);
+	}
+
 	/** 解析 */
-	private SpannableStringBuilder parseTextStyle(SpannableStringBuilder style, ArrayList<StyleConfig> configsArray) {
+	private SpannableStringBuilder parseTextStyle(SpannableStringBuilder style, ArrayList<StyleConfig> configsArray,boolean isChoose) {
 		for (final StyleConfig config : configsArray) {
 			if(style.length() <= 0
 					|| style.length() < config.getEnd()
 					|| config.getStart() < 0){
 				continue;
 			}
-			//背景色
-			if (!TextUtils.isEmpty(config.getBackgroudColor())) {
-				style.setSpan(new BackgroundColorSpan(Color.parseColor(config.getBackgroudColor())),
-						config.getStart(), config.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			if(isChoose){
+				//选择后背景色
+				if (config.getChooseBackgroudColor() > 0) {
+					style.setSpan(new BackgroundColorSpan(config.getChooseBackgroudColor()),
+							config.getStart(), config.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+			}else {
+				//背景色
+				if (!TextUtils.isEmpty(config.getBackgroudColor())) {
+					style.setSpan(new BackgroundColorSpan(Color.parseColor(config.getBackgroudColor())),
+							config.getStart(), config.getEnd(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
 			}
 			//文字颜色
 			if (!TextUtils.isEmpty(config.getTextColor())) {
@@ -109,6 +146,10 @@ public class MultifunctionTextView extends TextView {
 					//  在onClick方法中可以编写单击链接时要执行的动作
 					@Override
 					public void onClick(View widget) {
+						if(isLongClick){
+							isLongClick = false;
+							return;
+						}
 						config.getClickListener().onClick(widget);
 					}
 
@@ -216,6 +257,14 @@ public class MultifunctionTextView extends TextView {
 	 */
 	public void setCopyText(String copyText) {
 		mTextViewTagLongClick.setCopyText(copyText);
+	}
+
+	public void setNormBackColor(int color){
+		mTextViewTagLongClick.setNormBackColor(color);
+	}
+
+	public void setChoseBackColor(int color) {
+		mTextViewTagLongClick.setChoseBackColor(color);
 	}
 
 	/**

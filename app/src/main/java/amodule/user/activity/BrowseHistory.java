@@ -34,7 +34,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 	private TextView rightText;
 	private int defaultIndex = 0;
 	private List<HistoryView> viewList = new ArrayList<>();
-	private String[] titles = new String[]{"菜谱", "美食帖", "头条"};
+	private String[] titles = new String[]{"菜谱", "美食贴", "头条"};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 			}
 		}
 		initView();
-		initTitle();
+//		initTitle();
 	}
 
 	private void initView() {

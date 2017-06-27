@@ -24,6 +24,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
+import acore.dialogManager.VersionOp;
+import acore.override.XHApplication;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
@@ -56,7 +58,7 @@ public class FileManager extends UtilFile{
 	public static final String file_hotwords = "hotWords";
 
 	public static final String xmlFile_userInfo = "common";
-	public static final String xmlFile_wake = "wake";
+	public static final String xmlFile_wake = "wake2";
 	public static final String xmlFile_appInfo = "appInfo2";
 	public static final String xmlFile_appUrl = "appUrl";
 	public static final String xmlFile_localPushTag = "localPushTag";
@@ -68,7 +70,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_isIndexData = "isIndexData";
 	public static final String xmlKey_device = "device";
 	public static final String xmlKey_device_statictis = "device_statictis";
-	public static final String xmlKey_firstStart = "firstStart";
+	public static final String xmlKey_firstStart_v2 = "firstStart_v2";
 	public static final String xmlKey_downDishLimit = "downDishLimit";
 	public static final String xmlKey_upFavorTime = "upFavorTime";
 	public static final String xmlKey_crashTime = "crashTime";
@@ -132,7 +134,7 @@ public class FileManager extends UtilFile{
 	public static final  String MATCH_WORDS_CREATE_TIME = "match_words_create_time"; //热搜词库，创建时间
 	public static final  String SHOW_NO_WIFI = "show_no_wifi";
 	public static final  String STATICTIS_S6 = "statictis_s6";//s6统计数据体
-	public static final  String file_homeTopModle = "homeTopModle";//首页一级导航的内置数据
+	public static final  String file_homeTopModle = "homeTopModle" + VersionOp.getVerName(XHApplication.in());//首页一级导航的内置数据
 
 
 	/**

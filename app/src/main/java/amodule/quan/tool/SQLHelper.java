@@ -18,7 +18,7 @@ public class SQLHelper extends SQLiteOpenHelper {
 	public static final String DES = "des";//数据描述
 	public static final String IMG = "img";//数据url
 	public static final String TYPE="type";//模块类型
-	public static final String HASIMG="hasImg";//美食帖是否有图片
+	public static final String HASIMG="hasImg";//美食贴是否有图片
 	/***********************VERSION==2添加的字段***************************/
 	public static final String DISPLAYFLAG="displayFlag";//模块是否显示
 	public static final String STYLE="style";//模块数据展示类型

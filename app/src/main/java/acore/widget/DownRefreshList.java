@@ -262,7 +262,7 @@ public class DownRefreshList extends ListView implements OnScrollListener {
 	 *  当状态改变时候，调用该方法，以更新界面
 	 */
 	private void changeHeaderViewByState() {
-		//TODO 当状态改变时候，调用该方法，以更新界面
+		//当状态改变时候，调用该方法，以更新界面
 		switch (state) {
 		case RELEASE_To_REFRESH:
 			arrowImageView.setVisibility(View.VISIBLE);

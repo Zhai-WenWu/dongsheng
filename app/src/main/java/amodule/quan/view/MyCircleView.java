@@ -185,7 +185,7 @@ public class MyCircleView extends LinearLayout{
 			
 			@Override
 			public void onClick(View v) {
-				//TODO 去发现圈子
+				//去发现圈子
 				Intent intent = new Intent(mCon, CircleFind.class);
 				mCon.startActivity(intent);
 			}

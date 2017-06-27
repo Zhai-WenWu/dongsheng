@@ -14,7 +14,7 @@ public class ReqEncryptState {
     private void getData(){
         long time= System.currentTimeMillis();
         if(ReqEncryptCommon.getInstance().isencrypt()&&
-                (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength())>=time){
+                (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=time){
             if(reqEncryptCallBack!=null)reqEncryptCallBack.encryptSuccess(ReqEncryptCommon.getInstance().getData(paramsData));
         }else{
             getLoginApp();

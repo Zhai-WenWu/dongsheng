@@ -69,7 +69,7 @@ public class CircleMainFragment extends Fragment {
     private LoadManager mLoadManager = null;
     /**
      * 圈子列表的头部局
-     * 包含置顶，公告，活动，发帖界面，发帖失败界面
+     * 包含置顶，公告，活动，发贴界面，发贴失败界面
      */
     private CircleHeaderView mCircleHeaderView;
     private PtrClassicFrameLayout refreshLayout;
@@ -83,7 +83,7 @@ public class CircleMainFragment extends Fragment {
     private int mCurrentPage = 0;
     /** 每页的数据数量 */
     private int mEveryPageNum = 0;
-    /** 帖子的数据集合 */
+    /** 贴子的数据集合 */
     private ArrayList<Map<String, String>> mListData = new ArrayList<>();
     /** 圈子数据 */
     private ArrayList<Map<String, String>> mCircleData = new ArrayList<>();
@@ -484,7 +484,7 @@ public class CircleMainFragment extends Fragment {
                         }
                         String dataType = returnData.get(0).get("dataType");
                         returnData = StringManager.getListMapByJson(returnData.get(0).get("data"));
-                        //判断列表数据类型-----------------1：帖子 2：用户
+                        //判断列表数据类型-----------------1：贴子 2：用户
                         if ("2".equals(dataType)) {
                             for (int index = 0, length = returnData.size(); index < length; index++) {
                                 Map<String, String> map = returnData.get(index);

@@ -20,7 +20,14 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     public static final String STATE_SUCCESS = "success";
     public static final String STATE_FAIL = "fail";
     public static final String STATE_SUSPEND = "suspend";
+    public static final String DATA_TYPE = "dataType";
 
+    //详情页的删除操作
+    public static final String ACTION_DEL = "actionDel";//2:删除成功
+    //详情页的关注操作
+    public static final String ACTION_ATT = "actionAtt";//表示“关注”操作
+
+    public static final String SECONDE_EDIT = "secondEdit";//是否二次编辑 1：否 2：是
 
 
     public UploadStateChangeBroadcasterReceiver(ReceiveBack callback){
@@ -29,8 +36,7 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String state = intent.getStringExtra(STATE_KEY);
-        callback.onGetReceive(state);
+        callback.onGetReceive(intent);
     }
 
 
@@ -41,7 +47,7 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     }
 
     public interface ReceiveBack{
-        void onGetReceive(String state);
+        void onGetReceive(Intent intent);
     }
 
 }

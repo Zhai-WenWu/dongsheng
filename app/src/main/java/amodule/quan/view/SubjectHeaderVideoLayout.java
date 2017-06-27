@@ -106,10 +106,10 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
 
     private void setVideoPlayerData(String videoData,Activity activity){
         final Map<String, String> videoInfo = StringManager.getFirstMap(videoData);
-        adLayout = (FrameLayout) rootView.findViewById(R.id.dishvideo_ad);
+        adLayout = (FrameLayout) rootView.findViewById(R.id.video_ad_layout);
         if (videoInfo != null) {
             videoImg = videoInfo.get("sImgUrl");
-            RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.dishVidio);
+            RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.video_layout);
             dishVidio.setVisibility(View.VISIBLE);
             videoPlayerController = new VideoImagePlayerController(activity,dishVidio,videoImg);
             handlerADData();
@@ -159,8 +159,8 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
     }
 
     private void addVideoView(String uu, String vu, String name, String imgValue) {
-        adLayout = (FrameLayout) rootView.findViewById(R.id.dishvideo_ad);
-        RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.dishVidio);
+        adLayout = (FrameLayout) rootView.findViewById(R.id.video_ad_layout);
+        RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.video_layout);
         dishVidio.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
                 Tools.getDimen(getContext(), R.dimen.dp_220));//
@@ -175,10 +175,11 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
         mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
             @Override
             public void onStatistics() {
-                XHClick.mapStat(getContext(), "a_post_detail_video", "帖子部分点击量", "播放点击量");
+                XHClick.mapStat(getContext(), "a_post_detail_video", "贴子部分点击量", "播放点击量");
             }
         });
         mVideoPlayerController.hideFullScreen();
+        mVideoPlayerController.setMute(true, false);
         //点击回调
         mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
             @Override

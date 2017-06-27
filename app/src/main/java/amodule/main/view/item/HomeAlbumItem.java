@@ -10,14 +10,16 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
 
 /**
- * 专辑Item
+ * 蒙版--样式
  * Created by sll on 2017/4/18.
  */
 
@@ -26,6 +28,7 @@ public class HomeAlbumItem extends HomeItem {
     private ImageView mImg;
     private TextView mTitle;
     private TextView mNum1;
+    private View mLayerView;
 
     public HomeAlbumItem(Context context) {
         super(context, R.layout.home_albumitem);
@@ -45,6 +48,7 @@ public class HomeAlbumItem extends HomeItem {
         mImg = (ImageView) findViewById(R.id.img);
         mTitle = (TextView) findViewById(R.id.title);
         mNum1 = (TextView) findViewById(R.id.num1);
+        mLayerView = findViewById(R.id.layer_view);
         addListener();
     }
 
@@ -71,10 +75,17 @@ public class HomeAlbumItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
-        if (mDataMap.containsKey("img") && !TextUtils.isEmpty(mDataMap.get("img"))) {
-            loadImage(mDataMap.get("img"), mImg);
-            findViewById(R.id.layer_view).setVisibility(View.VISIBLE);
-        }else findViewById(R.id.layer_view).setVisibility(View.GONE);
+        if (mDataMap.containsKey("styleData")) {
+            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
+            if (datas != null && datas.size() > 0) {
+                Map<String, String> imgMap = datas.get(0);
+                if (imgMap != null && imgMap.size() > 0) {
+                    String imgUrl = imgMap.get("url");
+                    loadImage(imgUrl, mImg);
+                    mLayerView.setVisibility(View.VISIBLE);
+                }
+            }
+        } else findViewById(R.id.layer_view).setVisibility(View.GONE);
         if (mDataMap.containsKey("name") && mTitle != null) {
             String albumName = mDataMap.get("name");
             if (!TextUtils.isEmpty(albumName)) {
@@ -99,6 +110,8 @@ public class HomeAlbumItem extends HomeItem {
             mTitle.setVisibility(View.GONE);
         if (viewIsVisible(mNum1))
             mNum1.setVisibility(View.GONE);
+        if (viewIsVisible(mLayerView))
+            mLayerView.setVisibility(View.GONE);
 
     }
 }

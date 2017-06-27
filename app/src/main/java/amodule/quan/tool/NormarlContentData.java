@@ -7,7 +7,7 @@ package amodule.quan.tool;
 public class NormarlContentData {
 
     public String statisID = "a_quan_homepage";
-    public String statisKey = "帖子";
+    public String statisKey = "贴子";
     public String moduleName;
     public String circleName;
 

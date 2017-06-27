@@ -441,6 +441,7 @@
     <dimen name="dp_290">464dp</dimen>
     <dimen name="dp_300">480dp</dimen>
     <dimen name="dp_340">544dp</dimen>
+    <dimen name="dp_375">600dp</dimen>
     <dimen name="dp_400">640dp</dimen>
     <dimen name="dp_408">652.8dp</dimen>
     <dimen name="dp_540">864dp</dimen>

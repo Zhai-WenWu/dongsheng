@@ -13,6 +13,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -31,7 +32,7 @@ import aplug.feedback.activity.Feedback;
  * 小贴士
  */
 
-public class DishExplainView extends DishBaseView{
+public class DishExplainView extends ItemBaseView {
     public static String DISH_STYLE_EXP="dish_style_EXP";
     public static int  DISH_STYLE_EXP_INDEX=2;
     private Map<String,String> mapData;

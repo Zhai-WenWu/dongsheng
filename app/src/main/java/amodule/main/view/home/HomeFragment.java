@@ -23,7 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.utils.VDPlayPauseHelper;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -42,6 +41,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
 import amodule.main.adapter.AdapterListView;
 import amodule.main.bean.HomeModuleBean;
@@ -52,7 +52,6 @@ import amodule.main.view.item.HomeItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
 import amodule.main.view.item.HomeTxtItem;
-import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -64,6 +63,8 @@ import third.ad.option.AdOptionList;
 import third.ad.option.AdOptionParent;
 import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
+import third.video.SimpleVideoPlayerController;
+import third.video.VideoPlayerController;
 
 import static amodule.main.activity.MainHome.tag;
 import static com.xiangha.R.id.return_top;
@@ -95,7 +96,7 @@ public class HomeFragment extends Fragment{
     private int position=-1;
     /** 当前二级内容中位置 */
     private int twoPosition=-1;
-    /** 帖子的数据集合 */
+    /** 贴子的数据集合 */
     private ArrayList<Map<String, String>> mListData = new ArrayList<>();
 
     private String backUrl= "";//向上拉取数据集合
@@ -112,7 +113,6 @@ public class HomeFragment extends Fragment{
     private boolean isRecoment = false,isDayDish = false,isSetIndex = false;
     private static final Integer[] AD_INSTERT_INDEX = new Integer[]{3,9,16,24,32,40,48,56,64,72};
 
-    private VideoImageView mVideoImageView;
     private RelativeLayout mVideoLayout;
     private ReplayAndShareView mReplayAndShareView;
 
@@ -171,7 +171,7 @@ public class HomeFragment extends Fragment{
         if(TextUtils.isEmpty(type)){
             return null;
         }
-        if("recom".equals(type)){ //推荐
+        if(MainHome.recommedType.equals(type)){ //推荐
             isRecoment = true;
             return AdControlHomeDish.getInstance().getTwoLoadAdData();
         }else{
@@ -325,7 +325,6 @@ public class HomeFragment extends Fragment{
                 }, new AutoLoadMore.OnListScrollListener() {
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
-                        stopVideo();
                     }
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -343,7 +342,7 @@ public class HomeFragment extends Fragment{
                 });
         }
         //处理推荐的置顶数据
-        if(homeModuleBean.getType().equals("recom")) {
+        if(homeModuleBean.getType().equals(MainHome.recommedType)) {
             String url = StringManager.API_RECOMMEND_TOP;
             ReqEncyptInternet.in().doEncyptAEC(url, "", new InternetCallback(mActivity) {
                 @Override
@@ -396,7 +395,7 @@ public class HomeFragment extends Fragment{
      */
     private void loadData(final boolean refresh, String data){
         Log.i("zhangyujian","refresh::"+refresh+"::data:"+data);
-        if (homeModuleBean != null && "recom".equals(homeModuleBean.getType()) && refresh)
+        if (homeModuleBean != null && MainHome.recommedType.equals(homeModuleBean.getType()) && refresh)
             XHClick.mapStat(mActivity, "a_recommend", "刷新效果", "下拉刷新");
         linearLayoutOne.removeAllViews();
         String url= StringManager.API_RECOMMEND;
@@ -421,7 +420,7 @@ public class HomeFragment extends Fragment{
                     Log.i("FRJ","获取  服务端   数据回来了-------------");
                     boolean isRecom=false;//是否是推荐
                     //只处理推荐列表
-                    if(homeModuleBean.getType().equals("recom"))isRecom=true;
+                    if(homeModuleBean.getType().equals(MainHome.recommedType))isRecom=true;
 
                     ArrayList<Map<String,String>> listmaps= StringManager.getListMapByJson(object);
                     //当前数据有问题，直接return数据
@@ -440,6 +439,12 @@ public class HomeFragment extends Fragment{
                         //当前只有向上刷新，并且服务端确认可以刷新数据
                         if (compelClearData || (refresh && !TextUtils.isEmpty(listmaps.get(0).get("reset")) && "2".equals(listmaps.get(0).get("reset")))) {
                             mListData.clear();
+                            //强制刷新，重置数据
+                            if(!TextUtils.isEmpty(listmaps.get(0).get("backurl")))
+                                backUrl = listmaps.get(0).get("backurl");
+                            if(!TextUtils.isEmpty(listmaps.get(0).get("nexturl")))
+                                nextUrl = listmaps.get(0).get("nexturl");
+
                         }
                         //初始化二级
                         initContextView(listmaps.get(0).get("trigger_two_type"));
@@ -676,7 +681,7 @@ public class HomeFragment extends Fragment{
         }
     }
 
-    private VDPlayPauseHelper mVDPlayPauseHelper;
+    private SimpleVideoPlayerController mPlayerController;
 
     /**
      * 处理view,video
@@ -687,10 +692,23 @@ public class HomeFragment extends Fragment{
         if (parentView == null || position < 0 || position >= mListData.size())
             return;
         if(mListData.get(position).containsKey("video") && !TextUtils.isEmpty(mListData.get(position).get("video"))) {
-            Map<String, String> videoData = StringManager.getFirstMap(mListData.get(position).get("video"));
-            if(mVideoImageView==null)
-                mVideoImageView = new VideoImageView(mActivity,false);
-            mVideoImageView.setImageBg(mListData.get(position).get("img"));
+            Map<String, String> dataMap = mListData.get(position);
+            if (dataMap == null || dataMap.size() <= 0)
+                return;
+            if (mVideoLayout != null && mVideoLayout.getChildCount() > 0) {
+                mVideoLayout.removeAllViews();
+            }
+            if (mPlayerController != null) {
+                mPlayerController.removePlayingCompletionListener();
+                mPlayerController.onPause();
+            }
+            mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_container);
+            if (mPlayerController == null)
+                mPlayerController = new SimpleVideoPlayerController(mActivity);
+            mPlayerController.setViewGroup(mVideoLayout);
+            mPlayerController.setImgUrl(dataMap.get("img"));
+            mPlayerController.initView();
+            Map<String, String> videoData = StringManager.getFirstMap(dataMap.get("video"));
             if (videoData != null) {
                 String videoUrl = videoData.get("videoUrl");
                 if (!TextUtils.isEmpty(videoUrl)) {
@@ -709,38 +727,21 @@ public class HomeFragment extends Fragment{
                                 }
                             }
                         }
-                        mVideoImageView.setVideoData(videoD);
+                        mPlayerController.initVideoView2(videoD, dataMap.get("name"), null);
                     }
-
                 }
-
             }
-            mVideoImageView.setVideoCycle(false);
-            mVideoImageView.setVisibility(View.VISIBLE);
-            if (mVideoLayout != null && mVideoLayout.getChildCount() > 0) {
-                mVideoLayout.removeAllViews();
-            }
-
-            mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_container);
-            mVideoLayout.addView(mVideoImageView);
-            mVideoImageView.onBegin();
-            mPlayPosition = position;
-            mPlayParentView = parentView;
-            final View resumeView =  parentView.findViewById(R.id.resume_img);
-            mVideoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
-                @Override
-                public void setVideoClick() {
-                    if (resumeView != null)
-                        resumeView.setVisibility(isPlaying() ? View.VISIBLE : View.GONE);
-                    playPause();
-                }
-            });
-            mVideoImageView.setOnPlayingCompletionListener(new VideoImageView.OnPlayingCompletionListener() {
+            mPlayerController.hideFullScreen();
+            mPlayerController.setMute(false, false);
+            mPlayerController.setOnClick();
+            mPlayerController.setOnPlayingCompletionListener(new VideoPlayerController.OnPlayingCompletionListener() {
                 @Override
                 public void onPlayingCompletion() {
                     showReplayShareView();
                 }
             });
+            mPlayPosition = position;
+            mPlayParentView = parentView;
         }
     }
 
@@ -748,15 +749,15 @@ public class HomeFragment extends Fragment{
      * 暂停播放
      */
     public void stopVideo(){
-        if(mVideoImageView!=null){
+        if (mPlayerController != null) {
             mPlayPosition = -1;
             if (mPlayParentView != null) {
                 View resumeView = mPlayParentView.findViewById(R.id.resume_img);
                 if (resumeView != null && resumeView.getVisibility() != View.GONE)
                     resumeView.setVisibility(View.GONE);
             }
+            mPlayerController.onPause();
             mPlayParentView = null;
-            mVideoImageView.onVideoPause();
             if (mVideoLayout != null)
                 mVideoLayout.removeAllViews();
         }
@@ -771,23 +772,6 @@ public class HomeFragment extends Fragment{
             controller.resume();
             controller.start();
         }
-    }
-
-    /**
-     * 播放/暂停
-     */
-    private void playPause() {
-        if (mVDPlayPauseHelper == null)
-            mVDPlayPauseHelper = new VDPlayPauseHelper(mActivity);
-        mVDPlayPauseHelper.doClick();
-    }
-
-    /**
-     * 是否正在播放
-     * @return
-     */
-    private boolean isPlaying() {
-        return mVideoImageView == null ? false : mVideoImageView.getIsPlaying();
     }
 
     /**
@@ -867,23 +851,24 @@ public class HomeFragment extends Fragment{
      */
     private HomeItem handlerTopView(Map<String,String> map,int position){
         HomeItem viewTop=null;
-        if(map.containsKey("type")&&!TextUtils.isEmpty(map.get("type"))){
-            int type=Integer.parseInt(map.get("type"));
+        if(map.containsKey("style")&&!TextUtils.isEmpty(map.get("style"))){
+            String type=map.get("style");
             switch (type){
-                case 1:
-                case 2:
+                case AdapterListView.type_tagImage:
                     viewTop= new HomeRecipeItem(mActivity);
                     break;
-                case 3:
-                    viewTop= new HomeTxtItem(mActivity);
-                    break;
-                case 4:
+
+                case AdapterListView.type_levelImage:
                     viewTop= new HomeAlbumItem(mActivity);
                     break;
-                case 5:
+                case AdapterListView.type_threeImage:
                     viewTop= new HomePostItem(mActivity);
                     break;
-
+                case AdapterListView.type_rightImage:
+                case AdapterListView.type_noImage:
+                    default:
+                    viewTop= new HomeTxtItem(mActivity);
+                    break;
             }
             viewTop.setViewType(MODULETOPTYPE);
             viewTop.setHomeModuleBean(homeModuleBean);
@@ -908,7 +893,7 @@ public class HomeFragment extends Fragment{
     }
 
     public boolean isRecom() {
-        return homeModuleBean.getType().equals("recom");
+        return homeModuleBean.getType().equals(MainHome.recommedType);
     }
 
     public long getStatrTime() {
@@ -971,7 +956,7 @@ public class HomeFragment extends Fragment{
      */
     public void setStatisticShowNum(){
         if(scrollDataIndex>0&&isRecom()){
-            XHClick.saveStatictisFile("home","recom","","",String.valueOf(scrollDataIndex),"list","","","","","");
+            XHClick.saveStatictisFile("home",MainHome.recommedType_statictus,"","",String.valueOf(scrollDataIndex),"list","","","","","");
             scrollDataIndex=-1;
         }
     }

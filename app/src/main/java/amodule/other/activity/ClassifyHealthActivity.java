@@ -46,7 +46,7 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
         initActivity("", 2, 0, 0, R.layout.classify_health_layout);
         mSelectedPos = getIntent().getIntExtra("selectedPos", 0);
         initData();
-        initStatusBar();
+//        initStatusBar();
         initView();
     }
 

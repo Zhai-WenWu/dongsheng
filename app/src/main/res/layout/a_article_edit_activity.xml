@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout">
+
+    <include
+        android:id="@+id/title_rela"
+        layout="@layout/a_common_post_new_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_controler_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_rela"
+        android:background="@android:color/transparent">
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/edit_controler"
+            android:background="#FFFFFE"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dp_50">
+
+                <amodule.article.view.richtext.RichText
+                    android:id="@+id/edit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:background="@null"
+                    android:paddingBottom="@dimen/dp_15"
+                    android:paddingTop="@dimen/dp_15"
+                    android:textColor="#494949"
+                    android:textColorHint="#bbbbbb"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/sp_24"
+                    android:textStyle="bold"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:background="#e1e1e1"/>
+
+                <amodule.article.view.TextAndImageMixLayout
+                    android:id="@+id/text_image_mix_ayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:minHeight="@dimen/dp_120"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <amodule.article.view.EditBottomControler
+            android:id="@+id/edit_controler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

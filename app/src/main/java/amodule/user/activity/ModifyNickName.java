@@ -118,6 +118,9 @@ public class ModifyNickName extends BaseActivity {
 			int lastIndex = newData.lastIndexOf(INTERVAL_CHAR);
 			info = newData.substring(0,lastIndex);
 		}
+		if(TextUtils.isEmpty(info)){
+			info = "对美食的敬意，便是与你分享";
+		}
 		String params = "type=setOther&info=" + info;
 		ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
 

@@ -18,7 +18,7 @@ import xh.basic.internet.UtilInternet;
 
 /**
  * @author Eva
- * 美食帖发布控制
+ * 美食贴发布控制
  */
 public class UploadSubjectControl extends UploadHelper{
 	public static final String IMAGE_TYPE_SUBJECT = "subject";
@@ -44,7 +44,7 @@ public class UploadSubjectControl extends UploadHelper{
 	}
 	
 	/**
-	 * 开始发帖时需要实现的代码
+	 * 开始发贴时需要实现的代码
 	 */
 	@Override
 	public void startUploadHandle(long uploadTimeCode, UploadData uploadData) {
@@ -59,7 +59,7 @@ public class UploadSubjectControl extends UploadHelper{
 	}
 	
 	/**
-	 * 发帖结束时需要实现的代码
+	 * 发贴结束时需要实现的代码
 	 */
 	@Override
 	public void endUploadHandle(UploadData uploadData, int flag, Object msg) {

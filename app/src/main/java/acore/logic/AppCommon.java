@@ -226,7 +226,7 @@ public class AppCommon {
                     }
                 }
                 if (!TextUtils.isEmpty(url) && urls.length > 1) {
-                    //TODO 不会有.app了，变成包名加类名啦
+                    //不会有.app了，变成包名加类名啦
                     int indexs = url.indexOf(".app");
                     String data = url.substring(0, indexs + 4); //+4是为了加上.app4个字符
                     XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
@@ -544,6 +544,15 @@ public class AppCommon {
      * @param code
      */
     public static void onAttentionClick(String code, final String type) {
+        onAttentionClick(code, type, null);
+    }
+
+    /**
+     * 关注请求
+     *
+     * @param code
+     */
+    public static void onAttentionClick(String code, final String type, final Runnable succRun) {
         if (code != null) {
             ReqInternet.in().doPost(StringManager.api_setUserData, "type=" + type + "&p1=" + code.toString(),
                     new InternetCallback(XHApplication.in()) {
@@ -552,6 +561,8 @@ public class AppCommon {
                             if (flag >= ReqInternet.REQ_OK_STRING) {
                                 LoginManager.modifyUserInfo(XHApplication.in(), "followNum", returnObj.toString());
                                 AppCommon.follwersNum = Integer.valueOf(returnObj.toString());
+                                if (succRun != null)
+                                    succRun.run();
                             }
                         }
                     });
@@ -967,7 +978,15 @@ public class AppCommon {
         return setVip(act,vipView,data,"","");
     }
 
+    public static boolean setVip(final Activity act, ImageView vipView, String data, View.OnClickListener listener){
+        return setVip(act,vipView,data,"","","",listener);
+    }
+
     public static boolean setVip(final Activity act, ImageView vipView, String data, final String eventId, final String twoLevel){
+        return setVip(act,vipView,data,eventId,twoLevel,"",null);
+    }
+
+    public static boolean setVip(final Activity act, ImageView vipView, String data, final String eventId, final String twoLevel, final String threadLevel, final View.OnClickListener listener){
         boolean isVip = isVip(data);
         if(isVip){
             vipView.setVisibility(View.VISIBLE);
@@ -978,7 +997,8 @@ public class AppCommon {
         vipView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!TextUtils.isEmpty(eventId)) XHClick.mapStat(act,eventId,twoLevel,"会员皇冠");
+                if(!TextUtils.isEmpty(eventId)) XHClick.mapStat(act,eventId,twoLevel,TextUtils.isEmpty(threadLevel) ? "会员皇冠" : threadLevel);
+                if(listener != null) listener.onClick(v);
                 AppCommon.openUrl(act, StringManager.api_vip, true);
             }
         });
@@ -989,11 +1009,15 @@ public class AppCommon {
         boolean isVip = false;
         if(TextUtils.isEmpty(data))
             return false;
-        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(data);
-        if(arrayList.size() > 0) {
-            Map<String, String> map = arrayList.get(0);
-            if ("2".equals(map.get("isVip"))) {
-                isVip = true;
+        if("2".equals(data)){
+            isVip = true;
+        }else {
+            ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(data);
+            if (arrayList.size() > 0) {
+                Map<String, String> map = arrayList.get(0);
+                if ("2".equals(map.get("isVip"))) {
+                    isVip = true;
+                }
             }
         }
         return isVip;

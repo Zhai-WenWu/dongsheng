@@ -39,7 +39,7 @@ public class MyFavorite extends BaseActivity {
 	private HorizontalScrollView hsv_favorite;
 	private LinearLayout ll_favorite;
 	private FavoriteDish favoriteDish;//收藏的菜谱
-	private FavoriteQuan favoriteQuan;//收藏的美食帖
+	private FavoriteQuan favoriteQuan;//收藏的美食贴
 	private FavoriteNous fragmentNous;//收藏的香哈头条
 	
 	public static Handler handler = null;
@@ -81,7 +81,7 @@ public class MyFavorite extends BaseActivity {
 		initData();
 		init();
 		setTop();
-		initTitle();
+//		initTitle();
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class MyFavorite extends BaseActivity {
 		//统计
 		XHClick.onEventValue(this, "pageFav", "pageFav", "菜谱", 1);
 		
-		//我的收藏 ----美食帖
+		//我的收藏 ----美食贴
 		favoriteQuan = new FavoriteQuan(this);
 		View fragmentHotGoodvView = favoriteQuan.onCreateView();
 		pagerList.add(fragmentHotGoodvView);
@@ -237,7 +237,7 @@ public class MyFavorite extends BaseActivity {
 		win_width = ToolsDevice.getWindowPx(this).widthPixels;
 		topList = new ArrayList<Map<String, String>>();
 		// 罗明
-		String names[] = { "菜谱", "美食帖", "头条" };
+		String names[] = { "菜谱", "美食贴", "头条" };
 		for (int i = 0; i < names.length; i++) {
 			HashMap<String, String> topMap = new HashMap<String, String>();
 			topMap.put("name", names[i]);
@@ -306,7 +306,7 @@ public class MyFavorite extends BaseActivity {
 				XHClick.getViewPageItemStopTime();
 				XHClick.getViewPageItemStartTime("MyFavorite_meiShiTie");
 				//统计
-				XHClick.onEventValue(MyFavorite.this, "pageFav", "pageFav", "美食帖", 1);
+				XHClick.onEventValue(MyFavorite.this, "pageFav", "pageFav", "美食贴", 1);
 				break;
 			case 2:
 				//选择第三页

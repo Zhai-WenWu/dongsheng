@@ -197,7 +197,7 @@ public class AdapterCircle extends AdapterSimple {
 
         public void setData(final Map<String, String> map, final int position, int style) {
             if (view != null) {
-                //添加美食帖统计code
+                //添加美食贴统计code
                 if (!map.containsKey("isPromotion"))
                     XHClick.saveCode(view.getContext(), map.get("code"));
                 //设置是否显示抢沙发的title需要在initView前面

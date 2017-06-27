@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/acticle_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="@dimen/dp_3"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_15"
+        android:text="大标题"
+        android:textColor="#494949"
+        android:textSize="@dimen/dp_24"
+        android:visibility="visible"/>
+
+    <!--用户信息-->
+    <amodule.article.view.CustomerView
+        android:id="@+id/customer_view"
+        android:layout_below="@+id/acticle_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--发布页面-->
+    <style name="article_bottom_select">
+        <item name="android:layout_width">@dimen/dp_50</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">@dimen/dp_13</item>
+        <item name="android:background">@drawable/article_select_img</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="article_bottom_select_bottom">
+        <item name="android:layout_width">@dimen/dp_53</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">@dimen/dp_5.5</item>
+        <item name="android:background">@drawable/article_select_bottom_round</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+
+    <!--选择分类页面-->
+    <style name="article_select_check">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/dp_14</item>
+        <item name="android:layout_marginRight">@dimen/dp_20</item>
+    </style>
+</resources>

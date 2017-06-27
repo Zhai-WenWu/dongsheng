@@ -18,7 +18,7 @@ import amodule.quan.tool.NormarlContentData;
 import xh.windowview.BottomDialog;
 
 /**
- * 正常帖子内容
+ * 正常贴子内容
  */
 @SuppressLint("ClickableViewAccessibility")
 public class NormalContentView extends CircleItemBaseRelativeLayout {
@@ -41,7 +41,7 @@ public class NormalContentView extends CircleItemBaseRelativeLayout {
     public static final String INDEX_LIKE = "like";// 赞
 
     private String statisID = "a_quan_homepage";
-    private String statisKey = "帖子";
+    private String statisKey = "贴子";
     private boolean needRefresh = false;
     public boolean isRobsof = false;
     private NormalContentItemUserView normalContentItemUserView;
@@ -91,7 +91,7 @@ public class NormalContentView extends CircleItemBaseRelativeLayout {
     }
     public void setIsRobsof(boolean isRobsof) {
         this.isRobsof=isRobsof;
-        statisKey = isRobsof ? "抢沙发" : "帖子";
+        statisKey = isRobsof ? "抢沙发" : "贴子";
         normarlContentData.setStatisKey(statisKey);
     }
     public void setCircleName(String circleName) {
@@ -209,7 +209,7 @@ public class NormalContentView extends CircleItemBaseRelativeLayout {
         });
 
         if ((map.containsKey("code") && !TextUtils.isEmpty(map.get("code")) || map.containsKey("url") && !TextUtils.isEmpty(map.get("url")))
-                && (!map.containsKey("uploadState") || "3000".equals(map.get("uploadState")))) {// 初始化只要正常帖和上传中状态
+                && (!map.containsKey("uploadState") || "3000".equals(map.get("uploadState")))) {// 初始化只要正常贴和上传中状态
             setShowUpload(true);
         } else {
             setShowUpload(false);
@@ -243,9 +243,9 @@ public class NormalContentView extends CircleItemBaseRelativeLayout {
     }
 
     /**
-     * 设置帖子当前状态
+     * 设置贴子当前状态
      *
-     * @param state true表示当前正常，上传成功的帖子 false 真在 上传中
+     * @param state true表示当前正常，上传成功的贴子 false 真在 上传中
      */
     public void setShowUpload(boolean state) {
         normalContentItemUserView.setShowUpload(state);

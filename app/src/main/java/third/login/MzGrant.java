@@ -56,10 +56,10 @@ public class MzGrant {
 							"&p4=" + map.get("nickname")  + 
 							"&p5="+ map.get("icon") + 
 							"&p6=1"; 
-					Tools.showToast(mAct, "授权完成");
+//					Tools.showToast(mAct, "授权完成");
 					LoginManager.userLogin(mAct, param);
 				}else{
-					Tools.showToast(mAct, "授权失败");
+					Tools.showToast(mAct, "登录失败");
 				}
 			}
 		});

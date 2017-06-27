@@ -47,7 +47,7 @@ import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
-import static com.xiangha.R.id.dishvideo_img;
+import static com.xiangha.R.id.video_img_layout;
 
 /**
  * Created by Administrator on 2016/9/21.
@@ -99,7 +99,7 @@ public class DishHeaderView extends LinearLayout {
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
         view_oneImage = LayoutInflater.from(activity).inflate(R.layout.view_dish_header_oneimage, null);
-        dishVidioLayout = (RelativeLayout) view_oneImage.findViewById(R.id.dishVidio);
+        dishVidioLayout = (RelativeLayout) view_oneImage.findViewById(R.id.video_layout);
 
         //处理简介
         dishAboutView = new DishAboutView(activity);
@@ -133,13 +133,13 @@ public class DishHeaderView extends LinearLayout {
 
         try {
             String selfVideo = list.get(0).get("selfVideo");
-            if(!TextUtils.isEmpty(selfVideo)
-                    && !"[]".equals(selfVideo)){
-                boolean urlValid = setSelfVideo(title, list.get(0).get("selfVideo"), list.get(0).get("img"));
+            if (!TextUtils.isEmpty(selfVideo)
+                    && !"[]".equals(selfVideo)) {
+                boolean urlValid = setSelfVideo(title, selfVideo, list.get(0).get("img"));
                 if (!urlValid) {
                     setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
                 }
-            }else{
+            } else {
                 setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
             }
         }catch (Exception e){
@@ -150,11 +150,11 @@ public class DishHeaderView extends LinearLayout {
     }
 
     private void initVideoAd(){
-        adLayout = (FrameLayout) view_oneImage.findViewById(R.id.dishvideo_ad);
+        adLayout = (FrameLayout) view_oneImage.findViewById(R.id.video_ad_layout);
         int distance = Tools.getDimen(activity, R.dimen.dp_45);
-        if (Tools.isShowTitle()) {
-            distance += Tools.getStatusBarHeight(activity);
-        }
+//        if (Tools.isShowTitle()) {
+//            distance += Tools.getStatusBarHeight(activity);
+//        }
         adLayout.setPadding(0,distance,0,0);
 
         ArrayList<String> list= new ArrayList<>();
@@ -295,11 +295,11 @@ public class DishHeaderView extends LinearLayout {
             String videoUrl = selfVideoMap.get("url");
             if (!TextUtils.isEmpty(videoUrl)
                     && videoUrl.startsWith("http")) {
-                LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.dishvideo_img);
+                LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.video_img_layout);
                 int distance = Tools.getDimen(activity, R.dimen.dp_45);
-                if (Tools.isShowTitle()) {
-                    distance += Tools.getStatusBarHeight(activity);
-                }
+//                if (Tools.isShowTitle()) {
+//                    distance += Tools.getStatusBarHeight(activity);
+//                }
                 dishVidioLayout.setPadding(0, distance, 0, 0);
 //                dishvideo_img.addView(new DishVideoImageView(activity).setData(img, selfVideoMap.get("duration")));
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
@@ -349,11 +349,10 @@ public class DishHeaderView extends LinearLayout {
                 Map<String, String> dishBurden = UtilString.getListMapByJson(videoJson).get(0);
                 String videoUnique = dishBurden.get("vu");
                 String userUnique = dishBurden.get("uu");
-                LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.dishvideo_img);
+                LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.video_img_layout);
                 int distance = Tools.getDimen(activity, R.dimen.dp_45);
-                if (Tools.isShowTitle()) {
-                    distance += Tools.getStatusBarHeight(activity);
-                }
+//                if (Tools.isShowTitle()) {setData
+//                }
                 dishVidioLayout.setPadding(0, distance, 0, 0);
 //                dishvideo_img.addView(new DishVideoImageView(activity).setData(img, dishBurden.get("duration")));
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
@@ -384,7 +383,7 @@ public class DishHeaderView extends LinearLayout {
                 Toast.makeText(context,"视频地址信息错误",Toast.LENGTH_SHORT).show();
             }
         } else {
-            findViewById(dishvideo_img).setVisibility(View.GONE);
+            findViewById(video_img_layout).setVisibility(View.GONE);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             final ImageViewVideo imvv = new ImageViewVideo(activity);
             imvv.parseItemImg(ImageView.ScaleType.CENTER_CROP, img, false, false, R.drawable.i_nopic, FileManager.save_cache);
@@ -405,6 +404,7 @@ public class DishHeaderView extends LinearLayout {
 
                     Intent intent = new Intent(activity, MoreImageShow.class);
                     intent.putExtra("data", listmap);
+                    intent.putExtra("from", "dish");
                     intent.putExtra("index", 0);
                     intent.putExtra("isShowAd", false);
                     dishVidioLayout.setClickable(true);

@@ -6,15 +6,13 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/singleText"
+        style="@style/top_title_singleText"
         android:layout_width="match_parent"
         android:layout_centerInParent="true"
         android:clickable="true"
         android:gravity="center"
         android:paddingLeft="@dimen/dp_55"
-        android:paddingRight="@dimen/dp_55"
-        android:textColor="@color/common_top_text"
-        android:textSize="@dimen/sp_17" />
+        android:paddingRight="@dimen/dp_55" />
 
     <View
         android:id="@+id/title_dian"
@@ -137,6 +135,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_4"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
@@ -242,7 +241,7 @@
                 style="@style/rightBtn"
                 android:clickable="false"
                 android:paddingLeft="@dimen/dp_15"
-                android:paddingRight="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_6"
                 android:src="@drawable/z_quan_title_topbar_ico_more_white"
                 android:visibility="visible" />
 

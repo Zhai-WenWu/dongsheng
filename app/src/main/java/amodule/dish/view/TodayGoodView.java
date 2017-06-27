@@ -65,7 +65,7 @@ public class TodayGoodView extends CircleItemBaseRelativeLayout {
 				}else item_score.setVisibility(View.INVISIBLE);
 			}else
 				item_score.setVisibility(View.INVISIBLE);
-			//是否是视频帖hasVideo=2
+			//是否是视频贴hasVideo=2
 			if(map.containsKey("hasVideo")&&"2".equals(map.get("hasVideo"))){
 				item_img.setVisibility(View.GONE);
 				item_model_video.setVisibility(View.VISIBLE);

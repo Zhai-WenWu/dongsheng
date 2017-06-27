@@ -86,6 +86,7 @@ public class Welcome extends BaseActivity {
             @Override
             public void onClick(View v) {
                 isAdLeadClick=true;
+                closeActivity();
             }
         });
         textSkip.setOnClickListener(new View.OnClickListener() {

@@ -92,11 +92,27 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/title_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_container"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_alignParentLeft="true"
+        android:lineSpacingExtra="@dimen/dp_4"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/c_black_text"
+        android:textSize="@dimen/sp_17"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_190"
-        android:layout_below="@+id/top_container"
+        android:layout_below="@+id/title_top"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_15"

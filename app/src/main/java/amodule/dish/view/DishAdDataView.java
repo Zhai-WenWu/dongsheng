@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -30,7 +31,7 @@ import third.ad.tools.AdPlayIdConfig;
 /**
  * 处理数据的小贴士下的广告
  */
-public class DishAdDataView extends DishBaseView {
+public class DishAdDataView extends ItemBaseView {
     private XHAllAdControl xhAllAdControl;
 
     private Map<String, String> adDataMap = new HashMap<>();

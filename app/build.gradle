@@ -29,6 +29,9 @@ dependencies {
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
+    //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
+    //    compile 'com.android.support:support-v4:23.4.0'
+    //    compile 'com.github.chrisbanes:photoview:latest.release'
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.android.support:support-v4:24.0.0'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
@@ -39,6 +42,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     //    compile 'com.github.chrisbanes:photoview:latest.release'
 }
 
@@ -51,7 +56,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 177
-        versionName "5.3.5"
+        versionName "5.3.9.1"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -67,8 +72,11 @@ android {
 //            storeFile file('D:/android_workspace/xiangha.keystore')
 //            storeFile file('E:/keystore/xiangha.keystore')
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
+//            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
 //            yulekwok
-            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
+//            mac
+//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }
@@ -111,36 +119,22 @@ android {
     }
 
     //会根据渠道号，自动执行对应的方法，默认执行main
-    //会根据渠道号，自动执行对应的方法，默认执行main
-//    sourceSets{
-//        main {
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_normal']
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_360']
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_anzhuoapk']
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_baidu']
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_huawei']
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_samsung']
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_lenovo']
-////            res.srcDirs = ['src\\main\\res','src\\main\\res_letv']
-//            res.srcDirs = ['src\\main\\res','src\\main\\res_xiaomi']
-//            jniLibs.srcDirs=['libs']
-//        }
-//
-//    }
-//    mac 
-    //会根据渠道号，自动执行对应的方法，默认执行main
-    sourceSets{
+    sourceSets {
         main {
-            res.srcDirs = ['src\\main\\res','src\\main\\res_normal']
-//            res.srcDirs = ['src/main/res','src/main/res_360']
-//            res.srcDirs = ['src/main/res','src/main/res_anzhuoapk']
-//            res.srcDirs = ['src/main/res','src/main/res_baidu']
-//            res.srcDirs = ['src/main/res','src/main/res_huawei']
-//            res.srcDirs = ['src/main/res','src/main/res_samsung']
-//            res.srcDirs = ['src/main/res','src/main/res_lenovo']
-//            res.srcDirs = ['src/main/res','src/main/res_letv']
-//            res.srcDirs = ['src/main/res','src/main/res_xiaomi']
-            jniLibs.srcDirs=['libs']
+            //mac
+            res.srcDirs = ['src/main/res', 'src/main/res_normal']
+            //windows
+//            res.srcDirs = ['src\\main\\res', 'src\\main\\res_normal']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_360']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_anzhuoapk']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_baidu']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_huawei']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_samsung']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_lenovo']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_letv']
+//            res.srcDirs = ['src\\main\\res','src\\main\\res_xiaomi']
+            jniLibs.srcDirs = ['libs']
+
         }
 
     }

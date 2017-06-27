@@ -73,7 +73,7 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
      */
     private void setType(String type) {
         setVisibility(View.GONE);
-        if ("3".equals(type) || "5".equals(type)) {//菜谱帖子
+        if ("3".equals(type) || "5".equals(type)) {//菜谱贴子
             setVisibility(View.VISIBLE);
         } else if ("2".equals(type)) {
             setVisibility(View.VISIBLE);
@@ -131,7 +131,7 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
             intent.putExtra("name", dishName);
         } else {
             intent = new Intent(getContext(), HomeSearch.class);
-            intent.putExtra("from", "美食帖更多");
+            intent.putExtra("from", "美食贴更多");
             intent.putExtra("s", title);
             intent.putExtra("type", "4".equals(ShowSubject.types) ? "zhishi" : "caipu");
         }

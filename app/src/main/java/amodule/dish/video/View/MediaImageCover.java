@@ -13,13 +13,13 @@ import com.xiangha.R;
 import java.io.File;
 import java.io.FileInputStream;
 
-import amodule.dish.view.DishBaseView;
+import acore.override.view.ItemBaseView;
 import xh.basic.tool.UtilImage;
 
 /**
  * 地址
  */
-public class MediaImageCover extends DishBaseView {
+public class MediaImageCover extends ItemBaseView {
     public MediaImageCover(Context context, int layoutId) {
         super(context, R.layout.media_cover_url);
     }

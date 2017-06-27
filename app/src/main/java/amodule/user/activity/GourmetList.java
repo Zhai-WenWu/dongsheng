@@ -243,7 +243,7 @@ public class GourmetList extends BaseActivity {
 						for (int i = 0; i < listTop.size(); i++) {
 							map = listTop.get(i);
 							map.put("allLikeNum", "被赞" + map.get("allLikeNum"));
-							map.put("allSubjectNum", "美食帖" + map.get("allSubjectNum"));
+							map.put("allSubjectNum", "美食贴" + map.get("allSubjectNum"));
 							map.put("userCode", map.get("code"));
 							rightData.add(map);
 						}

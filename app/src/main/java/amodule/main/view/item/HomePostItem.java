@@ -22,7 +22,7 @@ import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
 
 /**
- * 帖子Item，只处理3图模式的。
+ * 贴子Item，只处理3图模式的。
  * Created by sll on 2017/4/18.
  */
 
@@ -131,20 +131,22 @@ public class HomePostItem extends HomeItem {
             }
         }
         int imgCount = 0;
-        if (mDataMap.containsKey("imgs")) {
-            String imgs = mDataMap.get("imgs");
+        if (mDataMap.containsKey("styleData")) {
+            String imgs = mDataMap.get("styleData");
             if (!TextUtils.isEmpty(imgs)) {
                 ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(imgs);
                 if (maps != null) {
                     imgCount = maps.size();
                     RelativeLayout.LayoutParams postContainerParams = (LayoutParams) mPostContainer.getLayoutParams();
                     if (imgCount == 0) {
+                        mPostContainer.setMinimumHeight(0);
                         postContainerParams.height = LayoutParams.WRAP_CONTENT;
                         postContainerParams.topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                         postContainerParams.bottomMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                     } else if (imgCount < 3) {
                         if (mPostContainer != null) {
-                            postContainerParams.height = getContext().getResources().getDimensionPixelSize(R.dimen.dp_74_5);
+                            mPostContainer.setMinimumHeight(getContext().getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+                            postContainerParams.height = LayoutParams.WRAP_CONTENT;
                             postContainerParams.topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                             postContainerParams.bottomMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_15);
                             mPostContainer.setLayoutParams(postContainerParams);
@@ -152,13 +154,14 @@ public class HomePostItem extends HomeItem {
                         if (mImgsContainerRight != null) {
                             mImgsContainerRight.setVisibility(View.VISIBLE);
                         }
-                        loadImage(maps.get(0).get(""), mImgRight);
+                        loadImage(maps.get(0).get("url"), mImgRight);
                         if (mIsAd && mLayerView != null)
                             mLayerView.setVisibility(View.VISIBLE);
                         if (mIsAd && mAdTagRight != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
                             mAdTagRight.setVisibility(View.VISIBLE);
                     } else {
                         if (mPostContainer != null) {
+                            mPostContainer.setMinimumHeight(0);
                             postContainerParams.height = LayoutParams.WRAP_CONTENT;
                             postContainerParams.topMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
                             postContainerParams.bottomMargin = getContext().getResources().getDimensionPixelSize(R.dimen.dp_13);
@@ -176,9 +179,9 @@ public class HomePostItem extends HomeItem {
                         }
                         if (mIsAd && mAdTagCenter != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
                             mAdTagCenter.setVisibility(View.VISIBLE);
-                        loadImage(maps.get(0).get(""), mImg1);
-                        loadImage(maps.get(1).get(""), mImg2);
-                        loadImage(maps.get(2).get(""), mImg3);
+                        loadImage(maps.get(0).get("url"), mImg1);
+                        loadImage(maps.get(1).get("url"), mImg2);
+                        loadImage(maps.get(2).get("url"), mImg3);
                     }
                 }
             }
@@ -201,25 +204,90 @@ public class HomePostItem extends HomeItem {
             } else if (imgCount >= 3) {
                 mTitle.setMaxLines(2);
             } else {
-                titleParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dp_1);
+                mTitle.setLines(2);
+                mTitle.setMaxLines(Integer.MAX_VALUE);
+                titleParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dp_5);
             }
             mTitle.setLayoutParams(titleParams);
             mTitle.setVisibility(View.VISIBLE);
         }
 
-        if (mDataMap.containsKey("commentNum") && mNum1 != null) {
-            String commentNum = handleNumber(mDataMap.get("commentNum"));
-            if (!TextUtils.isEmpty(commentNum)) {
-                mNum1.setText(commentNum + "评论");
-                mNum1.setVisibility(View.VISIBLE);
-            }
-        }
-        if (mDataMap.containsKey("likeNum") && mNum2 != null) {
-            String likeNum = handleNumber(mDataMap.get("likeNum"));
-            if (!TextUtils.isEmpty(likeNum)) {
-                mNum2.setText(likeNum + "赞");
-                mNum2.setVisibility(View.VISIBLE);
-            }
+        switch (imgCount) {
+            case 0://无图
+                switch (mType) {
+                    case "3":
+                    case "5":
+                        if (mAllClickNum != null && mNum1 != null) {
+                            mNum1.setText(mAllClickNum + "浏览");
+                            mNum1.setVisibility(View.VISIBLE);
+                        }
+                        if (mComNum != null && mNum2 != null) {
+                            mNum2.setText(mComNum + "评论");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                }
+                break;
+            case 1://右图
+            case 2:
+                switch (mType) {
+                    case "1":
+                        if (mAllClickNum != null && mNum1 != null) {
+                            mNum1.setText(mAllClickNum + "浏览");
+                            mNum1.setVisibility(View.VISIBLE);
+                        }
+                        if (!mIsTop) {
+                            if (mFavNum != null && mNum2 != null) {
+                                mNum2.setText(mFavNum + "收藏");
+                                mNum2.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        break;
+                    case "2":
+                        if (mAllClickNum != null && mNum1 != null) {
+                            mNum1.setText(mAllClickNum + "浏览");
+                            mNum1.setVisibility(View.VISIBLE);
+                        }
+                        if (!mIsTop) {
+                            if (mComNum != null && mNum2 != null) {
+                                mNum2.setText(mComNum + "评论");
+                                mNum2.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        break;
+                    case "3":
+                        if (mComNum != null && mNum1 != null) {
+                            mNum1.setText(mComNum + "评论");
+                            mNum1.setVisibility(View.VISIBLE);
+                        }
+                        if (mAllClickNum != null && mNum2 != null) {
+                            mNum2.setText(mAllClickNum + "浏览");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case "5":
+                        if (mComNum != null && mNum1 != null) {
+                            mNum1.setText(mComNum + "评论");
+                            mNum1.setVisibility(View.VISIBLE);
+                        }
+                        if (mLikeNum != null && mNum2 != null) {
+                            mNum2.setText(mLikeNum + "赞");
+                            mNum2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                }
+                break;
+            default://3图
+                if (mAllClickNum != null && mNum1 != null) {
+                    mNum1.setText(mAllClickNum + "浏览");
+                    mNum1.setVisibility(View.VISIBLE);
+                }
+                if (mComNum != null && mNum2 != null) {
+                    mNum2.setText(mComNum + "评论");
+                    mNum2.setVisibility(View.VISIBLE);
+                }
+                break;
         }
     }
 

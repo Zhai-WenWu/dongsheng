@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    <ImageView
-        android:id="@+id/leftImgBtn"
-        android:layout_width="@dimen/dp_25"
-        android:layout_height="@dimen/dp_45"
-        android:layout_marginLeft="@dimen/dp_6"
-        android:scaleType="centerInside"
-        android:src="@drawable/z_me_mypage_ico_back" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/dishVidio"
+        android:id="@+id/video_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:orientation="vertical"/>
+
+    <RelativeLayout
+        android:id="@+id/bar_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45">
+
+        <include
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            layout="@layout/a_bar_item_back" />
+    </RelativeLayout>
 </RelativeLayout>

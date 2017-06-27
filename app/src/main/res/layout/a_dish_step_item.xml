@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/itemNum"
-        android:layout_width="@dimen/dp_24"
+        android:layout_width="@dimen/dp_26"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:text="10"

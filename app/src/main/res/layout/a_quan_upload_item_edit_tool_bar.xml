@@ -7,7 +7,10 @@
         android:id="@+id/quan_bar_subject_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent">
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -20,7 +23,7 @@
                 android:id="@+id/quan_bar_ll_emojiBar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
-                android:background="#F1eee4" >
+                android:background="#F9F9F9" >
 
                 <ImageButton
                     android:id="@+id/quan_bar_ib_addEmoji"

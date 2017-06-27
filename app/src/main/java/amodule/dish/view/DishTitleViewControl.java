@@ -102,7 +102,7 @@ public class DishTitleViewControl implements View.OnClickListener{
      * @param dishInfoMaps-----数据集合
      * @param code------code菜谱
      * @param dishJson----菜谱的基础信息
-     * @param isHasVideo----是否是视频帖
+     * @param isHasVideo----是否是视频贴
      */
     public void setData(Map<String, String> dishInfoMaps,String code,String dishJson,boolean isHasVideo,String dishState,LoadManager loadManager){
         this.dishInfoMap=dishInfoMaps;
@@ -246,7 +246,7 @@ public class DishTitleViewControl implements View.OnClickListener{
         String mType = "", mTitle = "", mClickUrl = "", mContent = "", mImgUrl = "",isVideo="";
         //是否是自己区分数据
         String code = UtilString.getListMapByJson(dishInfoMap.get("customer")).get(0).get("code");
-        //登陆并是自己的菜谱帖
+        //登陆并是自己的菜谱贴
         if (LoginManager.isLogin() && !TextUtils.isEmpty(code) && code.equals(LoginManager.userInfo.get("code"))) {
             mTitle = "【香哈菜谱】我上传了" + dishInfoMap.get("name") + "的做法";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
@@ -254,7 +254,7 @@ public class DishTitleViewControl implements View.OnClickListener{
             mImgUrl = dishInfoMap.get("img");
             mType = BarShare.IMG_TYPE_WEB;
             isVideo="1";
-            //不是自己的菜谱帖
+            //不是自己的菜谱贴
         } else if (isHasVideo) {
             mTitle = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
+import acore.dialogManager.VersionOp;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.ToolsDevice;
@@ -25,6 +26,8 @@ import third.push.umeng.UMPushServer;
 import static com.sina.sinavideo.coreplayer.util.AndroidUtil.getProcessName;
 
 public class XHApplication extends Application {
+    /**包名*/
+    private static final String PACKAGE_NAME = "com.xiangha";
     private static XHApplication mAppApplication;
 
     //仿造单例，获取application对象
@@ -43,14 +46,14 @@ public class XHApplication extends Application {
 
     @Override
     public void onCreate() {
-        Log.i("zhangyujian", "进程::" + getProcessName(this));
+        Log.i("zhangyujian", "进程名字::" + getProcessName(this));
         startTime = System.currentTimeMillis();
         super.onCreate();
         mAppApplication = this;
         initUmengPush();
         String processName = getProcessName(this);
         if (processName != null) {
-            if (processName.equals("com.xiangha")) {//多进程多初始化，只对xiangha进程进行初始化
+            if (processName.equals(PACKAGE_NAME)) {//多进程多初始化，只对xiangha进程进行初始化
                 initData();
             }
         }
@@ -96,7 +99,6 @@ public class XHApplication extends Application {
             public void onActivityResumed(Activity activity) {
                 //记录当前activity
                 XHActivityManager.getInstance().setCurrentActivity(activity);
-
             }
 
             @Override
@@ -145,8 +147,16 @@ public class XHApplication extends Application {
                 CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
                 strategy.setAppChannel(ChannelUtil.getChannel(context));
                 strategy.setAppReportDelay(5 * 1000);
-//		测试阶段建议设置成true，发布时设置为false
-                CrashReport.initCrashReport(context, "1150004142", false, strategy);
+                //		测试阶段建议设置成true，发布时设置为false
+                String versoinName = VersionOp.getVerName(context);
+                Log.i("tzy","versoinName = " + versoinName);
+                String[] temp = versoinName.split("\\.");
+                Log.i("tzy","temp = " + temp.toString());
+                String testAppID = "4146e8557a";//测试APP id
+                String AppID = "1150004142";//正式APP id
+                boolean isTest = temp.length != 3;
+                Log.i("tzy","isTest = " + isTest);
+                CrashReport.initCrashReport(context, isTest ? testAppID:AppID , isTest, strategy);
                 CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
             }
         }).start();

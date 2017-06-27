@@ -62,7 +62,7 @@ public class AdapterUserSubject extends AdapterSimple {
         public void setData(final Map<String, String> map, int position) {
             view.setIsClickUser(false);
             view.initView(map, "",position);
-            view.setStatisIDNew(mTongjiId,"美食帖");
+            view.setStatisIDNew(mTongjiId,"美食贴");
             view.setDeleteSubjectCallBack(mDeleteCallback,position);
             view.setOnTitleTopStateCallBack(new NormalContentView.OnTitleTopStateCallBack() {
 

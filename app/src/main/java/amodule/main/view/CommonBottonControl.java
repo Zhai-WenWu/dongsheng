@@ -28,9 +28,9 @@ public class CommonBottonControl {
 	 * @param context
 	 */
 	public View setCommonBottonView(String className,Activity context,int contentXml){
-		if(jubgeCommonBottonShow(context,className))
-			return addCommonBottonView(className,context, contentXml);
-		else 
+//		if(jubgeCommonBottonShow(context,className))
+//			return addCommonBottonView(className,context, contentXml);
+//		else
 			return LayoutInflater.from(context).inflate(contentXml, null);
 	}
 	/**
@@ -90,7 +90,7 @@ public class CommonBottonControl {
 			});
 			builder.setIconDrawableAndText(CommonBottomView.BOTTOM_CENTER, R.drawable.tab_found, "社区");
 		}else if(list!=null&&style.equals("2")){//圈子内部----显示otherview--不传文字和后面背景色就ok了
-//			builder.setIconDrawableAndText(CommonBottomView.BOTTOM_CENTER, R.drawable.z_home_menu_fatie, "发帖");
+//			builder.setIconDrawableAndText(CommonBottomView.BOTTOM_CENTER, R.drawable.z_home_menu_fatie, "发贴");
 //			builder.setNoShowIndex(Integer.parseInt(CommonBottomView.BOTTOM_CENTER));
 //			String color = Tools.getColorStr(context,R.color.comment_color);
 //			builder.setIndexBackgroup(CommonBottomView.BOTTOM_CENTER, color, "#FFFFFF");

@@ -219,7 +219,7 @@ public class AdConfigTools {
 			onClickSite = "user";
 		}else if("用户昵称".equals(onClickSite)){
 			onClickSite = "user";
-		}else if("帖子内容".equals(onClickSite)){
+		}else if("贴子内容".equals(onClickSite)){
 			onClickSite = "overall";
 		}else if("评论".equals(onClickSite)){
 			onClickSite = "content";

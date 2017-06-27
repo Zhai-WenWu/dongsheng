@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <amodule.article.view.richtext.RichText
+        android:id="@+id/rich_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:hint="添加内容"
+        android:textColor="#535353"
+        android:textColorHint="#BBBBBB"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_2"
+        android:paddingBottom="@dimen/dp_2"
+        android:lineSpacingExtra="@dimen/dp_5"
+        android:lineSpacingMultiplier="1"
+        android:textSize="@dimen/sp_17"
+        app:linkColor="#5c809c"
+        app:historyEnable="true"
+        app:historySize="99"
+        app:linkUnderline="false"/>
+
+</RelativeLayout>

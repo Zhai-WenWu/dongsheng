@@ -139,7 +139,7 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 			moveModel();
 			break;
 		case R.id.user_recommend_home:// 推荐
-			AlertDialog dialog = new AlertDialog.Builder(QuanRecommend.this).setTitle("确认推荐？").setMessage("您确认要推荐本帖吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			AlertDialog dialog = new AlertDialog.Builder(QuanRecommend.this).setTitle("确认推荐？").setMessage("您确认要推荐本贴吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -195,7 +195,7 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 	 * 加精
 	 */
 	private void addCream(){
-		AlertDialog dialog = new AlertDialog.Builder(QuanRecommend.this).setTitle("确认加精？").setMessage("您确认要对该帖加精吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		AlertDialog dialog = new AlertDialog.Builder(QuanRecommend.this).setTitle("确认加精？").setMessage("您确认要对该贴加精吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

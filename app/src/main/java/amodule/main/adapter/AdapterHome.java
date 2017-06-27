@@ -57,7 +57,7 @@ public class AdapterHome extends AdapterSimple{
                 viewHolder = (ViewDishViewHolder) convertView.getTag();
             }
             viewHolder.setData(map, position);
-        }else if("5".equals(type)){//美食帖
+        }else if("5".equals(type)){//美食贴
             ViewTiziViewHolder viewHolder = null;
             if (convertView == null
                     || !(convertView.getTag() instanceof ViewTiziViewHolder)) {
@@ -101,7 +101,7 @@ public class AdapterHome extends AdapterSimple{
     }
 
     /**
-     * 帖子
+     * 贴子
      */
     public class ViewTiziViewHolder{
         HomePostItem view;

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/title_rela_all"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/common_top_bg">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:padding="@dimen/dp_5"
+                android:scaleType="centerInside"
+                android:src="@drawable/calssify_health_back"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/top_text_other"
+                android:background="@null"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
+                android:text="取消"/>
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/top_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="香哈视频"/>
+
+            <Button
+                android:id="@+id/category_btn"
+                style="@style/top_text_other"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:drawablePadding="5dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:singleLine="true"
+                android:text="相册"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/grid_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer_bar"
+        android:layout_below="@+id/title_rela_all">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/video_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dp_9"
+            android:layout_marginLeft="@dimen/dp_1.5"
+            android:layout_marginRight="@dimen/dp_1.5"/>
+
+        <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+            android:id="@+id/video_recyclerview_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/header_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_5"
+                android:gravity="center"
+                android:background="#fbf5cf"
+                android:textColor="@color/comment_color"
+                android:textSize="@dimen/sp_12"
+                android:text="本列表只支持MOV或MP4格式视频"/>
+
+        </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/video_emptyview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/dish_video_choose_hint"
+        android:layout_below="@+id/title_all_rela"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:layout_above="@+id/recorder_video_choose_hint_tv"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/i_recorder_video_nodata"/>
+
+        <TextView
+            android:id="@+id/recorder_video_choose_hint_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_40"
+            android:textSize="@dimen/sp_16"
+            android:textColor="#999"
+            android:text="暂无视频"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

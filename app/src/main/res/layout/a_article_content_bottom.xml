@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/artilce_repint_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:paddingBottom="@dimen/dp_16"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:singleLine="true"
+        android:textColor="#B6B5B5"
+        android:textSize="@dimen/sp_14"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/article_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/artilce_repint_source"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20">
+
+        <RelativeLayout
+            android:id="@+id/ad_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_18"
+            android:paddingTop="@dimen/dp_10"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/_layout"
+            android:paddingBottom="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/article_publish_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2017-05-25"
+                android:textColor="#B6B5B5"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/article_browse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_35"
+                android:layout_toRightOf="@+id/article_publish_date"
+                android:text="阅读86425"
+                android:textColor="#B6B5B5"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/article_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="举报"
+                android:textColor="#B6B5B5"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_11"
+        android:layout_below="@+id/article_info_layout"
+        android:background="#F7F7F7"/>
+
+</RelativeLayout>

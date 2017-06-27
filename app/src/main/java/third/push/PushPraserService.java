@@ -124,7 +124,7 @@ public class PushPraserService extends Service{
 				String newMSG = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.newMSG);
 				//当t == XHClick.NOTIFY_SELF 时是自我唤醒,必须走.
 				if (data.type == XHClick.NOTIFY_SELF || newMSG == "" || newMSG.equals("1")) {
-					// A：一般用于推送活动、头条  C：一般是美食帖消息
+					// A：一般用于推送活动、头条  C：一般是美食贴消息
 					switch (data.type) {
 						// 显示通知，不存在消息列表中
 						case XHClick.NOTIFY_A:

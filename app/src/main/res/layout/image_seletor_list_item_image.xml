@@ -7,7 +7,7 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:src="@drawable/default_error" />
 
     <View
@@ -21,7 +21,7 @@
         android:id="@+id/checkmark"
         android:layout_width="@dimen/dp_30"
         android:layout_height="@dimen/dp_30"
-        android:layout_gravity="top|right"
+        android:layout_gravity="bottom|right"
         android:clickable="true"
         android:padding="@dimen/dp_3.5"
         android:src="@drawable/btn_unselected" />

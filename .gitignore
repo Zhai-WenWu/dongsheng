@@ -58,3 +58,7 @@ freeline/
 freeline_project_description.json
 *.properties
 *gradle-wrapper.jar
+
+.DS_Store		
+/.DS_Store		
+*.DS_Store

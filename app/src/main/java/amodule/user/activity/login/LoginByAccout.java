@@ -8,6 +8,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -45,6 +47,8 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
     private PhoneNumInputView phone_info;
     private SecretInputView ll_secret;
     private NextStepView btn_next_step;
+    private LinearLayout contentLayout;
+    private LinearLayout otherLoginLayout;
     private TextView tvRegister;
     private TextView tvIdentify;
     private TextView tvLostsercet;
@@ -72,7 +76,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
             int flag = msg.what;
             switch (flag) {
                 case EMPOWER_OK:
-                    Tools.showToast(LoginByAccout.this, "授权完成");
+//                    Tools.showToast(LoginByAccout.this, "授权完成");
                     String param = msg.obj.toString();
 
                     if (ShareTools.WEI_XIN.equals(platform)) {
@@ -125,11 +129,11 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
 
                     break;
                 case EMPOWER_ERROR:
-                    Tools.showToast(LoginByAccout.this, "授权出错");
+                    Tools.showToast(LoginByAccout.this, "登录失败");
                     loadManager.hideProgressBar();
                     break;
                 case EMPOWER_CANCLE:
-                    Tools.showToast(LoginByAccout.this, "取消授权");
+                    Tools.showToast(LoginByAccout.this, "登录失败");
                     loadManager.hideProgressBar();
                     break;
                 case INFO_ERROR:
@@ -155,6 +159,8 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
 
 
     private void initView() {
+        contentLayout = (LinearLayout) findViewById(R.id.content_layout);
+        otherLoginLayout = (LinearLayout) findViewById(R.id.ll_other_login);
         top_left_view = (ImageView) findViewById(R.id.top_left_view);
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
         ll_secret = (SecretInputView) findViewById(R.id.ll_secret);
@@ -169,6 +175,18 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         imageMeizu = (ImageView) findViewById(R.id.iv_meizu);
         imageWeixin = (ImageView) findViewById(R.id.iv_weixin);
         imageWeixin = (ImageView) findViewById(R.id.iv_weixin);
+
+        contentLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if(contentLayout.getHeight() < ToolsDevice.getWindowPx(LoginByAccout.this).heightPixels){
+                    contentLayout.removeView(otherLoginLayout);
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    rl.addView(otherLoginLayout,layoutParams);
+                }
+            }
+        });
 
         top_left_view.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
@@ -373,7 +391,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         this.mPlatformName = mPlatformName;
         this.platform = platform;
         loadManager.showProgressBar();
-        Tools.showToast(mAct, "授权开始");
+//        Tools.showToast(mAct, "授权开始");
         ShareSDK.initSDK(mAct);
         Platform pf = ShareSDK.getPlatform(mAct, platform);
         if (pf.isValid()) {

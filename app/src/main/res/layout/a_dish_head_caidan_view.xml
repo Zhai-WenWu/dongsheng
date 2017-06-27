@@ -8,31 +8,54 @@
         android:id="@+id/dish_menu_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_40"
-        android:layout_marginRight="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_35"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_18"
         android:gravity="center"
-        android:textSize="@dimen/sp_18" />
-
-    <TextView
-        android:id="@+id/dish_menu_classify_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_40"
-        android:layout_marginRight="@dimen/dp_40"
-        android:gravity="center"
-        android:textSize="@dimen/sp_18" />
+        android:textSize="@dimen/sp_24"
+        android:lineSpacingExtra="@dimen/dp_3"
+        android:textStyle="bold"
+        android:textColor="#494949"/>
 
     <LinearLayout
+        android:id="@+id/from_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_18"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/dish_menu_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#333333"
+            android:gravity="center"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_14"
+            android:text="来自："/>
+
+        <TextView
+            android:id="@+id/dish_menu_author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:gravity="center"
+            android:textColor="#ff533c"
             android:textSize="@dimen/sp_14" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/dish_menu_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:textColor="#535353"
+        android:lineSpacingExtra="@dimen/dp_7"
+        android:textSize="@dimen/sp_16"
+        android:layout_marginBottom="@dimen/dp_1"/>
 
 </LinearLayout>

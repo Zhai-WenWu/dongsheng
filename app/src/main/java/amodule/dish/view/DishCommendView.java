@@ -15,6 +15,7 @@ import com.xiangha.R;
 import java.util.Map;
 import java.util.Random;
 
+import acore.override.view.ItemBaseView;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.Tools;
@@ -34,7 +35,7 @@ import static third.ad.tools.TencenApiAdTools.TX_ID_DISH_DETAIL_SCOMMEND_1;
 /**
  * 推荐item
  */
-public class DishCommendView extends DishBaseView {
+public class DishCommendView extends ItemBaseView {
 
     public static String DISH_STYLE_COMMEND = "dish_style_commend";
     public static final int DISH_STYLE_COMMEND_INDEX = 5;

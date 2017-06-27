@@ -89,7 +89,7 @@
             android:gravity="center"
             android:paddingBottom="@dimen/dp_24.5"
             android:paddingTop="@dimen/dp_26"
-            android:text="请选择帖子类型"
+            android:text="请选择贴子类型"
             android:textColor="#505050"
             android:textSize="@dimen/sp_12"/>
 

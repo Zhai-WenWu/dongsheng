@@ -30,11 +30,13 @@ import third.ad.tools.AdPlayIdConfig;
 public class MoreImageShow extends BaseActivity{
     public static final String[] AD_IDS = new String[]{AdPlayIdConfig.DETAIL_DISH_MAKE};
     private ViewPager viewPager;
-    private ArrayList<ImageMoreView> classContainter = new ArrayList<ImageMoreView>();
+    private ArrayList<ImageMoreView> classContainter = new ArrayList<>();
     private List<Map<String,String>> mList = new ArrayList<>();
     private MyAdapter myAdapter;
     private int pageNum = 0;
     private XHAllAdControl xhAllAdControl;
+
+    private String from;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class MoreImageShow extends BaseActivity{
         Bundle bundleObject = getIntent().getExtras();
         mList = (List<Map<String,String>>)bundleObject.getSerializable("data");
         pageNum = bundleObject.getInt("index");
+        from = bundleObject.getString("from");
         if(mList == null || mList.size() == 0){
             finish();
         }
@@ -100,7 +103,8 @@ public class MoreImageShow extends BaseActivity{
                 classContainter.get(position).onPageChange();
                 classContainter.get(position).onShow();
                 pageNum = position;
-                XHClick.mapStat(MoreImageShow.this, DetailDish.tongjiId, "菜谱区域的点击", "步骤图大图-滑动");
+                if("dish".equals(from))
+                    XHClick.mapStat(MoreImageShow.this, DetailDish.tongjiId, "菜谱区域的点击", "步骤图大图-滑动");
             }
 
             @Override
@@ -177,4 +181,5 @@ public class MoreImageShow extends BaseActivity{
 
 
     }
+
 }

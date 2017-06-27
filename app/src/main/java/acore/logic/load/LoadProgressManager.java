@@ -1,7 +1,5 @@
 package acore.logic.load;
 
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -22,6 +20,9 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+
 /**
  * progress的管理类
  * @author Eva
@@ -31,7 +32,7 @@ public class LoadProgressManager {
 	private LinearLayout mLoadFailLayout;
 	private RelativeLayout mProgressBar;
 	private View mProgressShadow;
-	private Button mLoadFailBtn;
+	private TextView mLoadFailBtn;
 	
 	public LoadProgressManager(Context context , RelativeLayout layout){
 		initProgress(context , layout);
@@ -54,7 +55,7 @@ public class LoadProgressManager {
 		layout.addView(mProgressShadow);
 		//初始化progressBar
 		mProgressBar = (RelativeLayout) inflater.inflate(R.layout.xh_main_loading, null);
-		lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mProgressBar.setLayoutParams(lp);
 		//设置加载中动画
@@ -76,15 +77,15 @@ public class LoadProgressManager {
 		mLoadFailLayout.setOrientation(LinearLayout.VERTICAL);
 		ImageView loadFaildImg = new ImageView(context);
 		TextView loadFailTv = new TextView(context);
-		mLoadFailBtn = new Button(context);
+		mLoadFailBtn = new TextView(context);
 		mLoadFailLayout.addView(loadFaildImg);
 		mLoadFailLayout.addView(loadFailTv);
 		mLoadFailLayout.addView(mLoadFailBtn);
 		
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mLoadFailLayout.setLayoutParams(lp);
-		mLoadFailLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+		mLoadFailLayout.setGravity(Gravity.CENTER);
 		
 		int dp = ToolsDevice.dp2px(context, 52); 
 		LinearLayout.LayoutParams loadFaildParams = new LinearLayout.LayoutParams(dp, dp);
@@ -113,8 +114,8 @@ public class LoadProgressManager {
 		mLoadFailBtn.setText("重新加载");
 		mLoadFailBtn.setTextColor(Color.parseColor(color));
 		mLoadFailBtn.setTextSize(Tools.getDimenSp(context, R.dimen.sp_14));
-		int lrDp = ToolsDevice.dp2px(context, 20);
-		int tbDp = ToolsDevice.dp2px(context, 7);
+		int lrDp = Tools.getDimen(context,R.dimen.dp_20);
+		int tbDp = Tools.getDimen(context,R.dimen.dp_7);
 		mLoadFailBtn.setPadding(lrDp, tbDp, lrDp, tbDp);
 		hideLoadFailBar();
 		layout.addView(mLoadFailLayout);

@@ -40,9 +40,11 @@ public class UploadItemData {
     public static final int POS_BODY = 2;
     public static final int POS_TAIL = 3;
 
+    private String uploadUrl; //最终上传的url
     private String name;
     private int type;
     private String path;
+    private String videoImage;
     private int pos;
     private int index;
     private int totleLength;
@@ -56,6 +58,18 @@ public class UploadItemData {
     private String videoInfo;
     private String hashCode;
     private String uniqueId;
+
+    public void setUploadUrl(String uploadUrl) {
+        this.uploadUrl = uploadUrl;
+    }
+
+    public String getUploadUrl() {
+        return uploadUrl;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
     public String getName() {
         return name;
@@ -120,7 +134,15 @@ public class UploadItemData {
     public void setPath(String path) {
         this.path = path;
         totleLength = (int) FileManager.getFileSize(path);
-        uniqueId = Md5Util.encode(path + UPLOAD_API);
+        uniqueId = Md5Util.encode(path + UPLOAD_API + System.currentTimeMillis());
+    }
+
+    public void setVideoImage(String videoImage) {
+        this.videoImage = videoImage;
+    }
+
+    public String getVideoImage() {
+        return videoImage;
     }
 
     public String getRecMsg() {
@@ -187,6 +209,7 @@ public class UploadItemData {
         map.put("name", name);
         map.put("type", type + "");
         map.put("path", path);
+        map.put("videoImage", videoImage);
         map.put("pos", pos + "");
         map.put("index", index + "");
         map.put("speed", speed + "");

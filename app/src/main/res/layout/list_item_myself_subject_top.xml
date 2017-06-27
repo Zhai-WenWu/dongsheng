@@ -54,7 +54,7 @@
                 android:layout_below="@+id/iv_camera"
                 android:paddingTop="@dimen/dp_3"
                 android:gravity="center_horizontal"
-                android:text="发美食帖"
+                android:text="发美食贴"
                 android:textColor="#A0A0A0"
                 android:textSize="@dimen/sp_11" />
         </RelativeLayout>

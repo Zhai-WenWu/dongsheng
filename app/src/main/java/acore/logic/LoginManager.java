@@ -40,7 +40,7 @@ public class LoginManager {
     public static final int LOGIN_WB = 3;
     public static final String[] PLATFORMS = {"QQ", "微信", "新浪"};
 
-    public static Map<String, String> userInfo = new HashMap<String, String>(); // 当前登录用户信息
+    public static Map<String, String> userInfo = new HashMap<>(); // 当前登录用户信息
 
     private static String mPlatformName = "QQ";
     private static BaseActivity mAct;
@@ -350,7 +350,7 @@ public class LoginManager {
 
 
     /**
-     * 是否显示发帖子任务入口
+     * 是否显示发贴子任务入口
      *
      * @return
      */
@@ -415,6 +415,30 @@ public class LoginManager {
     }
 
     /**
+     * 是否有权限发文章
+     * @return
+     */
+    public static boolean isShowSendArticleButton() {
+        if (MainChangeSend.sendMap == null) {
+            return false;
+        } else {
+            return "2".equals(MainChangeSend.sendMap.get("sendArticle"));
+        }
+    }
+
+    /**
+     * 是否有权限发视频
+     * @return
+     */
+    public static boolean isShowSendVideoButton() {
+        if (MainChangeSend.sendMap == null) {
+            return false;
+        } else {
+            return "2".equals(MainChangeSend.sendMap.get("sendVideo"));
+        }
+    }
+
+    /**
      * 是否可以发布小视频
      *
      * @return
@@ -425,6 +449,8 @@ public class LoginManager {
         else
             return false;
     }
+
+
 
 
     /**
@@ -473,5 +499,6 @@ public class LoginManager {
             regTime = obj.toString();
         return regTime;
     }
+
 
 }

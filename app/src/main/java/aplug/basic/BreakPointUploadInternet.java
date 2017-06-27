@@ -15,6 +15,7 @@ import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.qiniu.android.storage.persistent.FileRecorder;
+import com.qq.e.comm.util.Md5Util;
 
 import org.json.JSONObject;
 
@@ -93,9 +94,24 @@ public class BreakPointUploadInternet {
                             if(res!=null&&res.has("key")&&res.has("hash")){//包含两个参数标示成功
                                 callBack.loaded(REQ_UPLOAD_OK,key,100,res);
                             }else if(res!=null&&res.has("error")){//有错误日志
-                                callBack.loaded(REQ_UPLOAD_Error,key,100,res);
+                                if(info.statusCode>0&&info.statusCode==614){
+                                    try {
+                                        res.put("hash", Md5Util.encode(key));
+                                        callBack.loaded(REQ_UPLOAD_OK, key, 100, res);
+                                    }catch (Exception e){e.printStackTrace();}
+                                }else{callBack.loaded(REQ_UPLOAD_Error,key,100,res);}
+
                             }else if("cancelled by user".equals(!TextUtils.isEmpty(info.error)?info.error:"")){//无法识别错误
                                 callBack.loaded(REQ_UPLOAD_STOP,key,100,res);
+                            }else if(!TextUtils.isEmpty(key)){//重复上传
+                                try {
+                                    if (res == null) {
+                                        JSONObject jsonObject = new JSONObject();
+                                        jsonObject.put("hash", Md5Util.encode(key));
+                                        res=jsonObject;
+                                    }
+                                    callBack.loaded(REQ_UPLOAD_OK, key, 100, res);
+                                }catch (Exception e){e.printStackTrace();}
                             }else{
                                 callBack.loaded(REQ_STRING_ERROR,key,100,res);
                             }

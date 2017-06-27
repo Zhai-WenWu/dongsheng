@@ -1,6 +1,5 @@
 package acore.widget.multifunction.linstener;
 
-import acore.tools.Tools;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -8,23 +7,30 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.override.XHApplication;
+import acore.tools.Tools;
+
 @SuppressWarnings("deprecation")
 public class TextViewTagLongClick implements OnLongClickListener{
 	private Context mCon;
 	private TextView mTv;
 	private CustomPopupWindow mPopupWindow;
+	private ImageView upArrow,downArrow;
 	/**
 	 * 长按弹框类型，
 	 */
@@ -33,22 +39,36 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	private OnClickListener mUserClicker;//中间数据
 	private String mRightBtnName = "投诉";
 	private String mCopyText="";
-	
+
+	private int normBackColor,choseBackColor = Color.parseColor("#E3E3E3");
+
+	private OnLongClickListener longClickListener;
+
 	//是否删除掉star和end时前面添加@后面添加 <空格>
 	public boolean isHaveAt = true,nIsHaveCopy=true;
-	
+
 	public TextViewTagLongClick(Context con,TextView tv){
 		mCon = con;
 		mTv = tv;
 		mTv.setOnLongClickListener(this);
+		normBackColor = Color.parseColor("#ffffff");
+	}
+
+	public void setOnLongClickListener(OnLongClickListener listener){
+		longClickListener = listener;
 	}
 	
 	@Override
 	public boolean onLongClick(View v) {
 		if(nIsHaveCopy){
-			mTv.setBackgroundColor(Color.parseColor("#E3E3E3"));
+			if(longClickListener != null){
+				longClickListener.onLongClick();
+			}
 			getPopupWindowsInstance();
-			mPopupWindow.showAsPullUp(mTv, 0, -20);
+			if (mPopupWindow != null){
+				mTv.setBackgroundColor(choseBackColor);
+				mPopupWindow.showAsPullUp(mTv, 0, -20);
+			}
 			return true;
 		}else
 			return false;
@@ -103,9 +123,12 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	 * @param rightBtnName
 	 */
 	private void initPopuptWindow(final OnClickListener userClicker,final OnClickListener rightclicker, String rightBtnName) {
+		if(rightclicker == null) return;
 		LayoutInflater layoutInflater = LayoutInflater.from(mCon);
 		
 		View popupWindow = layoutInflater.inflate(R.layout.c_widget_textview_showpop, null);
+		upArrow = (ImageView) popupWindow.findViewById(R.id.textview_showpop_up_arrow);
+		downArrow = (ImageView) popupWindow.findViewById(R.id.textview_showpop_down_arrow);
 		Button btnCopy = (Button) popupWindow.findViewById(R.id.copytext);
 		btnCopy.setOnClickListener(new OnClickListener() {
 			@Override
@@ -121,16 +144,22 @@ public class TextViewTagLongClick implements OnLongClickListener{
 			}
 		});
 		Button rightBtn = (Button) popupWindow.findViewById(R.id.pop_rightBtn);
-		rightBtn.setText(rightBtnName);
-		rightBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dismissPopupWindowInstance();
-				if(rightclicker != null){
-					rightclicker.onClick(v);
+		if(rightclicker != null && !TextUtils.isEmpty(rightBtnName)){
+			rightBtn.setText(rightBtnName);
+			rightBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dismissPopupWindowInstance();
+					if(rightclicker != null){
+						rightclicker.onClick(v);
+					}
 				}
-			}
-		});
+			});
+		}else{
+			rightBtn.setVisibility(View.GONE);
+			popupWindow.findViewById(R.id.center_line).setVisibility(View.GONE);
+		}
+
 		if(userClicker!=null){//有三个位置时，显示数据
 			popupWindow.findViewById(R.id.rela_right).setVisibility(View.VISIBLE);
 			popupWindow.findViewById(R.id.ll_left).setBackgroundResource(R.drawable.bg_round_black_left);
@@ -156,7 +185,8 @@ public class TextViewTagLongClick implements OnLongClickListener{
 		mPopupWindow.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				mTv.setBackgroundColor(Color.parseColor("#ffffff"));
+				Log.i("commentReplay","TextViewTagLongClick  PopupWindow onDismiss（）:" + normBackColor);
+				mTv.setBackgroundColor(normBackColor);
 			}
 		});
 	}
@@ -177,10 +207,18 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	private void dismissPopupWindowInstance() {
 		if (null != mPopupWindow) {
 			mPopupWindow.dismiss();
-			mTv.setBackgroundColor(Color.parseColor("#FFFFFF"));
+			mTv.setBackgroundColor(normBackColor);
 		}
 	}
-	
+
+	public void setNormBackColor(int color){
+		normBackColor = color;
+	}
+
+	public void setChoseBackColor(int choseBackColor) {
+		this.choseBackColor = choseBackColor;
+	}
+
 	private class CustomPopupWindow extends PopupWindow {
 		public CustomPopupWindow(View contentView, int width, int height) {
 			super(contentView, width, height, false);
@@ -204,8 +242,21 @@ public class TextViewTagLongClick implements OnLongClickListener{
 			// 计算anchor中点
 			anchorCenter[0] = location[0] + anchor.getWidth() / 2;
 			anchorCenter[1] = location[1];
-			super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] - mPopupWindow.getHeight() + yoff);
-			// anchor.getContext().getResources().getDimensionPixelSize(R.dimen.popup_upload_height)
+			int popupWindH = mPopupWindow.getHeight();
+			int titleH = Tools.getDimen(XHApplication.in(),R.dimen.dp_45);
+			if(location[1] < titleH * 2 + popupWindH - yoff) {
+				upArrow.setVisibility(View.VISIBLE);
+				downArrow.setVisibility(View.GONE);
+				super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] + anchor.getHeight() - yoff);
+			}else{
+				upArrow.setVisibility(View.GONE);
+				downArrow.setVisibility(View.VISIBLE);
+				super.showAtLocation(anchor, Gravity.TOP | Gravity.LEFT, anchorCenter[0] + xoff, anchorCenter[1] - popupWindH + yoff);
+			}
 		}
+	}
+
+	public interface OnLongClickListener{
+		public void onLongClick();
 	}
 }

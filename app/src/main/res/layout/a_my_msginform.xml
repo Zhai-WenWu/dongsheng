@@ -31,25 +31,13 @@
                     android:layout_marginLeft="@dimen/dp_15"
                     android:text="接收新消息通知" />
 
-                <acore.widget.SwitchButton
+                <acore.widget.switchView
                     android:id="@+id/msg_newMSG_sb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dp_15" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#cdcdcd" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentTop="true"
-                    android:background="#cdcdcd" />
 
                 <View
                     android:id="@+id/msg_unClick"
@@ -80,7 +68,7 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="香哈头条推荐" />
 
-                    <acore.widget.SwitchButton
+                    <acore.widget.switchView
                         android:id="@+id/msg_nous_sb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -90,16 +78,11 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1px"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:background="#DDDDDD" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentTop="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -113,9 +96,9 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_15"
-                        android:text="美食帖推荐" />
+                        android:text="美食贴推荐" />
 
-                    <acore.widget.SwitchButton
+                    <acore.widget.switchView
                         android:id="@+id/msg_subject_sb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -125,7 +108,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1px"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:background="#DDDDDD" />
@@ -144,7 +127,7 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="精选菜谱推荐" />
 
-                    <acore.widget.SwitchButton
+                    <acore.widget.switchView
                         android:id="@+id/msg_jxCaiPu_sb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -154,7 +137,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1px"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:background="#DDDDDD" />
@@ -173,7 +156,7 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="精选菜单推荐" />
 
-                    <acore.widget.SwitchButton
+                    <acore.widget.switchView
                         android:id="@+id/msg_jxMenu_sb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -183,7 +166,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1px"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:background="#DDDDDD" />
@@ -202,7 +185,7 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="美食圈评论、赞" />
 
-                    <acore.widget.SwitchButton
+                    <acore.widget.switchView
                         android:id="@+id/msg_quan_zan_sb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -210,11 +193,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/dp_15" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -237,7 +215,7 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="声音提醒" />
 
-                    <acore.widget.SwitchButton
+                    <acore.widget.switchView
                         android:id="@+id/msg_informsing_sb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -247,16 +225,11 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1px"
                         android:layout_alignParentBottom="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:background="#DDDDDD" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentTop="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -272,7 +245,7 @@
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="震动提醒" />
 
-                    <acore.widget.SwitchButton
+                    <acore.widget.switchView
                         android:id="@+id/msg_informshork_sb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -280,11 +253,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/dp_15" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#cdcdcd" />
                 </RelativeLayout>
             </LinearLayout>
 

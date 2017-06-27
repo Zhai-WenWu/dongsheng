@@ -55,7 +55,7 @@ public class CircleHeaderTopFakeView extends LinearLayout{
 
 			@Override
 			public void onClick(View v) {
-				//跳转发帖界面
+				//跳转发贴界面
 				Intent intent = null;
 				if(TextUtils.isEmpty(mSubjectData.getVideo())){
 					intent = new Intent(mContext, UploadSubjectNew.class);

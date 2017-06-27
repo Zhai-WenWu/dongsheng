@@ -40,6 +40,7 @@ import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
 import amodule.upload.callback.UploadListUICallBack;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
 
@@ -113,7 +114,6 @@ public class UploadDishListActivity extends BaseActivity {
             return;
         }
 
-//        new StepVideoPosCompute().computeStepPos(draftId);
         listPool = UploadListControl.getUploadListControlInstance()
                 .add(VideoDishUploadListPool.class,
                         draftId,coverPath,finalVideoPath,timesStamp, generateUiCallback());
@@ -123,7 +123,6 @@ public class UploadDishListActivity extends BaseActivity {
             finish();
             return;
         }
-
         dishName = uploadPoolData.getTitle();
         arrayList = uploadPoolData.getListData();
         tv_title.setText(dishName);
@@ -210,7 +209,12 @@ public class UploadDishListActivity extends BaseActivity {
                     public void onClick(View v) {
                         dialog.cancel();
                         listPool.cancelUpload();
-                        FriendHome.isRefresh = true;
+                        if (FriendHome.isAlive) {
+                            Intent broadIntent = new Intent();
+                            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+                            Main.allMain.sendBroadcast(broadIntent);
+                        }
                         isStopUpload = true;
 
                         Intent intent = new Intent();
@@ -350,7 +354,6 @@ public class UploadDishListActivity extends BaseActivity {
     }
 
     private void getCapturePic(final ImageView iv_cover_dish, final String path) {
-
         if (bitmaps.containsKey(path)) {
             iv_cover_dish.setImageBitmap(bitmaps.get(path));
             return;
@@ -369,11 +372,9 @@ public class UploadDishListActivity extends BaseActivity {
                 }
             }).start();
         }
-
     }
 
     private View getHeaderView() {
-
         View view = LayoutInflater.from(UploadDishListActivity.this)
                 .inflate(R.layout.c_upload_list_header_item, null);
         rl_allstart = (LinearLayout) view.findViewById(R.id.ll_allstart);
@@ -450,13 +451,15 @@ public class UploadDishListActivity extends BaseActivity {
     private void gotoFriendHome() {
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
-            FriendHome.isRefresh = true;
+            Intent broadIntent = new Intent();
+            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+            Main.allMain.sendBroadcast(broadIntent);
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
             intent.putExtra("index", 1);
             intent.setClass(this, FriendHome.class);
-            FriendHome.isRefresh = true;
             startActivity(intent);
         }
         finish();
@@ -464,7 +467,6 @@ public class UploadDishListActivity extends BaseActivity {
 
 
     private void allStartOrPause(boolean isAllStart) {
-
         if (isAllStart) {
             listPool.allStartOrStop(UploadListPool.TYPE_START);
             rl_allstart.setVisibility(View.GONE);
@@ -480,6 +482,7 @@ public class UploadDishListActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        listPool.unBindUI();
+        if (listPool != null)
+            listPool.unBindUI();
     }
 }

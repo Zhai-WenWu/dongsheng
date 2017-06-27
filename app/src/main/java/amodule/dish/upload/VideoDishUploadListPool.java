@@ -122,6 +122,7 @@ public class VideoDishUploadListPool extends UploadListPool {
                 @Override
                 public boolean onLoop(UploadItemData itemData) {
                     if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
+                        itemData.setUploadUrl(StringManager.api_uploadDish);
                         itemData.setUploadMsg(params);
                         return true;
                     }
@@ -141,6 +142,7 @@ public class VideoDishUploadListPool extends UploadListPool {
      * @param responseStr
      * @param jsonObject
      */
+    @Override
     protected void uploadThingOver(final boolean flag, final String uniquId, final String responseStr, final JSONObject jsonObject) {
 
         if (isPause)
@@ -266,7 +268,7 @@ public class VideoDishUploadListPool extends UploadListPool {
         }
         Intent broadIntent = new Intent();
         broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
-
+        broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
         if (flag) {
             broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
                     UploadStateChangeBroadcasterReceiver.STATE_SUCCESS);

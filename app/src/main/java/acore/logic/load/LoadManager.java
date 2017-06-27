@@ -159,6 +159,17 @@ public class LoadManager {
 		setLoading(clicker);
 	}
 
+	public void setLoading(ListView list, ListAdapter adapter, boolean hasMore, final View.OnClickListener clicker, AutoLoadMore.OnListScrollListener listScrollListener) {
+		if (list.getAdapter() == null) {
+			if (hasMore) {
+				Button loadMore = mLoadMore.newLoadMoreBtn(list, clicker);
+				AutoLoadMore.setAutoMoreListen(list, loadMore, clicker,listScrollListener);
+			}
+			list.setAdapter(adapter);
+		}
+		setLoading(clicker);
+	}
+
 	/**
 	 * 设置下拉加载的页面加载、重载等按钮，并开始重载
 	 *
@@ -371,6 +382,22 @@ public class LoadManager {
 	 * @return
 	 */
 	public int changeMoreBtn(Object key, int flag, int everyPageNum, int actPageNum, int nowPage, boolean isBlankSpace) {
+		return changeMoreBtn(key,flag,everyPageNum,actPageNum,nowPage,isBlankSpace,mLoadMoreTextArray[0]);
+	}
+
+	/**
+	 * ,一个页面若有多个loadMare则需要传入对应的key拿到对应的loadMore
+	 *
+	 * @param key
+	 * @param flag
+	 * @param everyPageNum
+	 * @param actPageNum
+	 * @param nowPage
+	 * @param isBlankSpace
+	 *
+	 * @return
+	 */
+	public int changeMoreBtn(Object key, int flag, int everyPageNum, int actPageNum, int nowPage, boolean isBlankSpace,String nodataHint) {
 		Button loadMoreBtn = getSingleLoadMore(key);
 		if (loadMoreBtn == null) {
 			return 0;
@@ -396,7 +423,7 @@ public class LoadManager {
 				loadMoreBtn.setText("点击加载更多");
 				loadMoreBtn.setEnabled(true);
 			} else {
-				loadMoreBtn.setText(mLoadMoreTextArray[0]);
+				loadMoreBtn.setText(nodataHint);
 				loadMoreBtn.setEnabled(false);
 			}
 			if (actPageNum <= 0 && nowPage == 1)

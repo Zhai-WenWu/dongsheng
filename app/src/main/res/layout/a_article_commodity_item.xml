@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/commodity_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/dp_20"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20">
+
+    <RelativeLayout
+        android:id="@+id/commodity_image_layout"
+        android:layout_width="@dimen/dp_105"
+        android:layout_height="@dimen/dp_105"
+        android:background="@drawable/bg_article_commodity_image"
+        android:padding="@dimen/dp_1">
+
+        <ImageView
+            android:id="@+id/commodity_image"
+            android:layout_width="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/commodity_status"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_article_commodity_status"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="已下架"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_12"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F9F9F9"
+        android:layout_alignBottom="@+id/commodity_image_layout"
+        android:layout_alignTop="@+id/commodity_image_layout"
+        android:layout_toRightOf="@+id/commodity_image_layout"
+        android:padding="@dimen/dp_14">
+
+        <TextView
+            android:id="@+id/commodity_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="2"
+            android:textColor="#535353"
+            android:textSize="@dimen/sp_17"/>
+
+        <LinearLayout
+            android:id="@+id/price_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/commodity_title"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/price_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/price"
+                android:text="￥"
+                android:textColor="#CC0000"
+                android:textSize="@dimen/sp_10"/>
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#CC0000"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/saled_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:text="已售"
+                android:textColor="#BFBFBF"
+                android:textSize="@dimen/sp_12"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

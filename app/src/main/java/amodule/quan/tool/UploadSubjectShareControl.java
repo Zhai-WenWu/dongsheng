@@ -61,19 +61,19 @@ public class UploadSubjectShareControl{
 		boolean isShowBeginToast = true;
 		if(shareToFlag.get("bk")){
 			ShareTools barShare = ShareTools.getBarShare(mCon);
-			barShare.showSharePlatform(title,content,imgType,shareImg,clickUrl,ShareTools.SINA_NAME,"发帖","",isShowBeginToast);
+			barShare.showSharePlatform(title,content,imgType,shareImg,clickUrl,ShareTools.SINA_NAME,"发贴","",isShowBeginToast);
 			isShowBeginToast = false;
 		}
 		if(shareToFlag.get("pyq")){
 			isHavaPYQ = true;
 			ShareTools barShare = ShareTools.getBarShare(mCon);
-			barShare.showSharePlatform(title,content,imgType,shareImg,clickUrl,ShareTools.WEI_QUAN,"发帖","",isShowBeginToast);
+			barShare.showSharePlatform(title,content,imgType,shareImg,clickUrl,ShareTools.WEI_QUAN,"发贴","",isShowBeginToast);
 			isShowBeginToast = false;
 		}
 		if(shareToFlag.get("kj")){
 			if(!isHavaPYQ){
 				ShareTools barShare = ShareTools.getBarShare(mCon);
-				barShare.showSharePlatform(title,content,imgType,shareImg,clickUrl,ShareTools.QQ_ZONE,"发帖","",isShowBeginToast);
+				barShare.showSharePlatform(title,content,imgType,shareImg,clickUrl,ShareTools.QQ_ZONE,"发贴","",isShowBeginToast);
 			}
 		}
 //		LogManager.print("d", "toastStr:" + toastStr);

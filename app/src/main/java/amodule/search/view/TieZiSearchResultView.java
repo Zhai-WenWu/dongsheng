@@ -43,7 +43,7 @@ public class TieZiSearchResultView extends RelativeLayout {
     private int mCurrentPage = 0, everyPage = 0;
 
     /**
-     * 帖子的数据集合
+     * 贴子的数据集合
      */
     private ArrayList<Map<String, String>> mListData = new ArrayList<>();
     private ComposeSearchAdapter mAdapter;
