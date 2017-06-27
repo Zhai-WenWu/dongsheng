@@ -486,7 +486,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             startActivity(intent);
             return;
         }
-        isSend = true;
         String content = commend_write_et.getText().toString();
         if(content.length() == 0){
             Tools.showToast(this,"发送内容不能为空");
@@ -496,6 +495,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             Tools.showToast(this,"发送内容不能超过2000字");
             return;
         }
+        isSend = true;
 
         String newParams;
         isAddForm = false;
