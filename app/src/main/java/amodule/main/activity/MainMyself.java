@@ -284,7 +284,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                         my_vip.setText("会员续费");
                         my_vip.setSideColor(Color.parseColor("#ffffff"));
                         my_vip.setTextColor(Color.parseColor("#3e3e3e"));
-                        my_vip.setBackgroundColor(Color.parseColor("#ffffff"));
                     }else{
                         isVipImg.setVisibility(View.VISIBLE);
                         isVipImg.setImageResource(R.drawable.i_user_home_unvip);
@@ -292,8 +291,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                         my_vip.setText("开通会员");
                         my_vip.setTextColor(getResources().getColor(R.color.common_top_text));
                         my_vip.setSideColor(getResources().getColor(R.color.common_top_text));
-                        my_vip.setTextColor(Color.parseColor("#ffffff"));
-                        my_vip.setBackgroundColor(getResources().getColor(R.color.transparent));
                     }
                     my_vip.setVisibility(View.VISIBLE);
 
