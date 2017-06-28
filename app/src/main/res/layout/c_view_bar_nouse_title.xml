@@ -296,15 +296,15 @@
             android:background="@android:color/transparent"
             android:clickable="true"
             android:onClick="titleOnClick"
-            android:visibility="gone" >
+            android:visibility="visible" >
 
             <ImageView
                 android:id="@+id/img_share"
                 style="@style/rightBtn"
-                android:layout_width="@dimen/dp_37"
+                android:layout_width="@dimen/dp_35"
+                android:paddingRight="@dimen/dp_5"
                 android:clickable="false"
                 android:src="@drawable/z_z_topbar_ico_share"
-                android:paddingRight="@dimen/dp_5"
                 android:visibility="visible" />
 
             <TextView

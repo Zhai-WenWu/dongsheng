@@ -53,7 +53,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 
 	private void initView() {
 		TextView title = (TextView) findViewById(R.id.title);
-		title.setText("浏览记录");
+		title.setText("浏览历史");
 
 		rightText = (TextView) findViewById(R.id.rightText);
 		rightText.setText("清空");

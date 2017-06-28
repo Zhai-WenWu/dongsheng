@@ -115,7 +115,7 @@
         android:layout_marginRight="@dimen/dp_8"
         android:paddingTop="@dimen/dp_5"
         android:textColor="@color/common_top_text"
-        android:textSize="@dimen/sp_13" />
+        android:textSize="@dimen/sp_14" />
 
     <ImageView
         android:id="@+id/rightImgBtn2"
