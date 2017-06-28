@@ -370,6 +370,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
                 if(isRelateDataOk){
                     mArticleAdContrler.handlerAdData(allDataListMap);
+                    detailAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -566,6 +567,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                     analysRelateData(listMap);
                     mArticleAdContrler.handlerAdData(allDataListMap);
+                    detailAdapter.notifyDataSetChanged();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
                     toastFaildRes(flag, true, object);
