@@ -288,6 +288,8 @@ public class MainHome extends MainBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("zyj","mainHome::onresume");
+        refreshAdData();
     }
 
     @Override
@@ -476,6 +478,7 @@ public class MainHome extends MainBaseActivity {
      */
     public void refreshAdData(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if(fragments==null||fragments.size()<=0)return;
         int size= fragments.size();
         for(int position=0;position<size;position++) {
             if (fragments != null && fragments.size() > position) {
