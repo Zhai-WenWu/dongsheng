@@ -115,15 +115,13 @@ public class DetailDish extends BaseActivity {
         startTime= System.currentTimeMillis();
     }
 
-    public static boolean isTestRestart = false;
     @Override
     protected void onRestart() {
         super.onRestart();
         page = 1;
-        isTestRestart= true;
         hasPermission = true;
         isHasVideo = false;
-            detailPermissionMap.clear();
+        detailPermissionMap.clear();
         permissionMap.clear();
         dishActivityViewControl.reset();
         mHandler.sendEmptyMessage(LOAD_DISH);
@@ -214,26 +212,25 @@ public class DetailDish extends BaseActivity {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-//                if(isTestRestart)return;
-//                Log.i("tzy","obj = " + obj);
-//                //权限检测
-//                if(permissionMap.isEmpty()){
-//                    permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
-//                    if(permissionMap.containsKey("page")){
-//                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-//                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
-//                        if(!hasPermission) return;
-//                    }
-//                    if(permissionMap.containsKey("detail"))
-//                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
-//                }
+                Log.i("tzy","obj = " + obj);
+                //权限检测
+                if(permissionMap.isEmpty()){
+                    permissionMap = StringManager.getFirstMap(obj);
+                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+                    if(permissionMap.containsKey("page")){
+                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
+                        if(!hasPermission) return;
+                    }
+                    if(permissionMap.containsKey("detail"))
+                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                }
             }
 
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    if(!hasPermission && !isTestRestart) return;
+                    if(!hasPermission) return;
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
                         analyzeData(StringManager.getListMapByJson(o),detailPermissionMap);
                         if(page < 3)

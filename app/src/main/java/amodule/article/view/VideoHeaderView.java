@@ -37,6 +37,7 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.article.activity.VideoDetailActivity;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.view.DishHeaderView;
 import amodule.dish.view.DishVideoImageView;
@@ -266,7 +267,6 @@ public class VideoHeaderView extends RelativeLayout {
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
 
             if(permissionMap != null && permissionMap.containsKey("video")){
-
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
                 Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
                 Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
@@ -279,7 +279,7 @@ public class VideoHeaderView extends RelativeLayout {
                 isHaspause = false;
                 dredgeVipLayout.setVisibility(GONE);
                 mVideoPlayerController.setControlLayerVisibility(true);
-                VDVideoViewController.getInstance(getContext()).setSeekPause(false);
+                VDVideoViewController.getInstance(activity).setSeekPause(false);
             }
 
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
@@ -327,6 +327,8 @@ public class VideoHeaderView extends RelativeLayout {
     int limitTime = 0;
     private RelativeLayout dredgeVipLayout;
     private void setVipPermision(final Map<String, String> common){
+        if(StringManager.getBooleanByEqualsValue(common,"isShow")
+                ) return;
         final String url = common.get("url");
         if(TextUtils.isEmpty(url)) return;
         VideoDredgeVipView vipView = new VideoDredgeVipView(getContext());
@@ -336,17 +338,9 @@ public class VideoHeaderView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 if(!TextUtils.isEmpty(url)){
-                    DetailDish.isTestRestart = true;
                     AppCommon.openUrl(activity,url,true);
                     return;
                 }
-
-                dredgeVipLayout.setVisibility(GONE);
-                mVideoPlayerController.onStart();
-                VDVideoViewController.getInstance(context).onStartWithVideoResume();
-
-                VDVideoViewController.getInstance(context).seekTo(currentTime);
-                mVideoPlayerController.setControlLayerVisibility(true);
             }
         });
         mVideoPlayerController.setOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
@@ -354,7 +348,7 @@ public class VideoHeaderView extends RelativeLayout {
             public void onProgressUpdate(long current, long duration) {
                 int currentS = Math.round(current/1000f);
                 if(isHaspause){
-                    VDVideoViewController.getInstance(context).setSeekPause(true);
+                    VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
                     return;
@@ -362,7 +356,7 @@ public class VideoHeaderView extends RelativeLayout {
                 if(currentS > limitTime && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
-                    VDVideoViewController.getInstance(context).setSeekPause(true);
+                    VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
                     isHaspause = true;
@@ -373,7 +367,7 @@ public class VideoHeaderView extends RelativeLayout {
             public void onDragProgess(long current, long duration) {
                 int currentS = Math.round(current/1000f);
                 if(isHaspause){
-                    VDVideoViewController.getInstance(context).setSeekPause(true);
+                    VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
                     return;
@@ -381,7 +375,7 @@ public class VideoHeaderView extends RelativeLayout {
                 if(currentS > limitTime && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
-                    VDVideoViewController.getInstance(getContext()).setSeekPause(true);
+                    VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
 

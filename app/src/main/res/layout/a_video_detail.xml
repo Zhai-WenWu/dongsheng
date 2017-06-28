@@ -60,7 +60,6 @@
         android:id="@+id/edit_controler_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="@android:color/transparent"
         >
 
@@ -78,5 +77,13 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         android:layout_height="match_parent"/>
+
+    <include
+        android:id="@+id/dredge_vip_bottom_layout"
+        layout="@layout/v_dredge_vip_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

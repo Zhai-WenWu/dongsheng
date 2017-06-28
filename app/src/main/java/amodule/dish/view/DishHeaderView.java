@@ -365,7 +365,8 @@ public class DishHeaderView extends LinearLayout {
     }
     private RelativeLayout dredgeVipLayout;
     private void setVipPermision(final Map<String, String> common){
-        if("1".equals(common.get("isShow"))){
+        if(!StringManager.getBooleanByEqualsValue(common,"isShow")
+                ){
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
             VideoDredgeVipView vipView = new VideoDredgeVipView(context);
@@ -382,8 +383,6 @@ public class DishHeaderView extends LinearLayout {
                     dredgeVipLayout.setVisibility(GONE);
                     mVideoPlayerController.onStart();
                     VDVideoViewController.getInstance(context).onStartWithVideoResume();
-
-//                    VDVideoViewController.getInstance(context).seekTo(currentTime);
                     mVideoPlayerController.setControlLayerVisibility(true);
                 }
             });

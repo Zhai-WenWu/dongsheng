@@ -71,8 +71,6 @@ public class DishExplainView extends ItemBaseView {
             subjectfloorNum_tv.setText("去评论("+maps.get("commentNum")+"条)");
         }else subjectfloorNum_tv.setText("去评论");
 
-        LinearLayout aboutLayout = (LinearLayout) findViewById(R.id.about_layout);
-
 
         //举报
         findViewById(R.id.explain_report).setOnClickListener(new OnClickListener() {
@@ -102,6 +100,19 @@ public class DishExplainView extends ItemBaseView {
 
             }
         });
+
+        //处理权限问题
+        LinearLayout aboutLayout = (LinearLayout) findViewById(R.id.about_layout);
+        Map<String,String> commonPermission = StringManager.getFirstMap(permissionMap.get("video"));
+        commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
+        if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
+                ){
+            aboutLayout.setVisibility(VISIBLE);
+            findViewById(R.id.explain_report).setVisibility(VISIBLE);
+        }else{
+            aboutLayout.setVisibility(GONE);
+            findViewById(R.id.explain_report).setVisibility(GONE);
+        }
 
     }
     // 上传我的做法

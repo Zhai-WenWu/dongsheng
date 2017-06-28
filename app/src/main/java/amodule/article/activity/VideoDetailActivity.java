@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
@@ -77,6 +78,7 @@ public class VideoDetailActivity extends BaseActivity {
 
     private TextView mTitle;
     private ImageView rightButton;
+    private RelativeLayout dredgeVipLayout;
     private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
     /** 头部view */
@@ -93,8 +95,7 @@ public class VideoDetailActivity extends BaseActivity {
     private Map<String, String> shareMap = new HashMap<>();
     private Map<String,String> permissionMap = new HashMap<>();
     private Map<String,String> detailPermissionMap = new HashMap<>();
-    private boolean hasPermission = true;
-
+    private boolean hasPagePermission = true;
 
     private String commentNum;
     private boolean isKeyboradShow = false;
@@ -140,11 +141,9 @@ public class VideoDetailActivity extends BaseActivity {
         }
     }
 
-    boolean permissionTest = false;
     @Override
     protected void onRestart() {
         super.onRestart();
-        permissionTest= true;
         if (loadManager != null)
             loadManager.hideProgressBar();
         refreshData(false);
@@ -188,7 +187,6 @@ public class VideoDetailActivity extends BaseActivity {
 
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_video_detail);
-        initWebView();
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
@@ -197,11 +195,16 @@ public class VideoDetailActivity extends BaseActivity {
         initListView();
         //初始化评论框
         initCommentBar();
+
+        initDredgeVip();
     }
 
-    private void initWebView() {
+    private void initDredgeVip() {
         WebviewManager manager = new WebviewManager(this,loadManager,true);
         xhWebView = manager.createWebView(R.id.XHWebview);
+        xhWebView.setVisibility(View.GONE);
+        dredgeVipLayout = (RelativeLayout) findViewById(R.id.dredge_vip_bottom_layout);
+        dredgeVipLayout.setVisibility(View.GONE);
     }
 
     private void initStatusBar() {
@@ -424,6 +427,9 @@ public class VideoDetailActivity extends BaseActivity {
         if (commentMap != null) commentMap.clear();
         allDataListMap.clear();
         if (detailAdapter != null) detailAdapter.notifyDataSetChanged();
+        hasPagePermission = false;
+        detailPermissionMap.clear();
+        permissionMap.clear();
     }
 
     private void requestVideoData(final boolean onlyUser) {
@@ -433,24 +439,25 @@ public class VideoDetailActivity extends BaseActivity {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-//                Log.i("tzy","obj = " + obj);
-//                //权限检测
-//                if(permissionMap.isEmpty()){
-//                    permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
-//                    if(permissionMap.containsKey("page")){
-//                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-//                        hasPermission = analyzePagePermissionData(pagePermission);
-//                        if(!hasPermission) return;
-//                    }
-//                    if(permissionMap.containsKey("detail"))
-//                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
-//                }
+                Log.i("tzy","obj = " + obj);
+                //权限检测
+                if(permissionMap.isEmpty()){
+                    permissionMap = StringManager.getFirstMap(obj);
+                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+                    if(permissionMap.containsKey("page")){
+                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+                        hasPagePermission = analyzePagePermissionData(pagePermission);
+                        if(!hasPagePermission) return;
+                    }
+                    if(permissionMap.containsKey("detail")){
+                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                    }
+                }
             }
 
             @Override
             public void loaded(int flag, String url, Object object) {
-                if(!hasPermission && !permissionTest) return;
+                if(!hasPagePermission) return;
 
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysVideoData(onlyUser, StringManager.getFirstMap(object),detailPermissionMap);
@@ -508,6 +515,27 @@ public class VideoDetailActivity extends BaseActivity {
 
         detailAdapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
+
+        Map<String,String> commonPermission = StringManager.getFirstMap(detailPermissionMap.get("video"));
+        commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
+        final String url = commonPermission.get("url");
+        if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
+                ){
+            //正常
+            mCommentBar.setVisibility(View.VISIBLE);
+            dredgeVipLayout.setVisibility(View.GONE);
+        }else{
+            //有限制
+            mCommentBar.setVisibility(View.GONE);
+            dredgeVipLayout.setVisibility(View.VISIBLE);
+            dredgeVipLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!TextUtils.isEmpty(url))
+                        AppCommon.openUrl(VideoDetailActivity.this,url,true);
+                }
+            });
+        }
     }
 
     private void requestRelateData(boolean onlyUser) {
@@ -532,7 +560,12 @@ public class VideoDetailActivity extends BaseActivity {
 //                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
                     toastFaildRes(flag, true, object);
-                requestForumData(false);//请求
+                Map<String,String> commonPermission = StringManager.getFirstMap(detailPermissionMap.get("video"));
+                commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
+                if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
+                        ){
+                    requestForumData(false);//请求
+                }
             }
         });
     }
