@@ -174,6 +174,8 @@ public class MainHome extends MainBaseActivity {
                 }
                 itemPosition = position;
 //                setFragmentCurrentPage(position);
+                //刷新广告数据
+                refreshAdData(position);
                 Log.i(tag, "viewpager::onPageSelected::" + position);
                 XHClick.mapStat(MainHome.this, "a_index530", "二级导航栏", "点击/滑动到" + listBean.get(position).getTitle() + "按钮");
             }
@@ -470,7 +472,7 @@ public class MainHome extends MainBaseActivity {
     }
 
     /**
-     * 刷新广告策略。
+     * 刷新广告策略。--全部刷新
      */
     public void refreshAdData(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
@@ -483,5 +485,16 @@ public class MainHome extends MainBaseActivity {
             }
         }
     }
+    /**
+     * 刷新广告策略。---单个刷新
+     */
+    public void refreshAdData(int position){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            if (fragments != null && fragments.size() > position) {
+                if (fragments.get(position) instanceof HomeFragment) {
+                    ((HomeFragment) fragments.get(position)).isNeedRefresh();
+                }
+            }
+        }
 }
 

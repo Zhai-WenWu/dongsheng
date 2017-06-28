@@ -22,6 +22,7 @@ import acore.tools.StringManager;
 import third.ad.tools.GdtAdTools;
 import xh.basic.tool.UtilString;
 
+import static third.ad.control.AdControlHomeDish.tag_yu;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -50,7 +51,7 @@ public class XHAllAdControl {
 
     private boolean isNeedRefersh = false;//是否需要刷新
     private long oneAdTime;//第一次请求广告的时间。
-    public long showTime= 2*60*1000;//广告的过期时间。30分钟
+    public long showTime= 1*60*1000;//广告的过期时间。30分钟
 
     /**
      * 初始化
@@ -386,6 +387,7 @@ public class XHAllAdControl {
      */
     public boolean isNeedRefersh() {
         long nowTime = System.currentTimeMillis();
+        Log.i(tag_yu,"nowTime:::"+nowTime+":::"+oneAdTime+"：：："+(nowTime-oneAdTime)+":::"+showTime);
         if(nowTime-oneAdTime>=showTime){//当前广告已过期
             return true;
         }
