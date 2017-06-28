@@ -1,6 +1,7 @@
 package third.ad.scrollerAd;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 
 import java.util.Map;
@@ -139,5 +140,18 @@ public abstract class XHScrollerAdParent {
         }else{
             return LoginManager.isShowAd();
         }
+    }
+
+    /**
+     * 判断当前是否支持该广告类型
+     * @param type
+     * @return
+     */
+    public static boolean supportType(String type){
+        if(!TextUtils.isEmpty(type)&&(XHScrollerAdParent.TAG_GDT.equals(type)||XHScrollerAdParent.TAG_BANNER.equals(type)
+        || XHScrollerAdParent.TAG_API.equals(type))){
+            return true;
+        }
+        return false;
     }
 }

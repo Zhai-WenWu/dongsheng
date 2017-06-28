@@ -51,7 +51,7 @@ public class XHAllAdControl {
 
     private boolean isNeedRefersh = false;//是否需要刷新
     private long oneAdTime;//第一次请求广告的时间。
-    public long showTime= 1*60*1000;//广告的过期时间。30分钟
+    public long showTime= 5*60*1000;//广告的过期时间。30分钟
 
     /**
      * 初始化
@@ -147,7 +147,7 @@ public class XHAllAdControl {
      */
     private void handlerAdData(String adData, ArrayList<Map<String, String>> arrayList, String data) {
         Map<String, String> map_ad = StringManager.getFirstMap(adData);
-        if (map_ad.get("open").equals("2")) {
+        if (map_ad.get("open").equals("2")&&XHScrollerAdParent.supportType(map_ad.get("type"))) {
             /*banner广告数据存储到广告体*/
             if (map_ad.get("type").equals("personal"))
                 map_ad.put("data", data);
@@ -218,9 +218,6 @@ public class XHAllAdControl {
                     break;
                 case "gdt":
                     parent = new XHScrollerGdt(backIds, i);
-                    break;
-                case "inmobi":
-                    parent = new XHScrollerInMobi(act, data, backIds, i);
                     break;
                 case "personal":
                     parent = new XHScrollerSelf(data, backIds, i, act);
