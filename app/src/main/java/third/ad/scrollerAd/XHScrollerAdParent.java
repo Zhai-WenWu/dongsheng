@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -153,5 +154,46 @@ public abstract class XHScrollerAdParent {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取当前广告尺寸
+     * @param type---广告类型
+     * @param loid---腾讯API的loid
+     * @param viewTag ----外部要显示的图片样式 1-大图，2-小图
+     */
+    public static Map getAdImageSize(String type,String loid,String viewTag){
+        if(TextUtils.isEmpty(type)||TextUtils.isEmpty(viewTag))return null;
+        Map<String,String> map = new HashMap<>();
+        if(ADKEY_GDT.equals(type)){//广点通
+            switch (viewTag){
+                case "1"://大图
+                    map.put("width","640");
+                    map.put("height","330");
+                    break;
+                case "2"://小图
+                    map.put("width","230");
+                    map.put("height","152");
+                    break;
+            }
+            return map;
+
+        }else if(ADKEY_API.equals(type)){//腾讯API
+            if("1".equals(viewTag)){
+                if(!TextUtils.isEmpty(loid)&&loid.equals("201")){
+                    map.put("width","640");
+                    map.put("height","246");
+                }else {
+                    map.put("width","640");
+                    map.put("height","330");
+                }
+
+            }else if("2".equals(viewTag)){
+                map.put("width","230");
+                map.put("height","152");
+            }
+            return map;
+        }
+        return null;
     }
 }
