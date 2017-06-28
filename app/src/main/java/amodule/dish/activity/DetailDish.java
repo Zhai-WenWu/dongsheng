@@ -125,7 +125,6 @@ public class DetailDish extends BaseActivity {
         isHasVideo = false;
         detailPermissionMap.clear();
         permissionMap.clear();
-        code = "94400649";
         dishJson = "";
         mHandler.sendEmptyMessage(LOAD_DISH);
     }

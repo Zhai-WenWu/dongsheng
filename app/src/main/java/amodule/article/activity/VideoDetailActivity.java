@@ -153,7 +153,6 @@ public class VideoDetailActivity extends BaseActivity {
         hasPagePermission = true;
         detailPermissionMap.clear();
         permissionMap.clear();
-        code = "220";
         refreshData(false);
     }
 
