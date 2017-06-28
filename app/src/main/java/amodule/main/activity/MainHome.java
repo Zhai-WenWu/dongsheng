@@ -402,7 +402,7 @@ public class MainHome extends MainBaseActivity {
     public void onActivityshow() {
         //检查更新
 //		SpecialWebControl.initSpecialWeb(this,"index","","");
-        showGuidancePage();
+//        showGuidancePage();
     }
 
     /**
