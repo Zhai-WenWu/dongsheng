@@ -600,7 +600,6 @@ public class ArticleDetailActivity extends BaseActivity {
             String commentNumber = map.get("commentNumber");
             map.put("commentNumber", "0".equals(commentNumber) ? "" : commentNumber + "评论");
         }
-        ArrayRelate.remove(ArrayRelate.size() - 1);
         if (page == 1)
             ArrayRelate.get(0).put("showheader", "1");
         allDataListMap.addAll(ArrayRelate);

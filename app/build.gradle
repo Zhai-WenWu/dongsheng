@@ -45,6 +45,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     //    compile 'com.github.chrisbanes:photoview:latest.release'
+
 }
 
 android {
@@ -56,7 +57,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 177
-        versionName "5.3.9.1"
+        versionName "5.3.9.2"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -74,9 +75,9 @@ android {
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
 //            yulekwok
-            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
+//            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
-//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }
