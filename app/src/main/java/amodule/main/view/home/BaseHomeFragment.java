@@ -99,6 +99,7 @@ public class BaseHomeFragment extends Fragment {
 
     private void initView() {
         WebviewManager manager = new WebviewManager(mActivity, mLoadManager, false);
+        manager.setOpenFlag(WebviewManager.OPEN_SELF);
         mWebview = manager.createWebView(R.id.XHWebview);
         manager.setJSObj(mWebview, new JsAppCommon(mActivity, mWebview, mLoadManager,null));
         Map<String,String> header= MallReqInternet.in().getHeader(mActivity);

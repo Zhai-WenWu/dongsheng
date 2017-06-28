@@ -45,6 +45,10 @@ public class WebviewManager {
     private List<XHWebView> mWwebArray;
     private boolean state = true;
 
+    public static final String OPEN_NEW = "OPEN_NEW";
+    public static final String OPEN_SELF = "OPEN_SELF";
+    private String mOpenFlag = OPEN_NEW;
+
     /**
      * 初始化
      *
@@ -57,6 +61,10 @@ public class WebviewManager {
         this.loadManager = loadManager;
         mWwebArray = new ArrayList<>();
         this.state = state;
+    }
+
+    public void setOpenFlag(String openFlag) {
+        mOpenFlag = openFlag;
     }
 
     public XHWebView createWebView(int id) {
@@ -193,6 +201,10 @@ public class WebviewManager {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
                 Log.i("tzy","url = " + url);
+                if (OPEN_SELF.equals(mOpenFlag)) {
+                    view.loadUrl(url);
+                    return false;
+                }
                 if (state) {
                     loadManager.setLoading(new OnClickListener() {
                         @Override
