@@ -76,7 +76,7 @@ public abstract class MallInternetCallback extends InterCallback {
 			ArrayList<Map<String, String>> array = StringManager.getListMapByJson(str);
 			if (array.size() > 0) {
 				result = array.get(0);
-				if (url.contains("http://oauth.xiangha.com")) {
+				if (url.contains(MallStringManager.mall_getDsToken)) {
 					String resCode = result.get("res");
 					String resData = result.get("data");
 					msg = result.get("data");
