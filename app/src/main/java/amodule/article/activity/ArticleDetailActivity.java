@@ -349,7 +349,6 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleAdContrler.setOnListAdCallback(new ArticleAdContrler.OnListAdCallback() {
             @Override
             public void onListAdData(Map<String, String> adDataMap) {
-
                 if(isRelateDataOk){
                     mArticleAdContrler.handlerAdData(allDataListMap);
                 }
@@ -364,6 +363,7 @@ public class ArticleDetailActivity extends BaseActivity {
             return;
         adView = mArticleAdContrler.getBigAdView(adDataMap);
         articleContentBottomView.addViewToAdLayout(adView);
+        detailAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -484,11 +484,10 @@ public class ArticleDetailActivity extends BaseActivity {
         if (adDataMap != null)
             showAd(adDataMap);
 
-        detailAdapter.notifyDataSetChanged();
-
         commentNum = mapArticle.get("commentNumber");
         mArticleCommentBar.setPraiseAPI(StringManager.api_likeArticle);
         mArticleCommentBar.setData(mapArticle);
+        detailAdapter.notifyDataSetChanged();
 
         mapArticle.remove("html");
         mapArticle.remove("content");
@@ -548,6 +547,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                     analysRelateData(listMap);
                     mArticleAdContrler.handlerAdData(allDataListMap);
+                    detailAdapter.notifyDataSetChanged();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                 } else
                     toastFaildRes(flag, true, object);

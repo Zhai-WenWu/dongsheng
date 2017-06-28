@@ -419,4 +419,8 @@ public class DishTitleViewControl implements View.OnClickListener{
     public void setOfflineLayoutVisibility(boolean isShow){
         detailDish.findViewById(off_layout).setVisibility(isShow ? (state != null ? View.GONE : View.VISIBLE) : View.GONE);
     }
+
+    public boolean isOfflineLayoutVisibility(){
+        return detailDish.findViewById(off_layout).getVisibility() == View.VISIBLE;
+    }
 }

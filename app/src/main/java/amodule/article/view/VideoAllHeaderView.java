@@ -118,4 +118,8 @@ public class VideoAllHeaderView extends LinearLayout {
     public void setCallBack(VideoViewCallBack callBack) {
         this.callBack = callBack;
     }
+
+    public VideoHeaderView getVideoHeaderView() {
+        return videoHeaderView;
+    }
 }

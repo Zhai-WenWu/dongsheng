@@ -367,6 +367,7 @@ public class DishHeaderView extends LinearLayout {
     private void setVipPermision(final Map<String, String> common){
         if(!StringManager.getBooleanByEqualsValue(common,"isShow")
                 ){
+            Log.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
             VideoDredgeVipView vipView = new VideoDredgeVipView(context);
@@ -537,6 +538,10 @@ public class DishHeaderView extends LinearLayout {
 
     public void onPause() {
         isOnResuming = false;
+    }
+
+    public View getVideoView(){
+        return videoViewGroup;
     }
 
     /**

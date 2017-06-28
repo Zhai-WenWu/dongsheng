@@ -313,7 +313,7 @@ public class DishActivityViewControl {
             }
         }else{
             dishTitleViewControl.setOfflineLayoutVisibility(false);
-            dregdeVipLayout.setVisibility(View.VISIBLE);
+//            dregdeVipLayout.setVisibility(View.VISIBLE);
             dregdeVipLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -456,6 +456,18 @@ public class DishActivityViewControl {
                 dishHeaderView.onListViewScroll();
                 if(dishFootView!=null)
                 dishFootView.onListViewScroll();
+
+                if(isHasVideo && dishHeaderView != null && dishHeaderView.getVideoView() != null){
+                    View headerView = dishHeaderView.getVideoView();
+                    int[] location = new int[2];
+                    headerView.getLocationOnScreen(location);
+                    int viewBottom = location[1] + headerView.getHeight();
+                    int mixHeight = Tools.getStatusBarHeight(activity) + Tools.getDimen(activity,R.dimen.dp_45);
+                    if(viewBottom <= mixHeight && !dishTitleViewControl.isOfflineLayoutVisibility()){
+                        dregdeVipLayout.setVisibility(View.VISIBLE);
+                    }else
+                        dregdeVipLayout.setVisibility(View.GONE);
+                }
             }
         });
         listview.setOnTouchListener(new View.OnTouchListener() {

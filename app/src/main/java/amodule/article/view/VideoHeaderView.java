@@ -271,7 +271,7 @@ public class VideoHeaderView extends RelativeLayout {
                 Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
                 Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
                 if(!TextUtils.isEmpty(timeMap.get("time"))){
-                    limitTime = Integer.parseInt(timeMap.get("time"));
+//                    limitTime = Integer.parseInt(timeMap.get("time"));
                     setVipPermision(commonMap);
                 }
             }else{
