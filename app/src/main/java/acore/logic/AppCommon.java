@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -434,10 +435,11 @@ public class AppCommon {
      */
     public synchronized static void saveAppData() {
         final String appDataPath = FileManager.getDataDir() + FileManager.file_appData;
-        if (FileManager.ifFileModifyByCompletePath(appDataPath, 6 * 60) == null) {
+//        if (FileManager.ifFileModifyByCompletePath(appDataPath, 6 * 60) == null) {
             ReqInternet.in().doGet(StringManager.api_appData + "?type=newData", new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, final Object returnObj) {
+                    Log.i("tzy","data = " + returnObj);
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         saveAppDataToFile(returnObj.toString());
                     } else {
@@ -456,7 +458,7 @@ public class AppCommon {
                     }.start();
                 }
             });
-        }
+//        }
     }
 
     /**

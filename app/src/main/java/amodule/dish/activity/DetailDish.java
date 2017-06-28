@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.xiangha.R;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -51,21 +53,25 @@ import static java.lang.System.currentTimeMillis;
  * 页面加载原则：头部跟随view一起初始化，底部有数据再进行加载
  */
 public class DetailDish extends BaseActivity {
-    public String code, dishTitle, state;//页面开启状态所必须的数据。
     public static String tongjiId = "a_menu_detail_normal430";//统计标示
-    public boolean isHasVideo = false;//是否显示视频数据
-    private VideoPlayerController mVideoPlayerController = null;//视频控制器
-    private int statusBarHeight = 0;//广告所用bar高度
-    private int page = 1;
-    private Handler mHandler;
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
+
+    private ADDishContorl adDishContorl;
+    private VideoPlayerController mVideoPlayerController = null;//视频控制器
+    private DishActivityViewControl dishActivityViewControl;//view处理控制
+
+    private Handler mHandler;
+    private Map<String,String> permissionMap = new HashMap<>();
+    private Map<String,String> detailPermissionMap = new HashMap<>();
+    public static int showNumLookImage=0;//点击展示次数
+    private int statusBarHeight = 0;//广告所用bar高度
+    private int page = 1;
+    public String code, dishTitle, state;//页面开启状态所必须的数据。
     public String dishJson;//历史记录中dishInfo的数据
     private String imgLevel = FileManager.save_cache;//图片缓存机制---是离线菜谱改变其缓存机制
-    public static int showNumLookImage=0;//点击展示次数
-    private ADDishContorl adDishContorl;
-    private boolean isShowTitleColor=false;
-    private DishActivityViewControl dishActivityViewControl;//view处理控制
+    public boolean isHasVideo = false;//是否显示视频数据
+    private boolean hasPermission = true;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -107,7 +113,21 @@ public class DetailDish extends BaseActivity {
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         dishActivityViewControl.setAdDishControl(adDishContorl);
         startTime= System.currentTimeMillis();
+    }
 
+    public static boolean isTestRestart = false;
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        page = 1;
+        isTestRestart= true;
+        hasPermission = true;
+        isHasVideo = false;
+            detailPermissionMap.clear();
+        permissionMap.clear();
+        dishActivityViewControl.reset();
+        mHandler.sendEmptyMessage(LOAD_DISH);
+        dishJson = "";
     }
 
     /**
@@ -127,9 +147,8 @@ public class DetailDish extends BaseActivity {
                 loadManager.setLoading(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(page >= 3){
+                        if(page >= 3)
                             setRequest(++page);
-                        }
                     }
                 },false);
             }
@@ -142,9 +161,8 @@ public class DetailDish extends BaseActivity {
             }
         });
     }
-    /**
-     * 延迟handler数据回调
-     */
+
+    /**延迟handler数据回调     */
     private void initData() {
         mHandler = new Handler(new Handler.Callback() {
             @Override
@@ -154,9 +172,8 @@ public class DetailDish extends BaseActivity {
                         if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
                             imgLevel = LoadImage.SAVE_LONG;
                             analyzeHistoryData();
-                        } else {
+                        } else
                             setRequest(page);
-                        }
                         break;
                     case LOAD_DISH_OVER://数据读取成功
                         findViewById(share_layout).setVisibility(View.VISIBLE);
@@ -194,22 +211,39 @@ public class DetailDish extends BaseActivity {
             params += "&isNew=1";
         }
         ReqInternet.in().doGet(StringManager.api_getDishInfoNew + params, new InternetCallback(this) {
+
+            @Override
+            public void getPower(int flag, String url, Object obj) {
+//                if(isTestRestart)return;
+//                Log.i("tzy","obj = " + obj);
+//                //权限检测
+//                if(permissionMap.isEmpty()){
+//                    permissionMap = StringManager.getFirstMap(obj);
+//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+//                    if(permissionMap.containsKey("page")){
+//                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+//                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
+//                        if(!hasPermission) return;
+//                    }
+//                    if(permissionMap.containsKey("detail"))
+//                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+//                }
+            }
+
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
+                    if(!hasPermission && !isTestRestart) return;
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
-                        analyzeData(UtilString.getListMapByJson(o));
-                        if(page < 3){
+                        analyzeData(StringManager.getListMapByJson(o),detailPermissionMap);
+                        if(page < 3)
                             setRequest(++page);
-                        }
                     } else {
                         dishActivityViewControl.setIsGoLoading(false);
                         loadManager.loadOver(flag, 1, true);
                     }
-                } else {
+                } else
                     dishActivityViewControl.setIsGoLoading(false);
-                }
-//                if (flag < ReqInternet.REQ_OK_STRING)
                 if(ToolsDevice.isNetworkAvailable(context)|| !LoadImage.SAVE_LONG.equals(imgLevel)){
                     loadManager.loadOver(flag, 1, true);
                 }else loadManager.hideProgressBar();
@@ -229,7 +263,8 @@ public class DetailDish extends BaseActivity {
             dishActivityViewControl.setIsGoLoading(false);
             return;
         }
-        dishActivityViewControl.analyzeDishInfoData(listmaps);
+        //TODO 测试
+        dishActivityViewControl.analyzeDishInfoData(listmaps, new HashMap<String, String>());
         loadManager.loadOver(ReqInternet.REQ_OK_STRING, 1, true);
         mHandler.sendEmptyMessage(LOAD_DISH_OVER);
     }
@@ -239,9 +274,9 @@ public class DetailDish extends BaseActivity {
      *
      * @param list
      */
-    private void analyzeData(ArrayList<Map<String, String>> list) {
+    private void analyzeData(ArrayList<Map<String, String>> list,Map<String,String> permissionMap) {
         String lable = list.get(0).get("lable");
-        ArrayList<Map<String, String>> listmaps = UtilString.getListMapByJson(list.get(0).get("data"));
+        ArrayList<Map<String, String>> listmaps = StringManager.getListMapByJson(list.get(0).get("data"));
         //第一页未请求到数据，直接关闭改页面
         if (listmaps.size() == 0 && lable.equals("dishInfo")) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
@@ -253,7 +288,7 @@ public class DetailDish extends BaseActivity {
             saveHistoryToDB(dishJson);
             requestWeb();
         }
-        dishActivityViewControl.analyzeData(list);
+        dishActivityViewControl.analyzeData(list,permissionMap);
     }
     private boolean saveHistory = false;
     private void saveHistoryToDB(final String dishJson) {

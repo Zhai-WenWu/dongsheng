@@ -65,7 +65,7 @@ public class VideoAllHeaderView extends LinearLayout {
 
     }
 
-    public void setData(boolean  isOnlyUser,Map<String, String> mapVideo){
+    public void setData(boolean isOnlyUser, Map<String, String> mapVideo, Map<String, String> detailPermissionMap){
         if(mapVideo == null){
             setVisibility(GONE);
             return;
@@ -82,7 +82,7 @@ public class VideoAllHeaderView extends LinearLayout {
                 public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
                     callBack.getVideoPlayerController(mVideoPlayerController);
                 }
-            });
+            },detailPermissionMap);
             //设置videoinfo数据
             videoInfoView.setData(mapVideo);
         }

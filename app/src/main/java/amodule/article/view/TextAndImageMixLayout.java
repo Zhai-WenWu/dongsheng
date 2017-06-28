@@ -581,26 +581,26 @@ public class TextAndImageMixLayout extends LinearLayout
 
     @Override
     public void onRemove(final BaseView view) {
-        if (isSecondEdit) {
+//        if (isSecondEdit) {
             removeBaseView(view);
-        } else {
-            final XhDialog dialog = new XhDialog(getContext());
-            dialog.setTitle("确定删除？");
-            dialog.setCanselButton("取消", new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                }
-            });
-            dialog.setSureButton("确定", new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeBaseView(view);
-                    dialog.cancel();
-                }
-            });
-            dialog.show();
-        }
+//        } else {
+//            final XhDialog dialog = new XhDialog(getContext());
+//            dialog.setTitle("确定删除？");
+//            dialog.setCanselButton("取消", new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dialog.cancel();
+//                }
+//            });
+//            dialog.setSureButton("确定", new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    removeBaseView(view);
+//                    dialog.cancel();
+//                }
+//            });
+//            dialog.show();
+//        }
     }
 
     /**

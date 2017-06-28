@@ -115,6 +115,13 @@ public class ReqEncyptInternet extends UtilInternet {
         Log.i("zhangyujian","now_parms::"+now_parms);
         String encryptparams=ReqEncryptCommon.getInstance().getData(now_parms,sign_yes);
         InternetCallback internetCallback= new InternetCallback(XHApplication.in()) {
+
+            @Override
+            public void getPower(int flag, String url, Object obj) {
+                if(callback != null)
+                    callback.getPower(flag, url, obj);
+            }
+
             @Override
             public void loaded(int flag, String url, Object object) {
                 Log.i("zhangyujian","flag:" + flag + "   object::"+object);

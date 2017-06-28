@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tip_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="观看完整视频请开通VIP"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_16"/>
+
+    <TextView
+        android:id="@+id/dredge_vip_text"
+        android:layout_width="@dimen/dp_130"
+        android:layout_height="@dimen/dp_32"
+        android:layout_below="@+id/tip_message"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_40"
+        android:background="@drawable/bg_dregde_vip"
+        android:gravity="center"
+        android:text="开通VIP"
+        android:textColor="#FFF"
+        android:textSize="@dimen/sp_15"/>
+
+    <LinearLayout
+        android:id="@+id/login_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dredge_vip_text"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/dp_15"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已是VIP，"
+            android:textColor="#FFF"
+            android:textSize="@dimen/sp_14"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="立刻登陆"
+            android:textColor="#D39E54"
+            android:textSize="@dimen/sp_14"/>
+    </LinearLayout>
+
+</RelativeLayout>

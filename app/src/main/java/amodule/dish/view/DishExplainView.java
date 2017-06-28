@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -19,7 +20,6 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.quan.db.CircleData;
@@ -54,7 +54,7 @@ public class DishExplainView extends ItemBaseView {
         super.init();
     }
 
-    public void setData(final Map<String,String> maps, Activity activitys){
+    public void setData(final Map<String, String> maps, Activity activitys, Map<String, String> permissionMap){
         this.activity=activitys;
         this.mapData= maps;
         TextView explain_content_tv= (TextView) findViewById(R.id.explain_content_tv);
@@ -70,6 +70,9 @@ public class DishExplainView extends ItemBaseView {
         if(maps.containsKey("commentNum")&&!TextUtils.isEmpty(maps.get("commentNum"))&&Integer.parseInt(maps.get("commentNum"))>0){
             subjectfloorNum_tv.setText("去评论("+maps.get("commentNum")+"条)");
         }else subjectfloorNum_tv.setText("去评论");
+
+        LinearLayout aboutLayout = (LinearLayout) findViewById(R.id.about_layout);
+
 
         //举报
         findViewById(R.id.explain_report).setOnClickListener(new OnClickListener() {

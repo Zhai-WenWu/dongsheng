@@ -52,6 +52,8 @@ import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import aplug.web.tools.WebviewManager;
+import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
@@ -80,15 +82,19 @@ public class VideoDetailActivity extends BaseActivity {
     /** 头部view */
     private VideoAllHeaderView mHaederLayout;
     private CommentBar mCommentBar;
+    private XHWebView xhWebView;
 
     private VideoDetailAdapter detailAdapter;
     private VideoAdContorler mVideoAdContorler;
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
     private Map<String, String> commentMap;
-    private Map<String, String> shareMap = new HashMap<>();
-
     private Map<String, String> adDataMap;
+    private Map<String, String> shareMap = new HashMap<>();
+    private Map<String,String> permissionMap = new HashMap<>();
+    private Map<String,String> detailPermissionMap = new HashMap<>();
+    private boolean hasPermission = true;
+
 
     private String commentNum;
     private boolean isKeyboradShow = false;
@@ -134,12 +140,14 @@ public class VideoDetailActivity extends BaseActivity {
         }
     }
 
+    boolean permissionTest = false;
     @Override
     protected void onRestart() {
         super.onRestart();
+        permissionTest= true;
         if (loadManager != null)
             loadManager.hideProgressBar();
-        refreshData(true);
+        refreshData(false);
     }
 
     @Override
@@ -180,17 +188,20 @@ public class VideoDetailActivity extends BaseActivity {
 
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_video_detail);
-
+        initWebView();
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
         initTitle();
-        //初始化刷新layout
-        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         //初始化listview
         initListView();
         //初始化评论框
         initCommentBar();
+    }
+
+    private void initWebView() {
+        WebviewManager manager = new WebviewManager(this,loadManager,true);
+        xhWebView = manager.createWebView(R.id.XHWebview);
     }
 
     private void initStatusBar() {
@@ -248,6 +259,8 @@ public class VideoDetailActivity extends BaseActivity {
 
     /** 初始化ListView */
     private void initListView() {
+        //初始化刷新layout
+        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         listView = (ListView) findViewById(R.id.listview);
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -284,6 +297,7 @@ public class VideoDetailActivity extends BaseActivity {
         mCommentBar = (CommentBar) findViewById(R.id.comment_bar);
         mCommentBar.setCode(code);
         mCommentBar.setType(TYPE_VIDEO);
+        mCommentBar.setVisibility(View.GONE);
         mCommentBar.setOnCommentSuccessCallback(new CommentBar.OnCommentSuccessCallback() {
             @Override
             public void onCommentSuccess(boolean isSofa, Object obj) {
@@ -352,19 +366,6 @@ public class VideoDetailActivity extends BaseActivity {
             }
         });
         listView.setAdapter(detailAdapter);
-        //设置
-//        loadManager.setLoading(refreshLayout, listView, detailAdapter, true,
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                    }
-//                },
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                    }
-//                });
-//        loadManager.mLoadMore.getLoadMoreBtn(null).setVisibility(View.GONE);
         View view = new View(this);
         view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
         listView.addFooterView(view);
@@ -393,6 +394,13 @@ public class VideoDetailActivity extends BaseActivity {
                 && adDataMap != null
                 && !adDataMap.isEmpty()){
             adDataMap.put(TYPE_KEY,String.valueOf(Type_bigAd));
+            for(int index = 0; index < allDataListMap.size();index ++){
+                if(String.valueOf(Type_comment).equals(allDataListMap.get(index).get(TYPE_KEY))){
+                    allDataListMap.add(index,adDataMap);
+                    detailAdapter.notifyDataSetChanged();
+                    return;
+                }
+            }
             allDataListMap.add(adDataMap);
             detailAdapter.notifyDataSetChanged();
         }
@@ -422,10 +430,30 @@ public class VideoDetailActivity extends BaseActivity {
         loadManager.showProgressBar();
         StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=RAW");
         ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params.toString(), new InternetCallback(this) {
+
+            @Override
+            public void getPower(int flag, String url, Object obj) {
+//                Log.i("tzy","obj = " + obj);
+//                //权限检测
+//                if(permissionMap.isEmpty()){
+//                    permissionMap = StringManager.getFirstMap(obj);
+//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+//                    if(permissionMap.containsKey("page")){
+//                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+//                        hasPermission = analyzePagePermissionData(pagePermission);
+//                        if(!hasPermission) return;
+//                    }
+//                    if(permissionMap.containsKey("detail"))
+//                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+//                }
+            }
+
             @Override
             public void loaded(int flag, String url, Object object) {
+                if(!hasPermission && !permissionTest) return;
+
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    analysVideoData(onlyUser, StringManager.getFirstMap(object));
+                    analysVideoData(onlyUser, StringManager.getFirstMap(object),detailPermissionMap);
                 } else
                     toastFaildRes(flag, true, object);
                 if (!onlyUser)
@@ -436,9 +464,10 @@ public class VideoDetailActivity extends BaseActivity {
         });
     }
 
-    private void analysVideoData(boolean onlyUser, @NonNull final Map<String, String> mapVideo){
+    private void analysVideoData(boolean onlyUser, @NonNull final Map<String, String> mapVideo, Map<String, String> detailPermissionMap){
         if (mapVideo.isEmpty()) return;
-
+        xhWebView.setVisibility(View.GONE);
+        mCommentBar.setVisibility(View.VISIBLE);
         final Map<String, String> customerData = StringManager.getFirstMap(mapVideo.get("customer"));
         final String userCode = customerData.get("code");
         final boolean isAuthor = LoginManager.isLogin()
@@ -446,7 +475,7 @@ public class VideoDetailActivity extends BaseActivity {
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
         mHaederLayout.setType(TYPE_VIDEO);
-        mHaederLayout.setData(onlyUser,mapVideo);
+        mHaederLayout.setData(onlyUser,mapVideo,detailPermissionMap);
 
         if(!TextUtils.isEmpty(customerData.get("nickName"))){
             mTitle.setText(customerData.get("nickName"));
@@ -506,6 +535,17 @@ public class VideoDetailActivity extends BaseActivity {
                 requestForumData(false);//请求
             }
         });
+    }
+
+    public boolean analyzePagePermissionData(Map<String,String> pagePermission){
+        if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
+            String url = pagePermission.get("url");
+            xhWebView.loadUrl(url);
+            xhWebView.setVisibility(View.VISIBLE);
+            return false;
+        }
+        xhWebView.setVisibility(View.GONE);
+        return true;
     }
 
     /**
@@ -574,6 +614,7 @@ public class VideoDetailActivity extends BaseActivity {
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
+
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysForumData(isRefresh, object);
                 } else

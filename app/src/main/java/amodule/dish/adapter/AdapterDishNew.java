@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,8 @@ public class AdapterDishNew extends AdapterSimple{
             stepViewHolder.setData(map,position);
         }else if(style.equals(DishExplainView.DISH_STYLE_EXP)){//小贴士
             DishExplainView explainView= new DishExplainView(context);
-            explainView.setData(map,activity);
+            //TODO 适应以前代码
+            explainView.setData(map,activity, new HashMap<String, String>());
             convertView= explainView;
 
         }else if(style.equals(DishShareShow.DISH_STYLE_SHARE)){//分享

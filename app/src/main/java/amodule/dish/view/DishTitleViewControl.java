@@ -89,6 +89,10 @@ public class DishTitleViewControl implements View.OnClickListener{
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
     }
 
+    public void reset(){
+
+    }
+
     /**
      * 设置视频控制器
      * @param mVideoPlayerControllers

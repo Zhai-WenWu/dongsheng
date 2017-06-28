@@ -66,7 +66,12 @@ public class DishAboutView extends ItemBaseView {
         super.init();
 
     }
-    public void setData(Map<String,String> map, Activity activitys){
+
+    public void reset(){
+
+    }
+
+    public void setData(Map<String, String> map, Activity activitys, Map<String, String> permissionMap){
         this.mapAbout = map;
         this.activity= activitys;
         setCaipuData();

@@ -24,6 +24,8 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
+import com.sina.sinavideo.sdk.VDVideoViewController;
+import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
+import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MoreImageShow;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -59,17 +62,17 @@ public class DishHeaderView extends LinearLayout {
     //头部的view
     private DishAboutView dishAboutView;
     private DishDataShow dishDataShow;
-    private View view_oneImage;
+    private View videoViewGroup;
     private RelativeLayout dishVidioLayout;
     private DishADView dishADView;
 
     private boolean isHasVideo = false;//
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private DishHeaderVideoCallBack callBack;
-    private  FrameLayout adLayout;
-    private  Map<String,String> mapAd;//广告数据
-    private boolean isAutoPaly=false;//默认自动播放
-    private boolean isOnResuming=false;//默认自动播放
+    private FrameLayout adLayout;
+    private Map<String, String> mapAd;//广告数据
+    private boolean isAutoPaly = false;//默认自动播放
+    private boolean isOnResuming = false;//默认自动播放
 
     private int distance;
 
@@ -91,6 +94,11 @@ public class DishHeaderView extends LinearLayout {
         this.setOrientation(LinearLayout.VERTICAL);
     }
 
+    public void reset(){
+        dishAboutView.reset();
+        dishDataShow.reset();
+    }
+
     /**
      * 初始化view
      *
@@ -101,20 +109,21 @@ public class DishHeaderView extends LinearLayout {
         distance = Tools.getDimen(activity, R.dimen.dp_45);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
-        view_oneImage = LayoutInflater.from(activity).inflate(R.layout.view_dish_header_oneimage, null);
+        videoViewGroup = LayoutInflater.from(activity).inflate(R.layout.view_dish_header_oneimage, null);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * 9 / 16 + distance);
-        view_oneImage.setLayoutParams(params);
-        dishVidioLayout = (RelativeLayout) view_oneImage.findViewById(R.id.video_layout);
+        videoViewGroup.setLayoutParams(params);
+        dishVidioLayout = (RelativeLayout) videoViewGroup.findViewById(R.id.video_layout);
+        dredgeVipLayout = (RelativeLayout) videoViewGroup.findViewById(R.id.video_dredge_vip_layout);
 
         //处理简介
         dishAboutView = new DishAboutView(activity);
         //广告
-         dishADView = new DishADView(activity);
+        dishADView = new DishADView(activity);
         dishADView.setData(activity);
         //主辅料
         dishDataShow = new DishDataShow(activity);
         //头部加载view
-        this.addView(view_oneImage);
+        this.addView(videoViewGroup);
         this.addView(dishAboutView);
         this.addView(dishADView);
         this.addView(dishDataShow);
@@ -124,80 +133,83 @@ public class DishHeaderView extends LinearLayout {
      * 设置数据
      *
      * @param list
+     * @param permissionMap
      */
-    public void setData(ArrayList<Map<String, String>> list, DishHeaderVideoCallBack callBacks) {
+    public void setData(ArrayList<Map<String, String>> list, DishHeaderVideoCallBack callBacks, Map<String, String> permissionMap) {
         if (callBacks == null) {
             callBack = new DishHeaderVideoCallBack() {
                 @Override
-                public void videoImageOnClick() {}
+                public void videoImageOnClick() {
+                }
+
                 @Override
-                public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {}
+                public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
+                }
             };
         } else this.callBack = callBacks;
-        String title = list.get(0).get("name");
+        Map<String, String> videoMap = list.get(0);
+        String title = videoMap.get("name");
 
         try {
-            String selfVideo = list.get(0).get("selfVideo");
+            String selfVideo = videoMap.get("selfVideo");
+            String hasVideo = videoMap.get("hasVideo");
+            String video = videoMap.get("video");
+            String img = videoMap.get("img");
             if (!TextUtils.isEmpty(selfVideo)
                     && !"[]".equals(selfVideo)) {
-                boolean urlValid = setSelfVideo(title, selfVideo, list.get(0).get("img"));
-                if (!urlValid) {
-                    setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
-                }
-            } else {
-                setVideo(list.get(0).get("hasVideo"), list.get(0).get("video"), list.get(0).get("img"));
-            }
-        }catch (Exception e){
-            Toast.makeText(context,"视频播放失败",Toast.LENGTH_SHORT).show();
+                if (!setSelfVideo(title, selfVideo, img, permissionMap))
+                    setVideo(hasVideo, video, img, permissionMap);
+            } else
+                setVideo(hasVideo, video, img, permissionMap);
+        } catch (Exception e) {
+            Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
         }
-        dishAboutView.setData(list.get(0), activity);
-        dishDataShow.setData(list, activity);
+        dishAboutView.setData(videoMap, activity, permissionMap);
+        dishDataShow.setData(list, activity, permissionMap);
     }
 
-    private void initVideoAd(){
-        adLayout = (FrameLayout) view_oneImage.findViewById(R.id.video_ad_layout);
+    private void initVideoAd() {
+        adLayout = (FrameLayout) videoViewGroup.findViewById(R.id.video_ad_layout);
         int distance = Tools.getDimen(activity, R.dimen.dp_45);
-//        if (Tools.isShowTitle()) {
-//            distance += Tools.getStatusBarHeight(activity);
-//        }
-        adLayout.setPadding(0,distance,0,0);
+        adLayout.setPadding(0, distance, 0, 0);
 
-        ArrayList<String> list= new ArrayList<>();
-        String key= AdPlayIdConfig.DISH_MEDIA;
+        ArrayList<String> list = new ArrayList<>();
+        String key = AdPlayIdConfig.DISH_MEDIA;
         list.add(key);
 
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(Map<String, String> maps) {
                 String temp = maps.get(AdPlayIdConfig.DISH_MEDIA);
-                mapAd= StringManager.getFirstMap(temp);
-                Log.i("tzy","needVideoControl time = " + System.currentTimeMillis());
-                if(mapAd != null && mapAd.size()>0
-                        && mVideoPlayerController != null){
+                mapAd = StringManager.getFirstMap(temp);
+                Log.i("tzy", "needVideoControl time = " + System.currentTimeMillis());
+                if (mapAd != null && mapAd.size() > 0
+                        && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
                 }
-                if(isAutoPaly && mVideoPlayerController != null)
+                if (isAutoPaly && mVideoPlayerController != null)
                     mVideoPlayerController.setOnClick();
             }
-        },activity,"result_media");
+        }, activity, "result_media");
 
     }
+
     private int num = 4;
-    private Thread mThread;
     private XHAllAdControl xhAllAdControl;
 
     /**
      * 处理广告展示
+     *
      * @param map
      * @param view
      */
-    private void setVideoAdData(final Map<String,String> map, final View view){
-        xhAllAdControl.onAdBind(0,view,"");
+    private void setVideoAdData(final Map<String, String> map, final View view) {
+        xhAllAdControl.onAdBind(0, view, "");
         final TextView mNum = (TextView) view.findViewById(R.id.ad_gdt_video_num);
         final ImageView mImageView = (ImageView) view.findViewById(R.id.ad_video_img);
         String imgUrl = null;
-        if(map.containsKey("imgUrl")) imgUrl= map.get("imgUrl");
-        if(TextUtils.isEmpty(imgUrl))return;
+        if (map.containsKey("imgUrl")) imgUrl = map.get("imgUrl");
+        if (TextUtils.isEmpty(imgUrl)) return;
 
         view.findViewById(R.id.ad_gdt_video_hint_layout).setOnClickListener(new OnClickListener() {
             @Override
@@ -210,25 +222,25 @@ public class DishHeaderView extends LinearLayout {
         view.findViewById(R.id.ad_vip_lead).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.openUrl(activity,StringManager.api_openVip,true);
+                AppCommon.openUrl(activity, StringManager.api_openVip, true);
             }
         });
 
         mImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                xhAllAdControl.onAdClick(0,"");
+                xhAllAdControl.onAdClick(0, "");
             }
         });
         //初始化倒计时
-        final Handler handler = new Handler(){
+        final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 mNum.setText("" + msg.what);
-                if(msg.what == 0){
+                if (msg.what == 0) {
                     view.setVisibility(View.GONE);
-                    if(!mVideoPlayerController.isPlaying()) {
+                    if (!mVideoPlayerController.isPlaying()) {
                         mVideoPlayerController.setShowAd(false);
                         if (isOnResuming) mVideoPlayerController.setOnClick();
                     }
@@ -275,7 +287,7 @@ public class DishHeaderView extends LinearLayout {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            for(; num > 0; num--) {
+                            for (; num > 0; num--) {
                                 handler.sendEmptyMessage(num);
                                 try {
                                     Thread.sleep(1000);
@@ -290,23 +302,41 @@ public class DishHeaderView extends LinearLayout {
             });
     }
 
-    private boolean setSelfVideo(final String title, final String selfVideoJson, final String img) {
+    boolean isContinue = false;
+    boolean isHaspause = false;
+    long currentTime = 0;
+    int limitTime = 0;
+    private boolean setSelfVideo(final String title, final String selfVideoJson, final String img, Map<String, String> permissionMap) {
         initVideoAd();
         boolean isUrlVaild = false;
         tongjiId = "a_menu_detail_video430";
-        if(!TextUtils.isEmpty(selfVideoJson)
-        &&!"[]".equals(selfVideoJson)){
+        if (!TextUtils.isEmpty(selfVideoJson)
+                && !"[]".equals(selfVideoJson)) {
             Map<String, String> selfVideoMap = UtilString.getListMapByJson(selfVideoJson).get(0);
             String videoUrl = selfVideoMap.get("url");
             if (!TextUtils.isEmpty(videoUrl)
                     && videoUrl.startsWith("http")) {
-                LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.video_img_layout);
-//                if (Tools.isShowTitle()) {
-//                    distance += Tools.getStatusBarHeight(activity);
-//                }
+                LinearLayout dishvideo_img = (LinearLayout) videoViewGroup.findViewById(R.id.video_img_layout);
                 dishVidioLayout.setPadding(0, distance, 0, 0);
-//                dishvideo_img.addView(new DishVideoImageView(activity).setData(img, selfVideoMap.get("duration")));
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+
+                if(permissionMap != null && permissionMap.containsKey("video")){
+
+                    Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
+                    Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
+                    Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
+                    if(!TextUtils.isEmpty(timeMap.get("time"))){
+                        limitTime = Integer.parseInt(timeMap.get("time"));
+                        setVipPermision(commonMap);
+                    }
+                }else{
+                    isContinue = true;
+                    isHaspause = false;
+                    dredgeVipLayout.setVisibility(GONE);
+                    mVideoPlayerController.setControlLayerVisibility(true);
+                    VDVideoViewController.getInstance(context).setSeekPause(false);
+                }
+
                 DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
                 dishVideoImageView.setData(img, selfVideoMap.get("duration"));
                 mVideoPlayerController.setNewView(dishVideoImageView);
@@ -322,44 +352,126 @@ public class DishHeaderView extends LinearLayout {
                 mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                     @Override
                     public void onclick() {
-                        setVideoAdData(mapAd,adLayout);
+                        setVideoAdData(mapAd, adLayout);
                     }
                 });
                 dishvideo_img.setVisibility(View.GONE);
-                callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, view_oneImage);
+                callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
                 callBack.videoImageOnClick();
-//                mVideoPlayerController.setOnClick();
                 isUrlVaild = true;
             }
         }
         return isUrlVaild;
+    }
+    private RelativeLayout dredgeVipLayout;
+    private void setVipPermision(final Map<String, String> common){
+        if("1".equals(common.get("isShow"))){
+            final String url = common.get("url");
+            if(TextUtils.isEmpty(url)) return;
+            VideoDredgeVipView vipView = new VideoDredgeVipView(context);
+            dredgeVipLayout.addView(vipView);
+            vipView.setTipMessaText(common.get("text"));
+            vipView.setDredgeVipClick(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!TextUtils.isEmpty(url)){
+                        AppCommon.openUrl(activity,url,true);
+                        return;
+                    }
+
+                    dredgeVipLayout.setVisibility(GONE);
+                    mVideoPlayerController.onStart();
+                    VDVideoViewController.getInstance(context).onStartWithVideoResume();
+
+//                    VDVideoViewController.getInstance(context).seekTo(currentTime);
+                    mVideoPlayerController.setControlLayerVisibility(true);
+                }
+            });
+            dredgeVipLayout.setPadding(0, distance, 0, 0);
+            mVideoPlayerController.setOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
+                @Override
+                public void onProgressUpdate(long current, long duration) {
+                    int currentS = Math.round(current/1000f);
+                    if(isHaspause){
+                        VDVideoViewController.getInstance(context).setSeekPause(true);
+                        mVideoPlayerController.onPause();
+                        mVideoPlayerController.onResume();
+                        return;
+                    }
+                    if(currentS > limitTime && !isContinue){
+                        currentTime = current;
+                        dredgeVipLayout.setVisibility(VISIBLE);
+                        VDVideoViewController.getInstance(context).setSeekPause(true);
+                        mVideoPlayerController.onPause();
+                        mVideoPlayerController.onResume();
+                        isHaspause = true;
+                    }
+                }
+
+                @Override
+                public void onDragProgess(long current, long duration) {
+                    int currentS = Math.round(current/1000f);
+                    if(isHaspause){
+                        VDVideoViewController.getInstance(context).setSeekPause(true);
+                        mVideoPlayerController.onPause();
+                        mVideoPlayerController.onResume();
+                        return;
+                    }
+                    if(currentS > limitTime && !isContinue){
+                        currentTime = current;
+                        dredgeVipLayout.setVisibility(VISIBLE);
+                        VDVideoViewController.getInstance(context).setSeekPause(true);
+                        mVideoPlayerController.onPause();
+                        mVideoPlayerController.onResume();
+
+                        isHaspause = true;
+                    }
+                }
+            });
+        }
+
     }
 
 
     /**
      * 展示顶图view,是大图还是视频
      *
-     * @param hasVideo  》标记是否是视频字段 1---不是 2---是
-     * @param videoJson 》视频数据
-     * @param img       》图片链接
+     * @param hasVideo      》标记是否是视频字段 1---不是 2---是
+     * @param videoJson     》视频数据
+     * @param img           》图片链接
+     * @param permissionMap
      */
-    private void setVideo(String hasVideo, final String videoJson, final String img) {
+    private void setVideo(String hasVideo, final String videoJson, final String img, Map<String, String> permissionMap) {
         if ("2".equals(hasVideo)) {
             isHasVideo = true;
             initVideoAd();
             tongjiId = "a_menu_detail_video430";
-            if(!TextUtils.isEmpty(videoJson)
-            &&!"[]".equals(videoJson)){
+            if (!TextUtils.isEmpty(videoJson)
+                    && !"[]".equals(videoJson)) {
                 Map<String, String> dishBurden = UtilString.getListMapByJson(videoJson).get(0);
                 String videoUnique = dishBurden.get("vu");
                 String userUnique = dishBurden.get("uu");
-                LinearLayout dishvideo_img = (LinearLayout) view_oneImage.findViewById(R.id.video_img_layout);
+                LinearLayout dishvideo_img = (LinearLayout) videoViewGroup.findViewById(R.id.video_img_layout);
                 int distance = Tools.getDimen(activity, R.dimen.dp_45);
-//                if (Tools.isShowTitle()) {setData
-//                }
                 dishVidioLayout.setPadding(0, distance, 0, 0);
-//                dishvideo_img.addView(new DishVideoImageView(activity).setData(img, dishBurden.get("duration")));
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+
+                if(permissionMap != null && permissionMap.containsKey("video")){
+                    Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
+                    Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
+                    Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
+                    if(!TextUtils.isEmpty(timeMap.get("time"))){
+                        limitTime = Integer.parseInt(timeMap.get("time"));
+                        setVipPermision(commonMap);
+                    }
+                }else{
+                    isContinue = true;
+                    isHaspause = false;
+                    dredgeVipLayout.setVisibility(GONE);
+                    mVideoPlayerController.setControlLayerVisibility(true);
+                    VDVideoViewController.getInstance(context).setSeekPause(false);
+                }
+
                 DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
                 dishVideoImageView.setData(img, dishBurden.get("duration"));
                 mVideoPlayerController.setNewView(dishVideoImageView);
@@ -375,16 +487,16 @@ public class DishHeaderView extends LinearLayout {
                 mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                     @Override
                     public void onclick() {
-                        setVideoAdData(mapAd,adLayout);
+                        setVideoAdData(mapAd, adLayout);
                     }
                 });
                 dishvideo_img.setVisibility(View.GONE);
-                callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, view_oneImage);
-                Log.i("tzy","getVideoControl time = " + System.currentTimeMillis());
+                callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
+                Log.i("tzy", "getVideoControl time = " + System.currentTimeMillis());
                 callBack.videoImageOnClick();
 
-            }else{
-                Toast.makeText(context,"视频地址信息错误",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "视频地址信息错误", Toast.LENGTH_SHORT).show();
             }
         } else {
             findViewById(video_img_layout).setVisibility(View.GONE);
@@ -417,12 +529,13 @@ public class DishHeaderView extends LinearLayout {
             });
         }
 //        setViewOneState();
-        callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, view_oneImage);
+        callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
     }
 
     public void onResume() {
         isOnResuming = true;
     }
+
     public void onPause() {
         isOnResuming = false;
     }

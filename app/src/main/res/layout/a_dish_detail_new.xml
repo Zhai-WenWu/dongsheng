@@ -18,9 +18,22 @@
         android:scrollbars="none"
         android:visibility="gone"/>
 
+    <include
+        android:id="@+id/dredge_vip_bottom_layout"
+        layout="@layout/v_dredge_vip_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_55"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
 
-        <include
-            android:id="@+id/dish_title_dish"
-            layout="@layout/a_dish_detail_bar_title"/>
+    <aplug.web.view.XHWebView
+        android:id="@+id/XHWebview"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <include
+        android:id="@+id/dish_title_dish"
+        layout="@layout/a_dish_detail_bar_title"/>
 
 </RelativeLayout>

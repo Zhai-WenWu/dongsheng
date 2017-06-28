@@ -397,6 +397,19 @@ public class StringManager extends UtilString {
         return map;
     }
 
+    /**
+     *
+     * @param map
+     * @param key
+     * @return
+     */
+    public static boolean getBooleanByEqualsValue(Map<String, String> map, String key){
+        if(map == null || TextUtils.isEmpty(key) || !map.containsKey(key)){
+            return false;
+        }
+        return "2".equals(map.get(key));
+    }
+
     public static JSONArray getJsonByArrayList(ArrayList<Map<String, String>> arrayList) {
         JSONArray jsonArray = new JSONArray();
         try {

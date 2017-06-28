@@ -60,16 +60,23 @@
         android:id="@+id/edit_controler_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:background="@android:color/transparent"
         >
 
         <amodule.article.view.CommentBar
             android:id="@+id/comment_bar"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 
-
+    <aplug.web.view.XHWebView
+        android:id="@+id/XHWebview"
+        android:layout_below="@+id/all_title_rela"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

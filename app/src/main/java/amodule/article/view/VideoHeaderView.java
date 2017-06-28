@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +24,8 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
+import com.sina.sinavideo.sdk.VDVideoViewController;
+import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -34,8 +37,10 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.dish.activity.DetailDish;
 import amodule.dish.view.DishHeaderView;
 import amodule.dish.view.DishVideoImageView;
+import amodule.dish.view.VideoDredgeVipView;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
@@ -54,6 +59,7 @@ public class VideoHeaderView extends RelativeLayout {
     private final static String STATUS_TRANSCODING = "2";
     private final static String STATUS_TRANSCODED = "3";
     private Activity activity;
+    private Context context;
 
     private RelativeLayout dishVidioLayout;
     private FrameLayout adLayout;
@@ -88,12 +94,16 @@ public class VideoHeaderView extends RelativeLayout {
 
     public void initView(Activity activity) {
         this.activity = activity;
+        this.context = activity.getBaseContext();
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * 9 / 16);
+        setLayoutParams(params);
         dishVidioLayout = (RelativeLayout) findViewById(R.id.video_layout);
+        dredgeVipLayout = (RelativeLayout) findViewById(R.id.video_dredge_vip_layout);
     }
 
-    public void setData(Map<String, String> data, DishHeaderView.DishHeaderVideoCallBack callBack) {
+    public void setData(Map<String, String> data, DishHeaderView.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
         if (callBack == null) {
             this.callBack = new DishHeaderView.DishHeaderVideoCallBack() {
                 @Override
@@ -124,7 +134,7 @@ public class VideoHeaderView extends RelativeLayout {
                 url = videoUrlData.get("D480p");
             }
             videoData.put("url", url);
-            setSelfVideo(videoData);
+            setSelfVideo(videoData,detailPermissionMap);
         } catch (Exception e) {
             Toast.makeText(getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
         }
@@ -245,7 +255,7 @@ public class VideoHeaderView extends RelativeLayout {
             });
     }
 
-    private boolean setSelfVideo(final Map<String, String> selfVideoMap) {
+    private boolean setSelfVideo(final Map<String, String> selfVideoMap, Map<String, String> permissionMap) {
         if (STATUS_TRANSCODED.equals(status))
             initVideoAd();
         boolean isUrlVaild = false;
@@ -253,9 +263,28 @@ public class VideoHeaderView extends RelativeLayout {
         String img = selfVideoMap.get("videoImg");
         if (!TextUtils.isEmpty(videoUrl)
                 && videoUrl.startsWith("http")) {
-            DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
-            dishVideoImageView.setDataNoTime(img);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+
+            if(permissionMap != null && permissionMap.containsKey("video")){
+
+                Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
+                Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
+                Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
+                if(!TextUtils.isEmpty(timeMap.get("time"))){
+                    limitTime = Integer.parseInt(timeMap.get("time"));
+                    setVipPermision(commonMap);
+                }
+            }else{
+                isContinue = true;
+                isHaspause = false;
+                dredgeVipLayout.setVisibility(GONE);
+                mVideoPlayerController.setControlLayerVisibility(true);
+                VDVideoViewController.getInstance(getContext()).setSeekPause(false);
+            }
+
+            DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
+            dishVideoImageView.setData(img,"");
+
             mVideoPlayerController.setNewView(dishVideoImageView);
             mVideoPlayerController.initVideoView2(videoUrl, selfVideoMap.get("title"), dishVideoImageView);
             mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
@@ -291,6 +320,75 @@ public class VideoHeaderView extends RelativeLayout {
             isUrlVaild = true;
         }
         return isUrlVaild;
+    }
+    boolean isContinue = false;
+    boolean isHaspause = false;
+    long currentTime = 0;
+    int limitTime = 0;
+    private RelativeLayout dredgeVipLayout;
+    private void setVipPermision(final Map<String, String> common){
+        final String url = common.get("url");
+        if(TextUtils.isEmpty(url)) return;
+        VideoDredgeVipView vipView = new VideoDredgeVipView(getContext());
+        dredgeVipLayout.addView(vipView);
+        vipView.setTipMessaText(common.get("text"));
+        vipView.setDredgeVipClick(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(url)){
+                    DetailDish.isTestRestart = true;
+                    AppCommon.openUrl(activity,url,true);
+                    return;
+                }
+
+                dredgeVipLayout.setVisibility(GONE);
+                mVideoPlayerController.onStart();
+                VDVideoViewController.getInstance(context).onStartWithVideoResume();
+
+                VDVideoViewController.getInstance(context).seekTo(currentTime);
+                mVideoPlayerController.setControlLayerVisibility(true);
+            }
+        });
+        mVideoPlayerController.setOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
+            @Override
+            public void onProgressUpdate(long current, long duration) {
+                int currentS = Math.round(current/1000f);
+                if(isHaspause){
+                    VDVideoViewController.getInstance(context).setSeekPause(true);
+                    mVideoPlayerController.onPause();
+                    mVideoPlayerController.onResume();
+                    return;
+                }
+                if(currentS > limitTime && !isContinue){
+                    currentTime = current;
+                    dredgeVipLayout.setVisibility(VISIBLE);
+                    VDVideoViewController.getInstance(context).setSeekPause(true);
+                    mVideoPlayerController.onPause();
+                    mVideoPlayerController.onResume();
+                    isHaspause = true;
+                }
+            }
+
+            @Override
+            public void onDragProgess(long current, long duration) {
+                int currentS = Math.round(current/1000f);
+                if(isHaspause){
+                    VDVideoViewController.getInstance(context).setSeekPause(true);
+                    mVideoPlayerController.onPause();
+                    mVideoPlayerController.onResume();
+                    return;
+                }
+                if(currentS > limitTime && !isContinue){
+                    currentTime = current;
+                    dredgeVipLayout.setVisibility(VISIBLE);
+                    VDVideoViewController.getInstance(getContext()).setSeekPause(true);
+                    mVideoPlayerController.onPause();
+                    mVideoPlayerController.onResume();
+
+                    isHaspause = true;
+                }
+            }
+        });
     }
 
     public void onResume() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
     <!--<acore.widget.ZoomLayout-->
     <!--android:id="@+id/a_home_zoom_layout"-->
@@ -12,23 +12,30 @@
         android:id="@+id/video_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_240"
-        android:background="#898989" />
+        android:background="#898989"/>
+
     <LinearLayout
         android:id="@+id/video_img_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_240"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:background="#898989"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#898989"
+        android:orientation="vertical"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/video_dredge_vip_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_240"
+        android:visibility="gone"/>
 
     <include
         android:id="@+id/video_ad_layout"
+        layout="@layout/ad_gdt_video"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_240"
-        android:visibility="gone"
-        layout="@layout/ad_gdt_video" />
+        android:visibility="gone"/>
 
 </RelativeLayout>
