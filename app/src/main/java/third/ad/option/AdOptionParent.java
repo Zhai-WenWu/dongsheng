@@ -370,7 +370,7 @@ public abstract class AdOptionParent {
      */
     public boolean isNeedRefresh(){
         if(xhAllAdControl!=null){
-            xhAllAdControl.isNeedRefersh();
+            return xhAllAdControl.isNeedRefersh();
         }
         return false;
     }

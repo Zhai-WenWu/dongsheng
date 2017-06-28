@@ -213,9 +213,9 @@ public class AdControlNormalDish extends AdControlParent{
     @Override
     public boolean isNeedRefresh() {
         AdOptionHomeDish adOptionHomeDish = null;
-        if(adControlMap.containsKey(0)){
+        if(downAdControlMap.containsKey(0)){
             adOptionHomeDish=adControlMap.get(0);
-        }else if(adControlMap.containsKey(1)){
+        }else if(downAdControlMap.containsKey(1)){
             adOptionHomeDish=adControlMap.get(1);
         }
         if(adOptionHomeDish!=null){

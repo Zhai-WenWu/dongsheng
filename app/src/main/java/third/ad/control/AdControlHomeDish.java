@@ -233,13 +233,11 @@ public class AdControlHomeDish extends AdControlParent{
     @Override
     public boolean isNeedRefresh() {
         AdOptionHomeDish adOptionHomeDish = null;
-        if(adControlMap.containsKey(0)){
-            adOptionHomeDish=adControlMap.get(0);
-        }else if(adControlMap.containsKey(1)){
-            adOptionHomeDish=adControlMap.get(1);
-        }
-        if(adOptionHomeDish!=null){
-            return adOptionHomeDish.isNeedRefresh();
+        if(downAdControlMap.size()>0) {
+            adOptionHomeDish=downAdControlMap.get(0);
+            if (adOptionHomeDish != null) {
+                return adOptionHomeDish.isNeedRefresh();
+            }
         }
         return false;
     }
@@ -294,4 +292,5 @@ public class AdControlHomeDish extends AdControlParent{
     public void setAdLoadNumberCallBack(AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack){
         this.adLoadNumberCallBack=adLoadNumberCallBack;
     }
+
 }

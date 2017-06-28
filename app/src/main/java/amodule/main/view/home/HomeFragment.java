@@ -962,8 +962,9 @@ public class HomeFragment extends BaseHomeFragment{
 
     public void isNeedRefresh(){
         if(mAdControl==null||mListData==null||mListData.size()<=0||adapterListView==null)return;//条件过滤
-        Log.i(tag_yu,"isNeedRefresh::::"+mAdControl.isNeedRefresh()+":::"+homeModuleBean.getTitle());
+//        Log.i(tag_yu,"isNeedRefresh::::"+mAdControl.isNeedRefresh()+":::"+homeModuleBean.getTitle());
         boolean state=mAdControl.isNeedRefresh();
+        Log.i(tag_yu,"isNeedRefresh::::"+state+":::"+homeModuleBean.getTitle());
 //        state=true;
         if(state){
             boolean isShow=true;

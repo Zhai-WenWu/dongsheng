@@ -566,11 +566,12 @@ public class MallCommon {
 		UtilFile.saveShared(context, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
 		Object msg=UtilFile.loadShared(context, FileManager.MALL_STAT_BUT, FileManager.MALL_STAT_BUT);
 		ArrayList<Map<String,String>> list=UtilString.getListMapByJson(msg);
-		String url = null;
+		String url = "";
 		if(list!=null&&list.size()>0&&list.get(0).containsKey(but_tag)){
 			ArrayList<Map<String,String>> list_real=UtilString.getListMapByJson(list.get(0).get(but_tag));
 			url="fr1="+list_real.get(0).get("fr");
 		}
+
 		return url;
 	}
 }
