@@ -278,6 +278,7 @@ public class VideoDetailActivity extends BaseActivity {
         });
         //initListView
         mHaederLayout = new VideoAllHeaderView(this);
+        mHaederLayout.setType(TYPE_VIDEO);
         mHaederLayout.setCallBack(new VideoAllHeaderView.VideoViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
@@ -474,7 +475,6 @@ public class VideoDetailActivity extends BaseActivity {
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
-        mHaederLayout.setType(TYPE_VIDEO);
         mHaederLayout.setData(onlyUser,mapVideo,detailPermissionMap);
 
         if(!TextUtils.isEmpty(customerData.get("nickName"))){

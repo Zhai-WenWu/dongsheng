@@ -54,7 +54,6 @@ public class VideoAllHeaderView extends LinearLayout {
         addView(videoHeaderView);
 
         videoInfoView = new VideoInfoView(getContext());
-        videoInfoView.setType(mCurrType);
         addView(videoInfoView);
 
         customerView = new CustomerView(getContext());
@@ -70,7 +69,7 @@ public class VideoAllHeaderView extends LinearLayout {
             setVisibility(GONE);
             return;
         }
-
+        videoInfoView.setType(mCurrType);
         setVisibility(VISIBLE);
         if(!isOnlyUser){
             videoHeaderView.setData(mapVideo, new DishHeaderView.DishHeaderVideoCallBack() {
