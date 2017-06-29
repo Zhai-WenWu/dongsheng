@@ -386,7 +386,7 @@ setControlLayerVisibility(false);
             public Map<String, String> getReqHeader(Map<String, String> header, String url,
                                                     Map<String, String> params) {
                 mVideoInfoRequestNumber++;
-                return new HashMap<String, String>();
+                return new HashMap<>();
             }
         });
     }
