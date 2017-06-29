@@ -1,10 +1,8 @@
 package amodule.main.view.item;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,13 +13,9 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.logic.XHClick;
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterListView;
-import aplug.web.ShowWeb;
 
 /**
  * 右图，无图，样式, 带有标题，描述等信息
@@ -76,10 +70,6 @@ public class HomeTxtItem extends HomeItem {
                     mTitle.setText(desc);
                     mTitle.setVisibility(View.VISIBLE);
                 }
-            }
-            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
-                mAdControlParent.onAdShow(mDataMap, this);
-                mDataMap.put("isADShow", "1");
             }
         }
         int imgCount = 0;

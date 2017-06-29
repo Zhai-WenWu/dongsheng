@@ -79,6 +79,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public static final int DATA_TYPE_VIDEO = 101;
 
     protected EditText editTitle;
+    private TextView nestStep;
     private EditBottomControler editBottomControler;
     protected TextAndImageMixLayout mixLayout;
     private LinearLayout contentLayout;
@@ -139,10 +140,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             DisplayMetrics dm = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
                             int distance = dm.heightPixels - location[1] - (editBottomControler.isShowEditLayout() ? dp_50 + dp_64 : dp_50);
-                            Log.i("tzy", "distance = " + distance);
-                            Log.i("tzy", "heightDifference2 = " + heightDifference2);
-                            Log.i("tzy", "isKeyboradShow = " + isKeyboradShow);
-                            Log.i("tzy", "preIsKeyboradShow = " + preIsKeyboradShow);
                             if (isKeyboradShow
                                     && !preIsKeyboradShow
                                     && distance <= heightDifference2
@@ -162,7 +159,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(title);
 
-        TextView nestStep = (TextView) findViewById(R.id.nextStep);
+        nestStep = (TextView) findViewById(R.id.nextStep);
         int dp_20 = (int) this.getResources().getDimension(R.dimen.dp_20);
         nestStep.setPadding(dp_20, 0, dp_20, 0);
         nestStep.setVisibility(View.VISIBLE);
@@ -520,6 +517,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 }
             }).start();
         } else {
+            if("2".equals(getType()))
+                nestStep.setText("发布");
             mixLayout.setSecondEdit(true);
             StringBuilder sbuilder = new StringBuilder().append("code=").append(code).append("&type=RAW");
             ReqEncyptInternet.in().doEncypt(getEditApi(), sbuilder.toString(), new InternetCallback(this) {

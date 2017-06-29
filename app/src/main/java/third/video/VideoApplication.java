@@ -26,7 +26,6 @@ public class VideoApplication {
 	private static VideoApplication mVideoApp = null;
 //	static String libsplayerUrl = "http://www.huher.com:9810/test/zip/";
 	static String suffixName = ".7z";
-	static int count = 0;
 	public static boolean initSuccess = false;
 	static boolean isIniting = false;
 
@@ -123,14 +122,6 @@ public class VideoApplication {
 			initSuccess = !inited;
 			isIniting = false;
 		}
-	}
-	
-	private String getData(List<Map<String,String>> list,String key){
-		if(list.size() > 0){
-			Map<String,String> map = list.get(0);
-			return map.get(key);
-		}
-		return "";
 	}
 
 	public boolean isInitSuccess(){
