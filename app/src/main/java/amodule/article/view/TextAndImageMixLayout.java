@@ -692,7 +692,7 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
             if (view instanceof EditTextView) {
-                String text = ((EditTextView) view).getText().toString();
+                String text = ((EditTextView) view).getText().toString().trim();
                 if (!TextUtils.isEmpty(text)) {
                     hasText = true;
                     return hasText;
