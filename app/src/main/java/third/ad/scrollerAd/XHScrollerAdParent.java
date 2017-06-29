@@ -193,6 +193,14 @@ public abstract class XHScrollerAdParent {
                 map.put("height","152");
             }
             return map;
+        }else if(ADKEY_BANNER.equals(type)){//xh自己的广告
+            if("1".equals(viewTag)){
+                map.put("width","750");
+                map.put("height","464");
+            }else if("2".equals(viewTag)){
+                map.put("width","240");
+                map.put("height","180");
+            }
         }
         return null;
     }
