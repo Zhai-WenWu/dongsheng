@@ -166,16 +166,8 @@ public abstract class XHScrollerAdParent {
         if(TextUtils.isEmpty(type)||TextUtils.isEmpty(viewTag))return null;
         Map<String,String> map = new HashMap<>();
         if(ADKEY_GDT.equals(type)){//广点通
-            switch (viewTag){
-                case "1"://大图
-                    map.put("width","640");
-                    map.put("height","330");
-                    break;
-                case "2"://小图
-                    map.put("width","230");
-                    map.put("height","152");
-                    break;
-            }
+            map.put("width","1280");
+            map.put("height","720");
             return map;
 
         }else if(ADKEY_API.equals(type)){//腾讯API
@@ -201,6 +193,7 @@ public abstract class XHScrollerAdParent {
                 map.put("width","240");
                 map.put("height","180");
             }
+            return map;
         }
         return null;
     }

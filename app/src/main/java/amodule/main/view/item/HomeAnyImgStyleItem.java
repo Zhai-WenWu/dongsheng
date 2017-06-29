@@ -1,7 +1,6 @@
 package amodule.main.view.item;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,8 +13,6 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Tools.ImageUtility;
@@ -76,38 +73,17 @@ public class HomeAnyImgStyleItem extends HomeItem {
             if (imgMap != null && imgMap.size() > 0) {
                 String imgUrl = imgMap.get("url");
                 if (mIsAd) {
-                    loadImage(imgUrl, mImg, new ADImageLoadCallback() {
-                        @Override
-                        public void callback(Bitmap bitmap) {
-                            if (bitmap == null)
-                                return;
-                            int bitmapWidth = bitmap.getWidth();
-                            int bitmapHeight = bitmap.getHeight();
-                            int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
-                            int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
-                            mImg.setScaleType(ImageView.ScaleType.FIT_XY);
-                            mImg.setImageBitmap(bitmap);
-                            if (mContainer != null) {
-                                MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                                containerParams.height = imgHeight;
-                                mContainer.setLayoutParams(containerParams);
-                            }
-                            MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-                            adImgParams.height = imgHeight;
-                            mImg.setLayoutParams(adImgParams);
-
-                            if (mLayerView != null) {
-                                MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-                                layerParams.height = imgHeight;
-                                mLayerView.setLayoutParams(layerParams);
-                                mLayerView.setVisibility(View.VISIBLE);
-                            }
-                            if (mContainer != null) {
-                                mContainer.requestLayout();
-                                mContainer.invalidate();
-                            }
-                        }
-                    });
+                    if (mLayerView != null)
+                        mLayerView.setVisibility(View.VISIBLE);
+                    MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
+                    int[] size = new int[2];
+                    getADImgSize(size, mDataMap.get("style"));
+                    if (size[0] > 0 && size[1] > 0) {
+                        containerParams.width = size[0];
+                        containerParams.height = size[1];
+                    }
+                    mContainer.requestLayout();
+                    mContainer.invalidate();
                 } else {
                     int[] size = new int[2];
                     ImageUtility.getInstance().getImageSizeByUrl(imgUrl, size);
@@ -124,8 +100,8 @@ public class HomeAnyImgStyleItem extends HomeItem {
                         requestLayout();
                         invalidate();
                     }
-                    loadImage(imgUrl, mImg);
                 }
+                loadImage(imgUrl, mImg);
             }
         }
 
@@ -134,9 +110,13 @@ public class HomeAnyImgStyleItem extends HomeItem {
     @Override
     protected void resetData() {
         super.resetData();
+        if (mContainer == null)
+            return;
         MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
         containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
-        mContainer.setLayoutParams(containerParams);
+        containerParams.width = MarginLayoutParams.MATCH_PARENT;
+        mContainer.requestLayout();
+        mContainer.invalidate();
     }
 
     @Override

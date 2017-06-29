@@ -1,10 +1,8 @@
 package amodule.main.view.item;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,10 +13,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.logic.XHClick;
 import acore.tools.StringManager;
-import amodule.main.activity.MainHome;
 
 /**
  * 贴子Item，只处理3图模式的。
@@ -69,12 +64,6 @@ public class HomePostItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
-        if (mIsAd) {
-            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
-                mAdControlParent.onAdShow(mDataMap, this);
-                mDataMap.put("isADShow", "1");
-            }
-        }
         if (mDataMap.containsKey("styleData")) {
             String imgs = mDataMap.get("styleData");
             if (!TextUtils.isEmpty(imgs)) {
