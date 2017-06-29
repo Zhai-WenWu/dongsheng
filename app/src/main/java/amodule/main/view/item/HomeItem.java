@@ -2,6 +2,7 @@ package amodule.main.view.item;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ import amodule.main.adapter.AdapterHome;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.home.HomeFragment;
 import aplug.basic.SubBitmapTarget;
+import aplug.web.ShowWeb;
 import third.ad.control.AdControlParent;
 import xh.basic.tool.UtilImage;
 
@@ -183,7 +185,28 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
      * @param view 点击的Item
      * @return 如果返回false，表示外界不处理点击事件，将会自己处理点击事件；
      */
-    protected boolean handleClickEvent(View view) {
+    private boolean handleClickEvent(View view) {
+        if (!TextUtils.isEmpty(mTransferUrl)) {
+            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
+                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
+                else mTransferUrl+="?data_type="+mDataMap.get("type");
+                mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
+                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
+            }
+            if(mTransferUrl.contains("nousInfo.app")){
+                String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
+                Log.i("zhangyujian","mTransferUrl:::"+params);
+                Map<String,String> map = StringManager.getMapByString(params,"&","=");
+                Intent intent = new Intent(XHActivityManager.getInstance().getCurrentActivity(), ShowWeb.class);
+                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
+                intent.putExtra("data_type",map.get("data_type"));
+                intent.putExtra("code",map.get("code"));
+                intent.putExtra("module_type",isTopTypeView()?"top_info":"info");
+                XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
+                return true;
+            }
+        }
         return false;
     }
 

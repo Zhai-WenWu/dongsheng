@@ -54,19 +54,6 @@ public class HomeAlbumItem extends HomeItem {
     }
 
     @Override
-    protected boolean handleClickEvent(View view) {
-        if (!TextUtils.isEmpty(mTransferUrl)) {
-            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                else mTransferUrl+="?data_type="+mDataMap.get("type");
-                mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-            }
-        }
-        return super.handleClickEvent(view);
-    }
-
-    @Override
     public void setData(Map<String, String> dataMap, int position) {
         super.setData(dataMap, position);
         if (mDataMap == null)

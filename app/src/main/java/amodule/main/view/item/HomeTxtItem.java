@@ -63,31 +63,6 @@ public class HomeTxtItem extends HomeItem {
     }
 
     @Override
-    protected boolean handleClickEvent(View view) {
-        if (!TextUtils.isEmpty(mTransferUrl)) {
-            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                else mTransferUrl+="?data_type="+mDataMap.get("type");
-                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-            }
-            if(mTransferUrl.contains("nousInfo.app")){
-                String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
-                Log.i("zhangyujian","mTransferUrl:::"+params);
-                Map<String,String> map = StringManager.getMapByString(params,"&","=");
-                Intent intent = new Intent(XHActivityManager.getInstance().getCurrentActivity(), ShowWeb.class);
-                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
-                intent.putExtra("data_type",map.get("data_type"));
-                intent.putExtra("code",map.get("code"));
-                intent.putExtra("module_type",isTopTypeView()?"top_info":"info");
-                XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
-                return true;
-            }
-        }
-        return super.handleClickEvent(view);
-    }
-
-    @Override
     public void setData(Map<String, String> dataMap, int position) {
         super.setData(dataMap, position);
         if (mDataMap == null)

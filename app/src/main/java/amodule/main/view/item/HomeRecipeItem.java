@@ -85,27 +85,14 @@ public class HomeRecipeItem extends HomeItem {
                         mVideoClickCallBack.videoOnClick(mPosition);
                         XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
                     }
-                } else
+                } else {
+                    XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击文字信息进入详情");
                     HomeRecipeItem.super.onClick(v);
+                }
             }
         };
         if (mVideoContainer != null)
             mVideoContainer.setOnClickListener(clickListener);
-    }
-
-    @Override
-    protected boolean handleClickEvent(View view) {
-        if (!TextUtils.isEmpty(mTransferUrl)) { //非视频菜谱tab的，其他tab下的图文菜谱和视频菜谱处理
-            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                else mTransferUrl+="?data_type="+mDataMap.get("type");
-                mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-            }
-            XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击文字信息进入详情");
-        }
-        return super.handleClickEvent(view);
     }
 
     @Override
