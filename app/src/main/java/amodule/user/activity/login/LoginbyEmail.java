@@ -65,12 +65,7 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
 
             @Override
             public void afterTextChanged(Editable s) {
-
-                if (s.length() > 0) {
-                    iv_youxinag_del.setVisibility(View.VISIBLE);
-                } else {
-                    iv_youxinag_del.setVisibility(View.GONE);
-                }
+                iv_youxinag_del.setVisibility(s.length() > 0?View.VISIBLE:View.GONE);
                 onInputDataChanged();
             }
         });
@@ -87,21 +82,11 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
             }
         });
 
-        btn_next_step.init("登录", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("登录",new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
                 XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "点击登录");
                 loginByEmail();
-            }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
             }
         });
 
@@ -177,8 +162,6 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
 
     }
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -189,7 +172,6 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
                 break;
         }
     }
-
 
     @Override
     public void onBackPressed() {

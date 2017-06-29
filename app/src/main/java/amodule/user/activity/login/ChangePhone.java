@@ -63,8 +63,9 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
         tv_phone_missed = (TextView) findViewById(R.id.tv_phone_missed);
         tv_identify_info = (TextView) findViewById(R.id.tv_identify_info);
         tv_identify_info.setVisibility(View.VISIBLE);
-        tv_identify_info.setText("旧手机号是+" + zoneCode + " "
-                + hidePhoneNum(phoneNum) + "，请获取验证码");
+        String infoText = new StringBuffer("旧手机号是+").append(zoneCode).append(" ")
+                .append(hidePhoneNum(phoneNum)).append("，请获取验证码").toString();
+        tv_identify_info.setText(infoText);
         tv_help.setOnClickListener(this);
         tv_phone_missed.setOnClickListener(this);
         speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
@@ -76,7 +77,6 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
                 ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(ChangePhone.this) {
                     @Override
                     public void loaded(int i, String s, Object o) {
-
                     }
                 });
             }
@@ -125,7 +125,7 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
             }
         });
 
-        btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("下一步", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
                 XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "方法1验证码页，点下一步");
@@ -142,27 +142,13 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
                             }
                         });
             }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
-            }
         });
     }
 
 
     private void refreshNextStepBtnState() {
         String identify = login_identify.getIdentify();
-        if (TextUtils.isEmpty(identify)) {
-            btn_next_step.setClickCenterable(false);
-        } else {
-            btn_next_step.setClickCenterable(true);
-        }
+        btn_next_step.setClickCenterable(!TextUtils.isEmpty(identify));
     }
 
     @Override
@@ -175,7 +161,7 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
             case R.id.tv_phone_missed:
                 XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "方法1验证码页，点手机号丢失或停用");
                 final XhDialog xhDialog = new XhDialog(ChangePhone.this);
-                xhDialog.setTitle("手机号丢失或停用？" + "\n请输入原手机号和密码验证")
+                xhDialog.setTitle("手机号丢失或停用？\n请输入原手机号和密码验证")
                         .setCanselButton("取消", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -192,8 +178,8 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
                             }
                         })
                         .setSureButtonTextColor("#007aff")
-                        .setCancelButtonTextColor("#007aff");
-                xhDialog.show();
+                        .setCancelButtonTextColor("#007aff")
+                        .show();
                 break;
             default:
                 break;

@@ -18,9 +18,7 @@ import xh.windowview.XhDialog;
 /**
  * Created by ：fei_teng on 2017/2/21 15:04.
  */
-
 public class LostSecret extends BaseLoginActivity {
-
 
     private TextView tv_title;
     private PhoneNumInputView phone_info;
@@ -35,7 +33,6 @@ public class LostSecret extends BaseLoginActivity {
         initTitle();
         ToolsDevice.modifyStateTextColor(this);
     }
-
 
     private void initView() {
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -60,13 +57,11 @@ public class LostSecret extends BaseLoginActivity {
             }
         });
 
-        btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("下一步", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
-                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
-                        "输入手机号页，点下一步");
-                String errorType = LoginCheck.checkPhoneFormatWell(LostSecret.this, phone_info.getZoneCode(),
-                        phone_info.getPhoneNum());
+                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码","输入手机号页，点下一步");
+                String errorType = LoginCheck.checkPhoneFormatWell(LostSecret.this, phone_info.getZoneCode(),phone_info.getPhoneNum());
 
                 if (LoginCheck.WELL_TYPE.equals(errorType)) {
                     checkPhoneRegisted(LostSecret.this, phone_info.getZoneCode(), phone_info.getPhoneNum(),
@@ -112,25 +107,12 @@ public class LostSecret extends BaseLoginActivity {
                     XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码","失败原因：手机号格式错误");
                 }
             }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
-            }
         });
-
-
     }
 
     private void refreshNextStepBtnState() {
         btn_next_step.setClickCenterable(!phone_info.isDataAbsence());
     }
-
 
     @Override
     protected void onCountrySelected(String country_code) {

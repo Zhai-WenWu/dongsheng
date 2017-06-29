@@ -82,7 +82,7 @@ public class RegisterByPhoneOne extends BaseLoginActivity implements View.OnClic
                     }
                 });
 
-        btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("下一步", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
 
@@ -133,16 +133,6 @@ public class RegisterByPhoneOne extends BaseLoginActivity implements View.OnClic
                 }else if(LoginCheck.ERROR_FORMAT.equals(errorType)){
                     XHClick.mapStat(RegisterByPhoneOne.this, PHONE_TAG, "注册", "手机号失败：手机号格式错");
                 }
-
-            }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
 
             }
         });

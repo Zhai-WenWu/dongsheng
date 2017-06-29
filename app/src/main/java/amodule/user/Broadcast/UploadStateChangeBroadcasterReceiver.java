@@ -12,8 +12,6 @@ import android.content.IntentFilter;
 
 public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
 
-
-
     private ReceiveBack callback;
     public static final String ACTION = "uploadState";
     public static final String STATE_KEY = "state";
@@ -39,7 +37,6 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
         callback.onGetReceive(intent);
     }
 
-
     public void register(Context context){
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION);
@@ -49,7 +46,4 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     public interface ReceiveBack{
         void onGetReceive(Intent intent);
     }
-
 }
-
-

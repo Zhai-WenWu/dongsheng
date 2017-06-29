@@ -109,22 +109,12 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
 
             }
         });
-        btn_next_step.init("进入香哈", "", "",
+        btn_next_step.init("进入香哈",
                 new NextStepView.NextStepViewCallback() {
                     @Override
                     public void onClickCenterBtn() {
                         dataStatistics("点击进入香哈");
                         backToForward();
-                    }
-
-                    @Override
-                    public void onClickLeftView() {
-
-                    }
-
-                    @Override
-                    public void onClickRightView() {
-
                     }
                 });
 
