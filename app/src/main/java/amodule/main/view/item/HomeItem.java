@@ -19,7 +19,9 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
@@ -34,7 +36,7 @@ import xh.basic.tool.UtilImage;
  * Created by sll on 2017/4/18.
  */
 
-public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickListener {
+public class HomeItem extends BaseItemView implements View.OnClickListener, BaseItemView.OnItemClickListener {
 
     //用户信息和置顶view
     private ImageView mTopTag;
@@ -62,17 +64,14 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     private AdapterHome.ViewClickCallBack mRefreshCallBack;
 
     protected HomeItemBottomView mHomeItemBottomView;
+    private ImageView mAdTag;
 
     public HomeItem(Context context, int layoutId) {
         this(context,null,layoutId);
-//        LayoutInflater.from(context).inflate(layoutId, this, true);
-//        initView();
     }
 
     public HomeItem(Context context, AttributeSet attrs, int layoutId) {
         this(context, attrs,0,layoutId);
-//        LayoutInflater.from(context).inflate(layoutId, this, true);
-//        initView();
     }
 
     public HomeItem(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
@@ -83,6 +82,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     protected void initView() {
         this.setBackgroundColor(Color.parseColor("#ffffff"));
+        mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mLineTop = findViewById(R.id.line_top);
         mDot = findViewById(R.id.dot);
         mTopTxt = (TextView) findViewById(R.id.top_txt);
@@ -108,6 +108,13 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                         XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
+        addDefaultListener();
+    }
+
+    private void addDefaultListener() {
+        if (mAdTag != null)
+            mAdTag.setOnClickListener(this);
+        setOnClickListener(this);
     }
 
     private ADImageLoadCallback mCallback;
@@ -151,6 +158,33 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
         this.mRefreshCallBack = callBack;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mIsAd) {
+            if (v == mAdTag) {
+                onAdHintClick();
+            } else if (v == this) {
+                if (mAdControlParent != null) {
+                    mAdControlParent.onAdClick(mDataMap);
+                }
+            }
+            return;
+        }
+        if (!handleClickEvent(v)) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
+            onItemClick();
+        }
+    }
+
+    /**
+     * 处理Item点击事件外的其他事件。
+     * @param view 点击的Item
+     * @return 如果返回false，表示外界不处理点击事件，将会自己处理点击事件；
+     */
+    protected boolean handleClickEvent(View view) {
+        return false;
     }
 
     public interface ADImageLoadCallback {
@@ -246,6 +280,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 mIsAd = true;
             }
         }
+        if (mIsAd && mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
+            mAdTag.setVisibility(View.VISIBLE);
         if (mDataMap.containsKey("type")) {
             mType = mDataMap.get("type");
         }
@@ -255,6 +291,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     }
 
     protected void resetView() {
+        if (viewIsVisible(mAdTag))
+            mAdTag.setVisibility(View.GONE);
         if (viewIsVisible(mTimeTagContainer))
             mTimeTagContainer.setVisibility(View.GONE);
         if (viewIsVisible(mUserName))

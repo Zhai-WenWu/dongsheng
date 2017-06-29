@@ -36,7 +36,6 @@ public class HomeRecipeItem extends HomeItem {
     private ImageView mImg;
     private ImageView mVIP;
     private ImageView mSole;
-    private ImageView mAdTag;
     private ImageView mPlayImg;
     private LinearLayout mRecommendTag;
     private RelativeLayout mVideoContainer;
@@ -67,7 +66,6 @@ public class HomeRecipeItem extends HomeItem {
         mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
         mSole = (ImageView) findViewById(R.id.img_sole);
-        mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mPlayImg = (ImageView) findViewById(R.id.play_img);
         mRecommendTag = (LinearLayout) findViewById(R.id.recommend_tag);
         mVideoContainer = (RelativeLayout) findViewById(R.id.video_container);
@@ -81,41 +79,33 @@ public class HomeRecipeItem extends HomeItem {
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsAd) {
-                    if (v == mAdTag) {
-                        onAdHintClick();
-                    } else if (v == HomeRecipeItem.this) {
-                        if (mAdControlParent != null) {
-                            mAdControlParent.onAdClick(mDataMap);
-                        }
+                //视频列表下点击视频图片部分直接播放，其他部分则跳转到视频菜谱详情页
+                if (v == mVideoContainer && !TextUtils.isEmpty(mType) && mType.equals("2") && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType())) { //表示当前tab是视频菜谱
+                    if (mVideoClickCallBack != null) {
+                        mVideoClickCallBack.videoOnClick(mPosition);
+                        XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
                     }
-                } else {
-                    //视频列表下点击视频图片部分直接播放，其他部分则跳转到视频菜谱详情页
-                    if (v == mVideoContainer && !TextUtils.isEmpty(mType) && mType.equals("2") && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType())) { //表示当前tab是视频菜谱
-                        if (mVideoClickCallBack != null) {
-                            mVideoClickCallBack.videoOnClick(mPosition);
-                            XHClick.mapStat((Activity)getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
-                        }
-                    } else if (!TextUtils.isEmpty(mTransferUrl)) { //非视频菜谱tab的，其他tab下的图文菜谱和视频菜谱处理
-                        if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                            if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                            else mTransferUrl+="?data_type="+mDataMap.get("type");
-                            mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                            Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                            XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-                        }
-                        AppCommon.openUrl((Activity) getContext(), mTransferUrl, false);
-                        XHClick.mapStat((Activity)getContext(), "a_video", "进入详情/列表播放", "点击文字信息进入详情");
-                    }
-                    onItemClick();
-                }
+                } else
+                    HomeRecipeItem.super.onClick(v);
             }
         };
-        this.setOnClickListener(clickListener);
         if (mVideoContainer != null)
             mVideoContainer.setOnClickListener(clickListener);
-        if (mAdTag != null)
-            mAdTag.setOnClickListener(clickListener);
+    }
+
+    @Override
+    protected boolean handleClickEvent(View view) {
+        if (!TextUtils.isEmpty(mTransferUrl)) { //非视频菜谱tab的，其他tab下的图文菜谱和视频菜谱处理
+            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
+                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
+                else mTransferUrl+="?data_type="+mDataMap.get("type");
+                mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
+                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
+            }
+            XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击文字信息进入详情");
+        }
+        return super.handleClickEvent(view);
     }
 
     @Override
@@ -126,8 +116,6 @@ public class HomeRecipeItem extends HomeItem {
         if (mIsAd) {
             if (mLayerView != null)
                 mLayerView.setVisibility(View.VISIBLE);
-            if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
-                mAdTag.setVisibility(View.VISIBLE);
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);
                 mDataMap.put("isADShow", "1");
@@ -294,8 +282,6 @@ public class HomeRecipeItem extends HomeItem {
             mVIP.setVisibility(View.GONE);
         if (viewIsVisible(mSole))
             mSole.setVisibility(View.GONE);
-        if (viewIsVisible(mAdTag))
-            mAdTag.setVisibility(View.GONE);
         if (viewIsVisible(mPlayImg))
             mPlayImg.setVisibility(View.GONE);
         if (viewIsVisible(mRecommendTag))

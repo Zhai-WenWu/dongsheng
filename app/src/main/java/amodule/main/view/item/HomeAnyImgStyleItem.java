@@ -30,7 +30,6 @@ public class HomeAnyImgStyleItem extends HomeItem {
     private TextView mTitleTop;
     private ImageView mImg;
     private ImageView mVIP;
-    private ImageView mADTag;
     private RelativeLayout mContainer;
     private View mLayerView;
 
@@ -52,33 +51,8 @@ public class HomeAnyImgStyleItem extends HomeItem {
         mTitleTop = (TextView) findViewById(R.id.title_top);
         mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
-        mADTag = (ImageView) findViewById(R.id.ad_tag);
         mContainer = (RelativeLayout) findViewById(R.id.container);
         mLayerView = findViewById(R.id.layer_view);
-        addListener();
-    }
-
-    private void addListener() {
-        OnClickListener clickListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mIsAd) {
-                    if (v == mADTag) {
-                        onAdHintClick();
-                    } else if (v == HomeAnyImgStyleItem.this) {
-                        if (mAdControlParent != null) {
-                            mAdControlParent.onAdClick(mDataMap);
-                        }
-                    }
-                } else {
-                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
-                    onItemClick();
-                }
-            }
-        };
-        this.setOnClickListener(clickListener);
-        if (mADTag != null)
-            mADTag.setOnClickListener(clickListener);
     }
 
     @Override
@@ -93,8 +67,6 @@ public class HomeAnyImgStyleItem extends HomeItem {
             mTitleTop.setVisibility(View.VISIBLE);
             hasTitleTop = true;
         }
-        if (mIsAd && mADTag != null)
-            mADTag.setVisibility(View.VISIBLE);
         if (mModuleBean != null && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip"))) {
             mVIP.setVisibility(View.VISIBLE);
         }
@@ -176,8 +148,6 @@ public class HomeAnyImgStyleItem extends HomeItem {
             mImg.setVisibility(View.GONE);
         if (viewIsVisible(mVIP))
             mVIP.setVisibility(View.GONE);
-        if (viewIsVisible(mADTag))
-            mADTag.setVisibility(View.GONE);
         if (viewIsVisible(mLayerView))
             mLayerView.setVisibility(View.GONE);
     }

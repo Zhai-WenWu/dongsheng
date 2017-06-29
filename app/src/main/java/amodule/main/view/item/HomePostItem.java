@@ -34,7 +34,6 @@ public class HomePostItem extends HomeItem {
     private ImageView mImg3;
 
     private LinearLayout mImgsContainerCenter;
-    private ImageView mAdTagCenter;
 
     private View mLayerView1;
     private View mLayerView2;
@@ -60,44 +59,23 @@ public class HomePostItem extends HomeItem {
         mImg2 = (ImageView) findViewById(R.id.img2);
         mImg3 = (ImageView) findViewById(R.id.img3);
         mImgsContainerCenter = (LinearLayout) findViewById(R.id.imgs_container_center);
-        mAdTagCenter = (ImageView) findViewById(R.id.ad_tag_center);
         mLayerView1 = findViewById(R.id.layer_view1);
         mLayerView2 = findViewById(R.id.layer_view2);
         mLayerView3 = findViewById(R.id.layer_view3);
-        addListener();
     }
 
-    private void addListener() {
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mIsAd) {
-                    if (v == mAdTagCenter) {
-                        onAdHintClick();
-                    } else if (v == HomePostItem.this) {
-                        if (mAdControlParent != null) {
-                            mAdControlParent.onAdClick(mDataMap);
-                        }
-                    }
-                } else {
-                    if (!TextUtils.isEmpty(mTransferUrl)) {
-                        if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                            if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                            else mTransferUrl+="?data_type="+mDataMap.get("type");
-                            mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                            Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                            XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-                        }
-                        AppCommon.openUrl((Activity) getContext(), mTransferUrl, false);
-                    }
-                    if (v == HomePostItem.this)
-                        onItemClick();
-                }
+    @Override
+    protected boolean handleClickEvent(View view) {
+        if (!TextUtils.isEmpty(mTransferUrl)) {
+            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
+                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
+                else mTransferUrl+="?data_type="+mDataMap.get("type");
+                mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
+                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
             }
-        };
-        this.setOnClickListener(clickListener);
-        if (mAdTagCenter != null)
-            mAdTagCenter.setOnClickListener(clickListener);
+        }
+        return super.handleClickEvent(view);
     }
 
     @Override
@@ -126,8 +104,6 @@ public class HomePostItem extends HomeItem {
                         if (mLayerView3 != null)
                             mLayerView3.setVisibility(View.VISIBLE);
                     }
-                    if (mIsAd && mAdTagCenter != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
-                        mAdTagCenter.setVisibility(View.VISIBLE);
                     loadImage(maps.get(0).get("url"), mImg1);
                     loadImage(maps.get(1).get("url"), mImg2);
                     loadImage(maps.get(2).get("url"), mImg3);
@@ -155,7 +131,5 @@ public class HomePostItem extends HomeItem {
             mTitle.setVisibility(View.GONE);
         if (viewIsVisible(mImgsContainerCenter))
             mImgsContainerCenter.setVisibility(View.GONE);
-        if (viewIsVisible(mAdTagCenter))
-            mAdTagCenter.setVisibility(View.GONE);
     }
 }
