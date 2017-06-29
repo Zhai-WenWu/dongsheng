@@ -33,6 +33,7 @@ import acore.widget.TextViewLimitLine;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.VideoDetailActivity;
+import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -374,6 +375,7 @@ public class FriendHome extends BaseActivity {
 		String dataFrom = dataMap.get("dataFrom");
 		if ("1".equals(dataFrom)) {//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
 			String uploadType = dataMap.get("uploadType");
+			uploadType = UploadDishData.UPLOAD_FAIL;
 			String hasMedia = dataMap.get("hasMedia");
 			Map<String, String> tabMap = mTabContentViews.get(tabIndex).getDataMap();
 			if (tabMap != null && tabMap.size() > 0) {
@@ -413,6 +415,12 @@ public class FriendHome extends BaseActivity {
 								final UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
 								final UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(id));
 								if (articleData != null) {
+									if ("2".equals(type)) {
+										Intent intent = new Intent(FriendHome.this, ArticleEidtActiivty.class);
+										intent.putExtra("draftId", articleData.getId());
+										startActivity(intent);
+										return;
+									}
 									dataMap.put("uploadType", UploadDishData.UPLOAD_ING);
 									itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_ING);
 									articleData.setUploadType(UploadDishData.UPLOAD_ING);
