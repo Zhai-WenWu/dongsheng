@@ -81,7 +81,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_18"
+            android:layout_height="@dimen/dp_23"
             android:layout_marginTop="@dimen/dp_10"
             >
             <TextView
@@ -94,9 +94,7 @@
                 android:id="@+id/comment_delete"
                 style="@style/comment_time"
                 android:layout_toRightOf="@+id/comment_time"
-                android:layout_marginLeft="@dimen/dp_9"
-                android:paddingLeft="@dimen/dp_3"
-                android:paddingRight="@dimen/dp_3"
+                android:layout_marginLeft="@dimen/dp_6"
                 android:text="删除"
                 />
 
@@ -104,7 +102,7 @@
                 android:id="@+id/comment_replay"
                 style="@style/comment_time"
                 android:layout_toLeftOf="@+id/comment_praise_num"
-                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginRight="@dimen/dp_13"
                 android:text="回复"
                 />
             <TextView
@@ -113,16 +111,17 @@
                 android:layout_toLeftOf="@+id/comment_praise"
                 android:text="1331"
                 android:layout_centerVertical="true"
+                android:padding="0dp"
                 />
 
             <ImageView
                 android:id="@+id/comment_praise"
-                android:layout_width="@dimen/dp_19"
-                android:layout_height="@dimen/dp_19"
+                android:layout_width="@dimen/dp_23"
+                android:layout_height="match_parent"
                 android:paddingLeft="@dimen/dp_5"
-                android:paddingTop="@dimen/dp_2"
+                android:paddingTop="@dimen/dp_3"
                 android:paddingRight="@dimen/dp_2"
-                android:paddingBottom="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_3"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/i_comment_praise"

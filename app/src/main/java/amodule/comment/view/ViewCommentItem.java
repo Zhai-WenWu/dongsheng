@@ -350,9 +350,6 @@ public class ViewCommentItem extends LinearLayout {
             final String replay_ucode = replayMap.get("replay_ucode");
             final String is_replay_author = replayMap.get("is_replay_author");
 
-            String authoCode = null;
-
-
             Log.i("commentReplay","uName:" + uName + "   is_anchor:" + is_anchor);
             if("2".equals(is_anchor)){ //是否是锚点
                 Log.i("commentReplay","is_anchor:" + is_anchor);
@@ -378,7 +375,6 @@ public class ViewCommentItem extends LinearLayout {
             });
             multifunctionText.addStyle(uNameBuilder.getContent(), uNameBuilder.build());
             if("2".equals(is_author)) {
-                authoCode = ucode;
                 CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                 authorBuilder.parse(null);
                 multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
@@ -398,7 +394,6 @@ public class ViewCommentItem extends LinearLayout {
                 });
                 multifunctionText.addStyle(replayNameBuilder.getContent(), replayNameBuilder.build());
                 if ("2".equals(is_replay_author)) {
-                    authoCode = replay_ucode;
                     CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                     authorBuilder.parse(null);
                     multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
@@ -420,7 +415,7 @@ public class ViewCommentItem extends LinearLayout {
 
             replayTv.setText(multifunctionText);
             replayTv.setCopyText(content);
-            final boolean isReport = TextUtils.isEmpty(authoCode) || !authoCode.equals(LoginManager.userInfo.get("code"));
+            final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
             replayTv.setRightClicker(isReport ? "举报" : "删除" ,new OnClickListener() {
                 @Override
                 public void onClick(View v) {
