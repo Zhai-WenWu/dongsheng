@@ -1136,16 +1136,33 @@ public class RichText extends EditText implements TextWatcher {
                 }
                 int endIndesc = startIndex + desc.length();
                 //判断当前光标位置
-                if (selStart > startIndex && selStart < endIndesc
-                        && selEnd > startIndex && selEnd < endIndesc) {
-                    CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
-                    for (CharacterStyle span : spans) {
-                        if (span instanceof RichURLSpan) {
-                            if (onSelectContainsType != null) {
-                                onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
+                if (selStart == selEnd){
+                    if(selStart > startIndex && selStart < endIndesc
+                            && selEnd > startIndex && selEnd < endIndesc) {
+                        CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
+                        for (CharacterStyle span : spans) {
+                            if (span instanceof RichURLSpan) {
+                                if (onSelectContainsType != null) {
+                                    onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
+                                }
+                                this.setSelection(textLength);
+                                break;
                             }
-                            this.setSelection(textLength);
-                            break;
+                        }
+                    }
+                    else if(selStart != selEnd){
+                        if(selStart >= startIndex && selStart <= endIndesc
+                                && selEnd >= startIndex && selEnd <= endIndesc) {
+                            CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
+                            for (CharacterStyle span : spans) {
+                                if (span instanceof RichURLSpan) {
+                                    if (onSelectContainsType != null) {
+                                        onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
+                                    }
+                                    this.setSelection(textLength);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }

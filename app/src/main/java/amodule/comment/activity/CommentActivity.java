@@ -104,7 +104,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.commend_hind).setOnClickListener(this);
         sendTv = (TextView) findViewById(R.id.comment_send);
         sendTv.setOnClickListener(this);
-        sendTv.setClickable(false);
+//        sendTv.setClickable(false);
         writePen = (ImageView) findViewById(R.id.commend_write_pen);
         commend_write_tv = (TextView) findViewById(R.id.commend_write_tv);
         commend_write_tv.setOnClickListener(this);
@@ -116,7 +116,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                sendTv.setClickable(s.length() > 0);
+//                sendTv.setClickable(s.length() > 0);
                 sendTv.setTextColor(s.length() > 0 ? Color.parseColor("#333333") : Color.parseColor("#cccccc"));
             }
         });
@@ -125,7 +125,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(View.VISIBLE == sendTv.getVisibility()) {
-                    Log.i("commentReplay","downRefreshList onTouch() isShowKeyboard:" + isShowKeyboard);
+                    Log.i("commentReplay","downRefreshList onTouch()");
                     oldUrl = currentUrl;
                     changeKeyboard(false,false);
                     commend_write_et.setHint(" 写评论");
@@ -272,16 +272,24 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onContentReplayClick(String comment_id,String replay_id,String replay_code, String replay_name,String type,boolean isShowKeyBoard,boolean isMyselft) {
                 if(isMyselft) return;
+                Log.i("commentReplay","onContentReplayClick() isShowKeyboard:" + isShowKeyboard);
+                if(isShowKeyboard && isShowKeyBoard){
+                    oldUrl = currentUrl;
+                    changeKeyboard(false,false);
+                    return;
+                }
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"回复",type);
                 changeKeyboard(true,isShowKeyBoard);
                 Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
                 commend_write_et.setHint(" 回复" + replay_name);
-                currentUrl = StringManager.api_addReplay;
+                Log.i("commentReplay","onContentReplayClick() oldUrl:" + oldUrl);
                 currentParams = "&commentId=" + comment_id + "&replayUcode=" + replay_code;
                 replayIndex = position;
-                if(!comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
+                if(!StringManager.api_addReplay.equals(oldUrl) || !comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
+//                if(!comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
                     commend_write_et.setText("");
                 }
+                currentUrl = StringManager.api_addReplay;
                 oldCommentId = comment_id;
                 oldReplayId = replay_code;
             }
@@ -383,6 +391,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             }
         });
         View view = new View(this);
+        view.setBackgroundResource(R.color.backgroup_color);
         view.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_40));
         downRefreshList.addFooterView(view);
     }
@@ -578,10 +587,11 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             commend_write_tv.setVisibility(View.GONE);
             commend_write_et.setVisibility(View.VISIBLE);
             commend_write_et.requestFocus();
-            if(isShowboard)ToolsDevice.keyboardControl(true,CommentActivity.this,commend_write_et);
+            ToolsDevice.keyboardControl(isShowboard,CommentActivity.this,commend_write_et);
             sendTv.setVisibility(View.VISIBLE);
             writePen.setVisibility(View.GONE);
         }else{
+            oldUrl = currentUrl;
             currentUrl = StringManager.api_addForum;
             sendTv.setVisibility(View.GONE);
             writePen.setVisibility(View.VISIBLE);
@@ -606,7 +616,10 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             case R.id.commend_hind:
                 break;
             case R.id.comment_send:
-                sendData();
+                String content = commend_write_et.getText().toString();
+                if(content.length() > 0){
+                    sendData();
+                }
                 break;
             case R.id.commend_write_tv:
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"点击评论框","");

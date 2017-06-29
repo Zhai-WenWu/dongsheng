@@ -613,21 +613,20 @@
                     android:layout_height="@dimen/dp_14"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginRight="@dimen/dp_22"
+                    android:layout_marginRight="@dimen/dp_19"
                     android:background="@drawable/tv_circle_red_20"
                     android:gravity="center_horizontal|center_vertical"
-                    android:text="1"
                     android:textColor="#FFFFFF"
                     android:textSize="@dimen/sp_10"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/mall_news_num_two"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_14"
+                    android:layout_height="@dimen/dp_16"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginRight="@dimen/dp_22"
+                    android:layout_marginRight="@dimen/dp_12"
                     android:background="@drawable/tv_circle_red_20"
                     android:gravity="center_horizontal|center_vertical"
                     android:minWidth="@dimen/dp_15"
