@@ -24,6 +24,7 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
 import amodule.main.bean.HomeModuleBean;
@@ -31,6 +32,7 @@ import amodule.main.view.home.HomeFragment;
 import aplug.basic.SubBitmapTarget;
 import aplug.web.ShowWeb;
 import third.ad.control.AdControlParent;
+import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilImage;
 
 /**
@@ -303,8 +305,14 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 mIsAd = true;
             }
         }
-        if (mIsAd && mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
-            mAdTag.setVisibility(View.VISIBLE);
+        if (mIsAd) {
+            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
+                mAdControlParent.onAdShow(mDataMap, this);
+                mDataMap.put("isADShow", "1");
+            }
+            if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
+                mAdTag.setVisibility(View.VISIBLE);
+        }
         if (mDataMap.containsKey("type")) {
             mType = mDataMap.get("type");
         }
@@ -461,5 +469,29 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
      */
     public String getDataType() {
         return mType;
+    }
+
+    /**
+     * 获取广告图片的大小。
+     * @param size 一个两个整数的数组
+     * @param style 广告样式 适用于大图样式1和任意图样式6的广告
+     */
+    protected void getADImgSize(int[] size, String style) {
+        if (mDataMap == null || (!"1".equals(mDataMap.get("style")) && !"6".equals(mDataMap.get("style"))))
+            return;
+        Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), mDataMap.get("stype"), "1");
+        if (mapSize == null || mapSize.isEmpty())
+            return;
+        try {
+            size[0] = Integer.parseInt(mapSize.get("width"));
+            size[1] = Integer.parseInt(mapSize.get("height"));
+            int fixedWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
+            if (size[0] > fixedWidth) {
+                size[1] = size[1] * fixedWidth / size[0];
+                size[0] = fixedWidth;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

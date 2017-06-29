@@ -33,13 +33,14 @@
         android:padding="@dimen/dp_5"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_15"
         android:src="@drawable/z_z_topbar_ico_back_white"/>
 
     <TextView
         android:id="@+id/tv_cancel_upload"
         style="@style/top_titleBarView"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/dp_10"
         android:layout_centerVertical="false"
         android:clickable="true"
         android:gravity="left|center_vertical"

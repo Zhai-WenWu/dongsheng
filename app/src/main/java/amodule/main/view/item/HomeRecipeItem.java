@@ -1,11 +1,8 @@
 package amodule.main.view.item;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +14,6 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -103,10 +99,6 @@ public class HomeRecipeItem extends HomeItem {
         if (mIsAd) {
             if (mLayerView != null)
                 mLayerView.setVisibility(View.VISIBLE);
-            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
-                mAdControlParent.onAdShow(mDataMap, this);
-                mDataMap.put("isADShow", "1");
-            }
         }
         if (mDataMap.containsKey("video")) {
             String video = mDataMap.get("video");
@@ -178,37 +170,17 @@ public class HomeRecipeItem extends HomeItem {
                     if (!TextUtils.isEmpty(imgUrl)) {
                         if (mContainer != null)
                             mContainer.setVisibility(View.VISIBLE);
-                        loadImage(imgUrl, mImg, mIsAd ? new ADImageLoadCallback() {
-                            @Override
-                            public void callback(Bitmap bitmap) {
-                                if (bitmap == null)
-                                    return;
-                                int bitmapWidth = bitmap.getWidth();
-                                int bitmapHeight = bitmap.getHeight();
-                                int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
-                                int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
-                                mImg.setScaleType(ImageView.ScaleType.FIT_XY);
-                                mImg.setImageBitmap(bitmap);
-                                if (mContainer != null) {
-                                    MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                                    containerParams.height = imgHeight;
-                                    mContainer.setLayoutParams(containerParams);
-                                }
-                                MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-                                adImgParams.height = imgHeight;
-                                mImg.setLayoutParams(adImgParams);
-
-                                if (mLayerView != null) {
-                                    MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-                                    layerParams.height = imgHeight;
-                                    mLayerView.setLayoutParams(layerParams);
-                                }
-                                if (mContainer != null) {
-                                    mContainer.requestLayout();
-                                    mContainer.invalidate();
-                                }
+                        if (mIsAd) {
+                            int[] size = new int[2];
+                            getADImgSize(size, mDataMap.get("style"));
+                            if (size[0] > 0 && size[1] > 0) {
+                                containerParams.width = size[0];
+                                containerParams.height = size[1];
                             }
-                        } : null);
+                            mContainer.requestLayout();
+                            mContainer.invalidate();
+                        }
+                        loadImage(imgUrl, mImg);
                     }
                 }
             }
@@ -243,13 +215,8 @@ public class HomeRecipeItem extends HomeItem {
         mIsVideo = false;
         MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
         containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
+        containerParams.width = MarginLayoutParams.MATCH_PARENT;
         mContainer.setLayoutParams(containerParams);
-        MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-        layerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
-        mLayerView.setLayoutParams(layerParams);
-        MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-        adImgParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
-        mImg.setLayoutParams(adImgParams);
         mContainer.requestLayout();
         mContainer.invalidate();
     }
