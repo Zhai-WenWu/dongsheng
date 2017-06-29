@@ -33,7 +33,6 @@ public class HomeTxtItem extends HomeItem {
     private TextView mTitle;
     private TextView mDesc;
     private ImageView mImg;
-    private ImageView mAdTag;
     private ImageView mVIP;
     private RelativeLayout mImgs;
     private RelativeLayout mContainer;
@@ -58,57 +57,10 @@ public class HomeTxtItem extends HomeItem {
         mDesc = (TextView) findViewById(R.id.desc);
         mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
-        mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mImgs = (RelativeLayout) findViewById(R.id.imgs);
         mContainer = (RelativeLayout) findViewById(R.id.txt_container);
         mLayerView = findViewById(R.id.layer_view);
-        addListener();
     }
-
-    private void addListener() {
-        OnClickListener onClickListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mIsAd) {
-                    if (v == mAdTag) {
-                        onAdHintClick();
-                    } else if (v == HomeTxtItem.this) {
-                        if (mAdControlParent != null) {
-                            mAdControlParent.onAdClick(mDataMap);
-                        }
-                    }
-                } else {
-                    if (!TextUtils.isEmpty(mTransferUrl)) {
-                        if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                            if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                            else mTransferUrl+="?data_type="+mDataMap.get("type");
-                            Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                            XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-                        }
-                        if(mTransferUrl.contains("nousInfo.app")){
-                           String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
-                            Log.i("zhangyujian","mTransferUrl:::"+params);
-                            Map<String,String> map = StringManager.getMapByString(params,"&","=");
-                            Intent intent = new Intent(XHActivityManager.getInstance().getCurrentActivity(), ShowWeb.class);
-                            intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
-                            intent.putExtra("data_type",map.get("data_type"));
-                            intent.putExtra("code",map.get("code"));
-                            intent.putExtra("module_type",isTopTypeView()?"top_info":"info");
-                            XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
-                        }else{
-                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mTransferUrl,true);
-                        }
-                    }
-                    if (v == HomeTxtItem.this)
-                        onItemClick();
-                }
-            }
-        };
-        this.setOnClickListener(onClickListener);
-        if (mAdTag != null)
-            mAdTag.setOnClickListener(onClickListener);
-    }
-
 
     @Override
     public void setData(Map<String, String> dataMap, int position) {
@@ -125,8 +77,6 @@ public class HomeTxtItem extends HomeItem {
                     mTitle.setVisibility(View.VISIBLE);
                 }
             }
-            if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
-                mAdTag.setVisibility(View.VISIBLE);
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);
                 mDataMap.put("isADShow", "1");
@@ -198,8 +148,6 @@ public class HomeTxtItem extends HomeItem {
             mImg.setVisibility(View.GONE);
         if (viewIsVisible(mImgs))
             mImgs.setVisibility(View.GONE);
-        if (viewIsVisible(mAdTag))
-            mAdTag.setVisibility(View.GONE);
         if (viewIsVisible(mLayerView))
             mLayerView.setVisibility(View.GONE);
         if (viewIsVisible(mDesc))

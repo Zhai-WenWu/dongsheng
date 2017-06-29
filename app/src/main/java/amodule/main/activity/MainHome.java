@@ -483,7 +483,7 @@ public class MainHome extends MainBaseActivity {
         for(int position=0;position<size;position++) {
             if (fragments != null && fragments.size() > position) {
                 if (fragments.get(position) instanceof HomeFragment) {
-                    ((HomeFragment) fragments.get(position)).isNeedRefresh();
+                    ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
                 }
             }
         }
@@ -495,7 +495,7 @@ public class MainHome extends MainBaseActivity {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
             if (fragments != null && fragments.size() > position) {
                 if (fragments.get(position) instanceof HomeFragment) {
-                    ((HomeFragment) fragments.get(position)).isNeedRefresh();
+                    ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
                 }
             }
         }

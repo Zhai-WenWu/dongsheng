@@ -361,7 +361,7 @@ public class HomeFragment extends BaseHomeFragment{
      */
     private void EntryptData(final boolean refresh){
         if(refresh){
-            isNeedRefresh();
+            isNeedRefresh(false);
         }
         String params="";
         LoadOver = true;
@@ -438,6 +438,7 @@ public class HomeFragment extends BaseHomeFragment{
                         //当前只有向上刷新，并且服务端确认可以刷新数据
                         if (compelClearData || (refresh && !TextUtils.isEmpty(listmaps.get(0).get("reset")) && "2".equals(listmaps.get(0).get("reset")))) {
                             mListData.clear();
+                            isNeedRefresh(true);
                             //强制刷新，重置数据
                             if(!TextUtils.isEmpty(listmaps.get(0).get("backurl")))
                                 backUrl = listmaps.get(0).get("backurl");
@@ -960,10 +961,15 @@ public class HomeFragment extends BaseHomeFragment{
         }
     }
 
-    public void isNeedRefresh(){
-        if(mAdControl==null||mListData==null||mListData.size()<=0||adapterListView==null)return;//条件过滤
+    /**
+     * 刷新广告数据
+     * @param isForceRefresh 是否强制刷新广告
+     */
+    public void isNeedRefresh(boolean isForceRefresh){
+        if(mAdControl==null||mListData==null||adapterListView==null)return;//条件过滤
         boolean state=mAdControl.isNeedRefresh();
-        Log.i(tag_yu,"isNeedRefresh::::"+state+":::"+homeModuleBean.getTitle());
+        Log.i(tag_yu,"isNeedRefresh::::"+state+":::"+homeModuleBean.getTitle()+"：：：isForceRefresh：："+isForceRefresh);
+        if(isForceRefresh)state=isForceRefresh;//强制刷新
 //        state=true;
         if(state){
             //重新请求广告

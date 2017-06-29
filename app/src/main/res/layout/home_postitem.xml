@@ -196,7 +196,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/ad_tag_center"
+            android:id="@+id/ad_tag"
             android:layout_width="@dimen/dp_35"
             android:layout_height="@dimen/dp_16.5"
             android:layout_below="@+id/imgs_container_center"
