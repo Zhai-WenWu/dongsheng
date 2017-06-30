@@ -283,6 +283,17 @@ public class AppCommon {
             return;
         } else if (url.indexOf("GoodsList.app") > -1) { //返现商品列表
             return;
+        } else if(url.indexOf("link.app")==0){//外链
+            String temp = url.substring(url.indexOf("?") + 1, url.length());
+            LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
+            String openUrl = map_link.get("url");
+            Intent intentLink = new Intent();
+            intentLink.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse(openUrl);
+            intentLink.setData(content_url);
+            act.startActivity(intentLink);
+            return;
+
         }
         intent = parseURL(XHApplication.in(), bundle, url);
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
