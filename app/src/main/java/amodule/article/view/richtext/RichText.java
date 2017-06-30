@@ -1165,7 +1165,7 @@ public class RichText extends EditText implements TextWatcher {
                                 if (onSelectContainsType != null) {
                                     onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
                                 }
-                                this.setSelection(endIndesc + 1 <= textLength ? endIndesc + 1 : textLength );
+                                this.setSelection(endIndesc <= textLength ? endIndesc  : textLength );
                                 break;
                             }
                         }
@@ -1196,7 +1196,7 @@ public class RichText extends EditText implements TextWatcher {
                 //粘帖
                 final ClipboardManager manager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
                 String pasteText = getClipFirstText(manager);
-                Log.i("tzy", "copied text: " + pasteText);//%   %
+                Log.i("tzy", "copied text: " + pasteText);
                 pasteText = TextUtils.isEmpty(pasteText) ? "" : pasteText;
                 ClipData clip = ClipData.newPlainText("simple text copy", pasteText);
                 manager.setPrimaryClip(clip);

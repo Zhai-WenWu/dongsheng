@@ -61,6 +61,7 @@ import xh.windowview.XhDialog;
 
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
 import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
+import static amodule.article.view.richtext.RichText.FORMAT_LINK;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
 
 /**
@@ -407,6 +408,10 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             }
                             if (mixLayout.getURLCount() >= getMaxURLCount()) {
                                 Tools.showToast(EditParentActivity.this, "链接最多" + getMaxURLCount() + "条");
+                                return;
+                            }
+                            if(mixLayout.getCurrentEditText().getRichText().containLink()){
+                                Tools.showToast(EditParentActivity.this, "不可重复添加");
                                 return;
                             }
                             //收起键盘
