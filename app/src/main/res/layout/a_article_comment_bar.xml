@@ -111,6 +111,7 @@
                 android:layout_alignParentTop="true"
                 android:background="#FFFFFE"
                 android:paddingLeft="@dimen/dp_20"
+                style="@style/bottom_navigation"
                 android:visibility="gone">
 
                 <EditText

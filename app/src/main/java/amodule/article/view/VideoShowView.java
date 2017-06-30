@@ -2,6 +2,7 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -134,8 +135,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                             }else{
                                 int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
                                 int height = width * 9 / 16;
-                                coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 coverImage.setLayoutParams(new LayoutParams(width,height));
+                                coverImage.setScaleType(imageWidth > imageHieght?ImageView.ScaleType.CENTER_CROP:ImageView.ScaleType.FIT_CENTER);
+                                coverImage.setBackgroundColor(Color.parseColor("#000000"));
                                 coverImage.setImageBitmap(bitmap);
                             }
                         }
@@ -171,8 +173,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                             }else{
                                 int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
                                 int height = width * 9 / 16;
-                                coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 coverImage.setLayoutParams(new LayoutParams(width,height));
+                                coverImage.setScaleType(imageWidth > imageHieght?ImageView.ScaleType.CENTER_CROP:ImageView.ScaleType.FIT_CENTER);
+                                coverImage.setBackgroundColor(Color.parseColor("#000000"));
                                 coverImage.setImageBitmap(bitmap);
                             }
                         }
