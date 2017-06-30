@@ -153,6 +153,8 @@ public class VideoDetailActivity extends BaseActivity {
         hasPagePermission = true;
         detailPermissionMap.clear();
         permissionMap.clear();
+        if(mHaederLayout != null)
+            mHaederLayout.setLoginStatus();
         refreshData(false);
     }
 
@@ -191,8 +193,8 @@ public class VideoDetailActivity extends BaseActivity {
         if (bundle != null)
             code = bundle.getString("code");
         //TODO
-//        code = "190";
-        code = "106";
+        code = "190";
+//        code = "106";
     }
 
     private void initView() {

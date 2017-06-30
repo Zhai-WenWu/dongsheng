@@ -21,7 +21,7 @@
         android:layout_height="@dimen/dp_32"
         android:layout_below="@+id/tip_message"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_35"
         android:background="@drawable/bg_dregde_vip"
         android:gravity="center"
         android:text="开通VIP"
@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="立刻登陆"
+            android:text="立刻登录"
             android:textColor="#D39E54"
             android:textSize="@dimen/sp_14"/>
     </LinearLayout>

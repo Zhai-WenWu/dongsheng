@@ -77,7 +77,7 @@ public class MyManagerInfo extends BaseActivity {
                         Map<String, String> userMap = list.get(index);
                         userCode = userMap.get("userCode");
                         loadManager.showProgressBar();
-                        //退出登陆
+                        //退出登录
                         LoginManager.logout(MyManagerInfo.this);
                     }
                 }});
@@ -92,7 +92,7 @@ public class MyManagerInfo extends BaseActivity {
                     if(inputOrder(inputContent)) return;
                     userCode = inputContent;
                     loadManager.showProgressBar();
-                    //退出登陆
+                    //退出登录
                     LoginManager.logout(MyManagerInfo.this);
                 } else {
                     Toast.makeText(getApplicationContext(), "请输入UserCode", Toast.LENGTH_LONG).show();

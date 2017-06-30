@@ -100,6 +100,11 @@ public class VideoAllHeaderView extends LinearLayout {
         mCurrType = type;
     }
 
+    public void setLoginStatus(){
+        if(videoHeaderView != null)
+            videoHeaderView.setLoginStatus();
+    }
+
     public void onResume() {
         if(videoHeaderView!=null)
             videoHeaderView.onResume();

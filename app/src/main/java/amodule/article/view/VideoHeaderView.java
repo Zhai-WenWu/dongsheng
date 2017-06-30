@@ -326,12 +326,13 @@ public class VideoHeaderView extends RelativeLayout {
     long currentTime = 0;
     int limitTime = 0;
     private RelativeLayout dredgeVipLayout;
+    private VideoDredgeVipView vipView;
     private void setVipPermision(final Map<String, String> common){
         if(StringManager.getBooleanByEqualsValue(common,"isShow")
                 ) return;
         final String url = common.get("url");
         if(TextUtils.isEmpty(url)) return;
-        VideoDredgeVipView vipView = new VideoDredgeVipView(getContext());
+        vipView = new VideoDredgeVipView(getContext());
         dredgeVipLayout.addView(vipView);
         vipView.setTipMessaText(common.get("text"));
         vipView.setDredgeVipClick(new OnClickListener() {
@@ -391,5 +392,11 @@ public class VideoHeaderView extends RelativeLayout {
 
     public void onPause() {
         isOnResuming = false;
+    }
+
+    public void setLoginStatus(){
+        if(vipView != null){
+            vipView.setLogin();
+        }
     }
 }

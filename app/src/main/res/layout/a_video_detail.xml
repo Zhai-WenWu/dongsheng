@@ -82,7 +82,7 @@
         android:id="@+id/dredge_vip_bottom_layout"
         layout="@layout/v_dredge_vip_bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_55"
+        android:layout_height="@dimen/dp_51"
         android:layout_alignParentBottom="true"
         android:visibility="gone"/>
 

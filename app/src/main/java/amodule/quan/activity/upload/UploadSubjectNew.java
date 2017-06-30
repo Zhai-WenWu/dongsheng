@@ -469,7 +469,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			return "同意原创内容发布协议后才能提交哦";
 		}
 		if(!LoginManager.isLogin()){
-			XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", "没登陆", 0);
+			XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", "没登录", 0);
 			Intent intent = new Intent(this, LoginByAccout.class);
 			startActivity(intent);
 			return "请登录";

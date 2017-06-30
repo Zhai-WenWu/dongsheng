@@ -90,7 +90,7 @@
         <item name="android:textColor">@color/c_black_text</item>
         <item name="android:textSize">@dimen/sp_15</item>
     </style>
-    <!-- 登陆查看密码 -->
+    <!-- 登录查看密码 -->
     <style name="login_lookPassword">
         <item name="android:layout_width">@dimen/dp_46</item>
         <item name="android:layout_height">@dimen/dp_46</item>
@@ -117,7 +117,7 @@
         <item name="android:textSize">@dimen/sp_15</item>
     </style>
 
-    <!-- 第三方登陆 ico -->
+    <!-- 第三方登录 ico -->
     <style name="login_3_ico">
         <item name="android:layout_width">@dimen/dp_44</item>
         <item name="android:layout_height">@dimen/dp_44</item>

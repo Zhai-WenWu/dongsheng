@@ -45,6 +45,20 @@ public class VideoDredgeVipView extends RelativeLayout {
         tipMessage = (TextView) findViewById(R.id.tip_message);
         dredgeVip = (TextView) findViewById(R.id.dredge_vip_text);
 
+        setLogin();
+    }
+
+    public void setTipMessaText(String text){
+        if(!TextUtils.isEmpty(text) && tipMessage != null)
+            tipMessage.setText(text);
+    }
+
+    public void setDredgeVipClick(OnClickListener clickListener){
+        if(clickListener != null)
+            dredgeVip.setOnClickListener(clickListener);
+    }
+
+    public void setLogin(){
         if(LoginManager.isLogin())
             logingLayout.setVisibility(GONE);
         else{
@@ -58,13 +72,4 @@ public class VideoDredgeVipView extends RelativeLayout {
         }
     }
 
-    public void setTipMessaText(String text){
-        if(!TextUtils.isEmpty(text) && tipMessage != null)
-            tipMessage.setText(text);
-    }
-
-    public void setDredgeVipClick(OnClickListener clickListener){
-        if(clickListener != null)
-            dredgeVip.setOnClickListener(clickListener);
-    }
 }

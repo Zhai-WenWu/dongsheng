@@ -187,6 +187,8 @@ public class DishActivityViewControl {
         adapter.notifyDataSetChanged();
         xhWebView.setVisibility(View.GONE);
         dregdeVipLayout.setVisibility(View.GONE);
+        if (dishHeaderView != null)
+            dishHeaderView.setLoginStatus();
     }
 
     /**

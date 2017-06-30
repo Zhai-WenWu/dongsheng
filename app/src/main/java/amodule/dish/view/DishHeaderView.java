@@ -364,13 +364,14 @@ public class DishHeaderView extends LinearLayout {
         return isUrlVaild;
     }
     private RelativeLayout dredgeVipLayout;
+    private VideoDredgeVipView vipView;
     private void setVipPermision(final Map<String, String> common){
         if(!StringManager.getBooleanByEqualsValue(common,"isShow")
                 ){
             Log.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
-            VideoDredgeVipView vipView = new VideoDredgeVipView(context);
+            vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
             vipView.setDredgeVipClick(new OnClickListener() {
@@ -530,6 +531,11 @@ public class DishHeaderView extends LinearLayout {
         }
 //        setViewOneState();
         callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
+    }
+
+    public void setLoginStatus(){
+        if(vipView != null)
+            vipView.setLogin();
     }
 
     public void onResume() {

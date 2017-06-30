@@ -90,7 +90,7 @@ public class LoginManager {
 
 
     /**
-     * 登陆成功
+     * 登录成功
      */
     public static void loginSuccess(final Activity mAct, Object returnObj, boolean isThirdAuth) {
         if (mAct != null)
@@ -134,7 +134,7 @@ public class LoginManager {
     }
 
     /**
-     * 退出登陆
+     * 退出登录
      *
      * @param mAct
      */
@@ -298,7 +298,7 @@ public class LoginManager {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
-                    //判断用户是否已经登陆
+                    //判断用户是否已经登录
                     if (!LoginManager.isLogin()) {
                         //统计
                         XHClick.onEvent(mAct, "login", mPlatformName);
@@ -307,7 +307,7 @@ public class LoginManager {
 //							Tools.showToast(mAct, "欢迎" + (userInfo.get("nickName").length()==0?"":userInfo.get("nickName")) + "回来！");
                     }
 
-                    //如果是用户设置页面，第三方登陆为绑定，需要修改UI界面
+                    //如果是用户设置页面，第三方登录为绑定，需要修改UI界面
                     if (mAct instanceof AccoutActivity) {
                         for (int i = 0; i < PLATFORMS.length; i++) {
                             if (mPlatformName.equals(PLATFORMS[i]))
