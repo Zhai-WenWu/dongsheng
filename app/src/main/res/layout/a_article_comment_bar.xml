@@ -8,11 +8,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="match_parent"
@@ -38,7 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/dp_43"
-                android:gravity="center_vertical"
                 android:paddingLeft="@dimen/dp_20"
                 android:paddingRight="@dimen/dp_20"
                 android:background="#f9FFFFFE"
@@ -48,6 +47,7 @@
                     android:id="@+id/comment_edit_fake"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dp_16"
                     android:layout_toLeftOf="@+id/praise_button"
                     android:background="@drawable/bg_article_comment"
@@ -105,15 +105,13 @@
 
             <RelativeLayout
                 android:id="@+id/comment_bar_real"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/bottom_navigation"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:minHeight="@dimen/dp_43"
-                android:gravity="center_vertical"
                 android:background="#FFFFFE"
                 android:paddingLeft="@dimen/dp_20"
+                style="@style/bottom_navigation"
                 android:visibility="gone">
 
                 <EditText
@@ -131,7 +129,7 @@
                     android:paddingBottom="@dimen/dp_5.5"
                     android:paddingLeft="@dimen/dp_13"
                     android:paddingRight="@dimen/dp_13"
-                    android:paddingTop="@dimen/dp_5.5"
+                    android:paddingTop="@dimen/dp_4.5"
                     android:textSize="@dimen/sp_15"/>
 
                 <ImageView

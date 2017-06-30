@@ -172,10 +172,10 @@ public class ArticleUploadListActivity extends BaseActivity {
                 refreshUploadView();
                 if (flag) {
                     isStopUpload = false;
-                    gotoFriendHome();
                 } else {
                     isStopUpload = true;
                 }
+//                gotoFriendHome();
             }
         };
     }
@@ -409,6 +409,8 @@ public class ArticleUploadListActivity extends BaseActivity {
         goBack();
         super.onBackPressed();
     }
+
+
 
     private void goBack() {
         gotoFriendHome();

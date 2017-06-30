@@ -175,7 +175,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private boolean isLoading = false;
-    private void getClassifyData(){
+    private synchronized void getClassifyData(){
         if(isLoading)return;
         isLoading = true;
         loadManager.showProgressBar();
