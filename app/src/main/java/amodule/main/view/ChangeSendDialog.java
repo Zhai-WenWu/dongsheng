@@ -56,7 +56,7 @@ public class ChangeSendDialog extends Dialog {
     protected View view;
     protected int height;
 
-    private ImageView closeImage, tastImg;
+    private ImageView closeImage;
     private GridView mGridView;
     private List<Map<String, String>> list;
 
@@ -90,7 +90,6 @@ public class ChangeSendDialog extends Dialog {
 
     private void init() {
         closeImage = (ImageView) findViewById(R.id.close_image);
-        tastImg = (ImageView) findViewById(R.id.change_send_tast);
         mGridView = (GridView) findViewById(R.id.change_send_gridview);
         initData();
         AdapterSimple adapter = new AdapterSimple(mGridView, list,
@@ -139,22 +138,6 @@ public class ChangeSendDialog extends Dialog {
 //            itemNum++;
 //        }
 
-        if (dishVideoMap != null && dishVideoMap.size() > 0) {
-            String img = dishVideoMap.get("img");
-            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(activity)
-                    .load(img)
-                    .setSaveType(LoadImage.SAVE_CACHE)
-                    .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(tastImg);
-            tastImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCommon.openUrl(activity, dishVideoMap.get("url"), true);
-                    closeDialog();
-                }
-            });
-        }
         mGridView.setNumColumns(itemNum > 3 ? 4 : itemNum);
     }
 
