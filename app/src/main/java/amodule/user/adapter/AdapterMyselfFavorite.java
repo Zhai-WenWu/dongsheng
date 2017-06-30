@@ -90,7 +90,7 @@ public class AdapterMyselfFavorite extends AdapterSimple {
 		public void setValue(Map<String, String> map) {
 			// img,dishName, make,isFine,burden,time,delete
 //			AdapterMyselfFavorite.this.setViewImage(iv_img, map.get("img").length() == 0 ? R.drawable.i_nopic + "" : map.get("img"));
-			iv_img.playImgWH = Tools.getDimen(mAct, R.dimen.dp_25);
+			iv_img.playImgWH = Tools.getDimen(mAct, R.dimen.dp_34);
 			iv_img.parseItemImg(map.get("img"), map.get("hasVideo"), false);
 			
 			AdapterMyselfFavorite.this.setViewText(tv_dishName, map.get("name"));

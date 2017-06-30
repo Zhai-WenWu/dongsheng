@@ -278,7 +278,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
             viewHolder = (CaipuViewHolder) convertView.getTag();
         }
 
-        viewHolder.iv_caipuCover.playImgWH = Tools.getDimen(mParent.getContext(), R.dimen.dp_30);
+        viewHolder.iv_caipuCover.playImgWH = Tools.getDimen(mParent.getContext(), R.dimen.dp_34);
         viewHolder.iv_caipuCover.parseItemImg(scaleType, caipuMap.get("img"), caipuMap.get("hasVideo"), true, imgResource, imgLevel);
         setViewText(viewHolder.tv_caipu_name, caipuMap.get("name"));
         setViewText(viewHolder.tv_caipu_decrip, caipuMap.get("burdens"));

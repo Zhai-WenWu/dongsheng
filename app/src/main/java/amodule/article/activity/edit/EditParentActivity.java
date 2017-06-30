@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -154,7 +155,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         }
                     });
         }
-        String color = Tools.getColorStr(this, R.color.common_top_bg);
+        final String color = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(color));
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(title);
@@ -215,21 +216,34 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 preStr = s.toString();
+                Log.i("editArticle","beforeTextChanged() preStr:" + preStr + "   start:" + start + "   count:" + count + "    after:" + after);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 editTitle.setTextSize(Tools.getDimenSp(EditParentActivity.this, R.dimen.sp_24));
+                Log.i("editArticle","onTextChanged() s:" + s + "    before:" + before + "   start:" + start + "   count:" + count);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0 && s.length() > 64) {
-                    editTitle.setText(s.subSequence(0, 64));
-                    editTitle.setSelection(editTitle.getText().length());
+                boolean isSet = false;
+                String newS = s.toString();
+                if(newS.contains("\r") || newS.contains("\n")){
+                    newS = newS.replaceAll("\r|\n", "");
+                    isSet = true;
+                }
+                if (newS.length() > 0 && newS.length() > 64) {
+                    newS = newS.subSequence(0, 64).toString();
                     Tools.showToast(EditParentActivity.this, "标题最多64字");
                     ToolsDevice.keyboardControl(false, EditParentActivity.this, editTitle);
+                    isSet = true;
                 }
+                if(isSet) {
+                    editTitle.setText(newS);
+                    editTitle.setSelection(editTitle.getText().length());
+                }
+
             }
         });
         editTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -238,6 +252,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 if (hasFocus) {
                     editBottomControler.setVisibility(View.GONE);
                 }
+            }
+        });
+        editTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return (event.getKeyCode()==KeyEvent.KEYCODE_ENTER);
             }
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
@@ -553,7 +573,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public abstract String getType();
 
     protected String checkData() {
-        if (TextUtils.isEmpty(editTitle.getText())) {
+        String title = editTitle.getText().toString();
+        title = title.trim();
+        if (TextUtils.isEmpty(title)) {
             return "标题不能为空";
         }
         boolean isHasText = mixLayout.hasText();

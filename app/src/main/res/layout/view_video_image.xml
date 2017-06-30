@@ -24,7 +24,7 @@
         android:layout_width="@dimen/dp_40"
         android:layout_height="@dimen/dp_40"
         android:layout_centerInParent="true"
-        android:background="@drawable/z_icon_play"
+        android:background="@drawable/home_item_play"
         android:scaleType="centerCrop"
         android:visibility="gone"/>
 
