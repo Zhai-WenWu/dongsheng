@@ -59,7 +59,7 @@ public class VideoAllHeaderView extends LinearLayout {
         customerView = new CustomerView(getContext());
         customerView.setType(mCurrType);
         LinearLayout.LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, Tools.getDimen(getContext(), R.dimen.dp_5),0,Tools.getDimen(getContext(), R.dimen.dp_4));
+        layoutParams.setMargins(0, Tools.getDimen(getContext(), R.dimen.dp_5),0,0);
         addView(customerView,layoutParams);
 
     }

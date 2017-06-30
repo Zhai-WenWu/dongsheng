@@ -175,7 +175,7 @@ public class EditTextView extends BaseView {
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
                     .append(TextUtils.isEmpty(mRichText.getText()) ? "<br>" : mRichText.toHtml())//.replaceAll("\"","\\\"")
-                    .append("</p>");
+                    .append("<br></p>");
             Log.i("tzy", "edittext content = " + builder.toString());
 //            jsonObject.put("html", TextUtils.htmlEncode(builder.toString()));
             jsonObject.put("html", builder.toString());

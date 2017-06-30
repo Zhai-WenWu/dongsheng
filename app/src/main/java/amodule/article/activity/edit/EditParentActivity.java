@@ -164,6 +164,8 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         nestStep.setPadding(dp_20, 0, dp_20, 0);
         nestStep.setVisibility(View.VISIBLE);
         nestStep.setOnClickListener(this);
+        if("2".equals(getType()))
+            nestStep.setText("发布");
         ImageView leftImgBtn = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) leftImgBtn.getLayoutParams();
         params.setMargins((int) getResources().getDimension(R.dimen.dp_18), 0, 0, 0);
@@ -517,8 +519,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 }
             }).start();
         } else {
-            if("2".equals(getType()))
-                nestStep.setText("发布");
             mixLayout.setSecondEdit(true);
             StringBuilder sbuilder = new StringBuilder().append("code=").append(code).append("&type=RAW");
             ReqEncyptInternet.in().doEncypt(getEditApi(), sbuilder.toString(), new InternetCallback(this) {

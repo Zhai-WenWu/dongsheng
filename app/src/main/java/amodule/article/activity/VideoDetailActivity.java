@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
@@ -317,7 +318,17 @@ public class VideoDetailActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("list", jsonArray);
                             commentMap.put("data", jsonObject.toString());
+                            if(allDataListMap.indexOf(commentMap) < 0)
+                                allDataListMap.add(commentMap);
                             detailAdapter.notifyDataSetChanged();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
+                                    Log.i("tzy","position = " + position);
+                                    AppCommon.scorllToIndex(listView,position);
+                                }
+                            },200);
                         }
                     }
                 } catch (JSONException e) {
@@ -624,6 +635,7 @@ public class VideoDetailActivity extends BaseActivity {
     }
 
     private void analysForumData(boolean isRefresh, Object object) {
+        if("0".equals(commentNum)) return;
         commentMap = StringManager.getFirstMap(object);
         commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
         commentMap.put("data", object.toString());

@@ -179,6 +179,7 @@ public class ArticleCommentView extends ItemBaseView {
             findViewById(R.id.has_comment_layout).setVisibility(GONE);
             findViewById(R.id.robsofa).setVisibility(GONE);
             setVisibility(GONE);
+
         }
         findViewById(R.id.above_line).setVisibility("2".equals(getType()) ? VISIBLE : GONE);
         findViewById(R.id.bottom_line).setVisibility("2".equals(getType()) ? GONE : VISIBLE);

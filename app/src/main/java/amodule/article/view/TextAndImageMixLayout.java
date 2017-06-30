@@ -188,7 +188,7 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
         //删除<p></p>
-        html = new String(html.replace(propertyStr, "").replace("</p>", ""));
+        html = new String(html.replace(propertyStr, "").replace("<br></p>", ""));
         if("<br>".equals(html)){
             html = "";
         }
@@ -283,7 +283,7 @@ public class TextAndImageMixLayout extends LinearLayout
         currentEditText.setOnSelectCenterCallback(onSelectCenterCallback);
         if (!TextUtils.isEmpty(content)) {
             view.setText(content);
-            view.setSelection(view.getRichText().getText().length());
+//            view.setSelection(view.getRichText().getText().length());
         }
         view.getRichText().setHint(indexOfChild(view) == 0 ? "添加内容" : "");
         return view;

@@ -595,7 +595,7 @@ public class AppCommon {
         if (version >= 11) {
             int lastVisible = listView.getLastVisiblePosition();
             if (index > lastVisible) {
-                listView.setSelection(index);
+                listView.smoothScrollToPosition(index);
             } else
                 listView.smoothScrollToPositionFromTop(index, 0);
         } else if (version < 11 && version >= 8) {

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
@@ -67,7 +69,7 @@ public class ArticleDetailActivity extends BaseActivity {
     public static final String TYPE_ARTICLE = "1";
     public static final String TYPE_VIDEO = "2";
 
-    private ListView listview;
+    private ListView listView;
     /** 头部view */
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
     private TextView mTitle;
@@ -236,7 +238,17 @@ public class ArticleDetailActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("list", jsonArray);
                             commentMap.put("data", jsonObject.toString());
+                            if(allDataListMap.indexOf(commentMap) < 0)
+                                allDataListMap.add(0,commentMap);
                             detailAdapter.notifyDataSetChanged();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
+                                    Log.i("tzy","position = " + position);
+                                    AppCommon.scorllToIndex(listView,position);
+                                }
+                            },200);
                         }
                     }
                 } catch (JSONException e) {
@@ -248,8 +260,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 初始化ListView */
     private void initListView() {
-        listview = (ListView) findViewById(R.id.listview);
-        listview.setOnTouchListener(new View.OnTouchListener() {
+        listView = (ListView) findViewById(R.id.listview);
+        listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -283,7 +295,7 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutTwo);
         layout.addView(linearLayoutThree);
 
-        listview.addHeaderView(layout);
+        listView.addHeaderView(layout);
     }
 
     /** 数据初始化 **/
@@ -312,7 +324,7 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         //设置
-        loadManager.setLoading(refreshLayout, listview, detailAdapter, true,
+        loadManager.setLoading(refreshLayout, listView, detailAdapter, true,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -346,7 +358,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 });
         View view = new View(this);
         view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
-        listview.addFooterView(view);
+        listView.addFooterView(view);
         //请求文章数据
         requestArticleData(false);
         //初始化广告
@@ -443,7 +455,7 @@ public class ArticleDetailActivity extends BaseActivity {
         detailAdapter.notifyDataSetChanged();
         if (onlyUser)
             return;
-        listview.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.VISIBLE);
 
         WebviewManager manager = new WebviewManager(this, loadManager, true);
         if (webView == null)
@@ -535,6 +547,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void analysForumData(boolean isRefresh, Object object) {
+        if("0".equals(commentNum)) return;
         commentMap = StringManager.getFirstMap(object);
         commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
         commentMap.put("data", object.toString());
