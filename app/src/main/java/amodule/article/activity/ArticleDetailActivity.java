@@ -58,6 +58,8 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
+import third.share.ShareTools;
+import third.share.UserHomeShare;
 import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
@@ -86,6 +88,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
 
+    private boolean isAuthor;
+    private Map<String, String> customerData;
     private Map<String, String> adDataMap;
     private Map<String, String> commentMap;
     private Map<String, String> shareMap = new HashMap<>();
@@ -467,13 +471,13 @@ public class ArticleDetailActivity extends BaseActivity {
         webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
 
-        final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
+        customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         if (!TextUtils.isEmpty(customerData.get("nickName"))) {
             mTitle.setText(customerData.get("nickName"));
             mTitle.setVisibility(View.VISIBLE);
         }
         final String userCode = customerData.get("code");
-        final boolean isAuthor = LoginManager.isLogin()
+        isAuthor = LoginManager.isLogin()
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
@@ -668,8 +672,6 @@ public class ArticleDetailActivity extends BaseActivity {
         dialog.show();
     }
 
-    private Bitmap shareImageBitmap = null;
-
     private void handlerShareData() {
         if (!TextUtils.isEmpty(shareMap.get("img"))) {
             shareMap.put("imgType", BarShare.IMG_TYPE_WEB);
@@ -689,21 +691,18 @@ public class ArticleDetailActivity extends BaseActivity {
             Tools.showToast(this, "数据处理中，请稍候");
             return;
         }
-
-        barShare = new BarShare(ArticleDetailActivity.this,  "视频详情", "");
-        String title = shareMap.get("title");
-        String content = shareMap.get("content");
-        String clickUrl = shareMap.get("url");
-        String type = BarShare.IMG_TYPE_RES;
-        String shareImg = "" + R.drawable.umen_share_launch;
-        if (shareImageBitmap != null) {
-            barShare.setShare(title, content, shareImageBitmap, clickUrl);
-        } else {
-            type = shareMap.get("imgType");
-            shareImg = shareMap.get("img");
-            barShare.setShare(type, title, content, shareImg, clickUrl);
-        }
-        barShare.openShare();
+        Intent intent = new Intent(this, UserHomeShare.class);
+        intent.putExtra("tongjiId", isAuthor ? "a_my":"a_user");
+        intent.putExtra("nickName", customerData.get("nickName"));
+        intent.putExtra("imgUrl", shareMap.get("img"));
+        intent.putExtra("code", customerData.get("code"));
+        intent.putExtra("clickUrl", shareMap.get("url"));
+        intent.putExtra("title", shareMap.get("title"));
+        intent.putExtra("content", shareMap.get("content"));
+        intent.putExtra("type", shareMap.get("imgType"));
+        intent.putExtra("shareFrom", "文章详情");
+        intent.putExtra("isHasReport",!isAuthor); //自己的主页不现实举报
+        startActivity(intent);
     }
 
     private void openDeleteDialog() {

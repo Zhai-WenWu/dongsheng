@@ -1,8 +1,10 @@
 package third.share;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -16,7 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.ToolsDevice;
+import amodule.article.activity.ArticleDetailActivity;
+import amodule.article.activity.VideoDetailActivity;
 import amodule.quan.activity.QuanReport;
 
 import static third.share.ShareTools.mFrom;
@@ -29,7 +35,7 @@ public class UserHomeShare extends Activity implements View.OnClickListener{
 
     private ArrayList<Map<String,String>> mData = new ArrayList<>();
     private String[] mSharePlatforms;
-    private String mTitle,mContent,mType,mImgUrl,mClickUrl;
+    private String mTitle,mContent,mType,mImgUrl,mClickUrl, mShareFrom;
     private Boolean isHasReport;
 
     private String nickName,userCode;
@@ -45,12 +51,23 @@ public class UserHomeShare extends Activity implements View.OnClickListener{
         isHasReport = getIntent().getBooleanExtra("isHasReport",false);
         userCode = getIntent().getStringExtra("code");
         nickName = getIntent().getStringExtra("nickName");
-        mClickUrl = getIntent().getStringExtra("clickUrl");
-        mTitle = "【香哈菜谱】“" + nickName + "”的个人主页";
-        mContent = "“" + nickName + "”入驻香哈菜谱啦，快来关注与Ta一起学习做菜吧！";
-        mImgUrl = getIntent().getStringExtra("imgUrl");
-        mType = ShareTools.IMG_TYPE_WEB;
 
+        //分享必须
+        mClickUrl = getIntent().getStringExtra("clickUrl");
+        mTitle = getIntent().getStringExtra("title");
+        if (TextUtils.isEmpty(mTitle))//默认是个人主页的
+            mTitle = "【香哈菜谱】“" + nickName + "”的个人主页";
+        mContent = getIntent().getStringExtra("content");
+        if (TextUtils.isEmpty(mContent))//默认是个人主页的
+            mContent = "“" + nickName + "”入驻香哈菜谱啦，快来关注与Ta一起学习做菜吧！";
+        mImgUrl = getIntent().getStringExtra("imgUrl");
+        mType = getIntent().getStringExtra("type");
+        if (TextUtils.isEmpty(mType))//默认是来自网络的
+            mType = ShareTools.IMG_TYPE_WEB;
+
+        mShareFrom = getIntent().getStringExtra("shareFrom");
+        if (TextUtils.isEmpty(mShareFrom))
+            mShareFrom = "个人主页";
         init();
     }
 
@@ -81,7 +98,7 @@ public class UserHomeShare extends Activity implements View.OnClickListener{
                     UserHomeShare.this.startActivity(intent);
                 }else{
                     ShareTools barShare = ShareTools.getBarShare(UserHomeShare.this);
-                    barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom,"个人主页",mParent);
+                    barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom, mShareFrom ,mParent);
                 }
                 UserHomeShare.this.finish();
             }
