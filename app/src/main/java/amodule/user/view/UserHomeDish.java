@@ -129,6 +129,7 @@ public class UserHomeDish extends TabContentView {
             }
         }, tongjiId);
         adapter.roundImgPixels = Tools.getDimen(mAct, R.dimen.dp_400);
+        adapter.playImgWH = Tools.getDimen(mAct, R.dimen.dp_45);
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data, String textRepresentation) {

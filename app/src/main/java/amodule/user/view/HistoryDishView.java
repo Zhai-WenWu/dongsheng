@@ -117,7 +117,7 @@ public class HistoryDishView extends HistoryView {
                 new int[]{R.id.tv_itemDishName, R.id.tv_itemBurden, R.id.iv_itemIsFine, /*R.id.tv_item_make,*/ R.id.allclick,R.id.tag_exclusive});
         mAdapter.urlKey = "imgShow";
         mAdapter.videoImgId = R.id.itemImg1;
-        mAdapter.playImgWH = Tools.getDimen(mContext, R.dimen.dp_30);
+        mAdapter.playImgWH = Tools.getDimen(mContext, R.dimen.dp_34);
 
         mAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
