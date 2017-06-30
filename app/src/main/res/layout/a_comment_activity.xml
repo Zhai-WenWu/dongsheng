@@ -79,13 +79,10 @@
 
         <RelativeLayout
             android:id="@+id/a_comment_keyboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/bottom_navigation"
             android:background="#f9ffffff"
             android:paddingLeft="@dimen/dp_20"
-            android:paddingTop="@dimen/dp_7.5"
             android:paddingRight="@dimen/dp_20"
-            android:paddingBottom="@dimen/dp_7.5"
             >
 
             <ImageView

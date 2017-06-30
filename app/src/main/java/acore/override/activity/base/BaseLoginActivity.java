@@ -102,7 +102,7 @@ public class BaseLoginActivity extends BaseActivity {
 
     protected int err_count_secret;
     private ArrayList<BaseLoginActivity> activityList = new ArrayList<BaseLoginActivity>();
-    protected SMSSendCallback callback;
+    private SMSSendCallback callback;
     private String phoneNumber="";//手机号码
     private String countyrCode="";//验证码
 
@@ -137,7 +137,6 @@ public class BaseLoginActivity extends BaseActivity {
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, final Object data) {
-                Log.i("tzy","afterEvent callback = " + callback);
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     // 回调完成
                     if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
@@ -148,9 +147,7 @@ public class BaseLoginActivity extends BaseActivity {
                         SyntaxTools.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.i("tzy","RESULT_COMPLETE callback = " + callback);
-                                if(callback != null)
-                                    callback.onSendSuccess();
+                                callback.onSendSuccess();
                             }
                         });
                     } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
@@ -183,8 +180,7 @@ public class BaseLoginActivity extends BaseActivity {
 
                             } catch (Exception e) {
                             }
-                            Log.i("tzy","RESULT_ERROR callback = " + callback);
-                            if(callback != null)
+
                             callback.onSendFalse();
                             LogManager.print("w", data.toString() + "");
                             String param = "log=" + data.toString();
@@ -442,9 +438,7 @@ public class BaseLoginActivity extends BaseActivity {
      * @param phone_number
      */
     protected boolean reqIdentifyCode(String countyrCode, String phone_number,SMSSendCallback callback) {
-        Log.i("tzy","reqIdentifyCode");
         this.callback = callback;
-        Log.i("tzy","callback = " + callback.toString());
         this.countyrCode=countyrCode;
         this.phoneNumber=phone_number;
         SMSSDK.registerEventHandler(eventHandler);

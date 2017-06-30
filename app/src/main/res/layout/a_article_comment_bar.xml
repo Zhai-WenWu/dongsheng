@@ -37,10 +37,9 @@
                 android:id="@+id/comment_bar_fake"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/dp_7.5"
+                android:minHeight="@dimen/dp_43"
                 android:paddingLeft="@dimen/dp_20"
                 android:paddingRight="@dimen/dp_20"
-                android:paddingTop="@dimen/dp_7.5"
                 android:background="#f9FFFFFE"
                 android:visibility="visible">
 
@@ -106,15 +105,12 @@
 
             <RelativeLayout
                 android:id="@+id/comment_bar_real"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/bottom_navigation"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:background="#FFFFFE"
-                android:paddingBottom="@dimen/dp_7.5"
                 android:paddingLeft="@dimen/dp_20"
-                android:paddingTop="@dimen/dp_7.5"
                 android:visibility="gone">
 
                 <EditText
