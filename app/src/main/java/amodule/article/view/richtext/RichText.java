@@ -21,6 +21,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Parcel;
 import android.text.Editable;
 import android.text.Layout;
@@ -1055,7 +1056,6 @@ public class RichText extends EditText implements TextWatcher {
         return RichParser.toHtml(getEditableText());
     }
 
-
     protected void switchToKnifeStyle(Editable editable, int start, int end) {
         AlignmentSpan[] alignSpans = editable.getSpans(start, end, AlignmentSpan.class);
         for(int index = 0 ; index < alignSpans.length ; alignSpans = editable.getSpans(start, end, AlignmentSpan.class),index ++){
@@ -1121,12 +1121,14 @@ public class RichText extends EditText implements TextWatcher {
         if (onSelectContainsType != null)
             onSelectContainsType.onSelecrCenter(contains(FORMAT_CENTER));
         int textLength = text.length();
-        if (selStart > 0 && selStart < textLength) {
+        if (selStart >= 0 && selStart <= textLength) {
             //遍历link的array
             for (int index = 0; index < linkMapArray.size(); index++) {
                 Map<String, String> linkMap = linkMapArray.get(index);
                 String desc = linkMap.get(KEY_TITLE);
                 int startIndex = text.indexOf(linkMap.get(KEY_TITLE));
+                Log.i("tzy", "desc = " + desc);
+                Log.i("tzy", "selStart = " + selStart + " ; selEnd = " + selEnd);
                 Log.i("tzy", "startIndex = " + startIndex);
                 //找不到则remove
                 if (startIndex < 0) {
@@ -1135,6 +1137,7 @@ public class RichText extends EditText implements TextWatcher {
                     continue;
                 }
                 int endIndesc = startIndex + desc.length();
+                Log.i("tzy", "endIndesc = " + endIndesc);
                 //判断当前光标位置
                 if (selStart == selEnd){
                     if(selStart > startIndex && selStart < endIndesc
@@ -1145,29 +1148,39 @@ public class RichText extends EditText implements TextWatcher {
                                 if (onSelectContainsType != null) {
                                     onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
                                 }
-                                this.setSelection(textLength);
+                                this.setSelection(endIndesc + 1 <= textLength ? endIndesc + 1 : textLength );
                                 break;
                             }
                         }
                     }
-                    else if(selStart != selEnd){
-                        if(selStart >= startIndex && selStart <= endIndesc
-                                && selEnd >= startIndex && selEnd <= endIndesc) {
-                            CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
-                            for (CharacterStyle span : spans) {
-                                if (span instanceof RichURLSpan) {
-                                    if (onSelectContainsType != null) {
-                                        onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
-                                    }
-                                    this.setSelection(textLength);
-                                    break;
+                } else if(selStart != selEnd){
+                    if(selStart >= startIndex && selStart <= endIndesc
+                            && selEnd >= startIndex && selEnd <= endIndesc) {
+                        Log.i("tzy", "selStart != selEnd = true");
+                        CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
+                        Log.i("tzy", "spans.length = " + spans.length);
+                        for (CharacterStyle span : spans) {
+                            Log.i("tzy", "span = " + span.toString());
+                            if (span instanceof RichURLSpan) {
+                                if (onSelectContainsType != null) {
+                                    onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
                                 }
+                                this.setSelection(endIndesc + 1 <= textLength ? endIndesc + 1 : textLength );
+                                break;
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public boolean showContextMenu() {
+        boolean flag = super.showContextMenu();
+        Log.i("tzy","showContextMenu");
+//        onSelectionChanged(getSelectionStart(),getSelectionEnd());
+        return flag;
     }
 
     @Override
@@ -1183,8 +1196,9 @@ public class RichText extends EditText implements TextWatcher {
                 //粘帖
                 final ClipboardManager manager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
                 String pasteText = getClipFirstText(manager);
-                Log.i("tzy", "copied text: " + pasteText);
-                ClipData clip = ClipData.newPlainText("simple text copy", TextUtils.isEmpty(pasteText) ? "" : pasteText);
+                Log.i("tzy", "copied text: " + pasteText);//%   %
+                pasteText = TextUtils.isEmpty(pasteText) ? "" : pasteText;
+                ClipData clip = ClipData.newPlainText("simple text copy", pasteText);
                 manager.setPrimaryClip(clip);
                 break;
         }
@@ -1202,6 +1216,11 @@ public class RichText extends EditText implements TextWatcher {
 
     public List<Map<String, String>> getLinkMapArray() {
         return linkMapArray;
+    }
+
+    public void putLinkMapArray(List<Map<String, String>> urls){
+        this.linkMapArray.addAll(urls);
+        setSelection(0);
     }
 
     private OnSelectContainsType onSelectContainsType;

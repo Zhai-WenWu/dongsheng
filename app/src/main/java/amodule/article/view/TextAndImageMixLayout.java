@@ -116,6 +116,7 @@ public class TextAndImageMixLayout extends LinearLayout
                     break;
                 case BaseView.URLS:
                     //do nothing
+                    handlerUrls(map.get("urls"));
                     break;
                 default:
                     break;
@@ -126,6 +127,20 @@ public class TextAndImageMixLayout extends LinearLayout
         else if (isSingleVideo) {
             for (int index = getChildCount() - 1; index > 1; index--) {
                 removeViewAt(index);
+            }
+        }
+    }
+
+    /**
+     * [{"title":"hjjbjjjjj","url":"http:\/\/www.baidu.com"}]}
+     * @param urls
+     */
+    private void handlerUrls(String urls) {
+        List<Map<String,String>> urlsArray = StringManager.getListMapByJson(urls);
+        for(int index = 0; index < getChildCount() ; index ++){
+            BaseView view = (BaseView) getChildAt(index);
+            if(view instanceof EditTextView){
+                ((EditTextView)view).putLinkMapArray(urlsArray);
             }
         }
     }
@@ -192,6 +207,7 @@ public class TextAndImageMixLayout extends LinearLayout
         if("<br>".equals(html)){
             html = "";
         }
+        Log.i("tzy","html = " + html);
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
         editTextView.setSelection(editTextView.getRichText().getText().length());

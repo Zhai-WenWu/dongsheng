@@ -307,6 +307,10 @@ public class EditTextView extends BaseView {
         return mRichText.getLinkMapArray();
     }
 
+    public void putLinkMapArray(List<Map<String, String>> urls){
+        mRichText.putLinkMapArray(urls);
+    }
+
     public interface OnFocusChangeCallback {
         public void onFocusChange(EditTextView v, boolean hasFocus);
     }
