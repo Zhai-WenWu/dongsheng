@@ -965,6 +965,7 @@ public class AppCommon {
 
     public static boolean isVip(String data){
         boolean isVip = false;
+
         if(TextUtils.isEmpty(data))
             return false;
         if("2".equals(data)){

@@ -418,4 +418,10 @@
         <item name="android:paddingBottom">@dimen/dp_6</item>
     </style>
 
+    <style name="bottom_navigation_tv_textview" >
+        <item name="android:paddingTop">@dimen/dp_4</item>
+        <item name="android:paddingBottom">@dimen/dp_4</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+    </style>
+
 </resources>

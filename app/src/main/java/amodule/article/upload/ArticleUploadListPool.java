@@ -433,6 +433,7 @@ public class ArticleUploadListPool extends UploadListPool {
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
             int bodyIndex = 0;
             String imgsDataStr = uploadArticleData.getImgs();
+            Log.i("articleUpload","修改上传池数据 imgsDataStr:" + imgsDataStr);
             if (!TextUtils.isEmpty(imgsDataStr)) {
                 UploadItemData bodyItemData;
                 ArrayList<Map<String, String>> makesList = StringManager.getListMapByJson(imgsDataStr);
@@ -442,9 +443,6 @@ public class ArticleUploadListPool extends UploadListPool {
                         String imgPath = map.get("path");
                         String imgUrl = map.get("url");
 
-                        if (!TextUtils.isEmpty(imgUrl)) {
-                            continue;
-                        }
                         Log.e("articleUpload", "文章上传 imgPath: " + imgPath + ",imgUrl:" + imgUrl);
                         Log.e("articleUpload", "文章上传 imgPath.indexOf(\"http\"): " + imgPath.indexOf("http"));
                         if (imgPath.indexOf("http") != 0 && !Tools.isFileExists(imgPath)) {

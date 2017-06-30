@@ -107,6 +107,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         timesStamp = intent.getStringExtra("time");
         coverPath = intent.getStringExtra("coverPath");
         finalVideoPath = intent.getStringExtra("finalVideoPath");
+        Log.i("articleUpload","initData() draftId:" + draftId + "    timesStamp:" + timesStamp + "    coverPath:" + coverPath + "    finalVideoPath:" + finalVideoPath);
         isStopUpload = false;
     }
 
