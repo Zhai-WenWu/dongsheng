@@ -20,7 +20,7 @@
             android:gravity="center_horizontal"
             android:text="发菜谱"
             android:textColor="@color/common_top_text"
-            android:textSize="@dimen/sp_17"/>
+            android:textSize="@dimen/sp_16"/>
 
     </LinearLayout>
 

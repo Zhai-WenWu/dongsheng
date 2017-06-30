@@ -708,7 +708,7 @@ public class VideoDetailActivity extends BaseActivity {
         intent.putExtra("content", shareMap.get("content"));
         intent.putExtra("type", shareMap.get("imgType"));
         intent.putExtra("shareFrom", "视频详情");
-        intent.putExtra("isHasReport",!isAuthor); //自己的主页不现实举报
+//        intent.putExtra("isHasReport",!isAuthor); //自己的主页不现实举报
         startActivity(intent);
     }
 
