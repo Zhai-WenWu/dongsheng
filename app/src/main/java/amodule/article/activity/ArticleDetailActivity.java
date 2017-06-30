@@ -37,6 +37,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -468,7 +469,12 @@ public class ArticleDetailActivity extends BaseActivity {
             linearLayoutTwo.addView(webView);
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
+        String htmlStr = mapArticle.get("html");
+        if(htmlStr.indexOf("&lt;") >= 0)
+            htmlStr = htmlStr.replace("&lt;","<");
+        if(htmlStr.indexOf("&gt;") >= 0)
+            htmlStr = htmlStr.replace("&gt;",">");
+        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), htmlStr, "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
 
         customerData = StringManager.getFirstMap(mapArticle.get("customer"));
