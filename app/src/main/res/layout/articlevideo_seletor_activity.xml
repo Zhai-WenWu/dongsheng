@@ -32,7 +32,8 @@
                 style="@style/top_text_other"
                 android:background="@null"
                 android:layout_centerVertical="true"
-                android:gravity="center"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp_1"
                 android:paddingLeft="@dimen/dp_20"
                 android:paddingRight="@dimen/dp_20"
                 android:text="取消"/>

@@ -355,7 +355,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        if(mCategoryPopup.isShowing())
+        if(mCategoryPopup != null && mCategoryPopup.isShowing())
             mCategoryPopup.dismiss();
         else{
             setResult(RESULT_CANCELED);
