@@ -157,8 +157,14 @@ public class VideoHeaderView extends RelativeLayout {
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
                 }
-                if (isAutoPaly && mVideoPlayerController != null)
-                    mVideoPlayerController.setOnClick();
+                if (isAutoPaly && mVideoPlayerController != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mVideoPlayerController.setOnClick();
+                        }
+                    });
+                }
             }
         }, activity, "wz_tiepian");
 
