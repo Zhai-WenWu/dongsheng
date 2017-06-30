@@ -486,10 +486,8 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
             size[0] = Integer.parseInt(mapSize.get("width"));
             size[1] = Integer.parseInt(mapSize.get("height"));
             int fixedWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
-            if (size[0] > fixedWidth) {
-                size[1] = size[1] * fixedWidth / size[0];
-                size[0] = fixedWidth;
-            }
+            size[1] = size[1] * fixedWidth / size[0];
+            size[0] = fixedWidth;
         } catch (Exception e) {
             e.printStackTrace();
         }

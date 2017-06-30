@@ -407,7 +407,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 请求网络 */
     private void requestArticleData(final boolean onlyUser) {
-        loadManager.showProgressBar();
+//        loadManager.showProgressBar();
         StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=HTML");
         ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params.toString(), new InternetCallback(this) {
             @Override
