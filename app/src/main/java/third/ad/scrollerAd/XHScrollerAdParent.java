@@ -17,12 +17,12 @@ import third.ad.tools.AdConfigTools;
  */
 public abstract class XHScrollerAdParent {
     public static final String ADKEY_GDT = "sdk_gdt";
-    public static final String ADKEY_INMOBI = "sdk_inmobi";
+//    public static final String ADKEY_INMOBI = "sdk_inmobi";
     public static final String ADKEY_API = "api_tfp";
     public static final String ADKEY_BANNER = "xh";
 
     public static final String TAG_GDT = "gdt";
-    public static final String TAG_INMOBI = "inmobi";
+//    public static final String TAG_INMOBI = "inmobi";
     public static final String TAG_API = "api";
     public static final String TAG_BANNER = "personal";
 

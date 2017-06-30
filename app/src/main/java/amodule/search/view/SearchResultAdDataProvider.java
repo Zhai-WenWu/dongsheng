@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.tools.StringManager;
 import third.ad.scrollerAd.XHAllAdControl;
+import third.ad.scrollerAd.XHScrollerAdParent;
 import third.ad.tools.AdPlayIdConfig;
 
 /**
@@ -66,6 +67,11 @@ public class SearchResultAdDataProvider {
                             ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
                             if (adList != null && adList.size() > 0) {
                                 Map<String, String> adDataMap = adList.get(0);
+                                //自由广告，取搜索图片
+                                if(adDataMap.containsKey("type")&& XHScrollerAdParent.ADKEY_BANNER.equals(adDataMap.get("type"))
+                                        &&adDataMap.containsKey("appSearchImg")&&!TextUtils.isEmpty(adDataMap.get("appSearchImg"))){
+                                    adDataMap.put("imgUrl",adDataMap.get("appSearchImg"));
+                                }
                                 list.add(adDataMap);
                             }
                         }
