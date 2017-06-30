@@ -595,7 +595,7 @@ public class VideoDetailActivity extends BaseActivity {
         if (ArrayRelate.isEmpty()) return;
         for (Map<String, String> map : ArrayRelate) {
             String clickAll = map.get("clickAll");
-            map.put("clickAll", "0".equals(clickAll) ? "" : clickAll + "浏览");
+            map.put("clickAll", "0".equals(clickAll) ? "" : clickAll + "播放");
             String commentNumber = map.get("commentNumber");
             map.put("commentNumber", "0".equals(commentNumber) ? "" : commentNumber + "评论");
         }

@@ -1,15 +1,23 @@
 package amodule.dish.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import acore.override.view.ItemBaseView;
+import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
+import xh.basic.tool.UtilImage;
 
 /**
  * Created by Administrator on 2016/8/15.
@@ -51,10 +59,26 @@ public class DishVideoImageView extends ItemBaseView {
         return this;
     }
 
-    public View setDataNoTime(String img){
-        setViewImage(imageview_rela,img);
-        findViewById(R.id.play_layout_1).setVisibility(GONE);
-        findViewById(R.id.play_layout_2).setVisibility(VISIBLE);
+    public View setImageScaleType(String img,String time,@NonNull ImageView.ScaleType type){
+        if(TextUtils.isEmpty(img)) return this;
+        if(!TextUtils.isEmpty(time)){
+            time_tv.setVisibility(View.VISIBLE);
+            time_tv.setText(time);
+        }else time_tv.setVisibility(View.GONE);
+        BitmapRequestBuilder<GlideUrl, Bitmap> requestBuilder = LoadImage.with(context)
+                .load(img)
+                .setImageRound(roundImgPixels)
+                .setPlaceholderId(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon)
+                .setErrorId(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon)
+                .setSaveType(imgLevel)
+                .build();
+        requestBuilder.into(new SubBitmapTarget() {
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                imageview_rela.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                UtilImage.setImgViewByWH(imageview_rela, bitmap, imgWidth, imgHeight, imgZoom);
+            }
+        });
         return this;
     }
 }

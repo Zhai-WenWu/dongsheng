@@ -208,7 +208,6 @@ public class BaseLoginActivity extends BaseActivity {
         //注册SDK
         SMSSDK.initSDK(this, smsAppkey, smsAppsecret);
 
-
         View rl_topbar = findViewById(R.id.rl_topbar);
         if (rl_topbar != null) {
             rl_topbar.setOnClickListener(new View.OnClickListener() {

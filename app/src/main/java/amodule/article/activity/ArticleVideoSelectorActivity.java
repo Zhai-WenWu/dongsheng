@@ -270,8 +270,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cancel:
-                setResult(RESULT_CANCELED);
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_back:
                 v.postDelayed(new Runnable() {
@@ -351,6 +350,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                     finish();
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mCategoryPopup.isShowing())
+            mCategoryPopup.dismiss();
+        else{
+            setResult(RESULT_CANCELED);
+            super.onBackPressed();
         }
     }
 }
