@@ -76,6 +76,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         contentLoad();
     }
 
+
     private void initData() {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
@@ -108,6 +109,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (ArticleVideoSelectorActivity.this.isFinishing())
+                    return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE || newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     Glide.with(ArticleVideoSelectorActivity.this).resumeRequests();
                 } else {
@@ -176,6 +179,13 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
+        Glide.with(this).resumeRequests();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Glide.with(this).pauseRequests();
     }
 
     /**
