@@ -435,6 +435,7 @@ public class VideoDetailActivity extends BaseActivity {
     /** 重置数据 */
     private void resetData() {
         page = 0;
+        isRelateOver = false;
         shareMap.clear();
         if (commentMap != null) commentMap.clear();
         allDataListMap.clear();
@@ -442,25 +443,25 @@ public class VideoDetailActivity extends BaseActivity {
     }
 
     private void requestVideoData(final boolean onlyUser) {
-        loadManager.showProgressBar();
+//        loadManager.showProgressBar();
         StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=RAW");
         ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params.toString(), new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-//                Log.i("tzy","obj = " + obj);
-//                //权限检测
-//                if(permissionMap.isEmpty()){
-//                    permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
-//                    if(permissionMap.containsKey("page")){
-//                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-//                        hasPermission = analyzePagePermissionData(pagePermission);
-//                        if(!hasPermission) return;
-//                    }
-//                    if(permissionMap.containsKey("detail"))
-//                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
-//                }
+                Log.i("tzy","obj = " + obj);
+                //权限检测
+                if(permissionMap.isEmpty()){
+                    permissionMap = StringManager.getFirstMap(obj);
+                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+                    if(permissionMap.containsKey("page")){
+                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+                        hasPermission = analyzePagePermissionData(pagePermission);
+                        if(!hasPermission) return;
+                    }
+                    if(permissionMap.containsKey("detail"))
+                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                }
             }
 
             @Override
