@@ -12,7 +12,6 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -101,7 +100,6 @@ public class CaipuSearchResultView extends LinearLayout {
 
         createCallback();
         adapterCaipuSearch = new AdapterCaipuSearch(mActivity, list_search_result, caipuSearchResultCallback);
-
     }
 
 

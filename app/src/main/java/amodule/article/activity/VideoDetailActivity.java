@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
@@ -58,6 +59,7 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.share.BarShare;
+import third.share.UserHomeShare;
 import third.video.VideoPlayerController;
 import xh.windowview.XhDialog;
 
@@ -93,6 +95,8 @@ public class VideoDetailActivity extends BaseActivity {
     private Map<String, String> shareMap = new HashMap<>();
     private Map<String,String> permissionMap = new HashMap<>();
     private Map<String,String> detailPermissionMap = new HashMap<>();
+    private boolean isAuthor;
+    private Map<String, String> customerData;
     private boolean hasPermission = true;
 
 
@@ -278,6 +282,7 @@ public class VideoDetailActivity extends BaseActivity {
         });
         //initListView
         mHaederLayout = new VideoAllHeaderView(this);
+        mHaederLayout.setType(TYPE_VIDEO);
         mHaederLayout.setCallBack(new VideoAllHeaderView.VideoViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
@@ -316,7 +321,17 @@ public class VideoDetailActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("list", jsonArray);
                             commentMap.put("data", jsonObject.toString());
+                            if(allDataListMap.indexOf(commentMap) < 0)
+                                allDataListMap.add(commentMap);
                             detailAdapter.notifyDataSetChanged();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
+                                    Log.i("tzy","position = " + position);
+                                    AppCommon.scorllToIndex(listView,position);
+                                }
+                            },200);
                         }
                     }
                 } catch (JSONException e) {
@@ -420,6 +435,7 @@ public class VideoDetailActivity extends BaseActivity {
     /** 重置数据 */
     private void resetData() {
         page = 0;
+        isRelateOver = false;
         shareMap.clear();
         if (commentMap != null) commentMap.clear();
         allDataListMap.clear();
@@ -427,25 +443,25 @@ public class VideoDetailActivity extends BaseActivity {
     }
 
     private void requestVideoData(final boolean onlyUser) {
-        loadManager.showProgressBar();
+//        loadManager.showProgressBar();
         StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=RAW");
         ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params.toString(), new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-//                Log.i("tzy","obj = " + obj);
-//                //权限检测
-//                if(permissionMap.isEmpty()){
-//                    permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
-//                    if(permissionMap.containsKey("page")){
-//                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-//                        hasPermission = analyzePagePermissionData(pagePermission);
-//                        if(!hasPermission) return;
-//                    }
-//                    if(permissionMap.containsKey("detail"))
-//                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
-//                }
+                Log.i("tzy","obj = " + obj);
+                //权限检测
+                if(permissionMap.isEmpty()){
+                    permissionMap = StringManager.getFirstMap(obj);
+                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+                    if(permissionMap.containsKey("page")){
+                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+                        hasPermission = analyzePagePermissionData(pagePermission);
+                        if(!hasPermission) return;
+                    }
+                    if(permissionMap.containsKey("detail"))
+                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                }
             }
 
             @Override
@@ -468,13 +484,12 @@ public class VideoDetailActivity extends BaseActivity {
         if (mapVideo.isEmpty()) return;
         xhWebView.setVisibility(View.GONE);
         mCommentBar.setVisibility(View.VISIBLE);
-        final Map<String, String> customerData = StringManager.getFirstMap(mapVideo.get("customer"));
+        customerData = StringManager.getFirstMap(mapVideo.get("customer"));
         final String userCode = customerData.get("code");
-        final boolean isAuthor = LoginManager.isLogin()
+        isAuthor = LoginManager.isLogin()
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
-        mHaederLayout.setType(TYPE_VIDEO);
         mHaederLayout.setData(onlyUser,mapVideo,detailPermissionMap);
 
         if(!TextUtils.isEmpty(customerData.get("nickName"))){
@@ -595,7 +610,7 @@ public class VideoDetailActivity extends BaseActivity {
         if (ArrayRelate.isEmpty()) return;
         for (Map<String, String> map : ArrayRelate) {
             String clickAll = map.get("clickAll");
-            map.put("clickAll", "0".equals(clickAll) ? "" : clickAll + "浏览");
+            map.put("clickAll", "0".equals(clickAll) ? "" : clickAll + "播放");
             String commentNumber = map.get("commentNumber");
             map.put("commentNumber", "0".equals(commentNumber) ? "" : commentNumber + "评论");
         }
@@ -624,6 +639,7 @@ public class VideoDetailActivity extends BaseActivity {
     }
 
     private void analysForumData(boolean isRefresh, Object object) {
+        if("0".equals(commentNum)) return;
         commentMap = StringManager.getFirstMap(object);
         commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
         commentMap.put("data", object.toString());
@@ -683,20 +699,18 @@ public class VideoDetailActivity extends BaseActivity {
             return;
         }
 
-        barShare = new BarShare(VideoDetailActivity.this, "视频详情", "");
-        String title = shareMap.get("title");
-        String content = shareMap.get("content");
-        String clickUrl = shareMap.get("url");
-        String type = BarShare.IMG_TYPE_RES;
-        String shareImg = "" + R.drawable.umen_share_launch;
-        if (shareImageBitmap != null) {
-            barShare.setShare(title, content, shareImageBitmap, clickUrl);
-        } else {
-            type = shareMap.get("imgType");
-            shareImg = shareMap.get("img");
-            barShare.setShare(type, title, content, shareImg, clickUrl);
-        }
-        barShare.openShare();
+        Intent intent = new Intent(this, UserHomeShare.class);
+        intent.putExtra("tongjiId", isAuthor ? "a_my":"a_user");
+        intent.putExtra("nickName", customerData.get("nickName"));
+        intent.putExtra("imgUrl", shareMap.get("img"));
+        intent.putExtra("code", customerData.get("code"));
+        intent.putExtra("clickUrl", shareMap.get("url"));
+        intent.putExtra("title", shareMap.get("title"));
+        intent.putExtra("content", shareMap.get("content"));
+        intent.putExtra("type", shareMap.get("imgType"));
+        intent.putExtra("shareFrom", "视频详情");
+//        intent.putExtra("isHasReport",!isAuthor); //自己的主页不现实举报
+        startActivity(intent);
     }
 
     private void openDeleteDialog() {

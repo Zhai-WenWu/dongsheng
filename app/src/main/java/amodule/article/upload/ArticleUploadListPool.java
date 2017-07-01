@@ -24,6 +24,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.UploadFailPopWindowDialog;
+import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -137,6 +138,7 @@ public class ArticleUploadListPool extends UploadListPool {
                 });
 
         super.uploadOver(flag, response);
+        Activity act = XHActivityManager.getInstance().getCurrentActivity();
         if (FriendHome.isAlive) {
             Intent broadIntent = new Intent();
             broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
@@ -154,7 +156,6 @@ public class ArticleUploadListPool extends UploadListPool {
             }
             Main.allMain.sendBroadcast(broadIntent);
         } else if (Tools.isForward(XHApplication.in())) {
-            Activity act = XHActivityManager.getInstance().getCurrentActivity();
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
             if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
@@ -181,6 +182,9 @@ public class ArticleUploadListPool extends UploadListPool {
 //                it.putExtra("index",fridendHomeIndex);
 //                act.startActivity(it);
 //            }
+        }
+        if(act.getClass() == ArticleUploadListActivity.class){
+            act.finish();
         }
     }
 
@@ -429,6 +433,7 @@ public class ArticleUploadListPool extends UploadListPool {
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
             int bodyIndex = 0;
             String imgsDataStr = uploadArticleData.getImgs();
+            Log.i("articleUpload","修改上传池数据 imgsDataStr:" + imgsDataStr);
             if (!TextUtils.isEmpty(imgsDataStr)) {
                 UploadItemData bodyItemData;
                 ArrayList<Map<String, String>> makesList = StringManager.getListMapByJson(imgsDataStr);
@@ -438,9 +443,6 @@ public class ArticleUploadListPool extends UploadListPool {
                         String imgPath = map.get("path");
                         String imgUrl = map.get("url");
 
-                        if (!TextUtils.isEmpty(imgUrl)) {
-                            continue;
-                        }
                         Log.e("articleUpload", "文章上传 imgPath: " + imgPath + ",imgUrl:" + imgUrl);
                         Log.e("articleUpload", "文章上传 imgPath.indexOf(\"http\"): " + imgPath.indexOf("http"));
                         if (imgPath.indexOf("http") != 0 && !Tools.isFileExists(imgPath)) {

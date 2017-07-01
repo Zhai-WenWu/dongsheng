@@ -164,7 +164,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
             }
         });
 
-        btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("下一步",  new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
 
@@ -241,17 +241,6 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                                 }
                             });
                 }
-
-            }
-
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
 
             }
         });

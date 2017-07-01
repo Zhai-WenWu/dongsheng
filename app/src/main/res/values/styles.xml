@@ -409,4 +409,19 @@
         <item name="android:layout_height">@dimen/dp_16</item>
     </style>
 
+    <style name="bottom_navigation" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">@dimen/dp_43</item>
+        <item name="android:paddingTop">@dimen/dp_6</item>
+        <item name="android:paddingBottom">@dimen/dp_6</item>
+    </style>
+
+    <style name="bottom_navigation_tv_textview" >
+        <item name="android:paddingTop">@dimen/dp_4</item>
+        <item name="android:paddingBottom">@dimen/dp_4</item>
+        <item name="android:textSize">@dimen/sp_15</item>
+    </style>
+
 </resources>

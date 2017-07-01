@@ -51,7 +51,7 @@ import xh.windowview.XhDialog;
 @SuppressLint("CutPasteId")
 public class MainChangeSend extends BaseActivity {
 
-    private ImageView closeImage, tastImg;
+    private ImageView closeImage;
     private GridView mGridView;
     private List<Map<String, String>> list;
 
@@ -70,7 +70,6 @@ public class MainChangeSend extends BaseActivity {
 
     private void init() {
         closeImage = (ImageView) findViewById(R.id.close_image);
-        tastImg = (ImageView) findViewById(R.id.change_send_tast);
         mGridView = (GridView) findViewById(R.id.change_send_gridview);
         initData();
         AdapterSimple adapter = new AdapterSimple(mGridView, list,
@@ -107,22 +106,6 @@ public class MainChangeSend extends BaseActivity {
 //            itemNum++;
 //        }
 
-        if (dishVideoMap != null && dishVideoMap.size() > 0) {
-            String img = dishVideoMap.get("img");
-            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(this)
-                    .load(img)
-                    .setSaveType(LoadImage.SAVE_CACHE)
-                    .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(tastImg);
-            tastImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCommon.openUrl(MainChangeSend.this, dishVideoMap.get("url"), true);
-                    finish();
-                }
-            });
-        }
         mGridView.setNumColumns(itemNum > 3 ? 4 : itemNum);
     }
 

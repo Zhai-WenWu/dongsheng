@@ -37,7 +37,6 @@ public class BindPhoneNum extends BaseLoginActivity {
         origin = ORIGIN_BIND_PHONE_NUM;
     }
 
-
     private void initView() {
 
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
@@ -56,15 +55,11 @@ public class BindPhoneNum extends BaseLoginActivity {
                     @Override
                     public void onPhoneInfoChanged() {
 
-                        if (!phone_info.isDataAbsence()) {
-                            btn_next_step.setClickCenterable(true);
-                        } else {
-                            btn_next_step.setClickCenterable(false);
-                        }
+                        btn_next_step.setClickCenterable(!phone_info.isDataAbsence());
                     }
                 });
 
-        btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("下一步", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
 
@@ -93,16 +88,6 @@ public class BindPhoneNum extends BaseLoginActivity {
                 }else if(LoginCheck.ERROR_FORMAT.equals(errorType)){
                     XHClick.mapStat(BindPhoneNum.this, TAG_ACCOCUT, "绑定手机号", "失败原因：手机号格式错误");
                 }
-
-            }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
 
             }
         });

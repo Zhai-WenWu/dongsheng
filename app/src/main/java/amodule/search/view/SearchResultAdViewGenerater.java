@@ -131,10 +131,10 @@ public class SearchResultAdViewGenerater {
     private static RelativeLayout createSelfAdView(Activity mActivity, Map<String, String> dataMap) {
 
         RelativeLayout view = null;
-        if (dataMap.get("imgUrl3").startsWith("http")) {
+        if (dataMap.get("appSearchImg").startsWith("http")) {
             view = (RelativeLayout) LayoutInflater.from(mActivity)
                     .inflate(R.layout.c_search_result_ad_top1, null);
-            dataMap.put("imgUrl", dataMap.get("imgUrl3"));
+            dataMap.put("imgUrl", dataMap.get("appSearchImg"));
             setAdView(view, dataMap);
         }
         return view;
@@ -153,7 +153,7 @@ public class SearchResultAdViewGenerater {
                                           Map<String, String> adData, int adIndex) {
 
         if(XHScrollerAdParent.ADKEY_BANNER.equals(adData.get("type"))){
-            adData.put("imgUrl",adData.get("imgUrl3"));
+            adData.put("imgUrl",adData.get("appSearchImg"));
         }
         RelativeLayout view = (RelativeLayout) LayoutInflater.from(mActivity)
                 .inflate(R.layout.c_search_result_ad_item, null);

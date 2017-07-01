@@ -284,7 +284,7 @@ public class Main extends Activity implements OnClickListener {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        QbSdk.initX5Environment(Main.this, null);
+//        QbSdk.initX5Environment(Main.this, null);
         //视频合成so初始化，单独列出
         LoadLanSongSdk.initVideoSdk(getApplicationContext());
     }

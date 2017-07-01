@@ -263,12 +263,14 @@ public class UserHomeVideo extends TabContentView {
                 int loadCount = 0;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     loadCount = parseInfo(returnObj);
-                } else {
-                    Tools.showToast(mAct, returnObj.toString());
                 }
                 if (everyPage == 0)
                     everyPage = loadCount;
                 currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,datas.size() == 0);
+                if (flag < UtilInternet.REQ_OK_STRING) {
+                    Tools.showToast(mAct, returnObj.toString());
+                    return;
+                }
                 onDataReady(true);
                 setHeadViewHeight();
             }

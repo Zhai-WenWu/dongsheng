@@ -34,7 +34,7 @@ dependencies {
     //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     compile 'com.tencent.bugly:crashreport:2.3.1'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.code.gson:gson:2.7'
+//    compile 'com.google.code.gson:gson:2.7'
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
     compile 'com.android.support:appcompat-v7:21.0.3'
@@ -51,7 +51,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 177
-        versionName "5.3.9.3"
+        versionName "5.3.9.6"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO

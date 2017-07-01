@@ -3,6 +3,7 @@ package amodule.article.tools;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,8 +72,10 @@ public class ArticleAdContrler {
         if (obj != null) {
             Map<String, String> data = (Map<String, String>) obj;
             data.put("adFollowPosition", String.valueOf(adPositionInList[index]));
+            if(adInsteredArray.get(index) == null){
+                adRcomDataArray.add(data);
+            }
             adInsteredArray.append(index, false);
-            adRcomDataArray.add(data);
             if (onListAdCallback != null)
                 onListAdCallback.onListAdData(data);
         }
@@ -99,15 +102,19 @@ public class ArticleAdContrler {
                             break;
                         case ARTICLE_RECM_1:
                             sendAdMessage(adStr, ARTICLE_RECOMMEND_1);
+                            Log.i("tzy",ARTICLE_RECM_1 + "----------"+count++);
                             break;
                         case ARTICLE_RECM_2:
                             sendAdMessage(adStr, ARTICLE_RECOMMEND_2);
+                            Log.i("tzy",ARTICLE_RECM_2 + "----------"+count++);
                             break;
                     }
                 }
             }
         }, XHActivityManager.getInstance().getCurrentActivity(), id);
     }
+
+    int count = 0;
 
     protected void sendAdMessage(String adStr, int type) {
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
@@ -163,6 +170,7 @@ public class ArticleAdContrler {
      * @param allDataListMap 所有数据
      */
     public void handlerAdData(List<Map<String, String>> allDataListMap) {
+
         if (adRcomDataArray != null && !adRcomDataArray.isEmpty()
                 && allDataListMap != null && !allDataListMap.isEmpty()) {
             //循环ad数据

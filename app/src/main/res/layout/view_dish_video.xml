@@ -8,7 +8,7 @@
         android:id="@+id/imageview_rela"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ececec" />
+        android:background="#000" />
    
     <LinearLayout
         android:id="@+id/play_layout_1"

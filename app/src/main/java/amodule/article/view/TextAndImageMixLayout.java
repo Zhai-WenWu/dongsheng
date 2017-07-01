@@ -116,6 +116,7 @@ public class TextAndImageMixLayout extends LinearLayout
                     break;
                 case BaseView.URLS:
                     //do nothing
+                    handlerUrls(map.get("urls"));
                     break;
                 default:
                     break;
@@ -126,6 +127,20 @@ public class TextAndImageMixLayout extends LinearLayout
         else if (isSingleVideo) {
             for (int index = getChildCount() - 1; index > 1; index--) {
                 removeViewAt(index);
+            }
+        }
+    }
+
+    /**
+     * [{"title":"hjjbjjjjj","url":"http:\/\/www.baidu.com"}]}
+     * @param urls
+     */
+    private void handlerUrls(String urls) {
+        List<Map<String,String>> urlsArray = StringManager.getListMapByJson(urls);
+        for(int index = 0; index < getChildCount() ; index ++){
+            BaseView view = (BaseView) getChildAt(index);
+            if(view instanceof EditTextView){
+                ((EditTextView)view).putLinkMapArray(urlsArray);
             }
         }
     }
@@ -188,10 +203,11 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
         //删除<p></p>
-        html = new String(html.replace(propertyStr, "").replace("</p>", ""));
+        html = new String(html.replace(propertyStr, "").replace("<br></p>", ""));
         if("<br>".equals(html)){
             html = "";
         }
+        Log.i("tzy","html = " + html);
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
         editTextView.setSelection(editTextView.getRichText().getText().length());
@@ -283,7 +299,7 @@ public class TextAndImageMixLayout extends LinearLayout
         currentEditText.setOnSelectCenterCallback(onSelectCenterCallback);
         if (!TextUtils.isEmpty(content)) {
             view.setText(content);
-            view.setSelection(view.getRichText().getText().length());
+//            view.setSelection(view.getRichText().getText().length());
         }
         view.getRichText().setHint(indexOfChild(view) == 0 ? "添加内容" : "");
         return view;
@@ -692,7 +708,7 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
             if (view instanceof EditTextView) {
-                String text = ((EditTextView) view).getText().toString();
+                String text = ((EditTextView) view).getText().toString().trim();
                 if (!TextUtils.isEmpty(text)) {
                     hasText = true;
                     return hasText;

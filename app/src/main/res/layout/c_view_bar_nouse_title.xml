@@ -296,7 +296,7 @@
             android:background="@android:color/transparent"
             android:clickable="true"
             android:onClick="titleOnClick"
-            android:visibility="visible" >
+            android:visibility="gone" >
 
             <ImageView
                 android:id="@+id/img_share"

@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -60,6 +61,7 @@ import xh.windowview.XhDialog;
 
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
 import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
+import static amodule.article.view.richtext.RichText.FORMAT_LINK;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
 
 /**
@@ -79,6 +81,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public static final int DATA_TYPE_VIDEO = 101;
 
     protected EditText editTitle;
+    private TextView nestStep;
     private EditBottomControler editBottomControler;
     protected TextAndImageMixLayout mixLayout;
     private LinearLayout contentLayout;
@@ -139,10 +142,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             DisplayMetrics dm = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(dm);
                             int distance = dm.heightPixels - location[1] - (editBottomControler.isShowEditLayout() ? dp_50 + dp_64 : dp_50);
-                            Log.i("tzy", "distance = " + distance);
-                            Log.i("tzy", "heightDifference2 = " + heightDifference2);
-                            Log.i("tzy", "isKeyboradShow = " + isKeyboradShow);
-                            Log.i("tzy", "preIsKeyboradShow = " + preIsKeyboradShow);
                             if (isKeyboradShow
                                     && !preIsKeyboradShow
                                     && distance <= heightDifference2
@@ -157,16 +156,18 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                         }
                     });
         }
-        String color = Tools.getColorStr(this, R.color.common_top_bg);
+        final String color = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(color));
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(title);
 
-        TextView nestStep = (TextView) findViewById(R.id.nextStep);
+        nestStep = (TextView) findViewById(R.id.nextStep);
         int dp_20 = (int) this.getResources().getDimension(R.dimen.dp_20);
         nestStep.setPadding(dp_20, 0, dp_20, 0);
         nestStep.setVisibility(View.VISIBLE);
         nestStep.setOnClickListener(this);
+        if("2".equals(getType()))
+            nestStep.setText("发布");
         ImageView leftImgBtn = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) leftImgBtn.getLayoutParams();
         params.setMargins((int) getResources().getDimension(R.dimen.dp_18), 0, 0, 0);
@@ -216,21 +217,34 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 preStr = s.toString();
+                Log.i("editArticle","beforeTextChanged() preStr:" + preStr + "   start:" + start + "   count:" + count + "    after:" + after);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 editTitle.setTextSize(Tools.getDimenSp(EditParentActivity.this, R.dimen.sp_24));
+                Log.i("editArticle","onTextChanged() s:" + s + "    before:" + before + "   start:" + start + "   count:" + count);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0 && s.length() > 64) {
-                    editTitle.setText(s.subSequence(0, 64));
-                    editTitle.setSelection(editTitle.getText().length());
+                boolean isSet = false;
+                String newS = s.toString();
+                if(newS.contains("\r") || newS.contains("\n")){
+                    newS = newS.replaceAll("\r|\n", "");
+                    isSet = true;
+                }
+                if (newS.length() > 0 && newS.length() > 64) {
+                    newS = newS.subSequence(0, 64).toString();
                     Tools.showToast(EditParentActivity.this, "标题最多64字");
                     ToolsDevice.keyboardControl(false, EditParentActivity.this, editTitle);
+                    isSet = true;
                 }
+                if(isSet) {
+                    editTitle.setText(newS);
+                    editTitle.setSelection(editTitle.getText().length());
+                }
+
             }
         });
         editTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -239,6 +253,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 if (hasFocus) {
                     editBottomControler.setVisibility(View.GONE);
                 }
+            }
+        });
+        editTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return (event.getKeyCode()==KeyEvent.KEYCODE_ENTER);
             }
         });
         mixLayout = (TextAndImageMixLayout) findViewById(R.id.text_image_mix_ayout);
@@ -388,6 +408,10 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                             }
                             if (mixLayout.getURLCount() >= getMaxURLCount()) {
                                 Tools.showToast(EditParentActivity.this, "链接最多" + getMaxURLCount() + "条");
+                                return;
+                            }
+                            if(mixLayout.getCurrentEditText().getRichText().containLink()){
+                                Tools.showToast(EditParentActivity.this, "不可重复添加");
                                 return;
                             }
                             //收起键盘
@@ -554,7 +578,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public abstract String getType();
 
     protected String checkData() {
-        if (TextUtils.isEmpty(editTitle.getText())) {
+        String title = editTitle.getText().toString();
+        title = title.trim();
+        if (TextUtils.isEmpty(title)) {
             return "标题不能为空";
         }
         boolean isHasText = mixLayout.hasText();

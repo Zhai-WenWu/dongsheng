@@ -31,7 +31,7 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
     /**
      * 等待验证码时间：秒
      */
-    private int waitTime = 90;
+    private int waitTime = 60;
 
     public IdentifyInputView(Context context) {
         this(context, null);

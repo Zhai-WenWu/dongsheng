@@ -79,40 +79,44 @@
 
         <RelativeLayout
             android:id="@+id/a_comment_keyboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/bottom_navigation"
             android:background="#f9ffffff"
+            android:minHeight="@dimen/dp_43"
+            android:gravity="center_vertical"
             android:paddingLeft="@dimen/dp_20"
-            android:paddingTop="@dimen/dp_6"
             android:paddingRight="@dimen/dp_20"
-            android:paddingBottom="@dimen/dp_6"
             >
 
-            <ImageView
-                android:id="@+id/commend_write_pen"
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_14"
-                android:layout_marginTop="@dimen/dp_2"
-                android:src="@drawable/i_comment_pen" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_toLeftOf="@+id/comment_send"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_round40_dbdbdb"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:id="@+id/commend_write_pen"
+                    android:layout_width="@dimen/dp_12"
+                    android:layout_height="@dimen/dp_12"
+                    android:layout_marginLeft="@dimen/dp_14"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:src="@drawable/i_comment_pen" />
 
                 <!--android:background="@drawable/bg_round40_dbdbdb"-->
-            <TextView
-                android:id="@+id/commend_write_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/comment_send"
-                android:background="@drawable/bg_round40_dbdbdb"
-                android:gravity="center_vertical"
-                android:text="写评论"
-                android:paddingLeft="@dimen/dp_30"
-                android:paddingTop="@dimen/dp_5.5"
-                android:paddingBottom="@dimen/dp_5.5"
-                android:textColor="#333333"
-                android:textCursorDrawable="@drawable/comment_text_cursor"
-                android:textSize="@dimen/sp_15"
-                android:visibility="visible"/>
+                <TextView
+                    android:id="@+id/commend_write_tv"
+                    style="@style/bottom_navigation_tv_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="写评论"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:textColor="#333333"
+                    android:textCursorDrawable="@drawable/comment_text_cursor"
+                    android:visibility="visible"/>
+
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/commend_write_et"
@@ -124,9 +128,9 @@
                 android:hint="写评论"
                 android:maxLines="5"
                 android:paddingLeft="@dimen/dp_13"
-                android:paddingTop="@dimen/dp_5.5"
+                android:paddingTop="@dimen/dp_4"
                 android:paddingRight="@dimen/dp_13"
-                android:paddingBottom="@dimen/dp_5.5"
+                android:paddingBottom="@dimen/dp_4"
                 android:textColor="#333333"
                 android:textColorHint="#cdcdcd"
                 android:textCursorDrawable="@drawable/comment_text_cursor"
@@ -138,12 +142,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:paddingLeft="@dimen/dp_13"
-                android:paddingTop="@dimen/dp_5"
+                android:paddingTop="@dimen/dp_3.5"
                 android:paddingRight="@dimen/dp_3"
-                android:paddingBottom="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_3.5"
                 android:text="发送"
                 android:textColor="#ccc"
                 android:textSize="@dimen/sp_16"

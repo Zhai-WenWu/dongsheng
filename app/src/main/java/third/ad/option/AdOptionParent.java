@@ -98,6 +98,16 @@ public abstract class AdOptionParent {
                                         adMap.get("iconUrl"), adMap.get("imgUrl"), adMap.get("type"));
                                 if(newMap != null) {
                                     if(!newMap.containsKey("adClass")) newMap.put("adClass",adMap.get("type"));
+
+                                    if(adMap.containsKey("appImg")){
+                                        newMap.put("appImg",adMap.get("appImg"));
+                                    }
+                                    if(adMap.containsKey("appHomeImg")){
+                                        newMap.put("appHomeImg",adMap.get("appHomeImg"));
+                                    }
+                                    if(adMap.containsKey("appSearchImg")){
+                                        newMap.put("appSearchImg",adMap.get("appSearchImg"));
+                                    }
                                     newMap.put("imgs", adMap.get("imgs")); //api广告图片集合
                                     newMap.put("adType", adMap.get("adType")); //自由广告时，1：活动 2:广告
                                     newMap.put("stype", adMap.get("stype")); //腾讯api广告的样式类型
@@ -233,6 +243,19 @@ public abstract class AdOptionParent {
                                         styleData.put(styleObject);
                                     } else {
                                         String adImg = adMap.get("img");
+                                        //对图片根据类型进行选择
+                                        String ImgKey="";
+                                        if(!TextUtils.isEmpty(type)&&("1".equals(type)||"5".equals(type)||"6".equals(type))){
+                                            ImgKey="appHomeImg";
+                                        }else{
+                                            ImgKey="appSearchImg";
+                                        }
+                                        Log.i("wyl","ImgKey::**********************************"+ImgKey);
+                                        if(adMap.containsKey(ImgKey)&&!TextUtils.isEmpty(adMap.get(ImgKey))){
+                                            adImg=adMap.get(ImgKey);
+                                            Log.i("wyl","ImgKey::****************2******************"+adImg);
+                                            adMap.put("img",adImg);
+                                        }
                                         ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(adMap.get("imgs"));
                                         if (imgsMap != null && imgsMap.size() > 0) {
                                             for (Map<String, String> imgMap : imgsMap) {

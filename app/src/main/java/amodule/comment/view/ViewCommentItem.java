@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -45,6 +46,7 @@ public class ViewCommentItem extends LinearLayout {
     private TextView userName,commentTime,commentDelete,commentPraiseNum,replayContentShow;
 
     private LinearLayout commentContent,commentReplay;
+    private RelativeLayout commentContentParent;
 
     private Map<String,String> dataMap;
     private Map<String, String> cusstomMap;
@@ -78,6 +80,7 @@ public class ViewCommentItem extends LinearLayout {
         commentPraiseNum = (TextView) findViewById(R.id.comment_praise_num);
         replayContentShow = (TextView) findViewById(R.id.comment_item_replay_cotent_show);
 
+        commentContentParent = (RelativeLayout) findViewById(R.id.comment_item_parent);
         commentContent = (LinearLayout) findViewById(R.id.comment_content);
         commentReplayImg = (ImageView) findViewById(R.id.comment_item_replay_cotent_img);
         commentReplay = (LinearLayout) findViewById(R.id.comment_item_replay_cotent);
@@ -140,8 +143,9 @@ public class ViewCommentItem extends LinearLayout {
         comment_id = dataMap.get("comment_id");
         String content = dataMap.get("content");
         String is_anchor = dataMap.get("is_anchor");
+        boolean isAnchor = "2".equals(is_anchor);
         if("2".equals(is_anchor)){
-            commentContent.setBackgroundColor(Color.parseColor("#fffae3"));
+            commentContentParent.setBackgroundColor(Color.parseColor("#fffae3"));
             if (mListener != null) {
                 String ucode = cusstomMap.get("ucode");
                 boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
@@ -159,15 +163,18 @@ public class ViewCommentItem extends LinearLayout {
                 }
             }).start();
         }
-        else commentContent.setBackgroundColor(Color.parseColor("#00fffae3"));
+        else {
+            commentContentParent.setBackgroundColor(Color.parseColor("#00fffae3"));
+        }
+        int chooseBackColro = Color.parseColor("#fffde3");
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
         for(Map<String, String> contentMap:contentArray) {
-            addCotentView(contentMap);
+            addCotentView(contentMap,isAnchor ? chooseBackColro : normalBackColor,chooseBackColro);
         }
     }
 
     private boolean isShowContentClick = false;
-    private void addCotentView(final Map<String, String> contentMap){
+    private void addCotentView(final Map<String, String> contentMap,int normalBackColor,int choseBackColor){
         View view = layoutInflater.inflate(R.layout.a_comment_item_content,null);
         final String text = contentMap.get("text");
         final MultifunctionTextView contentText = (MultifunctionTextView) view.findViewById(R.id.commend_cotent_text);
@@ -176,9 +183,9 @@ public class ViewCommentItem extends LinearLayout {
         }else {
             contentText.setVisibility(View.VISIBLE);
             Log.i("commentReplay","addCotentView normalBackColor:" + normalBackColor);
-            if(normalBackColor != -1)
+            if (normalBackColor != -1)
                 contentText.setNormBackColor(normalBackColor);
-            contentText.setChoseBackColor(Color.parseColor("#fffde3"));
+            contentText.setChoseBackColor(choseBackColor);
             int maxNum = 100;
             if (TextUtils.isEmpty(text) || text.length() <= maxNum) {
                 contentText.setText(text);
@@ -350,9 +357,6 @@ public class ViewCommentItem extends LinearLayout {
             final String replay_ucode = replayMap.get("replay_ucode");
             final String is_replay_author = replayMap.get("is_replay_author");
 
-            String authoCode = null;
-
-
             Log.i("commentReplay","uName:" + uName + "   is_anchor:" + is_anchor);
             if("2".equals(is_anchor)){ //是否是锚点
                 Log.i("commentReplay","is_anchor:" + is_anchor);
@@ -378,7 +382,6 @@ public class ViewCommentItem extends LinearLayout {
             });
             multifunctionText.addStyle(uNameBuilder.getContent(), uNameBuilder.build());
             if("2".equals(is_author)) {
-                authoCode = ucode;
                 CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                 authorBuilder.parse(null);
                 multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
@@ -398,7 +401,6 @@ public class ViewCommentItem extends LinearLayout {
                 });
                 multifunctionText.addStyle(replayNameBuilder.getContent(), replayNameBuilder.build());
                 if ("2".equals(is_replay_author)) {
-                    authoCode = replay_ucode;
                     CommentBuilder authorBuilder = new CommentBuilder("作者").setTextColor("#590e04");
                     authorBuilder.parse(null);
                     multifunctionText.addStyle(authorBuilder.getContent(), authorBuilder.build());
@@ -420,7 +422,7 @@ public class ViewCommentItem extends LinearLayout {
 
             replayTv.setText(multifunctionText);
             replayTv.setCopyText(content);
-            final boolean isReport = TextUtils.isEmpty(authoCode) || !authoCode.equals(LoginManager.userInfo.get("code"));
+            final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
             replayTv.setRightClicker(isReport ? "举报" : "删除" ,new OnClickListener() {
                 @Override
                 public void onClick(View v) {

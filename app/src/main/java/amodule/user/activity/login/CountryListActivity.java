@@ -49,7 +49,7 @@ public class CountryListActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		countryList = new ArrayList<Map<String, String>>();
+		countryList = new ArrayList<>();
 		AdapterSimple adapter = new AdapterSimple(country_list, countryList,
 				R.layout.user_country_list_item,
 				new String[] { "name" }, 

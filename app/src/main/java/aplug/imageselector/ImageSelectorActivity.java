@@ -371,8 +371,10 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 
 	/**
 	 * 选择图片操作
-	 * 
-	 * @param image
+	 * @param adapterView
+	 * @param position
+	 * @param mode
+	 * @param view
 	 */
 	private void selectImageFromGrid(AdapterView<?> adapterView, int position, int mode, View view) {
 		Image image = (Image) adapterView.getAdapter().getItem(position);
@@ -605,7 +607,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		// 退出
 		case R.id.btn_back:
 			setResult(RESULT_CANCELED);
-			finish();
+			onBackPressed();
 			break;
 		// 提交按钮
 		case R.id.commit:

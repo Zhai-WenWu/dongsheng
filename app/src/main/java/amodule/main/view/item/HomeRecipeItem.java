@@ -1,11 +1,8 @@
 package amodule.main.view.item;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +14,6 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -36,7 +32,6 @@ public class HomeRecipeItem extends HomeItem {
     private ImageView mImg;
     private ImageView mVIP;
     private ImageView mSole;
-    private ImageView mAdTag;
     private ImageView mPlayImg;
     private LinearLayout mRecommendTag;
     private RelativeLayout mVideoContainer;
@@ -67,7 +62,6 @@ public class HomeRecipeItem extends HomeItem {
         mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
         mSole = (ImageView) findViewById(R.id.img_sole);
-        mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mPlayImg = (ImageView) findViewById(R.id.play_img);
         mRecommendTag = (LinearLayout) findViewById(R.id.recommend_tag);
         mVideoContainer = (RelativeLayout) findViewById(R.id.video_container);
@@ -81,41 +75,20 @@ public class HomeRecipeItem extends HomeItem {
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsAd) {
-                    if (v == mAdTag) {
-                        onAdHintClick();
-                    } else if (v == HomeRecipeItem.this) {
-                        if (mAdControlParent != null) {
-                            mAdControlParent.onAdClick(mDataMap);
-                        }
+                //视频列表下点击视频图片部分直接播放，其他部分则跳转到视频菜谱详情页
+                if (v == mVideoContainer && !TextUtils.isEmpty(mType) && mType.equals("2") && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType())) { //表示当前tab是视频菜谱
+                    if (mVideoClickCallBack != null) {
+                        mVideoClickCallBack.videoOnClick(mPosition);
+                        XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
                     }
                 } else {
-                    //视频列表下点击视频图片部分直接播放，其他部分则跳转到视频菜谱详情页
-                    if (v == mVideoContainer && !TextUtils.isEmpty(mType) && mType.equals("2") && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType())) { //表示当前tab是视频菜谱
-                        if (mVideoClickCallBack != null) {
-                            mVideoClickCallBack.videoOnClick(mPosition);
-                            XHClick.mapStat((Activity)getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
-                        }
-                    } else if (!TextUtils.isEmpty(mTransferUrl)) { //非视频菜谱tab的，其他tab下的图文菜谱和视频菜谱处理
-                        if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                            if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                            else mTransferUrl+="?data_type="+mDataMap.get("type");
-                            mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                            Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                            XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-                        }
-                        AppCommon.openUrl((Activity) getContext(), mTransferUrl, false);
-                        XHClick.mapStat((Activity)getContext(), "a_video", "进入详情/列表播放", "点击文字信息进入详情");
-                    }
-                    onItemClick();
+                    XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击文字信息进入详情");
+                    HomeRecipeItem.super.onClick(v);
                 }
             }
         };
-        this.setOnClickListener(clickListener);
         if (mVideoContainer != null)
             mVideoContainer.setOnClickListener(clickListener);
-        if (mAdTag != null)
-            mAdTag.setOnClickListener(clickListener);
     }
 
     @Override
@@ -126,12 +99,6 @@ public class HomeRecipeItem extends HomeItem {
         if (mIsAd) {
             if (mLayerView != null)
                 mLayerView.setVisibility(View.VISIBLE);
-            if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
-                mAdTag.setVisibility(View.VISIBLE);
-            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
-                mAdControlParent.onAdShow(mDataMap, this);
-                mDataMap.put("isADShow", "1");
-            }
         }
         if (mDataMap.containsKey("video")) {
             String video = mDataMap.get("video");
@@ -203,37 +170,17 @@ public class HomeRecipeItem extends HomeItem {
                     if (!TextUtils.isEmpty(imgUrl)) {
                         if (mContainer != null)
                             mContainer.setVisibility(View.VISIBLE);
-                        loadImage(imgUrl, mImg, mIsAd ? new ADImageLoadCallback() {
-                            @Override
-                            public void callback(Bitmap bitmap) {
-                                if (bitmap == null)
-                                    return;
-                                int bitmapWidth = bitmap.getWidth();
-                                int bitmapHeight = bitmap.getHeight();
-                                int imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getContext().getResources().getDimensionPixelSize(R.dimen.dp_40);
-                                int imgHeight = bitmapHeight * imgWidth / bitmapWidth;
-                                mImg.setScaleType(ImageView.ScaleType.FIT_XY);
-                                mImg.setImageBitmap(bitmap);
-                                if (mContainer != null) {
-                                    MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                                    containerParams.height = imgHeight;
-                                    mContainer.setLayoutParams(containerParams);
-                                }
-                                MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-                                adImgParams.height = imgHeight;
-                                mImg.setLayoutParams(adImgParams);
-
-                                if (mLayerView != null) {
-                                    MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-                                    layerParams.height = imgHeight;
-                                    mLayerView.setLayoutParams(layerParams);
-                                }
-                                if (mContainer != null) {
-                                    mContainer.requestLayout();
-                                    mContainer.invalidate();
-                                }
+                        if (mIsAd) {
+                            int[] size = new int[2];
+                            getADImgSize(size, mDataMap.get("style"));
+                            if (size[0] > 0 && size[1] > 0) {
+                                containerParams.width = size[0];
+                                containerParams.height = size[1];
                             }
-                        } : null);
+                            mContainer.requestLayout();
+                            mContainer.invalidate();
+                        }
+                        loadImage(imgUrl, mImg);
                     }
                 }
             }
@@ -268,13 +215,8 @@ public class HomeRecipeItem extends HomeItem {
         mIsVideo = false;
         MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
         containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
+        containerParams.width = MarginLayoutParams.MATCH_PARENT;
         mContainer.setLayoutParams(containerParams);
-        MarginLayoutParams layerParams = (MarginLayoutParams) mLayerView.getLayoutParams();
-        layerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
-        mLayerView.setLayoutParams(layerParams);
-        MarginLayoutParams adImgParams = (MarginLayoutParams) mImg.getLayoutParams();
-        adImgParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
-        mImg.setLayoutParams(adImgParams);
         mContainer.requestLayout();
         mContainer.invalidate();
     }
@@ -294,8 +236,6 @@ public class HomeRecipeItem extends HomeItem {
             mVIP.setVisibility(View.GONE);
         if (viewIsVisible(mSole))
             mSole.setVisibility(View.GONE);
-        if (viewIsVisible(mAdTag))
-            mAdTag.setVisibility(View.GONE);
         if (viewIsVisible(mPlayImg))
             mPlayImg.setVisibility(View.GONE);
         if (viewIsVisible(mRecommendTag))

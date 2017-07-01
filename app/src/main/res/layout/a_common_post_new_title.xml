@@ -34,7 +34,7 @@
         android:clickable="true"
         android:gravity="center_vertical"
         android:text="下一步"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/upload"

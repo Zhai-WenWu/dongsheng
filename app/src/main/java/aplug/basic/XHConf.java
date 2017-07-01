@@ -57,7 +57,7 @@ public class XHConf extends BasicConf {
 		net_encode=HTTP.UTF_8;
 		net_imgUploadHeight=net_imgUploadWidth=900;
 		net_imgUploadKb=300;
-		if(!log_isDebug) net_domain2ipJson="{'api.xiangha.com':[{'ip':'101.201.172.223','weight':100}],'api.huher.com':[{'ip':'182.92.245.125','weight':100}]}";
+//		if(!log_isDebug) net_domain2ipJson="{'api.xiangha.com':[{'ip':'101.201.172.223','weight':100}],'api.huher.com':[{'ip':'182.92.245.125','weight':100}]}";
 	
 		//设置url和域名配置
 		String domain= UtilFile.loadShared(context, FileManager.xmlFile_appInfo,FileManager.xmlKey_domain).toString();
@@ -67,10 +67,10 @@ public class XHConf extends BasicConf {
 		String mall_domain= UtilFile.loadShared(context, FileManager.xmlFile_appInfo,FileManager.xmlKey_mall_domain).toString();
 		MallStringManager.changeUrl(mall_domain);
 		//调试模式下不处理domain2ip
-		if(!log_isDebug){
-			String jsonStr = OnlineConfigAgent.getInstance().getConfigParams(context, "domain2ip");
-			if(jsonStr.length()>1) net_domain2ipJson=jsonStr;
-		}
+//		if(!log_isDebug){
+//			String jsonStr = OnlineConfigAgent.getInstance().getConfigParams(context, "domain2ip");
+//			if(jsonStr.length()>1) net_domain2ipJson=jsonStr;
+//		}
 
 		
 		//设置图片配置

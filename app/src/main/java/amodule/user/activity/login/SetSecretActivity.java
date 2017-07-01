@@ -77,7 +77,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                     XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "设置密码页，点密码眼睛");
                 } else if (ORIGIN_MODIFY_PSW.equals(path_from)) {
                     XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "修改密码", "设置密码页，点密码眼睛");
-                }else if(ORIGIN_REGISTER.equals(path_from)){
+                } else if (ORIGIN_REGISTER.equals(path_from)) {
                     XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "设置密码页，点密码眼睛");
                 }
 
@@ -85,7 +85,7 @@ public class SetSecretActivity extends BaseLoginActivity {
         });
         user_set_secret.showSecret();
 
-        btn_next_step.init("确定", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("确定", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
 
@@ -95,7 +95,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                     XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "设置密码页，点完成");
                 } else if (ORIGIN_MODIFY_PSW.equals(path_from)) {
                     XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "修改密码", "设置新密码页，点完成");
-                }else if(ORIGIN_REGISTER.equals(path_from)){
+                } else if (ORIGIN_REGISTER.equals(path_from)) {
                     XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "设置密码页，点击确定");
                 }
 
@@ -109,7 +109,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                         XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "失败原因：密码不符合要求");
                     } else if (ORIGIN_MODIFY_PSW.equals(path_from)) {
                         XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "修改密码", "失败原因：密码不符合要求");
-                    }else if(ORIGIN_REGISTER.equals(path_from)){
+                    } else if (ORIGIN_REGISTER.equals(path_from)) {
                         XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "失败原因：密码不符合要");
                     }
                     return;
@@ -142,7 +142,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                                         backToForward();
                                     } else if (ORIGIN_REGISTER.equals(path_from)) {
                                         gotoSetPersonInfo(SetSecretActivity.this, ORIGIN_REGISTER);
-                                    }else if(ORIGIN_BIND_FROM_WEB.equals(path_from)){
+                                    } else if (ORIGIN_BIND_FROM_WEB.equals(path_from)) {
                                         Toast.makeText(SetSecretActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
                                         backToForward();
                                     }
@@ -161,7 +161,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                                         Toast.makeText(SetSecretActivity.this, "修改密码失败", Toast.LENGTH_SHORT).show();
                                     } else if (ORIGIN_MODIFY_PSW.equals(path_from)) {
                                         XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "修改密码", "修改失败");
-                                    }else if(ORIGIN_BIND_FROM_WEB.equals(path_from)){
+                                    } else if (ORIGIN_BIND_FROM_WEB.equals(path_from)) {
                                     } else {
                                         Toast.makeText(SetSecretActivity.this, "设置密码失败", Toast.LENGTH_SHORT).show();
                                     }
@@ -169,16 +169,6 @@ public class SetSecretActivity extends BaseLoginActivity {
                                 }
                             });
                 }
-            }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
             }
         });
 
@@ -191,25 +181,21 @@ public class SetSecretActivity extends BaseLoginActivity {
             loadManager.hideProgressBar();
         } else {
 
-
             if (ORIGIN_FIND_PSW.equals(path_from)) {
                 XHClick.mapStat(this, PHONE_TAG, "忘记密码", "设置新密码页，点返回");
             } else if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
                 XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "设置密码页，点返回");
             } else if (ORIGIN_MODIFY_PSW.equals(path_from)) {
                 XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "修改密码", "设置密码页，点返回");
-            }else if(ORIGIN_REGISTER.equals(path_from)){
+            } else if (ORIGIN_REGISTER.equals(path_from)) {
                 XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "设置密码页，点返回");
             }
-
 
             if (ORIGIN_REGISTER.equals(path_from) || ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
                 showDialog();
             } else {
                 finish();
             }
-
-
         }
     }
 
@@ -229,34 +215,35 @@ public class SetSecretActivity extends BaseLoginActivity {
         }
 
         final XhDialog xhDialog = new XhDialog(this);
-        xhDialog.setTitle(title);
-        xhDialog.setSureButton(sureText, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                xhDialog.cancel();
-
-                if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
-                    XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择设置密码");
-                } else if(ORIGIN_REGISTER.equals(path_from)){
-                    XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择设置密码");
-                }
-            }
-        });
-        xhDialog.setCanselButton(cancelText, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                xhDialog.cancel();
-                if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
-                    Toast.makeText(SetSecretActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
-                } else if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
-                    XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择下次再说");
-                } else if(ORIGIN_REGISTER.equals(path_from)){
-                    XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择直接登录");
-                }
-                backToForward();
-            }
-        })
+        xhDialog.setTitle(title)
                 .setSureButtonTextColor("#007aff")
-                .setCancelButtonTextColor("#007aff").show();
+                .setSureButton(sureText, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        xhDialog.cancel();
+
+                        if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
+                            XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择设置密码");
+                        } else if (ORIGIN_REGISTER.equals(path_from)) {
+                            XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择设置密码");
+                        }
+                    }
+                })
+                .setCancelButtonTextColor("#007aff")
+                .setCanselButton(cancelText, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        xhDialog.cancel();
+                        if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
+                            Toast.makeText(SetSecretActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                        } else if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
+                            XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择下次再说");
+                        } else if (ORIGIN_REGISTER.equals(path_from)) {
+                            XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择直接登录");
+                        }
+                        backToForward();
+                    }
+                })
+                .show();
     }
 }

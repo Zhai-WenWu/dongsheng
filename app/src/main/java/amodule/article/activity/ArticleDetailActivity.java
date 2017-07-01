@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,10 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -56,6 +59,8 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
+import third.share.ShareTools;
+import third.share.UserHomeShare;
 import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
@@ -67,7 +72,7 @@ public class ArticleDetailActivity extends BaseActivity {
     public static final String TYPE_ARTICLE = "1";
     public static final String TYPE_VIDEO = "2";
 
-    private ListView listview;
+    private ListView listView;
     /** 头部view */
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
     private TextView mTitle;
@@ -84,6 +89,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
 
+    private boolean isAuthor;
+    private Map<String, String> customerData;
     private Map<String, String> adDataMap;
     private Map<String, String> commentMap;
     private Map<String, String> shareMap = new HashMap<>();
@@ -236,7 +243,17 @@ public class ArticleDetailActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("list", jsonArray);
                             commentMap.put("data", jsonObject.toString());
+                            if(allDataListMap.indexOf(commentMap) < 0)
+                                allDataListMap.add(0,commentMap);
                             detailAdapter.notifyDataSetChanged();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
+                                    Log.i("tzy","position = " + position);
+                                    AppCommon.scorllToIndex(listView,position);
+                                }
+                            },200);
                         }
                     }
                 } catch (JSONException e) {
@@ -248,8 +265,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 初始化ListView */
     private void initListView() {
-        listview = (ListView) findViewById(R.id.listview);
-        listview.setOnTouchListener(new View.OnTouchListener() {
+        listView = (ListView) findViewById(R.id.listview);
+        listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -283,7 +300,7 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutTwo);
         layout.addView(linearLayoutThree);
 
-        listview.addHeaderView(layout);
+        listView.addHeaderView(layout);
     }
 
     /** 数据初始化 **/
@@ -312,7 +329,7 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         //设置
-        loadManager.setLoading(refreshLayout, listview, detailAdapter, true,
+        loadManager.setLoading(refreshLayout, listView, detailAdapter, true,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -346,7 +363,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 });
         View view = new View(this);
         view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
-        listview.addFooterView(view);
+        listView.addFooterView(view);
         //请求文章数据
         requestArticleData(false);
         //初始化广告
@@ -407,7 +424,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 请求网络 */
     private void requestArticleData(final boolean onlyUser) {
-        loadManager.showProgressBar();
+//        loadManager.showProgressBar();
         StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=HTML");
         ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params.toString(), new InternetCallback(this) {
             @Override
@@ -443,7 +460,7 @@ public class ArticleDetailActivity extends BaseActivity {
         detailAdapter.notifyDataSetChanged();
         if (onlyUser)
             return;
-        listview.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.VISIBLE);
 
         WebviewManager manager = new WebviewManager(this, loadManager, true);
         if (webView == null)
@@ -452,16 +469,21 @@ public class ArticleDetailActivity extends BaseActivity {
             linearLayoutTwo.addView(webView);
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), mapArticle.get("html"), "text/html", "utf-8", null);
+        String htmlStr = mapArticle.get("html");
+        if(htmlStr.indexOf("&lt;") >= 0)
+            htmlStr = htmlStr.replace("&lt;","<");
+        if(htmlStr.indexOf("&gt;") >= 0)
+            htmlStr = htmlStr.replace("&gt;",">");
+        webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), htmlStr, "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
 
-        final Map<String, String> customerData = StringManager.getFirstMap(mapArticle.get("customer"));
+        customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         if (!TextUtils.isEmpty(customerData.get("nickName"))) {
             mTitle.setText(customerData.get("nickName"));
             mTitle.setVisibility(View.VISIBLE);
         }
         final String userCode = customerData.get("code");
-        final boolean isAuthor = LoginManager.isLogin()
+        isAuthor = LoginManager.isLogin()
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
@@ -535,6 +557,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void analysForumData(boolean isRefresh, Object object) {
+        if("0".equals(commentNum)) return;
         commentMap = StringManager.getFirstMap(object);
         commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
         commentMap.put("data", object.toString());
@@ -655,8 +678,6 @@ public class ArticleDetailActivity extends BaseActivity {
         dialog.show();
     }
 
-    private Bitmap shareImageBitmap = null;
-
     private void handlerShareData() {
         if (!TextUtils.isEmpty(shareMap.get("img"))) {
             shareMap.put("imgType", BarShare.IMG_TYPE_WEB);
@@ -676,21 +697,18 @@ public class ArticleDetailActivity extends BaseActivity {
             Tools.showToast(this, "数据处理中，请稍候");
             return;
         }
-
-        barShare = new BarShare(ArticleDetailActivity.this,  "视频详情", "");
-        String title = shareMap.get("title");
-        String content = shareMap.get("content");
-        String clickUrl = shareMap.get("url");
-        String type = BarShare.IMG_TYPE_RES;
-        String shareImg = "" + R.drawable.umen_share_launch;
-        if (shareImageBitmap != null) {
-            barShare.setShare(title, content, shareImageBitmap, clickUrl);
-        } else {
-            type = shareMap.get("imgType");
-            shareImg = shareMap.get("img");
-            barShare.setShare(type, title, content, shareImg, clickUrl);
-        }
-        barShare.openShare();
+        Intent intent = new Intent(this, UserHomeShare.class);
+        intent.putExtra("tongjiId", isAuthor ? "a_my":"a_user");
+        intent.putExtra("nickName", customerData.get("nickName"));
+        intent.putExtra("imgUrl", shareMap.get("img"));
+        intent.putExtra("code", customerData.get("code"));
+        intent.putExtra("clickUrl", shareMap.get("url"));
+        intent.putExtra("title", shareMap.get("title"));
+        intent.putExtra("content", shareMap.get("content"));
+        intent.putExtra("type", shareMap.get("imgType"));
+        intent.putExtra("shareFrom", "文章详情");
+//        intent.putExtra("isHasReport",!isAuthor); //自己的主页不现实举报
+        startActivity(intent);
     }
 
     private void openDeleteDialog() {

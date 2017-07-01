@@ -2,6 +2,7 @@ package amodule.main.view.item;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -19,14 +20,19 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.home.HomeFragment;
 import aplug.basic.SubBitmapTarget;
+import aplug.web.ShowWeb;
 import third.ad.control.AdControlParent;
+import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilImage;
 
 /**
@@ -34,7 +40,7 @@ import xh.basic.tool.UtilImage;
  * Created by sll on 2017/4/18.
  */
 
-public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickListener {
+public class HomeItem extends BaseItemView implements View.OnClickListener, BaseItemView.OnItemClickListener {
 
     //用户信息和置顶view
     private ImageView mTopTag;
@@ -62,17 +68,14 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     private AdapterHome.ViewClickCallBack mRefreshCallBack;
 
     protected HomeItemBottomView mHomeItemBottomView;
+    private ImageView mAdTag;
 
     public HomeItem(Context context, int layoutId) {
         this(context,null,layoutId);
-//        LayoutInflater.from(context).inflate(layoutId, this, true);
-//        initView();
     }
 
     public HomeItem(Context context, AttributeSet attrs, int layoutId) {
         this(context, attrs,0,layoutId);
-//        LayoutInflater.from(context).inflate(layoutId, this, true);
-//        initView();
     }
 
     public HomeItem(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
@@ -83,6 +86,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     protected void initView() {
         this.setBackgroundColor(Color.parseColor("#ffffff"));
+        mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mLineTop = findViewById(R.id.line_top);
         mDot = findViewById(R.id.dot);
         mTopTxt = (TextView) findViewById(R.id.top_txt);
@@ -108,6 +112,13 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                         XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
+        addDefaultListener();
+    }
+
+    private void addDefaultListener() {
+        if (mAdTag != null)
+            mAdTag.setOnClickListener(this);
+        setOnClickListener(this);
     }
 
     private ADImageLoadCallback mCallback;
@@ -151,6 +162,54 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
         this.mRefreshCallBack = callBack;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mIsAd) {
+            if (v == mAdTag) {
+                onAdHintClick();
+            } else if (v == this) {
+                if (mAdControlParent != null) {
+                    mAdControlParent.onAdClick(mDataMap);
+                }
+            }
+            return;
+        }
+        if (!handleClickEvent(v)) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
+            onItemClick();
+        }
+    }
+
+    /**
+     * 处理Item点击事件外的其他事件。
+     * @param view 点击的Item
+     * @return 如果返回false，表示外界不处理点击事件，将会自己处理点击事件；
+     */
+    private boolean handleClickEvent(View view) {
+        if (!TextUtils.isEmpty(mTransferUrl)) {
+            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
+                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
+                else mTransferUrl+="?data_type="+mDataMap.get("type");
+                mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
+                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
+            }
+            if(mTransferUrl.contains("nousInfo.app")){
+                String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
+                Log.i("zhangyujian","mTransferUrl:::"+params);
+                Map<String,String> map = StringManager.getMapByString(params,"&","=");
+                Intent intent = new Intent(XHActivityManager.getInstance().getCurrentActivity(), ShowWeb.class);
+                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
+                intent.putExtra("data_type",map.get("data_type"));
+                intent.putExtra("code",map.get("code"));
+                intent.putExtra("module_type",isTopTypeView()?"top_info":"info");
+                XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
+                return true;
+            }
+        }
+        return false;
     }
 
     public interface ADImageLoadCallback {
@@ -246,6 +305,14 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 mIsAd = true;
             }
         }
+        if (mIsAd) {
+            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
+                mAdControlParent.onAdShow(mDataMap, this);
+                mDataMap.put("isADShow", "1");
+            }
+            if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
+                mAdTag.setVisibility(View.VISIBLE);
+        }
         if (mDataMap.containsKey("type")) {
             mType = mDataMap.get("type");
         }
@@ -255,6 +322,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     }
 
     protected void resetView() {
+        if (viewIsVisible(mAdTag))
+            mAdTag.setVisibility(View.GONE);
         if (viewIsVisible(mTimeTagContainer))
             mTimeTagContainer.setVisibility(View.GONE);
         if (viewIsVisible(mUserName))
@@ -400,5 +469,27 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
      */
     public String getDataType() {
         return mType;
+    }
+
+    /**
+     * 获取广告图片的大小。
+     * @param size 一个两个整数的数组
+     * @param style 广告样式 适用于大图样式1和任意图样式6的广告
+     */
+    protected void getADImgSize(int[] size, String style) {
+        if (mDataMap == null || (!"1".equals(mDataMap.get("style")) && !"6".equals(mDataMap.get("style"))))
+            return;
+        Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), mDataMap.get("stype"), "1");
+        if (mapSize == null || mapSize.isEmpty())
+            return;
+        try {
+            size[0] = Integer.parseInt(mapSize.get("width"));
+            size[1] = Integer.parseInt(mapSize.get("height"));
+            int fixedWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
+            size[1] = size[1] * fixedWidth / size[0];
+            size[0] = fixedWidth;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
