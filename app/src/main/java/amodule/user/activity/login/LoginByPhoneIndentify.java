@@ -164,8 +164,8 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                             speechaIdentifyInputView.setState(true);
                             if(flag>= UtilInternet.REQ_OK_STRING) {
                                 final XhDialog xhDialog = new XhDialog(LoginByPhoneIndentify.this);
-                                xhDialog.setTitle("该手机号尚未注册，" + "\n是否注册新账号？")
-                                        .setCanselButton("不注册", new View.OnClickListener() {
+                                xhDialog.setTitle("网络有问题或手机号未注册？")
+                                        .setCanselButton("取消", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
@@ -173,7 +173,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                                                 xhDialog.cancel();
                                             }
                                         })
-                                        .setSureButton("注册", new View.OnClickListener() {
+                                        .setSureButton("立即注册", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 register(LoginByPhoneIndentify.this, phone_info.getZoneCode(), phone_info.getPhoneNum());

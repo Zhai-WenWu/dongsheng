@@ -353,8 +353,8 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                         public void onFalse(int flag) {
 //
                             final XhDialog xhDialog = new XhDialog(LoginByAccout.this);
-                            xhDialog.setTitle("该手机号尚未注册，\n是否注册新账号？")
-                                    .setCanselButton("不注册", new View.OnClickListener() {
+                            xhDialog.setTitle("网络有问题或手机号未注册")
+                                    .setCanselButton("取消", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录",
@@ -362,7 +362,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                                             xhDialog.cancel();
                                         }
                                     })
-                                    .setSureButton("注册", new View.OnClickListener() {
+                                    .setSureButton("立即注册", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             register(LoginByAccout.this, phone_info.getZoneCode(),

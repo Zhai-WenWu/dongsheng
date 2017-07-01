@@ -81,8 +81,8 @@ public class LostSecret extends BaseLoginActivity {
                                 public void onFalse(int flag) {
 
                                     final XhDialog xhDialog = new XhDialog(LostSecret.this);
-                                    xhDialog.setTitle("该手机号尚未注册，"+"\n是否注册新账号？")
-                                            .setCanselButton("不注册", new View.OnClickListener() {
+                                    xhDialog.setTitle("网络有问题或手机号未注册？")
+                                            .setCanselButton("取消", new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
@@ -90,7 +90,7 @@ public class LostSecret extends BaseLoginActivity {
                                                     xhDialog.cancel();
                                                 }
                                             })
-                                            .setSureButton("注册", new View.OnClickListener() {
+                                            .setSureButton("立即注册", new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     register(LostSecret.this, phone_info.getZoneCode(),
