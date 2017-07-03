@@ -28,7 +28,7 @@ import cn.sharesdk.onekeyshare.OnekeySharePage;
 import cn.sharesdk.onekeyshare.OnekeyShareThemeImpl;
 
 import com.mob.tools.gui.MobViewPager;
-import com.mob.tools.utils.R;
+import com.mob.tools.utils.ResHelper;
 
 /** 九宫格的抽象类 */
 public abstract class PlatformPage extends OnekeySharePage {
@@ -44,7 +44,7 @@ public abstract class PlatformPage extends OnekeySharePage {
 
 	public PlatformPage(OnekeyShareThemeImpl impl) {
 		super(impl);
-		this.impl = R.forceCast(impl);
+		this.impl = ResHelper.forceCast(impl);
 	}
 
 	public void onCreate() {
@@ -109,10 +109,9 @@ public abstract class PlatformPage extends OnekeySharePage {
 		}
 
 		ArrayList<CustomerLogo> customers = getCustomerLogos();
-		if (customers == null) {
-			customers = new ArrayList<CustomerLogo>();
+		if (customers != null && customers.size() > 0) {
+			cells.addAll(customers);
 		}
-		cells.addAll(customers);
 
 		return cells;
 	}

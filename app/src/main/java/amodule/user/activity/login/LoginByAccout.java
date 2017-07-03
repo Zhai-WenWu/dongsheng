@@ -7,12 +7,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mob.MobSDK;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -351,10 +353,10 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         this.platform = platform;
         loadManager.showProgressBar();
 //        Tools.showToast(mAct, "授权开始");
-        ShareSDK.initSDK(mAct);
-        Platform pf = ShareSDK.getPlatform(mAct, platform);
-        if (pf.isValid()) {
-            pf.removeAccount();
+//        ShareSDK.initSDK(mAct);
+        Platform pf = ShareSDK.getPlatform(platform);
+        if (pf.isAuthValid()) {
+            pf.removeAccount(true);
         }
         //false为客户端   true为网页版
         pf.SSOSetting(false);
@@ -366,6 +368,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
             public void onError(Platform arg0, int arg1, Throwable arg2) {
                 handler.sendEmptyMessage(EMPOWER_ERROR);
                 UtilLog.reportError("用户授权出错", null);
+                Log.i("zhangyujian","用户授权出错::Platform::"+arg0.getName()+"::"+arg1);
             }
 
             @Override
@@ -384,6 +387,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                     if (platform.equals(ShareTools.WEI_XIN)) {
                         param += "&p7=" + res.get("unionid").toString();
                     }
+                    Log.i("zhangyujian","---------第三方用户信息----------" + res.toString());
                     UtilLog.print("d", "---------第三方用户信息----------" + res.toString());
                 }
                 //

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.mob.MobSDK;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -60,7 +61,7 @@ public class BaseLoginActivity extends BaseActivity {
     public static final String PHONE_TAG = "a_login520";
     public final static String TAG_ACCOCUT = "a_security520";
 
-    public static final String SMS_SDK_VERSION = "2.0.2";
+    public static final String SMS_SDK_VERSION = "3.0.0";
     public static final String smsAppkey = "10e22f093f255";
     public static final String smsAppsecret = "bb71787a9ec63116377a83c3ecac048a";
     public String text = "正在登录";
@@ -202,7 +203,8 @@ public class BaseLoginActivity extends BaseActivity {
             }
         };
         //注册SDK
-        SMSSDK.initSDK(this, smsAppkey, smsAppsecret);
+//        SMSSDK.initSDK(this, smsAppkey, smsAppsecret);
+        MobSDK.init(this, smsAppkey, smsAppsecret);
 
         View rl_topbar = findViewById(R.id.rl_topbar);
         if (rl_topbar != null) {

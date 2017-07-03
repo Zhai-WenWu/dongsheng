@@ -586,10 +586,10 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     public void thirdAuth(final String platform, final String type) {
         loadManager.showProgressBar();
 //        Tools.showToast(mAct, "授权开始...");
-        ShareSDK.initSDK(mAct);
-        Platform pf = ShareSDK.getPlatform(mAct, platform);
-        if (pf.isValid()) {
-            pf.removeAccount();
+//        ShareSDK.initSDK(mAct);
+        Platform pf = ShareSDK.getPlatform( platform);
+        if (pf.isAuthValid()) {
+            pf.removeAccount(true);
         }
         //false为客户端   true为网页版
         pf.SSOSetting(false);
