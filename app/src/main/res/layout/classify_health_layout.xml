@@ -30,7 +30,7 @@
             android:layout_alignParentBottom="true"
             app:pstsIndicatorColor="#FFFFFE"
             app:pstsIndicatorWidthFollowText="true"
-            app:pstsTabBackground="@color/classify_health_titlecolor"
+            app:pstsTabBackground="@color/common_top_bg"
             app:pstsTabPaddingLeftRight="@dimen/dp_12.5"
             app:pstsTabTextColor="@color/circle_tab_text_color"
             app:pstsTabTextSize="@dimen/sp_16" />
