@@ -94,6 +94,8 @@ public class EditTextView extends BaseView {
                             && start  >= 0
                             && start + 1< s.toString().length()
                             && '\n' == s.charAt(start);
+//                if(needRefreshCenter)
+//                    mRichText.centerFormat(mRichText.contains(RichText.FORMAT_CENTER));
             }
 
             @Override
@@ -104,7 +106,7 @@ public class EditTextView extends BaseView {
             @Override
             public void afterTextChanged(Editable s) {
                 if(needRefreshCenter)
-                    mRichText.center(!mRichText.contains(RichText.FORMAT_CENTER));
+                    mRichText.centerFormat(mRichText.contains(RichText.FORMAT_CENTER));
                 if (onAfterTextChanged != null) {
                     onAfterTextChanged.afterTextChanged(s);
                 }
@@ -269,7 +271,8 @@ public class EditTextView extends BaseView {
     }
 
     public void setupTextCenter() {
-        mRichText.center(!mRichText.contains(RichText.FORMAT_CENTER));
+        mRichText.centerFormat(!mRichText.contains(RichText.FORMAT_CENTER));
+//        mRichText.bullet(!mRichText.contains(RichText.FORMAT_BULLET));
     }
 
     public int getSelectionStart() {

@@ -12,14 +12,11 @@ import com.xiangha.R;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
-import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SpeechaIdentifyInputView;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -69,16 +66,22 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
         speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speechaIdentifyInputView.setState(false);
-                login_identify.setOnBtnClickState(false);
-                login_identify.startCountDown();
+                loadManager.showProgressBar();
                 String phoneNum = phone_info.getPhoneNum();
-                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum,
-                        new InternetCallback(LoginByPhoneIndentify.this) {
-                            @Override
-                            public void loaded(int i, String s, Object o) {
-                            }
-                        });
+                reqIdentifySpeecha(phoneNum,new BaseLoginCallback(){
+                    @Override
+                    public void onSuccess() {
+                        loadManager.hideProgressBar();
+                        speechaIdentifyInputView.setState(false);
+                        login_identify.setOnBtnClickState(false);
+                        login_identify.startCountDown();
+                    }
+
+                    @Override
+                    public void onFalse(int flag) {
+                        loadManager.hideProgressBar();
+                    }
+                });
             }
         });
 

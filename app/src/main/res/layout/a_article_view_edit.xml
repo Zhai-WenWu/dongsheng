@@ -20,6 +20,8 @@
         android:lineSpacingExtra="@dimen/dp_5"
         android:lineSpacingMultiplier="1"
         android:textSize="@dimen/sp_17"
+        app:bulletColor="#000000"
+        app:bulletRadius="@dimen/dp_3"
         app:linkColor="#5c809c"
         app:historyEnable="true"
         app:historySize="99"
