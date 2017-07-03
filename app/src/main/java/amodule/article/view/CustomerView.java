@@ -157,10 +157,10 @@ public class CustomerView extends ItemBaseView {
         if (mapUser.containsKey("isFollow") && !"3".equals(mapUser.get("isFollow"))) {//1，未关注，2，已关注，3自己
             follow_rela.setVisibility(VISIBLE);
             if ("1".equals(mapUser.get("isFollow"))) {//未关注
-                follow_rela.setBackgroundResource(R.drawable.bg_circle_red_5);
+                follow_rela.setBackgroundResource(R.drawable.bg_follow);
                 follow_rela.setClickable(true);
                 follow_tv.setText("关注");
-                follow_tv.setTextColor(Color.parseColor("#fffffe"));
+                follow_tv.setTextColor(Color.parseColor("#ff533c"));
             } else {
                 follow_rela.setBackgroundColor(Color.parseColor("#fffffe"));
                 follow_rela.setClickable(false);

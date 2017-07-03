@@ -65,6 +65,7 @@ public class RichTagHandler implements Html.TagHandler {
         } else {
             if(tag.equalsIgnoreCase(CENTER)){
                 output.append("\n");
+
                 end(output, Center.class, new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER));
             }else if (tag.equalsIgnoreCase(BULLET_LI)) {
                 if (output.length() > 0 && output.charAt(output.length() - 1) != '\n') {
