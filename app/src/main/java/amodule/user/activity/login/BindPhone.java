@@ -10,15 +10,12 @@ import com.xiangha.R;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
-import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SecretInputView;
 import amodule.user.view.SpeechaIdentifyInputView;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 
 /**
  * Created by ：fei_teng on 2017/2/21 16:40.
@@ -62,14 +59,20 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
         speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speechaIdentifyInputView.setState(false);
-                login_identify.setOnBtnClickState(false);
-                login_identify.startCountDown();
+                loadManager.showProgressBar();
                 String phoneNum = phone_info.getPhoneNum();
-                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(BindPhone.this) {
+                reqIdentifySpeecha(phoneNum,new BaseLoginCallback(){
                     @Override
-                    public void loaded(int i, String s, Object o) {
+                    public void onSuccess() {
+                        loadManager.hideProgressBar();
+                        speechaIdentifyInputView.setState(false);
+                        login_identify.setOnBtnClickState(false);
+                        login_identify.startCountDown();
+                    }
 
+                    @Override
+                    public void onFalse(int flag) {
+                        loadManager.hideProgressBar();
                     }
                 });
             }
@@ -212,7 +215,6 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.tv_top_right:
                 dataStatistics("跳过绑定手机号");

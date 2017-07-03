@@ -45,12 +45,15 @@ import amodule.user.activity.login.RegisterByPhoneOne;
 import amodule.user.activity.login.SetPersonalInfo;
 import amodule.user.activity.login.SetSecretActivity;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import third.push.xg.XGPushServer;
 import xh.windowview.XhDialog;
+
+import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * Created by ：fei_teng on 2017/2/15 20:21.
@@ -261,7 +264,7 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(returnObj);
+                    ArrayList<Map<String, String>> maps = getListMapByJson(returnObj);
                     if (maps != null && maps.size() > 0) {
                         err_count_secret = 0;
                         LoginManager.loginSuccess(mAct, returnObj.toString());
@@ -374,7 +377,7 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(msg);
+                    ArrayList<Map<String, String>> maps = getListMapByJson(msg);
                     if (maps.size() > 0) {
                         Map<String, String> map = maps.get(0);
                         String result = map.get("result");
@@ -408,7 +411,7 @@ public class BaseLoginActivity extends BaseActivity {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     boolean registed = false;
-                    ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(msg);
+                    ArrayList<Map<String, String>> maps = getListMapByJson(msg);
                     if (maps.size() > 0) {
                         Map<String, String> map = maps.get(0);
                         String result = map.get("result");
@@ -431,6 +434,36 @@ public class BaseLoginActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    protected void reqIdentifySpeecha(String phoneNum, final BaseLoginCallback callback){
+        if (TextUtils.isEmpty(phoneNum)) {
+            Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
+            callback.onFalse(-1);
+            return;
+        }
+        String errorType = LoginCheck.checkPhoneFormatWell(this, "86", phoneNum);
+        if (LoginCheck.WELL_TYPE.equals(errorType)) {
+            ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum,
+                    new InternetCallback(this) {
+                        @Override
+                        public void loaded(int flag, String s, Object o) {
+                            if (ReqInternet.REQ_OK_STRING >= flag) {
+                                ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
+                                if (arrayList.size() > 0) {
+                                    Map<String, String> map = arrayList.get(0);
+                                    if (TextUtils.isEmpty(map.get("errorCode"))) {
+                                        callback.onSuccess();
+                                        return;
+                                    }
+                                }
+                            }
+                            callback.onFalse(flag);
+                        }
+                    });
+        }else{
+            callback.onFalse(-1);
+        }
     }
 
     /**
@@ -510,7 +543,7 @@ public class BaseLoginActivity extends BaseActivity {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     boolean success = false;
-                    ArrayList<Map<String, String>> lists = StringManager.getListMapByJson(returnObj);
+                    ArrayList<Map<String, String>> lists = getListMapByJson(returnObj);
                     Map<String, String> map = lists.get(0);
                     if (map != null && map.size() > 0) {
                         if ("2".equals(map.get("result"))) {

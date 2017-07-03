@@ -11,13 +11,10 @@ import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
-import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.SpeechaIdentifyInputView;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 import xh.windowview.XhDialog;
 
 /**
@@ -88,13 +85,19 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
         speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speechaIdentifyInputView.setState(false);
-                login_identify.setOnBtnClickState(false);
-                login_identify.startCountDown();
-                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(InputIdentifyCode.this) {
+                loadManager.showProgressBar();
+                reqIdentifySpeecha(phoneNum,new BaseLoginCallback(){
                     @Override
-                    public void loaded(int i, String s, Object o) {
+                    public void onSuccess() {
+                        loadManager.hideProgressBar();
+                        speechaIdentifyInputView.setState(false);
+                        login_identify.setOnBtnClickState(false);
+                        login_identify.startCountDown();
+                    }
 
+                    @Override
+                    public void onFalse(int flag) {
+                        loadManager.hideProgressBar();
                     }
                 });
             }

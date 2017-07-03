@@ -1,7 +1,6 @@
 package amodule.article.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -37,7 +36,6 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -59,7 +57,6 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
-import third.share.ShareTools;
 import third.share.UserHomeShare;
 import xh.windowview.XhDialog;
 
