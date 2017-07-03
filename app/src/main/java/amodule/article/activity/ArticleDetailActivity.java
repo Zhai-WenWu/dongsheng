@@ -92,9 +92,9 @@ public class ArticleDetailActivity extends BaseActivity {
     private boolean isAuthor;
     private Map<String, String> customerData;
     private Map<String, String> adDataMap;
-    private Map<String, String> commentMap;
+    private Map<String, String> commentMap = new HashMap<>();
     private Map<String, String> shareMap = new HashMap<>();
-    private String commentNum;
+    private String commentNum = "0";
     private boolean isKeyboradShow = false;
     private boolean isAdShow = false;
     private String code = "";//请求数据的code
@@ -243,6 +243,8 @@ public class ArticleDetailActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("list", jsonArray);
                             commentMap.put("data", jsonObject.toString());
+                            commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
+                            commentMap.put("commentNum", commentNum);
                             if(allDataListMap.indexOf(commentMap) < 0)
                                 allDataListMap.add(0,commentMap);
                             detailAdapter.notifyDataSetChanged();
@@ -528,6 +530,7 @@ public class ArticleDetailActivity extends BaseActivity {
         detailAdapter.notifyDataSetChanged();
 
         commentNum = mapArticle.get("commentNumber");
+        Log.i("tzy", "commentNum = " + commentNum);
         mArticleCommentBar.setPraiseAPI(StringManager.api_likeArticle);
         mArticleCommentBar.setData(mapArticle);
 
@@ -560,8 +563,8 @@ public class ArticleDetailActivity extends BaseActivity {
         if("0".equals(commentNum)) return;
         commentMap = StringManager.getFirstMap(object);
         commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
-        commentMap.put("data", object.toString());
         commentMap.put("commentNum", commentNum);
+        commentMap.put("data", object.toString());
         if (isRefresh) {
             int commentCount = Integer.parseInt(commentNum);
             commentMap.put("commentNum", "" + ++commentCount);
@@ -592,6 +595,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     mArticleAdContrler.handlerAdData(allDataListMap);
                     detailAdapter.notifyDataSetChanged();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
+                    loadManager.mLoadMore.getLoadMoreBtn(null).setVisibility(View.GONE);
                 } else
                     toastFaildRes(flag, true, object);
             }

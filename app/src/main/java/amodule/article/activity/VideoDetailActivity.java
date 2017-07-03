@@ -90,7 +90,7 @@ public class VideoDetailActivity extends BaseActivity {
     private VideoAdContorler mVideoAdContorler;
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
-    private Map<String, String> commentMap;
+    private Map<String, String> commentMap = new HashMap<>();
     private Map<String, String> adDataMap;
     private Map<String, String> shareMap = new HashMap<>();
     private Map<String,String> permissionMap = new HashMap<>();
@@ -100,7 +100,7 @@ public class VideoDetailActivity extends BaseActivity {
     private boolean hasPermission = true;
 
 
-    private String commentNum;
+    private String commentNum = "0";
     private boolean isKeyboradShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
@@ -321,6 +321,8 @@ public class VideoDetailActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("list", jsonArray);
                             commentMap.put("data", jsonObject.toString());
+                            commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
+                            commentMap.put("commentNum", commentNum);
                             if(allDataListMap.indexOf(commentMap) < 0)
                                 allDataListMap.add(commentMap);
                             detailAdapter.notifyDataSetChanged();
