@@ -3,11 +3,13 @@ package amodule.article.tools;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -140,7 +142,15 @@ public class ArticleAdContrler {
     }
 
     public View getBigAdView(Map<String, String> dataMap) {
+        if (dataMap == null || dataMap.isEmpty())
+            return null;
         final View adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad, null);
+        TextView titleTv = (TextView) adView.findViewById(R.id.title);
+        TextView nameTv = (TextView) adView.findViewById(R.id.user_name);
+        RelativeLayout container = (RelativeLayout) adView.findViewById(R.id.container);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
+        String title = dataMap.get("title");
+        params.topMargin = adView.getResources().getDimensionPixelSize(TextUtils.isEmpty(title) ? R.dimen.dp_15 : R.dimen.dp_6);
         //加载图片
         ImageView imageView = (ImageView) adView.findViewById(R.id.img);
         int width = ToolsDevice.getWindowPx(XHActivityManager.getInstance().getCurrentActivity()).widthPixels - Tools.getDimen(XHActivityManager.getInstance().getCurrentActivity(), R.dimen.dp_20) * 2;
@@ -148,8 +158,16 @@ public class ArticleAdContrler {
         imageView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
         Glide.with(XHActivityManager.getInstance().getCurrentActivity()).load(dataMap.get("imgUrl")).centerCrop().into(imageView);
         //加载title
-        TextView adTitle = (TextView) adView.findViewById(R.id.title);
-        adTitle.setText(new StringBuilder().append(dataMap.get("title")).append(" | ").append(dataMap.get("desc")));
+        if (TextUtils.isEmpty(title)) {
+            titleTv.setVisibility(View.GONE);
+            nameTv.setVisibility(View.GONE);
+        } else {
+            titleTv.setText(new StringBuilder().append(title).append(" | ").append(dataMap.get("desc")));
+            titleTv.setVisibility(View.VISIBLE);
+            nameTv.setText(title);
+            nameTv.setVisibility(View.VISIBLE);
+        }
+
         //设置ad点击
         adView.setOnClickListener(new View.OnClickListener() {
             @Override
