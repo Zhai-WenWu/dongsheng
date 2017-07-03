@@ -52,6 +52,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
     private String type = TYPE_ARTICLE;
     private String praiseAPI = "";
     private int praiseNum = 0;
+    private boolean needPlus = true;
     private boolean isSofa = false;
 
     public CommentBar(Context context) {
@@ -104,8 +105,15 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
             praiseButton.setEnabled(false);
             praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
         }
-        praiseNum = Integer.parseInt(map.get("likeNumber"));
-        praiseText.setText(praiseNum == 0 ? "赞" : "" + praiseNum);
+        map.put("likeNumber","1.2万");
+        try{
+            praiseNum = Integer.parseInt(map.get("likeNumber"));
+            praiseText.setText(praiseNum == 0 ? "赞" : "" + praiseNum);
+        }catch (NumberFormatException e){
+            needPlus = false;
+            praiseText.setText(map.get("likeNumber"));
+        }
+
 
         String commentNum = map.get("commentNumber");
         isSofa = "0".equals(commentNum);
@@ -169,9 +177,10 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
                     public void loaded(int flag, String url, Object obj) {
                     }
                 });
-
-        praiseNum++;
-        praiseText.setText(String.valueOf(praiseNum));
+        if(needPlus){
+            praiseNum++;
+            praiseText.setText(String.valueOf(praiseNum));
+        }
         praiseButton.setEnabled(false);
         praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
 
