@@ -379,6 +379,10 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	private void selectImageFromGrid(AdapterView<?> adapterView, int position, int mode, View view) {
 		Image image = (Image) adapterView.getAdapter().getItem(position);
 		if (image != null) {
+			if (image.path != null && image.path.endsWith(".webp")) {
+				Tools.showToast(getApplicationContext(), "不支持webp格式");
+				return;
+			}
 			// 多选模式
 			if (mode == ImageSelectorConstant.MODE_MULTI) {
 				Intent intent = new Intent(this, ImgWallActivity.class);
