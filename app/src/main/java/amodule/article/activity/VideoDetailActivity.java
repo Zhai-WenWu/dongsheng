@@ -547,6 +547,7 @@ public class VideoDetailActivity extends BaseActivity {
                     addADMapToData();
                     detailAdapter.notifyDataSetChanged();
 //                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
+                    listView.removeFooterView(loadManager.getSingleLoadMore(listView));
                 } else
                     toastFaildRes(flag, true, object);
                 requestForumData(false);//请求
