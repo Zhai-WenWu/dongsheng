@@ -74,7 +74,6 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
-import third.ad.tools.InMobiAdTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
@@ -137,13 +136,7 @@ public class Main extends Activity implements OnClickListener {
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
         StatService.setContext(this.getApplication());
-        //初始化
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                InMobiAdTools.getInstance().initSdk(Main.this);
-            }
-        }).start();
+
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
@@ -291,7 +284,7 @@ public class Main extends Activity implements OnClickListener {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        QbSdk.initX5Environment(Main.this, null);
+//        QbSdk.initX5Environment(Main.this, null);
         //视频合成so初始化，单独列出
         LoadLanSongSdk.initVideoSdk(getApplicationContext());
     }
@@ -617,7 +610,6 @@ public class Main extends Activity implements OnClickListener {
                 mainIndex.saveNowStatictis();
                 XHClick.newHomeStatictis(true, "");
             }
-
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
             if (allTab.containsKey("MainIndex")) {
                 MainHome mainIndex = (MainHome) allTab.get("MainIndex");

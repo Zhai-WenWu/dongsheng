@@ -84,12 +84,15 @@ public class XHScrollerSelf extends XHScrollerAdParent{
                         imgUrl2= temp.get("appHomeImg");
                         imgUrl3= temp.get("appSearchImg");
                     }
+                    if(!TextUtils.isEmpty(map_link.get("name"))){//不缺少数据才是成功的状态
+                        map.put("appImg", imgUrl);
+                        //自动选择图片---默认样式首页大图
+                        if(!TextUtils.isEmpty(imgUrl2))map.put("imgUrl", imgUrl2);
+                            else if(!TextUtils.isEmpty(imgUrl3))map.put("imgUrl", imgUrl3);
+                        else map.put("imgUrl", imgUrl);
 
-
-                    if(!TextUtils.isEmpty(map_link.get("name"))&&!TextUtils.isEmpty(imgUrl)){//不缺少数据才是成功的状态
-                        map.put("imgUrl", imgUrl);
-                        map.put("imgUrl2", imgUrl2);
-                        map.put("imgUrl3", imgUrl3);
+                        map.put("appHomeImg", imgUrl2);
+                        map.put("appSearchImg", imgUrl3);
                         map.put("iconUrl", imgUrl);
                         map.put("type",XHScrollerAdParent.ADKEY_BANNER);
                         xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);

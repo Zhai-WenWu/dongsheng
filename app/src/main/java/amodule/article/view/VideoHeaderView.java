@@ -158,8 +158,14 @@ public class VideoHeaderView extends RelativeLayout {
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
                 }
-                if (isAutoPaly && mVideoPlayerController != null)
-                    mVideoPlayerController.setOnClick();
+                if (isAutoPaly && mVideoPlayerController != null) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mVideoPlayerController.setOnClick();
+                        }
+                    });
+                }
             }
         }, activity, "wz_tiepian");
 
@@ -283,7 +289,7 @@ public class VideoHeaderView extends RelativeLayout {
             }
 
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
-            dishVideoImageView.setData(img,"");
+            dishVideoImageView.setImageScaleType(img,"",ImageView.ScaleType.CENTER_INSIDE);
 
             mVideoPlayerController.setNewView(dishVideoImageView);
             mVideoPlayerController.initVideoView2(videoUrl, selfVideoMap.get("title"), dishVideoImageView);

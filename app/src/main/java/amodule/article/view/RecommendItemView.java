@@ -40,6 +40,7 @@ public class RecommendItemView extends ItemBaseView {
     private TextView recBrowse;
     private TextView recComment;
     private ImageView videoIcon;
+    private ImageView adIcon;
 
     public RecommendItemView(Context context) {
         super(context, R.layout.a_article_recommend_item);
@@ -59,6 +60,7 @@ public class RecommendItemView extends ItemBaseView {
         adLayout = (RelativeLayout) findViewById(R.id.ad_layout);
         recImage = (ImageView) findViewById(R.id.rec_image);
         videoIcon = (ImageView) findViewById(R.id.video_icon);
+        adIcon = (ImageView) findViewById(R.id.ad_tag);
         recTitle = (TextView) findViewById(R.id.rec_title);
         recCustomerName = (TextView) findViewById(R.id.rec_customer_name);
         recBrowse = (TextView) findViewById(R.id.rec_browse);
@@ -87,6 +89,7 @@ public class RecommendItemView extends ItemBaseView {
             Map<String,String> styleDataMap = StringManager.getFirstMap(map.get("styleData"));
             videoIcon.setVisibility("2".equals(styleDataMap.get("type")) ? VISIBLE:GONE);
         }else videoIcon.setVisibility(GONE);
+        adIcon.setVisibility("2".equals(map.get("isAd")) ? VISIBLE : GONE);
         if (map.containsKey("customer")) {
             Map<String, String> customer = StringManager.getFirstMap(map.get("customer"));
             setViewText(recCustomerName, customer, "nickName");

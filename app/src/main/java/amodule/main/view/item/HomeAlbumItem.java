@@ -51,25 +51,6 @@ public class HomeAlbumItem extends HomeItem {
         mTitle = (TextView) findViewById(R.id.title);
         mNum1 = (TextView) findViewById(R.id.num1);
         mLayerView = findViewById(R.id.layer_view);
-        addListener();
-    }
-
-    private void addListener() {
-        this.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!TextUtils.isEmpty(mTransferUrl)) {
-                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                        if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                        else mTransferUrl+="?data_type="+mDataMap.get("type");
-                        mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                        XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-                    }
-                    AppCommon.openUrl((Activity) getContext(), mTransferUrl, false);
-                }
-                onItemClick();
-            }
-        });
     }
 
     @Override

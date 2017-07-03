@@ -170,7 +170,6 @@ public class UploadListControl {
      * @return progress   上传进度
      */
     public int initUpload(UploadItemData data) {
-
         if (!TextUtils.isEmpty(data.getRecMsg())) {
             return 100;
         }

@@ -107,6 +107,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         timesStamp = intent.getStringExtra("time");
         coverPath = intent.getStringExtra("coverPath");
         finalVideoPath = intent.getStringExtra("finalVideoPath");
+        Log.i("articleUpload","initData() draftId:" + draftId + "    timesStamp:" + timesStamp + "    coverPath:" + coverPath + "    finalVideoPath:" + finalVideoPath);
         isStopUpload = false;
     }
 
@@ -172,10 +173,10 @@ public class ArticleUploadListActivity extends BaseActivity {
                 refreshUploadView();
                 if (flag) {
                     isStopUpload = false;
-                    gotoFriendHome();
                 } else {
                     isStopUpload = true;
                 }
+//                gotoFriendHome();
             }
         };
     }
@@ -410,6 +411,8 @@ public class ArticleUploadListActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+
+
     private void goBack() {
         gotoFriendHome();
         if (!isStopUpload) {
@@ -490,22 +493,26 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void hintNetWork(){
-        final XhDialog xhDialog = new XhDialog(ArticleUploadListActivity.this);
-        xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
-                .setCanselButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-                    }
-                }).setSureButton("确定", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                xhDialog.cancel();
-                allStartOrPause(true);
-            }
-        }).setSureButtonTextColor("#333333")
-                .setCancelButtonTextColor("#333333")
-                .show();
+//        if(ToolsDevice.getNetActiveState(ArticleUploadListActivity.this)) {
+            final XhDialog xhDialog = new XhDialog(ArticleUploadListActivity.this);
+            xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
+                    .setCanselButton("取消", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            xhDialog.cancel();
+                        }
+                    }).setSureButton("确定", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    xhDialog.cancel();
+                    allStartOrPause(true);
+                }
+            }).setSureButtonTextColor("#333333")
+                    .setCancelButtonTextColor("#333333")
+                    .show();
+//        }else{
+//            Tools.showToast(ArticleUploadListActivity.this,"网络错误，请检查网络或重试");
+//        }
     }
 
 

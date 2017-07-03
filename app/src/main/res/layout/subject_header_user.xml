@@ -58,6 +58,7 @@
                 android:layout_height="@dimen/dp_16"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_4"
+                android:layout_marginTop="@dimen/dp_1"
                 android:gravity="center"
                 android:scaleType="fitCenter" />
 

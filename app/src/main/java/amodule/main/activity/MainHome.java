@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
@@ -63,6 +64,7 @@ public class MainHome extends MainBaseActivity {
     private RelativeLayout mSearch;
     private ImageView mMoreBtn;
     private int itemPosition = 0;//当前所在位置.
+    private int onResumeNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +176,8 @@ public class MainHome extends MainBaseActivity {
                 }
                 itemPosition = position;
 //                setFragmentCurrentPage(position);
+                //刷新广告数据
+                refreshAdData(position);
                 Log.i(tag, "viewpager::onPageSelected::" + position);
                 XHClick.mapStat(MainHome.this, "a_index530", "二级导航栏", "点击/滑动到" + listBean.get(position).getTitle() + "按钮");
             }
@@ -286,6 +290,13 @@ public class MainHome extends MainBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("zyj","mainHome::onresume");
+        refreshAdData();
+        //为了解决首页打开webview后再调用此句再打开的webView的大小就不是0*0啦
+        if(onResumeNum == 1){
+            SpecialWebControl.initSpecialWeb(this,"index","","");
+        }
+        onResumeNum ++;
     }
 
     @Override
@@ -398,7 +409,7 @@ public class MainHome extends MainBaseActivity {
     public void onActivityshow() {
         //检查更新
 //		SpecialWebControl.initSpecialWeb(this,"index","","");
-        showGuidancePage();
+//        showGuidancePage();
     }
 
     /**
@@ -470,18 +481,30 @@ public class MainHome extends MainBaseActivity {
     }
 
     /**
-     * 刷新广告策略。
+     * 刷新广告策略。--全部刷新
      */
     public void refreshAdData(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if(fragments==null||fragments.size()<=0)return;
         int size= fragments.size();
         for(int position=0;position<size;position++) {
             if (fragments != null && fragments.size() > position) {
                 if (fragments.get(position) instanceof HomeFragment) {
-                    ((HomeFragment) fragments.get(position)).isNeedRefresh();
+                    ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
                 }
             }
         }
     }
+    /**
+     * 刷新广告策略。---单个刷新
+     */
+    public void refreshAdData(int position){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            if (fragments != null && fragments.size() > position) {
+                if (fragments.get(position) instanceof HomeFragment) {
+                    ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
+                }
+            }
+        }
 }
 

@@ -73,12 +73,12 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                 login_identify.setOnBtnClickState(false);
                 login_identify.startCountDown();
                 String phoneNum = phone_info.getPhoneNum();
-                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum, new InternetCallback(LoginByPhoneIndentify.this) {
-                    @Override
-                    public void loaded(int i, String s, Object o) {
-
-                    }
-                });
+                ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum,
+                        new InternetCallback(LoginByPhoneIndentify.this) {
+                            @Override
+                            public void loaded(int i, String s, Object o) {
+                            }
+                        });
             }
         });
 
@@ -107,7 +107,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
             public void onCountDownEnd() {
                 refreshNextStepBtnStat();
                 final String zoneCode = phone_info.getZoneCode();
-                if("86".equals(zoneCode)) {
+                if ("86".equals(zoneCode)) {
                     if (isFirst) {
                         isFirst = false;
                         speechaIdentifyInputView.setVisibility(View.VISIBLE);
@@ -162,10 +162,10 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                         public void onFalse(int flag) {
                             login_identify.setOnBtnClickState(true);
                             speechaIdentifyInputView.setState(true);
-                            if(flag>= UtilInternet.REQ_OK_STRING) {
+                            if (flag >= UtilInternet.REQ_OK_STRING) {
                                 final XhDialog xhDialog = new XhDialog(LoginByPhoneIndentify.this);
-                                xhDialog.setTitle("该手机号尚未注册，" + "\n是否注册新账号？")
-                                        .setCanselButton("不注册", new View.OnClickListener() {
+                                xhDialog.setTitle("网络有问题或手机号未注册？")
+                                        .setCanselButton("取消", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录",
@@ -173,7 +173,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                                                 xhDialog.cancel();
                                             }
                                         })
-                                        .setSureButton("注册", new View.OnClickListener() {
+                                        .setSureButton("立即注册", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 register(LoginByPhoneIndentify.this, phone_info.getZoneCode(), phone_info.getPhoneNum());
@@ -183,19 +183,19 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                                             }
                                         })
                                         .setSureButtonTextColor("#007aff")
-                                        .setCancelButtonTextColor("#007aff");
-                                xhDialog.show();
+                                        .setCancelButtonTextColor("#007aff")
+                                        .show();
                             }
                         }
                     });
-                }else{
+                } else {
                     login_identify.setOnBtnClickState(true);
                     speechaIdentifyInputView.setState(true);
                 }
             }
         });
 
-        btn_next_step.init("登录", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("登录", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
                 XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录", "输入验证码，点击登录");
@@ -224,16 +224,6 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                 } else if (LoginCheck.ERROR_FORMAT.equals(errorType)) {
                     XHClick.mapStat(LoginByPhoneIndentify.this, PHONE_TAG, "手机验证码登录", "失败原因：手机号格式错误");
                 }
-            }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
             }
         });
 

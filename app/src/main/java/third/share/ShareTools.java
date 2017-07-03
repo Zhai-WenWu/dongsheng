@@ -58,7 +58,7 @@ public class ShareTools {
 	public static ShareTools getBarShare(Context act) {
 		if (shareTools == null) {
 			shareTools = new ShareTools();
-			ShareSDK.initSDK(act);
+//			ShareSDK.initSDK(act);
 		}
 		mContext = act;
 		return shareTools;

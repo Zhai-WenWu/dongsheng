@@ -1,6 +1,7 @@
 package amodule.user.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ public class NextStepView extends RelativeLayout implements View.OnClickListener
     private final TextView tv_left;
     private final TextView tv_right;
     private NextStepViewCallback callBack;
+    private LeftClickCallback leftClickCallback;
+    private RightClickCallback rightClickCallback;
 
     public NextStepView(Context context) {
         this(context, null);
@@ -49,18 +52,23 @@ public class NextStepView extends RelativeLayout implements View.OnClickListener
     }
 
 
-    public void init(String title, String leftStr, String rightStr, NextStepViewCallback callBack) {
-
+    public void init(@NonNull String title,  @NonNull NextStepViewCallback callBack) {
         this.callBack = callBack;
         user_next_step_btn.setText(title);
+    }
 
+    public void setLeftClick(String leftStr,LeftClickCallback leftClickCallback) {
+        this.leftClickCallback = leftClickCallback;
         if (!TextUtils.isEmpty(leftStr)) {
             tv_left.setText(leftStr);
             tv_left.setVisibility(VISIBLE);
         } else {
             tv_left.setVisibility(GONE);
         }
+    }
 
+    public void setRightClick(String rightStr, RightClickCallback rightClickCallback) {
+        this.rightClickCallback = rightClickCallback;
         if (!TextUtils.isEmpty(rightStr)) {
             tv_right.setText(rightStr);
             tv_right.setVisibility(VISIBLE);
@@ -77,10 +85,12 @@ public class NextStepView extends RelativeLayout implements View.OnClickListener
                 callBack.onClickCenterBtn();
                 break;
             case R.id.tv_left:
-                callBack.onClickLeftView();
+                if(leftClickCallback != null)
+                    leftClickCallback.onClickLeftView();
                 break;
             case R.id.tv_right:
-                callBack.onClickRightView();
+                if(rightClickCallback != null)
+                    rightClickCallback.onClickRightView();
                 break;
             default:
                 break;
@@ -89,11 +99,13 @@ public class NextStepView extends RelativeLayout implements View.OnClickListener
 
 
     public interface NextStepViewCallback {
-
         void onClickCenterBtn();
-
+    }
+    public interface LeftClickCallback{
         void onClickLeftView();
+    }
 
+    public interface RightClickCallback{
         void onClickRightView();
     }
 

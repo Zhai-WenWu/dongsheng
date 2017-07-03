@@ -1,6 +1,7 @@
 package acore.override.activity.base;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
@@ -139,7 +140,8 @@ public class WebActivity extends BaseActivity{
 	}
 
 	private static void setCookie(String theUrl){
-		String cookieKey = StringManager.apiUrl.replace(StringManager.apiTitle, "").replace("/", "");
+//		String cookieKey = StringManager.apiUrl.replace(StringManager.apiTitle, "").replace("/", "");
+		Log.i("zhangyujian","StringManager.domain::"+StringManager.domain+":::"+theUrl);
 		if(theUrl.indexOf(MallStringManager.domain)>-1){//电商 ds.xiangha.com
 			Map<String,String> header=MallReqInternet.in().getHeader(mShowWeb);
 			String cookieKey_mall=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
@@ -152,13 +154,13 @@ public class WebActivity extends BaseActivity{
 			}
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
-		}else if (theUrl.indexOf(cookieKey) > -1) {//菜谱  .xiangha.com
+		}else if (theUrl.indexOf(StringManager.domain) > -1) {//菜谱  .xiangha.com
 			Map<String,String> header = ReqInternet.in().getHeader(mShowWeb);
 			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
 			String[] cookie = cookieStr.split(";");
 			CookieManager cookieManager = CookieManager.getInstance();
 			for (int i = 0; i < cookie.length; i++) {
-				cookieManager.setCookie(cookieKey, cookie[i]);
+				cookieManager.setCookie(StringManager.domain, cookie[i]);
 			}
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);

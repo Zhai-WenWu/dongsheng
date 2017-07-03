@@ -87,25 +87,14 @@ public class CheckSrcret extends BaseLoginActivity implements View.OnClickListen
         });
         ll_secret.showSecret();
 
-        btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("下一步",  new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
                 XHClick.mapStat(CheckSrcret.this, TAG_ACCOCUT, "修改手机号",
                         "方法2验证密码页，点下一步");
                 checkSecret();
             }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
-            }
         });
-
     }
 
     private void checkSecret() {

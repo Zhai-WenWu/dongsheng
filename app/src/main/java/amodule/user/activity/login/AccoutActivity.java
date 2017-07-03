@@ -31,9 +31,7 @@ import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 import third.push.xg.XGPushServer;
 import third.share.ShareTools;
-import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilLog;
-import xh.basic.tool.UtilString;
 import xh.windowview.XhDialog;
 
 /**
@@ -92,7 +90,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         tel = intent.getStringExtra(PHONE_NUM);
         zoneCode = intent.getStringExtra(ZONE_CODE);
 
-        bindMap = new HashMap<String, String>();
+        bindMap = new HashMap<>();
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -270,13 +268,16 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
     public void getData() {
 
-        String param = "type=getData&devCode=" + XGPushServer.getXGToken(this);
+        String param = new StringBuffer()
+                .append("type=getData")
+                .append("&devCode=").append(XGPushServer.getXGToken(this))
+                .toString();
         ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback(this) {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    ArrayList<Map<String, String>> listReturn = StringManager.getListMapByJson(returnObj);
                     if (listReturn.size() > 0) {
                         Map<String, String> user_info = listReturn.get(0);
                         tel = user_info.get("tel");
@@ -300,8 +301,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         ReqInternet.in().doPost(StringManager.api_getThirdBind, "", new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    ArrayList<Map<String, String>> listReturn = StringManager.getListMapByJson(returnObj);
                     if (listReturn.size() > 0) {
                         Map<String, String> thirdBind_info = listReturn.get(0);
                         setBindInfo(thirdBind_info);
@@ -379,20 +380,18 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         String title = "";
         String tongjiStr = "";
 
-        if ("email".equals(type)) {
-            title = "邮箱";
-        } else if ("qq".equals(type)) {
-            title = "QQ号";
-        } else if ("weibo".equals(type)) {
-            title = "微博号";
-        } else if ("weixin".equals(type)) {
-            title = "微信号";
-        } else if ("meizu".equals(type)) {
-            title = "魅族号";
+        switch (type) {
+            case "email": title = "邮箱"; break;
+            case "qq": title = "QQ号"; break;
+            case "weibo": title = "微博号"; break;
+            case "weixin": title = "微信号"; break;
+            case "meizu": title = "魅族号"; break;
+            default:
+                break;
         }
 
         tongjiStr = title;
-        if("邮箱".equals(tongjiStr)){
+        if ("邮箱".equals(tongjiStr)) {
             tongjiStr = "解绑邮箱";
         }
 
@@ -441,14 +440,11 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "弹框解绑，选择确定");
                             unbindThirdParty(type);
                         }
-
                     }
                 })
                 .setSureButtonTextColor("#007aff")
                 .setCancelButtonTextColor("#007aff");
         xhDialog.show();
-
-
     }
 
     private void unbindEmail() {
@@ -458,8 +454,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             @Override
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(msg);
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    ArrayList<Map<String, String>> listReturn = StringManager.getListMapByJson(msg);
                     if (listReturn.size() > 0) {
                         Map<String, String> map = listReturn.get(0);
                         if ("2".equals(map.get("result"))) {
@@ -498,8 +494,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                 if ("meizu".equals(tempStr)) {
                     tempStr = "tempStr";
                 }
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(msg);
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    ArrayList<Map<String, String>> listReturn = StringManager.getListMapByJson(msg);
                     if (listReturn.size() > 0) {
                         Map<String, String> map = listReturn.get(0);
                         if ("2".equals(map.get("result"))) {
@@ -554,7 +550,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-//        finish();
 
         if (loadManager.isShowingProgressBar()) {
             loadManager.hideProgressBar();
@@ -591,15 +586,14 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     public void thirdAuth(final String platform, final String type) {
         loadManager.showProgressBar();
 //        Tools.showToast(mAct, "授权开始...");
-        ShareSDK.initSDK(mAct);
-        Platform pf = ShareSDK.getPlatform(mAct, platform);
-        if (pf.isValid()) {
-            pf.removeAccount();
+//        ShareSDK.initSDK(mAct);
+        Platform pf = ShareSDK.getPlatform( platform);
+        if (pf.isAuthValid()) {
+            pf.removeAccount(true);
         }
         //false为客户端   true为网页版
         pf.SSOSetting(false);
         //设置监听
-        //Setting listener
         pf.setPlatformActionListener(new PlatformActionListener() {
 
             @Override
@@ -627,16 +621,18 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         if (action == Platform.ACTION_USER_INFOR) {
                             String devCode = XGPushServer.getXGToken(mAct);
                             PlatformDb plfDb = plat.getDb();
-                            param = "type=thirdLogin&devCode=" + devCode +
-                                    "&p1=" + plfDb.getToken() +
-                                    "&p2=" + plfDb.getUserId() +
-                                    "&p3=" + mPlatformName +
-                                    "&p4=" + plfDb.getUserName() +
-                                    "&p5=" + plfDb.getUserIcon() +
-                                    "&p6=" + getGender(plfDb.getUserGender());
+                            StringBuffer stringBuffer =new StringBuffer().append("type=thirdLogin")
+                                    .append("&devCode=").append(devCode)
+                                    .append("&p1=").append(plfDb.getToken())
+                                    .append("&p2=").append(plfDb.getUserId())
+                                    .append("&p3=").append(mPlatformName)
+                                    .append("&p4=").append(plfDb.getUserName())
+                                    .append("&p5=").append(plfDb.getUserIcon())
+                                    .append("&p6=").append(getGender(plfDb.getUserGender()));
                             if (platform.equals(ShareTools.WEI_XIN)) {
-                                param += "&p7=" + res.get("unionid").toString();
+                                stringBuffer.append("&p7=").append(res.get("unionid").toString());
                             }
+                            param = stringBuffer.toString();
                             UtilLog.print("d", "---------第三方用户信息----------" + res.toString());
                         }
                         //
@@ -653,7 +649,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
                                     @Override
                                     public void loaded(int flag, String url, Object returnObj) {
-                                        if (flag >= UtilInternet.REQ_OK_STRING) {
+                                        if (flag >= ReqInternet.REQ_OK_STRING) {
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定成功");
                                             getData();
                                         } else {
@@ -690,9 +686,9 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(handler!=null){
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
-            handler=null;
+            handler = null;
         }
     }
 }

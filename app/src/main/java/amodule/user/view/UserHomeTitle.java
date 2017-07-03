@@ -100,18 +100,13 @@ public class UserHomeTitle {
             bar_title.setLayoutParams(layout);
             //对返回键进行处理
             ImageView friend_back = (ImageView) mParentTitleView.findViewById(R.id.a_user_home_title_back);
-            int dp_42 = Tools.getDimen(mAct, R.dimen.dp_42);
-            int dp_10 = Tools.getDimen(mAct, R.dimen.dp_10);
-            RelativeLayout.LayoutParams LayoutParams_back = new RelativeLayout.LayoutParams(dp_42, dp_42);
-            LayoutParams_back.setMargins(0, Tools.getStatusBarHeight(mAct), 0, 0);
+            RelativeLayout.LayoutParams LayoutParams_back = (RelativeLayout.LayoutParams) friend_back.getLayoutParams();
+            LayoutParams_back.topMargin = Tools.getStatusBarHeight(mAct);
             friend_back.setLayoutParams(LayoutParams_back);
-            friend_back.setPadding(dp_10, dp_10, dp_10, dp_10);
-//			bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
             //对举报进行处理
-//            RelativeLayout.LayoutParams LayoutParams_report = (RelativeLayout.LayoutParams) friend_report.getLayoutParams();
-//            LayoutParams_report.setMargins(0, Tools.getStatusBarHeight(mAct), 0, 0);
-//            LayoutParams_report.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-//            friend_report.setLayoutParams(LayoutParams_report);
+            RelativeLayout.LayoutParams LayoutParams_report = (RelativeLayout.LayoutParams) friend_report.getLayoutParams();
+            LayoutParams_report.topMargin = Tools.getStatusBarHeight(mAct) - mAct.getResources().getDimensionPixelSize(R.dimen.dp_6);
+            friend_report.setLayoutParams(LayoutParams_report);
         }
     }
 

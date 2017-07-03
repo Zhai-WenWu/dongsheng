@@ -93,96 +93,97 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                     }
                 });
 
-        login_identify.init("请输入4位验证码", new IdentifyInputView.IdentifyInputViewCallback() {
-            @Override
-            public void onCountDownEnd() {
-                refreshNextStepBtnStat();
-                final String zoneCode = phone_info.getZoneCode();
-                if("86".equals(zoneCode)) {
-                    if (isFirst) {
-                        isFirst = false;
-                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                    }
-                    speechaIdentifyInputView.setState(true);
-                }
-            }
-
-            @Override
-            public void onInputDataChanged() {
-
-                refreshNextStepBtnStat();
-            }
-
-            @Override
-            public void onCliclSendIdentify() {
-
-                final String newZoneCode = phone_info.getZoneCode();
-                final String newPhoneNum = phone_info.getPhoneNum();
-                if (TextUtils.isEmpty(newZoneCode) || TextUtils.isEmpty(newPhoneNum)) {
-                    Toast.makeText(AddNewPhone.this, "请输入手机号", Toast.LENGTH_SHORT).show();
-                    login_identify.setOnBtnClickState(true);
-                    return;
-                }
-
-                String error_type = LoginCheck.checkPhoneFormatWell(AddNewPhone.this, newZoneCode, newPhoneNum);
-                if (LoginCheck.WELL_TYPE.equals(error_type)) {
-                    if (newZoneCode.equals(zoneCode) && newPhoneNum.equals(phoneNum)) {
-                        Toast.makeText(AddNewPhone.this, "你已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
-                        login_identify.setOnBtnClickState(true);
-                        dataStatics("方法1失败原因：已经绑定这个手机号","方法2失败原因：已经绑定这个手机号");
-                        return;
+        login_identify.init("请输入4位验证码",
+                new IdentifyInputView.IdentifyInputViewCallback() {
+                    @Override
+                    public void onCountDownEnd() {
+                        refreshNextStepBtnStat();
+                        final String zoneCode = phone_info.getZoneCode();
+                        if ("86".equals(zoneCode)) {
+                            if (isFirst) {
+                                isFirst = false;
+                                speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                            }
+                            speechaIdentifyInputView.setState(true);
+                        }
                     }
 
-                    dataStatics("方法1新手机号页，点获取验证码", "方法2新手机号页，点获取验证码");
-                    checkPhoneRegisted(AddNewPhone.this, newZoneCode, newPhoneNum, new BaseLoginCallback() {
-                        @Override
-                        public void onSuccess() {
-                            Toast.makeText(AddNewPhone.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onInputDataChanged() {
+
+                        refreshNextStepBtnStat();
+                    }
+
+                    @Override
+                    public void onCliclSendIdentify() {
+
+                        final String newZoneCode = phone_info.getZoneCode();
+                        final String newPhoneNum = phone_info.getPhoneNum();
+                        if (TextUtils.isEmpty(newZoneCode) || TextUtils.isEmpty(newPhoneNum)) {
+                            Toast.makeText(AddNewPhone.this, "请输入手机号", Toast.LENGTH_SHORT).show();
                             login_identify.setOnBtnClickState(true);
-                            dataStatics("方法1失败原因：已经绑定其他账号", "方法2失败原因：已经绑定其他账号");
+                            return;
                         }
 
-                        @Override
-                        public void onFalse(int flag) {
-                            loadManager.showProgressBar();
+                        String error_type = LoginCheck.checkPhoneFormatWell(AddNewPhone.this, newZoneCode, newPhoneNum);
+                        if (LoginCheck.WELL_TYPE.equals(error_type)) {
+                            if (newZoneCode.equals(zoneCode) && newPhoneNum.equals(phoneNum)) {
+                                Toast.makeText(AddNewPhone.this, "你已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
+                                login_identify.setOnBtnClickState(true);
+                                dataStatics("方法1失败原因：已经绑定这个手机号", "方法2失败原因：已经绑定这个手机号");
+                                return;
+                            }
+
+                            dataStatics("方法1新手机号页，点获取验证码", "方法2新手机号页，点获取验证码");
+                            checkPhoneRegisted(AddNewPhone.this, newZoneCode, newPhoneNum, new BaseLoginCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    Toast.makeText(AddNewPhone.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
+                                    login_identify.setOnBtnClickState(true);
+                                    dataStatics("方法1失败原因：已经绑定其他账号", "方法2失败原因：已经绑定其他账号");
+                                }
+
+                                @Override
+                                public void onFalse(int flag) {
+                                    loadManager.showProgressBar();
+                                    login_identify.setOnBtnClickState(true);
+                                    reqIdentifyCode(newZoneCode, newPhoneNum,
+                                            new SMSSendCallback() {
+                                                @Override
+                                                public void onSendSuccess() {
+                                                    loadManager.hideProgressBar();
+                                                    login_identify.startCountDown();
+                                                    speechaIdentifyInputView.setState(false);
+                                                }
+
+                                                @Override
+                                                public void onSendFalse() {
+                                                    login_identify.setOnBtnClickState(true);
+                                                    loadManager.hideProgressBar();
+                                                    speechaIdentifyInputView.setState(true);
+                                                    dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
+                                                }
+                                            }
+                                    );
+                                }
+                            });
+                        } else {
                             login_identify.setOnBtnClickState(true);
-                            reqIdentifyCode(newZoneCode, newPhoneNum,
-                                    new SMSSendCallback() {
-                                        @Override
-                                        public void onSendSuccess() {
-                                            loadManager.hideProgressBar();
-                                            login_identify.startCountDown();
-                                            speechaIdentifyInputView.setState(false);
-                                        }
-
-                                        @Override
-                                        public void onSendFalse() {
-                                            login_identify.setOnBtnClickState(true);
-                                            loadManager.hideProgressBar();
-                                            speechaIdentifyInputView.setState(true);
-                                            dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
-                                        }
-                                    }
-                            );
+                            speechaIdentifyInputView.setState(true);
                         }
-                    });
-                }else {
-                    login_identify.setOnBtnClickState(true);
-                    speechaIdentifyInputView.setState(true);
-                }
-            }
-        });
+                    }
+                });
 
-        btn_next_step.init("完成", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("完成", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
 
                 dataStatics("方法1新手机号页，点完成", "方法2新手机号页，点完成");
                 String type = TYPE_MOTIFY_SMS;
                 String errorType = LoginCheck.checkPhoneFormatWell(AddNewPhone.this,
-                        phone_info.getZoneCode(),  phone_info.getPhoneNum());
+                        phone_info.getZoneCode(), phone_info.getPhoneNum());
 
-                if(LoginCheck.WELL_TYPE.equals(errorType)){
+                if (LoginCheck.WELL_TYPE.equals(errorType)) {
                     motifyPhone(AddNewPhone.this, type, phone_info.getZoneCode(), phone_info.getPhoneNum(),
                             login_identify.getIdentify(), zoneCode, phoneNum,
                             new BaseLoginCallback() {
@@ -201,22 +202,12 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                                     Toast.makeText(AddNewPhone.this, "验证码错误", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                }else if(LoginCheck.NOT_11_NUM.equals(errorType)){
+                } else if (LoginCheck.NOT_11_NUM.equals(errorType)) {
                     dataStatics("方法1失败原因：手机号不是11位", "方法2失败原因：手机号不是11位");
 
-                }else if(LoginCheck.ERROR_FORMAT.equals(errorType)){
+                } else if (LoginCheck.ERROR_FORMAT.equals(errorType)) {
                     dataStatics("方法1失败原因：手机号格式错误", "方法2失败原因：手机号格式错误");
                 }
-            }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
             }
         });
 

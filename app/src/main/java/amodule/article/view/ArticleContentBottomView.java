@@ -62,7 +62,7 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
             if(TextUtils.isEmpty(repAddressStr) || "null".equals(repAddressStr)){
                 articleRepintSource.setText("转载");
             }else{
-                articleRepintSource.setText("转载：" + repAddressStr);
+                articleRepintSource.setText("转载: " + repAddressStr);
             }
             articleRepintSource.setVisibility(VISIBLE);
         }

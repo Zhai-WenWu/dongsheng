@@ -78,7 +78,6 @@
                 android:layout_toRightOf="@+id/article_select_check_hint"
                 android:background="@null"
                 android:hint="输入来源"
-                android:maxEms="200"
                 android:gravity="bottom"
                 android:textColor="#666666"
                 android:textColorHint="#ccc"

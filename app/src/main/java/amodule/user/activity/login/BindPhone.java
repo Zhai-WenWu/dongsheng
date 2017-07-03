@@ -92,7 +92,7 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
             @Override
             public void onCountDownEnd() {
                 final String zoneCode = phone_info.getZoneCode();
-                if("86".equals(zoneCode)) {
+                if ("86".equals(zoneCode)) {
                     if (isFirst) {
                         isFirst = false;
                         speechaIdentifyInputView.setVisibility(View.VISIBLE);
@@ -161,7 +161,7 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
         });
         user_secret.showSecret();
 
-        btn_next_step.init("提交", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("提交", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
 
@@ -196,25 +196,17 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                 }
 
             }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
-            }
         });
     }
 
 
     private void refreshNextStepBtnState() {
 
-        btn_next_step.setClickCenterable(!(phone_info.isDataAbsence()
-                || login_identify.isIdentifyCodeEmpty()
-                || user_secret.isEmpty()));
+        btn_next_step.setClickCenterable(
+                !(phone_info.isDataAbsence()
+                        || login_identify.isIdentifyCodeEmpty()
+                        || user_secret.isEmpty())
+        );
 
     }
 
@@ -230,7 +222,6 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                 break;
         }
     }
-
 
 
     private void dataStatistics(String threeLevel) {

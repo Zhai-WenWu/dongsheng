@@ -21,8 +21,6 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.inmobi.ads.InMobiAdRequestStatus;
-import com.inmobi.ads.InMobiNative;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -206,99 +204,6 @@ public class WelcomeDialog extends Dialog {
                     @Override
                     public View getTextSikp() {
                         return textSkip;
-                    }
-                });
-        //设置Inmobi广告回调
-        WelcomeAdTools.getInstance().setmInMobiNativeCallback(
-                new WelcomeAdTools.InMobiNativeCallback() {
-                    @Override
-                    public void onAdLoadSucceeded(final InMobiNative inMobiNative) {
-                        try {
-                            Log.i("zhangyujian","InMobiNativeCallback");
-                            isAdLoadOk = true;
-                            //成功
-                            JSONObject content = new JSONObject((String) inMobiNative.getAdContent());
-                            //json字符串解析数据
-                            final String landingURL = content.getString("landingURL");
-                            String url = content.getJSONObject("screenshots").getString("url");
-                            //处理view
-                            mADLayout.removeAllViews();
-                            View view = LayoutInflater.from(activity).inflate(R.layout.view_ad_inmobi, null);
-                            final ImageView imageView = (ImageView) view.findViewById(R.id.image);
-                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            mADLayout.addView(view);
-
-                            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
-                                    .load(url)
-                                    .build();
-                            if (bitmapRequest != null)
-                                bitmapRequest.into(new SubBitmapTarget() {
-                                    @Override
-                                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-                                        if (bitmap != null) {
-                                            if(mAdTime>5){
-                                                endCountDown();
-                                                mAdTime=5;
-                                                startCountDown(false);
-                                            }else if(mAdTime<3){
-                                                closeDialog();
-                                                return;
-                                            }
-                                            showSkipContainer();
-                                            UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(activity).widthPixels, 0, false);
-                                            //曝光
-                                            InMobiNative.bind(imageView, inMobiNative);
-                                            XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_inmobi");
-                                        }
-                                    }
-                                });
-
-                            //点击
-                            imageView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    //点击统计
-                                    inMobiNative.reportAdClick(null); //此方法参数通常传null}
-
-                                    //友盟统计
-                                    XHClick.track(activity, "点击启动页广告");
-                                    XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_inmobi");
-
-                                    if (!TextUtils.isEmpty(landingURL)) {
-                                        Handler handler = new Handler(getMainLooper());
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                AppCommon.openUrl(activity, landingURL, true);
-                                            }
-                                        });
-                                    }
-                                    closeDialog();
-                                }
-                            });
-                            //回调数据
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                        //失败
-                    }
-
-                    @Override
-                    public void onAdDismissed(InMobiNative inMobiNative) {
-                        //广告被点击之后回到app
-                        closeDialog();
-                    }
-
-                    @Override
-                    public void onAdDisplayed(InMobiNative inMobiNative) {
-                    }
-
-                    @Override
-                    public void onUserLeftApplication(InMobiNative inMobiNative) {
                     }
                 });
         //设置XHBanner回调

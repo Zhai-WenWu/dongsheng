@@ -102,10 +102,10 @@ public class DishHeaderView extends LinearLayout {
     /**
      * 初始化view
      *
-     * @param activitys
+     * @param activity
      */
-    public void initView(Activity activitys) {
-        this.activity = activitys;
+    public void initView(Activity activity) {
+        this.activity = activity;
         distance = Tools.getDimen(activity, R.dimen.dp_45);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理

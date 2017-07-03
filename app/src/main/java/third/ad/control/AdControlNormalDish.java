@@ -42,7 +42,8 @@ public class AdControlNormalDish extends AdControlParent{
     private int downNextAdNum = 0;
     private Map<String,String> downAdState=new HashMap<>();//存储广告请求当前状态
     private Map<String,String> downAd=new HashMap<>();//是否要请求下一个数据块。
-    private String[] adPlayIds;
+    private String[] adPlayIds;//全部广告ID
+    private String[] adPlayIdsOne;//部分广告数据ID
 
     public AdControlNormalDish(String statisticKey,String[] adPlayIds){
         adControlMap = new HashMap<>();
@@ -213,9 +214,9 @@ public class AdControlNormalDish extends AdControlParent{
     @Override
     public boolean isNeedRefresh() {
         AdOptionHomeDish adOptionHomeDish = null;
-        if(adControlMap.containsKey(0)){
+        if(downAdControlMap.containsKey(0)){
             adOptionHomeDish=adControlMap.get(0);
-        }else if(adControlMap.containsKey(1)){
+        }else if(downAdControlMap.containsKey(1)){
             adOptionHomeDish=adControlMap.get(1);
         }
         if(adOptionHomeDish!=null){

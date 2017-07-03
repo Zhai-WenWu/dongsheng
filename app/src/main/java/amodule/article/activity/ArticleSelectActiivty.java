@@ -3,8 +3,10 @@ package amodule.article.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -106,6 +108,25 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         reprintImg.setOnClickListener(this);
         reprintLink = (EditText) findViewById(R.id.article_select_check_reprint_link);
         reprintLink.setOnClickListener(this);
+        reprintLink.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() > 200){
+                    Tools.showToast(ArticleSelectActiivty.this,"最多200字");
+                    reprintLink.setText(s.subSequence(0,200));
+                }
+            }
+        });
         findViewById(R.id.article_select_check_hint).setOnClickListener(this);
         if(2 == uploadArticleData.getIsOriginal()){
             isCheck = 2;
@@ -175,7 +196,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private boolean isLoading = false;
-    private void getClassifyData(){
+    private synchronized void getClassifyData(){
         if(isLoading)return;
         isLoading = true;
         loadManager.showProgressBar();
@@ -275,10 +296,14 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     return;
                 }
                 if(isCheck > 0) {
-                    if (sqLite.checkHasMedia(draftId)){
-                        upload();
+                    if(ToolsDevice.getNetActiveState(ArticleSelectActiivty.this)) {
+                        if (sqLite.checkHasMedia(draftId)) {
+                            upload();
+                        } else {
+                            hintDilog();
+                        }
                     }else{
-                        hintDilog();
+                        Tools.showToast(ArticleSelectActiivty.this,"网络错误，请检查网络或重试");
                     }
                 }else{
                     Tools.showToast(ArticleSelectActiivty.this,"请选择原创/转载");

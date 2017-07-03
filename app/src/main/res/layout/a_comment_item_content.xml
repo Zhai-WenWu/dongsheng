@@ -7,9 +7,8 @@
 
     <acore.widget.multifunction.view.MultifunctionTextView
         android:id="@+id/commend_cotent_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="天干气躁，小心火烛"
         android:textSize="@dimen/sp_16"
         android:textColor="#535353"
         />

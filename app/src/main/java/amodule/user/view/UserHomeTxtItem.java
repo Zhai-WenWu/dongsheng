@@ -217,15 +217,30 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                         }
                     }
                 }
-                String val = handleNumber(mDataMap.get("commentNumber"));
-                if (!TextUtils.isEmpty(val) && mNum2 != null && Integer.parseInt(val) > 0) {
-                    mNum2.setText(val + "评论");
-                    mNum2.setVisibility(View.VISIBLE);
-                }
-                String allClick = handleNumber(mDataMap.get("allClick"));
-                if (!TextUtils.isEmpty(allClick) && mNum1 != null && Integer.parseInt(allClick) > 0) {
-                    mNum1.setText(allClick + "浏览");
-                    mNum1.setVisibility(View.VISIBLE);
+                ArrayList<Map<String, String>> numInfos = StringManager.getListMapByJson(mDataMap.get("numInfo"));
+                if (numInfos != null && !numInfos.isEmpty()) {
+                    for (int i = 0; i < numInfos.size(); i ++) {
+                        Map<String, String> numInfo = numInfos.get(i);
+                        if (numInfo != null && !numInfo.isEmpty()) {
+                            String numStr = numInfo.get("");
+                            if (!TextUtils.isEmpty(numStr)) {
+                                switch (i) {
+                                    case 0:
+                                        if (mNum1 != null) {
+                                            mNum1.setText(numStr);
+                                            mNum1.setVisibility(View.VISIBLE);
+                                        }
+                                        break;
+                                    case 1:
+                                        if (mNum2 != null) {
+                                            mNum2.setText(numStr);
+                                            mNum2.setVisibility(View.VISIBLE);
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
