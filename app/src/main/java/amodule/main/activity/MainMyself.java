@@ -127,6 +127,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         moneyNum.setText("0");
         scoreNum.setText("0");
         couponNum.setText("0");
+        vipInfo.setVisibility(View.GONE);
         my_renzheng.setVisibility(View.GONE);
         my_vip.setVisibility(View.GONE);
         myself_lv.setVisibility(View.GONE);

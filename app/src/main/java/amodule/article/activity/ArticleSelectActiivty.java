@@ -296,10 +296,14 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     return;
                 }
                 if(isCheck > 0) {
-                    if (sqLite.checkHasMedia(draftId)){
-                        upload();
+                    if(ToolsDevice.getNetActiveState(ArticleSelectActiivty.this)) {
+                        if (sqLite.checkHasMedia(draftId)) {
+                            upload();
+                        } else {
+                            hintDilog();
+                        }
                     }else{
-                        hintDilog();
+                        Tools.showToast(ArticleSelectActiivty.this,"网络错误，请检查网络或重试");
                     }
                 }else{
                     Tools.showToast(ArticleSelectActiivty.this,"请选择原创/转载");
