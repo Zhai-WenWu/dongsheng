@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
@@ -63,6 +64,7 @@ public class MainHome extends MainBaseActivity {
     private RelativeLayout mSearch;
     private ImageView mMoreBtn;
     private int itemPosition = 0;//当前所在位置.
+    private int onResumeNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,6 +292,11 @@ public class MainHome extends MainBaseActivity {
         super.onResume();
         Log.i("zyj","mainHome::onresume");
         refreshAdData();
+        //为了解决首页打开webview后再调用此句再打开的webView的大小就不是0*0啦
+        if(onResumeNum == 1){
+            SpecialWebControl.initSpecialWeb(this,"index","","");
+        }
+        onResumeNum ++;
     }
 
     @Override
