@@ -241,6 +241,8 @@ public class ArticleDetailAdapter extends BaseAdapter {
         View view = new View(context);
         if (mOnGetBigAdView != null)
             view = mOnGetBigAdView.getBigAdView(map);
+        if (view == null)
+            return layout;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         int dp_17 = Tools.getDimen(context, R.dimen.dp_17);
         int dp_20 = Tools.getDimen(context, R.dimen.dp_20);
