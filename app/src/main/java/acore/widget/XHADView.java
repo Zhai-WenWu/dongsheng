@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -141,6 +140,7 @@ public class XHADView extends RelativeLayout{
 			public void run() {
 				Message msg = new Message();
 				msg.arg1 = displayTime;
+//				msg.arg1 = 0;
 				handler.sendMessage(msg);
 			}
 		};
@@ -207,24 +207,9 @@ public class XHADView extends RelativeLayout{
 		}
 		try {
 			if(isClosed){
-				Animation animStart = AnimationUtils.loadAnimation(getContext(), R.anim.translate_out);
-				animStart.setAnimationListener(new Animation.AnimationListener() {
-					@Override
-					public void onAnimationStart(Animation animation) {
-					}
-
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						onDestroy();
-					}
-
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-					}
-				});
-				animLayout.startAnimation(animStart);
+				onDestroy();
 			}
-		}catch (Exception e){
+		}catch (Exception ignored){
 
 		}
 	}

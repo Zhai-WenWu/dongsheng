@@ -23,6 +23,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
@@ -590,6 +591,36 @@ public class RichText extends EditText implements TextWatcher {
         }
     }
 
+    public boolean previousLineContainCenter(){
+        String[] lines = TextUtils.split(getEditableText().toString(), "\n");
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < lines.length; i++) {
+            int lineStart = 0;
+            for (int j = 0; j < i; j++) {
+                lineStart = lineStart + lines[j].length() + 1;
+            }
+
+            int lineEnd = lineStart + lines[i].length();
+            if (lineStart >= lineEnd) {
+                continue;
+            }
+
+            if (lineStart <= getSelectionStart() && getSelectionEnd() <= lineEnd) {
+                list.add(i-1);
+            } else if (getSelectionStart() <= lineStart && lineEnd <= getSelectionEnd()) {
+                list.add(i-1);
+            }
+        }
+
+        for (Integer i : list) {
+            if (!containCenterFormat(i)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     protected boolean containCenterFormat(){
         String[] lines = TextUtils.split(getEditableText().toString(), "\n");
         List<Integer> list = new ArrayList<>();
@@ -937,8 +968,16 @@ public class RichText extends EditText implements TextWatcher {
      * @param link
      * @param desc
      */
-    public void addLinkMapToArray(String link, String desc) {
-        Map linkMap = new HashMap();
+    public void addLinkMapToArray(@NonNull String link, @NonNull String desc) {
+        Log.i("tzy","addLinkMapToArray");
+        for(Map<String,String> map:linkMapArray){
+            Log.i("tzy","addLinkMapToArray for");
+            if(map.get(KEY_URL).equals(link) && map.get(KEY_TITLE).equals(desc)){
+                Log.i("tzy","containsValue");
+                return;
+            }
+        }
+        Map<String,String> linkMap = new HashMap();
         linkMap.put(KEY_URL, link);
         linkMap.put(KEY_TITLE, desc);
         linkMapArray.add(linkMap);

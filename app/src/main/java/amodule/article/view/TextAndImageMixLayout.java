@@ -140,7 +140,13 @@ public class TextAndImageMixLayout extends LinearLayout
         for(int index = 0; index < getChildCount() ; index ++){
             BaseView view = (BaseView) getChildAt(index);
             if(view instanceof EditTextView){
-                ((EditTextView)view).putLinkMapArray(urlsArray);
+                EditTextView editTextView = ((EditTextView)view);
+                String text = editTextView.getText().toString();
+                for(Map<String,String> map:urlsArray){
+                    if(text.contains(map.get("title"))){
+                        editTextView.addLinkToData(map.get("url"),map.get("title"));
+                    }
+                }
             }
         }
     }

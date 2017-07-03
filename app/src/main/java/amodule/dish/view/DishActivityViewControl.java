@@ -77,6 +77,7 @@ public class DishActivityViewControl {
     private String code;
     private boolean isGoLoading = true;
     public String dishJson;//历史记录中dishInfo的数据
+    private boolean hasPermission = true;
 
     private int statusBarHeight = 0;//广告所用bar高度
     private DishViewCallBack callBack;
@@ -281,6 +282,12 @@ public class DishActivityViewControl {
             dishTitleViewControl.setstate(state);
         }
         dishTitleViewControl.setViewState();
+        if(permissionMap != null && permissionMap.containsKey("offLine")){
+            Map<String,String> offlineMap = StringManager.getFirstMap(permissionMap.get("offLine"));
+            offlineMap = StringManager.getFirstMap(offlineMap.get("common"));
+            dishTitleViewControl.setOfflineLayoutVisibility("1".equals(offlineMap.get("isShow")));
+        }
+
         //头部view
         dishHeaderView.setData(list, new DishHeaderView.DishHeaderVideoCallBack() {
             @Override
@@ -299,13 +306,13 @@ public class DishActivityViewControl {
             }
         },permissionMap);
         adapter.notifyDataSetChanged();
-        //TODO test
         ArrayList<Map<String,String>> list_makes = new ArrayList<>();
         Map<String,String> commonPermission = StringManager.getFirstMap(permissionMap.get("video"));
         commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
         final String url = commonPermission.get("url");
         if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
                 ){
+            hasPermission = true;
             dishTitleViewControl.setOfflineLayoutVisibility(true);
             textPractice.setVisibility(View.VISIBLE);
             //步骤
@@ -314,8 +321,9 @@ public class DishActivityViewControl {
                 list_makes.get(i).put("style", DishStepView.DISH_STYLE_STEP);
             }
         }else{
-            dishTitleViewControl.setOfflineLayoutVisibility(false);
+//            dishTitleViewControl.setOfflineLayoutVisibility(false);
 //            dregdeVipLayout.setVisibility(View.VISIBLE);
+            hasPermission = false;
             dregdeVipLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -465,7 +473,7 @@ public class DishActivityViewControl {
                     headerView.getLocationOnScreen(location);
                     int viewBottom = location[1] + headerView.getHeight();
                     int mixHeight = Tools.getStatusBarHeight(activity) + Tools.getDimen(activity,R.dimen.dp_45);
-                    if(viewBottom <= mixHeight && !dishTitleViewControl.isOfflineLayoutVisibility()){
+                    if(viewBottom <= mixHeight && !hasPermission){
                         dregdeVipLayout.setVisibility(View.VISIBLE);
                     }else
                         dregdeVipLayout.setVisibility(View.GONE);
