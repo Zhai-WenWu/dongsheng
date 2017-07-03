@@ -105,7 +105,6 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
             praiseButton.setEnabled(false);
             praiseButton.setBackgroundResource(R.drawable.bg_article_praise_unenable);
         }
-        map.put("likeNumber","1.2万");
         try{
             praiseNum = Integer.parseInt(map.get("likeNumber"));
             praiseText.setText(praiseNum == 0 ? "赞" : "" + praiseNum);
