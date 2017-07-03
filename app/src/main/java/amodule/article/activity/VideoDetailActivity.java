@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -79,6 +80,7 @@ public class VideoDetailActivity extends BaseActivity {
 
     private TextView mTitle;
     private ImageView rightButton;
+    private RelativeLayout dredgeVipLayout;
     private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
     /** 头部view */
@@ -95,6 +97,9 @@ public class VideoDetailActivity extends BaseActivity {
     private Map<String, String> shareMap = new HashMap<>();
     private Map<String,String> permissionMap = new HashMap<>();
     private Map<String,String> detailPermissionMap = new HashMap<>();
+    private boolean hasPagePermission = true;
+    private boolean contiunRefresh = true;
+    private String lastPermission = "";
     private boolean isAuthor;
     private Map<String, String> customerData;
     private boolean hasPermission = true;
@@ -144,13 +149,17 @@ public class VideoDetailActivity extends BaseActivity {
         }
     }
 
-    boolean permissionTest = false;
     @Override
     protected void onRestart() {
         super.onRestart();
-        permissionTest= true;
         if (loadManager != null)
             loadManager.hideProgressBar();
+        page = 0;
+        hasPagePermission = true;
+        detailPermissionMap.clear();
+        permissionMap.clear();
+        if(mHaederLayout != null)
+            mHaederLayout.setLoginStatus();
         refreshData(false);
     }
 
@@ -188,11 +197,13 @@ public class VideoDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null)
             code = bundle.getString("code");
+        //TODO
+        code = "190";
+//        code = "106";
     }
 
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_video_detail);
-        initWebView();
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
@@ -201,11 +212,16 @@ public class VideoDetailActivity extends BaseActivity {
         initListView();
         //初始化评论框
         initCommentBar();
+
+        initDredgeVip();
     }
 
-    private void initWebView() {
+    private void initDredgeVip() {
         WebviewManager manager = new WebviewManager(this,loadManager,true);
         xhWebView = manager.createWebView(R.id.XHWebview);
+        xhWebView.setVisibility(View.GONE);
+        dredgeVipLayout = (RelativeLayout) findViewById(R.id.dredge_vip_bottom_layout);
+        dredgeVipLayout.setVisibility(View.GONE);
     }
 
     private void initStatusBar() {
@@ -383,6 +399,27 @@ public class VideoDetailActivity extends BaseActivity {
             }
         });
         listView.setAdapter(detailAdapter);
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(mHaederLayout != null && mHaederLayout.getVideoHeaderView() != null){
+                    View headerView = mHaederLayout.getVideoHeaderView();
+                    int[] location = new int[2];
+                    headerView.getLocationOnScreen(location);
+                    int viewBottom = location[1] + headerView.getHeight();
+                    int mixHeight = Tools.getStatusBarHeight(VideoDetailActivity.this) + Tools.getDimen(VideoDetailActivity.this,R.dimen.dp_45);
+                    if(viewBottom <= mixHeight && mCommentBar.getVisibility() != View.VISIBLE){
+                        dredgeVipLayout.setVisibility(View.VISIBLE);
+                    }else
+                        dredgeVipLayout.setVisibility(View.GONE);
+                }
+            }
+        });
         View view = new View(this);
         view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
         listView.addFooterView(view);
@@ -429,8 +466,6 @@ public class VideoDetailActivity extends BaseActivity {
      * @param onlyUser 是否只刷新用户数据
      */
     private void refreshData(boolean onlyUser) {
-        if (!onlyUser)
-            resetData();
         requestVideoData(onlyUser);
     }
 
@@ -442,6 +477,7 @@ public class VideoDetailActivity extends BaseActivity {
         if (commentMap != null) commentMap.clear();
         allDataListMap.clear();
         if (detailAdapter != null) detailAdapter.notifyDataSetChanged();
+
     }
 
     private void requestVideoData(final boolean onlyUser) {
@@ -454,22 +490,35 @@ public class VideoDetailActivity extends BaseActivity {
                 Log.i("tzy","obj = " + obj);
                 //权限检测
                 if(permissionMap.isEmpty()){
+                    if(TextUtils.isEmpty(lastPermission)){
+                        lastPermission = (String) obj;
+                    }else{
+                        if(lastPermission.equals(obj.toString())){
+                            contiunRefresh = false;
+                            return;
+                        }
+                    }
                     permissionMap = StringManager.getFirstMap(obj);
                     Log.i("tzy","permissionMap = " + permissionMap.toString());
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-                        hasPermission = analyzePagePermissionData(pagePermission);
-                        if(!hasPermission) return;
+                        hasPagePermission = analyzePagePermissionData(pagePermission);
+                        if(!hasPagePermission) return;
                     }
-                    if(permissionMap.containsKey("detail"))
+                    if(permissionMap.containsKey("detail")){
                         detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                    }
                 }
             }
 
             @Override
             public void loaded(int flag, String url, Object object) {
-                if(!hasPermission && !permissionTest) return;
-
+                if(!hasPagePermission || !contiunRefresh) {
+                    loadManager.hideProgressBar();
+                    return;
+                }
+                if (!onlyUser)
+                    resetData();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysVideoData(onlyUser, StringManager.getFirstMap(object),detailPermissionMap);
                 } else
@@ -525,6 +574,26 @@ public class VideoDetailActivity extends BaseActivity {
 
         detailAdapter.notifyDataSetChanged();
         listView.setVisibility(View.VISIBLE);
+
+        Map<String,String> commonPermission = StringManager.getFirstMap(detailPermissionMap.get("video"));
+        commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
+        final String url = commonPermission.get("url");
+        if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
+                ){
+            //正常
+            mCommentBar.setVisibility(View.VISIBLE);
+            dredgeVipLayout.setVisibility(View.GONE);
+        }else{
+            //有限制
+            mCommentBar.setVisibility(View.GONE);
+            dredgeVipLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!TextUtils.isEmpty(url))
+                        AppCommon.openUrl(VideoDetailActivity.this,url,true);
+                }
+            });
+        }
     }
 
     private void requestRelateData(boolean onlyUser) {
@@ -550,7 +619,12 @@ public class VideoDetailActivity extends BaseActivity {
                     listView.removeFooterView(loadManager.getSingleLoadMore(listView));
                 } else
                     toastFaildRes(flag, true, object);
-                requestForumData(false);//请求
+                Map<String,String> commonPermission = StringManager.getFirstMap(detailPermissionMap.get("video"));
+                commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
+                if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
+                        ){
+                    requestForumData(false);//请求
+                }
             }
         });
     }

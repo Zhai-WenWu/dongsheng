@@ -250,7 +250,7 @@ public class DishTitleViewControl implements View.OnClickListener{
         String mType = "", mTitle = "", mClickUrl = "", mContent = "", mImgUrl = "",isVideo="";
         //是否是自己区分数据
         String code = UtilString.getListMapByJson(dishInfoMap.get("customer")).get(0).get("code");
-        //登陆并是自己的菜谱贴
+        //登录并是自己的菜谱贴
         if (LoginManager.isLogin() && !TextUtils.isEmpty(code) && code.equals(LoginManager.userInfo.get("code"))) {
             mTitle = "【香哈菜谱】我上传了" + dishInfoMap.get("name") + "的做法";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
@@ -414,5 +414,13 @@ public class DishTitleViewControl implements View.OnClickListener{
             Intent intent = new Intent(detailDish, LoginByAccout.class);
             detailDish.startActivity(intent);
         }
+    }
+
+    public void setOfflineLayoutVisibility(boolean isShow){
+        detailDish.findViewById(off_layout).setVisibility(isShow ? (state != null ? View.GONE : View.VISIBLE) : View.GONE);
+    }
+
+    public boolean isOfflineLayoutVisibility(){
+        return detailDish.findViewById(off_layout).getVisibility() == View.VISIBLE;
     }
 }

@@ -336,7 +336,7 @@ public class BaseLoginActivity extends BaseActivity {
 
 
     /**
-     * 手机验证码登陆
+     * 手机验证码登录
      *
      * @param mAct
      * @param phoneNum     手机号

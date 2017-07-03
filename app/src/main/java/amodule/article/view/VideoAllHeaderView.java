@@ -99,6 +99,11 @@ public class VideoAllHeaderView extends LinearLayout {
         mCurrType = type;
     }
 
+    public void setLoginStatus(){
+        if(videoHeaderView != null)
+            videoHeaderView.setLoginStatus();
+    }
+
     public void onResume() {
         if(videoHeaderView!=null)
             videoHeaderView.onResume();
@@ -116,5 +121,9 @@ public class VideoAllHeaderView extends LinearLayout {
 
     public void setCallBack(VideoViewCallBack callBack) {
         this.callBack = callBack;
+    }
+
+    public VideoHeaderView getVideoHeaderView() {
+        return videoHeaderView;
     }
 }

@@ -364,11 +364,14 @@ public class DishHeaderView extends LinearLayout {
         return isUrlVaild;
     }
     private RelativeLayout dredgeVipLayout;
+    private VideoDredgeVipView vipView;
     private void setVipPermision(final Map<String, String> common){
-        if("1".equals(common.get("isShow"))){
+        if(!StringManager.getBooleanByEqualsValue(common,"isShow")
+                ){
+            Log.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
-            VideoDredgeVipView vipView = new VideoDredgeVipView(context);
+            vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
             vipView.setDredgeVipClick(new OnClickListener() {
@@ -382,8 +385,6 @@ public class DishHeaderView extends LinearLayout {
                     dredgeVipLayout.setVisibility(GONE);
                     mVideoPlayerController.onStart();
                     VDVideoViewController.getInstance(context).onStartWithVideoResume();
-
-//                    VDVideoViewController.getInstance(context).seekTo(currentTime);
                     mVideoPlayerController.setControlLayerVisibility(true);
                 }
             });
@@ -532,12 +533,21 @@ public class DishHeaderView extends LinearLayout {
         callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
     }
 
+    public void setLoginStatus(){
+        if(vipView != null)
+            vipView.setLogin();
+    }
+
     public void onResume() {
         isOnResuming = true;
     }
 
     public void onPause() {
         isOnResuming = false;
+    }
+
+    public View getVideoView(){
+        return videoViewGroup;
     }
 
     /**

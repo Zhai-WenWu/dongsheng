@@ -113,7 +113,7 @@ public class ActivityMethodManager {
             } else
                 mAct.finish();
         }
-        //电商是3，登陆界面是4，其他页面是5，加次判断是为了解决从首页发视频菜谱，跳到上传列表，通过colseLevel关闭发视频菜谱页面，饼跳到菜谱列表页面
+        //电商是3，登录界面是4，其他页面是5，加次判断是为了解决从首页发视频菜谱，跳到上传列表，通过colseLevel关闭发视频菜谱页面，饼跳到菜谱列表页面
         else if (colse_level != 6 || level < 4)
             colse_level = 1000;
     }

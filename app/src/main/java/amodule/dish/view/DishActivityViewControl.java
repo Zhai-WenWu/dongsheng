@@ -187,6 +187,8 @@ public class DishActivityViewControl {
         adapter.notifyDataSetChanged();
         xhWebView.setVisibility(View.GONE);
         dregdeVipLayout.setVisibility(View.GONE);
+        if (dishHeaderView != null)
+            dishHeaderView.setLoginStatus();
     }
 
     /**
@@ -255,7 +257,6 @@ public class DishActivityViewControl {
         } else if (lable.equals("recommendDishMenu")) {//菜谱推荐
             dishFootView.analyzeMenuData(listmaps,permissionMap);
         } else if (lable.equals("relatedRecommend")) {//相关推荐
-
             dishFootView.analyzeRelatedData(listmaps,permissionMap);
         } else if (lable.equals("wonderfulRecommend")) {//精彩推荐
             dishFootView.analyzeWonderfulData(listmaps,adDishContorl,permissionMap);
@@ -273,6 +274,13 @@ public class DishActivityViewControl {
         isHasVideo = dishInfoMap.get("hasVideo").equals("2");
         XHClick.track(activity,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         dishTitleViewControl.setData(dishInfoMap,code,dishJson,isHasVideo,dishInfoMap.get("dishState"),loadManager);
+        Map<String, String> customer = StringManager.getFirstMap(list.get(0).get("customer"));
+        if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
+                && customer.get("code").equals(LoginManager.userInfo.get("code"))) {
+            state = "";
+            dishTitleViewControl.setstate(state);
+        }
+        dishTitleViewControl.setViewState();
         //头部view
         dishHeaderView.setData(list, new DishHeaderView.DishHeaderVideoCallBack() {
             @Override
@@ -296,8 +304,9 @@ public class DishActivityViewControl {
         Map<String,String> commonPermission = StringManager.getFirstMap(permissionMap.get("video"));
         commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
         final String url = commonPermission.get("url");
-        if(commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow")
+        if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
                 ){
+            dishTitleViewControl.setOfflineLayoutVisibility(true);
             textPractice.setVisibility(View.VISIBLE);
             //步骤
             list_makes = StringManager.getListMapByJson(list.get(0).get("makes"));
@@ -305,7 +314,8 @@ public class DishActivityViewControl {
                 list_makes.get(i).put("style", DishStepView.DISH_STYLE_STEP);
             }
         }else{
-            dregdeVipLayout.setVisibility(View.VISIBLE);
+            dishTitleViewControl.setOfflineLayoutVisibility(false);
+//            dregdeVipLayout.setVisibility(View.VISIBLE);
             dregdeVipLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -336,17 +346,9 @@ public class DishActivityViewControl {
         list_share.add(map_share);
 //        setAdapterData(list_share, false);
 //        dishFootView.setDataShare(map_share);
-
-        Map<String, String> customer = StringManager.getFirstMap(list.get(0).get("customer"));
-        if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
-                && customer.get("code").equals(LoginManager.userInfo.get("code"))) {
-            state = "";
-            dishTitleViewControl.setstate(state);
-        }
         if ("2".equals(list.get(0).get("hasVideo")) && (list_makes == null || list_makes.size() <= 0)) {
             tongjiId = "a_menu_detail_onlyvideo430";
         }
-        dishTitleViewControl.setViewState();
     }
 
     /**
@@ -456,6 +458,18 @@ public class DishActivityViewControl {
                 dishHeaderView.onListViewScroll();
                 if(dishFootView!=null)
                 dishFootView.onListViewScroll();
+
+                if(isHasVideo && dishHeaderView != null && dishHeaderView.getVideoView() != null){
+                    View headerView = dishHeaderView.getVideoView();
+                    int[] location = new int[2];
+                    headerView.getLocationOnScreen(location);
+                    int viewBottom = location[1] + headerView.getHeight();
+                    int mixHeight = Tools.getStatusBarHeight(activity) + Tools.getDimen(activity,R.dimen.dp_45);
+                    if(viewBottom <= mixHeight && !dishTitleViewControl.isOfflineLayoutVisibility()){
+                        dregdeVipLayout.setVisibility(View.VISIBLE);
+                    }else
+                        dregdeVipLayout.setVisibility(View.GONE);
+                }
             }
         });
         listview.setOnTouchListener(new View.OnTouchListener() {

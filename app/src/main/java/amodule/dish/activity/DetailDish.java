@@ -72,6 +72,8 @@ public class DetailDish extends BaseActivity {
     private String imgLevel = FileManager.save_cache;//图片缓存机制---是离线菜谱改变其缓存机制
     public boolean isHasVideo = false;//是否显示视频数据
     private boolean hasPermission = true;
+    private boolean contiunRefresh = true;
+    private String lastPermission = "";
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -115,19 +117,16 @@ public class DetailDish extends BaseActivity {
         startTime= System.currentTimeMillis();
     }
 
-    public static boolean isTestRestart = false;
     @Override
     protected void onRestart() {
         super.onRestart();
         page = 1;
-        isTestRestart= true;
         hasPermission = true;
         isHasVideo = false;
-            detailPermissionMap.clear();
+        detailPermissionMap.clear();
         permissionMap.clear();
-        dishActivityViewControl.reset();
-        mHandler.sendEmptyMessage(LOAD_DISH);
         dishJson = "";
+        mHandler.sendEmptyMessage(LOAD_DISH);
     }
 
     /**
@@ -205,35 +204,46 @@ public class DetailDish extends BaseActivity {
     /**
      * 请求网络
      */
-    private void setRequest(int pages) {
+    private void setRequest(final int pages) {
         String params = "?code=" + code + "&pg=" + pages;
         if (!TextUtils.isEmpty(state)) {//是当前用户的菜谱。
             params += "&isNew=1";
         }
+
         ReqInternet.in().doGet(StringManager.api_getDishInfoNew + params, new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-//                if(isTestRestart)return;
-//                Log.i("tzy","obj = " + obj);
-//                //权限检测
-//                if(permissionMap.isEmpty()){
-//                    permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
-//                    if(permissionMap.containsKey("page")){
-//                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-//                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
-//                        if(!hasPermission) return;
-//                    }
-//                    if(permissionMap.containsKey("detail"))
-//                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
-//                }
+                Log.i("tzy","obj = " + obj);
+                //权限检测
+                if(permissionMap.isEmpty()){
+                    if(TextUtils.isEmpty(lastPermission)){
+                        lastPermission = (String) obj;
+                    }else{
+                        if(lastPermission.equals(obj.toString())){
+                            contiunRefresh = false;
+                            return;
+                        }
+                    }
+                    permissionMap = StringManager.getFirstMap(obj);
+                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+                    if(permissionMap.containsKey("page")){
+                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
+                        if(!hasPermission) return;
+                    }
+                    if(permissionMap.containsKey("detail"))
+                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                }
             }
 
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    if(!hasPermission && !isTestRestart) return;
+                    if(!hasPermission || !contiunRefresh) return;
+                    if(pages == 1){
+                        dishActivityViewControl.reset();
+                    }
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
                         analyzeData(StringManager.getListMapByJson(o),detailPermissionMap);
                         if(page < 3)
