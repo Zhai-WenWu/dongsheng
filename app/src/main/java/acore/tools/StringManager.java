@@ -262,53 +262,53 @@ public class StringManager extends UtilString {
     public final static String api_checkPhoneRegisterState = apiUrl + urlSection.get("auth6") + "checkPhoneIsRegistered"; //手机号是否注册
     public final static String api_checkEmailRegisterState = apiUrl + urlSection.get("auth6") + "checkEmailIsRegistered"; //邮箱是否注册
     public final static String api_modifyPhone = apiUrl + urlSection.get("user6") + "modifyPhone"; //注册手机号
-    public final static String api_sendVoiceVerify = apiUrl + "Main7/VoiceVerify/send"; //获取语音验证码
+    public final static String api_sendVoiceVerify = apiUrl + "main7/voiceVerify/send"; //获取语音验证码
 
     /*** 新首页接口*/
-    public final static String API_GET_LEVEL = apiUrl + "Main7/Recommend/getLevel"; //获取首页层级数据
-    public final static String API_RECOMMEND = apiUrl + "Main7/Recommend/recommend"; //获取首页数据
-    public final static String API_LOGIN_APP = apiUrl + "Main7/public/loginApp"; //获取首页数据
-    public final static String API_RECOMMEND_TOP = apiUrl + "Main7/Recommend/topv1"; //获取推荐置顶数据
+    public final static String API_GET_LEVEL = apiUrl + "main7/recommend/getLevel"; //获取首页层级数据
+    public final static String API_RECOMMEND = apiUrl + "main7/recommend/recommend"; //获取首页数据
+    public final static String API_LOGIN_APP = apiUrl + "main7/public/loginApp"; //获取首页数据
+    public final static String API_RECOMMEND_TOP = apiUrl + "main7/recommend/topv1"; //获取推荐置顶数据
 
     /*** 个人主页：（视频、文章、问答）接口*/
-    public final static String API_USERMAIN_LEVEL = apiUrl + "Main7/Article/getClassList";//获取个人主页导航数据
+    public final static String API_USERMAIN_LEVEL = apiUrl + "main7/article/getClassList";//获取个人主页导航数据
 
     /*** 推荐列表的统计*/
     public final static String API_STATISTIC_S6 = "http://stat.xiangha.com/s6.gif"; //新首页统计
 
     /*文章*/
-    public final static String api_getArticleClass = apiUrl + "Main7/Article/getArticleClass"; //文章分类
-    public final static String api_getArticleRelated = apiUrl + "Main7/Article/getRelated"; //文章详情中的相关推荐
-    public final static String api_getArticleInfo = apiUrl + "Main7/Article/articleInfo"; //文章详情
-    public final static String api_articleAdd = apiUrl + "Main7/Article/articleAdd"; //发布文章
-    public final static String api_likeArticle = apiUrl + "Main7/Article/likeArticle"; //文章点赞
-    public final static String api_articleDel = apiUrl + "Main7/Article/articleDel"; //删除文章
+    public final static String api_getArticleClass = apiUrl + "main7/article/getArticleClass"; //文章分类
+    public final static String api_getArticleRelated = apiUrl + "main7/article/getRelated"; //文章详情中的相关推荐
+    public final static String api_getArticleInfo = apiUrl + "main7/article/articleInfo"; //文章详情
+    public final static String api_articleAdd = apiUrl + "main7/article/articleAdd"; //发布文章
+    public final static String api_likeArticle = apiUrl + "main7/article/likeArticle"; //文章点赞
+    public final static String api_articleDel = apiUrl + "main7/article/articleDel"; //删除文章
 
     /*视频*/
-    public final static String getVideoClass = apiUrl + "Main7/Video/getVideoClass"; //视频分类
-    public final static String api_getVideoInfo = apiUrl + "/Main7/Video/videoInfo"; //视频详情
-    public final static String api_getVideoRelated = apiUrl + "/Main7/Video/getRelated"; //视频详情
-    public final static String api_likeVideo = apiUrl + "/Main7/Video/likeVideo"; //视频详情
-    public final static String api_videoAdd = apiUrl + "Main7/Video/videoAdd"; //发布视频
-    public final static String api_videoDel = apiUrl + "Main7/Video/videoDel"; //发布视频
+    public final static String getVideoClass = apiUrl + "main7/video/getVideoClass"; //视频分类
+    public final static String api_getVideoInfo = apiUrl + "main7/video/videoInfo"; //视频详情
+    public final static String api_getVideoRelated = apiUrl + "main7/video/getRelated"; //视频详情
+    public final static String api_likeVideo = apiUrl + "main7/video/likeVideo"; //视频详情
+    public final static String api_videoAdd = apiUrl + "main7/video/videoAdd"; //发布视频
+    public final static String api_videoDel = apiUrl + "main7/video/videoDel"; //发布视频
 
     /*评论*/
-    public final static String api_forumList = apiUrl + "Main7/Forum/forumList"; //发布文章
-    public final static String api_likeForum = apiUrl + "Main7/Forum/likeForum"; //评论点赞
-    public final static String api_replayList = apiUrl + "Main7/Forum/replayList"; //评论点赞
-    public final static String api_addForum = apiUrl + "Main7/Forum/addForum"; //添加评论
-    public final static String api_delForum = apiUrl + "Main7/Forum/delForum"; //删除评论
-    public final static String api_addReplay = apiUrl + "Main7/Forum/addReplay"; //添加回复
-    public final static String api_delReplay = apiUrl + "Main7/Forum/delReplay"; //删除回复
+    public final static String api_forumList = apiUrl + "main7/forum/forumList"; //发布文章
+    public final static String api_likeForum = apiUrl + "main7/forum/likeForum"; //评论点赞
+    public final static String api_replayList = apiUrl + "main7/forum/replayList"; //评论点赞
+    public final static String api_addForum = apiUrl + "main7/forum/addForum"; //添加评论
+    public final static String api_delForum = apiUrl + "main7/forum/delForum"; //删除评论
+    public final static String api_addReplay = apiUrl + "main7/forum/addReplay"; //添加回复
+    public final static String api_delReplay = apiUrl + "main7/forum/delReplay"; //删除回复
 
     /*评论举报列表*/
-    public final static String API_COMMENTS_REPORT = apiUrl + "Main7/Forum/reportList";
-    public final static String API_COMMIT_REPORT = apiUrl + "Main7/Forum/addReport";
+    public final static String API_COMMENTS_REPORT = apiUrl + "main7/forum/reportList";
+    public final static String API_COMMIT_REPORT = apiUrl + "main7/forum/addReport";
 
     /*个人主页列表*/
-    public final static String API_USERHOME_ARTICLE = apiUrl + "Main7/Article/articleList";//文章列表
-    public final static String API_USERHOME_VIDEO = apiUrl + "Main7/Video/videoList";//视频列表
-    public final static String API_USERHOME_ANSWER = apiUrl + "Main7/Qa/qaList";//问答列表
+    public final static String API_USERHOME_ARTICLE = apiUrl + "main7/article/articleList";//文章列表
+    public final static String API_USERHOME_VIDEO = apiUrl + "main7/video/videoList";//视频列表
+    public final static String API_USERHOME_ANSWER = apiUrl + "main7/qa/qaList";//问答列表
 
     public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
     public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
