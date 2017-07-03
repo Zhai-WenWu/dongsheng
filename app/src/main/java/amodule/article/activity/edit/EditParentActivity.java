@@ -640,6 +640,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         Log.i("tzy", "content = " + content);
         uploadArticleData.setVideoArray(mixLayout.getVideoArrayMap());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());
+        Log.i("articleUpload", "saveDraft() imgs:" + uploadArticleData.getImgs());
         uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
 
         if (uploadArticleData.getId() > 0) {
