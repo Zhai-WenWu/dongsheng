@@ -96,7 +96,6 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         if (allContent != null)
             allContent.setBackgroundColor(Color.parseColor("#ffffff"));
         View upload = findViewById(R.id.upload);
-        upload.setVisibility(View.VISIBLE);
         upload.setOnClickListener(this);
         TextView link = (TextView) findViewById(R.id.article_select_check_original_link);
         link.setText(Html.fromHtml("<u>《香哈原创声明》</u>"));
@@ -216,6 +215,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                         gridView.setAdapter(adapterSimple);
                         findViewById(R.id.article_select_classify).setVisibility(View.VISIBLE);
                         gridView.setVisibility(View.VISIBLE);
+                        findViewById(R.id.upload).setVisibility(View.VISIBLE);
                         findViewById(R.id.article_select_other).setVisibility(View.VISIBLE);
                         reprintLink.clearFocus();
                         loadManager.hideProgressBar();
