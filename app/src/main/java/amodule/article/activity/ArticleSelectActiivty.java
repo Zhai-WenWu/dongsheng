@@ -96,6 +96,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         if (allContent != null)
             allContent.setBackgroundColor(Color.parseColor("#ffffff"));
         View upload = findViewById(R.id.upload);
+        upload.setVisibility(View.GONE);
         upload.setOnClickListener(this);
         TextView link = (TextView) findViewById(R.id.article_select_check_original_link);
         link.setText(Html.fromHtml("<u>《香哈原创声明》</u>"));
