@@ -59,6 +59,7 @@ import static acore.tools.ToolsDevice.getWindowPx;
  */
 public class XHClick {
     public static final int CIRCULATION_TIME = 30000;
+    public static final int HOME_STATICTIS_TIME = 10*1000;
     public static final int NOTIFY_A = 1;
     public static final int NOTIFY_B = 2;
     public static final int NOTIFY_C = 3;
@@ -68,8 +69,10 @@ public class XHClick {
     private static long startTime;//开始的时间戳
     private static long stopTime;//结束的时间戳
     private static String path = "";//记录页面停留时间的字符串
-    private static Handler handler;
+    private static Handler handler;//s2
     private static Runnable runnable;
+    private static Handler handlerStatictis;//s6统计
+    private static Runnable runnableStatictis;
 
     private static long viewPageStartTime;//viewpage 子tab的页面停留时间(开始的时间戳)
     private static long viewPageStopTime;//viewpage 子tab的页面停留时间(结束的时间戳)
@@ -412,14 +415,25 @@ public class XHClick {
                         }
                     });
 
-                //循环统计feed流数据
-                loopHandlerStatictis();
                 //循环计时器 每隔30秒执行一次
                 handler.postDelayed(runnable, CIRCULATION_TIME);
             }
         };
         //启动计时器 30秒后执行
         handler.postDelayed(runnable, CIRCULATION_TIME);
+
+        //********首页统计10秒循环统计
+        handlerStatictis = new Handler(Looper.getMainLooper());
+        runnableStatictis= new Runnable() {
+            @Override
+            public void run() {
+                //循环统计feed流数据
+                loopHandlerStatictis();
+                //循环倒计时--10秒统计
+                handlerStatictis.postDelayed(runnableStatictis,HOME_STATICTIS_TIME);
+            }
+        };
+        handlerStatictis.postDelayed(runnableStatictis,HOME_STATICTIS_TIME);
     }
 
 	/**
@@ -506,6 +520,8 @@ public class XHClick {
     public static void closeHandler() {
         if(handler != null && runnable!=null)
             handler.removeCallbacks(runnable);
+        if(handlerStatictis != null && runnableStatictis!=null)
+            handlerStatictis.removeCallbacks(runnableStatictis);
     }
 
     /**

@@ -51,7 +51,7 @@ public class XHAllAdControl {
 
     private boolean isNeedRefersh = false;//是否需要刷新
     private long oneAdTime;//第一次请求广告的时间。
-    public long showTime= 5*60*1000;//广告的过期时间。30分钟
+    public long showTime= 30*60*1000;//广告的过期时间。30分钟
 
     /**
      * 初始化
