@@ -197,9 +197,6 @@ public class VideoDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null)
             code = bundle.getString("code");
-        //TODO
-        code = "190";
-//        code = "106";
     }
 
     private void initView() {
