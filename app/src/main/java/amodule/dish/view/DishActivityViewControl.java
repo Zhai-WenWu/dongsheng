@@ -127,7 +127,7 @@ public class DishActivityViewControl {
 //        }
 //        bar_title_1.setBackgroundColor(Color.parseColor("#00ffffff"));
 //        bar_title_1.setBackgroundResource(R.drawable.bar_dish_gradient);
-        bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
+//        bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
     }
 
     /** 初始化view数据-----考虑以后抽成一个单独处理view */

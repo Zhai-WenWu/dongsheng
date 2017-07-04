@@ -29,6 +29,7 @@
     <aplug.web.view.XHWebView
         android:id="@+id/XHWebview"
         android:visibility="gone"
+        android:layout_below="@+id/dish_title_dish"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
