@@ -234,6 +234,7 @@ public class DetailDish extends BaseActivity {
                     }
                     if(permissionMap.containsKey("detail"))
                         detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+
                 }
             }
 

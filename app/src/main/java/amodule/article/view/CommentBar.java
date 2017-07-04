@@ -83,7 +83,9 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
 
         sendComment.setOnClickListener(this);
         findViewById(R.id.comment_edit_fake).setOnClickListener(this);
+        findViewById(R.id.comment_bar_fake).setOnClickListener(this);
         findViewById(R.id.praise_button).setOnClickListener(this);
+        findViewById(R.id.comment_bar_real).setOnClickListener(this);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -128,6 +130,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.comment_bar_fake:
             case R.id.comment_edit_fake:
                 doComment(isSofa ? "抢沙发" : getTextHint());
                 statistics("底部栏", "评论输入框");

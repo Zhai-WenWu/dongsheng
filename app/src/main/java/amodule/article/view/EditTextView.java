@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -94,8 +95,8 @@ public class EditTextView extends BaseView {
                             && start  >= 0
                             && start + 1< s.toString().length()
                             && '\n' == s.charAt(start);
-//                if(needRefreshCenter)
-//                    mRichText.centerFormat(mRichText.contains(RichText.FORMAT_CENTER));
+                if(needRefreshCenter)
+                    mRichText.centerFormat(mRichText.previousLineContainCenter());
             }
 
             @Override
@@ -105,11 +106,23 @@ public class EditTextView extends BaseView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(needRefreshCenter)
-                    mRichText.centerFormat(mRichText.contains(RichText.FORMAT_CENTER));
+
                 if (onAfterTextChanged != null) {
                     onAfterTextChanged.afterTextChanged(s);
                 }
+            }
+        });
+        mRichText.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                switch (keyCode){
+                    case KeyEvent.KEYCODE_DEL:
+                        if(mRichText.getSelectionStart() == 0){
+                            mRichText.centerFormat(false);
+                        }
+                        break;
+                }
+                return false;
             }
         });
         mRichText.setOnSelectTypeCallback(new RichText.OnSelectContainsType() {
@@ -176,7 +189,7 @@ public class EditTextView extends BaseView {
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
-                    .append(TextUtils.isEmpty(mRichText.getText()) ? "<br>" : mRichText.toHtml())//.replaceAll("\"","\\\"")
+                    .append(TextUtils.isEmpty(mRichText.getText()) ? "" : mRichText.toHtml())
                     .append("<br></p>");
             Log.i("tzy", "edittext content = " + builder.toString());
 //            jsonObject.put("html", TextUtils.htmlEncode(builder.toString()));
