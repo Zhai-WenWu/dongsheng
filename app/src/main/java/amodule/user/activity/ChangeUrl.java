@@ -32,9 +32,8 @@ public class ChangeUrl extends BaseActivity {
     public static boolean isChangeUrlState = false;
 
     @Override
-    protected void onCreate(Bundle arg0) {
-        // TODO Auto-generated method stub
-        super.onCreate(arg0);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         initActivity("切换url", 2, 0, R.layout.c_view_bar_title, R.layout.a_core_change_url);
         init();
         initData();

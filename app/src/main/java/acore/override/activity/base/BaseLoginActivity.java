@@ -3,6 +3,7 @@ package acore.override.activity.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.zxing.client.result.SMSMMSResultParser;
 import com.mob.MobSDK;
 import com.xiangha.R;
 
@@ -50,17 +50,13 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
 import cn.smssdk.EventHandler;
-import cn.smssdk.OnSendMessageHandler;
 import cn.smssdk.SMSSDK;
 import third.push.xg.XGPushServer;
 import xh.windowview.XhDialog;
 
-import static xh.basic.tool.UtilString.getListMapByJson;
-
 /**
  * Created by ：fei_teng on 2017/2/15 20:21.
  */
-
 public class BaseLoginActivity extends BaseActivity {
 
     public static final String PHONE_TAG = "a_login520";
@@ -73,7 +69,6 @@ public class BaseLoginActivity extends BaseActivity {
     protected int mGetCountryId = 100;
     protected static final int SET_USER_IMG = 5000;
     protected AccountInfoBean lastLoginAccout;
-    public EventHandler eventHandler = null;
     protected BaseActivity mAct;
     protected static final String ZONE_CODE = "zone_code";
     protected static final String PHONE_NUM = "phone_num";
@@ -90,7 +85,6 @@ public class BaseLoginActivity extends BaseActivity {
 
     protected static final String EMAIL_LOGIN_TYPE = "email_login_type";
     protected static final String PHONE_LOGIN_TYPE = "phone_login_type";
-    protected static final String THIRD_LOGIN_TYPE = "third_login_type";
     protected static final String QQ_LOGIN_TYPE = "qq_login_type";
     protected static final String WEIXIN_LOGIN_TYPE = "weixin_login_type";
     protected static final String WEIBO_LOGIN_TYPE = "third_login_type";
@@ -107,10 +101,8 @@ public class BaseLoginActivity extends BaseActivity {
     public static final int LOGIN_WB = 3;
 
     protected int err_count_secret;
-    private ArrayList<BaseLoginActivity> activityList = new ArrayList<BaseLoginActivity>();
-    private SMSSendCallback callback;
+    private EventHandler eventHandler = null;
     private String phoneNumber="";//手机号码
-    private String countyrCode="";//验证码
 
     /**
      * Activity标题初始化
@@ -131,8 +123,6 @@ public class BaseLoginActivity extends BaseActivity {
         setContentView(control.setCommonBottonView(className, this, contentXml));
         mCommonBottomView = control.mCommonBottomView;
 
-        activityList.add(this);
-
         if (Tools.isShowTitle()) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -140,71 +130,6 @@ public class BaseLoginActivity extends BaseActivity {
 
         lastLoginAccout = LoginCheck.getLastLoginAccout(this);
 
-        eventHandler = new EventHandler() {
-            @Override
-            public void afterEvent(final int event,final  int result, final Object data) {
-                SyntaxTools.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (result == SMSSDK.RESULT_COMPLETE) {
-                            // 回调完成
-                            if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                                // 提交验证码成功
-
-                            } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                                // 获取验证码成功
-
-                                callback.onSendSuccess();
-                            } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
-                                // 返回支持发送验证码的国家列表
-
-                            }
-                        } else if (result == SMSSDK.RESULT_ERROR) {
-                            try {
-                                Throwable throwable = (Throwable) data;
-                                throwable.printStackTrace();
-                                JSONObject object = new JSONObject(throwable.getMessage());
-                                String des = object.optString("detail");//错误描述
-                                int status = object.optInt("status");//错误代码
-                                Log.i("login","sendSMS() status:" + status);
-                                Log.i("login","sendSMS() des:" + des);
-                                //统计错误情况
-                                statisticsErrorCode(status);
-                                if (462 == status || 472 == status) {
-                                    Toast.makeText(mAct, "请勿频繁发送验证码", Toast.LENGTH_SHORT).show();
-                                } else if (463 == status
-                                        || 464 == status
-                                        || 465 == status
-                                        || 476 == status
-                                        || 477 == status
-                                        || 478 == status) {
-                                    Toast.makeText(mAct, "短信验证码使用次数已超限，请明日再试", Toast.LENGTH_SHORT).show();
-                                } else {
-                                }
-
-                            } catch (Exception e) {
-                            }
-
-                            callback.onSendFalse();
-                            LogManager.print("w", data.toString() + "");
-                            String param = "log=" + data.toString();
-                            if(!TextUtils.isEmpty(phoneNumber)) param += "&phoneNumber="+phoneNumber;
-                            if(!TextUtils.isEmpty(countyrCode)) param += "&code="+countyrCode;
-                            ReqInternet.in().doPost(StringManager.api_smsReport, param, new InternetCallback(mAct.getApplicationContext()) {
-                                @Override
-                                public void loaded(int flag, String url, Object returnObj) {
-                                    if (flag >= ReqInternet.REQ_OK_STRING) {
-
-                                    } else {
-//                                        toastFaildRes(flag, true, returnObj);
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        };
         //注册SDK
         MobSDK.init(this, smsAppkey, smsAppsecret);
 
@@ -263,21 +188,18 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> maps = getListMapByJson(returnObj);
+                    ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(returnObj);
                     if (maps != null && maps.size() > 0) {
                         err_count_secret = 0;
                         LoginManager.loginSuccess(mAct, returnObj.toString());
                         callback.onSuccess();
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {
-                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_MAILBOX,
-                                        "", "", phoneNum);
+                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_MAILBOX,"", "", phoneNum);
                             } else {
-                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_PHONE,
-                                        zoneCode, phoneNum, "");
+                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_PHONE,zoneCode, phoneNum, "");
                             }
                         }
-
                     } else {
                         onSercretError(loginType, zoneCode, phoneNum);
                         callback.onFalse(flag);
@@ -290,7 +212,6 @@ public class BaseLoginActivity extends BaseActivity {
         });
     }
 
-
     private void onSercretError(String loginType, final String zoneCode, final String phoneNum) {
         if (!(PHONE_LOGIN_TYPE.equals(loginType) || EMAIL_LOGIN_TYPE.equals(loginType)))
             return;
@@ -298,7 +219,7 @@ public class BaseLoginActivity extends BaseActivity {
         if (err_count_secret > 2) {
             if (!TextUtils.isEmpty(zoneCode)) {
                 final XhDialog xhDialog = new XhDialog(mAct);
-                xhDialog.setTitle("账号或密码错误，"+"\n可以通过短信验证码完成登录")
+                xhDialog.setTitle("账号或密码错误，\n可以通过短信验证码完成登录")
                         .setCanselButton("取消", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -318,7 +239,6 @@ public class BaseLoginActivity extends BaseActivity {
                         .setCancelButtonTextColor("#007aff");
                 xhDialog.show();
             } else {
-
                 final XhDialog xhDialog = new XhDialog(mAct);
                 xhDialog.setTitle("邮箱注册的账号，请使用电脑访问www.xiangha.com找回密码!")
                         .setSureButton("我知道了", new View.OnClickListener() {
@@ -332,10 +252,8 @@ public class BaseLoginActivity extends BaseActivity {
                         .setCancelButtonTextColor("#007aff");
                 xhDialog.show();
             }
-
         }
     }
-
 
     /**
      * 手机验证码登录
@@ -346,11 +264,12 @@ public class BaseLoginActivity extends BaseActivity {
      */
     protected void logInByIdentify(final Activity mAct, final String countryCode, final String phoneNum,
                                    String identifyCode, final BaseLoginCallback callback) {
-        String param = "phoneNum=" + phoneNum + "&zone=" + countryCode + "&verCode=" + identifyCode
-                + "&sdkVes=" + SMS_SDK_VERSION;
+        String param = new StringBuffer().append("phoneNum=").append(phoneNum)
+                .append("&zone=").append(countryCode)
+                .append("&verCode=").append(identifyCode)
+                .append("&sdkVes=").append(SMS_SDK_VERSION).toString();
         loadManager.showProgressBar();
         ReqInternet.in().doPost(StringManager.api_phoneLogin, param, new InternetCallback(mAct) {
-
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
@@ -359,7 +278,6 @@ public class BaseLoginActivity extends BaseActivity {
                     callback.onSuccess();
                     LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_PHONE,
                             countryCode, phoneNum, "");
-
                 } else {
                     callback.onFalse(flag);
                 }
@@ -376,16 +294,13 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> maps = getListMapByJson(msg);
-                    if (maps.size() > 0) {
-                        Map<String, String> map = maps.get(0);
-                        String result = map.get("result");
-                        if ("2".equals(result)) {
-                            callback.onSuccess();
-                        } else {
-                            callback.onFalse(flag);
-                            Log.e("checkRegisted", map.get("reason"));
-                        }
+                    Map<String, String> map = StringManager.getFirstMap(msg);
+                    String result = map.get("result");
+                    if ("2".equals(result)) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFalse(flag);
+                        Log.e("checkRegisted", map.get("reason"));
                     }
                 } else {
                     toastFaildRes(flag, true, msg);
@@ -402,7 +317,7 @@ public class BaseLoginActivity extends BaseActivity {
             return;
         }
         //发起请求
-        String param = "phone=" + phoneNum + "&&phoneZone=" + zoneCode;
+        String param = "phone=" + phoneNum + "&phoneZone=" + zoneCode;
         loadManager.showProgressBar();
         ReqInternet.in().doPost(StringManager.api_checkPhoneRegisterState, param, new InternetCallback(context) {
             @Override
@@ -410,21 +325,18 @@ public class BaseLoginActivity extends BaseActivity {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     boolean registed = false;
-                    ArrayList<Map<String, String>> maps = getListMapByJson(msg);
-                    if (maps.size() > 0) {
-                        Map<String, String> map = maps.get(0);
-                        String result = map.get("result");
-                        if ("2".equals(result)) {
-                            registed = true;
-                        } else {
-                            Log.e("checkRegisted", map.get("reason"));
-                        }
-                        if (registed) {
-                            callback.onSuccess();
-                        } else {
-                            //没有注册
-                            callback.onFalse(flag);
-                        }
+                    Map<String, String> map = StringManager.getFirstMap(msg);
+                    String result = map.get("result");
+                    if ("2".equals(result)) {
+                        registed = true;
+                    } else {
+                        Log.e("checkRegisted", map.get("reason"));
+                    }
+                    if (registed) {
+                        callback.onSuccess();
+                    } else {
+                        //没有注册
+                        callback.onFalse(flag);
                     }
                 } else {
                     //请求失败
@@ -448,13 +360,10 @@ public class BaseLoginActivity extends BaseActivity {
                         @Override
                         public void loaded(int flag, String s, Object o) {
                             if (ReqInternet.REQ_OK_STRING >= flag) {
-                                ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
-                                if (arrayList.size() > 0) {
-                                    Map<String, String> map = arrayList.get(0);
-                                    if (TextUtils.isEmpty(map.get("errorCode"))) {
-                                        callback.onSuccess();
-                                        return;
-                                    }
+                                Map<String, String> map = StringManager.getFirstMap(o);
+                                if (TextUtils.isEmpty(map.get("errorCode"))) {
+                                    callback.onSuccess();
+                                    return;
                                 }
                             }
                             callback.onFalse(flag);
@@ -470,15 +379,91 @@ public class BaseLoginActivity extends BaseActivity {
      *
      * @param countyrCode
      * @param phone_number
+     * @param callback
      */
-    protected boolean reqIdentifyCode(String countyrCode, String phone_number,SMSSendCallback callback) {
-        this.callback = callback;
-        this.countyrCode=countyrCode;
-        this.phoneNumber=phone_number;
+    protected boolean reqIdentifyCode(final String countyrCode, String phone_number,@NonNull final SMSSendCallback callback) {
+        this.phoneNumber = phone_number;
+        eventHandler = new EventHandler() {
+            @Override
+            public void afterEvent(final int event,final  int result, final Object data) {
+                SyntaxTools.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result == SMSSDK.RESULT_COMPLETE) {
+                            // 回调完成
+                            if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                                // 提交验证码成功
+
+                            } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                                // 获取验证码成功
+                                if(callback != null)
+                                    callback.onSendSuccess();
+                            } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+                                // 返回支持发送验证码的国家列表
+
+                            }
+                        } else if (result == SMSSDK.RESULT_ERROR) {
+                            handlerError(data);
+                            if(callback != null)
+                                callback.onSendFalse();
+                            LogManager.print("w", data.toString() + "");
+                            sendFalseRequest(data.toString(),countyrCode);
+                        }
+                    }
+                });
+            }
+
+            /**
+             *
+             * @param data
+             */
+            private void handlerError(Object data){
+                try {
+                    Throwable throwable = (Throwable) data;
+                    throwable.printStackTrace();
+                    JSONObject object = new JSONObject(throwable.getMessage());
+                    String des = object.optString("detail");//错误描述
+                    int status = object.optInt("status");//错误代码
+                    Log.i("login","sendSMS() status:" + status + " ; \n des:" + des);
+                    Log.i("login","sendSMS() des:" + des);
+                    //统计错误情况
+                    statisticsErrorCode(status);
+                    if (462 == status || 472 == status) {
+                        Toast.makeText(mAct, "请勿频繁发送验证码", Toast.LENGTH_SHORT).show();
+                    } else if (463 == status || 464 == status || 465 == status
+                            || 476 == status || 477 == status || 478 == status) {
+                        Toast.makeText(mAct, "短信验证码使用次数已超限，请明日再试", Toast.LENGTH_SHORT).show();
+                    } else {
+                    }
+                } catch (Exception e) {
+                }
+            }
+        };
+        //注册事件回调
         SMSSDK.registerEventHandler(eventHandler);
+        //请求验证码
         SMSSDK.getVerificationCode(countyrCode, phone_number);
-//        SMSSDK.getVoiceVerifyCode(countyrCode,phone_number);
         return true;
+    }
+
+    /**
+     * 发送失败统计,自己的统计
+     * @param data
+     * @param countyrCode
+     */
+    private void sendFalseRequest(String data,String countyrCode){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("log=").append(data);
+        if(!TextUtils.isEmpty(phoneNumber))
+            stringBuilder.append("&phoneNumber=").append(phoneNumber);
+        if(!TextUtils.isEmpty(countyrCode))
+            stringBuilder.append("&code=").append(countyrCode);
+        ReqInternet.in().doPost(StringManager.api_smsReport, stringBuilder.toString(),
+                new InternetCallback(mAct.getApplicationContext()) {
+                    @Override
+                    public void loaded(int flag, String url, Object returnObj) {
+                    }
+                });
     }
 
     /**
@@ -543,8 +528,7 @@ public class BaseLoginActivity extends BaseActivity {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     boolean success = false;
-                    ArrayList<Map<String, String>> lists = getListMapByJson(returnObj);
-                    Map<String, String> map = lists.get(0);
+                    Map<String, String> map = StringManager.getFirstMap(returnObj);
                     if (map != null && map.size() > 0) {
                         if ("2".equals(map.get("result"))) {
                             success = true;
@@ -698,7 +682,6 @@ public class BaseLoginActivity extends BaseActivity {
     }
 
     protected String hidePhoneNum(String phoneNum) {
-
         if (phoneNum != null && phoneNum.length() == 11) {
             phoneNum = phoneNum.replaceAll("^(\\d{3})(\\d+)(\\d{2})$", "$1******$3");
         }
@@ -709,7 +692,6 @@ public class BaseLoginActivity extends BaseActivity {
         Main.colse_level = 4;
         finish();
     }
-
 
     public interface SMSSendCallback {
 
