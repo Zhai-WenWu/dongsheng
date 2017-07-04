@@ -125,7 +125,6 @@ public class UploadDishMakeOptionActivity extends BaseActivity {
 
 	/**
 	 * 组合步骤做法和效果图数据 根据dataType返回草稿数据、所有数据
-	 * @TODO 
 	 */
 	public String getDishMakeData() {
 		List<Map<String, String>> list = mDragAdapter.getData();

@@ -35,7 +35,6 @@ public class AdapterDishVideoViewPager extends PagerAdapter{
 	}
 	@Override
 	public CharSequence getPageTitle(int position) {
-		// TODO Auto-generated method stub
 		return super.getPageTitle(position);
 	}
 

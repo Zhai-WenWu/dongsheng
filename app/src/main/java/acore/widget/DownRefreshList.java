@@ -102,7 +102,6 @@ public class DownRefreshList extends ListView implements OnScrollListener {
 		tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);// headview中各view
 		lastUpdatedTextView = (TextView) headView
 				.findViewById(R.id.head_lastUpdatedTextView);// headview中各view
-		//TODO
 		headView.setPadding(0, -1 * headContentHeight, 0, paddingBottom);// setPadding(int
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();// 头部高度
@@ -395,8 +394,7 @@ public class DownRefreshList extends ListView implements OnScrollListener {
 	private float xDistance, yDistance, xLast, yLast;
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		switch (ev.getAction()) {  
+		switch (ev.getAction()) {
 			case MotionEvent.ACTION_DOWN:  
 				xDistance = yDistance = 0f;  
 				xLast = ev.getX();  
