@@ -131,7 +131,7 @@ public class BaseLoginActivity extends BaseActivity {
         lastLoginAccout = LoginCheck.getLastLoginAccout(this);
 
         //注册SDK
-        MobSDK.init(this, smsAppkey, smsAppsecret);
+//        MobSDK.init(this, smsAppkey, smsAppsecret);
 
         View rl_topbar = findViewById(R.id.rl_topbar);
         if (rl_topbar != null) {

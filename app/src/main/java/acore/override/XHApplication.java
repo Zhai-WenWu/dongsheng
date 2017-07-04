@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
@@ -25,7 +26,7 @@ import third.push.umeng.UMPushServer;
 
 import static com.sina.sinavideo.coreplayer.util.AndroidUtil.getProcessName;
 
-public class XHApplication extends Application {
+public class XHApplication extends MobApplication {
     /**包名*/
     private static final String PACKAGE_NAME = "com.xiangha";
     private static XHApplication mAppApplication;
