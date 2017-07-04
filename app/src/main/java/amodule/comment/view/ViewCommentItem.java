@@ -55,6 +55,11 @@ public class ViewCommentItem extends LinearLayout {
 
     private int normalBackColor = -1;
 
+    /**
+     * 控制评论item是否有长按删除或举报功能
+     */
+    public boolean isHaveLongClickRight = true;
+
     public ViewCommentItem(Context context) {
         super(context);
         initView(context);
@@ -422,18 +427,22 @@ public class ViewCommentItem extends LinearLayout {
 
             replayTv.setText(multifunctionText);
             replayTv.setCopyText(content);
-            final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-            replayTv.setRightClicker(isReport ? "举报" : "删除" ,new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mListener != null) {
-                        if(isReport)
-                            mListener.onReportReplayClick(comment_id,replayMap.get("replay_id"),replay_ucode,replay_uname,content);
-                        else
-                            mListener.onDeleteReplayClick(comment_id,replayMap.get("replay_id"));
+            if(isHaveLongClickRight) {
+                final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
+                replayTv.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            if (isReport)
+                                mListener.onReportReplayClick(comment_id, replayMap.get("replay_id"), replay_ucode, replay_uname, content);
+                            else
+                                mListener.onDeleteReplayClick(comment_id, replayMap.get("replay_id"));
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                replayTv.setRightClicker("",null);
+            }
             replayTv.setHighlightColor(ContextCompat.getColor(mContext,R.color.transparent));//去掉点击后的背景颜色为透明
             commentReplay.setVisibility(View.VISIBLE);
             commentReplayImg.setVisibility(View.VISIBLE);

@@ -315,10 +315,13 @@ public class ArticleUploadListActivity extends BaseActivity {
                     String imgPath = arrayList.get(position).get("path");
                     if(String.valueOf(UploadItemData.TYPE_VIDEO).equals(arrayList.get(position).get("type")))
                         imgPath = arrayList.get(position).get("videoImage");
-                    view.findViewById(R.id.iv_cover_dish).setVisibility(View.VISIBLE);
+                    ImageView ivCoverDish = (ImageView) view.findViewById(R.id.iv_cover_dish);
+                    ivCoverDish.setVisibility(View.VISIBLE);
                     view.findViewById(R.id.iv_cover_dish_last).setVisibility(View.GONE);
                     Glide.with(ArticleUploadListActivity.this).load(imgPath)
-                            .into(((ImageView) view.findViewById(R.id.iv_cover_dish)));
+                            .override(Tools.getDimen(ArticleUploadListActivity.this,R.dimen.dp_123)
+                                    ,Tools.getDimen(ArticleUploadListActivity.this,R.dimen.dp_69))
+                            .into(ivCoverDish);
                 }
                 ((ProgressBar) view.findViewById(R.id.pb_progress)).setProgress(Integer.parseInt(itemMap.get("progress")));
                 ((ProgressBar) view.findViewById(R.id.pb_progress_pause)).setProgress(Integer.parseInt(itemMap.get("progress")));

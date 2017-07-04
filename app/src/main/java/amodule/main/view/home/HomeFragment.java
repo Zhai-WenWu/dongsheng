@@ -266,10 +266,9 @@ public class HomeFragment extends BaseHomeFragment{
     protected void onVisible() {
         preLoad();
         if (mLoadManager != null && mListview != null) {
-            Button loadMore = mLoadManager.getSingleLoadMore(mListview);
-            if (loadMore != null) {
-                loadMore.setVisibility(mListData.size() == 0 ? View.INVISIBLE : View.VISIBLE);
-            }
+            if( mListData.size() == 0){
+                mLoadManager.showProgressBar();
+            }else mLoadManager.hideProgressBar();
         }
     }
     protected void onInvisible() {

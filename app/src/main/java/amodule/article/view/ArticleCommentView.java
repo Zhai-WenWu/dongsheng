@@ -86,6 +86,7 @@ public class ArticleCommentView extends ItemBaseView {
                 Log.i("tzy", "comment dataMap = " + dataMap.toString());
                 if ("0".equals(dataMap.get("fabulous_num")))
                     dataMap.put("fabulous_num", "");
+                commentItem.isHaveLongClickRight = false;
                 commentItem.setData(dataMap);
                 commentItem.setOnClickListener(new OnClickListener() {
                     @Override

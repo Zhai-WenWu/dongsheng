@@ -150,23 +150,22 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                                 public void onFalse(int flag) {
                                     loadManager.showProgressBar();
                                     login_identify.setOnBtnClickState(true);
-                                    reqIdentifyCode(newZoneCode, newPhoneNum,
-                                            new SMSSendCallback() {
-                                                @Override
-                                                public void onSendSuccess() {
-                                                    loadManager.hideProgressBar();
-                                                    login_identify.startCountDown();
-                                                    speechaIdentifyInputView.setState(false);
-                                                }
-
-                                                @Override
-                                                public void onSendFalse() {
-                                                    login_identify.setOnBtnClickState(true);
-                                                    loadManager.hideProgressBar();
-                                                    speechaIdentifyInputView.setState(true);
-                                                    dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
-                                                }
+                                    reqIdentifyCode(newZoneCode, newPhoneNum,new SMSSendCallback() {
+                                            @Override
+                                            public void onSendSuccess() {
+                                                loadManager.hideProgressBar();
+                                                login_identify.startCountDown();
+                                                speechaIdentifyInputView.setState(false);
                                             }
+
+                                            @Override
+                                            public void onSendFalse() {
+                                                login_identify.setOnBtnClickState(true);
+                                                loadManager.hideProgressBar();
+                                                speechaIdentifyInputView.setState(true);
+                                                dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
+                                            }
+                                        }
                                     );
                                 }
                             });

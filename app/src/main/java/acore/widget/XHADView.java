@@ -140,7 +140,6 @@ public class XHADView extends RelativeLayout{
 			public void run() {
 				Message msg = new Message();
 				msg.arg1 = displayTime;
-//				msg.arg1 = 0;
 				handler.sendMessage(msg);
 			}
 		};
@@ -160,6 +159,10 @@ public class XHADView extends RelativeLayout{
 
 	//添加到WindowManager中，并显示
 	private void show(int displayTime){
+		//displayTime = 0 不显示
+		if(displayTime == 0){
+			return;
+		}
 		isClosed = false;
 		if(mActivity != null){
 			if(mActivity.isFinishing()){//mActivity.isDestroyed() API-level-17
@@ -188,15 +191,13 @@ public class XHADView extends RelativeLayout{
 			bgAnimView.startAnimation(alpha);
 			Animation animStart = AnimationUtils.loadAnimation(getContext(), R.anim.translate_start);
 			animLayout.startAnimation(animStart);
-			if(displayTime == 0){
-				return;
-			}
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					 hide();
-				}
-			}, displayTime);
+			//不自动关闭
+//			new Handler().postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					 hide();
+//				}
+//			}, displayTime);
 		}
 	}
 	

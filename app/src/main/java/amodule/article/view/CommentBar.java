@@ -200,6 +200,11 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
             return;
         }
 
+        if(text.length() > 2000){
+            Tools.showToast(getContext(),"发送内容不能超过2000字");
+            return;
+        }
+
         sendComment.setVisibility(INVISIBLE);
         progressBar.setVisibility(VISIBLE);
 

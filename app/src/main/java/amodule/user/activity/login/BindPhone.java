@@ -126,27 +126,24 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                                 dataStatistics("绑定手机号页，获取验证码");
                                 loadManager.showProgressBar();
                                 login_identify.startCountDown();
-                                reqIdentifyCode(phone_info.getZoneCode(), phone_info.getPhoneNum(),
-                                        new SMSSendCallback() {
-                                            @Override
-                                            public void onSendSuccess() {
-                                                loadManager.hideProgressBar();
-                                                login_identify.startCountDown();
-                                                speechaIdentifyInputView.setState(false);
-                                            }
+                                reqIdentifyCode(phone_info.getZoneCode(), phone_info.getPhoneNum(),new SMSSendCallback() {
+                                        @Override
+                                        public void onSendSuccess() {
+                                            loadManager.hideProgressBar();
+                                            login_identify.startCountDown();
+                                            speechaIdentifyInputView.setState(false);
+                                        }
 
-                                            @Override
-                                            public void onSendFalse() {
-                                                loadManager.hideProgressBar();
-                                                login_identify.setOnBtnClickState(true);
-                                                speechaIdentifyInputView.setState(true);
-                                                dataStatistics("绑定失败：验证码超限");
-                                            }
-                                        });
-
+                                        @Override
+                                        public void onSendFalse() {
+                                            loadManager.hideProgressBar();
+                                            login_identify.setOnBtnClickState(true);
+                                            speechaIdentifyInputView.setState(true);
+                                            dataStatistics("绑定失败：验证码超限");
+                                        }
+                                    });
                             }
                         });
-
             }
         });
 
