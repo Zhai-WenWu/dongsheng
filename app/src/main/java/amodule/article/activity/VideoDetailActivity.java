@@ -105,7 +105,6 @@ public class VideoDetailActivity extends BaseActivity {
     private Map<String, String> customerData;
     private boolean hasPermission = true;
 
-
     private String commentNum = "0";
     private boolean isKeyboradShow = false;
     private String code = "";//请求数据的code
@@ -618,7 +617,7 @@ public class VideoDetailActivity extends BaseActivity {
                     addADMapToData();
                     detailAdapter.notifyDataSetChanged();
 //                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
-                    listView.removeFooterView(loadManager.getSingleLoadMore(listView));
+//                    listView.removeFooterView(loadManager.getSingleLoadMore(listView));
                 } else
                     toastFaildRes(flag, true, object);
                 Map<String,String> commonPermission = StringManager.getFirstMap(detailPermissionMap.get("video"));

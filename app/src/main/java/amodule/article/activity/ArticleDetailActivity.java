@@ -591,7 +591,6 @@ public class ArticleDetailActivity extends BaseActivity {
                     mArticleAdContrler.handlerAdData(allDataListMap);
                     detailAdapter.notifyDataSetChanged();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
-                    loadManager.mLoadMore.getLoadMoreBtn(null).setVisibility(View.GONE);
                     listView.removeFooterView(loadManager.getSingleLoadMore(listView));
                 } else
                     toastFaildRes(flag, true, object);
