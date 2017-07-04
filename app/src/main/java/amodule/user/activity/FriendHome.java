@@ -375,7 +375,6 @@ public class FriendHome extends BaseActivity {
 		String dataFrom = dataMap.get("dataFrom");
 		if ("1".equals(dataFrom)) {//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
 			String uploadType = dataMap.get("uploadType");
-			uploadType = UploadDishData.UPLOAD_FAIL;
 			String hasMedia = dataMap.get("hasMedia");
 			Map<String, String> tabMap = mTabContentViews.get(tabIndex).getDataMap();
 			if (tabMap != null && tabMap.size() > 0) {
