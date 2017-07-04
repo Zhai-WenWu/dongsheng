@@ -139,11 +139,16 @@ public class ArticleUploadListActivity extends BaseActivity {
             tv_title.setText(dishName.length() > 7 ? dishName.substring(0,6) + "..." : dishName);
         }
 
-        if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
-            allStartOrPause(true);
-        } else {
+        boolean isAutoUpload = getIntent().getBooleanExtra("isAutoUpload",false);
+        if(isAutoUpload) {
+            if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
+                allStartOrPause(true);
+            } else {
+                allStartOrPause(false);
+                hintNetWork();
+            }
+        }else{
             allStartOrPause(false);
-            hintNetWork();
         }
 
         loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, 1, true);

@@ -243,6 +243,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             intent.putExtra("draftId", draftId);
             intent.putExtra("dataType", dataType);
             intent.putExtra("coverPath", uploadArticleData.getImg());
+            intent.putExtra("isAutoUpload", true);
             String videoPath = "";
             ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
             if(videoArray.size() > 0){
