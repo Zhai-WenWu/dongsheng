@@ -523,7 +523,7 @@ public class RichText extends EditText implements TextWatcher {
         String[] lines = TextUtils.split(getEditableText().toString(), "\n");
 
         for (int i = 0; i < lines.length; i++) {
-            if (containBullet(i)) {
+            if (containCenterFormat(i)) {
                 continue;
             }
 
@@ -577,17 +577,23 @@ public class RichText extends EditText implements TextWatcher {
             if (lineStart <= getSelectionStart() && getSelectionEnd() <= lineEnd) {
                 centerStart = lineStart;
                 centerEnd = lineEnd;
+                if (centerStart <= centerEnd) {
+                    AlignmentSpan[] spans = getEditableText().getSpans(centerStart, centerEnd, AlignmentSpan.class);
+                    for (AlignmentSpan span : spans) {
+                        getEditableText().removeSpan(span);
+                    }
+                }
             } else if (getSelectionStart() <= lineStart && lineEnd <= getSelectionEnd()) {
                 centerStart = lineStart;
                 centerEnd = lineEnd;
-            }
-
-            if (centerStart <= centerEnd) {
-                AlignmentSpan[] spans = getEditableText().getSpans(centerStart, centerEnd, AlignmentSpan.class);
-                for (AlignmentSpan span : spans) {
-                    getEditableText().removeSpan(span);
+                if (centerStart <= centerEnd) {
+                    AlignmentSpan[] spans = getEditableText().getSpans(centerStart, centerEnd, AlignmentSpan.class);
+                    for (AlignmentSpan span : spans) {
+                        getEditableText().removeSpan(span);
+                    }
                 }
             }
+
         }
     }
 
