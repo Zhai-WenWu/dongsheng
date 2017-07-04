@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.xiangha.R;
 
 import java.lang.ref.WeakReference;
@@ -73,7 +72,6 @@ public class UploadDishActivity extends BaseActivity implements View.OnClickList
             uploadDishParrentControl = new UploadDishVideoControl(this);
         }
         uploaDishWeakRef = new WeakReference<Activity>(this);
-        LoadLanSongSdk.initVideoSdk(getApplicationContext());
     }
 
     @Override
