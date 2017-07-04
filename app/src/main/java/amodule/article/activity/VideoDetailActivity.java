@@ -511,6 +511,8 @@ public class VideoDetailActivity extends BaseActivity {
 
             @Override
             public void loaded(int flag, String url, Object object) {
+                refreshLayout.refreshComplete();
+                loadManager.hideProgressBar();
                 if(!hasPagePermission || !contiunRefresh) {
                     loadManager.hideProgressBar();
                     return;
@@ -523,8 +525,7 @@ public class VideoDetailActivity extends BaseActivity {
                     toastFaildRes(flag, true, object);
                 if (!onlyUser)
                     requestRelateData(false);//请求
-                refreshLayout.refreshComplete();
-                loadManager.hideProgressBar();
+
             }
         });
     }

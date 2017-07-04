@@ -34,21 +34,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/dredge_vip_text"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginTop="@dimen/dp_15"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已是VIP，"
+            android:text="已是会员，"
             android:textColor="#FFF"
             android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="立刻登录"
+            android:text="点击登录>"
             android:textColor="#D39E54"
             android:textSize="@dimen/sp_14"/>
     </LinearLayout>
