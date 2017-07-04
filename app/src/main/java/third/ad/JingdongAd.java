@@ -98,7 +98,6 @@
 //			mImpJsb.put("tagid", tagId);
 //
 //		} catch (JSONException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //	}
@@ -166,7 +165,6 @@
 ////
 ////			@Override
 ////			public boolean onJsAlert(WebView view, String url, String message,JsResult result) {
-////				// TODO Auto-generated method stub
 ////				return super.onJsAlert(view, url, message, result);
 ////			}
 ////		});

@@ -222,7 +222,6 @@ public class Welcome extends BaseActivity {
 
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
     }
 

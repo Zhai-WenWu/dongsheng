@@ -226,13 +226,11 @@ public class BannerAd extends AdParent{
 
 	@Override
 	public void onPsuseAd() {
-		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void onDestroyAd() {
-		// TODO Auto-generated method stub
-		
+
 	}
 	/**
 	 * 获取广告统计层级数据

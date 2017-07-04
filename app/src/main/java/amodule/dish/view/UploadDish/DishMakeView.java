@@ -108,7 +108,6 @@ public class DishMakeView{
 
 	/**
 	 * 组合步骤做法和效果图数据 根据dataType返回草稿数据、所有数据
-	 * @TODO 
 	 */
 	public String getDishMakeData() {
 		JSONArray jsonArray = new JSONArray();
@@ -169,7 +168,6 @@ public class DishMakeView{
 
 	/**
 	 * 点击调整步骤
-	 * @TODO
 	 */
 	public View.OnClickListener getOnChangeStepListener(){
 		return new View.OnClickListener() {
@@ -186,7 +184,6 @@ public class DishMakeView{
 
 	/**
 	 * 点击添加步骤
-	 * @TODO
 	 */
 	public View.OnClickListener getAddStepListener(){
 		return new View.OnClickListener() {
@@ -228,7 +225,6 @@ public class DishMakeView{
 	/**
 	 * 点击删除步骤
 	 * @param v
-	 * @TODO 
 	 */
 	private void onDeleteStepView(View v) {
 		View parentView = (View) v.getParent();
@@ -245,7 +241,6 @@ public class DishMakeView{
 
 	/**
 	 * 根据resultCode处理，修改做法操作、传步骤图片操作
-	 * @TODO 
 	 */
 	public void onResultBack(int resultCode, Intent data) {
 		switch (resultCode) {

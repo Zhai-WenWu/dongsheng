@@ -44,13 +44,11 @@ public class WheelAdapterNumberic implements WheelAdapter {
 
 	@Override
 	public int getItemsCount() {
-		// TODO Auto-generated method stub
 		return maxValue - minValue + 1;
 	}
 
 	@Override
 	public String getItem(int index) {
-		// TODO Auto-generated method stub
 		if (index >= 0 && index < getItemsCount()) {
 			int value = minValue + index;
 			return format != null ? String.format(format, value) : Integer
@@ -61,7 +59,6 @@ public class WheelAdapterNumberic implements WheelAdapter {
 
 	@Override
 	public int getMaximumLength() {
-		// TODO Auto-generated method stub
 		int max = Math.max(Math.abs(maxValue), Math.abs(minValue));
 		int maxLen = Integer.toString(max).length();
 		if (minValue < 0) {

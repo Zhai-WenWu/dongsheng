@@ -52,7 +52,7 @@ import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGPushServer;
 
 /**
- * @Description: TODO
+ * @Description:
  * @Title: MainMyself.java Copyright: Copyright (c) xiangha.com 2014~2017
  * @author: FangRuijiao
  * @date: 2016年11月13日 下午15:22:50

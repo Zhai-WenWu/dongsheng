@@ -325,7 +325,6 @@ public class CircleUserSo extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		//TODO
 		switch (v.getId()) {
 		case R.id.a_circle_user_so_ture: //搜索按钮
 			onSearch();

@@ -311,7 +311,6 @@ public class MyMsgInformSetting extends BaseActivity{
 //			
 //			@Override
 //			public void loaded(int flag, String url, Object returnObj) {
-//				// TODO Auto-generated method stub
 //				if (flag >= ReqInternet.REQ_OK_STRING) {
 //					
 //				}
