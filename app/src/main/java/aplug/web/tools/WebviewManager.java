@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -124,6 +125,10 @@ public class WebviewManager {
         settings.setSavePassword(false);
         settings.setDefaultTextEncodingName("utf-8");
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+
+        //兼容https,在部分版本上资源显示不全的问题
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
     }
 
     /**
