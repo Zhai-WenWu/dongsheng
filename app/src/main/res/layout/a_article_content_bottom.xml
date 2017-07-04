@@ -9,6 +9,7 @@
         android:id="@+id/artilce_repint_source"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
         android:ellipsize="end"
         android:paddingBottom="@dimen/dp_16"
         android:paddingLeft="@dimen/dp_20"
@@ -23,14 +24,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/artilce_repint_source"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/ad_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
             android:paddingBottom="@dimen/dp_18"
             android:paddingTop="@dimen/dp_10"
             android:visibility="gone"/>
@@ -38,6 +39,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_19"
+            android:layout_marginRight="@dimen/dp_19"
             android:layout_below="@+id/_layout"
             android:paddingBottom="@dimen/dp_10">
 
@@ -47,7 +50,10 @@
                 android:layout_height="wrap_content"
                 android:text="2017-05-25"
                 android:textColor="#B6B5B5"
-                android:textSize="@dimen/sp_14"/>
+                android:textSize="@dimen/sp_14"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/article_browse"

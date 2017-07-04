@@ -49,7 +49,7 @@
         android:lineSpacingExtra="@dimen/dp_4"
         android:maxLines="2"
         android:textColor="@color/c_black_text"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_17"
         android:visibility="visible"/>
 
     <TextView
