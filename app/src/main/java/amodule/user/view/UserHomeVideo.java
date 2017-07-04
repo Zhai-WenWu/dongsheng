@@ -19,6 +19,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -51,6 +52,7 @@ public class UserHomeVideo extends TabContentView {
     private LoadManager loadManager;
     public ArrayList<Map<String, String>> datas;
     private ArrayList<Map<String, String>> mLocalDatas;
+    private Map<String, Map<String, String>> mSecondEditDatas;
     private ArrayList<Map<String, String>> mNetDatas;
     public AdapterUserVideo adapter;
     private boolean mLocalDataReady;
@@ -107,6 +109,7 @@ public class UserHomeVideo extends TabContentView {
         theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
         theListView.setDivider(null);
         datas = new ArrayList<>();
+        mSecondEditDatas = new HashMap<String, Map<String, String>>();
         mLocalDatas = new ArrayList<Map<String, String>>();
         mNetDatas = new ArrayList<Map<String, String>>();
         adapter = new AdapterUserVideo(mAct, theListView, datas, 0, null, null);
@@ -199,6 +202,8 @@ public class UserHomeVideo extends TabContentView {
         if (isRefresh && isMyselft) {
             if (mLocalDatas != null)
                 mLocalDatas.clear();
+            if (mSecondEditDatas != null)
+                mSecondEditDatas.clear();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -248,6 +253,10 @@ public class UserHomeVideo extends TabContentView {
                                 data.put("videos", videos);
                                 data.put("isMe", "2");
                                 data.put("dataFrom", String.valueOf(1));//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
+                                if (!TextUtils.isEmpty(code)) {
+                                    mSecondEditDatas.put(code, data);
+                                    continue;
+                                }
                                 mLocalDatas.add(data);
                             }
                         }
@@ -292,6 +301,17 @@ public class UserHomeVideo extends TabContentView {
                     datas.clear();
                     datas.addAll(mLocalDatas);
                     isRefresh = false;
+                }
+                if (!mSecondEditDatas.isEmpty() && !mNetDatas.isEmpty()) {
+                    ListIterator<Map<String, String>> netDatas = mNetDatas.listIterator();
+                    while(netDatas.hasNext()) {
+                        Map<String, String> netData = netDatas.next();
+                        String code = netData.get("code");
+                        if (!TextUtils.isEmpty(code) && mSecondEditDatas.size() > 0 && mSecondEditDatas.containsKey(code)) {
+                            netDatas.set(mSecondEditDatas.get(code));
+                            mSecondEditDatas.remove(code);
+                        }
+                    }
                 }
                 datas.addAll(mNetDatas);
                 if (datas.size() == 0 && isMyselft) {

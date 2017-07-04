@@ -401,6 +401,8 @@ public class FriendHome extends BaseActivity {
 								intent.putExtra("draftId", articleData.getId());
 								intent.putExtra("dataType", dataType);
 								intent.putExtra("coverPath", articleData.getImg());
+								if (UploadDishData.UPLOAD_ING.equals(uploadType))
+									intent.putExtra("isAutoUpload", true);
 								String videoPath = "";
 								ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
 								if(videoArray != null && videoArray.size() > 0){
