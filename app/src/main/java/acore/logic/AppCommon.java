@@ -721,7 +721,7 @@ public class AppCommon {
 
     public synchronized static void saveUrlRuleFile(Context context) {
         final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
-		//TODO 方便测试
+		//方便测试
 //		if(FileManager.ifFileModifyByCompletePath(urlRulePath, -1) == null){
 //			String urlRuleData = FileManager.getFromAssets(context, FileManager.file_urlRule);
 //			FileManager.saveFileToCompletePath(urlRulePath, urlRuleData, false);

@@ -45,8 +45,7 @@ import xh.basic.tool.UtilImage;
 /**
  * 传菜谱主控制
  * @author LiangYuanYuan
- * @TODO 
- * @data 2015年10月14日下午4:40:21 
+ * @data 2015年10月14日下午4:40:21
  */
 public class DishMainView{
 	private UploadDishActivity mUploadDishActivity;
@@ -194,7 +193,6 @@ public class DishMainView{
 	
 	/** 
 	 * 获取各个菜谱数据
-	 * @TODO 
 	 * 食材和辅料控制_组合数据
 	 * 做法步骤_组合数据
 	 * 组合效果图，菜谱名、心得、小贴士数据
@@ -228,7 +226,6 @@ public class DishMainView{
 	
 	/** 
 	 * 根据resultCode处理，修改菜谱名效果图等操作
-	 * @TODO 
 	 * 该界面得到的resultCode,就在当前界面进行处理。
 	 * 其他说有则进行下发
 	 */
@@ -257,7 +254,6 @@ public class DishMainView{
 	 
 	/**
 	 * 点击查看积分详情
-	 * @TODO
 	 */
 	private OnClickListener onIntegralInfoListener = new OnClickListener() {
 		
@@ -332,7 +328,6 @@ public class DishMainView{
 
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				Bitmap bmp = (Bitmap)msg.obj;
 				if(bmp != null){

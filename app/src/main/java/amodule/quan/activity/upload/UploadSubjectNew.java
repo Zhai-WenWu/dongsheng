@@ -354,7 +354,6 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		//TODO
 		switch(v.getId()){
 			case R.id.leftImgBtn:
 				UploadSubjectNew.this.onBackPressed();

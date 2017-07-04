@@ -6,14 +6,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.lansosdk.videoeditor.MediaInfo;
 
 import java.io.File;
 import java.util.List;
+
+import acore.override.XHApplication;
 
 /**
  * Created by Fang Ruijiao on 2016/10/11.
@@ -94,39 +97,29 @@ public class ToolsCammer {
     }
 
     public static float getLongTime(String filePath) {
-        MediaInfo mediaInfo = new MediaInfo(filePath);
-        mediaInfo.prepare();
-        int videoW = mediaInfo.vWidth;
-        int videoH = mediaInfo.vHeight;
-        if(videoW / 16.0 * 9 != videoH){
-            return -1;
-        }
-        float longTime = (float) (((int)(mediaInfo.vDuration * 10)) / 10.0);
-        return longTime;
 
-//        MediaPlayer mediaPlayer = MediaPlayer.create(con, Uri.fromFile(new File(filePath)));
-//        MediaPlayer mediaPlayer = new MediaPlayer();
-//        try {
-//            mediaPlayer.setDataSource(filePath);
-//            mediaPlayer.prepare();
-//            int videoW = mediaPlayer.getVideoWidth();
-//            int videoH = mediaPlayer.getVideoHeight();
-//            if(videoW / 16.0 * 9 != videoH){
-////                mediaPlayer.stop();
-//                mediaPlayer.release();
-//                mediaPlayer = null;
-//                return 0;
-//            }
-//            float longTime = (float) ((mediaPlayer.getDuration() * 10) / 10.0);
-////            mediaPlayer.stop();
-//            mediaPlayer.release();
-//            mediaPlayer = null;
-//            return longTime;
-//        } catch (Exception e) {
-////            Log.i("FRJ","getLongYime()");
-//            e.printStackTrace();
-//        }
-//        return 0;
+        MediaPlayer mediaPlayer = MediaPlayer.create(XHApplication.in(), Uri.fromFile(new File(filePath)));
+        try {
+            mediaPlayer.setDataSource(filePath);
+            mediaPlayer.prepare();
+            int videoW = mediaPlayer.getVideoWidth();
+            int videoH = mediaPlayer.getVideoHeight();
+            if(videoW / 16.0 * 9 != videoH){
+//                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                return 0;
+            }
+            float longTime = (float) ((mediaPlayer.getDuration() * 10) / 10.0);
+//            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+            return longTime;
+        } catch (Exception e) {
+//            Log.i("FRJ","getLongYime()");
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**

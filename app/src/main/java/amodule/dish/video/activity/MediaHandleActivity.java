@@ -32,7 +32,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
     private ProgressBar progressBar;
     private TextView progress_text;
     private UploadDishData uploadDishData;
-    private MediaHandleControl mediaHandlerContorl;
+//    private MediaHandleControl mediaHandlerContorl;
     private int progress_now=0;//当前进度
     private int progress_new=20;//可以达到的进度
     private Timer originalTimer,sucessTimer;
@@ -87,44 +87,44 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
             public void backResultState(Boolean state) {
             }
         });
-        mediaHandlerContorl= new MediaHandleControl(this,uploadDishData);
-        mediaHandlerContorl.startVideo();
-        mediaHandlerContorl.setHandlerDataCallBack(new MediaHandleControl.HandlerDataCallBack() {
-            @Override
-            public void setCallBack(int progress) {
-                progress_new=progress;
-                Log.i("mediahandler","progress_new::"+progress_new);
-            }
-
-            @Override
-            public void CallBackError() {
-                //出现错误，终止全部操作
-                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","合成失败","");
-            }
-
-            @Override
-            public void callBackSucess(String path,int id,String time,String cover) {
-                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","合成成功","");
-                Log.i("zhangyujian","合成成功:::"+path+":::"+id);
-                path_finish= path;
-                id_data=id;
-                time_key= time;
-                coverPath= cover;
-                //成功
-                if(progress_now<=95) {
-                    startSucessTimer();
-                }else {
-                    startPreview();
-                }
-            }
-        });
-        originalTimer= new Timer();
-        originalTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.sendEmptyMessage(STATE_PROCESS);
-            }
-        },0,1000);
+//        mediaHandlerContorl= new MediaHandleControl(this,uploadDishData);
+//        mediaHandlerContorl.startVideo();
+//        mediaHandlerContorl.setHandlerDataCallBack(new MediaHandleControl.HandlerDataCallBack() {
+//            @Override
+//            public void setCallBack(int progress) {
+//                progress_new=progress;
+//                Log.i("mediahandler","progress_new::"+progress_new);
+//            }
+//
+//            @Override
+//            public void CallBackError() {
+//                //出现错误，终止全部操作
+//                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","合成失败","");
+//            }
+//
+//            @Override
+//            public void callBackSucess(String path,int id,String time,String cover) {
+//                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","合成成功","");
+//                Log.i("zhangyujian","合成成功:::"+path+":::"+id);
+//                path_finish= path;
+//                id_data=id;
+//                time_key= time;
+//                coverPath= cover;
+//                //成功
+//                if(progress_now<=95) {
+//                    startSucessTimer();
+//                }else {
+//                    startPreview();
+//                }
+//            }
+//        });
+//        originalTimer= new Timer();
+//        originalTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                handler.sendEmptyMessage(STATE_PROCESS);
+//            }
+//        },0,1000);
     }
 
     @Override
@@ -163,8 +163,8 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","终止合成","确定");
-                mediaHandlerContorl.setStop(true);
-                MediaHandleControl.delAllMediaHandlerData(uploadDishData.getId());
+//                mediaHandlerContorl.setStop(true);
+//                MediaHandleControl.delAllMediaHandlerData(uploadDishData.getId());
                 MediaHandleActivity.this.finish();
                 dialog.cancel();
             }

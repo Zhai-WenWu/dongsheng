@@ -145,7 +145,6 @@ public class BarDatePicker extends LinearLayout{
 		
 		@Override
 		public void onScrollingStarted(WheelView wheel) {
-			// TODO Auto-generated method stub
 			timeScrolled = true;
 		}
 		
@@ -171,7 +170,6 @@ public class BarDatePicker extends LinearLayout{
 		
 		@Override
 		public void onChanged(WheelView wheel, int oldValue, int newValue) {
-			// TODO Auto-generated method stub
 			if(!timeScrolled){//滚轮滚动了
 				timeChanged = true;//时间数据改变了
 				

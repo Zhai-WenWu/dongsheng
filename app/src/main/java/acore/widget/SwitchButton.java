@@ -31,17 +31,14 @@ public class SwitchButton extends View implements android.view.View.OnClickListe
 
 	public SwitchButton(Context context) {
 		this(context, null);
-		// TODO Auto-generated constructor stub
 	}
 
 	public SwitchButton(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
-		// TODO Auto-generated constructor stub
 	}
 
 	public SwitchButton(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		// TODO Auto-generated constructor stub
 		init();
 	}
 
@@ -62,7 +59,6 @@ public class SwitchButton extends View implements android.view.View.OnClickListe
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		});
@@ -86,13 +82,11 @@ public class SwitchButton extends View implements android.view.View.OnClickListe
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// TODO Auto-generated method stub
 		setMeasuredDimension(mSwitchFrame.getWidth(), mSwitchFrame.getHeight());
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		// TODO Auto-generated method stub
 		super.onDraw(canvas);
 		//开着
 		if (mDeltX > 0 || mDeltX == 0 && mSwitchOn) {
@@ -122,7 +116,6 @@ public class SwitchButton extends View implements android.view.View.OnClickListe
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_CANCEL:
 			if (Math.abs(mDeltX) > 0 && Math.abs(mDeltX) < mMoveLength / 2) {
@@ -200,7 +193,6 @@ public class SwitchButton extends View implements android.view.View.OnClickListe
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		mDeltX = mSwitchOn ? mMoveLength : -mMoveLength;
 		mSwitchOn = !mSwitchOn;
 		if(mListener != null) {

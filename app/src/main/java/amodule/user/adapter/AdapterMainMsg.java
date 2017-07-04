@@ -30,7 +30,7 @@ import com.xiangha.R;
 import aplug.basic.SubBitmapTarget;
 
 /** 
- * @Description: TODO
+ * @Description:
  * @Title: AdapterMainMsg.java Copyright: Copyright (c) xiangha.com 2014~2017
  *
  * @author: intBird   修改 zeyu_t

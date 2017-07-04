@@ -167,7 +167,7 @@ public class ImageSelectorFragment extends Fragment {
         mPreviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO 预览
+                // 预览
             }
         });
 

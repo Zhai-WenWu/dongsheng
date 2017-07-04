@@ -69,7 +69,7 @@ public class XHScrollerSelf extends XHScrollerAdParent{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(map_link!=null) {
+                if(map_link!=null&&!TextUtils.isEmpty(map_link.get("name"))) {
                     map_link.put("type",XHScrollerAdParent.ADKEY_BANNER);
                     Map<String,String> map = new HashMap<>();
                     map.put("title", map_link.get("name"));
@@ -96,10 +96,12 @@ public class XHScrollerSelf extends XHScrollerAdParent{
                         map.put("iconUrl", imgUrl);
                         map.put("type",XHScrollerAdParent.ADKEY_BANNER);
                         xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);
-                    }else
+                    }else {
                         xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
-                }else
+                    }
+                }else {
                     xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
+                }
             }
         }).start();
 

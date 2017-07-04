@@ -352,7 +352,7 @@ public class ListDish extends BaseActivity {
                     if (!listData.get(i).containsKey("adStyle") || TextUtils.isEmpty(listData.get(i).get("adStyle"))) {
                         //插入广告
                         if (adData.get(j) != null && adData.get(j).size() > 0) {//数据
-                            listData.add(i - 1, adData.get(j));
+                            listData.add(i , adData.get(j));
                         }
                     }//不进行如何操作。
                 }

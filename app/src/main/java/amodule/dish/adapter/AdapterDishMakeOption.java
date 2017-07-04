@@ -132,7 +132,6 @@ public class AdapterDishMakeOption extends BaseAdapter implements DragGridBaseAd
 	 *
 	 * @param position
 	 *
-	 * @TODO
 	 */
 	private void onDeleteStepView(int position) {
 		XHClick.mapStat(mCon, UploadDishActivity.STATISTICS_MODIFY_MAKE_ID, "删除步骤", "");

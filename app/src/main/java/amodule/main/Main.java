@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -285,8 +284,6 @@ public class Main extends Activity implements OnClickListener {
         ShortVideoInit.init(Main.this);
         //从Welcome方法
 //        QbSdk.initX5Environment(Main.this, null);
-        //视频合成so初始化，单独列出
-        LoadLanSongSdk.initVideoSdk(getApplicationContext());
     }
 
     /**

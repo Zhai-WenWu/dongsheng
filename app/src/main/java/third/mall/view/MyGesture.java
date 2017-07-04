@@ -9,22 +9,18 @@ public class MyGesture extends GestureDetector {
 
 public MyGesture(OnGestureListener listener, Handler handler) {
 		super(listener, handler);
-		// TODO Auto-generated constructor stub
 	}
 
 public MyGesture(OnGestureListener listener) {
 		super(listener);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MyGesture(Context context, OnGestureListener listener, Handler handler) {
 		super(context, listener, handler);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MyGesture(Context context, OnGestureListener listener, Handler handler, boolean unused) {
 		super(context, listener, handler, unused);
-		// TODO Auto-generated constructor stub
 	}
 
 	private float down_y;

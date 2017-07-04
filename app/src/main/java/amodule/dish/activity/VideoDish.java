@@ -108,7 +108,6 @@ public class VideoDish extends BaseActivity{
 		handler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				initPagerView();
 				mViewPagerAdapter.notifyDataSetChanged();

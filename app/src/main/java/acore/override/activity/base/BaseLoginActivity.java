@@ -63,8 +63,6 @@ public class BaseLoginActivity extends BaseActivity {
     public final static String TAG_ACCOCUT = "a_security520";
 
     public static final String SMS_SDK_VERSION = "3.0.0";
-    public static final String smsAppkey = "10e22f093f255";
-    public static final String smsAppsecret = "bb71787a9ec63116377a83c3ecac048a";
     public String text = "正在登录";
     protected int mGetCountryId = 100;
     protected static final int SET_USER_IMG = 5000;
@@ -79,9 +77,6 @@ public class BaseLoginActivity extends BaseActivity {
     protected static final String ORIGIN_MODIFY_PSW = "origin_modify_psw";
     protected static final String ORIGIN_BIND_PHONE_NUM = "origin_bind_phone_num";
     protected static final String ORIGIN_BIND_FROM_WEB = "origin_bind_phone_web";
-
-    protected static final String TYPE_MOTIFY_SMS = "verifyCode";
-    protected static final String SECRET = "secret";
 
     protected static final String EMAIL_LOGIN_TYPE = "email_login_type";
     protected static final String PHONE_LOGIN_TYPE = "phone_login_type";
@@ -123,15 +118,9 @@ public class BaseLoginActivity extends BaseActivity {
         setContentView(control.setCommonBottonView(className, this, contentXml));
         mCommonBottomView = control.mCommonBottomView;
 
-        if (Tools.isShowTitle()) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
         setCommonStyle();
 
         lastLoginAccout = LoginCheck.getLastLoginAccout(this);
-
-        //注册SDK
-//        MobSDK.init(this, smsAppkey, smsAppsecret);
 
         View rl_topbar = findViewById(R.id.rl_topbar);
         if (rl_topbar != null) {
@@ -139,7 +128,6 @@ public class BaseLoginActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     onPressTopBar();
-
                 }
             });
         }
@@ -147,12 +135,12 @@ public class BaseLoginActivity extends BaseActivity {
 
     protected void initTitle() {
         if (Tools.isShowTitle()) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             LinearLayout linearView = new LinearLayout(this);
             int height = Tools.getStatusBarHeight(this);
             linearView.setBackgroundColor(getResources().getColor(R.color.backgroup_color));
             linearView.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams params =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
             ((RelativeLayout) findViewById(R.id.rl_topbar)).addView(linearView, 0, params);
         }
     }

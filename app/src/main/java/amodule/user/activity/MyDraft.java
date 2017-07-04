@@ -73,7 +73,6 @@ public class MyDraft extends BaseActivity {
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
 		super.onNewIntent(intent);
 		needOpenId = intent.getIntExtra("id", -1);
 	}
@@ -148,7 +147,6 @@ public class MyDraft extends BaseActivity {
 
 	/** 
 	 * 从数据库获取草稿数据
-	 * @TODO
 	 */
 	private void loadFormLocal() {
 		loadManager.showProgressBar();

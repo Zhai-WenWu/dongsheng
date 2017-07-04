@@ -181,7 +181,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
             public void onClickCenterBtn() {
 
                 dataStatics("方法1新手机号页，点完成", "方法2新手机号页，点完成");
-                String type = TYPE_MOTIFY_SMS;
+                String type = "verifyCode";
                 String errorType = LoginCheck.checkPhoneFormatWell(AddNewPhone.this,
                         phone_info.getZoneCode(), phone_info.getPhoneNum());
 

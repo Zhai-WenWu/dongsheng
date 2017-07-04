@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lansosdk.videoeditor.MediaInfo;
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
@@ -293,7 +292,7 @@ public class MediaPreviewActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                MediaHandleControl.delAllMediaHandlerData(id);
+//                MediaHandleControl.delAllMediaHandlerData(id);
                 this.finish();
                 break;
             case R.id.video_upload://发布点击
@@ -336,7 +335,6 @@ public class MediaPreviewActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 XHClick.mapStat(MediaPreviewActivity.this, "a_video_preview", "发布视频", "确定");
-                MediaHandleControl.delAllMediaHandlerData(id);
                 dialog.cancel();
                 MediaPreviewActivity.this.finish();
             }
@@ -421,19 +419,19 @@ public class MediaPreviewActivity extends BaseActivity implements View.OnClickLi
 
     private void getVideoTime() {
             if(Tools.isFileExists(path)){
-                MediaInfo mediaInfo = new MediaInfo(path);
-                if(mediaInfo!=null){
-                    mediaInfo.prepare();
-                }
-                if(mediaInfo!=null){
-                    totalTime = mediaInfo.vDuration;
-                }
+//                MediaInfo mediaInfo = new MediaInfo(path);
+//                if(mediaInfo!=null){
+//                    mediaInfo.prepare();
+//                }
+//                if(mediaInfo!=null){
+//                    totalTime = mediaInfo.vDuration;
+//                }
             }
     }
 
     @Override
     public void onBackPressed() {
-        MediaHandleControl.delAllMediaHandlerData(id);
+//        MediaHandleControl.delAllMediaHandlerData(id);
         super.onBackPressed();
 
     }
