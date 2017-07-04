@@ -40,6 +40,7 @@ public class HomeRecipeItem extends HomeItem {
     private View mLayerView;
 
     private boolean mIsVideo;
+    private boolean mIsVip;
 
     public HomeRecipeItem(Context context) {
         this(context, null);
@@ -76,7 +77,7 @@ public class HomeRecipeItem extends HomeItem {
             @Override
             public void onClick(View v) {
                 //视频列表下点击视频图片部分直接播放，其他部分则跳转到视频菜谱详情页
-                if (v == mVideoContainer && !TextUtils.isEmpty(mType) && mType.equals("2") && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType())) { //表示当前tab是视频菜谱
+                if (v == mVideoContainer && !TextUtils.isEmpty(mType) && mType.equals("2") && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType()) && !mIsVip) { //表示当前tab是视频菜谱
                     if (mVideoClickCallBack != null) {
                         mVideoClickCallBack.videoOnClick(mPosition);
                         XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
@@ -159,6 +160,7 @@ public class HomeRecipeItem extends HomeItem {
                 mSole.setVisibility(View.VISIBLE);
         }
         if (mVIP != null && !mIsAd && "2".equals(mDataMap.get("isVip"))) {
+            mIsVip = true;
             mVIP.setVisibility(View.VISIBLE);
         }
         if (mDataMap.containsKey("styleData")) {
@@ -213,6 +215,7 @@ public class HomeRecipeItem extends HomeItem {
     protected void resetData() {
         super.resetData();
         mIsVideo = false;
+        mIsVip = false;
         MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
         containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         containerParams.width = MarginLayoutParams.MATCH_PARENT;
