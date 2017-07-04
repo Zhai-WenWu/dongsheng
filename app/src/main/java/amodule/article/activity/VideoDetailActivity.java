@@ -81,6 +81,7 @@ public class VideoDetailActivity extends BaseActivity {
     private TextView mTitle;
     private ImageView rightButton;
     private RelativeLayout dredgeVipLayout;
+    private TextView dredgeVipImmediately;
     private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
     /** 头部view */
@@ -218,6 +219,7 @@ public class VideoDetailActivity extends BaseActivity {
         xhWebView = manager.createWebView(R.id.XHWebview);
         xhWebView.setVisibility(View.GONE);
         dredgeVipLayout = (RelativeLayout) findViewById(R.id.dredge_vip_bottom_layout);
+        dredgeVipImmediately = (TextView) findViewById(R.id.dredge_vip_immediately);
         dredgeVipLayout.setVisibility(View.GONE);
     }
 
@@ -583,6 +585,9 @@ public class VideoDetailActivity extends BaseActivity {
         }else{
             //有限制
             mCommentBar.setVisibility(View.GONE);
+            String buttonStr = commonPermission.get("button");
+            if(!TextUtils.isEmpty(buttonStr))
+                dredgeVipImmediately.setText(buttonStr);
             dredgeVipLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

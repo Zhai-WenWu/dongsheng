@@ -162,7 +162,8 @@ public class ArticleAdContrler {
             titleTv.setVisibility(View.GONE);
             nameTv.setVisibility(View.GONE);
         } else {
-            titleTv.setText(new StringBuilder().append(title).append(" | ").append(dataMap.get("desc")));
+            if(TextUtils.isEmpty(dataMap.get("desc")))
+                titleTv.setText(dataMap.get("desc"));
             titleTv.setVisibility(View.VISIBLE);
             nameTv.setText(title);
             nameTv.setVisibility(View.VISIBLE);

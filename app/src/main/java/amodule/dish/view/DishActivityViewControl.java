@@ -70,6 +70,7 @@ public class DishActivityViewControl {
     private boolean isOnClickImageShow= false;
     private RelativeLayout dishVidioLayout;
     private RelativeLayout dregdeVipLayout;
+    private TextView dredgeVipImmediately;
     private View view_oneImage;
     private TextView textPractice;
     private String state;
@@ -135,6 +136,7 @@ public class DishActivityViewControl {
         xhWebView = manager.createWebView(R.id.XHWebview);
         //开通VIP
         dregdeVipLayout = (RelativeLayout) activity.findViewById(R.id.dredge_vip_bottom_layout);
+        dredgeVipImmediately = (TextView) activity.findViewById(R.id.dredge_vip_immediately);
 
         //头部view处理
         dishHeaderView= new DishHeaderView(activity);
@@ -285,7 +287,7 @@ public class DishActivityViewControl {
         if(permissionMap != null && permissionMap.containsKey("offLine")){
             Map<String,String> offlineMap = StringManager.getFirstMap(permissionMap.get("offLine"));
             offlineMap = StringManager.getFirstMap(offlineMap.get("common"));
-            dishTitleViewControl.setOfflineLayoutVisibility("1".equals(offlineMap.get("isShow")));
+            dishTitleViewControl.setOfflineLayoutVisibility("2".equals(offlineMap.get("isShow")));
         }
 
         //头部view
@@ -310,6 +312,7 @@ public class DishActivityViewControl {
         Map<String,String> commonPermission = StringManager.getFirstMap(permissionMap.get("video"));
         commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
         final String url = commonPermission.get("url");
+        String buttonStr = commonPermission.get("button");
         if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
                 ){
             hasPermission = true;
@@ -321,9 +324,9 @@ public class DishActivityViewControl {
                 list_makes.get(i).put("style", DishStepView.DISH_STYLE_STEP);
             }
         }else{
-//            dishTitleViewControl.setOfflineLayoutVisibility(false);
-//            dregdeVipLayout.setVisibility(View.VISIBLE);
             hasPermission = false;
+            if(!TextUtils.isEmpty(buttonStr))
+                dredgeVipImmediately.setText(buttonStr);
             dregdeVipLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

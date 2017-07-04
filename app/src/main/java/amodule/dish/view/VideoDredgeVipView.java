@@ -53,6 +53,11 @@ public class VideoDredgeVipView extends RelativeLayout {
             tipMessage.setText(text);
     }
 
+    public void setDredgeVipText(String text){
+        if(!TextUtils.isEmpty(text) && dredgeVip != null)
+            dredgeVip.setText(text);
+    }
+
     public void setDredgeVipClick(OnClickListener clickListener){
         if(clickListener != null)
             dredgeVip.setOnClickListener(clickListener);
