@@ -8,17 +8,14 @@ import android.widget.LinearLayout;
 public class StickHeader extends LinearLayout {
 	public StickHeader(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public StickHeader(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public StickHeader(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		// TODO Auto-generated constructor stub
 	}
 	
 	private int mMovingMin = 30;
@@ -33,7 +30,6 @@ public class StickHeader extends LinearLayout {
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			mIsMoving = false;

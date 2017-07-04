@@ -120,13 +120,15 @@ public class DetailDish extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        page = 1;
-        hasPermission = true;
-        isHasVideo = false;
-        detailPermissionMap.clear();
-        permissionMap.clear();
-        dishJson = "";
-        mHandler.sendEmptyMessage(LOAD_DISH);
+        if(!hasPermission){
+            page = 1;
+            hasPermission = true;
+            isHasVideo = false;
+            detailPermissionMap.clear();
+            permissionMap.clear();
+            dishJson = "";
+            mHandler.sendEmptyMessage(LOAD_DISH);
+        }
     }
 
     /**
@@ -274,7 +276,6 @@ public class DetailDish extends BaseActivity {
             dishActivityViewControl.setIsGoLoading(false);
             return;
         }
-        //TODO 测试
         dishActivityViewControl.analyzeDishInfoData(listmaps, new HashMap<String, String>());
         loadManager.loadOver(ReqInternet.REQ_OK_STRING, 1, true);
         mHandler.sendEmptyMessage(LOAD_DISH_OVER);

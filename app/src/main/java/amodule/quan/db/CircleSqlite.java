@@ -19,7 +19,6 @@ public class CircleSqlite extends SQLiteOpenHelper {
 	/** 防止外部调用 */
 	private CircleSqlite(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

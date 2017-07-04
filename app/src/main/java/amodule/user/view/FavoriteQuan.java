@@ -35,7 +35,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 /** 
- * @Description: TODO
+ * @Description:
  * @Title: FavoriteQuan.java Copyright: Copyright (c) xiangha.com 2014~2017
  * @author: luomin
  * @date: 2015年3月17日 下午2:29:08   

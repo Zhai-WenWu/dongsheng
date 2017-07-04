@@ -57,7 +57,7 @@ public class AdapterDishNew extends AdapterSimple{
             stepViewHolder.setData(map,position);
         }else if(style.equals(DishExplainView.DISH_STYLE_EXP)){//小贴士
             DishExplainView explainView= new DishExplainView(context);
-            //TODO 适应以前代码
+            //适应以前代码
             explainView.setData(map,activity, new HashMap<String, String>());
             convertView= explainView;
 

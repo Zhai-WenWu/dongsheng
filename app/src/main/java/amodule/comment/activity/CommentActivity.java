@@ -351,12 +351,6 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             source = Integer.parseInt(sourceType);
         }
 
-        //TODO
-        if(TextUtils.isEmpty(type)) {
-            type = "1";
-            code = "520";
-        }
-
         if (TextUtils.isEmpty(type) || TextUtils.isEmpty(code)) {
             Tools.showToast(this, "缺少 类型 或 主题");
             finish();

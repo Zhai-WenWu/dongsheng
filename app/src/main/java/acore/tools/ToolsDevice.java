@@ -340,8 +340,8 @@ public class ToolsDevice {
         if (time != "" && (Long.valueOf(currentTime) - Long.valueOf(time) < 7)) {
             return "";
         }
-        // TODO 存储启动时间
-        Map<String, String> map = new HashMap<String, String>();
+        //存储启动时间
+        Map<String, String> map = new HashMap<>();
         map.put(FileManager.xmlKey_upFavorTime, currentTime);
         UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
         UtilLog.print("i", "oldTime:" + time + " currentTime:" + currentTime);

@@ -151,7 +151,6 @@ public class GalleryViewPager extends ViewPager{
 				views.get(i).setOnClickListener(ScrollLinearListLayout.getOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						if(views.size() > 1){
 							if(index == 0) {
 								helper.onClick(v , views.size()- 3);
@@ -174,7 +173,6 @@ public class GalleryViewPager extends ViewPager{
 				views.get(i).setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 						if(views.size() > 1){
 							if(index == 0) {
 								helper.onClick(v , views.size()- 3);

@@ -146,7 +146,7 @@ public class FolderAdapter extends BaseAdapter {
                     .override(mImageSize, mImageSize)
                     .centerCrop()
                     .into(cover);
-            // TODO 选择标识
+            //选择标识
         }
     }
 

@@ -26,7 +26,6 @@ import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
 
 /**
- * TODO
  * @author zeyue_t
  *	@time 2015年5月19日上午9:15:59
  */

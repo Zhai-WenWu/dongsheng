@@ -199,7 +199,6 @@ public class QuanAdvertControl {
             customerArray.put(customerObj);
             map.put("customer", customerArray.toString());
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

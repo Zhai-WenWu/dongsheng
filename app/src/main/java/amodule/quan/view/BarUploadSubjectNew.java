@@ -53,7 +53,6 @@ public class BarUploadSubjectNew {
 		rl_emoji = (RelativeLayout) mAct.findViewById(R.id.quan_bar_rl_emoji);
 		rl_seting = (RelativeLayout) mAct.findViewById(R.id.quan_bar_rl_seting);
 		switchButton = (ImageView)mAct.findViewById(R.id.quan_bar_switch_button_setting);
-		//TODO
 		// 添加Emoji表情
 		mAct.findViewById(R.id.quan_bar_ib_addEmoji).setOnClickListener(onClickListener);
 		ib_seting.setOnClickListener(onClickListener);
@@ -218,7 +217,6 @@ public class BarUploadSubjectNew {
 		
 		@Override
 		public void onClick(View v) {
-			//TODO
 			switch(v.getId()){
 			case R.id.quan_bar_ib_addEmoji:
 				XHClick.mapStat(mAct, UploadSubjectNew.mTongjiId, "底部点击", "表情");

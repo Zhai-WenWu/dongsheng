@@ -79,7 +79,6 @@ public class DialogUploadDishFial {
 
             @Override
             public void handleMessage(Message msg) {
-                // TODO Auto-generated method stub
                 super.handleMessage(msg);
                 Bitmap bmp = (Bitmap)msg.obj;
                 if(bmp != null){
