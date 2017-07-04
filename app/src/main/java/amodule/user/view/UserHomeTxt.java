@@ -65,6 +65,8 @@ public class UserHomeTxt extends TabContentView {
 	private LinearLayout mEmptyView;
 	private Button mGotoBtn;
 
+	private int mHeadViewHeight;
+
 	public UserHomeTxt(FriendHome act, String code) {
 		view = View.inflate(act, R.layout.myself_txt, null);
 		this.mAct = act;
@@ -180,13 +182,11 @@ public class UserHomeTxt extends TabContentView {
 		final int userinfo_h = Tools.getTargetHeight(friend_info);
 		try {
 			if (friend_info.getText() == null || friend_info.getText().toString().equals(""))
-				headView.setLayoutParams(new AbsListView.LayoutParams(
-						android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-						tabHost_h + bigImg_h));
+				mHeadViewHeight = tabHost_h + bigImg_h;
 			else
-				headView.setLayoutParams(new AbsListView.LayoutParams(
-						android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-						tabHost_h + bigImg_h + userinfo_h));
+				mHeadViewHeight = tabHost_h + bigImg_h + userinfo_h;
+			headView.setLayoutParams(new AbsListView.LayoutParams(
+					android.view.ViewGroup.LayoutParams.MATCH_PARENT, mHeadViewHeight));
 		} catch (Exception e) {
 			UtilLog.reportError("MyselfSubject头部局异常", e);
 		}
@@ -284,8 +284,8 @@ public class UserHomeTxt extends TabContentView {
 					Tools.showToast(mAct, returnObj.toString());
 					return;
 				}
-                onDataReady(true);
 				setHeadViewHeight();
+				onDataReady(true);
 			}
 		});
 	}
@@ -319,9 +319,8 @@ public class UserHomeTxt extends TabContentView {
 				}
                 datas.addAll(mNetDatas);
                 if (datas.size() == 0 && isMyselft) {
-					LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
 					RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
-					emptyParams.topMargin = tabMainMyself.getTop() + tabMainMyself.getHeight();
+					emptyParams.topMargin = mHeadViewHeight;
 					mEmptyContainer.setVisibility(View.VISIBLE);
                 } else {
 					mEmptyContainer.setVisibility(View.GONE);
