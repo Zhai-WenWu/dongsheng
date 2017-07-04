@@ -808,7 +808,9 @@ public class VideoDetailActivity extends BaseActivity {
                         deleteThis();
                         statistics("更多", "删除");
                     }
-                }).show();
+                }).setSureButtonTextColor("#333333")
+                .setCancelButtonTextColor("#333333")
+                .show();
     }
 
     private void deleteThis() {

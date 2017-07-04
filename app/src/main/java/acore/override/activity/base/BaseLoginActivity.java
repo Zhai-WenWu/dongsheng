@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.mob.MobSDK;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -97,7 +96,6 @@ public class BaseLoginActivity extends BaseActivity {
 
     protected int err_count_secret;
     private EventHandler eventHandler = null;
-    private String phoneNumber="";//手机号码
 
     /**
      * Activity标题初始化
@@ -335,7 +333,7 @@ public class BaseLoginActivity extends BaseActivity {
         });
     }
 
-    protected void reqIdentifySpeecha(String phoneNum, final BaseLoginCallback callback){
+    protected void reqIdentifySpeecha(final String phoneNum, final BaseLoginCallback callback){
         if (TextUtils.isEmpty(phoneNum)) {
             Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
             callback.onFalse(-1);
@@ -346,14 +344,15 @@ public class BaseLoginActivity extends BaseActivity {
             ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum,
                     new InternetCallback(this) {
                         @Override
-                        public void loaded(int flag, String s, Object o) {
+                        public void loaded(int flag, String s, Object data) {
                             if (ReqInternet.REQ_OK_STRING >= flag) {
-                                Map<String, String> map = StringManager.getFirstMap(o);
+                                Map<String, String> map = StringManager.getFirstMap(data);
                                 if (TextUtils.isEmpty(map.get("errorCode"))) {
                                     callback.onSuccess();
                                     return;
                                 }
                             }
+                            sendFalseRequest(data.toString(),"86",phoneNum);
                             callback.onFalse(flag);
                         }
                     });
@@ -369,8 +368,7 @@ public class BaseLoginActivity extends BaseActivity {
      * @param phone_number
      * @param callback
      */
-    protected boolean reqIdentifyCode(final String countyrCode, String phone_number,@NonNull final SMSSendCallback callback) {
-        this.phoneNumber = phone_number;
+    protected boolean reqIdentifyCode(final String countyrCode, final String phone_number, @NonNull final SMSSendCallback callback) {
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(final int event,final  int result, final Object data) {
@@ -395,7 +393,7 @@ public class BaseLoginActivity extends BaseActivity {
                             if(callback != null)
                                 callback.onSendFalse();
                             LogManager.print("w", data.toString() + "");
-                            sendFalseRequest(data.toString(),countyrCode);
+                            sendFalseRequest(data.toString(),countyrCode,phone_number);
                         }
                     }
                 });
@@ -439,7 +437,7 @@ public class BaseLoginActivity extends BaseActivity {
      * @param data
      * @param countyrCode
      */
-    private void sendFalseRequest(String data,String countyrCode){
+    private void sendFalseRequest(String data,String countyrCode,String phoneNumber){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("log=").append(data);
         if(!TextUtils.isEmpty(phoneNumber))

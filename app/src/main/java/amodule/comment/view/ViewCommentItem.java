@@ -194,19 +194,21 @@ public class ViewCommentItem extends LinearLayout {
             int maxNum = 100;
             if (TextUtils.isEmpty(text) || text.length() <= maxNum) {
                 contentText.setText(text);
-                String ucode = cusstomMap.get("ucode");
-                final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-                contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mListener != null) {
-                            if (isReport)
-                                mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text,"点击长按后的评论举报按钮");
-                            else
-                                mListener.onDeleteCommentClick(comment_id,"点击长按后的评论删除按钮");
+                if(isHaveLongClickRight) {
+                    String ucode = cusstomMap.get("ucode");
+                    final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
+                    contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mListener != null) {
+                                if (isReport)
+                                    mListener.onReportCommentClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"), text, "点击长按后的评论举报按钮");
+                                else
+                                    mListener.onDeleteCommentClick(comment_id, "点击长按后的评论删除按钮");
+                            }
                         }
-                    }
-                });
+                    });
+                }
             } else {
                 String newText = text.substring(0, maxNum);
                 MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
@@ -224,20 +226,21 @@ public class ViewCommentItem extends LinearLayout {
                         multifunctionText.addStyle(textBuilder.getContent(), textBuilder.build());
                         contentText.setText(multifunctionText);
                         contentText.setCopyText(text);
-
-                        String ucode = cusstomMap.get("ucode");
-                        final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-                        contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (mListener != null) {
-                                    if (isReport)
-                                        mListener.onReportCommentClick(comment_id,cusstomMap.get("ucode"),cusstomMap.get("nick_name"),text,"点击长按后的评论举报按钮");
-                                    else
-                                        mListener.onDeleteCommentClick(comment_id,"点击长按后的评论删除按钮");
+                        if(isHaveLongClickRight) {
+                            String ucode = cusstomMap.get("ucode");
+                            final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
+                            contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (mListener != null) {
+                                        if (isReport)
+                                            mListener.onReportCommentClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"), text, "点击长按后的评论举报按钮");
+                                        else
+                                            mListener.onDeleteCommentClick(comment_id, "点击长按后的评论删除按钮");
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 });
                 contentText.setRightClicker(null);
