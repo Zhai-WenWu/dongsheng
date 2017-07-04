@@ -88,7 +88,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private boolean isAuthor;
     private Map<String, String> customerData;
-    private Map<String, String> adDataMap;
+    private Map<String, String> adDataMap = new HashMap<>();
     private Map<String, String> commentMap = new HashMap<>();
     private Map<String, String> shareMap = new HashMap<>();
     private String commentNum = "0";
@@ -98,7 +98,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private int page = 0;//相关推荐的page
 
     private String data_type = "";//推荐列表过来的数据
-    private String module_type="";
+    private String module_type = "";
     private Long startTime;//统计使用的时间
 
 
@@ -108,8 +108,8 @@ public class ArticleDetailActivity extends BaseActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             code = bundle.getString("code");
-            data_type= bundle.getString("data_type");
-            module_type= bundle.getString("module_type");
+            data_type = bundle.getString("data_type");
+            module_type = bundle.getString("module_type");
         }
         startTime = System.currentTimeMillis();
         init();
@@ -138,9 +138,9 @@ public class ArticleDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         //统计
-        long nowTime=System.currentTimeMillis();
-        if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
-            XHClick.saveStatictisFile("ArticleDetail",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+        long nowTime = System.currentTimeMillis();
+        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
+            XHClick.saveStatictisFile("ArticleDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
     }
@@ -200,8 +200,8 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         mTitle = (TextView) findViewById(R.id.title);
-        int dp85 = Tools.getDimen(this,R.dimen.dp_85);
-        mTitle.setPadding(dp85,0,dp85,0);
+        int dp85 = Tools.getDimen(this, R.dimen.dp_85);
+        mTitle.setPadding(dp85, 0, dp85, 0);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
         ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
@@ -242,17 +242,17 @@ public class ArticleDetailActivity extends BaseActivity {
                             commentMap.put("data", jsonObject.toString());
                             commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
                             commentMap.put("commentNum", commentNum);
-                            if(allDataListMap.indexOf(commentMap) < 0)
-                                allDataListMap.add(0,commentMap);
+                            if (allDataListMap.indexOf(commentMap) < 0)
+                                allDataListMap.add(0, commentMap);
                             detailAdapter.notifyDataSetChanged();
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
-                                    Log.i("tzy","position = " + position);
-                                    AppCommon.scorllToIndex(listView,position);
+                                    Log.i("tzy", "position = " + position);
+                                    AppCommon.scorllToIndex(listView, position);
                                 }
-                            },200);
+                            }, 200);
                         }
                     }
                 } catch (JSONException e) {
@@ -376,14 +376,17 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleAdContrler.setOnBigAdCallback(new ArticleAdContrler.OnBigAdCallback() {
             @Override
             public void onBigAdData(Map<String, String> adDataMap) {
-                ArticleDetailActivity.this.adDataMap = adDataMap;
-                showAd(adDataMap);
+                Log.i("tzy","adDataMap = " + adDataMap);
+                if (adDataMap != null) {
+                    ArticleDetailActivity.this.adDataMap.putAll(adDataMap);
+                    showAd(adDataMap);
+                }
             }
         });
         mArticleAdContrler.setOnListAdCallback(new ArticleAdContrler.OnListAdCallback() {
             @Override
             public void onListAdData(Map<String, String> adDataMap) {
-                if(isRelateDataOk){
+                if (isRelateDataOk) {
                     mArticleAdContrler.handlerAdData(allDataListMap);
                     detailAdapter.notifyDataSetChanged();
                 }
@@ -391,7 +394,11 @@ public class ArticleDetailActivity extends BaseActivity {
         });
     }
 
-    public void showAd(Map<String, String> adDataMap){
+    public void showAd(Map<String, String> adDataMap) {
+        Log.i("tzy","showAd");
+        Log.i("tzy","adDataMap = " + adDataMap.toString());
+        Log.i("tzy","articleContentBottomView = " + articleContentBottomView);
+        Log.i("tzy","adView = "+ adView);
         if (articleContentBottomView == null
                 || isFinishing()
                 || adView != null)
@@ -469,10 +476,10 @@ public class ArticleDetailActivity extends BaseActivity {
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         String htmlStr = mapArticle.get("html");
-        if(htmlStr.indexOf("&lt;") >= 0)
-            htmlStr = htmlStr.replace("&lt;","<");
-        if(htmlStr.indexOf("&gt;") >= 0)
-            htmlStr = htmlStr.replace("&gt;",">");
+        if (htmlStr.indexOf("&lt;") >= 0)
+            htmlStr = htmlStr.replace("&lt;", "<");
+        if (htmlStr.indexOf("&gt;") >= 0)
+            htmlStr = htmlStr.replace("&gt;", ">");
         webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), htmlStr, "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
 
@@ -521,7 +528,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
             });
         }
-        if (adDataMap != null)
+        if (adDataMap != null && !adDataMap.isEmpty())
             showAd(adDataMap);
 
         commentNum = mapArticle.get("commentNumber");
@@ -556,7 +563,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void analysForumData(boolean isRefresh, Object object) {
-        if("0".equals(commentNum)) return;
+        if ("0".equals(commentNum)) return;
         commentMap = StringManager.getFirstMap(object);
         commentMap.put(TYPE_KEY, String.valueOf(Type_comment));
         commentMap.put("commentNum", commentNum);
@@ -630,6 +637,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private boolean isRelateDataOk = false;
+
     /**
      * 解析推荐数据
      *
@@ -698,7 +706,7 @@ public class ArticleDetailActivity extends BaseActivity {
             return;
         }
         Intent intent = new Intent(this, UserHomeShare.class);
-        intent.putExtra("tongjiId", isAuthor ? "a_my":"a_user");
+        intent.putExtra("tongjiId", isAuthor ? "a_my" : "a_user");
         intent.putExtra("nickName", customerData.get("nickName"));
         intent.putExtra("imgUrl", shareMap.get("img"));
         intent.putExtra("code", customerData.get("code"));

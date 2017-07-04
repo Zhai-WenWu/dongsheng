@@ -450,7 +450,6 @@ public class AppCommon {
             ReqInternet.in().doGet(StringManager.api_appData + "?type=newData", new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, final Object returnObj) {
-                    Log.i("tzy","data = " + returnObj);
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         saveAppDataToFile(returnObj.toString());
                     } else {

@@ -103,11 +103,9 @@ public class CustomerView extends ItemBaseView {
         }
         this.mapUser = mapUser;
         exp_user_rela.setVisibility(VISIBLE);
-        Log.i("tzy", "mapUser = " + mapUser.toString());
         if (mapUser.containsKey("img") && !TextUtils.isEmpty(mapUser.get("img"))) {
             setViewImage(auther_userImg, mapUser.get("img"));
         }
-        Log.i("tzy", "isGourmet = " + mapUser.get("isGourmet"));
         if (mapUser.containsKey("isGourmet") && "2".equals(mapUser.get("isGourmet"))) {
             findViewById(R.id.cusType).setVisibility(VISIBLE);
         } else findViewById(R.id.cusType).setVisibility(GONE);
