@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -19,8 +17,8 @@ import acore.logic.LoginManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import amodule.article.activity.ReportActivity;
-import amodule.article.activity.VideoDetailActivity;
 import amodule.article.view.richtext.RichParser;
+import amodule.user.activity.login.LoginByAccout;
 
 /**
  * PackageName : amodule.article.view
@@ -90,8 +88,6 @@ public class VideoInfoView extends ItemBaseView {
             }
         }
         contentText = RichParser.fromHtml(stringBuilder.toString()).toString().trim();
-        Log.i("tzy","contentText = " +contentText);
-//        contentText = "两年半之前，在一个由四个人组成的 Android 团队的帮助下，我开始从后端开发转向移动开发。一年之后，我加入了一个已经完成了B轮融资的初创公司，在那里主要做 Android 开发的工作。在一个小团队里工作，既能很好地保持独立，还不耽误向同事学习。";
         if(!TextUtils.isEmpty(contentText)){
             arrow.setVisibility(VISIBLE);
             content.setText(contentText);
@@ -111,14 +107,23 @@ public class VideoInfoView extends ItemBaseView {
         report.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ReportActivity.class);
-                intent.putExtra("code", videoMap.get("code"));
-                intent.putExtra("type", mCurrType);
-                intent.putExtra("userCode", userCode);
-                intent.putExtra("reportName", customerData.get("nickName"));
-                intent.putExtra("reportContent", videoMap.get("title"));
-                intent.putExtra("reportType", "1");
-                getContext().startActivity(intent);
+                if(!LoginManager.isLogin()){
+                    getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
+                    return;
+                }
+                if(LoginManager.isLogin()
+                        && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                        && !TextUtils.isEmpty(userCode)
+                        && userCode.equals(LoginManager.userInfo.get("code"))){
+                    Intent intent = new Intent(getContext(), ReportActivity.class);
+                    intent.putExtra("code", videoMap.get("code"));
+                    intent.putExtra("type", mCurrType);
+                    intent.putExtra("userCode", userCode);
+                    intent.putExtra("reportName", customerData.get("nickName"));
+                    intent.putExtra("reportContent", videoMap.get("title"));
+                    intent.putExtra("reportType", "1");
+                    getContext().startActivity(intent);
+                }
             }
         });
     }
