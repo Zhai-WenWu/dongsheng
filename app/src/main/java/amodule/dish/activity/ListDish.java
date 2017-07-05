@@ -28,6 +28,8 @@ import amodule.dish.adapter.ListDishAdapter;
 import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import aplug.web.tools.WebviewManager;
+import aplug.web.view.XHWebView;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
@@ -43,6 +45,7 @@ import xh.basic.tool.UtilString;
 @SuppressLint("InflateParams")
 public class ListDish extends BaseActivity {
 
+    private XHWebView xhWebView;
     private TextView authorName, dishInfo, dishName;
 
     private ListDishAdapter adapter = null;
@@ -52,6 +55,7 @@ public class ListDish extends BaseActivity {
     private String name = "", g1 = "", type = "";
     private String shareImg = "";
     public boolean moreFlag = true, offLineOver = false, infoVoer = false, isToday = false;
+    private String lastPermission = "";
     private String shareName = "";
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";//推荐列表过来的数据
@@ -61,6 +65,10 @@ public class ListDish extends BaseActivity {
     private static final Integer[] AD_INSTERT_INDEX = new Integer[]{3, 9, 16, 24, 32, 40, 48, 56, 64, 72};//插入广告的位置。
     private ArrayList<Map<String, String>> adData;
     private ListView listView;
+    private Map<String,String> permissionMap = new HashMap<>();
+    private Map<String,String> detailPermissionMap = new HashMap<>();
+    private boolean hasPermission = true;
+    private boolean contiunRefresh = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +90,8 @@ public class ListDish extends BaseActivity {
         initMenu();
         initAdData();
         initBarView();
-
+        WebviewManager manager = new WebviewManager(this,loadManager,true);
+        xhWebView = manager.createWebView(R.id.XHWebview);
     }
 
     /**
@@ -125,7 +134,20 @@ public class ListDish extends BaseActivity {
             }
         }, statisticKey);
         adapter.setXHAllControl(xhAllAdControl);
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(!hasPermission){
+            currentPage = 0;
+            hasPermission = true;
+            detailPermissionMap.clear();
+            permissionMap.clear();
+            arrayList.clear();
+            xhWebView.setVisibility(View.GONE);
+            loadData();
+        }
     }
 
     @Override
@@ -153,16 +175,10 @@ public class ListDish extends BaseActivity {
             dishInfo.setClickable(true);
             listView.addHeaderView(view, null, false);
         }
-        arrayList = new ArrayList<Map<String, String>>();
+        arrayList = new ArrayList<>();
         // 绑定列表数据
         adapter = new ListDishAdapter(this,arrayList);
 
-//		loadManager.setLoading(listView, adapter, true, new OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//				loadData();
-//			}
-//		});
         listView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -211,9 +227,38 @@ public class ListDish extends BaseActivity {
         else
             url = StringManager.api_getDishList + "?type=" + type + "&g1=" + g1 + "&page=" + currentPage;
         ReqInternet.in().doGet(url, new InternetCallback(this) {
+
+            @Override
+            public void getPower(int flag, String url, Object obj) {
+                Log.i("tzy","obj = " + obj);
+                //权限检测
+                if(permissionMap.isEmpty()
+                        && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
+                        && currentPage == 1){
+                    if(TextUtils.isEmpty(lastPermission)){
+                        lastPermission = (String) obj;
+                    }else{
+                        if(lastPermission.equals(obj.toString())){
+                            contiunRefresh = false;
+                            return;
+                        }
+                    }
+                    permissionMap = StringManager.getFirstMap(obj);
+                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+                    if(permissionMap.containsKey("page")){
+                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+                        hasPermission = analyzePagePermissionData(pagePermission);
+                        if(!hasPermission) return;
+                    }
+
+                }
+            }
+
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
+                    if(!hasPermission || !contiunRefresh) return;
+
                     ArrayList<Map<String, String>> returnList = UtilString.getListMapByJson(returnObj);
                     if (!type.equals("recommend") && !type.equals("typeRecommend")) {
                         String classifyName = returnList.get(0).get("name");
@@ -303,6 +348,22 @@ public class ListDish extends BaseActivity {
                     findViewById(R.id.dish_menu_listview).setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    /**
+     *
+     * @param pagePermission
+     * @return
+     */
+    public boolean analyzePagePermissionData(Map<String,String> pagePermission){
+        if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
+            String url = pagePermission.get("url");
+            xhWebView.loadUrl(url);
+            xhWebView.setVisibility(View.VISIBLE);
+            return false;
+        }
+        xhWebView.setVisibility(View.GONE);
+        return true;
     }
 
     protected void doShare() {
