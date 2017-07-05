@@ -109,7 +109,8 @@ public class AdapterDishNew extends AdapterSimple{
 
                 @Override
                 public void onClick() {
-                    clickCallBack.onClickPosition(position);
+                    if(clickCallBack != null)
+                        clickCallBack.onClickPosition(position);
                 }
             },position);
         }

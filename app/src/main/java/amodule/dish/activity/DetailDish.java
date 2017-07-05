@@ -218,7 +218,9 @@ public class DetailDish extends BaseActivity {
             public void getPower(int flag, String url, Object obj) {
                 Log.i("tzy","obj = " + obj);
                 //权限检测
-                if(permissionMap.isEmpty()){
+                if(permissionMap.isEmpty()
+                        && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
+                        && pages == 1){
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
                     }else{

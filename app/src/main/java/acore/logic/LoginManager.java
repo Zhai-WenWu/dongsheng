@@ -347,7 +347,11 @@ public class LoginManager {
         return true;
     }
 
-
+    public static boolean isBindMobilePhone(){
+        return userInfo != null
+                && userInfo.containsKey("tel")
+                && !TextUtils.isEmpty(userInfo.get("tel"));
+    }
 
     /**
      * 是否显示发贴子任务入口

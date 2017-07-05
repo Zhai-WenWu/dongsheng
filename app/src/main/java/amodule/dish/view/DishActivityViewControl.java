@@ -308,6 +308,7 @@ public class DishActivityViewControl {
             }
         },permissionMap);
         adapter.notifyDataSetChanged();
+
         ArrayList<Map<String,String>> list_makes = new ArrayList<>();
         Map<String,String> commonPermission = StringManager.getFirstMap(permissionMap.get("video"));
         commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
@@ -375,7 +376,7 @@ public class DishActivityViewControl {
             adapter.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
                 @Override
                 public void onClickPosition(int position) {
-                    if(!getStateMakes(list)){//无图时不执行
+                    if(!getStateMakes(stepList)){//无图时不执行
                         return;
                     }
                     if(!isOnClickImageShow){
@@ -385,7 +386,7 @@ public class DishActivityViewControl {
                     XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "步骤图点击");
                     Intent intent = new Intent(activity, MoreImageShow.class);
                     ArrayList<Map<String, String>> listdata = new ArrayList<Map<String, String>>();
-                    listdata.addAll(list);
+                    listdata.addAll(stepList);
                     if (!TextUtils.isEmpty(dishInfoMap.get("remark"))) {
                         Map<String, String> map_temp = new HashMap<String, String>();
                         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
@@ -395,7 +396,7 @@ public class DishActivityViewControl {
                             map_temp.put("img", "");
                         }
                         map_temp.put("info", "小贴士：\n" + dishInfoMap.get("remark"));
-                        map_temp.put("num", String.valueOf(list.size() + 1));
+                        map_temp.put("num", String.valueOf(stepList.size() + 1));
                         listdata.add(map_temp);
                     }
                     intent.putExtra("data", listdata);
@@ -419,8 +420,8 @@ public class DishActivityViewControl {
      * @return true --有图片，false---无图片
      */
     private boolean getStateMakes(ArrayList<Map<String, String>> listdata){
-        if(listdata!=null&&listdata.size()>0){
-            for(int i=0,size=listdata.size();i<size;i++){
+        if(listdata != null && listdata.size() > 0){
+            for(int i = 0 , size = listdata.size() ; i < size ; i++){
                 if(!TextUtils.isEmpty(listdata.get(i).get("img")))
                     return true;
             }

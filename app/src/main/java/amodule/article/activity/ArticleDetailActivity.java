@@ -49,6 +49,7 @@ import amodule.article.view.CommentBar;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -435,6 +436,8 @@ public class ArticleDetailActivity extends BaseActivity {
         ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params.toString(), new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
+                refreshLayout.refreshComplete();
+                loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysArticleData(onlyUser, StringManager.getFirstMap(object));
                 } else
@@ -442,8 +445,6 @@ public class ArticleDetailActivity extends BaseActivity {
                 if (!onlyUser)
                     requestForumData(false);//请求
                 linearLayoutThree.setVisibility(View.VISIBLE);
-                refreshLayout.refreshComplete();
-                loadManager.hideProgressBar();
             }
         });
     }
@@ -511,12 +512,20 @@ public class ArticleDetailActivity extends BaseActivity {
             articleContentBottomView = new ArticleContentBottomView(this);
         if (linearLayoutThree.getChildCount() == 0)
             linearLayoutThree.addView(articleContentBottomView);
-        articleContentBottomView.setData(mapArticle);
 
-        if (!isAuthor) {
-            articleContentBottomView.setOnReportClickCallback(new ArticleContentBottomView.OnReportClickCallback() {
-                @Override
-                public void onReportClick() {
+        articleContentBottomView.setData(mapArticle);
+        //是作者callback为null
+        articleContentBottomView.setOnReportClickCallback(isAuthor ? null : new ArticleContentBottomView.OnReportClickCallback() {
+            @Override
+            public void onReportClick() {
+                if(!LoginManager.isLogin()){
+                    startActivity(new Intent(ArticleDetailActivity.this, LoginByAccout.class));
+                    return;
+                }
+                if(LoginManager.isLogin()
+                        && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                        && !TextUtils.isEmpty(userCode)
+                        && userCode.equals(LoginManager.userInfo.get("code"))){
                     Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
                     intent.putExtra("code", code);
                     intent.putExtra("type", getType());
@@ -526,8 +535,8 @@ public class ArticleDetailActivity extends BaseActivity {
                     intent.putExtra("reportType", "1");
                     startActivity(intent);
                 }
-            });
-        }
+            }
+        });
         if (adDataMap != null && !adDataMap.isEmpty())
             showAd(adDataMap);
 

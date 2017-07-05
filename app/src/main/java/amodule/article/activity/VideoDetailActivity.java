@@ -485,9 +485,13 @@ public class VideoDetailActivity extends BaseActivity {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
+                refreshLayout.refreshComplete();
+                loadManager.hideProgressBar();
                 Log.i("tzy","obj = " + obj);
                 //权限检测
-                if(permissionMap.isEmpty()){
+                if(permissionMap.isEmpty()
+                        && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
+                        && page == 0){
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
                     }else{
@@ -511,8 +515,6 @@ public class VideoDetailActivity extends BaseActivity {
 
             @Override
             public void loaded(int flag, String url, Object object) {
-                refreshLayout.refreshComplete();
-                loadManager.hideProgressBar();
                 if(!hasPagePermission || !contiunRefresh) {
                     loadManager.hideProgressBar();
                     return;
