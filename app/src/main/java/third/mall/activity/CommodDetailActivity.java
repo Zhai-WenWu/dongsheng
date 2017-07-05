@@ -36,6 +36,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.HorizontalScrollView;
@@ -181,6 +182,9 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 		explain_detail_webview.setHorizontalScrollBarEnabled(false);
 		explain_detail_webview.setVerticalScrollBarEnabled(true);
 		explain_detail_webview.getSettings().setDefaultTextEncodingName("UTF-8");
+		//兼容https,在部分版本上资源显示不全的问题
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			explain_detail_webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
 
 		// LinearLayout commod_consult=(LinearLayout)
 		// findViewById(R.id.commod_consult);
