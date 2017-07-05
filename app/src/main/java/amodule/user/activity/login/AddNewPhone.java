@@ -138,37 +138,8 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                             }
 
                             dataStatics("方法1新手机号页，点获取验证码", "方法2新手机号页，点获取验证码");
-                            checkPhoneRegisted(AddNewPhone.this, newZoneCode, newPhoneNum, new BaseLoginCallback() {
-                                @Override
-                                public void onSuccess() {
-                                    Toast.makeText(AddNewPhone.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
-                                    login_identify.setOnBtnClickState(true);
-                                    dataStatics("方法1失败原因：已经绑定其他账号", "方法2失败原因：已经绑定其他账号");
-                                }
-
-                                @Override
-                                public void onFalse(int flag) {
-                                    loadManager.showProgressBar();
-                                    login_identify.setOnBtnClickState(true);
-                                    reqIdentifyCode(newZoneCode, newPhoneNum,new SMSSendCallback() {
-                                            @Override
-                                            public void onSendSuccess() {
-                                                loadManager.hideProgressBar();
-                                                login_identify.startCountDown();
-                                                speechaIdentifyInputView.setState(false);
-                                            }
-
-                                            @Override
-                                            public void onSendFalse() {
-                                                login_identify.setOnBtnClickState(true);
-                                                loadManager.hideProgressBar();
-                                                speechaIdentifyInputView.setState(true);
-                                                dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
-                                            }
-                                        }
-                                    );
-                                }
-                            });
+                            //检查是否注册
+                            checkPhoneRegist(newZoneCode,newPhoneNum);
                         } else {
                             login_identify.setOnBtnClickState(true);
                             speechaIdentifyInputView.setState(true);
@@ -215,6 +186,54 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
 
     }
 
+    /**
+     * 检查是否注册
+     * @param newZoneCode
+     * @param newPhoneNum
+     */
+    private void checkPhoneRegist(final String newZoneCode,final String newPhoneNum){
+        checkPhoneRegisted(AddNewPhone.this, newZoneCode, newPhoneNum, new BaseLoginCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(AddNewPhone.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
+                login_identify.setOnBtnClickState(true);
+                dataStatics("方法1失败原因：已经绑定其他账号", "方法2失败原因：已经绑定其他账号");
+            }
+
+            @Override
+            public void onFalse(int flag) {
+                loadManager.showProgressBar();
+                login_identify.setOnBtnClickState(true);
+                requestIdentifyCode(newZoneCode, newPhoneNum);
+            }
+        });
+    }
+
+    /**
+     * 请求验证码
+     * @param newZoneCode
+     * @param newPhoneNum
+     */
+    private void requestIdentifyCode(final String newZoneCode,final String newPhoneNum){
+        reqIdentifyCode(newZoneCode, newPhoneNum,new SMSSendCallback() {
+                    @Override
+                    public void onSendSuccess() {
+                        loadManager.hideProgressBar();
+                        login_identify.startCountDown();
+                        speechaIdentifyInputView.setState(false);
+                    }
+
+                    @Override
+                    public void onSendFalse() {
+                        login_identify.setOnBtnClickState(true);
+                        loadManager.hideProgressBar();
+                        speechaIdentifyInputView.setState(true);
+                        dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
+                    }
+                }
+        );
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -227,8 +246,8 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
         }
     }
 
+    /** 刷新下一步button可点击状态 */
     private void refreshNextStepBtnStat() {
-
         boolean canClickNextBtn = false;
         canClickNextBtn = !phone_info.isDataAbsence()
                 && !login_identify.isIdentifyCodeEmpty();

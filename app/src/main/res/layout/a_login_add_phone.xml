@@ -3,10 +3,8 @@
                 android:id="@+id/activityLayout"
                 style="@style/layout"
                 android:background="@color/backgroup_color"
-
                 android:paddingBottom="@dimen/dp_20"
                 android:paddingTop="@dimen/dp_20"
-
     >
 
 

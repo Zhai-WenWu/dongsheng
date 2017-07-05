@@ -1,6 +1,7 @@
 package amodule.user.activity.login;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -69,14 +70,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     }
 
     protected void initTitle() {
-        if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_rela_all);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
+        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
     }
 
     @Override
@@ -598,7 +593,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
             @Override
             public void onError(Platform arg0, int arg1, Throwable arg2) {
-
                 AccoutActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -643,7 +637,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         }
 
                         final String finalParam = param;
-
                         ReqInternet.in().doPost(StringManager.api_getUserInfo, finalParam.toString(),
                                 new InternetCallback(AccoutActivity.this) {
 
@@ -655,7 +648,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                                         } else {
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败");
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败原因：已被绑定过");
-                                            toastFaildRes(flag, true, returnObj);
+//                                            toastFaildRes(flag, true, returnObj);
                                         }
                                         mAct.loadManager.hideProgressBar();
                                     }

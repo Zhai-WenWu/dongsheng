@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:padding="@dimen/dp_15"
-        android:background="@drawable/selector_button_no_color"
+        android:background="#FFFFFF"
         android:text="中国" />
 
 </LinearLayout>
