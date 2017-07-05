@@ -110,6 +110,10 @@ public class VideoDetailActivity extends BaseActivity {
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
 
+    private String data_type = "";//推荐列表过来的数据
+    private String module_type = "";
+    private Long startTime;//统计使用的时间
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +191,10 @@ public class VideoDetailActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        long nowTime = System.currentTimeMillis();
+        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
+            XHClick.saveStatictisFile("VideoDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
+        }
         super.onDestroy();
         if (mVideoPlayerController != null) {
             mVideoPlayerController.onDestroy();
@@ -195,8 +203,12 @@ public class VideoDetailActivity extends BaseActivity {
 
     private void initBundle() {
         Bundle bundle = this.getIntent().getExtras();
-        if (bundle != null)
+        if (bundle != null) {
             code = bundle.getString("code");
+            data_type = bundle.getString("data_type");
+            module_type = bundle.getString("module_type");
+        }
+        startTime = System.currentTimeMillis();
     }
 
     private void initView() {

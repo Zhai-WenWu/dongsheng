@@ -126,12 +126,18 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 	private String actionUrl;
 	private String mall_stat_statistic;
 
+	private String data_type = "";//推荐列表过来的数据
+	private String module_type = "";
+	private Long startTime;//统计使用的时间
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			code = bundle.getString("product_code");
+			data_type = bundle.getString("data_type");
+			module_type = bundle.getString("module_type");
 			for (int i = 1; i < 100; i++) {
 				if (!TextUtils.isEmpty(bundle.getString("fr" + i))) {
 					map_statistic.put("fr" + i, bundle.getString("fr" + i));
@@ -152,6 +158,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 		initData();
 //		initTitle();
 		XHClick.track(this,"浏览商品");
+		startTime = System.currentTimeMillis();
 	}
 
 	private void initTitle() {
@@ -1039,6 +1046,10 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 
 	@Override
 	protected void onDestroy() {
+		long nowTime = System.currentTimeMillis();
+		if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
+			XHClick.saveStatictisFile("VideoDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
+		}
 		super.onDestroy();
 		mall_ScrollViewContainer = null;
 		common = null;

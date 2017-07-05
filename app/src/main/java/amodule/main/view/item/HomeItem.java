@@ -31,6 +31,7 @@ import amodule.main.adapter.AdapterListView;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.home.HomeFragment;
 import aplug.basic.SubBitmapTarget;
+import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
 import third.ad.control.AdControlParent;
 import third.ad.scrollerAd.XHScrollerAdParent;
@@ -210,12 +211,30 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
                 XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
             }
-            if(mTransferUrl.contains("nousInfo.app")){
+            if (mTransferUrl.indexOf("fullScreen=2") > -1) {//我的香豆、我的会员页面
+                Intent it = new Intent(XHActivityManager.getInstance().getCurrentActivity(), FullScreenWeb.class);
+                it.putExtra("url",mTransferUrl);
+                it.putExtra("code", mDataMap.get("code"));
+                it.putExtra("data_type", mDataMap.get("type"));
+                it.putExtra("module_type", isTopTypeView()?"top_info":"info");
+                XHActivityManager.getInstance().getCurrentActivity().startActivity(it);
+                return true;
+            }
+            if (mTransferUrl.contains("xhds.product.info.app?")) {//商品详情页，原生
+                return false;
+            }
+            if(mTransferUrl.contains("nousInfo.app")
+                    || mTransferUrl.contains("http://" + StringManager.appWebTitle + StringManager.defaultDomain + "/")
+                    || mTransferUrl.contains("http://" + StringManager.mmTitle + StringManager.defaultDomain + "/")
+                    || mTransferUrl.contains("http://" + StringManager.mTitle + StringManager.defaultDomain + "/")
+                    || mTransferUrl.contains(StringManager.defaultProtocol + StringManager.appWebTitle + StringManager.defaultDomain + "/")
+                    || mTransferUrl.contains(StringManager.defaultProtocol + StringManager.mmTitle + StringManager.defaultDomain + "/")
+                    || mTransferUrl.contains(StringManager.defaultProtocol + StringManager.mTitle + StringManager.defaultDomain + "/")){
                 String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
                 Log.i("zhangyujian","mTransferUrl:::"+params);
                 Map<String,String> map = StringManager.getMapByString(params,"&","=");
                 Intent intent = new Intent(XHActivityManager.getInstance().getCurrentActivity(), ShowWeb.class);
-                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
+                intent.putExtra("url",mTransferUrl.contains("nousInfo.app") ? (StringManager.api_nouseInfo + map.get("code")) : mTransferUrl);
                 intent.putExtra("data_type",map.get("data_type"));
                 intent.putExtra("code",map.get("code"));
                 intent.putExtra("module_type",isTopTypeView()?"top_info":"info");
