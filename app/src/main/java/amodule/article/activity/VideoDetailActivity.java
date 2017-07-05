@@ -599,7 +599,7 @@ public class VideoDetailActivity extends BaseActivity {
         }else{
             //有限制
             mCommentBar.setVisibility(View.GONE);
-            String buttonStr = commonPermission.get("button");
+            String buttonStr = commonPermission.get("button2");
             if(!TextUtils.isEmpty(buttonStr))
                 dredgeVipImmediately.setText(buttonStr);
             dredgeVipLayout.setOnClickListener(new View.OnClickListener() {

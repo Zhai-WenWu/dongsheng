@@ -374,7 +374,7 @@ public class DishHeaderView extends LinearLayout {
             vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
-            vipView.setDredgeVipText(common.get("button"));
+            vipView.setDredgeVipText(common.get("button1"));
             vipView.setDredgeVipClick(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
