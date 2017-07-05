@@ -861,7 +861,6 @@ public class XHClick {
 	 */
 	public static synchronized void newHomeStatictis(final boolean isResetData, String data){
 		try {
-            Main.allMain.handlerHomeStatistics();
 			String url = StringManager.API_STATISTIC_S6;
 			String baseData= getStatictisParams();
 			LinkedHashMap<String,String> map= new LinkedHashMap<>();
@@ -977,7 +976,7 @@ public class XHClick {
 			params+="&position="+position;
 			params+="&button_name="+button_name;
 			params+="&deep="+deep;
-            Log.i("zhangyujian","加载数据：：："+params);
+//            Log.i("zhangyujian","加载数据：：："+params);
             if(TextUtils.isEmpty(data)){
 
 				FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,params);
