@@ -394,13 +394,14 @@ public class DishHeaderView extends LinearLayout {
                 @Override
                 public void onProgressUpdate(long current, long duration) {
                     int currentS = Math.round(current/1000f);
+                    int durationS = Math.round(duration/1000f);
                     if(isHaspause){
                         VDVideoViewController.getInstance(context).setSeekPause(true);
                         mVideoPlayerController.onPause();
                         mVideoPlayerController.onResume();
                         return;
                     }
-                    if(currentS > limitTime && !isContinue){
+                    if((currentS > limitTime || currentS > durationS)&& !isContinue){
                         currentTime = current;
                         dredgeVipLayout.setVisibility(VISIBLE);
                         VDVideoViewController.getInstance(context).setSeekPause(true);
@@ -413,13 +414,14 @@ public class DishHeaderView extends LinearLayout {
                 @Override
                 public void onDragProgess(long current, long duration) {
                     int currentS = Math.round(current/1000f);
+                    int durationS = Math.round(duration/1000f);
                     if(isHaspause){
                         VDVideoViewController.getInstance(context).setSeekPause(true);
                         mVideoPlayerController.onPause();
                         mVideoPlayerController.onResume();
                         return;
                     }
-                    if(currentS > limitTime && !isContinue){
+                    if((currentS > limitTime || currentS > durationS) && !isContinue){
                         currentTime = current;
                         dredgeVipLayout.setVisibility(VISIBLE);
                         VDVideoViewController.getInstance(context).setSeekPause(true);
