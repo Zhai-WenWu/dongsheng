@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -226,12 +228,27 @@ public class Welcome extends BaseActivity {
     }
 
     private void showSkipContainer(){
-        textSkip.setVisibility(View.VISIBLE);
-        textLead.setVisibility(View.VISIBLE);
-//        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-//        alphaAnimation.setDuration(500);
-//        alphaAnimation.setFillAfter(true);
-//        mADSkipContainer.startAnimation(alphaAnimation);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        alphaAnimation.setDuration(500);
+        alphaAnimation.setFillAfter(true);
+        mADLayout.startAnimation(alphaAnimation);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textLead.setVisibility(View.VISIBLE);
+                textSkip.setVisibility(View.VISIBLE);
+                mADLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
     private Runnable mCountDownRun = new Runnable() {
         @Override
