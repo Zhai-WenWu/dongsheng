@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +18,13 @@ import android.widget.TextView;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.protocol.HTTP;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -35,6 +43,7 @@ import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
 import third.ad.control.AdControlParent;
 import third.ad.scrollerAd.XHScrollerAdParent;
+import third.mall.activity.CommodDetailActivity;
 import xh.basic.tool.UtilImage;
 
 /**
@@ -205,41 +214,46 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
     private boolean handleClickEvent(View view) {
         if (!TextUtils.isEmpty(mTransferUrl)) {
             if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                else mTransferUrl+="?data_type="+mDataMap.get("type");
-                mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                if (!mTransferUrl.contains("data_type=") && !mTransferUrl.contains("module_type=")) {
+                    if (!mTransferUrl.startsWith("http")) {
+                        if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
+                        else mTransferUrl+="?data_type="+mDataMap.get("type");
+                        mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                    } else {
+                        mTransferUrl += "&data_type="+mDataMap.get("type") + "&module_type="+(isTopTypeView()?"top_info":"info");
+                    }
+                }
                 Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
                 XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
             }
-            if (mTransferUrl.indexOf("fullScreen=2") > -1) {//我的香豆、我的会员页面
-                String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
-                Map<String,String> map = StringManager.getMapByString(params,"&","=");
-                Intent it = new Intent(XHActivityManager.getInstance().getCurrentActivity(), FullScreenWeb.class);
-                it.putExtra("url",mTransferUrl);
-                it.putExtra("code", map.containsKey("code") ? map.get("code") : "");
-                it.putExtra("data_type", map.get("data_type"));
-                it.putExtra("module_type", isTopTypeView()?"top_info":"info");
-                XHActivityManager.getInstance().getCurrentActivity().startActivity(it);
-                return true;
-            }
-            if (mTransferUrl.contains("xhds.product.info.app?")) {//商品详情页，原生
-                return false;
-            }
-            if(mTransferUrl.contains("nousInfo.app")
-                    || mTransferUrl.contains("http://" + StringManager.appWebTitle + StringManager.defaultDomain + "/")
-                    || mTransferUrl.contains("http://" + StringManager.mmTitle + StringManager.defaultDomain + "/")
-                    || mTransferUrl.contains("http://" + StringManager.mTitle + StringManager.defaultDomain + "/")
-                    || mTransferUrl.contains(StringManager.defaultProtocol + StringManager.appWebTitle + StringManager.defaultDomain + "/")
-                    || mTransferUrl.contains(StringManager.defaultProtocol + StringManager.mmTitle + StringManager.defaultDomain + "/")
-                    || mTransferUrl.contains(StringManager.defaultProtocol + StringManager.mTitle + StringManager.defaultDomain + "/")){
-                String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
-                Log.i("zhangyujian","mTransferUrl:::"+params);
-                Map<String,String> map = StringManager.getMapByString(params,"&","=");
-                Intent intent = new Intent(XHActivityManager.getInstance().getCurrentActivity(), ShowWeb.class);
-                intent.putExtra("url",mTransferUrl.contains("nousInfo.app") ? (StringManager.api_nouseInfo + map.get("code")) : mTransferUrl);
-                intent.putExtra("data_type",map.get("data_type"));
+
+            String params = mTransferUrl.substring(mTransferUrl.indexOf("?") + 1, mTransferUrl.length());
+            Log.i("zhangyujian","mTransferUrl:::"+params);
+            Map<String, String> map = StringManager.getMapByString(params, "&", "=");
+            Class c = null;
+            Intent intent = new Intent();
+            if (mTransferUrl.startsWith("http")) {//我的香豆、我的会员页面
+                if (mTransferUrl.indexOf("fullScreen=2") > -1) {
+                    c = FullScreenWeb.class;
+                    intent.putExtra("url", mTransferUrl);
+                    intent.putExtra("code", map.containsKey("code") ? map.get("code") : "");
+                } else {
+                    c = ShowWeb.class;
+                    intent.putExtra("url",mTransferUrl);
+                    intent.putExtra("code",map.get("code"));
+                }
+            } else if (mTransferUrl.contains("xhds.product.info.app?")) {//商品详情页，原生
+                c = CommodDetailActivity.class;
+                intent.putExtra("product_code",map.get("product_code"));
+            } else if(mTransferUrl.contains("nousInfo.app")){
+                c = ShowWeb.class;
+                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
                 intent.putExtra("code",map.get("code"));
-                intent.putExtra("module_type",isTopTypeView()?"top_info":"info");
+            }
+            if (c != null) {
+                intent.putExtra("data_type", map.get("data_type"));
+                intent.putExtra("module_type", isTopTypeView() ? "top_info" : "info");
+                intent.setClass(getContext(), c);
                 XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
                 return true;
             }
