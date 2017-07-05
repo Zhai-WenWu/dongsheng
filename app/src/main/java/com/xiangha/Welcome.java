@@ -2,6 +2,7 @@ package com.xiangha;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -104,6 +105,7 @@ public class Welcome extends BaseActivity {
                 new WelcomeAdTools.GdtCallback() {
                     @Override
                     public void onAdPresent() {
+                        mADLayout.setVisibility(View.GONE);
                         Log.i("zhangyujian","GdtCallback");
                         if(mAdTime>5){
                             endCountDown();
@@ -160,6 +162,7 @@ public class Welcome extends BaseActivity {
                     @Override
                     public void onAdLoadSucceeded(final String url, final String loadingUrl) {
                         //处理view
+                        mADLayout.setVisibility(View.GONE);
                         mADLayout.removeAllViews();
                         isAdLoadOk = true;
                         View view = LayoutInflater.from(Welcome.this).inflate(R.layout.view_ad_inmobi, null);
@@ -231,7 +234,10 @@ public class Welcome extends BaseActivity {
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration(500);
         alphaAnimation.setFillAfter(true);
+        findViewById(R.id.image).setVisibility(View.GONE);
         mADLayout.startAnimation(alphaAnimation);
+
+        mADLayout.setVisibility(View.VISIBLE);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -239,6 +245,7 @@ public class Welcome extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+
                 textLead.setVisibility(View.VISIBLE);
                 textSkip.setVisibility(View.VISIBLE);
                 mADLayout.setVisibility(View.VISIBLE);
