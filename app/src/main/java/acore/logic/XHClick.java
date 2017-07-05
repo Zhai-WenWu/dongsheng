@@ -59,7 +59,7 @@ import static acore.tools.ToolsDevice.getWindowPx;
  */
 public class XHClick {
     public static final int CIRCULATION_TIME = 30000;
-    public static final int HOME_STATICTIS_TIME = 10*1000;
+    public static final int HOME_STATICTIS_TIME = 10 * 1000;
     public static final int NOTIFY_A = 1;
     public static final int NOTIFY_B = 2;
     public static final int NOTIFY_C = 3;
@@ -97,7 +97,9 @@ public class XHClick {
         getViewPageItemLiveTime();
     }
 
-    /** 计算出viewpager中的item页面停留的时间 */
+    /**
+     * 计算出viewpager中的item页面停留的时间
+     */
     private static void getViewPageItemLiveTime() {
         double liveTime = (viewPageStopTime - viewPageStartTime) / 1000.0;
         //设置只保留一位小数
@@ -132,10 +134,10 @@ public class XHClick {
     public static void mapStat(Context context, String eventID, String twoLevel, String threeLevel) {
         if (!TextUtils.isEmpty(threeLevel)) {
             onEvent(context, eventID, twoLevel, threeLevel);
-            onMtaEvent(context,eventID,twoLevel,threeLevel);//mta统计
+            onMtaEvent(context, eventID, twoLevel, threeLevel);//mta统计
         }
         onEvent(context, eventID, "全部", twoLevel);
-        onMtaEvent(context,eventID,"全部",twoLevel);//mta统计
+        onMtaEvent(context, eventID, "全部", twoLevel);//mta统计
     }
 
     /**
@@ -150,10 +152,10 @@ public class XHClick {
     public static void mapStat(Context context, String eventID, String twoLevel, String threeLevel, int number) {
         if (!TextUtils.isEmpty(threeLevel)) {
             onEventValue(context, eventID, twoLevel, threeLevel, number);
-            onMtaEvent(context,eventID,twoLevel,threeLevel);//mta统计
+            onMtaEvent(context, eventID, twoLevel, threeLevel);//mta统计
         }
         onEventValue(context, eventID, "全部", twoLevel, number);
-        onMtaEvent(context,eventID,"全部",twoLevel);//mta统计
+        onMtaEvent(context, eventID, "全部", twoLevel);//mta统计
 
     }
 
@@ -172,7 +174,7 @@ public class XHClick {
             Map<String, String> map = new HashMap<String, String>();
             map.put(map_key, map_value);
             MobclickAgent.onEventValue(context, eventID, map, value);
-            onMtaEvent(context,eventID,map_key,map_value);//mta统计
+            onMtaEvent(context, eventID, map_key, map_value);//mta统计
         }
         showToast(context, "统计_计算_" + eventID + "：" + map_key + "，" + map_value + "，" + value);
     }
@@ -196,27 +198,31 @@ public class XHClick {
 
     /**
      * 腾讯统计
+     *
      * @param context
      * @param eventID
      * @param twoLevel
      * @param threeLevel
      */
-    private static void onMtaEvent(Context context, String eventID,String twoLevel, String threeLevel){
+    private static void onMtaEvent(Context context, String eventID, String twoLevel, String threeLevel) {
         Properties prop = new Properties();
         prop.setProperty(twoLevel, threeLevel);
 //        StatService.trackCustomKVEvent(context,eventID,prop);
-        StatService.trackCustomEvent(context,eventID,twoLevel, threeLevel);
+        StatService.trackCustomEvent(context, eventID, twoLevel, threeLevel);
     }
+
     /**
      * 百度统计
+     *
      * @param context
      * @param eventID
      * @param twoLevel
      * @param threeLevel
      */
-    private static void onbaiduEvent(Context context, String eventID,String twoLevel, String threeLevel){
+    private static void onbaiduEvent(Context context, String eventID, String twoLevel, String threeLevel) {
 //        com.baidu.mobstat.StatService.onEvent(context,eventID,twoLevel);
     }
+
     /**
      * 计数事件统计	(无map)
      *
@@ -319,12 +325,16 @@ public class XHClick {
         }
     }
 
-    /** 判断是否需要统计 */
+    /**
+     * 判断是否需要统计
+     */
     private static boolean isStatistics(Context context) {
         return !LoginManager.isManager() && VersionOp.getVerName(context).length() < 6;
     }
 
-    /** 获得activity页面开始时间戳 */
+    /**
+     * 获得activity页面开始时间戳
+     */
     public static void getStartTime(Context context) {
         startTime = System.currentTimeMillis();
         if (context != null) {
@@ -424,43 +434,43 @@ public class XHClick {
 
         //********首页统计10秒循环统计
         handlerStatictis = new Handler(Looper.getMainLooper());
-        runnableStatictis= new Runnable() {
+        runnableStatictis = new Runnable() {
             @Override
             public void run() {
                 //循环统计feed流数据
                 loopHandlerStatictis();
                 //循环倒计时--10秒统计
-                handlerStatictis.postDelayed(runnableStatictis,HOME_STATICTIS_TIME);
+                handlerStatictis.postDelayed(runnableStatictis, HOME_STATICTIS_TIME);
             }
         };
-        handlerStatictis.postDelayed(runnableStatictis,HOME_STATICTIS_TIME);
+        handlerStatictis.postDelayed(runnableStatictis, HOME_STATICTIS_TIME);
     }
 
-	/**
-	 * 软件退出时执行
-	 *
-	 * @param allActivity
-	 */
-	public static void finishToSendPath(Context allActivity) {
-		newHomeStatictis(true,"");
-		registerUserUseTimeSuperProperty(allActivity);
-		stopTime = System.currentTimeMillis();
-		double liveTime = (stopTime - startTime) / 1000.0;
-		//设置只保留一位小数
-		NumberFormat nf = new DecimalFormat("0.0 ");
-		try {
-			liveTime = Double.parseDouble(nf.format(liveTime).trim());
-		} catch (Exception e) {
-		}
-		if (allActivity != null) {
-			if (liveTime > 9999)
-				liveTime = 9999.9;
-			path += liveTime + ",";
-			showToast(allActivity, path);
-		}
-		if (!path.equals(""))
-			// 发送请求的操作
-			ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback(allActivity) {
+    /**
+     * 软件退出时执行
+     *
+     * @param allActivity
+     */
+    public static void finishToSendPath(Context allActivity) {
+        newHomeStatictis(true, "");
+        registerUserUseTimeSuperProperty(allActivity);
+        stopTime = System.currentTimeMillis();
+        double liveTime = (stopTime - startTime) / 1000.0;
+        //设置只保留一位小数
+        NumberFormat nf = new DecimalFormat("0.0 ");
+        try {
+            liveTime = Double.parseDouble(nf.format(liveTime).trim());
+        } catch (Exception e) {
+        }
+        if (allActivity != null) {
+            if (liveTime > 9999)
+                liveTime = 9999.9;
+            path += liveTime + ",";
+            showToast(allActivity, path);
+        }
+        if (!path.equals(""))
+            // 发送请求的操作
+            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback(allActivity) {
 
                 @Override
                 public void loaded(int flag, String url, Object msg) {
@@ -476,25 +486,25 @@ public class XHClick {
             });
     }
 
-	/**
-	 * 当按下home按钮的时候监听到,发送请求
-	 */
-	public static void HomeKeyListener(Context allActivity) {
-		newHomeStatictis(true,"");
-		stopTime = System.currentTimeMillis();
-		double liveTime = (stopTime - startTime) / 1000.0;
-		//设置只保留一位小数
-		NumberFormat nf = new DecimalFormat("0.0 ");
-		try {
-			liveTime = Double.parseDouble(nf.format(liveTime).trim());
-		} catch (Exception e) {
-		}
-		if (allActivity != null) {
-			if (liveTime > 9999)
-				liveTime = 9999.9;
-			path += liveTime + ",";
-			showToast(allActivity, path);
-		}
+    /**
+     * 当按下home按钮的时候监听到,发送请求
+     */
+    public static void HomeKeyListener(Context allActivity) {
+        newHomeStatictis(true, "");
+        stopTime = System.currentTimeMillis();
+        double liveTime = (stopTime - startTime) / 1000.0;
+        //设置只保留一位小数
+        NumberFormat nf = new DecimalFormat("0.0 ");
+        try {
+            liveTime = Double.parseDouble(nf.format(liveTime).trim());
+        } catch (Exception e) {
+        }
+        if (allActivity != null) {
+            if (liveTime > 9999)
+                liveTime = 9999.9;
+            path += liveTime + ",";
+            showToast(allActivity, path);
+        }
 
         if (!path.equals(""))
             // 发送请求的操作
@@ -518,9 +528,9 @@ public class XHClick {
      * 在软件退出时执行此方法
      */
     public static void closeHandler() {
-        if(handler != null && runnable!=null)
+        if (handler != null && runnable != null)
             handler.removeCallbacks(runnable);
-        if(handlerStatictis != null && runnableStatictis!=null)
+        if (handlerStatictis != null && runnableStatictis != null)
             handlerStatictis.removeCallbacks(runnableStatictis);
     }
 
@@ -603,7 +613,7 @@ public class XHClick {
         String param;
         try {
             param = "from=" + URLEncoder.encode(from, HTTP.UTF_8) + "&link=" + link + "&type=" + type;
-            Log.i("tzy","param = " + param);
+            Log.i("tzy", "param = " + param);
             ReqInternet.in().doPost(actionUrl, param, new InternetCallback(XHApplication.in()) {
 
                 @Override
@@ -617,9 +627,13 @@ public class XHClick {
         }
     }
 
-    /** DNS切换次数 */
+    /**
+     * DNS切换次数
+     */
     public static int switchDNSCount = 0;
-    /** DNS切换统计ID */
+    /**
+     * DNS切换统计ID
+     */
     public static final String switchDNSID = "img_dns_switch";
 
     /**
@@ -846,180 +860,186 @@ public class XHClick {
     }
 
     /**
-     *轮训统计首页请求数据
+     * 轮训统计首页请求数据
      */
-    private static void loopHandlerStatictis(){
-        String data=FileManager.loadShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6).toString();
-        if(!TextUtils.isEmpty(data)){
-            newHomeStatictis(true,"");
+    private static void loopHandlerStatictis() {
+        String data = FileManager.loadShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6).toString();
+        if (!TextUtils.isEmpty(data)) {
+            newHomeStatictis(true, "");
         }
     }
-	/**
-	 * 首页统计
+
+    /**
+     * 首页统计
+     *
      * @param isResetData 是否要重置参数数据
-     * @param data 参数数据块
-	 */
-	public static synchronized void newHomeStatictis(final boolean isResetData, String data){
-		try {
-			String url = StringManager.API_STATISTIC_S6;
-			String baseData= getStatictisParams();
-			LinkedHashMap<String,String> map= new LinkedHashMap<>();
-            if(TextUtils.isEmpty(data))
-			    data = FileManager.loadShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6).toString();
-			Map<String,String> baseMap= UtilString.getMapByString(baseData,"&","=");
-			JSONObject jsonObject = MapToJson(baseMap);
-			if(!TextUtils.isEmpty(data)){
-				JSONArray jsonArray = new JSONArray();
-				String [] strs= data.split("&&");
-				int lenght=strs.length;
-				for(int i=0;i<lenght;i++){
-					if(!TextUtils.isEmpty(strs[i])){
-						jsonArray.put(MapToJson(UtilString.getMapByString(strs[i],"&","=")));
-					}
-				}
-				jsonObject.put("log_data",jsonArray);
-			}else
-            {
+     * @param data        参数数据块
+     */
+    public static synchronized void newHomeStatictis(final boolean isResetData, String data) {
+        try {
+            String url = StringManager.API_STATISTIC_S6;
+            String baseData = getStatictisParams();
+            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+            if (TextUtils.isEmpty(data))
+                data = FileManager.loadShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6).toString();
+            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
+            JSONObject jsonObject = MapToJson(baseMap);
+            if (!TextUtils.isEmpty(data)) {
+                JSONArray jsonArray = new JSONArray();
+                String[] strs = data.split("&&");
+                int lenght = strs.length;
+                for (int i = 0; i < lenght; i++) {
+                    if (!TextUtils.isEmpty(strs[i])) {
+                        jsonArray.put(MapToJson(UtilString.getMapByString(strs[i], "&", "=")));
+                    }
+                }
+                jsonObject.put("log_data", jsonArray);
+            } else {
                 return;
             }
+            LinkedHashMap<String,String> map1= new LinkedHashMap<>();
+            map1.put("log_json",jsonObject.toString());
 
-			ReqInternet.in().doPost(url, RequestBody.create(MediaType.parse("application/json"),jsonObject.toString().getBytes()),map, new InternetCallback(XHApplication.in()) {
-				@Override
-				public void loaded(int flag, String url, Object object) {
-					if(flag>=ReqInternet.REQ_OK_STRING){
-                        if(isResetData)
-                            FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,"");
-					}else{
+            ReqInternet.in().doPost(url, map1, new InternetCallback(XHApplication.in()) {
+                @Override
+                public void loaded(int flag, String url, Object object) {
+                    if (flag >= ReqInternet.REQ_OK_STRING) {
+                        if (isResetData)
+                            FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, "");
+                    } else {
 
-					}
+                    }
 
-				}
-			});
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * 处理统计基础数据
-	 * @return
-	 */
-	private static String getStatictisParams(){
-		String params="xh_code="+ ToolsDevice.getXhIMEI(XHApplication.in());
-		if (LoginManager.userInfo.containsKey("userCode")) {
-			params += "&user_code=" + LoginManager.userInfo.get("userCode") + ";";
-		}
-		String device = UtilFile.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_device_statictis).toString();
-		if(!TextUtils.isEmpty(device)){
-			params+="&"+device;
-		}else {
-			String devices="";
-			devices += "system=and";
+    /**
+     * 处理统计基础数据
+     *
+     * @return
+     */
+    private static String getStatictisParams() {
+        String params = "xh_code=" + ToolsDevice.getXhIMEI(XHApplication.in());
+        if (LoginManager.userInfo.containsKey("userCode")) {
+            params += "&user_code=" + LoginManager.userInfo.get("userCode") + ";";
+        }
+        String device = UtilFile.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_device_statictis).toString();
+        if (!TextUtils.isEmpty(device)) {
+            params += "&" + device;
+        } else {
+            String devices = "";
+            devices += "system=and";
 //			String mtype = android.os.Build.MODEL; // 手机型号---出现中文不使用该字段
 //			mtype = mtype.replace("#", "_");
 //			devices += "&model=" + mtype;
-			devices += "&model=";
-			String mVersion = android.os.Build.VERSION.RELEASE; // android版本号
-			devices += "&system_version=" + mVersion;
-			devices += "&app_version=" + VersionOp.getVerName(XHApplication.in());
-			DisplayMetrics metric = getWindowPx(XHApplication.in());
-			devices += "&phone_res=" + metric.widthPixels + "*" + metric.heightPixels;
-			String channalID = ChannelUtil.getChannel(XHApplication.in());
-			devices += "&channel=" + channalID;
-			UtilFile.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_device_statictis,devices);
-			params+="&"+devices;
-		}
+            devices += "&model=";
+            String mVersion = android.os.Build.VERSION.RELEASE; // android版本号
+            devices += "&system_version=" + mVersion;
+            devices += "&app_version=" + VersionOp.getVerName(XHApplication.in());
+            DisplayMetrics metric = getWindowPx(XHApplication.in());
+            devices += "&phone_res=" + metric.widthPixels + "*" + metric.heightPixels;
+            String channalID = ChannelUtil.getChannel(XHApplication.in());
+            devices += "&channel=" + channalID;
+            UtilFile.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_device_statictis, devices);
+            params += "&" + devices;
+        }
 
-		params+="&net_state="+ToolsDevice.getNetWorkType(XHApplication.in());
-		params+="&memory="+ToolsDevice.getAvailMemory(XHApplication.in());
-		params+="&package_name="+ToolsDevice.getPackageName(XHApplication.in());
-		params+="&app_id="+StringManager.appID;
-		params+="&token="+ LoadManager.tok;
-		return params;
-	}
+        params += "&net_state=" + ToolsDevice.getNetWorkType(XHApplication.in());
+        params += "&memory=" + ToolsDevice.getAvailMemory(XHApplication.in());
+        params += "&package_name=" + ToolsDevice.getPackageName(XHApplication.in());
+        params += "&app_id=" + StringManager.appID;
+        params += "&token=" + LoadManager.tok;
+        return params;
+    }
 
-	/**
-	 * 新的统计策略
-	 * @param page_title 页面名称
-	 * @param mode_type 模块名称，list header, foot
-	 * @param data_type 数据类型 目前:图文菜谱，视频菜谱，美食贴专辑，涨知识
-	 * @param item_code 个体标识 code唯一标示
-	 * @param show_num 显示数量 数量，浏览数据数量
-	 * @param event 事件 动作事件 info(详情),up（上翻）,down（下翻）,click（点击）list()
-	 * @param stop_time 停留时间(s)
-	 * @param uri_name 页面路由标识,请求数据的接口
-	 * @param position 当前在列表的位置
-	 * @param button_name 按钮名称
-	 * @param deep 页面深度
-	 */
-	public synchronized static void saveStatictisFile(String page_title,String mode_type,String data_type,String item_code,
-													  String show_num,String event,String stop_time,String uri_name,
-													  String position,String button_name,String deep){
-		try {
-			final String data=FileManager.loadShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6).toString();
+    /**
+     * 新的统计策略
+     *
+     * @param page_title  页面名称
+     * @param mode_type   模块名称，list header, foot
+     * @param data_type   数据类型 目前:图文菜谱，视频菜谱，美食贴专辑，涨知识
+     * @param item_code   个体标识 code唯一标示
+     * @param show_num    显示数量 数量，浏览数据数量
+     * @param event       事件 动作事件 info(详情),up（上翻）,down（下翻）,click（点击）list()
+     * @param stop_time   停留时间(s)
+     * @param uri_name    页面路由标识,请求数据的接口
+     * @param position    当前在列表的位置
+     * @param button_name 按钮名称
+     * @param deep        页面深度
+     */
+    public synchronized static void saveStatictisFile(String page_title, String mode_type, String data_type, String item_code,
+                                                      String show_num, String event, String stop_time, String uri_name,
+                                                      String position, String button_name, String deep) {
+        try {
+            final String data = FileManager.loadShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6).toString();
 
-			//对数据进行存储
-			long time = System.currentTimeMillis();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String app_time = formatter.format(time);
+            //对数据进行存储
+            long time = System.currentTimeMillis();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String app_time = formatter.format(time);
 //            Log.i("zhangyujian","数据时间::"+app_time+":::"+event);
-			String params="";
-			params+="app_time="+app_time;
-			params+="&page_title="+page_title;
-			params+="&mode_type="+mode_type;
-			params+="&data_type="+data_type;
-			params+="&item_code="+item_code;
-			params+="&show_num="+show_num;
-			params+="&event="+event;
-			params+="&stop_time="+stop_time;
-			params+="&uri_name="+uri_name;
-			params+="&position="+position;
-			params+="&button_name="+button_name;
-			params+="&deep="+deep;
+            String params = "";
+            params += "app_time=" + app_time;
+            params += "&page_title=" + page_title;
+            params += "&mode_type=" + mode_type;
+            params += "&data_type=" + data_type;
+            params += "&item_code=" + item_code;
+            params += "&show_num=" + show_num;
+            params += "&event=" + event;
+            params += "&stop_time=" + stop_time;
+            params += "&uri_name=" + uri_name;
+            params += "&position=" + position;
+            params += "&button_name=" + button_name;
+            params += "&deep=" + deep;
 //            Log.i("zhangyujian","加载数据：：："+params);
-            if(TextUtils.isEmpty(data)){
+            if (TextUtils.isEmpty(data)) {
 
-				FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,params);
-			}else{
-                String[] strs= data.split("&&");
-                if(strs.length>=500){
-                    FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,"");
+                FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, params);
+            } else {
+                String[] strs = data.split("&&");
+                if (strs.length >= 500) {
+                    FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, "");
 //                    Log.i("zhangyujian","数据超过1000条，请求数据");
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            newHomeStatictis(false,data);
+                            newHomeStatictis(false, data);
                         }
                     });
 
-                }else{
-                    FileManager.saveShared(XHApplication.in(),FileManager.STATICTIS_S6,FileManager.STATICTIS_S6,data+"&&"+params);
+                } else {
+                    FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, data + "&&" + params);
                 }
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-	/**
-	 * map转json
-	 *
-	 * @param maps
-	 * @return
-	 */
-	public static JSONObject MapToJson(Map<String, String> maps) {
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		JSONObject jsonObject = new JSONObject();
-		if(maps==null||maps.size()<=0)return jsonObject;
+    /**
+     * map转json
+     *
+     * @param maps
+     * @return
+     */
+    public static JSONObject MapToJson(Map<String, String> maps) {
 
-		Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
-		try {
-			while (enty.hasNext()) {
-				Map.Entry<String, String> entry = enty.next();
-				jsonObject.put(entry.getKey(), entry.getValue());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonObject;
-	}
+        JSONObject jsonObject = new JSONObject();
+        if (maps == null || maps.size() <= 0) return jsonObject;
+
+        Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
+        try {
+            while (enty.hasNext()) {
+                Map.Entry<String, String> entry = enty.next();
+                jsonObject.put(entry.getKey(), entry.getValue());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
 }
