@@ -63,8 +63,8 @@ public class RichText extends EditText implements TextWatcher {
     public static final int FORMAT_LINK = 0x07;
     public static final int FORMAT_CENTER= 0x08;
 
-    private final String KEY_URL = "url";
-    private final String KEY_TITLE = "title";
+    public static final String KEY_URL = "url";
+    public static final String KEY_TITLE = "title";
     private Context mContext;
 
     private int bulletColor = 0;
@@ -1300,58 +1300,58 @@ public class RichText extends EditText implements TextWatcher {
         if (onSelectContainsType != null)
             onSelectContainsType.onSelecrCenter(contains(FORMAT_CENTER));
         int textLength = text.length();
+
         if (selStart >= 0 && selStart <= textLength) {
             //遍历link的array
             for (int index = 0; index < linkMapArray.size(); index++) {
                 Map<String, String> linkMap = linkMapArray.get(index);
                 String desc = linkMap.get(KEY_TITLE);
-                int startIndex = text.indexOf(linkMap.get(KEY_TITLE));
-                Log.i("tzy", "desc = " + desc);
-                Log.i("tzy", "selStart = " + selStart + " ; selEnd = " + selEnd);
-                Log.i("tzy", "startIndex = " + startIndex);
-                //找不到则remove
-                if (startIndex < 0) {
-                    linkMapArray.remove(linkMap);
-                    index--;
-                    continue;
-                }
-                int endIndesc = startIndex + desc.length();
-                Log.i("tzy", "endIndesc = " + endIndesc);
-                //判断当前光标位置
-                if (selStart == selEnd){
-                    if(selStart > startIndex && selStart < endIndesc
-                            && selEnd > startIndex && selEnd < endIndesc) {
-                        CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
-                        for (CharacterStyle span : spans) {
-                            if (span instanceof RichURLSpan) {
-                                if (onSelectContainsType != null) {
-                                    onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
-                                }
-                                this.setSelection(endIndesc + 1 <= textLength ? endIndesc + 1 : textLength );
-                                break;
-                            }
+                String url = linkMap.get(KEY_URL);
+                String textTemp = text;
+                int defatultStart = 0;
+                while (textTemp.indexOf(desc) >= 0 && defatultStart < text.length()){
+                    int startIndex = textTemp.indexOf(desc);
+                    int endIndesc = startIndex + desc.length();
+                    Log.i("tzy", "desc = " + desc);
+                    Log.i("tzy", "selStart = " + selStart + " ; selEnd = " + selEnd);
+
+                    int realStartIndex = startIndex + defatultStart;
+                    int realEndIndex = endIndesc + defatultStart;
+                    Log.i("tzy", "realStartIndex = " + realStartIndex);
+                    Log.i("tzy", "realEndIndex = " + realEndIndex);
+                    //判断当前光标位置
+                    if (selStart == selEnd){
+                        if(selStart > realStartIndex && selStart < realEndIndex
+                                && selEnd > realStartIndex && selEnd < realEndIndex) {
+                            if(containsSpan(realStartIndex,realEndIndex,textLength,desc,url))
+                                return;
+                        }
+                    } else if(selStart != selEnd){
+                        if(selStart >= realStartIndex && selStart <= realEndIndex
+                                && selEnd >= realStartIndex && selEnd <= realEndIndex) {
+                            if(containsSpan(realStartIndex,realEndIndex,textLength,desc,url))
+                                return;
                         }
                     }
-                } else if(selStart != selEnd){
-                    if(selStart >= startIndex && selStart <= endIndesc
-                            && selEnd >= startIndex && selEnd <= endIndesc) {
-                        Log.i("tzy", "selStart != selEnd = true");
-                        CharacterStyle[] spans = getText().getSpans(startIndex, endIndesc, CharacterStyle.class);
-                        Log.i("tzy", "spans.length = " + spans.length);
-                        for (CharacterStyle span : spans) {
-                            Log.i("tzy", "span = " + span.toString());
-                            if (span instanceof RichURLSpan) {
-                                if (onSelectContainsType != null) {
-                                    onSelectContainsType.onSelectLink(linkMap.get(KEY_URL), desc);
-                                }
-                                this.setSelection(endIndesc <= textLength ? endIndesc  : textLength );
-                                break;
-                            }
-                        }
-                    }
+                    textTemp = textTemp.substring(startIndex + desc.length() , textTemp.length());
+                    defatultStart += startIndex + desc.length();
                 }
             }
         }
+    }
+
+    private boolean containsSpan(int startIndex,int endIndex,int textLength,String desc,String url){
+        CharacterStyle[] spans = getText().getSpans(startIndex, endIndex, CharacterStyle.class);
+        for (CharacterStyle span : spans) {
+            if (span instanceof RichURLSpan) {
+                if (((RichURLSpan)span).getURL().equals(url) && onSelectContainsType != null) {
+                    onSelectContainsType.onSelectLink(url, desc);
+                    this.setSelection(endIndex + 1 <= textLength ? endIndex + 1 : textLength );
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
