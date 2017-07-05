@@ -34,6 +34,7 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.adapter.AdapterUserTxt;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -103,10 +104,10 @@ public class UserHomeTxt extends TabContentView {
 		mGotoBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (LoginManager.isShowSendVideoButton())
+				if (LoginManager.isBindMobilePhone())
 					mAct.startActivity(new Intent(mAct, ArticleEidtActiivty.class));
 				else
-					showDialog("文章", StringManager.api_applyArticlePower);
+					mAct.startActivity(new Intent(mAct, BindPhoneNum.class));
 			}
 		});
 		theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);

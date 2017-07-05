@@ -34,6 +34,7 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.adapter.AdapterUserVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -102,10 +103,10 @@ public class UserHomeVideo extends TabContentView {
         mGotoBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LoginManager.isShowSendVideoButton())
+                if (LoginManager.isBindMobilePhone())
                     mAct.startActivity(new Intent(mAct, VideoEditActivity.class));
                 else
-                    showDialog("短视频", StringManager.api_applyVideoPower);
+                    mAct.startActivity(new Intent(mAct, BindPhoneNum.class));
             }
         });
         theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
