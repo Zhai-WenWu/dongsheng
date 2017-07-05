@@ -209,7 +209,7 @@ public class WelcomeDialog extends Dialog {
 
                     @Override
                     public View getTextSikp() {
-                        return new View(activity);
+                        return textSkip;
                     }
                 });
         //设置XHBanner回调
