@@ -75,7 +75,7 @@ public class FullScreenWeb extends WebActivity {
     protected void onDestroy() {
         long nowTime = System.currentTimeMillis();
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("VideoDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
+            XHClick.saveStatictisFile("FullScreenWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
     }
