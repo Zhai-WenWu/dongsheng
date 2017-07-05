@@ -56,8 +56,8 @@ import third.video.VideoPlayerController;
 
 public class VideoHeaderView extends RelativeLayout {
     //转码状态1-未转，2-正转，3-已转
-    private final static String STATUS_UNTRANSCOD = "1";
-    private final static String STATUS_TRANSCODING = "2";
+//    private final static String STATUS_UNTRANSCOD = "1";
+//    private final static String STATUS_TRANSCODING = "2";
     private final static String STATUS_TRANSCODED = "3";
     private Activity activity;
     private Context context;
@@ -362,7 +362,7 @@ public class VideoHeaderView extends RelativeLayout {
                     mVideoPlayerController.onResume();
                     return;
                 }
-                if((currentS > limitTime || currentS > durationS) && !isContinue){
+                if((currentS > limitTime || limitTime > durationS) && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
@@ -382,7 +382,7 @@ public class VideoHeaderView extends RelativeLayout {
                     mVideoPlayerController.onResume();
                     return;
                 }
-                if((currentS > limitTime || currentS > durationS) && !isContinue){
+                if((currentS > limitTime || limitTime > durationS) && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
