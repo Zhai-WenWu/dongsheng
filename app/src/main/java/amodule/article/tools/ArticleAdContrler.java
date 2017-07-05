@@ -237,7 +237,7 @@ public class ArticleAdContrler {
             dataMap.put("img", adMap.get("imgUrl"));
             dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
             dataMap.put("clickAll", Tools.getRandom(200, 5000) + "浏览");
-            dataMap.put("commentNumber", "广告");
+            dataMap.put("commentNumber", "");
         } catch (JSONException e) {
             e.printStackTrace();
         }
