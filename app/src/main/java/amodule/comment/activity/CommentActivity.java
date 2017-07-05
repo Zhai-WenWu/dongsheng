@@ -258,7 +258,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         });
                         xhDialog.cancel();
                     }
-                }).show();
+                }).setSureButtonTextColor("#333333")
+                .setCancelButtonTextColor("#333333")
+                .show();
             }
 
             @Override
