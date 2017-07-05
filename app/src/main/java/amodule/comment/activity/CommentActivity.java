@@ -177,29 +177,47 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent,String reportType) {
-                XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,reportType);
-                Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
-                intent.putExtra("type",type);
-                intent.putExtra("code",code);
-                intent.putExtra("commentId",comment_id);
-                intent.putExtra("userCode",comment_user_code);
-                intent.putExtra("reportName",comment_user_name);
-                intent.putExtra("reportContent",reportContent);
-                startActivity(intent);
+                if(!LoginManager.isLogin()){
+                    startActivity(new Intent(CommentActivity.this, LoginByAccout.class));
+                    return;
+                }
+                if(LoginManager.isLogin()
+                        && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                        && !TextUtils.isEmpty(comment_user_code)
+                        && !comment_user_code.equals(LoginManager.userInfo.get("code"))){
+                    XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,reportType);
+                    Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
+                    intent.putExtra("type",type);
+                    intent.putExtra("code",code);
+                    intent.putExtra("commentId",comment_id);
+                    intent.putExtra("userCode",comment_user_code);
+                    intent.putExtra("reportName",comment_user_name);
+                    intent.putExtra("reportContent",reportContent);
+                    startActivity(intent);
+                }
             }
 
             @Override
             public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-                XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,"点击楼中楼的举报");
-                Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
-                intent.putExtra("type",type);
-                intent.putExtra("code",code);
-                intent.putExtra("commentId",comment_id);
-                intent.putExtra("replayId",replay_id);
-                intent.putExtra("userCode",replay_user_code);
-                intent.putExtra("reportName",replay_user_name);
-                intent.putExtra("reportContent",reportContent);
-                startActivity(intent);
+                if(!LoginManager.isLogin()){
+                    startActivity(new Intent(CommentActivity.this, LoginByAccout.class));
+                    return;
+                }
+                if(LoginManager.isLogin()
+                        && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                        && !TextUtils.isEmpty(replay_user_code)
+                        && !replay_user_code.equals(LoginManager.userInfo.get("code"))){
+                    XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,"点击楼中楼的举报");
+                    Intent intent = new Intent(CommentActivity.this,ReportActivity.class);
+                    intent.putExtra("type",type);
+                    intent.putExtra("code",code);
+                    intent.putExtra("commentId",comment_id);
+                    intent.putExtra("replayId",replay_id);
+                    intent.putExtra("userCode",replay_user_code);
+                    intent.putExtra("reportName",replay_user_name);
+                    intent.putExtra("reportContent",reportContent);
+                    startActivity(intent);
+                }
             }
 
             @Override

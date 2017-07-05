@@ -15,6 +15,7 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
@@ -22,6 +23,7 @@ import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ReportActivity;
 import amodule.comment.activity.CommentActivity;
 import amodule.comment.view.ViewCommentItem;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -117,15 +119,24 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onReportCommentClick(String comment_id, String comment_user_code, String comment_user_name, String reportContent, String reportType) {
-                        Intent intent = new Intent(context, ReportActivity.class);
-                        intent.putExtra("code", code);
-                        intent.putExtra("type", getType());
-                        intent.putExtra("userCode", comment_user_code);
-                        intent.putExtra("commentId", comment_id);
-                        intent.putExtra("reportName", comment_user_name);
-                        intent.putExtra("reportContent", reportContent);
-                        intent.putExtra("reportType", "2");
-                        context.startActivity(intent);
+                        if(!LoginManager.isLogin()){
+                            context.startActivity(new Intent(context, LoginByAccout.class));
+                            return;
+                        }
+                        if(LoginManager.isLogin()
+                                && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                                && !TextUtils.isEmpty(comment_user_code)
+                                && !comment_user_code.equals(LoginManager.userInfo.get("code"))){
+                            Intent intent = new Intent(context, ReportActivity.class);
+                            intent.putExtra("code", code);
+                            intent.putExtra("type", getType());
+                            intent.putExtra("userCode", comment_user_code);
+                            intent.putExtra("commentId", comment_id);
+                            intent.putExtra("reportName", comment_user_name);
+                            intent.putExtra("reportContent", reportContent);
+                            intent.putExtra("reportType", "2");
+                            context.startActivity(intent);
+                        }
                     }
 
                     @Override
@@ -134,15 +145,24 @@ public class ArticleCommentView extends ItemBaseView {
 
                     @Override
                     public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-                        Intent intent = new Intent(context, ReportActivity.class);
-                        intent.putExtra("code", code);
-                        intent.putExtra("type", getType());
-                        intent.putExtra("userCode", replay_user_code);
-                        intent.putExtra("replayId", replay_id);
-                        intent.putExtra("reportName", replay_user_name);
-                        intent.putExtra("reportContent", reportContent);
-                        intent.putExtra("reportType", "3");
-                        context.startActivity(intent);
+                        if(!LoginManager.isLogin()){
+                            context.startActivity(new Intent(context, LoginByAccout.class));
+                            return;
+                        }
+                        if(LoginManager.isLogin()
+                                && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                                && !TextUtils.isEmpty(replay_user_code)
+                                && !replay_user_code.equals(LoginManager.userInfo.get("code"))){
+                            Intent intent = new Intent(context, ReportActivity.class);
+                            intent.putExtra("code", code);
+                            intent.putExtra("type", getType());
+                            intent.putExtra("userCode", replay_user_code);
+                            intent.putExtra("replayId", replay_id);
+                            intent.putExtra("reportName", replay_user_name);
+                            intent.putExtra("reportContent", reportContent);
+                            intent.putExtra("reportType", "3");
+                            context.startActivity(intent);
+                        }
                     }
 
                     @Override
@@ -184,6 +204,10 @@ public class ArticleCommentView extends ItemBaseView {
         }
         findViewById(R.id.above_line).setVisibility("2".equals(getType()) ? VISIBLE : GONE);
         findViewById(R.id.bottom_line).setVisibility("2".equals(getType()) ? GONE : VISIBLE);
+    }
+
+    private void gotoReport(){
+
     }
 
     private void gotoCommentActivity(String commentId, String replayId) {

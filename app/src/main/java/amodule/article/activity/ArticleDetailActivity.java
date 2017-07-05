@@ -525,7 +525,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 if(LoginManager.isLogin()
                         && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                         && !TextUtils.isEmpty(userCode)
-                        && userCode.equals(LoginManager.userInfo.get("code"))){
+                        && !userCode.equals(LoginManager.userInfo.get("code"))){
                     Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
                     intent.putExtra("code", code);
                     intent.putExtra("type", getType());

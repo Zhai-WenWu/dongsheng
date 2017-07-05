@@ -42,20 +42,17 @@ import xh.windowview.XhDialog;
 public class AccoutActivity extends BaseLoginActivity implements View.OnClickListener {
 
     private LinearLayout ll_accout;
+    private RelativeLayout rl_phone_accout;
+    private LinearLayout ll_help;
     private LeftAndRightTextView view_email_accout;
     private LeftAndRightTextView view_phone_accout;
-    private LeftAndRightTextView view_weixin;
-    private LeftAndRightTextView view_qq;
-    private LeftAndRightTextView view_weibo;
-    private LeftAndRightTextView view_meizu;
+    private LeftAndRightTextView view_weixin, view_qq, view_weibo, view_meizu;
     private LeftAndRightTextView view_modify_secret;
     private Handler handler;
     public static final int ONREFRESH = 1;
     private Map<String, String> bindMap;
     private final String unbindStr = "未绑定";
     private String tel;
-    private RelativeLayout rl_phone_accout;
-    private LinearLayout ll_help;
     private String zoneCode;
     private View view_accout_below;
     private String mPlatformName = "";
@@ -134,7 +131,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
 
     private void shwoPhoneNum() {
-
         if (TextUtils.isEmpty(tel)) {
             rl_phone_accout.setVisibility(View.VISIBLE);
             view_phone_accout.setVisibility(View.GONE);
@@ -152,73 +148,11 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         findViewById(R.id.back).setOnClickListener(this);
 
         view_phone_accout.init("手机号", unbindStr, false, true, null);
-        view_email_accout.init("邮箱", unbindStr, false, true,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-                        String email = bindMap.get("email");
-                        if (TextUtils.isEmpty(email)) {
-                            return;
-                        } else {
-                            showUnbindThirdParty("email");
-                        }
-                    }
-                });
-
-        view_weixin.init("微信号", unbindStr, true, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-
-                        String weixin = bindMap.get("weixin");
-                        if (TextUtils.isEmpty(weixin)) {
-                            loginByThrid(LoginManager.LOGIN_WX, "微信号");
-                        } else {
-                            showUnbindThirdParty("weixin");
-                        }
-                    }
-                });
-
-        view_qq.init("QQ号", unbindStr, true, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-                        String qq = bindMap.get("qq");
-                        if (TextUtils.isEmpty(qq)) {
-                            loginByThrid(LoginManager.LOGIN_QQ, "QQ号");
-                        } else {
-                            showUnbindThirdParty("qq");
-                        }
-                    }
-                });
-
-        view_weibo.init("微博号", unbindStr, false, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-
-                        String weibo = bindMap.get("weibo");
-                        if (TextUtils.isEmpty(weibo)) {
-                            loginByThrid(LoginManager.LOGIN_WB, "微博号");
-                        } else {
-                            showUnbindThirdParty("weibo");
-                        }
-                    }
-                });
-
-        view_meizu.init("魅族", unbindStr, false, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-                        String meizu = bindMap.get("meizu");
-                        if (TextUtils.isEmpty(meizu)) {
-                            return;
-                        } else {
-                            showUnbindThirdParty("meizu");
-                        }
-
-                    }
-                });
+        view_email_accout.init("邮箱", unbindStr, false, true, getThirdLAndRCallback("email"));
+        view_weixin.init("微信号", unbindStr, true, false, getThirdLAndRCallback("weixin"));
+        view_qq.init("QQ号", unbindStr, true, false, getThirdLAndRCallback("qq"));
+        view_weibo.init("微博号", unbindStr, false, false, getThirdLAndRCallback("weibo"));
+        view_meizu.init("魅族", unbindStr, false, false, getThirdLAndRCallback("meizu"));
 
         view_modify_secret.init("修改密码", "", false, true,
                 new LeftAndRightTextView.LeftAndRightTextViewCallback() {
@@ -227,15 +161,48 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         motifySecret();
                     }
                 });
+    }
 
+    /**
+     * @param typeKey "weibo","qq","weixin"
+     */
+    private LeftAndRightTextView.LeftAndRightTextViewCallback getThirdLAndRCallback(final String typeKey) {
+        return new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+            @Override
+            public void onClick() {
+                thirdHandler(typeKey);
+            }
+        };
+    }
+
+    /**
+     * @param typeKey "weibo","qq","weixin"
+     */
+    private void thirdHandler(String typeKey) {
+        String type = bindMap.get(typeKey);
+        if (TextUtils.isEmpty(type)) {
+            switch (typeKey) {
+                case "email":
+                case "meizui":
+                    return;
+                case "weibo":
+                    loginByThrid(LoginManager.LOGIN_WB, "微博号");
+                    break;
+                case "qq":
+                    loginByThrid(LoginManager.LOGIN_QQ, "QQ号");
+                    break;
+                case "weixin":
+                    loginByThrid(LoginManager.LOGIN_WX, "微信号");
+                    break;
+            }
+        } else
+            showUnbindThirdParty(typeKey);
     }
 
     private void motifySecret() {
-
         if (TextUtils.isEmpty(tel)) {
             gotoBindPhoneNum(this);
         } else {
-
             final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
             xhDialog.setTitle("修改登录密码" + "\n将给手机" +
                     hidePhoneNum(tel) + "发送验证码")
@@ -349,15 +316,10 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     }
 
     private String parseData(String type, Map<String, String> info) {
-
         String str = info.get(type);
-
         if (TextUtils.isEmpty(str))
             return null;
-        ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(str);
-        if (maps.size() < 1)
-            return null;
-        Map<String, String> map = maps.get(0);
+        Map<String, String> map = StringManager.getFirstMap(str);
         if (map.size() < 1)
             return null;
 
@@ -365,13 +327,11 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             String name = map.get("name");
             bindMap.put(type, name);
             return name;
-        } else {
+        } else
             return null;
-        }
     }
 
     private void showUnbindThirdParty(final String type) {
-
         String title = "";
         String tongjiStr = "";
 
@@ -407,7 +367,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             xhDialog.show();
             return;
         }
-
 
         final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
 
@@ -469,7 +428,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         @Override
                         public void onClick(View v) {
                             loadManager.hideLoadFaildBar();
-
                         }
                     });
                 }
@@ -533,8 +491,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                 gotoFeedBack();
                 break;
             case R.id.title_rela_all:
-                onPressTopBar();
-                break;
             case R.id.back:
                 onPressTopBar();
             default:
@@ -582,7 +538,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         loadManager.showProgressBar();
 //        Tools.showToast(mAct, "授权开始...");
 //        ShareSDK.initSDK(mAct);
-        Platform pf = ShareSDK.getPlatform( platform);
+        Platform pf = ShareSDK.getPlatform(platform);
         if (pf.isAuthValid()) {
             pf.removeAccount(true);
         }
@@ -615,7 +571,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         if (action == Platform.ACTION_USER_INFOR) {
                             String devCode = XGPushServer.getXGToken(mAct);
                             PlatformDb plfDb = plat.getDb();
-                            StringBuffer stringBuffer =new StringBuffer().append("type=thirdLogin")
+                            StringBuffer stringBuffer = new StringBuffer().append("type=thirdLogin")
                                     .append("&devCode=").append(devCode)
                                     .append("&p1=").append(plfDb.getToken())
                                     .append("&p2=").append(plfDb.getUserId())
@@ -648,7 +604,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                                         } else {
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败");
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败原因：已被绑定过");
-//                                            toastFaildRes(flag, true, returnObj);
                                         }
                                         mAct.loadManager.hideProgressBar();
                                     }
