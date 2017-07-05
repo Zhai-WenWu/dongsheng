@@ -101,16 +101,12 @@ public class ArticleAdContrler {
                     switch (key) {
                         case ARTICLE_CONTENT_BOTTOM:
                             sendAdMessage(adStr, ARTICLE_BOTTOM);
-                            Log.i("tzy",ARTICLE_BOTTOM + "------------------wz_wz");
-                            Log.i("tzy","adStr = " + adStr);
                             break;
                         case ARTICLE_RECM_1:
                             sendAdMessage(adStr, ARTICLE_RECOMMEND_1);
-                            Log.i("tzy",ARTICLE_RECM_1 + "----------");
                             break;
                         case ARTICLE_RECM_2:
                             sendAdMessage(adStr, ARTICLE_RECOMMEND_2);
-                            Log.i("tzy",ARTICLE_RECM_2 + "----------");
                             break;
                     }
                 }
@@ -119,9 +115,7 @@ public class ArticleAdContrler {
     }
 
     protected void sendAdMessage(String adStr, int type) {
-        Log.i("tzy","adStr = " + adStr);
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
-        Log.i("tzy","adDataMap = " + adDataMap);
         if (adDataMap != null && adDataMap.size() > 0) {
             Message message = adHandler.obtainMessage();
             message.obj = adDataMap;
@@ -144,7 +138,6 @@ public class ArticleAdContrler {
     }
 
     public View getBigAdView(Map<String, String> dataMap) {
-        Log.i("tzy","adData = " + dataMap.toString());
         if (dataMap == null || dataMap.isEmpty())
             return null;
         final View adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad, null);

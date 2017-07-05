@@ -327,6 +327,7 @@ public class DishHeaderView extends LinearLayout {
                     Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
                     if(!TextUtils.isEmpty(timeMap.get("time"))){
                         limitTime = Integer.parseInt(timeMap.get("time"));
+                        Log.i("tzy","limitTime = " + limitTime);
                         setVipPermision(commonMap);
                     }
                 }else{
@@ -401,7 +402,7 @@ public class DishHeaderView extends LinearLayout {
                         mVideoPlayerController.onResume();
                         return;
                     }
-                    if((currentS > limitTime || currentS > durationS)&& !isContinue){
+                    if((currentS > limitTime || limitTime > durationS)&& !isContinue){
                         currentTime = current;
                         dredgeVipLayout.setVisibility(VISIBLE);
                         VDVideoViewController.getInstance(context).setSeekPause(true);
@@ -421,7 +422,7 @@ public class DishHeaderView extends LinearLayout {
                         mVideoPlayerController.onResume();
                         return;
                     }
-                    if((currentS > limitTime || currentS > durationS) && !isContinue){
+                    if((currentS > limitTime || limitTime > durationS) && !isContinue){
                         currentTime = current;
                         dredgeVipLayout.setVisibility(VISIBLE);
                         VDVideoViewController.getInstance(context).setSeekPause(true);
