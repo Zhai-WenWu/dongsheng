@@ -67,14 +67,22 @@ public class AdConfigTools {
 								JSONObject object = new JSONObject();
 								if(imgsList != null && imgsList.size() > 0){
 									Map<String, String> imgsMap = imgsList.get(0);
-									DisplayMetrics dm = ToolsDevice.getWindowPx(Main.allMain);
-									float beishu = (float) (dm.heightPixels * 1.0) / dm.widthPixels;
 									try{
-										if(Math.abs(beishu - (2900 / 1700)) > Math.abs(beishu - (2730 / 2000))){
-											object.put("img",imgsMap.get("indexImg2"));
+										String indexImg3Str = imgsMap.get("indexImg3");
+										//判断 indexImg3 是否为 null
+										if(!TextUtils.isEmpty(indexImg3Str)){
+											object.put("img",indexImg3Str);
 										}else{
-											object.put("img",imgsMap.get("indexImg1"));
+											//走以前的逻辑
+											DisplayMetrics dm = ToolsDevice.getWindowPx(Main.allMain);
+											float beishu = (float) (dm.heightPixels * 1.0) / dm.widthPixels;
+											if(Math.abs(beishu - (2900 / 1700)) > Math.abs(beishu - (2730 / 2000))){
+												object.put("img",imgsMap.get("indexImg2"));
+											}else{
+												object.put("img",imgsMap.get("indexImg1"));
+											}
 										}
+
 										object.put("url", map.get("url"));
 										object.put("showNum", map.get("showNum"));
 										object.put("times", map.get("times"));
