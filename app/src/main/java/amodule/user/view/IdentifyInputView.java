@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -65,7 +64,7 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
 
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.i("FRJ","millisUntilFinished:" + millisUntilFinished);
+//                Log.i("FRJ","millisUntilFinished:" + millisUntilFinished);
                 btn_identify_request.setBackgroundResource(R.drawable.bg_round_gray_identify);
                 btn_identify_request.setTextColor(Color.parseColor("#999999"));
                 btn_identify_request.setClickable(false);

@@ -351,8 +351,9 @@ public class BaseLoginActivity extends BaseActivity {
                                     callback.onSuccess();
                                     return;
                                 }
+                            }else if(String.valueOf(data).contains("网络错误")){
+                                Tools.showToast(BaseLoginActivity.this.getApplicationContext(),String.valueOf(data));
                             }
-                            Tools.showToast(BaseLoginActivity.this.getApplicationContext(),String.valueOf(data));
                             sendFalseRequest(data.toString(),"86",phoneNum);
                             callback.onFalse(flag);
                         }
