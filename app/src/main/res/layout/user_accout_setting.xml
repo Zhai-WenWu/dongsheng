@@ -73,25 +73,30 @@
                         android:visibility="visible" />
                 </RelativeLayout>
 
-
                 <amodule.user.view.LeftAndRightTextView
                     android:id="@+id/view_phone_accout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
 
-                <View
+                <LinearLayout
                     android:id="@+id/view_accout_below"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_0.5"
-                    android:background="#ededed"
-                    android:visibility="gone" />
-
-                <amodule.user.view.LeftAndRightTextView
-                    android:id="@+id/view_email_accout"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone" />
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_0.5"
+                        android:background="#ededed" />
+
+                    <amodule.user.view.LeftAndRightTextView
+                        android:id="@+id/view_email_accout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -139,23 +144,15 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_help"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_help"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_help"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dp_120"
-                    android:text="遇到问题?"
-                    android:textColor="#737272"
-                    android:textSize="@dimen/sp_14" />
-
-            </LinearLayout>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_120"
+                android:text="遇到问题?"
+                android:textColor="#737272"
+                android:textSize="@dimen/sp_14" />
 
         </LinearLayout>
     </ScrollView>

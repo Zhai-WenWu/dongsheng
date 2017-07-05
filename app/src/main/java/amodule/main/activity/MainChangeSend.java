@@ -2,7 +2,6 @@ package amodule.main.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -14,8 +13,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -29,14 +26,13 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
-import acore.tools.StringManager;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
+import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.LoginByAccout;
-import aplug.basic.LoadImage;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
 import xh.windowview.XhDialog;
@@ -203,22 +199,23 @@ public class MainChangeSend extends BaseActivity {
                 if (!LoginManager.isLogin()) {
                     finish();
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendArticleButton()) {
+                } else if (LoginManager.isBindMobilePhone()) {
                     finish();
                     startActivity(new Intent(this, ArticleEidtActiivty.class));
                 } else
-                    showDialog("发文章", StringManager.api_applyArticlePower);
+                    startActivity(new Intent(this, BindPhoneNum.class));
+//                    showDialog("发文章", StringManager.api_applyArticlePower);
                 break;
             case "7":
                 if (!LoginManager.isLogin()) {
                     finish();
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendVideoButton()) {
+                } else if (LoginManager.isBindMobilePhone()) {
                     finish();
                     startActivity(new Intent(this, VideoEditActivity.class));
                 } else
-
-                    showDialog("短视频", StringManager.api_applyVideoPower);
+                    startActivity(new Intent(this, BindPhoneNum.class));
+//                    showDialog("短视频", StringManager.api_applyVideoPower);
                 break;
         }
     }

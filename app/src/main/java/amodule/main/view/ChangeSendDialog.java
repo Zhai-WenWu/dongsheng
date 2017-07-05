@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Display;
@@ -19,8 +18,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -32,23 +29,16 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
-import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.article.activity.edit.ArticleEidtActiivty;
-import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
-import amodule.comment.activity.PublishCommentActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
+import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.LoginByAccout;
-import aplug.basic.LoadImage;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
-import aplug.shortvideo.activity.MediaRecorderActivity;
 import xh.windowview.XhDialog;
-
-import static amodule.main.activity.MainChangeSend.dishVideoMap;
 
 public class ChangeSendDialog extends Dialog {
 
@@ -227,19 +217,21 @@ public class ChangeSendDialog extends Dialog {
                 closeDialog();
                 if(!LoginManager.isLogin()) {
                     activity.startActivity(new Intent(activity, LoginByAccout.class));
-                }else if (LoginManager.isShowSendArticleButton())
+                }else if (LoginManager.isBindMobilePhone())
                     activity.startActivity(new Intent(activity, ArticleEidtActiivty.class));
                 else
-                    showDialog("文章", StringManager.api_applyArticlePower);
+                    activity.startActivity(new Intent(activity, BindPhoneNum.class));
+//                    showDialog("文章", StringManager.api_applyArticlePower);
                 break;
             case "7":
                 closeDialog();
                 if(!LoginManager.isLogin()) {
                     activity.startActivity(new Intent(activity, LoginByAccout.class));
-                }else if (LoginManager.isShowSendVideoButton())
+                }else if (LoginManager.isBindMobilePhone())
                     activity.startActivity(new Intent(activity, VideoEditActivity.class));
                 else
-                    showDialog("短视频", StringManager.api_applyVideoPower);
+                    activity.startActivity(new Intent(activity, BindPhoneNum.class));
+//                    showDialog("短视频", StringManager.api_applyVideoPower);
                 break;
         }
     }

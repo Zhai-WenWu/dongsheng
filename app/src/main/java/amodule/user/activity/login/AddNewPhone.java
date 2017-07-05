@@ -85,7 +85,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                 new PhoneNumInputView.PhoneNumInputViewCallback() {
                     @Override
                     public void onZoneCodeClick() {
-                        dataStatics("方法1新手机号页，点国家代码", "方法2新手机号页，点国家代码");
+                        dataStatics("新手机号页，点国家代码");
                         Intent intent = new Intent(AddNewPhone.this, CountryListActivity.class);
                         startActivityForResult(intent, mGetCountryId);
                     }
@@ -133,11 +133,11 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                             if (newZoneCode.equals(zoneCode) && newPhoneNum.equals(phoneNum)) {
                                 Toast.makeText(AddNewPhone.this, "你已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
                                 login_identify.setOnBtnClickState(true);
-                                dataStatics("方法1失败原因：已经绑定这个手机号", "方法2失败原因：已经绑定这个手机号");
+                                dataStatics("失败原因：已经绑定这个手机号");
                                 return;
                             }
 
-                            dataStatics("方法1新手机号页，点获取验证码", "方法2新手机号页，点获取验证码");
+                            dataStatics("新手机号页，点获取验证码");
                             //检查是否注册
                             checkPhoneRegist(newZoneCode,newPhoneNum);
                         } else {
@@ -151,7 +151,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
             @Override
             public void onClickCenterBtn() {
 
-                dataStatics("方法1新手机号页，点完成", "方法2新手机号页，点完成");
+                dataStatics("新手机号页，点完成");
                 String type = "verifyCode";
                 String errorType = LoginCheck.checkPhoneFormatWell(AddNewPhone.this,
                         phone_info.getZoneCode(), phone_info.getPhoneNum());
@@ -163,23 +163,23 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                                 @Override
                                 public void onSuccess() {
 
-                                    dataStatics("方法1，修改成功", "方法2，修改成功");
+                                    dataStatics("，修改成功");
                                     Toast.makeText(AddNewPhone.this, "修改成功", Toast.LENGTH_SHORT).show();
                                     backToForward();
                                 }
 
                                 @Override
                                 public void onFalse(int flag) {
-                                    dataStatics("方法1，修改失败", "方法2，修改失败");
-                                    dataStatics("方法1失败原因：验证码错误", "方法2失败原因：验证码错误");
+                                    dataStatics("，修改失败");
+                                    dataStatics("失败原因：验证码错误");
                                     Toast.makeText(AddNewPhone.this, "验证码错误", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } else if (LoginCheck.NOT_11_NUM.equals(errorType)) {
-                    dataStatics("方法1失败原因：手机号不是11位", "方法2失败原因：手机号不是11位");
+                    dataStatics("失败原因：手机号不是11位");
 
                 } else if (LoginCheck.ERROR_FORMAT.equals(errorType)) {
-                    dataStatics("方法1失败原因：手机号格式错误", "方法2失败原因：手机号格式错误");
+                    dataStatics("失败原因：手机号格式错误");
                 }
             }
         });
@@ -197,7 +197,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
             public void onSuccess() {
                 Toast.makeText(AddNewPhone.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
                 login_identify.setOnBtnClickState(true);
-                dataStatics("方法1失败原因：已经绑定其他账号", "方法2失败原因：已经绑定其他账号");
+                dataStatics("失败原因：已经绑定其他账号");
             }
 
             @Override
@@ -228,7 +228,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                         login_identify.setOnBtnClickState(true);
                         loadManager.hideProgressBar();
                         speechaIdentifyInputView.setState(true);
-                        dataStatics("方法1失败原因：验证码超限", "方法2失败原因：验证码超限");
+                        dataStatics("失败原因：验证码超限");
                     }
                 }
         );
@@ -238,7 +238,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_help:
-                dataStatics("方法1新手机号页，点遇到问题", "方法2新手机号页，点遇到问题");
+                dataStatics("新手机号页，点遇到问题");
                 gotoFeedBack();
                 break;
             default:
@@ -259,17 +259,23 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
         if (loadManager.isShowingProgressBar()) {
             loadManager.hideProgressBar();
         } else {
-            dataStatics("方法1新手机号页，点返回", "方法2新手机号页，点返回");
+            dataStatics("新手机号页，点返回");
             finish();
         }
     }
 
-
-    private void dataStatics(String msg1, String msg2) {
+    /**
+     *
+     * @param valueSuffix 统计值的后缀
+     */
+    private void dataStatics(String valueSuffix) {
+        StringBuilder valueBuilder = new StringBuilder();
         if (TYPE_SMS.equals(motifyType)) {
-            XHClick.mapStat(AddNewPhone.this, TAG_ACCOCUT, "修改手机号", msg1);
+            valueBuilder.append("方法1");
         } else if (TYPE_PSW.equals(motifyType)) {
-            XHClick.mapStat(AddNewPhone.this, TAG_ACCOCUT, "修改手机号", msg2);
+            valueBuilder.append("方法2");
         }
+        valueBuilder.append(valueSuffix);
+        XHClick.mapStat(AddNewPhone.this, TAG_ACCOCUT, "修改手机号", valueBuilder.toString());
     }
 }
