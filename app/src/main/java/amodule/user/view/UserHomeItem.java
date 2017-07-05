@@ -8,19 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-import java.io.InputStream;
 import java.util.Map;
 
-import acore.tools.FileManager;
-import acore.tools.ToolsDevice;
 import amodule.main.view.item.BaseItemView;
 import amodule.main.view.item.HomeItem;
-import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.control.AdControlParent;
 import xh.basic.tool.UtilImage;

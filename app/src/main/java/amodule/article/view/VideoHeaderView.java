@@ -56,8 +56,8 @@ import third.video.VideoPlayerController;
 
 public class VideoHeaderView extends RelativeLayout {
     //转码状态1-未转，2-正转，3-已转
-    private final static String STATUS_UNTRANSCOD = "1";
-    private final static String STATUS_TRANSCODING = "2";
+//    private final static String STATUS_UNTRANSCOD = "1";
+//    private final static String STATUS_TRANSCODING = "2";
     private final static String STATUS_TRANSCODED = "3";
     private Activity activity;
     private Context context;
@@ -341,7 +341,7 @@ public class VideoHeaderView extends RelativeLayout {
         vipView = new VideoDredgeVipView(getContext());
         dredgeVipLayout.addView(vipView);
         vipView.setTipMessaText(common.get("text"));
-        vipView.setDredgeVipText(common.get("button"));
+        vipView.setDredgeVipText(common.get("button1"));
         vipView.setDredgeVipClick(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -355,13 +355,14 @@ public class VideoHeaderView extends RelativeLayout {
             @Override
             public void onProgressUpdate(long current, long duration) {
                 int currentS = Math.round(current/1000f);
+                int durationS = Math.round(duration/1000f);
                 if(isHaspause){
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
                     return;
                 }
-                if(currentS > limitTime && !isContinue){
+                if((currentS > limitTime || limitTime > durationS) && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
@@ -374,13 +375,14 @@ public class VideoHeaderView extends RelativeLayout {
             @Override
             public void onDragProgess(long current, long duration) {
                 int currentS = Math.round(current/1000f);
+                int durationS = Math.round(duration/1000f);
                 if(isHaspause){
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
                     return;
                 }
-                if(currentS > limitTime && !isContinue){
+                if((currentS > limitTime || limitTime > durationS) && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
                     VDVideoViewController.getInstance(activity).setSeekPause(true);

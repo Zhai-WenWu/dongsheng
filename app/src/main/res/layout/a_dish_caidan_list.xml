@@ -27,5 +27,11 @@
         android:textColor="#777"
         android:textSize="@dimen/sp_20"
         android:visibility="gone" />
+
+    <aplug.web.view.XHWebView
+        android:id="@+id/XHWebview"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     
 </RelativeLayout>

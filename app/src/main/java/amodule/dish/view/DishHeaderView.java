@@ -327,6 +327,7 @@ public class DishHeaderView extends LinearLayout {
                     Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
                     if(!TextUtils.isEmpty(timeMap.get("time"))){
                         limitTime = Integer.parseInt(timeMap.get("time"));
+                        Log.i("tzy","limitTime = " + limitTime);
                         setVipPermision(commonMap);
                     }
                 }else{
@@ -374,7 +375,7 @@ public class DishHeaderView extends LinearLayout {
             vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
-            vipView.setDredgeVipText(common.get("button"));
+            vipView.setDredgeVipText(common.get("button1"));
             vipView.setDredgeVipClick(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -394,13 +395,14 @@ public class DishHeaderView extends LinearLayout {
                 @Override
                 public void onProgressUpdate(long current, long duration) {
                     int currentS = Math.round(current/1000f);
+                    int durationS = Math.round(duration/1000f);
                     if(isHaspause){
                         VDVideoViewController.getInstance(context).setSeekPause(true);
                         mVideoPlayerController.onPause();
                         mVideoPlayerController.onResume();
                         return;
                     }
-                    if(currentS > limitTime && !isContinue){
+                    if((currentS > limitTime || limitTime > durationS)&& !isContinue){
                         currentTime = current;
                         dredgeVipLayout.setVisibility(VISIBLE);
                         VDVideoViewController.getInstance(context).setSeekPause(true);
@@ -413,13 +415,14 @@ public class DishHeaderView extends LinearLayout {
                 @Override
                 public void onDragProgess(long current, long duration) {
                     int currentS = Math.round(current/1000f);
+                    int durationS = Math.round(duration/1000f);
                     if(isHaspause){
                         VDVideoViewController.getInstance(context).setSeekPause(true);
                         mVideoPlayerController.onPause();
                         mVideoPlayerController.onResume();
                         return;
                     }
-                    if(currentS > limitTime && !isContinue){
+                    if((currentS > limitTime || limitTime > durationS) && !isContinue){
                         currentTime = current;
                         dredgeVipLayout.setVisibility(VISIBLE);
                         VDVideoViewController.getInstance(context).setSeekPause(true);

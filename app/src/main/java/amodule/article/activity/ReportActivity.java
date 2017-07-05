@@ -79,7 +79,7 @@ public class ReportActivity extends BaseActivity {
         if (!LoginManager.isLogin()
                 || (!TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                         && !TextUtils.isEmpty(mUserCode)
-                        && !mUserCode.equals(LoginManager.userInfo.get("code")))) {
+                        && mUserCode.equals(LoginManager.userInfo.get("code")))) {
             finish();
             return;
         }

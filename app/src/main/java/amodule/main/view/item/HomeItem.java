@@ -212,10 +212,12 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
             }
             if (mTransferUrl.indexOf("fullScreen=2") > -1) {//我的香豆、我的会员页面
+                String params= mTransferUrl.substring(mTransferUrl.indexOf("?")+1,mTransferUrl.length());
+                Map<String,String> map = StringManager.getMapByString(params,"&","=");
                 Intent it = new Intent(XHActivityManager.getInstance().getCurrentActivity(), FullScreenWeb.class);
                 it.putExtra("url",mTransferUrl);
-                it.putExtra("code", mDataMap.get("code"));
-                it.putExtra("data_type", mDataMap.get("type"));
+                it.putExtra("code", map.containsKey("code") ? map.get("code") : "");
+                it.putExtra("data_type", map.get("data_type"));
                 it.putExtra("module_type", isTopTypeView()?"top_info":"info");
                 XHActivityManager.getInstance().getCurrentActivity().startActivity(it);
                 return true;

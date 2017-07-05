@@ -298,7 +298,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                     if (listMap.get("isGourmet") != null){
                         boolean isGourmet = AppCommon.setUserTypeImage(Integer.valueOf(listMap.get("isGourmet")), iv_userType);
                         if(isGourmet){
-                            my_renzheng.setText("已认证");
+                            my_renzheng.setText("已经认证");
                             my_renzheng.setSideColor(getResources().getColor(R.color.comment_color));
                             my_renzheng.setTextColor(getResources().getColor(R.color.comment_color));
                         }else{

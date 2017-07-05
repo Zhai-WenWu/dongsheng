@@ -313,7 +313,6 @@ public class DishActivityViewControl {
         Map<String,String> commonPermission = StringManager.getFirstMap(permissionMap.get("video"));
         commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
         final String url = commonPermission.get("url");
-        String buttonStr = commonPermission.get("button");
         if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
                 ){
             hasPermission = true;
@@ -326,6 +325,7 @@ public class DishActivityViewControl {
             }
         }else{
             hasPermission = false;
+            String buttonStr = commonPermission.get("button2");
             if(!TextUtils.isEmpty(buttonStr))
                 dredgeVipImmediately.setText(buttonStr);
             dregdeVipLayout.setOnClickListener(new View.OnClickListener() {
