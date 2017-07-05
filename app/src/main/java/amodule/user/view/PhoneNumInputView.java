@@ -23,15 +23,11 @@ import com.xiangha.R;
 
 public class PhoneNumInputView extends RelativeLayout implements View.OnClickListener {
 
-
-    private final Context context;
     private final LinearLayout ll_country_id;
     private final ImageView iv_del;
     private TextView user_contryId;
     private EditText user_phone_number;
     private PhoneNumInputViewCallback callback;
-    public static final String ZONE_CODE = "zoneCode";
-    public static final String PHONE_NUM = "phoneNum";
 
     public PhoneNumInputView(Context context) {
         this(context, null);
@@ -43,7 +39,6 @@ public class PhoneNumInputView extends RelativeLayout implements View.OnClickLis
 
     public PhoneNumInputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.context = context;
         LayoutInflater.from(context).inflate(R.layout.a_login_phone_info, this, true);
         user_contryId = (TextView) findViewById(R.id.user_contryId);
         user_phone_number = (EditText) findViewById(R.id.user_phone_number);
