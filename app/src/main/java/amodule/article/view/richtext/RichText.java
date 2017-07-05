@@ -30,9 +30,11 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.text.style.AlignmentSpan;
 import android.text.style.BulletSpan;
 import android.text.style.CharacterStyle;
+import android.text.style.ClickableSpan;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -40,6 +42,7 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -129,6 +132,7 @@ public class RichText extends EditText implements TextWatcher {
         if (historyEnable && historySize <= 0) {
             throw new IllegalArgumentException("historySize must > 0");
         }
+        setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
@@ -958,7 +962,7 @@ public class RichText extends EditText implements TextWatcher {
         }
     }
 
-    protected void linkValid(String link, int start, int end) {
+    protected void linkValid(final String link, final int start, final int end) {
         if (start >= end) {
             return;
         }
@@ -967,6 +971,15 @@ public class RichText extends EditText implements TextWatcher {
 
         linkInvalid(start, end);
         getEditableText().setSpan(new RichURLSpan(link, linkColor, linkUnderline), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getEditableText().setSpan(new RichClickSpan(new RichClickSpan.ClickCallback() {
+            @Override
+            public void onClick(View widget) {
+                int textLength = getText().subSequence(start, end).toString().length();
+                onSelectContainsType.onSelectLink(link, getText().subSequence(start, end).toString());
+                setSelection(end + 1 <= textLength ? end + 1 : textLength);
+            }
+        }), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         setSelection(end);
     }
 
@@ -975,11 +988,8 @@ public class RichText extends EditText implements TextWatcher {
      * @param desc
      */
     public void addLinkMapToArray(@NonNull String link, @NonNull String desc) {
-        Log.i("tzy","addLinkMapToArray");
         for(Map<String,String> map:linkMapArray){
-            Log.i("tzy","addLinkMapToArray for");
             if(map.get(KEY_URL).equals(link) && map.get(KEY_TITLE).equals(desc)){
-                Log.i("tzy","containsValue");
                 return;
             }
         }
@@ -995,6 +1005,10 @@ public class RichText extends EditText implements TextWatcher {
             return;
         }
 
+        ClickableSpan[] clickspans = getEditableText().getSpans(start, end, ClickableSpan.class);
+        for (ClickableSpan span : clickspans) {
+            getEditableText().removeSpan(span);
+        }
         URLSpan[] spans = getEditableText().getSpans(start, end, URLSpan.class);
         for (URLSpan span : spans) {
             getEditableText().removeSpan(span);
@@ -1301,43 +1315,43 @@ public class RichText extends EditText implements TextWatcher {
             onSelectContainsType.onSelecrCenter(contains(FORMAT_CENTER));
         int textLength = text.length();
 
-        if (selStart >= 0 && selStart <= textLength) {
-            //遍历link的array
-            for (int index = 0; index < linkMapArray.size(); index++) {
-                Map<String, String> linkMap = linkMapArray.get(index);
-                String desc = linkMap.get(KEY_TITLE);
-                String url = linkMap.get(KEY_URL);
-                String textTemp = text;
-                int defatultStart = 0;
-                while (textTemp.indexOf(desc) >= 0 && defatultStart < text.length()){
-                    int startIndex = textTemp.indexOf(desc);
-                    int endIndesc = startIndex + desc.length();
-                    Log.i("tzy", "desc = " + desc);
-                    Log.i("tzy", "selStart = " + selStart + " ; selEnd = " + selEnd);
-
-                    int realStartIndex = startIndex + defatultStart;
-                    int realEndIndex = endIndesc + defatultStart;
-                    Log.i("tzy", "realStartIndex = " + realStartIndex);
-                    Log.i("tzy", "realEndIndex = " + realEndIndex);
-                    //判断当前光标位置
-                    if (selStart == selEnd){
-                        if(selStart > realStartIndex && selStart < realEndIndex
-                                && selEnd > realStartIndex && selEnd < realEndIndex) {
-                            if(containsSpan(realStartIndex,realEndIndex,textLength,desc,url))
-                                return;
-                        }
-                    } else if(selStart != selEnd){
-                        if(selStart >= realStartIndex && selStart <= realEndIndex
-                                && selEnd >= realStartIndex && selEnd <= realEndIndex) {
-                            if(containsSpan(realStartIndex,realEndIndex,textLength,desc,url))
-                                return;
-                        }
-                    }
-                    textTemp = textTemp.substring(startIndex + desc.length() , textTemp.length());
-                    defatultStart += startIndex + desc.length();
-                }
-            }
-        }
+//        if (selStart >= 0 && selStart <= textLength) {
+//            //遍历link的array
+//            for (int index = 0; index < linkMapArray.size(); index++) {
+//                Map<String, String> linkMap = linkMapArray.get(index);
+//                String desc = linkMap.get(KEY_TITLE);
+//                String url = linkMap.get(KEY_URL);
+//                String textTemp = text;
+//                int defatultStart = 0;
+//                while (textTemp.indexOf(desc) >= 0 && defatultStart < text.length()){
+//                    int startIndex = textTemp.indexOf(desc);
+//                    int endIndesc = startIndex + desc.length();
+//                    Log.i("tzy", "desc = " + desc);
+//                    Log.i("tzy", "selStart = " + selStart + " ; selEnd = " + selEnd);
+//
+//                    int realStartIndex = startIndex + defatultStart;
+//                    int realEndIndex = endIndesc + defatultStart;
+//                    Log.i("tzy", "realStartIndex = " + realStartIndex);
+//                    Log.i("tzy", "realEndIndex = " + realEndIndex);
+//                    //判断当前光标位置
+//                    if (selStart == selEnd){
+//                        if(selStart > realStartIndex && selStart < realEndIndex
+//                                && selEnd > realStartIndex && selEnd < realEndIndex) {
+//                            if(containsSpan(realStartIndex,realEndIndex,textLength,desc,url))
+//                                return;
+//                        }
+//                    } else if(selStart != selEnd){
+//                        if(selStart >= realStartIndex && selStart <= realEndIndex
+//                                && selEnd >= realStartIndex && selEnd <= realEndIndex) {
+//                            if(containsSpan(realStartIndex,realEndIndex,textLength,desc,url))
+//                                return;
+//                        }
+//                    }
+//                    textTemp = textTemp.substring(startIndex + desc.length() , textTemp.length());
+//                    defatultStart += startIndex + desc.length();
+//                }
+//            }
+//        }
     }
 
     private boolean containsSpan(int startIndex,int endIndex,int textLength,String desc,String url){

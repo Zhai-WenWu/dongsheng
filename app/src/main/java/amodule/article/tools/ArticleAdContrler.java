@@ -1,5 +1,6 @@
 package amodule.article.tools;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -14,6 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import org.json.JSONException;
@@ -74,7 +78,7 @@ public class ArticleAdContrler {
         if (obj != null) {
             Map<String, String> data = (Map<String, String>) obj;
             data.put("adFollowPosition", String.valueOf(adPositionInList[index]));
-            if(adInsteredArray.get(index) == null){
+            if (adInsteredArray.get(index) == null) {
                 adRcomDataArray.add(data);
             }
             adInsteredArray.append(index, false);
@@ -148,17 +152,30 @@ public class ArticleAdContrler {
         String title = dataMap.get("title");
         params.topMargin = adView.getResources().getDimensionPixelSize(TextUtils.isEmpty(title) ? R.dimen.dp_15 : R.dimen.dp_6);
         //加载图片
-        ImageView imageView = (ImageView) adView.findViewById(R.id.img);
-        int width = ToolsDevice.getWindowPx(XHActivityManager.getInstance().getCurrentActivity()).widthPixels - Tools.getDimen(XHActivityManager.getInstance().getCurrentActivity(), R.dimen.dp_20) * 2;
-        int height = width * 312 / 670;//312 670
-        imageView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
-        Glide.with(XHActivityManager.getInstance().getCurrentActivity()).load(dataMap.get("imgUrl")).centerCrop().into(imageView);
+        final ImageView imageView = (ImageView) adView.findViewById(R.id.img);
+        final int width = ToolsDevice.getWindowPx(XHActivityManager.getInstance().getCurrentActivity()).widthPixels - Tools.getDimen(XHActivityManager.getInstance().getCurrentActivity(), R.dimen.dp_20) * 2;
+        Glide.with(XHActivityManager.getInstance().getCurrentActivity())
+                .load(dataMap.get("imgUrl"))
+                .asBitmap()
+                .listener(new RequestListener<String, Bitmap>() {
+                    @Override
+                    public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
+                        int height = width * bitmap.getHeight() / bitmap.getWidth();
+                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+                        return false;
+                    }
+                }).into(imageView);
         //加载title
         if (TextUtils.isEmpty(title)) {
             titleTv.setVisibility(View.GONE);
             nameTv.setVisibility(View.GONE);
         } else {
-            if(!TextUtils.isEmpty(dataMap.get("desc")))
+            if (!TextUtils.isEmpty(dataMap.get("desc")))
                 titleTv.setText(dataMap.get("desc"));
             titleTv.setVisibility(View.VISIBLE);
             nameTv.setText(title);
@@ -195,18 +212,18 @@ public class ArticleAdContrler {
                 //获取广告map
                 Map<String, String> adMap = getAdMap(adRcomDataArray.get(adIndex), adIndex);
                 //遍历原始数据体插入数据
-                for (int oriDataIndex = 0, recIndex = 0,allDataSize = allDataListMap.size(); oriDataIndex < allDataSize; oriDataIndex++) {
-                    Map<String,String> oriData = allDataListMap.get(oriDataIndex);
-                    if(String.valueOf(Type_recommed).equals(oriData.get(TYPE_KEY))
-                            && "1".equals(oriData.get("isAd"))){
+                for (int oriDataIndex = 0, recIndex = 0, allDataSize = allDataListMap.size(); oriDataIndex < allDataSize; oriDataIndex++) {
+                    Map<String, String> oriData = allDataListMap.get(oriDataIndex);
+                    if (String.valueOf(Type_recommed).equals(oriData.get(TYPE_KEY))
+                            && "1".equals(oriData.get("isAd"))) {
                         int adFollowPosiont = Integer.parseInt(adMap.get("adFollowPosition"));
                         int adInsertPosition = oriDataIndex + 1;
-                        if(adFollowPosiont == recIndex){
-                            if(allDataListMap.size() > adInsertPosition){
-                                allDataListMap.add(adInsertPosition,adMap);
+                        if (adFollowPosiont == recIndex) {
+                            if (allDataListMap.size() > adInsertPosition) {
+                                allDataListMap.add(adInsertPosition, adMap);
                                 adInsteredArray.put(adIndex, true);
                                 break;
-                            }else if(allDataListMap.size() == adInsertPosition){
+                            } else if (allDataListMap.size() == adInsertPosition) {
                                 allDataListMap.add(adMap);
                                 adInsteredArray.put(adIndex, true);
                                 break;
