@@ -3,6 +3,7 @@ package amodule.user.activity.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +72,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
                 reqIdentifySpeecha(phoneNum,new BaseLoginCallback(){
                     @Override
                     public void onSuccess() {
+                        Log.i("FRJ","reqIdentifySpeecha() onSuccess()");
                         loadManager.hideProgressBar();
                         speechaIdentifyInputView.setState(false);
                         login_identify.setOnBtnClickState(false);
@@ -79,6 +81,7 @@ public class LoginByPhoneIndentify extends BaseLoginActivity implements View.OnC
 
                     @Override
                     public void onFalse(int flag) {
+                        Log.i("FRJ","reqIdentifySpeecha() onFalse()");
                         loadManager.hideProgressBar();
                     }
                 });
