@@ -438,7 +438,8 @@ public class UploadListControl {
                     };
                     Log.i("articleUpload", "uploadLastInfo() params:" + MapToString(itemData.getUploadMsg(), "&", "="));
                     if (path.contains("main7")) {
-                        ReqEncyptInternet.in().doEncypt(path, MapToString(itemData.getUploadMsg(), "&", "="), internetCallback);
+                        Log.i("articleUpload", "uploadLastInfo() doEncypt()");
+                        ReqEncyptInternet.in().doEncypt(path, itemData.getUploadMsg(), internetCallback);
                     } else {
                         ReqInternet.in().doPost(path, itemData.getUploadMsg(), internetCallback);
                     }

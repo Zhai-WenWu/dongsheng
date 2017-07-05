@@ -2,13 +2,14 @@ package amodule.article.db;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.tools.StringManager;
@@ -201,23 +202,20 @@ public class UploadArticleData {
     }
 
     public void upload(String url,InternetCallback callback){
-        StringBuffer uploadTextData = new StringBuffer();
-        uploadTextData.append("title=");
-        uploadTextData.append(getTitle());
-        uploadTextData.append("&classCode=");
-        uploadTextData.append(getClassCode());
-        uploadTextData.append("&content=");
-        try {
-            uploadTextData.append(Uri.encode(getContent(), HTTP.UTF_8));
+        Log.i("articleUpload","upload()  title:" + getTitle());
+        LinkedHashMap map = new LinkedHashMap();
+//        map.put("title",getTitle());
+        map.put("title", Uri.encode(getTitle(), HTTP.UTF_8));
+        map.put("classCode",getClassCode());
+        try{
+//            map.put("content",getContent());
+            map.put("content", Uri.encode(getContent(), HTTP.UTF_8));
         }catch (Exception e){
             e.printStackTrace();
         }
-        uploadTextData.append("&isOriginal=");
-        uploadTextData.append(String.valueOf(getIsOriginal()));
-        uploadTextData.append("&repAddress=");
-        uploadTextData.append(getRepAddress());
-        uploadTextData.append("&code=");
-        uploadTextData.append(getCode());
-        ReqEncyptInternet.in().doEncypt(url, uploadTextData.toString(), callback);
+        map.put("isOriginal",String.valueOf(getIsOriginal()));
+        map.put("repAddress",getRepAddress());
+        map.put("code",getCode());
+        ReqEncyptInternet.in().doEncypt(url, map, callback);
     }
 }

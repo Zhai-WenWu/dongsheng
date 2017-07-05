@@ -345,13 +345,14 @@ public class BaseLoginActivity extends BaseActivity {
                     new InternetCallback(this) {
                         @Override
                         public void loaded(int flag, String s, Object data) {
-                            if (ReqInternet.REQ_OK_STRING >= flag) {
+                            if (flag >= ReqInternet.REQ_OK_STRING) {
                                 Map<String, String> map = StringManager.getFirstMap(data);
                                 if (TextUtils.isEmpty(map.get("errorCode"))) {
                                     callback.onSuccess();
                                     return;
                                 }
                             }
+                            Tools.showToast(BaseLoginActivity.this.getApplicationContext(),String.valueOf(data));
                             sendFalseRequest(data.toString(),"86",phoneNum);
                             callback.onFalse(flag);
                         }
