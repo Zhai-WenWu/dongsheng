@@ -88,8 +88,6 @@ public class DishFootView extends LinearLayout {
     }
 
     public void reset(){
-        foot_menu.removeAllViews();
-        foot_menu.addView(explainView);
         foot_linear.removeAllViews();
         foot_commend.removeAllViews();
     }
