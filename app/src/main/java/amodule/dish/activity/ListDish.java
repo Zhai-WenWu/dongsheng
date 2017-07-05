@@ -145,7 +145,6 @@ public class ListDish extends BaseActivity {
             detailPermissionMap.clear();
             permissionMap.clear();
             arrayList.clear();
-            xhWebView.setVisibility(View.GONE);
             loadData();
         }
     }
@@ -346,6 +345,7 @@ public class ListDish extends BaseActivity {
                 // 否则显示结果
                 else
                     findViewById(R.id.dish_menu_listview).setVisibility(View.VISIBLE);
+                xhWebView.setVisibility(View.GONE);
             }
         });
     }
