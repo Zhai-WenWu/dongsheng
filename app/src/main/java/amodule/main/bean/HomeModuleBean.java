@@ -13,7 +13,16 @@ public class HomeModuleBean implements Serializable{
     private int position;//当前位置
     private int twoTypeIndex=0;//当前位置是在0
     private String twoData;//二级数据
-    private String webUrl;//是否为站外链接 1：否 2：是
+    private String webUrl;//加载页面的链接
+    private String isSelf;//是否为站外链接 1：否 2：是
+
+    public void setIsSelf(String isSelf) {
+        this.isSelf = isSelf;
+    }
+
+    public String getIsSelf() {
+        return isSelf;
+    }
 
     public String getWebUrl() {
         return webUrl;

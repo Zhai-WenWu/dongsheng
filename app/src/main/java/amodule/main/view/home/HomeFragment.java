@@ -340,7 +340,7 @@ public class HomeFragment extends BaseHomeFragment{
                 });
         }
         //处理推荐的置顶数据
-        if(homeModuleBean.getType().equals(MainHome.recommedType)) {
+        if(MainHome.recommedType.equals(homeModuleBean.getType())) {
             String url = StringManager.API_RECOMMEND_TOP;
             ReqEncyptInternet.in().doEncyptAEC(url, "", new InternetCallback(mActivity) {
                 @Override

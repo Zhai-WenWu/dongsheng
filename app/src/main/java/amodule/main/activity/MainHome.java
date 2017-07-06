@@ -256,6 +256,7 @@ public class MainHome extends MainBaseActivity {
             bean.setTitle(listModule.get(i).get("title"));
             bean.setType(listModule.get(i).get("type"));
             bean.setWebUrl(listModule.get(i).get("webUrl"));
+            bean.setIsSelf(listModule.get(i).get("isSelf"));
             String level = listModule.get(i).get("level");
             if (!TextUtils.isEmpty(level)) {
                 bean.setTwoData(level);//设置二级数据内容

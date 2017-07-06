@@ -35,6 +35,7 @@ public class BaseHomeFragment extends Fragment {
     /** 保存板块信息的key */
     protected static final String MODULEDATA = "moduleData";
     private MainBaseActivity mActivity;
+    private WebviewManager mWebViewManager;
     private LoadManager mLoadManager;
     private HomeModuleBean mModuleBean;
     public XHWebView mWebview;
@@ -98,22 +99,24 @@ public class BaseHomeFragment extends Fragment {
     }
 
     private void initView() {
-        WebviewManager manager = new WebviewManager(mActivity, mLoadManager, false);
-        manager.setOpenFlag(WebviewManager.OPEN_SELF);
-        mWebview = manager.createWebView(R.id.XHWebview);
-        manager.setJSObj(mWebview, new JsAppCommon(mActivity, mWebview, mLoadManager,null));
-        Map<String,String> header= MallReqInternet.in().getHeader(mActivity);
-        String cookieKey= MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
-        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-        String[] cookie = cookieStr.split(";");
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.setAcceptCookie(true);
-        for (int i = 0; i < cookie.length; i++) {
-            if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
-            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
-            cookieManager.setCookie(cookieKey, cookie[i]);
+        mWebViewManager = new WebviewManager(mActivity, mLoadManager, false);
+        mWebview = mWebViewManager.createWebView(R.id.XHWebview);
+        mWebViewManager.setJSObj(mWebview, new JsAppCommon(mActivity, mWebview, mLoadManager,null));
+        if (mModuleBean != null && "2".equals(mModuleBean.getIsSelf())) {
+            Map<String,String> header= MallReqInternet.in().getHeader(mActivity);
+            String cookieKey= MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
+            String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+            String[] cookie = cookieStr.split(";");
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            for (int i = 0; i < cookie.length; i++) {
+                if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
+                LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
+                cookieManager.setCookie(cookieKey, cookie[i]);
+            }
+            CookieSyncManager.getInstance().sync();
         }
-        CookieSyncManager.getInstance().sync();
+        mWebview = new XHWebView(mActivity);
         mRootView.addView(mWebview, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
     }
 
@@ -132,9 +135,11 @@ public class BaseHomeFragment extends Fragment {
     public void loadWebData(boolean isRefresh) {
         if (mModuleBean == null)
             return;
+        if (!"2".equals(mModuleBean.getIsSelf()) && mWebViewManager != null) {
+            mWebViewManager.setOpenFlag(WebviewManager.OPEN_SELF);
+        }
         String webUrl = mModuleBean.getWebUrl();
         if (TextUtils.isEmpty(webUrl))
-
             return;
         if (isRefresh)
             mWebview.setScrollY(0);
