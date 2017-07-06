@@ -281,7 +281,6 @@ public class WelcomeDialog extends Dialog {
         findViewById(R.id.image).setVisibility(View.GONE);
         mADLayout.startAnimation(alphaAnimation);
 
-        mADLayout.setVisibility(View.VISIBLE);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
