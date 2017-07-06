@@ -438,10 +438,14 @@ public class ArticleDetailActivity extends BaseActivity {
             public void loaded(int flag, String url, Object object) {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
+                //没有数据直接退出
+                if(TextUtils.isEmpty((String) object)){
+                    ArticleDetailActivity.this.finish();
+                    return;
+                }
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysArticleData(onlyUser, StringManager.getFirstMap(object));
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 if (!onlyUser)
                     requestForumData(false);//请求
                 linearLayoutThree.setVisibility(View.VISIBLE);
@@ -455,6 +459,7 @@ public class ArticleDetailActivity extends BaseActivity {
      * @param mapArticle
      */
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
+        Log.i("tzy","mapArticle = " + mapArticle.toString());
         if (mapArticle.isEmpty()) return;
 
         if (headerView == null)

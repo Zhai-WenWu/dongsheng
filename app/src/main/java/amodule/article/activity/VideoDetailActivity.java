@@ -531,6 +531,11 @@ public class VideoDetailActivity extends BaseActivity {
                     loadManager.hideProgressBar();
                     return;
                 }
+                //没有数据直接退出
+                if(TextUtils.isEmpty((String) object)){
+                    VideoDetailActivity.this.finish();
+                    return;
+                }
                 if (!onlyUser)
                     resetData();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
