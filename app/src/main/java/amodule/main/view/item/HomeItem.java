@@ -164,20 +164,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                         v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                     } else {
                         v.setScaleType(mScaleType);
-                        if (mDataMap.containsKey("style") && String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))) {
-                            mImgWidth = getResources().getDimensionPixelSize(R.dimen.dp_110);
-                            mImgHeight = getResources().getDimensionPixelSize(R.dimen.dp_72_5);
-                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, mImgWidth, mImgHeight, true);
-                            v.setImageBitmap(newBitmap);
-                        } else if (mDataMap.containsKey("style") && String.valueOf(AdapterListView.type_threeImage).equals(mDataMap.get("style"))) {
-                            int screenWidth = ToolsDevice.getWindowPx(getContext()).widthPixels;
-                            mImgWidth = (screenWidth - getResources().getDimensionPixelSize(R.dimen.dp_43)) / 3;
-                            mImgHeight = getResources().getDimensionPixelSize(R.dimen.dp_87_5);
-                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, mImgWidth, mImgHeight, true);
-                            v.setImageBitmap(newBitmap);
-                        } else {
-                            UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
-                        }
+                        UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
                     }
                 }
             }
