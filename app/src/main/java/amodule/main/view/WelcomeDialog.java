@@ -272,6 +272,9 @@ public class WelcomeDialog extends Dialog {
                 });
     }
     private void showSkipContainer(){
+        textLead.setVisibility(View.VISIBLE);
+        textSkip.setVisibility(View.VISIBLE);
+        mADLayout.setVisibility(View.VISIBLE);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration(500);
         alphaAnimation.setFillAfter(true);
