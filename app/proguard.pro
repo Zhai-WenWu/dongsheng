@@ -179,7 +179,11 @@
 -ignorewarnings
 #避免警告 end
 # mob短信 start
--keep class cn.smssdk.** { *; }
+-keep class cn.smssdk.**{*;}
+-keep class com.mob.**{*;}
+
+-dontwarn com.mob.**
+-dontwarn cn.smssdk.**
 # mob短信 end
 #支付宝混淆 start
 -keep class com.alipay.android.app.IAlixPay{*;}

@@ -371,12 +371,18 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 
 	/**
 	 * 选择图片操作
-	 * 
-	 * @param image
+	 * @param adapterView
+	 * @param position
+	 * @param mode
+	 * @param view
 	 */
 	private void selectImageFromGrid(AdapterView<?> adapterView, int position, int mode, View view) {
 		Image image = (Image) adapterView.getAdapter().getItem(position);
 		if (image != null) {
+			if (image.path != null && image.path.endsWith(".webp")) {
+				Tools.showToast(getApplicationContext(), "不支持webp格式");
+				return;
+			}
 			// 多选模式
 			if (mode == ImageSelectorConstant.MODE_MULTI) {
 				Intent intent = new Intent(this, ImgWallActivity.class);
@@ -425,7 +431,6 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
 	}
 
@@ -605,7 +610,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		// 退出
 		case R.id.btn_back:
 			setResult(RESULT_CANCELED);
-			finish();
+			onBackPressed();
 			break;
 		// 提交按钮
 		case R.id.commit:

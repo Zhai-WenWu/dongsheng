@@ -13,6 +13,15 @@ public class HomeModuleBean implements Serializable{
     private int position;//当前位置
     private int twoTypeIndex=0;//当前位置是在0
     private String twoData;//二级数据
+    private String webUrl;//是否为站外链接 1：否 2：是
+
+    public String getWebUrl() {
+        return webUrl;
+    }
+
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
+    }
 
     public String getTitle() {
         return title;

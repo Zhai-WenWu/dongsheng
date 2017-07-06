@@ -52,7 +52,7 @@
 			Pocket         http://getpocket.com/developer/apps/new
     -->
     
-    <ShareSDK 
+    <ShareSDK
         AppKey = "a68ee99eb10c"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->

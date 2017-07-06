@@ -220,7 +220,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			// 如果是回复贴则
 			if (SubjectData.TYPE_REPLY.equals(uploadType)) {
 				upData.setCode(bundle.getString("subjectCode"));
-				//TODO 设置subjectData对象title不可修改
+				//设置subjectData对象title不可修改
 				upData.setTitleCanModify(false);
 				findViewById(R.id.ll_location).setVisibility(View.GONE);
 				mLocationSys.mLocationClient.stop();
@@ -354,7 +354,6 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		//TODO
 		switch(v.getId()){
 			case R.id.leftImgBtn:
 				UploadSubjectNew.this.onBackPressed();
@@ -385,7 +384,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	 * 点击发布后和真正发布前所需要做的事情
 	 */
 	private void chooseNextStep(boolean isHasCid){
-		//TODO 获取数据
+		//获取数据
 		SubjectData subjectData = upSubContent.getData();
 		subjectData.setDishCode(mDishCode);
 		//只有发贴才存草稿
@@ -469,7 +468,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			return "同意原创内容发布协议后才能提交哦";
 		}
 		if(!LoginManager.isLogin()){
-			XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", "没登陆", 0);
+			XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", "没登录", 0);
 			Intent intent = new Intent(this, LoginByAccout.class);
 			startActivity(intent);
 			return "请登录";
@@ -507,7 +506,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 				if(mChooseCid != null && !defaultChooseCid.equals(mChooseCid)){
 					subjectData.setCid(mChooseCid);
 				}
-				//TODO 添加位置信息
+				//添加位置信息
 				subjectData.setLocation(mLocationControl.getLocationJson());
 				subjectData.setIsLocation(mLocationControl.getIsLocation() ? "2" : "1");
 			}

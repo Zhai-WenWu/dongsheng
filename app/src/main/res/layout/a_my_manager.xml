@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_10"
+            android:minHeight="@dimen/dp_30"
             android:layout_toLeftOf="@+id/otherUser_login"
             android:background="@drawable/bg_round_f5"
             android:hint="特殊情况使用UserCode模拟登录"

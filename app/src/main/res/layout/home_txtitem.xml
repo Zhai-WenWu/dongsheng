@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20"
-    android:background="@color/transparent">
+    android:background="@color/transparent_fe">
 
     <View
         android:id="@+id/line_top"
@@ -55,6 +55,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_9"
             android:maxLines="2"
             android:ellipsize="end"
             android:textSize="@dimen/sp_17"
@@ -63,12 +64,25 @@
             android:textColor="@color/c_black_text"
             android:visibility="visible"/>
 
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginBottom="@dimen/dp_6"
+            android:layout_alignParentLeft="true"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="#666666"
+            android:textSize="@dimen/sp_14"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/user_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="@dimen/dp_13"
+            android:layout_below="@+id/desc"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             android:gravity="center_vertical">
@@ -109,24 +123,14 @@
                     android:visibility="visible" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/num1"
+            <LinearLayout
+                android:id="@+id/numInfoLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dp_14"
-                android:textColor="#b5b4b4"
-                android:textSize="@dimen/sp_11"
-                android:text="七年老鸭"
-                android:visibility="visible" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/num2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#b5b4b4"
-                android:textSize="@dimen/sp_11"
-                android:text="七年老鸭"
-                android:visibility="visible" />
+            </LinearLayout>
 
         </LinearLayout>
     </RelativeLayout>
@@ -145,7 +149,7 @@
             android:id="@+id/img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
+            android:background="@color/transparent_fe"
             android:visibility="visible"/>
 
         <View
@@ -154,6 +158,17 @@
             android:layout_height="match_parent"
             android:background="#19ffffff"
             android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/vip"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_16"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_3"
+            android:layout_marginTop="@dimen/dp_3"
+            android:src="@drawable/vip"
+            android:scaleType="fitXY"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/ad_tag"

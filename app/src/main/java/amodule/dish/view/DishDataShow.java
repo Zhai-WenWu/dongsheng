@@ -35,6 +35,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 public class DishDataShow extends ItemBaseView {
     private LinearLayout linear_data;
     private LinearLayout recommendAd_linear;
+    private TableLayout zhuLiaoTab;
     private Activity activity;
     public DishDataShow(Context context) {
         super(context, R.layout.view_dish_data_show);
@@ -55,13 +56,19 @@ public class DishDataShow extends ItemBaseView {
         recommendAd_linear= (LinearLayout) findViewById(R.id.recommendAd_linear);
     }
 
+    public void reset(){
+        if(zhuLiaoTab != null && zhuLiaoTab.getChildCount() > 0){
+            zhuLiaoTab.removeAllViews();
+        }
+    }
 
     /**
      * 设置数据
      *
      * @param lists
+     * @param permissionMap
      */
-    public void setData(ArrayList<Map<String, String>> lists, final Activity activity) {
+    public void setData(ArrayList<Map<String, String>> lists, final Activity activity, Map<String, String> permissionMap) {
         this.activity= activity;
 //        view_dish_header_data
         //主料
@@ -72,7 +79,7 @@ public class DishDataShow extends ItemBaseView {
             zhuList.addAll(zhuList_1);
         }
             View view = LayoutInflater.from(context).inflate(R.layout.view_dish_header_data, null);
-            TableLayout zhuLiaoTab = (TableLayout) view.findViewById(R.id.zhu_liao_tab);
+            zhuLiaoTab = (TableLayout) view.findViewById(R.id.zhu_liao_tab);
             TextView zhu_tv = (TextView) view.findViewById(R.id.zhu_tv);
             zhu_tv.setText("用料");
 

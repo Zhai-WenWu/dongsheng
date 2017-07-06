@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -37,6 +38,7 @@ public class EditTextView extends BaseView {
 
     boolean isDialogShow = false;
     private RichText mRichText;
+    boolean needRefreshCenter = false;
 
     private OnFocusChangeCallback mOnFocusChangeCallback;
 
@@ -89,7 +91,12 @@ public class EditTextView extends BaseView {
         mRichText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                needRefreshCenter = after == 0
+                            && start  >= 0
+                            && start + 1< s.toString().length()
+                            && '\n' == s.charAt(start);
+                if(needRefreshCenter)
+                    mRichText.centerFormat(mRichText.previousLineContainCenter());
             }
 
             @Override
@@ -99,9 +106,23 @@ public class EditTextView extends BaseView {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if (onAfterTextChanged != null) {
                     onAfterTextChanged.afterTextChanged(s);
                 }
+            }
+        });
+        mRichText.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                switch (keyCode){
+                    case KeyEvent.KEYCODE_DEL:
+                        if(mRichText.getSelectionStart() == 0){
+                            mRichText.centerFormat(false);
+                        }
+                        break;
+                }
+                return false;
             }
         });
         mRichText.setOnSelectTypeCallback(new RichText.OnSelectContainsType() {
@@ -114,6 +135,12 @@ public class EditTextView extends BaseView {
             public void onSelectUnderline(boolean isSelected) {
                 if (onSelectUnderlineCallback != null)
                     onSelectUnderlineCallback.onSelectUnderline(isSelected);
+            }
+
+            @Override
+            public void onSelecrCenter(boolean isSelected) {
+                if (onSelectCenterCallback != null)
+                    onSelectCenterCallback.onSelectCenter(isSelected);
             }
 
             @Override
@@ -156,14 +183,16 @@ public class EditTextView extends BaseView {
             //正则处理html标签
             SpannableStringBuilder ssbuilder = new SpannableStringBuilder();
             ssbuilder.append(delHTMLTag(mRichText.getText()));
+            final int selecttionEnd = mRichText.getSelectionEnd();
             mRichText.setText(ssbuilder);
-            mRichText.setSelection(ssbuilder.length());
+            mRichText.setSelection(selecttionEnd < ssbuilder.length() ? selecttionEnd : ssbuilder.length());
             //拼接正式数据
             StringBuilder builder = new StringBuilder();
             builder.append("<p align=\"").append(isCenterHorizontal ? "center" : "left").append("\">")
-                    .append(TextUtils.isEmpty(mRichText.getText()) ? "<br>" : mRichText.toHtml())//.replaceAll("\"","\\\"")
-                    .append("</p>");
+                    .append(TextUtils.isEmpty(mRichText.getText()) ? "" : mRichText.toHtml())
+                    .append("<br></p>");
             Log.i("tzy", "edittext content = " + builder.toString());
+//            jsonObject.put("html", TextUtils.htmlEncode(builder.toString()));
             jsonObject.put("html", builder.toString());
             jsonObject.put("type", TEXT);
         } catch (JSONException e) {
@@ -255,9 +284,8 @@ public class EditTextView extends BaseView {
     }
 
     public void setupTextCenter() {
-        mRichText.setGravity(isCenterHorizontal ?
-                Gravity.TOP | Gravity.START : Gravity.CENTER_HORIZONTAL);
-        isCenterHorizontal = !isCenterHorizontal;
+        mRichText.centerFormat(!mRichText.contains(RichText.FORMAT_CENTER));
+//        mRichText.bullet(!mRichText.contains(RichText.FORMAT_BULLET));
     }
 
     public int getSelectionStart() {
@@ -293,6 +321,10 @@ public class EditTextView extends BaseView {
 
     public List<Map<String, String>> getLinkMapArray() {
         return mRichText.getLinkMapArray();
+    }
+
+    public void putLinkMapArray(List<Map<String, String>> urls){
+        mRichText.putLinkMapArray(urls);
     }
 
     public interface OnFocusChangeCallback {
@@ -352,13 +384,18 @@ public class EditTextView extends BaseView {
 
     public OnSelectBoldCallback onSelectBoldCallback;
     public OnSelectUnderlineCallback onSelectUnderlineCallback;
+    public OnSelectCenterCallback onSelectCenterCallback;
 
     public void setOnSelectBoldCallback(OnSelectBoldCallback onSelectBoldCallback) {
         this.onSelectBoldCallback = onSelectBoldCallback;
     }
 
-    public void setOnSelectUnderline(OnSelectUnderlineCallback onSelectUnderlineCallback) {
+    public void setOnSelectUnderlineCallback(OnSelectUnderlineCallback onSelectUnderlineCallback) {
         this.onSelectUnderlineCallback = onSelectUnderlineCallback;
+    }
+
+    public void setOnSelectCenterCallback(OnSelectCenterCallback onSelectCenterCallback) {
+        this.onSelectCenterCallback = onSelectCenterCallback;
     }
 
     public interface OnAfterTextChanged {
@@ -371,6 +408,10 @@ public class EditTextView extends BaseView {
 
     public interface OnSelectUnderlineCallback {
         public void onSelectUnderline(boolean isSelected);
+    }
+
+    public interface OnSelectCenterCallback{
+        public void onSelectCenter(boolean callback);
     }
 
 }

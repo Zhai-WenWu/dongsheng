@@ -43,14 +43,14 @@
                     android:id="@+id/rl_userPage"
                     android:layout_below="@+id/my_title_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_106"
+                    android:layout_height="@dimen/dp_100"
                     android:gravity="center_vertical">
 
                     <ImageView
                         android:id="@+id/myself_iv"
-                        android:layout_width="@dimen/dp_56"
-                        android:layout_height="@dimen/dp_56"
-                        android:layout_centerVertical="true"
+                        android:layout_width="@dimen/dp_57"
+                        android:layout_height="@dimen/dp_57"
+                        android:layout_marginTop="@dimen/dp_24.5"
                         android:layout_marginLeft="@dimen/dp_20"
                         android:background="@drawable/bg_user_round80_fff"
                         android:clickable="false"
@@ -125,40 +125,36 @@
 
                         <acore.widget.TagTextView
                             android:id="@+id/my_vip"
-                            android:layout_width="@dimen/dp_76"
-                            android:layout_height="@dimen/dp_22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_14"
                             android:layout_below="@+id/ll_myself"
-                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_7"
                             android:gravity="center"
-                            android:paddingBottom="@dimen/dp_1"
-                            android:paddingLeft="@dimen/dp_9"
-                            android:paddingRight="@dimen/dp_9"
-                            android:paddingTop="@dimen/dp_1"
+                            android:paddingLeft="@dimen/dp_4"
+                            android:paddingRight="@dimen/dp_4"
                             android:textColor="#FFFFFF"
-                            android:textSize="@dimen/sp_12"
+                            android:textSize="@dimen/sp_10"
                             app:backgroundColor="@android:color/transparent"
-                            app:radius="@dimen/dp_3"
+                            app:radius="@dimen/dp_1"
                             app:sideColor="#FFFFFF"
                             app:sideWidth="1px"
                             android:visibility="gone"
                             />
                         <acore.widget.TagTextView
                             android:id="@+id/my_renzheng"
-                            android:layout_width="@dimen/dp_60"
-                            android:layout_height="@dimen/dp_22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_14"
                             android:layout_below="@+id/ll_myself"
                             android:layout_toRightOf="@+id/my_vip"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_7"
+                            android:layout_marginLeft="@dimen/dp_7"
                             android:gravity="center"
-                            android:paddingBottom="@dimen/dp_1"
-                            android:paddingLeft="@dimen/dp_9"
-                            android:paddingRight="@dimen/dp_9"
-                            android:paddingTop="@dimen/dp_1"
+                            android:paddingLeft="@dimen/dp_4"
+                            android:paddingRight="@dimen/dp_4"
                             android:textColor="#FFFFFF"
-                            android:textSize="@dimen/sp_12"
+                            android:textSize="@dimen/sp_10"
                             app:backgroundColor="@android:color/transparent"
-                            app:radius="@dimen/dp_3"
+                            app:radius="@dimen/dp_1"
                             app:sideColor="#FFFFFF"
                             app:sideWidth="1px"
                             android:visibility="gone"
@@ -186,7 +182,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:clickable="false"
-                        android:src="@drawable/z_find_home_ico_go"/>
+                        android:src="@drawable/z_my_ico_go"/>
 
                     <TextView
                         android:id="@+id/goManagerInfo"
@@ -226,7 +222,7 @@
                             style="@style/myTabText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="美食贴"/>
+                            android:text="美食记"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -276,12 +272,12 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_63"
+                    android:layout_height="@dimen/dp_60"
                     android:layout_below="@+id/myself_ll_tab"
                     android:orientation="horizontal"
                     android:background="#fff"
                     >
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/ll_money"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -290,17 +286,37 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/my_money_hint"
+                            android:layout_width="@dimen/dp_6"
+                            android:layout_height="@dimen/dp_6"
+                            android:layout_toRightOf="@+id/my_money_text"
+                            android:layout_marginLeft="@dimen/dp_1"
+                            android:layout_marginTop="@dimen/dp_1"
+                            android:background="@drawable/btn_circle_red"
+                            android:clickable="false"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/sp_10"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/my_money_text"
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="钱包(香包)"/>
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:text="我的香豆"/>
+
                         <TextView
                             android:id="@+id/my_money"
                             style="@style/myTab2Title"
-                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/my_money_text"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:text="0"/>
-                    </LinearLayout>
+
+                    </RelativeLayout>
                     <LinearLayout
                         android:id="@+id/ll_score"
                         android:layout_width="0dp"
@@ -313,7 +329,7 @@
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="积分"/>
+                            android:text="我的积分"/>
                         <TextView
                             android:id="@+id/my_score"
                             style="@style/myTab2Title"
@@ -333,7 +349,7 @@
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="优惠券(张)"/>
+                            android:text="优惠券"/>
                         <TextView
                             android:id="@+id/my_coupon"
                             style="@style/myTab2Title"

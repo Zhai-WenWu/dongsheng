@@ -214,7 +214,6 @@ public abstract class MediaRecorderBase implements SurfaceHolder.Callback,Camera
 
             mParameters.setPreviewFrameRate(mFrameRate);
 //        mParameters.setPreviewFpsRange(5 * 1000, 20 * 1000);
-            //TODO
             Comparator comp = new SortComparator();
             //获取系统预览支持的尺寸集合
             List<Camera.Size> supportPreviewlist = mParameters.getSupportedPreviewSizes();

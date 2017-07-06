@@ -18,9 +18,7 @@ import xh.windowview.XhDialog;
 /**
  * Created by ：fei_teng on 2017/2/21 15:04.
  */
-
 public class LostSecret extends BaseLoginActivity {
-
 
     private TextView tv_title;
     private PhoneNumInputView phone_info;
@@ -35,7 +33,6 @@ public class LostSecret extends BaseLoginActivity {
         initTitle();
         ToolsDevice.modifyStateTextColor(this);
     }
-
 
     private void initView() {
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -60,13 +57,11 @@ public class LostSecret extends BaseLoginActivity {
             }
         });
 
-        btn_next_step.init("下一步", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("下一步", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
-                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
-                        "输入手机号页，点下一步");
-                String errorType = LoginCheck.checkPhoneFormatWell(LostSecret.this, phone_info.getZoneCode(),
-                        phone_info.getPhoneNum());
+                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码","输入手机号页，点下一步");
+                String errorType = LoginCheck.checkPhoneFormatWell(LostSecret.this, phone_info.getZoneCode(),phone_info.getPhoneNum());
 
                 if (LoginCheck.WELL_TYPE.equals(errorType)) {
                     checkPhoneRegisted(LostSecret.this, phone_info.getZoneCode(), phone_info.getPhoneNum(),
@@ -81,8 +76,8 @@ public class LostSecret extends BaseLoginActivity {
                                 public void onFalse(int flag) {
 
                                     final XhDialog xhDialog = new XhDialog(LostSecret.this);
-                                    xhDialog.setTitle("该手机号尚未注册，"+"\n是否注册新账号？")
-                                            .setCanselButton("不注册", new View.OnClickListener() {
+                                    xhDialog.setTitle("网络有问题或手机号未注册？")
+                                            .setCanselButton("取消", new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
@@ -90,7 +85,7 @@ public class LostSecret extends BaseLoginActivity {
                                                     xhDialog.cancel();
                                                 }
                                             })
-                                            .setSureButton("注册", new View.OnClickListener() {
+                                            .setSureButton("立即注册", new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     register(LostSecret.this, phone_info.getZoneCode(),
@@ -112,25 +107,12 @@ public class LostSecret extends BaseLoginActivity {
                     XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码","失败原因：手机号格式错误");
                 }
             }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
-            }
         });
-
-
     }
 
     private void refreshNextStepBtnState() {
         btn_next_step.setClickCenterable(!phone_info.isDataAbsence());
     }
-
 
     @Override
     protected void onCountrySelected(String country_code) {

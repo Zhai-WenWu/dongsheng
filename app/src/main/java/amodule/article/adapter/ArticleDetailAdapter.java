@@ -10,7 +10,9 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -33,7 +35,7 @@ import amodule.article.view.richtext.RichURLSpan;
  * 文章详情页adapter
  */
 public class ArticleDetailAdapter extends BaseAdapter {
-
+    public final static String TYPE_KEY = "datatype";
     public final static int Type_recommed = 1;//推荐类型
     public final static int Type_text = 2;//文本
     public final static int Type_image = 3;//图片
@@ -41,6 +43,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
     public final static int Type_caipu = 6;//菜谱
     public final static int Type_ds = 7;//电商
     public final static int Type_comment = 8;//评论
+    public final static int Type_bigAd = 9;//评论
 
     private Context context;
     private ArrayList<Map<String, String>> listMap;
@@ -108,6 +111,9 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
                 viewHolder.setData(map, position);
                 break;
+            case Type_bigAd:
+                convertView = getBigAdView(map);
+                break;
         }
         return convertView;
     }
@@ -127,16 +133,6 @@ public class ArticleDetailAdapter extends BaseAdapter {
         return view;
     }
 
-    private OnRabSofaCallback onRabSofaCallback;
-
-    public interface OnRabSofaCallback {
-        public void onRabSoaf();
-    }
-
-    public void setOnRabSofaCallback(OnRabSofaCallback onRabSofaCallback) {
-        this.onRabSofaCallback = onRabSofaCallback;
-    }
-
     @Override
     public int getViewTypeCount() {
         return 11;
@@ -144,8 +140,8 @@ public class ArticleDetailAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        String dataTypeStr = getItem(position).get("datatype");
-        if(TextUtils.isEmpty(dataTypeStr)){
+        String dataTypeStr = getItem(position).get(TYPE_KEY);
+        if (TextUtils.isEmpty(dataTypeStr)) {
             return 0;
         }
         return Integer.parseInt(dataTypeStr);
@@ -224,9 +220,9 @@ public class ArticleDetailAdapter extends BaseAdapter {
             if (view != null) {
                 map.put("type", type);
                 view.setData(map);
-                if("2".equals(map.get("isAd"))
+                if ("2".equals(map.get("isAd"))
                         && view != null
-                        && mOnADCallback != null){
+                        && mOnADCallback != null) {
                     final int index = Integer.parseInt(map.get("adPosition"));
                     mOnADCallback.onBind(index, view, "");
                     view.setOnAdClickCallback(new RecommendItemView.OnAdClickCallback() {
@@ -240,19 +236,51 @@ public class ArticleDetailAdapter extends BaseAdapter {
         }
     }
 
+    private View getBigAdView(Map<String, String> map) {
+        RelativeLayout layout = new RelativeLayout(context);
+        View view = new View(context);
+        if (mOnGetBigAdView != null)
+            view = mOnGetBigAdView.getBigAdView(map);
+        if (view == null)
+            return layout;
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        int dp_17 = Tools.getDimen(context, R.dimen.dp_17);
+        int dp_20 = Tools.getDimen(context, R.dimen.dp_20);
+        layoutParams.setMargins(dp_20, dp_17, dp_20, dp_17);
+        layout.addView(view, layoutParams);
+        return layout;
+    }
+
     private OnADCallback mOnADCallback;
 
     public interface OnADCallback {
         public void onClick(View view, int index, String s);
 
         public void onBind(int index, View view, String s);
-    }
 
-    public OnADCallback getmOnADCallback() {
-        return mOnADCallback;
     }
 
     public void setmOnADCallback(OnADCallback mOnADCallback) {
         this.mOnADCallback = mOnADCallback;
+    }
+
+    private OnGetBigAdView mOnGetBigAdView;
+
+    public interface OnGetBigAdView {
+        public View getBigAdView(Map<String, String> map);
+    }
+
+    public void setOnGetBigAdView(OnGetBigAdView mOnGetBigAdView) {
+        this.mOnGetBigAdView = mOnGetBigAdView;
+    }
+
+    private OnRabSofaCallback onRabSofaCallback;
+
+    public interface OnRabSofaCallback {
+        public void onRabSoaf();
+    }
+
+    public void setOnRabSofaCallback(OnRabSofaCallback onRabSofaCallback) {
+        this.onRabSofaCallback = onRabSofaCallback;
     }
 }

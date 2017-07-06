@@ -3,7 +3,7 @@ package third.ad.tools;
 public class AdPlayIdConfig {
 
     public static final String ADTYPE_GDT = "sdk_gdt";
-    public static final String ADTYPE_INMOBI = "sdk_inmobi";
+//    public static final String ADTYPE_INMOBI = "sdk_inmobi";
     public static final String ADTYPE_API = "api_tfp";
     public static final String ADTYPE_BANNER = "xh";
 
@@ -75,7 +75,8 @@ public class AdPlayIdConfig {
     /**
      * 三餐推荐位
      */
-    public static final String[] COMMEND_THREE_MEALS = new String[]{"sc_liebiao"};
+    public static final String[] COMMEND_THREE_MEALS = new String[]{"sc_liebiao","sc_liebiao2","sc_liebiao3","sc_liebiao4","sc_liebiao5"
+            ,"sc_liebiao6","sc_liebiao7","sc_liebiao8","sc_liebiao9","sc_liebiao10"};
 
 
     /**
@@ -115,6 +116,7 @@ public class AdPlayIdConfig {
     public static final String ARTICLE_CONTENT_BOTTOM = "wz_wz";
     public static final String ARTICLE_RECM_1 = "wz_tuijian1";
     public static final String ARTICLE_RECM_2 = "wz_tuijian2";
+    public static final String ARTICLE_TIEPIAN = "wz_tiepian";
 
 
 }

@@ -33,6 +33,7 @@ import acore.widget.TextViewLimitLine;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.VideoDetailActivity;
+import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -60,6 +61,7 @@ import xh.basic.tool.UtilString;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_ATT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_DEL;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.DATA_TYPE;
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.STATE_KEY;
 
 @SuppressLint("CutPasteId")
@@ -376,64 +378,91 @@ public class FriendHome extends BaseActivity {
 			String hasMedia = dataMap.get("hasMedia");
 			Map<String, String> tabMap = mTabContentViews.get(tabIndex).getDataMap();
 			if (tabMap != null && tabMap.size() > 0) {
-				String type = tabMap.get("type");
+				final String type = tabMap.get("type");
 				switch (type) {
                     case "1"://视频列表
 					case "2"://文章列表
 						String id = dataMap.get("id");
-						if ("2".equals(hasMedia)) {
-							if (!TextUtils.isEmpty(id)) {
-								UploadParentSQLite parentSQL = null;
-								int dataType = EditParentActivity.DATA_TYPE_ARTICLE;
-								if ("1".equals(type)) {
-									parentSQL = new UploadVideoSQLite(this);
-									dataType = EditParentActivity.DATA_TYPE_VIDEO;
-								} else if ("2".equals(type)) {
-									parentSQL = new UploadArticleSQLite(this);
-								}
-								if (parentSQL == null)
-									return;
-								UploadArticleData articleData = parentSQL.selectById(Integer.parseInt(id));
-								Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
-								intent.putExtra("draftId", articleData.getId());
-								intent.putExtra("dataType", dataType);
-								intent.putExtra("coverPath", articleData.getImg());
-								String videoPath = "";
-								ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
-								if(videoArray != null && videoArray.size() > 0){
-									videoPath = videoArray.get(0).get("video");
-								}
-								intent.putExtra("finalVideoPath", videoPath);
-								FriendHome.this.startActivity(intent);
-							}
+						if (TextUtils.isEmpty(id))
 							return;
+						UploadParentSQLite parentSQL = null;
+						int dataType = EditParentActivity.DATA_TYPE_ARTICLE;
+						if ("1".equals(type)) {
+							parentSQL = new UploadVideoSQLite(this);
+							dataType = EditParentActivity.DATA_TYPE_VIDEO;
+						} else if ("2".equals(type)) {
+							parentSQL = new UploadArticleSQLite(this);
+						}
+						if (parentSQL == null)
+							return;
+						final UploadArticleData articleData = parentSQL.selectById(Integer.parseInt(id));
+						if ("2".equals(hasMedia)) { //如果包括多媒体资源，点击则进入上传列表页面
+							Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
+							intent.putExtra("draftId", articleData.getId());
+							intent.putExtra("dataType", dataType);
+							intent.putExtra("coverPath", articleData.getImg());
+							if (UploadDishData.UPLOAD_ING.equals(uploadType))
+								intent.putExtra("isAutoUpload", true);
+							String videoPath = "";
+							ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
+							if(videoArray != null && videoArray.size() > 0){
+								videoPath = videoArray.get(0).get("video");
+							}
+							intent.putExtra("finalVideoPath", videoPath);
+							FriendHome.this.startActivity(intent);
 						} else if (UploadDishData.UPLOAD_FAIL.equals(uploadType)) {
-							if (!TextUtils.isEmpty(id)) {
-								final UploadArticleSQLite articleSQLite = new UploadArticleSQLite(this);
-								final UploadArticleData articleData = articleSQLite.selectById(Integer.parseInt(id));
-								if (articleData != null) {
-									dataMap.put("uploadType", UploadDishData.UPLOAD_ING);
-									itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_ING);
-									articleData.setUploadType(UploadDishData.UPLOAD_ING);
-									articleSQLite.update(articleData.getId(), articleData);
-									articleData.upload(StringManager.api_articleAdd, new InternetCallback(this) {
-										@Override
-										public void loaded(int i, String s, Object o) {
-											if (i > UtilInternet.REQ_OK_STRING) {
-												dataMap.put("uploadType", UploadDishData.UPLOAD_SUCCESS);
-												itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_SUCCESS);
-												articleData.setUploadType(UploadDishData.UPLOAD_SUCCESS);
-											} else {
-												dataMap.put("uploadType", UploadDishData.UPLOAD_FAIL);
-												itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_FAIL);
-												articleData.setUploadType(UploadDishData.UPLOAD_FAIL);
-											}
-											articleSQLite.update(articleData.getId(), articleData);
-										}
-									});
-								}
+							if ("2".equals(type)) { //如果是无多媒体资源文章并且上传失败，点击进入编辑页面
+								Intent intent = new Intent(FriendHome.this, ArticleEidtActiivty.class);
+								intent.putExtra("draftId", articleData.getId());
+								startActivity(intent);
+								return;
 							}
-							return;
+							//如果是无多媒体资源视频并且上传失败，点击重新上传
+							dataMap.put("uploadType", UploadDishData.UPLOAD_ING);
+							itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_ING);
+							articleData.setUploadType(UploadDishData.UPLOAD_ING);
+							parentSQL.update(articleData.getId(), articleData);
+							final UploadParentSQLite mySql = parentSQL;
+							articleData.upload(StringManager.api_videoAdd, new InternetCallback(this) {
+								@Override
+								public void loaded(int i, String s, Object o) {
+									if (i >= UtilInternet.REQ_OK_STRING) {
+										dataMap.put("uploadType", UploadDishData.UPLOAD_SUCCESS);
+										itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_SUCCESS);
+										mySql.deleteById(articleData.getId());
+									} else {
+										dataMap.put("uploadType", UploadDishData.UPLOAD_FAIL);
+										itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_FAIL);
+										articleData.setUploadType(UploadDishData.UPLOAD_FAIL);
+										mySql.update(articleData.getId(), articleData);
+									}
+								}
+							});
+						}else if(UploadDishData.UPLOAD_PAUSE.equals(uploadType)){
+							//如果是无多媒体资源视频或文章并且暂停上传，点击重新上传
+							dataMap.put("uploadType", UploadDishData.UPLOAD_ING);
+							itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_ING);
+							articleData.setUploadType(UploadDishData.UPLOAD_ING);
+							parentSQL.update(articleData.getId(), articleData);
+							final UploadParentSQLite mySql = parentSQL;
+							String url = StringManager.api_articleAdd;
+							if("1".equals(type)) url = StringManager.api_videoAdd;
+
+							articleData.upload(url, new InternetCallback(this) {
+								@Override
+								public void loaded(int i, String s, Object o) {
+									if (i >= UtilInternet.REQ_OK_STRING) {
+										dataMap.put("uploadType", UploadDishData.UPLOAD_SUCCESS);
+										mySql.deleteById(articleData.getId());
+										sendBroadcast(true,type);
+									} else {
+										dataMap.put("uploadType", UploadDishData.UPLOAD_FAIL);
+										itemView.notifyUploadStatusChanged(UploadDishData.UPLOAD_FAIL);
+										articleData.setUploadType(UploadDishData.UPLOAD_FAIL);
+										mySql.update(articleData.getId(), articleData);
+									}
+								}
+							});
 						}
 						break;
 				}
@@ -460,6 +489,17 @@ public class FriendHome extends BaseActivity {
 				startActivity(intent);
 			}
 		}
+	}
+
+	private void sendBroadcast(boolean flag,String type){
+		Intent broadIntent = new Intent();
+		broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+		if (!TextUtils.isEmpty(type))
+			broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+		broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
+				flag ? UploadStateChangeBroadcasterReceiver.STATE_SUCCESS : UploadStateChangeBroadcasterReceiver.STATE_FAIL);
+		Main.allMain.sendBroadcast(broadIntent);
+
 	}
 
 
@@ -573,6 +613,7 @@ public class FriendHome extends BaseActivity {
 				new UploadStateChangeBroadcasterReceiver.ReceiveBack() {
 					@Override
 					public void onGetReceive(Intent intent) {
+                        String isSecondEdit = intent.getStringExtra(SECONDE_EDIT);
 						String state = intent.getStringExtra(STATE_KEY);
 						String dataType = intent.getStringExtra(DATA_TYPE);
 						String actionDel = intent.getStringExtra(ACTION_DEL);
@@ -592,10 +633,10 @@ public class FriendHome extends BaseActivity {
 								}
 							}
 						}
-						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType) && !"0".equals(dataType)) {
+						if (!TextUtils.isEmpty(dataType) && !"-1".equals(dataType)) {
 							if (!TextUtils.isEmpty(actionDel) && "2".equals(actionDel))
 								updateTabNum(true);
-							else if (!TextUtils.isEmpty(state) && UploadStateChangeBroadcasterReceiver.STATE_SUCCESS.equals(state))
+							else if (!TextUtils.isEmpty(state) && UploadStateChangeBroadcasterReceiver.STATE_SUCCESS.equals(state) && !"2".equals(isSecondEdit))
 								updateTabNum(false);
 						}
 						//文章、视频详情页的关注，并且是成功了才会有这个值。

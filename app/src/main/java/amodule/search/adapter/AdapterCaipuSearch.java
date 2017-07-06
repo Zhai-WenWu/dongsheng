@@ -272,12 +272,13 @@ public class AdapterCaipuSearch extends BaseAdapter {
             viewHolder.iv_itemIsFine = (TextView) convertView.findViewById(R.id.iv_itemIsFine);
             viewHolder.v_caipu_item_tail = convertView.findViewById(R.id.v_caipu_item_tail);
             viewHolder.v_bottom_line = convertView.findViewById(R.id.v_bottom_line);
+            viewHolder.vip = (ImageView) convertView.findViewById(R.id.vip);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CaipuViewHolder) convertView.getTag();
         }
 
-        viewHolder.iv_caipuCover.playImgWH = Tools.getDimen(mParent.getContext(), R.dimen.dp_30);
+        viewHolder.iv_caipuCover.playImgWH = Tools.getDimen(mParent.getContext(), R.dimen.dp_34);
         viewHolder.iv_caipuCover.parseItemImg(scaleType, caipuMap.get("img"), caipuMap.get("hasVideo"), true, imgResource, imgLevel);
         setViewText(viewHolder.tv_caipu_name, caipuMap.get("name"));
         setViewText(viewHolder.tv_caipu_decrip, caipuMap.get("burdens"));
@@ -286,7 +287,15 @@ public class AdapterCaipuSearch extends BaseAdapter {
         setViewText(viewHolder.tv_caipu_collected, caipuMap.get("favorites"));
         setViewText(viewHolder.tv_caipu_origin, caipuMap.get("cusNickName"));
 
-        if (("2").equals(caipuMap.get("exclusive"))) {
+        boolean vipShow = false;
+        if ("2".equals(caipuMap.get("isVip"))) {
+            viewHolder.vip.setVisibility(View.VISIBLE);
+            vipShow = true;
+        } else {
+            viewHolder.vip.setVisibility(View.GONE);
+        }
+
+        if (("2").equals(caipuMap.get("exclusive")) && !vipShow) {
             viewHolder.iv_itemIsSolo.setVisibility(View.VISIBLE);
         } else {
             viewHolder.iv_itemIsSolo.setVisibility(View.GONE);
@@ -547,6 +556,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
         TextView iv_itemIsFine;
         View v_caipu_item_tail;
         View v_bottom_line;
+        ImageView vip;
     }
 
     private View createAdView(int pos) {

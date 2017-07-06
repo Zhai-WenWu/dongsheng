@@ -28,7 +28,7 @@
         android:background="@android:color/transparent"
         android:gravity="center"
         android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_13"
+        android:paddingRight="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_2"
         android:text="搜索"
         android:textColor="@color/common_top_text"

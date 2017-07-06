@@ -106,10 +106,10 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
 
     private void setVideoPlayerData(String videoData,Activity activity){
         final Map<String, String> videoInfo = StringManager.getFirstMap(videoData);
-        adLayout = (FrameLayout) rootView.findViewById(R.id.dishvideo_ad);
+        adLayout = (FrameLayout) rootView.findViewById(R.id.video_ad_layout);
         if (videoInfo != null) {
             videoImg = videoInfo.get("sImgUrl");
-            RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.dishVidio);
+            RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.video_layout);
             dishVidio.setVisibility(View.VISIBLE);
             videoPlayerController = new VideoImagePlayerController(activity,dishVidio,videoImg);
             handlerADData();
@@ -159,8 +159,8 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
     }
 
     private void addVideoView(String uu, String vu, String name, String imgValue) {
-        adLayout = (FrameLayout) rootView.findViewById(R.id.dishvideo_ad);
-        RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.dishVidio);
+        adLayout = (FrameLayout) rootView.findViewById(R.id.video_ad_layout);
+        RelativeLayout dishVidio = (RelativeLayout) rootView.findViewById(R.id.video_layout);
         dishVidio.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
                 Tools.getDimen(getContext(), R.dimen.dp_220));//

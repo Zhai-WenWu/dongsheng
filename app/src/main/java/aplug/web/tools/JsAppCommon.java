@@ -2,7 +2,6 @@ package aplug.web.tools;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,15 +18,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.dialogManager.VersionOp;
+import acore.logic.PayCallback;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.db.DataOperate;
 import amodule.dish.db.ShowBuySqlite;
@@ -50,7 +49,6 @@ import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.dialog.FavorableDialog;
 import third.mall.wx.WxPay;
-import acore.logic.PayCallback;
 import third.share.BarShare;
 import xh.basic.tool.UtilFile;
 
@@ -262,7 +260,6 @@ public class JsAppCommon extends JsBase{
 								}
 							});
 						} else {
-							Tools.showToast(mAct, "请先登录");
 							Intent intent = new Intent(mAct, LoginByAccout.class);
 							mAct.startActivity(intent);
 						}

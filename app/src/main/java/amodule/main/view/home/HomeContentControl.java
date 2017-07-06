@@ -181,7 +181,6 @@ public class HomeContentControl {
 				}
 			}
 			navImgs[0].setImageResource(R.drawable.z_home_banner_bg_pic_active);
-			//TODO
 			final GalleryViewPager myGalleryHot = (GalleryViewPager) mHomePage.findViewById(R.id.a_home_main_gallery_huati);
 			myGalleryHot.setIsJudgeXY(true);
 			LayoutInflater inflater = LayoutInflater.from(mHomePage);

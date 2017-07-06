@@ -25,6 +25,8 @@ import com.xiangha.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -54,6 +56,48 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     private String type = IMAGE;
     private String idStr = "";
     private boolean isWrapContent = false;
+    private RequestListener<GlideUrl, Bitmap> bitmapRequestListener = new RequestListener<GlideUrl, Bitmap>() {
+        @Override
+        public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
+            removeThis();
+            Tools.showToast(getContext(), "文件已损坏");
+            return true;
+        }
+
+        @Override
+        public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
+            return false;
+        }
+    };
+    private RequestListener<File, Bitmap> fileRequestListener = new RequestListener<File, Bitmap>() {
+        @Override
+        public boolean onException(Exception e, File file, Target<Bitmap> target, boolean b) {
+            removeThis();
+            Tools.showToast(getContext(), "文件已损坏");
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(Bitmap bitmap, File file, Target<Bitmap> target, boolean b, boolean b1) {
+            return false;
+        }
+    };
+    private SubBitmapTarget subBitmapTarget = new SubBitmapTarget() {
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+            if (bitmap != null) {
+                imageWidth = bitmap.getWidth();
+                imageHieght = bitmap.getHeight();
+
+                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                if (isWrapContent) {
+                    if (imageWidth <= newWaith)
+                        newWaith = 0;
+                }
+                UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
+            }
+        }
+    };
 
     public ImageShowView(Context context) {
         this(context, null);
@@ -96,7 +140,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
             jsonObject.put(IMAGE_GIF.equals(type) ? "gifurl" : "imageurl", imageUrl);
             jsonObject.put("width", imageWidth);
             jsonObject.put("height", imageHieght);
-            if(!TextUtils.isEmpty(idStr))
+            if (!TextUtils.isEmpty(idStr))
                 jsonObject.put("id", idStr);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -108,42 +152,23 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         this.imageUrl = imageUrl;
         if (imageUrl.endsWith(".gif")) {
             type = IMAGE_GIF;
-            if (enableEdit){
-//                Glide.with(getContext()).load(imageUrl).asBitmap().into(showImage);
-                LoadImage.with(getContext())
-                        .load(imageUrl)
-                        .build()
-                        .listener(new RequestListener<GlideUrl, Bitmap>() {
-                            @Override
-                            public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
-                                int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-                                int height = width * 9 / 16;
-                                showImage.setLayoutParams(new LayoutParams(width,height));
-                                return false;
-                            }
+            if (enableEdit) {
+                if (imageUrl.startsWith("http")) {
+                    LoadImage.with(getContext())
+                            .load(imageUrl)
+                            .build()
+                            .listener(bitmapRequestListener)
+                            .into(subBitmapTarget);
 
-                            @Override
-                            public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
-                                return false;
-                            }
-                        })
-                        .into(new SubBitmapTarget() {
-                            @Override
-                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                                if (bitmap != null) {
-                                    imageWidth = bitmap.getWidth();
-                                    imageHieght = bitmap.getHeight();
+                } else {
+                    File file = new File(imageUrl);
+                    Glide.with(getContext())
+                            .load(file)
+                            .asBitmap()
+                            .listener(fileRequestListener)
+                            .into(subBitmapTarget);
+                }
 
-                                    int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                    if(isWrapContent){
-                                        if (imageWidth <= newWaith)
-                                            newWaith = 0;
-                                    }
-                                    UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
-
-                                }
-                            }
-                        });
                 itemGifHint.setVisibility(VISIBLE);
             } else
                 Glide.with(getContext())
@@ -154,43 +179,20 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                         .into(showImage);
         } else {
             type = IMAGE;
-            LoadImage.with(getContext())
-                    .load(imageUrl)
-                    .build()
-                    .listener(new RequestListener<GlideUrl, Bitmap>() {
-                        @Override
-                        public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
-//                            int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-//                            int height = width * 9 / 16;
-//                            showImage.setLayoutParams(new LayoutParams(width,height));
-//                            return false;
-                            removeThis();
-                            Tools.showToast(getContext(),"文件已损坏");
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
-                            return false;
-                        }
-                    })
-                    .into(new SubBitmapTarget() {
-                        @Override
-                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                            if (bitmap != null) {
-                                imageWidth = bitmap.getWidth();
-                                imageHieght = bitmap.getHeight();
-
-                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                if(isWrapContent){
-                                    if (imageWidth <= newWaith)
-                                        newWaith = 0;
-                                }
-                                UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
-
-                            }
-                        }
-                    });
+            if (imageUrl.startsWith("http")) {
+                LoadImage.with(getContext())
+                        .load(imageUrl)
+                        .build()
+                        .listener(bitmapRequestListener)
+                        .into(subBitmapTarget);
+            } else {
+                File file = new File(imageUrl);
+                Glide.with(getContext())
+                        .load(file)
+                        .asBitmap()
+                        .listener(fileRequestListener)
+                        .into(subBitmapTarget);
+            }
         }
     }
 
@@ -233,27 +235,6 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
             showImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
             showImage.setTag(TAG_ID, imgUrl);
             if (!XHActivityManager.getInstance().getCurrentActivity().isFinishing()) {
-//                itemGifHint.setVisibility(View.GONE);
-//                itemGifHint.setImageResource(R.drawable.i_dish_detail_gif_hint);
-//                Glide.with(getContext()).load(imgUrl).asBitmap().thumbnail(0.8f).listener(new RequestListener<String, Bitmap>() {
-//                    @Override
-//                    public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
-//                        imageWidth = bitmap.getWidth();
-//                        imageHieght = bitmap.getHeight();
-//
-//                        int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-//                        int waith = newWaith;
-//                        if (imageWidth <= newWaith)
-//                            waith = 0;
-//                        UtilImage.setImgViewByWH(showImage, bitmap, waith, 0, false);
-//                        return false;
-//                    }
-//                });
                 BitmapRequestBuilder<GlideUrl, Bitmap> requestBuilder = LoadImage.with(XHActivityManager.getInstance().getCurrentActivity())
                         .load(imgUrl)
                         .setPlaceholderId(R.drawable.i_nopic)
@@ -263,38 +244,8 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                     itemGifHint.setVisibility(View.GONE);
                     itemGifHint.setImageResource(R.drawable.i_dish_detail_gif_hint);
                     requestBuilder
-                            .listener(new RequestListener<GlideUrl, Bitmap>() {
-                                @Override
-                                public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
-//                                    int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-//                                    int height = width * 9 / 16;
-//                                    showImage.setLayoutParams(new LayoutParams(width,height));
-//                                    return false;
-                                    removeThis();
-                                    Tools.showToast(getContext(),"文件已损坏");
-                                    return true;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
-                                    return false;
-                                }
-                            })
-                            .into(new SubBitmapTarget() {
-                        @Override
-                        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                            imageWidth = bitmap.getWidth();
-                            imageHieght = bitmap.getHeight();
-
-                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                            if(isWrapContent){
-                                if (imageWidth <= newWaith)
-                                    newWaith = 0;
-                            }
-                            UtilImage.setImgViewByWH(showImage, bitmap, newWaith, 0, false);
-
-                        }
-                    });
+                            .listener(bitmapRequestListener)
+                            .into(subBitmapTarget);
                 }
             }
         }
@@ -323,7 +274,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
                             @Override
                             public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
                                 removeThis();
-                                Tools.showToast(getContext(),"文件已损坏");
+                                Tools.showToast(getContext(), "文件已损坏");
                                 return true;
                             }
 
@@ -351,12 +302,12 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
     private void setImageWH(ImageView imgView, int imgHeight) {
         imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         int dp_290 = Tools.getDimen(getContext(), R.dimen.dp_290);
-        RelativeLayout.LayoutParams layoutParams;
+        LayoutParams layoutParams;
         if (IMAGE_GIF.equals(type)) {
             imgView.setMinimumHeight(0);
-            layoutParams = new RelativeLayout.LayoutParams((int) (imgHeight / 9.0 * 16), imgHeight);
+            layoutParams = new LayoutParams((int) (imgHeight / 9.0 * 16), imgHeight);
         } else
-            layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
+            layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
         int dp_12 = Tools.getDimen(getContext(), R.dimen.dp_12);
         int dp_23 = Tools.getDimen(getContext(), R.dimen.dp_23);
         layoutParams.setMargins(0, dp_12, dp_23, 0);
@@ -387,7 +338,7 @@ public class ImageShowView extends BaseView implements View.OnClickListener {
         }
     }
 
-    public void removeThis(){
+    public void removeThis() {
         if (null != mOnRemoveCallback) {
             mOnRemoveCallback.onRemove(this);
         }

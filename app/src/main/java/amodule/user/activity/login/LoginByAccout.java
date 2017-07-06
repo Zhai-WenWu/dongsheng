@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mob.MobSDK;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -52,11 +55,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
     private TextView tvRegister;
     private TextView tvIdentify;
     private TextView tvLostsercet;
-    private ImageView imageQq;
-    private ImageView imageWeixin;
-    private ImageView imageWeibo;
-    private ImageView imageMailbox;
-    private ImageView imageMeizu;
+    private ImageView imageQq, imageWeixin, imageWeibo, imageMailbox, imageMeizu;
     private ImageView top_left_view;
 
     private static final int EMPOWER_OK = 1;
@@ -64,8 +63,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
     private static final int EMPOWER_CANCLE = 3;
     private static final int INFO_ERROR = 4;
 
-
-    public static Map<String, String> userInfo = new HashMap<String, String>(); // 当前登录用户信息
+    public static Map<String, String> userInfo = new HashMap<>(); // 当前登录用户信息
     private String mPlatformName;
     private String platform;
     private String loginType = "";
@@ -76,7 +74,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
             int flag = msg.what;
             switch (flag) {
                 case EMPOWER_OK:
-                    Tools.showToast(LoginByAccout.this, "授权完成");
+//                    Tools.showToast(LoginByAccout.this, "授权完成");
                     String param = msg.obj.toString();
 
                     if (ShareTools.WEI_XIN.equals(platform)) {
@@ -96,7 +94,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                                     String tel = userInfo.get("tel");
                                     if (TextUtils.isEmpty(tel)) {
                                         if (CountComputer.getTipCount(LoginByAccout.this) < 2) {
-                                            gotoBindPhone(LoginByAccout.this,loginType);
+                                            gotoBindPhone(LoginByAccout.this, loginType);
                                             CountComputer.saveTipCount(LoginByAccout.this);
                                         } else {
                                             backToForward();
@@ -104,36 +102,23 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                                     } else {
                                         backToForward();
                                     }
-
-                                    if (ShareTools.QQ_NAME.equals(platform)) {
-                                        XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "QQ登录", "登录成功");
-                                    } else if (ShareTools.WEI_XIN.equals(platform)) {
-                                        XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "微信登录", "登录成功");
-                                    } else if (ShareTools.SINA_NAME.equals(platform)) {
-                                        XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "微博登录", "登录成功");
-                                    }
-
+                                    //统计
+                                    statisticsData(platform, "登录成功");
                                 }
 
                                 @Override
                                 public void onFalse(int flag) {
-                                    if (ShareTools.QQ_NAME.equals(platform)) {
-                                        XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "QQ登录", "登录失败");
-                                    } else if (ShareTools.WEI_XIN.equals(platform)) {
-                                        XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "微信登录", "登录失败");
-                                    } else if (ShareTools.SINA_NAME.equals(platform)) {
-                                        XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "微博登录", "登录失败");
-                                    }
+                                    //统计
+                                    statisticsData(platform, "登录失败");
                                 }
                             });
-
                     break;
                 case EMPOWER_ERROR:
-                    Tools.showToast(LoginByAccout.this, "授权出错");
+                    Tools.showToast(LoginByAccout.this, "登录失败");
                     loadManager.hideProgressBar();
                     break;
                 case EMPOWER_CANCLE:
-                    Tools.showToast(LoginByAccout.this, "取消授权");
+                    Tools.showToast(LoginByAccout.this, "登录失败");
                     loadManager.hideProgressBar();
                     break;
                 case INFO_ERROR:
@@ -145,7 +130,15 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         }
     });
 
-
+    public void statisticsData(@NonNull String platform, String value) {
+        if (ShareTools.QQ_NAME.equals(platform)) {
+            XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "QQ登录", value);
+        } else if (ShareTools.WEI_XIN.equals(platform)) {
+            XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "微信登录", value);
+        } else if (ShareTools.SINA_NAME.equals(platform)) {
+            XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "微博登录", value);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +149,6 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         ToolsDevice.modifyStateTextColor(this);
         XHClick.track(this, "浏览登录页");
     }
-
 
     private void initView() {
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
@@ -179,11 +171,11 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         contentLayout.post(new Runnable() {
             @Override
             public void run() {
-                if(contentLayout.getHeight() < ToolsDevice.getWindowPx(LoginByAccout.this).heightPixels){
+                if (contentLayout.getHeight() < ToolsDevice.getWindowPx(LoginByAccout.this).heightPixels) {
                     contentLayout.removeView(otherLoginLayout);
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    rl.addView(otherLoginLayout,layoutParams);
+                    rl.addView(otherLoginLayout, layoutParams);
                 }
             }
         });
@@ -209,7 +201,6 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
             zone_code = lastLoginAccout.getAreaCode();
             phone_num = lastLoginAccout.getPhoneNum();
         }
-
 
         phone_info.init("手机号", zone_code, phone_num,
                 new PhoneNumInputView.PhoneNumInputViewCallback() {
@@ -239,22 +230,11 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
             }
         });
 
-
-        btn_next_step.init("登录", null, null, new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("登录", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
                 XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录", "点击登录");
                 gotoLogin();
-            }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
             }
         });
     }
@@ -268,22 +248,17 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                 register(this, "", "");
                 break;
             case R.id.tv_identify:
-                Intent intent = new Intent();
-                intent.setClass(this, LoginByPhoneIndentify.class);
-                startActivity(intent);
+                startActivity(new Intent(this, LoginByPhoneIndentify.class));
                 break;
             case R.id.tv_lostsercet:
-                Intent intent1 = new Intent();
-                intent1.setClass(this, LostSecret.class);
-                startActivity(intent1);
+                startActivity(new Intent(this, LostSecret.class));
                 break;
             case R.id.iv_weixin:
                 int number = ToolsDevice.isAppInPhone(this, "com.tencent.mm");
                 if (number == 0)
                     Tools.showToast(this, "需安装微信客户端才可以登录");
-                else {
+                else
                     thirdAuth(this, ShareTools.WEI_XIN, "微信");
-                }
                 break;
             case R.id.iv_weibo:
                 thirdAuth(this, ShareTools.SINA_NAME, "新浪");
@@ -303,24 +278,13 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                 break;
             default:
                 break;
-
         }
-
     }
-
 
     private void onInputDataChanged() {
-
-        boolean canClickNextBtn = false;
-
-        if (TextUtils.isEmpty(ll_secret.getPassword())) {
-            canClickNextBtn = false;
-        } else {
-            canClickNextBtn = !phone_info.isDataAbsence();
-        }
+        boolean canClickNextBtn = !TextUtils.isEmpty(ll_secret.getPassword()) && !phone_info.isDataAbsence();
         btn_next_step.setClickCenterable(canClickNextBtn);
     }
-
 
     private void gotoLogin() {
         String errorType = LoginCheck.checkPhoneFormatWell(this, phone_info.getZoneCode(), phone_info.getPhoneNum());
@@ -342,9 +306,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                                         @Override
                                         public void onFalse(int flag) {
                                             XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录", "登录失败");
-                                            XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录",
-                                                    "失败原因：账号或密码错");
-
+                                            XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录", "失败原因：账号或密码错");
                                         }
                                     });
                         }
@@ -353,8 +315,8 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                         public void onFalse(int flag) {
 //
                             final XhDialog xhDialog = new XhDialog(LoginByAccout.this);
-                            xhDialog.setTitle("该手机号尚未注册，\n是否注册新账号？")
-                                    .setCanselButton("不注册", new View.OnClickListener() {
+                            xhDialog.setTitle("网络有问题或手机号未注册")
+                                    .setCanselButton("取消", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机号登录",
@@ -362,7 +324,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                                             xhDialog.cancel();
                                         }
                                     })
-                                    .setSureButton("注册", new View.OnClickListener() {
+                                    .setSureButton("立即注册", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             register(LoginByAccout.this, phone_info.getZoneCode(),
@@ -383,7 +345,6 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         }
     }
 
-
     /**
      * 授权。如果授权成功，则获取用户信息</br>
      */
@@ -391,11 +352,11 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
         this.mPlatformName = mPlatformName;
         this.platform = platform;
         loadManager.showProgressBar();
-        Tools.showToast(mAct, "授权开始");
-        ShareSDK.initSDK(mAct);
-        Platform pf = ShareSDK.getPlatform(mAct, platform);
-        if (pf.isValid()) {
-            pf.removeAccount();
+//        Tools.showToast(mAct, "授权开始");
+//        ShareSDK.initSDK(mAct);
+        Platform pf = ShareSDK.getPlatform(platform);
+        if (pf.isAuthValid()) {
+            pf.removeAccount(true);
         }
         //false为客户端   true为网页版
         pf.SSOSetting(false);
@@ -407,6 +368,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
             public void onError(Platform arg0, int arg1, Throwable arg2) {
                 handler.sendEmptyMessage(EMPOWER_ERROR);
                 UtilLog.reportError("用户授权出错", null);
+                Log.i("zhangyujian","用户授权出错::Platform::"+arg0.getName()+"::"+arg1);
             }
 
             @Override
@@ -420,11 +382,12 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                             "&p2=" + plfDb.getUserId() +
                             "&p3=" + mPlatformName +
                             "&p4=" + plfDb.getUserName() +
-                            "&p5=" + plfDb.getUserIcon().replaceAll("40$","100$") +
+                            "&p5=" + plfDb.getUserIcon().replaceAll("40$", "100$") +
                             "&p6=" + getGender(plfDb.getUserGender());
                     if (platform.equals(ShareTools.WEI_XIN)) {
                         param += "&p7=" + res.get("unionid").toString();
                     }
+                    Log.i("zhangyujian","---------第三方用户信息----------" + res.toString());
                     UtilLog.print("d", "---------第三方用户信息----------" + res.toString());
                 }
                 //
@@ -432,7 +395,7 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
                     handler.sendEmptyMessage(INFO_ERROR);
                     return;
                 }
-                Message msg = new Message();
+                Message msg = handler.obtainMessage();
                 msg.what = EMPOWER_OK;
                 msg.obj = param;
                 handler.sendMessage(msg);
@@ -450,12 +413,14 @@ public class LoginByAccout extends BaseLoginActivity implements View.OnClickList
 
 
     private static String getGender(String gender) {
-        if ("m".equals(gender))//男
-            return "2";
-        else if ("f".equals(gender))//女
-            return "3";
-        else //默认为中性
-            return "1";
+        switch (gender) {
+            case "m":
+                return "2";//男
+            case "f":
+                return "3";//女
+            default:
+                return "1";//默认为中性
+        }
     }
 
     @Override

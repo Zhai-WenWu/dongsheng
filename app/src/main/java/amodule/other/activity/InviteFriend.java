@@ -149,7 +149,6 @@ public class InviteFriend extends BaseActivity {
 				String value = recomme_number.getText().toString();
 				ToolsDevice.keyboardControl(false, InviteFriend.this, recomme_number);
 				if(LoginManager.userInfo.size()<=0){
-					Tools.showToast(InviteFriend.this, "您还没有登录请先登录");
 					Intent intent = new Intent(InviteFriend.this, LoginByAccout.class);
 					startActivity(intent);
 					return;

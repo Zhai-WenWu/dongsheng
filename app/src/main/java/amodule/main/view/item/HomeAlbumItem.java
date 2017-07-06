@@ -25,17 +25,18 @@ import amodule.main.activity.MainHome;
 
 public class HomeAlbumItem extends HomeItem {
 
+    private ImageView mVIP;
     private ImageView mImg;
     private TextView mTitle;
     private TextView mNum1;
     private View mLayerView;
 
     public HomeAlbumItem(Context context) {
-        super(context, R.layout.home_albumitem);
+        this(context, null);
     }
 
     public HomeAlbumItem(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.home_albumitem);
+        this(context, attrs, 0);
     }
 
     public HomeAlbumItem(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -45,29 +46,11 @@ public class HomeAlbumItem extends HomeItem {
     @Override
     protected void initView() {
         super.initView();
+        mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
         mTitle = (TextView) findViewById(R.id.title);
         mNum1 = (TextView) findViewById(R.id.num1);
         mLayerView = findViewById(R.id.layer_view);
-        addListener();
-    }
-
-    private void addListener() {
-        this.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!TextUtils.isEmpty(mTransferUrl)) {
-                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
-                        if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                        else mTransferUrl+="?data_type="+mDataMap.get("type");
-                        mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                        XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
-                    }
-                    AppCommon.openUrl((Activity) getContext(), mTransferUrl, false);
-                }
-                onItemClick();
-            }
-        });
     }
 
     @Override
@@ -75,6 +58,8 @@ public class HomeAlbumItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
+        if (mModuleBean != null && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
+            mVIP.setVisibility(View.VISIBLE);
         if (mDataMap.containsKey("styleData")) {
             ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
             if (datas != null && datas.size() > 0) {
@@ -112,6 +97,8 @@ public class HomeAlbumItem extends HomeItem {
             mNum1.setVisibility(View.GONE);
         if (viewIsVisible(mLayerView))
             mLayerView.setVisibility(View.GONE);
+        if (viewIsVisible(mVIP))
+            mVIP.setVisibility(View.GONE);
 
     }
 }

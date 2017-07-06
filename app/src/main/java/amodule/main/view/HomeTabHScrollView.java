@@ -86,7 +86,7 @@ public class HomeTabHScrollView extends HorizontalScrollView {
     }
 
     private void addItemView() {
-        //TODO 尺寸的设置是临时数据，需要设计定规则
+        //尺寸的设置是临时数据，需要设计定规则
         if (mIsDay) {
             mTabContainer.setPadding(0, 0, 0, 0);
             int phoneWidth = Tools.getPhoneWidth();

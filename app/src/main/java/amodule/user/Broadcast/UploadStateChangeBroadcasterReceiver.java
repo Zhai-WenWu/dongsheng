@@ -12,8 +12,6 @@ import android.content.IntentFilter;
 
 public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
 
-
-
     private ReceiveBack callback;
     public static final String ACTION = "uploadState";
     public static final String STATE_KEY = "state";
@@ -27,6 +25,9 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     //详情页的关注操作
     public static final String ACTION_ATT = "actionAtt";//表示“关注”操作
 
+    public static final String SECONDE_EDIT = "secondEdit";//是否二次编辑 1：否 2：是
+
+
     public UploadStateChangeBroadcasterReceiver(ReceiveBack callback){
         this.callback = callback;
     }
@@ -35,7 +36,6 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         callback.onGetReceive(intent);
     }
-
 
     public void register(Context context){
         IntentFilter intentFilter = new IntentFilter();
@@ -46,7 +46,4 @@ public class UploadStateChangeBroadcasterReceiver extends BroadcastReceiver {
     public interface ReceiveBack{
         void onGetReceive(Intent intent);
     }
-
 }
-
-

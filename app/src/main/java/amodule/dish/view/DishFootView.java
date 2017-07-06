@@ -87,13 +87,19 @@ public class DishFootView extends LinearLayout {
         dishAdDataView.getRequest(activity, foot_menu);
     }
 
+    public void reset(){
+        foot_linear.removeAllViews();
+        foot_commend.removeAllViews();
+    }
+
     /**
      * 设置小贴士数据
      *
-     * @param map
+     * @param stringStringMap
+     * @param permissionMap
      */
-    public void setDataExplain(Map<String, String> map) {
-        explainView.setData(map, activity);
+    public void setDataExplain(Map<String, String> stringStringMap, Map<String, String> permissionMap) {
+        explainView.setData(stringStringMap, activity,permissionMap);
     }
 
 //    /**
@@ -108,8 +114,9 @@ public class DishFootView extends LinearLayout {
      * 菜谱数据解析
      *
      * @param list
+     * @param permissionMap
      */
-    public void analyzeMenuData(ArrayList<Map<String, String>> list) {
+    public void analyzeMenuData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         for (int i = 0, size = list.size(); i < size; i++) {
             list.get(i).put("style", DishMenuRecommend.DISH_STYLE_MENU);
         }
@@ -124,8 +131,9 @@ public class DishFootView extends LinearLayout {
      * 相关推荐
      *
      * @param list
+     * @param permissionMap
      */
-    public void analyzeRelatedData(final ArrayList<Map<String, String>> list) {
+    public void analyzeRelatedData(final ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         for (int i = 0, size = list.size(); i < size; i++) {
             list.get(i).put("style", DishCommendView_New.DISH_STYLE_COMMEND);
         }
@@ -135,6 +143,7 @@ public class DishFootView extends LinearLayout {
                 new XHAllAdControl.XHBackIdsDataCallBack() {
                     @Override
                     public void callBack(Map<String, String> map) {
+                        Log.i("tzy","list = " + list.toString());
                         //转化数据，ADData -> NormalData
                         String data = map.get(AdPlayIdConfig.DISH_COMMEND);
                         map = StringManager.getFirstMap(data);
@@ -189,8 +198,9 @@ public class DishFootView extends LinearLayout {
      * 精彩推荐
      *
      * @param list
+     * @param permissionMap
      */
-    public void analyzeWonderfulData(ArrayList<Map<String, String>> list, ADDishContorl adDishContorls) {
+    public void analyzeWonderfulData(ArrayList<Map<String, String>> list, ADDishContorl adDishContorls, Map<String, String> permissionMap) {
         this.adDishContorl = adDishContorls;
         list = adDishContorl.getAdList(list);
         for (int i = 0, size = list.size(); i < size; i++) {

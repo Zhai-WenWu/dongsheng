@@ -19,6 +19,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ListIterator;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -33,6 +34,7 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.adapter.AdapterUserTxt;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -51,6 +53,7 @@ public class UserHomeTxt extends TabContentView {
 	private LoadManager loadManager;
 	public ArrayList<Map<String, String>> datas;
     private ArrayList<Map<String, String>> mLocalDatas;
+    private Map<String, Map<String, String>> mSecondEditDatas;
     private ArrayList<Map<String, String>> mNetDatas;
 	public AdapterUserTxt adapter;
 	private boolean mLocalDataReady;
@@ -62,6 +65,8 @@ public class UserHomeTxt extends TabContentView {
 	private RelativeLayout mEmptyContainer;
 	private LinearLayout mEmptyView;
 	private Button mGotoBtn;
+
+	private int mHeadViewHeight;
 
 	public UserHomeTxt(FriendHome act, String code) {
 		view = View.inflate(act, R.layout.myself_txt, null);
@@ -99,15 +104,16 @@ public class UserHomeTxt extends TabContentView {
 		mGotoBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (LoginManager.isShowSendVideoButton())
+				if (LoginManager.isBindMobilePhone())
 					mAct.startActivity(new Intent(mAct, ArticleEidtActiivty.class));
 				else
-					showDialog("文章", StringManager.api_applyArticlePower);
+					mAct.startActivity(new Intent(mAct, BindPhoneNum.class));
 			}
 		});
 		theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
 		theListView.setDivider(null);
 		datas = new ArrayList<>();
+		mSecondEditDatas = new HashMap<String, Map<String, String>>();
         mLocalDatas = new ArrayList<Map<String, String>>();
         mNetDatas = new ArrayList<Map<String, String>>();
 		adapter = new AdapterUserTxt(mAct, theListView, datas, 0, null, null);
@@ -177,13 +183,11 @@ public class UserHomeTxt extends TabContentView {
 		final int userinfo_h = Tools.getTargetHeight(friend_info);
 		try {
 			if (friend_info.getText() == null || friend_info.getText().toString().equals(""))
-				headView.setLayoutParams(new AbsListView.LayoutParams(
-						android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-						tabHost_h + bigImg_h));
+				mHeadViewHeight = tabHost_h + bigImg_h;
 			else
-				headView.setLayoutParams(new AbsListView.LayoutParams(
-						android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-						tabHost_h + bigImg_h + userinfo_h));
+				mHeadViewHeight = tabHost_h + bigImg_h + userinfo_h;
+			headView.setLayoutParams(new AbsListView.LayoutParams(
+					android.view.ViewGroup.LayoutParams.MATCH_PARENT, mHeadViewHeight));
 		} catch (Exception e) {
 			UtilLog.reportError("MyselfSubject头部局异常", e);
 		}
@@ -200,6 +204,8 @@ public class UserHomeTxt extends TabContentView {
         if (isRefresh && isMyselft) {
             if (mLocalDatas != null)
                 mLocalDatas.clear();
+			if (mSecondEditDatas != null)
+				mSecondEditDatas.clear();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -252,6 +258,10 @@ public class UserHomeTxt extends TabContentView {
 								data.put("videos", videos);
                                 data.put("isMe", "2");
                                 data.put("dataFrom", String.valueOf(1));//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
+								if (!TextUtils.isEmpty(code)) {
+									mSecondEditDatas.put(code, data);
+									continue;
+								}
                                 mLocalDatas.add(data);
                             }
                         }
@@ -267,14 +277,16 @@ public class UserHomeTxt extends TabContentView {
                 int loadCount = 0;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     loadCount = parseInfo(returnObj);
-                } else {
-                    Tools.showToast(mAct, returnObj.toString());
                 }
                 if (everyPage == 0)
                     everyPage = loadCount;
                 currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,datas.size() == 0);
-                onDataReady(true);
+				if (flag < UtilInternet.REQ_OK_STRING) {
+					Tools.showToast(mAct, returnObj.toString());
+					return;
+				}
 				setHeadViewHeight();
+				onDataReady(true);
 			}
 		});
 	}
@@ -295,11 +307,21 @@ public class UserHomeTxt extends TabContentView {
                     datas.addAll(mLocalDatas);
                     isRefresh = false;
                 }
+                if (!mSecondEditDatas.isEmpty() && !mNetDatas.isEmpty()) {
+					ListIterator<Map<String, String>> netDatas = mNetDatas.listIterator();
+					while(netDatas.hasNext()) {
+						Map<String, String> netData = netDatas.next();
+						String code = netData.get("code");
+						if (!TextUtils.isEmpty(code) && mSecondEditDatas.size() > 0 && mSecondEditDatas.containsKey(code)) {
+							netDatas.set(mSecondEditDatas.get(code));
+							mSecondEditDatas.remove(code);
+						}
+					}
+				}
                 datas.addAll(mNetDatas);
                 if (datas.size() == 0 && isMyselft) {
-					LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
 					RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
-					emptyParams.topMargin = tabMainMyself.getTop() + tabMainMyself.getHeight();
+					emptyParams.topMargin = mHeadViewHeight;
 					mEmptyContainer.setVisibility(View.VISIBLE);
                 } else {
 					mEmptyContainer.setVisibility(View.GONE);

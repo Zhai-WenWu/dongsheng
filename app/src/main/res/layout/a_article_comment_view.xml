@@ -9,6 +9,7 @@
         android:id="@+id/above_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_11"
+        android:visibility="gone"
         android:background="#F7F7F7"/>
 
     <RelativeLayout
@@ -79,6 +80,7 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_11"
         android:layout_below="@+id/content_layout"

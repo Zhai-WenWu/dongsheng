@@ -142,11 +142,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 广点通广告 end -->
-    <!-- 魅族 账号登陆 -->
+    <!-- 魅族 账号登录 -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <!-- 魅族 账号登陆 end -->
+    <!-- 魅族 账号登录 end -->
     <!-- video -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
@@ -172,29 +172,16 @@
     <!-- 小米账号 -->
     <uses-permission android:name="com.xiaomi.permission.AUTH_SERVICE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <!-- inmobi广告 start -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <!--inmobi广告 start-->
 
     <!--mta统计 start-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!--mta统计 start-->
 
-    <!-- inmobi广告 start -->
     <application
         android:name="acore.override.XHApplication"
         android:allowBackup="false"
@@ -248,9 +235,6 @@
         <!-- 小米账号 -->
         <!-- <activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" /> -->
         <!-- main start -->
-        <service
-            android:name="com.inmobi.signals.activityrecognition.ActivityRecognitionManager"
-            android:enabled="true"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -443,16 +427,17 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.article.activity.VideoDetailActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.article.activity.ArticleVideoSelectorActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.article.activity.ArticleSelectActiivty"
@@ -483,8 +468,8 @@
         <activity
             android:name="amodule.article.activity.VideoPreviewActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Video_Preview_Theme"
             android:windowSoftInputMode="adjustPan"/>
 
@@ -666,7 +651,7 @@
             android:name="amodule.user.activity.ChangeUrl"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.user.activity.ChooseDish"
@@ -686,7 +671,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-            <!--android:launchMode="singleTask"-->
+        <!--android:launchMode="singleTask"-->
         <activity
             android:name="amodule.user.activity.GourmetList"
             android:configChanges="orientation|keyboardHidden"
@@ -848,7 +833,7 @@
             android:name="amodule.user.activity.login.UserSetting"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
         <!-- user end -->
 
@@ -1378,39 +1363,31 @@
             android:name="xh.basic.internet.img.module.DiskCacheModule"
             android:value="GlideModule"/>
 
-        <!-- inmobi 广告 start  //太坑爹，文档竟然没有写 -->
-        <activity
-            android:name="com.inmobi.rendering.InMobiAdActivity"
-            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize|screenLayout"
-            android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.NoTitleBar"
-            tools:ignore="UnusedAttribute"/>
-
-        <receiver
-            android:name="com.inmobi.commons.core.utilities.uid.ImIdShareBroadCastReceiver"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="com.inmobi.share.id"/>
-            </intent-filter>
-        </receiver>
-        <!-- inmobi 广告 end -->
 
         <activity android:name="amodule.comment.activity.PublishCommentActivity">
         </activity>
         <!--腾讯统计mta start-->
         <!--<provider-->
-            <!--android:name="com.tencent.mid.api.MidProvider"-->
-            <!--android:authorities="com.xiangha"-->
-            <!--android:exported="true" >-->
+        <!--android:name="com.tencent.mid.api.MidProvider"-->
+        <!--android:authorities="com.xiangha"-->
+        <!--android:exported="true" >-->
         <!--</provider>-->
         <!--appkey-->
         <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
-        <meta-data android:name="TA_APPKEY" android:value="Aqc1150004142" />
+        <meta-data
+            android:name="TA_APPKEY"
+            android:value="Aqc1150004142"/>
         <!--Channel-->
-        <meta-data android:name="InstallChannel" android:value="xiangha" />
+        <meta-data
+            android:name="InstallChannel"
+            android:value="xiangha"/>
         <!--腾讯统计mta start-->
+
+        <!--mobssms start-->
+        <!-- 通过AndroidManifest配置AppKey和AppSecret，如果你选择通过代码配置，则不需要配置以下meta-data -->
+        <meta-data android:name="Mob-AppKey" android:value="10e22f093f255"/>
+        <meta-data android:name="Mob-AppSecret" android:value="bb71787a9ec63116377a83c3ecac048a"/>
+        <!--mobssms end-->
 
     </application>
 

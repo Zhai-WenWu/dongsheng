@@ -24,6 +24,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.UploadFailPopWindowDialog;
+import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -53,6 +54,17 @@ public class ArticleUploadListPool extends UploadListPool {
     private String tongjiId = "a_videodish_uploadlist";
 
     private int dataType;
+
+    //是否是二次编辑上传的文章
+    private String isSecondEdit;//1:否 2:是
+
+    /**
+     * 设置是否二次编辑上传的文章
+     * @param isSecondEdit
+     */
+    public void setIsSecondEdit(boolean isSecondEdit) {
+        this.isSecondEdit = isSecondEdit ? "2" : "1";
+    }
 
     @Override
     protected void initData(int dataType,int draftId, String coverPath, String finalVideoPath, String timestamp, UploadListUICallBack callback) {
@@ -126,6 +138,7 @@ public class ArticleUploadListPool extends UploadListPool {
                 });
 
         super.uploadOver(flag, response);
+        Activity act = XHActivityManager.getInstance().getCurrentActivity();
         if (FriendHome.isAlive) {
             Intent broadIntent = new Intent();
             broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
@@ -138,9 +151,11 @@ public class ArticleUploadListPool extends UploadListPool {
                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
             broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY,
                     flag ? UploadStateChangeBroadcasterReceiver.STATE_SUCCESS : UploadStateChangeBroadcasterReceiver.STATE_FAIL);
+            if (flag && !TextUtils.isEmpty(isSecondEdit)) {
+                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.SECONDE_EDIT, isSecondEdit);
+            }
             Main.allMain.sendBroadcast(broadIntent);
         } else if (Tools.isForward(XHApplication.in())) {
-            Activity act = XHActivityManager.getInstance().getCurrentActivity();
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
             if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
@@ -167,6 +182,9 @@ public class ArticleUploadListPool extends UploadListPool {
 //                it.putExtra("index",fridendHomeIndex);
 //                act.startActivity(it);
 //            }
+        }
+        if(act.getClass() == ArticleUploadListActivity.class){
+            act.finish();
         }
     }
 
@@ -415,6 +433,7 @@ public class ArticleUploadListPool extends UploadListPool {
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
             int bodyIndex = 0;
             String imgsDataStr = uploadArticleData.getImgs();
+            Log.i("articleUpload","修改上传池数据 imgsDataStr:" + imgsDataStr);
             if (!TextUtils.isEmpty(imgsDataStr)) {
                 UploadItemData bodyItemData;
                 ArrayList<Map<String, String>> makesList = StringManager.getListMapByJson(imgsDataStr);
@@ -424,9 +443,6 @@ public class ArticleUploadListPool extends UploadListPool {
                         String imgPath = map.get("path");
                         String imgUrl = map.get("url");
 
-                        if (!TextUtils.isEmpty(imgUrl)) {
-                            continue;
-                        }
                         Log.e("articleUpload", "文章上传 imgPath: " + imgPath + ",imgUrl:" + imgUrl);
                         Log.e("articleUpload", "文章上传 imgPath.indexOf(\"http\"): " + imgPath.indexOf("http"));
                         if (imgPath.indexOf("http") != 0 && !Tools.isFileExists(imgPath)) {
@@ -535,7 +551,7 @@ public class ArticleUploadListPool extends UploadListPool {
             uploadTextData.put("title", Uri.encode(uploadArticleData.getTitle(), HTTP.UTF_8));
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
             Log.i("tzy","content = " + content);
-            uploadTextData.put("content", Uri.encode(content, HTTP.UTF_8));
+            uploadTextData.put("content", new String(Uri.encode(content, HTTP.UTF_8)));
             uploadTextData.put("isOriginal", String.valueOf(uploadArticleData.getIsOriginal()));
             uploadTextData.put("repAddress", uploadArticleData.getRepAddress());
             uploadTextData.put("img", imgArray.size() > 0 ? imgArray.get(0).get("url") : "");

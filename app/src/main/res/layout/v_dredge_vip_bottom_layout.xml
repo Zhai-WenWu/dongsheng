@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_51"
+    android:background="#F5FFFFFF">
+
+    <TextView
+        android:id="@+id/dredge_vip_immediately"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_36"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="@drawable/bg_dregde_vip"
+        android:gravity="center"
+        android:text="开通VIP"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_16"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#EDEDDE"/>
+
+</RelativeLayout>

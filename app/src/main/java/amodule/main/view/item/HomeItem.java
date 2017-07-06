@@ -2,6 +2,7 @@ package amodule.main.view.item;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -9,31 +10,40 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-import java.io.InputStream;
-import java.math.BigDecimal;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.protocol.HTTP;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
-import acore.tools.FileManager;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.AdapterHome;
+import amodule.main.adapter.AdapterListView;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.home.HomeFragment;
-import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import aplug.web.FullScreenWeb;
+import aplug.web.ShowWeb;
 import third.ad.control.AdControlParent;
+import third.ad.scrollerAd.XHScrollerAdParent;
+import third.mall.activity.CommodDetailActivity;
 import xh.basic.tool.UtilImage;
 
 /**
@@ -41,16 +51,7 @@ import xh.basic.tool.UtilImage;
  * Created by sll on 2017/4/18.
  */
 
-public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickListener {
-
-    private final int TAG_ID = R.string.tag;
-    private int mImgResource = R.drawable.i_nopic;
-    private int mRoundImgPixels = 0, mImgWidth = 0, mImgHeight = 0,// 以像素为单位
-            mRoundType = 1; // 1为全圆角，2上半部分圆角
-    private boolean mImgZoom = false; // 是否允许图片拉伸来适应设置的宽或高
-    private String mImgLevel = FileManager.save_cache; // 图片保存等级
-    private ImageView.ScaleType mScaleType = ImageView.ScaleType.CENTER_CROP;
-    private boolean mIsAnimate = false;// 控制图片渐渐显示
+public class HomeItem extends BaseItemView implements View.OnClickListener, BaseItemView.OnItemClickListener {
 
     //用户信息和置顶view
     private ImageView mTopTag;
@@ -59,6 +60,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected View mDot;
     protected TextView mTopTxt;
 
+    protected LinearLayout mNumInfoLayout;
     protected LinearLayout mTimeTagContainer;
     protected TextView mTimeTag;
     protected View mLineTop;
@@ -73,24 +75,18 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected String mTransferUrl;
     protected String mType;
 
-    protected String mComNum = null;//评论量
-    protected String mLikeNum = null;//点赞量
-    protected String mFavNum = null;//收藏量
-    protected String mAllClickNum = null;//浏览/播放量
-
     protected HomeModuleBean mModuleBean;
     private AdapterHome.ViewClickCallBack mRefreshCallBack;
 
+    protected HomeItemBottomView mHomeItemBottomView;
+    private ImageView mAdTag;
+
     public HomeItem(Context context, int layoutId) {
-        super(context);
-        LayoutInflater.from(context).inflate(layoutId, this, true);
-        initView();
+        this(context,null,layoutId);
     }
 
     public HomeItem(Context context, AttributeSet attrs, int layoutId) {
-        super(context, attrs);
-        LayoutInflater.from(context).inflate(layoutId, this, true);
-        initView();
+        this(context, attrs,0,layoutId);
     }
 
     public HomeItem(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
@@ -101,6 +97,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     protected void initView() {
         this.setBackgroundColor(Color.parseColor("#ffffff"));
+        mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mLineTop = findViewById(R.id.line_top);
         mDot = findViewById(R.id.dot);
         mTopTxt = (TextView) findViewById(R.id.top_txt);
@@ -109,6 +106,11 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mUserGourmet = (ImageView) findViewById(R.id.gourmet_icon);
         mUserName = (TextView) findViewById(R.id.user_name);
         mNameGourmet = (LinearLayout) findViewById(R.id.name_gourmet);
+        mNumInfoLayout = (LinearLayout) findViewById(R.id.numInfoLayout);
+        mHomeItemBottomView = new HomeItemBottomView(getContext());
+        if (mNumInfoLayout != null)
+            mNumInfoLayout.addView(mHomeItemBottomView);
+        mHomeItemBottomView.setVisibility(View.GONE);
 
         mTimeTagContainer = (LinearLayout) findViewById(R.id.time_tag_container);
         if (mTimeTagContainer != null)
@@ -121,6 +123,13 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                         XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
+        addDefaultListener();
+    }
+
+    private void addDefaultListener() {
+        if (mAdTag != null)
+            mAdTag.setOnClickListener(this);
+        setOnClickListener(this);
     }
 
     private ADImageLoadCallback mCallback;
@@ -135,62 +144,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         setViewImage(view, url);
     }
 
-    public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
-        this.mRefreshCallBack = callBack;
-    }
-
-    private void setViewImage(final ImageView v, String value) {
-        v.setVisibility(View.VISIBLE);
-        // 异步请求网络图片
-        if (value.indexOf("http") == 0) {
-            if (v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(value))
-                return;
-            if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
-                mRoundImgPixels = ToolsDevice.dp2px(v.getContext(), 500);
-                v.setImageResource(R.drawable.bg_round_user_icon);
-            } else {
-                v.setImageResource(mImgResource);
-            }
-            v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            if (value.length() < 10)
-                return;
-            v.setTag(TAG_ID, value);
-            if (v.getContext() == null) return;
-            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(v.getContext())
-                    .load(value)
-                    .setSaveType(mImgLevel)
-                    .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(getTarget(v, value));
-        }
-        // 直接设置为内部图片
-        else if (value.indexOf("ico") == 0) {
-            InputStream is = v.getResources().openRawResource(Integer.parseInt(value.replace("ico", "")));
-            Bitmap bitmap = UtilImage.inputStreamTobitmap(is);
-            bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, mRoundType, mRoundImgPixels);
-            UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
-        }
-        // 隐藏
-        else if (value.equals("hide") || value.length() == 0)
-            v.setVisibility(View.GONE);
-            // 直接加载本地图片
-        else if (!value.equals("ignore")) {
-            if (v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(value))
-                return;
-            v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            v.setImageResource(mImgResource);
-            v.setTag(TAG_ID, value);
-            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(v.getContext())
-                    .load(value)
-                    .setSaveType(mImgLevel)
-                    .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(getTarget(v, value));
-        }
-        // 如果为ignore,则忽略图片
-    }
-
-    private SubBitmapTarget getTarget(final ImageView v, final String url) {
+    @Override
+    protected SubBitmapTarget getTarget(final ImageView v, final String url) {
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
@@ -206,21 +161,104 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                     // 图片圆角和宽高适应auther_userImg
                     if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                         v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//						bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(context, 500));
-//                        v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
                         v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                     } else {
                         v.setScaleType(mScaleType);
-                        UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
-                        if (mIsAnimate) {
-//							AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-//							alphaAnimation.setDuration(300);
-//							v.setAnimation(alphaAnimation);
+                        if (mDataMap.containsKey("style") && String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))) {
+                            mImgWidth = getResources().getDimensionPixelSize(R.dimen.dp_110);
+                            mImgHeight = getResources().getDimensionPixelSize(R.dimen.dp_72_5);
+                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, mImgWidth, mImgHeight, true);
+                            v.setImageBitmap(newBitmap);
+                        } else if (mDataMap.containsKey("style") && String.valueOf(AdapterListView.type_threeImage).equals(mDataMap.get("style"))) {
+                            int screenWidth = ToolsDevice.getWindowPx(getContext()).widthPixels;
+                            mImgWidth = (screenWidth - getResources().getDimensionPixelSize(R.dimen.dp_43)) / 3;
+                            mImgHeight = getResources().getDimensionPixelSize(R.dimen.dp_87_5);
+                            Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, mImgWidth, mImgHeight, true);
+                            v.setImageBitmap(newBitmap);
+                        } else {
+                            UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
                         }
                     }
                 }
             }
         };
+    }
+
+    public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
+        this.mRefreshCallBack = callBack;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mIsAd) {
+            if (v == mAdTag) {
+                onAdHintClick();
+            } else if (v == this) {
+                if (mAdControlParent != null) {
+                    mAdControlParent.onAdClick(mDataMap);
+                }
+            }
+            return;
+        }
+        if (!handleClickEvent(v)) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
+            onItemClick();
+        }
+    }
+
+    /**
+     * 处理Item点击事件外的其他事件。
+     * @param view 点击的Item
+     * @return 如果返回false，表示外界不处理点击事件，将会自己处理点击事件；
+     */
+    private boolean handleClickEvent(View view) {
+        if (!TextUtils.isEmpty(mTransferUrl)) {
+            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
+                if (!mTransferUrl.contains("data_type=") && !mTransferUrl.contains("module_type=")) {
+                    if (!mTransferUrl.startsWith("http")) {
+                        if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
+                        else mTransferUrl+="?data_type="+mDataMap.get("type");
+                        mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                    } else {
+                        mTransferUrl += "&data_type="+mDataMap.get("type") + "&module_type="+(isTopTypeView()?"top_info":"info");
+                    }
+                }
+                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
+                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
+            }
+
+            String params = mTransferUrl.substring(mTransferUrl.indexOf("?") + 1, mTransferUrl.length());
+            Log.i("zhangyujian","mTransferUrl:::"+params);
+            Map<String, String> map = StringManager.getMapByString(params, "&", "=");
+            Class c = null;
+            Intent intent = new Intent();
+            if (mTransferUrl.startsWith("http")) {//我的香豆、我的会员页面
+                if (mTransferUrl.indexOf("fullScreen=2") > -1) {
+                    c = FullScreenWeb.class;
+                    intent.putExtra("url", mTransferUrl);
+                    intent.putExtra("code", map.containsKey("code") ? map.get("code") : "");
+                } else {
+                    c = ShowWeb.class;
+                    intent.putExtra("url",mTransferUrl);
+                    intent.putExtra("code",map.get("code"));
+                }
+            } else if (mTransferUrl.contains("xhds.product.info.app?")) {//商品详情页，原生
+                c = CommodDetailActivity.class;
+                intent.putExtra("product_code",map.get("product_code"));
+            } else if(mTransferUrl.contains("nousInfo.app")){
+                c = ShowWeb.class;
+                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
+                intent.putExtra("code",map.get("code"));
+            }
+            if (c != null) {
+                intent.putExtra("data_type", map.get("data_type"));
+                intent.putExtra("module_type", isTopTypeView() ? "top_info" : "info");
+                intent.setClass(getContext(), c);
+                XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
+                return true;
+            }
+        }
+        return false;
     }
 
     public interface ADImageLoadCallback {
@@ -257,7 +295,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         resetData();
         resetView();
         //时间标签
-
         if (mDataMap.containsKey("refreshTime")) {
             String refreshTime = mDataMap.get("refreshTime");
             if (!TextUtils.isEmpty(refreshTime) && mTimeTag != null) {
@@ -317,35 +354,25 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 mIsAd = true;
             }
         }
+        if (mIsAd) {
+            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
+                mAdControlParent.onAdShow(mDataMap, this);
+                mDataMap.put("isADShow", "1");
+            }
+            if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
+                mAdTag.setVisibility(View.VISIBLE);
+        }
         if (mDataMap.containsKey("type")) {
             mType = mDataMap.get("type");
         }
         if (mDataMap.containsKey("url"))
             mTransferUrl = mDataMap.get("url");
-        String comNumStr = mDataMap.get("commentNum");
-        if (!TextUtils.isEmpty(comNumStr) && Integer.parseInt(comNumStr) > 10) {
-            String commentNum = handleNumber(comNumStr);
-            if (!TextUtils.isEmpty(commentNum)) {
-                mComNum = commentNum;
-            }
-        }
-        String allClickStr = mDataMap.get("allClick");
-        if (!TextUtils.isEmpty(allClickStr)) {
-            String allClickNumStr = handleNumber(allClickStr);
-            if (!TextUtils.isEmpty(allClickNumStr)) {
-                mAllClickNum = allClickNumStr;
-            }
-        }
-        String likeNumStr = handleNumber(mDataMap.get("likeNum"));
-        if (!TextUtils.isEmpty(likeNumStr)) {
-            mLikeNum = likeNumStr;
-        }
-        String favNumStr = handleNumber(mDataMap.get("favorites"));
-        if (!TextUtils.isEmpty(favNumStr))
-            mFavNum = favNumStr;
+        mHomeItemBottomView.setData(StringManager.getListMapByJson(mDataMap.get("numInfo")));
     }
 
     protected void resetView() {
+        if (viewIsVisible(mAdTag))
+            mAdTag.setVisibility(View.GONE);
         if (viewIsVisible(mTimeTagContainer))
             mTimeTagContainer.setVisibility(View.GONE);
         if (viewIsVisible(mUserName))
@@ -370,10 +397,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         mIsTop = false;
         mTransferUrl = null;
         mType = "";
-        mComNum = null;
-        mLikeNum = null;
-        mFavNum = null;
-        mAllClickNum = null;
     }
 
     public void setHomeModuleBean(HomeModuleBean bean) {
@@ -495,5 +518,27 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
      */
     public String getDataType() {
         return mType;
+    }
+
+    /**
+     * 获取广告图片的大小。
+     * @param size 一个两个整数的数组
+     * @param style 广告样式 适用于大图样式1和任意图样式6的广告
+     */
+    protected void getADImgSize(int[] size, String style) {
+        if (mDataMap == null || (!"1".equals(mDataMap.get("style")) && !"6".equals(mDataMap.get("style"))))
+            return;
+        Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), mDataMap.get("stype"), "1");
+        if (mapSize == null || mapSize.isEmpty())
+            return;
+        try {
+            size[0] = Integer.parseInt(mapSize.get("width"));
+            size[1] = Integer.parseInt(mapSize.get("height"));
+            int fixedWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
+            size[1] = size[1] * fixedWidth / size[0];
+            size[0] = fixedWidth;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

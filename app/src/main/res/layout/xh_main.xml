@@ -35,7 +35,7 @@
             <LinearLayout
                 android:id="@+id/linear_item"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_43"
+                android:layout_height="match_parent"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dp_5"

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +46,10 @@ public class WebviewManager {
     private List<XHWebView> mWwebArray;
     private boolean state = true;
 
+    public static final String OPEN_NEW = "OPEN_NEW";
+    public static final String OPEN_SELF = "OPEN_SELF";
+    private String mOpenFlag = OPEN_NEW;
+
     /**
      * 初始化
      *
@@ -57,6 +62,10 @@ public class WebviewManager {
         this.loadManager = loadManager;
         mWwebArray = new ArrayList<>();
         this.state = state;
+    }
+
+    public void setOpenFlag(String openFlag) {
+        mOpenFlag = openFlag;
     }
 
     public XHWebView createWebView(int id) {
@@ -116,6 +125,10 @@ public class WebviewManager {
         settings.setSavePassword(false);
         settings.setDefaultTextEncodingName("utf-8");
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+
+        //兼容https,在部分版本上资源显示不全的问题
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
     }
 
     /**
@@ -192,8 +205,12 @@ public class WebviewManager {
             // 当前页打开
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+                Log.i("tzy","url = " + url);
+                if (OPEN_SELF.equals(mOpenFlag)) {
+                    view.loadUrl(url);
+                    return false;
+                }
                 if (state) {
-                    Log.i("tzy","url = " + url);
                     loadManager.setLoading(new OnClickListener() {
                         @Override
                         public void onClick(View v) {

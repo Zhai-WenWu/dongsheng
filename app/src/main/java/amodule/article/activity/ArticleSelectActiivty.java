@@ -3,8 +3,10 @@ package amodule.article.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -22,8 +24,9 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.XHClick;
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
@@ -37,10 +40,16 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
+import amodule.main.Main;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
+import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
+
+import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 
 /**
  * Created by Fang Ruijiao on 2017/5/22.
@@ -61,6 +70,8 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
 
     private int dataType;
     private int draftId;
+
+    private boolean isSecondEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +96,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         if (allContent != null)
             allContent.setBackgroundColor(Color.parseColor("#ffffff"));
         View upload = findViewById(R.id.upload);
-        upload.setVisibility(View.VISIBLE);
+        upload.setVisibility(View.GONE);
         upload.setOnClickListener(this);
         TextView link = (TextView) findViewById(R.id.article_select_check_original_link);
         link.setText(Html.fromHtml("<u>《香哈原创声明》</u>"));
@@ -97,6 +108,25 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         reprintImg.setOnClickListener(this);
         reprintLink = (EditText) findViewById(R.id.article_select_check_reprint_link);
         reprintLink.setOnClickListener(this);
+        reprintLink.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() > 200){
+                    Tools.showToast(ArticleSelectActiivty.this,"最多200字");
+                    reprintLink.setText(s.subSequence(0,200));
+                }
+            }
+        });
         findViewById(R.id.article_select_check_hint).setOnClickListener(this);
         if(2 == uploadArticleData.getIsOriginal()){
             isCheck = 2;
@@ -162,10 +192,11 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         draftId = getIntent().getIntExtra("draftId",-1);
         uploadArticleData = sqLite.selectById(draftId);
         checkCode = uploadArticleData.getClassCode();
+        isSecondEdit = !TextUtils.isEmpty(uploadArticleData.getCode());
     }
 
     private boolean isLoading = false;
-    private void getClassifyData(){
+    private synchronized void getClassifyData(){
         if(isLoading)return;
         isLoading = true;
         loadManager.showProgressBar();
@@ -185,6 +216,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                         gridView.setAdapter(adapterSimple);
                         findViewById(R.id.article_select_classify).setVisibility(View.VISIBLE);
                         gridView.setVisibility(View.VISIBLE);
+                        findViewById(R.id.upload).setVisibility(View.VISIBLE);
                         findViewById(R.id.article_select_other).setVisibility(View.VISIBLE);
                         reprintLink.clearFocus();
                         loadManager.hideProgressBar();
@@ -211,6 +243,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             intent.putExtra("draftId", draftId);
             intent.putExtra("dataType", dataType);
             intent.putExtra("coverPath", uploadArticleData.getImg());
+            intent.putExtra("isAutoUpload", true);
             String videoPath = "";
             ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
             if(videoArray.size() > 0){
@@ -221,8 +254,13 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         }else{
             InternetCallback internetCallback = new InternetCallback(ArticleSelectActiivty.this) {
                 @Override
-                public void loaded(int i, String s, Object o) {
-
+                public void loaded(int flag, String s, Object o) {
+                    if(flag >= ReqInternet.REQ_OK_STRING){
+                        sqLite.deleteById(draftId);
+                    }else{
+                        uploadArticleData.setUploadType(UploadDishData.UPLOAD_FAIL);
+                        sqLite.update(draftId,uploadArticleData);
+                    }
                 }
             };
             if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
@@ -230,6 +268,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO) {
                 uploadArticleData.upload(StringManager.api_videoAdd,internetCallback);
             }
+            gotoFriendHome();
         }
         finish();
         tjClosePage();
@@ -258,24 +297,15 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                     Tools.showToast(ArticleSelectActiivty.this,"请选择分类");
                     return;
                 }
-                if(isCheck > 0){
-                    if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActiivty.this))) {
-                        upload();
+                if(isCheck > 0) {
+                    if(ToolsDevice.getNetActiveState(ArticleSelectActiivty.this)) {
+                        if (sqLite.checkHasMedia(draftId)) {
+                            upload();
+                        } else {
+                            hintDilog();
+                        }
                     }else{
-                        final XhDialog xhDialog = new XhDialog(ArticleSelectActiivty.this);
-                        xhDialog.setTitle("当前不是WiFi环境，是否发布？")
-                                .setCanselButton("暂不发布", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        xhDialog.cancel();
-                                    }
-                                }).setSureButton("继续", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                upload();
-                                xhDialog.cancel();
-                            }
-                        }).show();
+                        Tools.showToast(ArticleSelectActiivty.this,"网络错误，请检查网络或重试");
                     }
                 }else{
                     Tools.showToast(ArticleSelectActiivty.this,"请选择原创/转载");
@@ -304,6 +334,58 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                 break;
 
         }
+    }
+
+    private void hintDilog(){
+        if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActiivty.this))) {
+            upload();
+        }else{
+            final XhDialog xhDialog = new XhDialog(ArticleSelectActiivty.this);
+            xhDialog.setTitle("当前不是WiFi环境，是否发布？")
+                    .setCanselButton("取消", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            xhDialog.cancel();
+                        }
+                    }).setSureButton("确定", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    upload();
+                    xhDialog.cancel();
+                }
+            }).setSureButtonTextColor("#333333")
+                    .setCancelButtonTextColor("#333333")
+                    .show();
+        }
+    }
+
+    private void gotoFriendHome() {
+        Log.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
+        Main.colse_level = 5;
+        if (FriendHome.isAlive) {
+            Intent broadIntent = new Intent();
+            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+            String type = "";
+            if (this.dataType == EditParentActivity.DATA_TYPE_ARTICLE)
+                type = "2";
+            else if (this.dataType == EditParentActivity.DATA_TYPE_VIDEO)
+                type = "1";
+            if (!TextUtils.isEmpty(type))
+                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+            broadIntent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
+            Main.allMain.sendBroadcast(broadIntent);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("code", LoginManager.userInfo.get("code"));
+            if(dataType == EditParentActivity.DATA_TYPE_ARTICLE)
+                intent.putExtra("index", 3);
+            else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
+                intent.putExtra("index", 2);
+            intent.putExtra(SECONDE_EDIT,isSecondEdit ? "2" : "1");
+            intent.setClass(this, FriendHome.class);
+            startActivity(intent);
+        }
+        finish();
     }
 
     //统计 关闭发布页面

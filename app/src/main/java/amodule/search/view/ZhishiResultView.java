@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 
 import com.xiangha.R;
 
@@ -124,8 +125,21 @@ public class ZhishiResultView extends RelativeLayout {
         });
 
         nousAdapter = new AdapterSearch(mListview, mListData, R.layout.c_search_result_zhishi_item,
-                new String[]{"img", "title", "classifyName", "allClick"},
-                new int[]{R.id.iv_img_zhishi, R.id.tv_des_zhishi, R.id.tv_cate_zhishi, R.id.tv_observed_zhishi});
+                new String[]{"img", "title", "classifyName", "allClick","aboveLine","bottomLine","line"},
+                new int[]{R.id.iv_img_zhishi, R.id.tv_des_zhishi, R.id.tv_cate_zhishi, R.id.tv_observed_zhishi,R.id.above_line,R.id.v_zhishi_item_tail,R.id.line});
+        nousAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Object data, String textRepresentation) {
+                switch (view.getId()){
+                    case R.id.above_line:
+                    case R.id.v_zhishi_item_tail:
+                    case R.id.line:
+                        view.setVisibility("hide".equals(data)?GONE:VISIBLE);
+                        return true;
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -146,14 +160,17 @@ public class ZhishiResultView extends RelativeLayout {
                     if (mCurrentPage == 1) {
                         mListData.clear();
                     }
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
-                    Map<String, String> map = listReturn.get(0);
-                    if (map.containsKey("nous") && !map.get("nous").equals("null")) {
-                        listReturn = UtilString.getListMapByJson(map.get("nous"));
+                    Map<String, String> map = StringManager.getFirstMap(returnObj);
+                    if (map.containsKey("nous") && !"null".equals(map.get("nous"))) {
+                        ArrayList<Map<String, String>> listReturn = StringManager.getListMapByJson(map.get("nous"));
+
                         // 解析菜谱
                         for (Map<String, String> mapReturn : listReturn) {
                             mapReturn.put("allClick", mapReturn.get("allClick") + "浏览");
                             mapReturn.put("img", mapReturn.get("img").equals("") ? "" : mapReturn.get("img"));
+                            mapReturn.put("aboveLine", "hide");
+                            mapReturn.put("bottomLine", "hide");
+                            mapReturn.put("line", "show");
                             mListData.add(mapReturn);
                         }
                         loadPage = listReturn.size();

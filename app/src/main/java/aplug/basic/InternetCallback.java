@@ -67,6 +67,7 @@ public abstract class InternetCallback extends InterCallback {
 				try {
 					String resCode = result.get("res");
 					String resData = result.get("data");
+					String resPower = result.get("power");
 					msg = result.get("data");
 					try {
 						if (result.containsKey("append")) {
@@ -89,6 +90,10 @@ public abstract class InternetCallback extends InterCallback {
 					} catch (Exception e) {
 					}
 					if (resCode.equals("2")) {
+						//权限处理
+						if(!TextUtils.isEmpty(resPower))
+							getPower(ReqInternet.REQ_OK_STRING, url, resPower);
+						//数据处理 2
 						loaded(ReqInternet.REQ_OK_STRING, url, resData);
 					} else if (msg.equals("网络不稳定")) {
 						msg = "网络不稳定，请重试";
@@ -115,6 +120,8 @@ public abstract class InternetCallback extends InterCallback {
 			loaded(ReqInternet.REQ_OK_STRING, url, str);
 		finish();
 	}
+
+	public void getPower(int flag, String url, Object obj){}
 
 	private void playAddScoreAnim(Context context, ArrayList<Map<String, String>> resultList) {
 		ToastCustom toastCustom = new ToastCustom(context, R.layout.pop_window, resultList);
@@ -219,7 +226,7 @@ public abstract class InternetCallback extends InterCallback {
 		String location = getLocation();
 		cookie += "geo=" + location + ";";
 		header.put("Cookie", cookie);
-        if(url.contains("Main7")&&!TextUtils.isEmpty(encryptparams)){
+        if((url.contains("main7")||url.contains("Main7"))&&!TextUtils.isEmpty(encryptparams)){
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }

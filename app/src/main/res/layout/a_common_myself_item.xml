@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/dp_43"
     android:paddingLeft="@dimen/dp_20"
     android:background="@color/backgroup_color">
 
     <TextView
         android:id="@+id/text_myself"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dp_15"
-        android:layout_marginBottom="@dimen/dp_15"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_12"
+        android:paddingBottom="@dimen/dp_12"
         android:clickable="false"
         android:gravity="center_vertical"
         android:textColor="#000000"
@@ -21,33 +21,35 @@
         android:layout_height="0px"
         android:layout_below="@id/text_myself"/>
 
-    <TextView
-        android:id="@+id/text_right_myself"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/dp_20"
-        android:layout_toLeftOf="@+id/my_new_info"
-        android:clickable="false"
-        android:textColor="#999999"
-        android:textSize="@dimen/sp_12" />
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/text_right_myself"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/my_new_info"
+            android:layout_marginRight="@dimen/dp_10"
+            android:clickable="false"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12" />
 
-    <TextView
-        android:id="@+id/my_new_info"
-        android:layout_width="@dimen/dp_6"
-        android:layout_height="@dimen/dp_6"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="@dimen/dp_6"
-        android:layout_alignParentRight="true"
-        android:layout_toLeftOf="@+id/ico_right_myself"
-        android:layout_marginRight="@dimen/dp_20"
-        android:background="@drawable/btn_circle_red"
-        android:clickable="false"
-        android:gravity="center_horizontal|center_vertical"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/sp_10"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/my_new_info"
+            android:layout_width="@dimen/dp_6"
+            android:layout_height="@dimen/dp_6"
+            android:background="@drawable/btn_circle_red"
+            android:clickable="false"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_10"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/my_new_hint"

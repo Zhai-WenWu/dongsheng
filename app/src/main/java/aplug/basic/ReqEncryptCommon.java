@@ -110,7 +110,11 @@ public class ReqEncryptCommon {
         return plaintext;
     }
 
-
+    /**
+     * params字符串进行加密。
+     * @param params
+     * @return
+     */
     public String getData(String params)  {
         Log.i("FRJ","getData() params:" + params);
         try {
@@ -138,6 +142,63 @@ public class ReqEncryptCommon {
             return "";
         }
     }
+    public String getData(String params,String nowSign)  {
+        Log.i("FRJ","getData() params:" + params);
+        try {
+            Map<String,String> map=null;
+            if(!TextUtils.isEmpty(params)){
+                map=StringManager.getMapByString(params,"&","=");
+            }
+            JSONObject jsonObject = new JSONObject();
+            if(map!=null){
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
+                    jsonObject.put(entry.getKey(),entry.getValue());
+                }
+            }
+            jsonObject.put("sign",nowSign);
+            Log.i("FRJ","getData() jsonObject:" + jsonObject);
+            GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
+            GY=GY.replace("-----END PUBLIC KEY-----","");
+            byte[] data=jsonObject.toString().getBytes();
+
+            return RSAUtils.encryptByPublicKey(data,GY);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+     *  map进行数据加密
+     * @param map
+     * @return
+     */
+    public String getData(Map<String,String> map)  {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            if(map!=null&&map.size()>0){
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
+                    jsonObject.put(entry.getKey(),entry.getValue());
+                }
+            }
+            jsonObject.put("sign",sign);
+            Log.i("FRJ","getData() jsonObject:" + jsonObject);
+            GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
+            GY=GY.replace("-----END PUBLIC KEY-----","");
+            byte[] data=jsonObject.toString().getBytes();
+
+            return RSAUtils.encryptByPublicKey(data,GY);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+
     public String getData(JSONObject jsonObject)  {
         try {
             jsonObject.put("sign",sign);

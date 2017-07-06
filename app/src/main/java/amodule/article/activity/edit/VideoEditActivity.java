@@ -10,6 +10,7 @@ import java.util.Map;
 import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.VideoDetailActivity;
 import amodule.article.db.UploadVideoSQLite;
@@ -68,25 +69,30 @@ public class VideoEditActivity extends EditParentActivity{
 
     @Override
     public void onNextSetp() {
-        String checkStr = checkData();
-        if (TextUtils.isEmpty(checkStr)) {
-            uploadArticleData.setIsOriginal(2);
-            saveDraft();
-            if(timer != null)timer.cancel();
-            Intent intent = new Intent(this, ArticleUploadListActivity.class);
-            intent.putExtra("draftId", uploadArticleData.getId());
-            intent.putExtra("dataType", EditParentActivity.DATA_TYPE_VIDEO);
-            intent.putExtra("coverPath", uploadArticleData.getImg());
-            String videoPath = "";
-            ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
-            if(videoArray.size() > 0){
-                videoPath = videoArray.get(0).get("video");
+        if(ToolsDevice.getNetActiveState(this)) {
+            String checkStr = checkData();
+            if (TextUtils.isEmpty(checkStr)) {
+                uploadArticleData.setIsOriginal(2);
+                saveDraft();
+                if (timer != null) timer.cancel();
+                Intent intent = new Intent(this, ArticleUploadListActivity.class);
+                intent.putExtra("draftId", uploadArticleData.getId());
+                intent.putExtra("dataType", EditParentActivity.DATA_TYPE_VIDEO);
+                intent.putExtra("coverPath", uploadArticleData.getImg());
+                intent.putExtra("isAutoUpload", true);
+                String videoPath = "";
+                ArrayList<Map<String, String>> videoArray = uploadArticleData.getVideoArray();
+                if (videoArray.size() > 0) {
+                    videoPath = videoArray.get(0).get("video");
+                }
+                intent.putExtra("finalVideoPath", videoPath);
+                startActivity(intent);
+                finish();
+            } else {
+                Tools.showToast(this, checkStr);
             }
-            intent.putExtra("finalVideoPath", videoPath);
-            startActivity(intent);
-            finish();
-        } else {
-            Tools.showToast(this, checkStr);
+        }else{
+            Tools.showToast(this,"网络错误，请检查网络或重试");
         }
     }
 

@@ -2,7 +2,6 @@ package amodule.main.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -14,8 +13,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -29,15 +26,13 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
-import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
+import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.LoginByAccout;
-import aplug.basic.LoadImage;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
 import xh.windowview.XhDialog;
@@ -52,7 +47,7 @@ import xh.windowview.XhDialog;
 @SuppressLint("CutPasteId")
 public class MainChangeSend extends BaseActivity {
 
-    private ImageView closeImage, tastImg;
+    private ImageView closeImage;
     private GridView mGridView;
     private List<Map<String, String>> list;
 
@@ -71,7 +66,6 @@ public class MainChangeSend extends BaseActivity {
 
     private void init() {
         closeImage = (ImageView) findViewById(R.id.close_image);
-        tastImg = (ImageView) findViewById(R.id.change_send_tast);
         mGridView = (GridView) findViewById(R.id.change_send_gridview);
         initData();
         AdapterSimple adapter = new AdapterSimple(mGridView, list,
@@ -108,22 +102,6 @@ public class MainChangeSend extends BaseActivity {
 //            itemNum++;
 //        }
 
-        if (dishVideoMap != null && dishVideoMap.size() > 0) {
-            String img = dishVideoMap.get("img");
-            BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(this)
-                    .load(img)
-                    .setSaveType(LoadImage.SAVE_CACHE)
-                    .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(tastImg);
-            tastImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCommon.openUrl(MainChangeSend.this, dishVideoMap.get("url"), true);
-                    finish();
-                }
-            });
-        }
         mGridView.setNumColumns(itemNum > 3 ? 4 : itemNum);
     }
 
@@ -165,7 +143,6 @@ public class MainChangeSend extends BaseActivity {
                     this.startActivity(dishIntent);
                     XHClick.track(this, "发菜谱");
                 } else {
-                    Tools.showToast(this, "请登录");
                     Intent intent = new Intent(this, LoginByAccout.class);
                     startActivity(intent);
                 }
@@ -221,25 +198,24 @@ public class MainChangeSend extends BaseActivity {
             case "6":
                 if (!LoginManager.isLogin()) {
                     finish();
-                    Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendArticleButton()) {
+                } else if (LoginManager.isBindMobilePhone()) {
                     finish();
                     startActivity(new Intent(this, ArticleEidtActiivty.class));
                 } else
-                    showDialog("发文章", StringManager.api_applyArticlePower);
+                    startActivity(new Intent(this, BindPhoneNum.class));
+//                    showDialog("发文章", StringManager.api_applyArticlePower);
                 break;
             case "7":
                 if (!LoginManager.isLogin()) {
                     finish();
-                    Tools.showToast(this, "请登录");
                     startActivity(new Intent(this, LoginByAccout.class));
-                } else if (LoginManager.isShowSendVideoButton()) {
+                } else if (LoginManager.isBindMobilePhone()) {
                     finish();
                     startActivity(new Intent(this, VideoEditActivity.class));
                 } else
-
-                    showDialog("短视频", StringManager.api_applyVideoPower);
+                    startActivity(new Intent(this, BindPhoneNum.class));
+//                    showDialog("短视频", StringManager.api_applyVideoPower);
                 break;
         }
     }

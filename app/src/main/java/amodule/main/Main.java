@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lansosdk.videoeditor.LoadLanSongSdk;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -74,7 +73,6 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
-import third.ad.tools.InMobiAdTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
@@ -135,14 +133,9 @@ public class Main extends Activity implements OnClickListener {
         //腾讯统计
         StatConfig.setDebugEnable(false);
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
         StatService.setContext(this.getApplication());
-        //初始化
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                InMobiAdTools.getInstance().initSdk(Main.this);
-            }
-        }).start();
+
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
@@ -213,7 +206,7 @@ public class Main extends Activity implements OnClickListener {
                                 sqLite.update(uploadArticleData.getId(),uploadArticleData);
                                 xhDialog.cancel();
                             }
-                        }).setSureButton(" 继续", new OnClickListener() {
+                        }).setSureButton("确定", new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
@@ -229,7 +222,9 @@ public class Main extends Activity implements OnClickListener {
                         startActivity(intent);
                         xhDialog.cancel();
                     }
-                }).show();
+                }).setSureButtonTextColor("#333333")
+                        .setCancelButtonTextColor("#333333")
+                        .show();
                 return true;
             }
             return false;
@@ -288,9 +283,7 @@ public class Main extends Activity implements OnClickListener {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        QbSdk.initX5Environment(Main.this, null);
-        //视频合成so初始化，单独列出
-        LoadLanSongSdk.initVideoSdk(getApplicationContext());
+//        QbSdk.initX5Environment(Main.this, null);
     }
 
     /**
@@ -614,7 +607,6 @@ public class Main extends Activity implements OnClickListener {
                 mainIndex.saveNowStatictis();
                 XHClick.newHomeStatictis(true, "");
             }
-
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
             if (allTab.containsKey("MainIndex")) {
                 MainHome mainIndex = (MainHome) allTab.get("MainIndex");

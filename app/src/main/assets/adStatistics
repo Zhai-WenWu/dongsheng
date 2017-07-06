@@ -148,5 +148,10 @@
 "show":"ad_show_wz",
 "click":"ad_click_wz",
 "twoData":"相关推荐"
+},
+"wz_tiepian":{
+"show":"ad_show_wz",
+"click":"ad_click_wz",
+"twoData":"视频前贴"
 }
 }

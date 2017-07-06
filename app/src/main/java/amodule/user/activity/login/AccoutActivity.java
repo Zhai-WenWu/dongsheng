@@ -1,6 +1,7 @@
 package amodule.user.activity.login;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +20,7 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -31,9 +33,6 @@ import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 import third.push.xg.XGPushServer;
 import third.share.ShareTools;
-import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilLog;
-import xh.basic.tool.UtilString;
 import xh.windowview.XhDialog;
 
 /**
@@ -43,20 +42,16 @@ import xh.windowview.XhDialog;
 public class AccoutActivity extends BaseLoginActivity implements View.OnClickListener {
 
     private LinearLayout ll_accout;
+    private RelativeLayout rl_phone_accout;
     private LeftAndRightTextView view_email_accout;
     private LeftAndRightTextView view_phone_accout;
-    private LeftAndRightTextView view_weixin;
-    private LeftAndRightTextView view_qq;
-    private LeftAndRightTextView view_weibo;
-    private LeftAndRightTextView view_meizu;
+    private LeftAndRightTextView view_weixin, view_qq, view_weibo, view_meizu;
     private LeftAndRightTextView view_modify_secret;
     private Handler handler;
     public static final int ONREFRESH = 1;
-    private Map<String, String> bindMap;
+    private Map<String, String> bindMap = new HashMap<>();
     private final String unbindStr = "未绑定";
     private String tel;
-    private RelativeLayout rl_phone_accout;
-    private LinearLayout ll_help;
     private String zoneCode;
     private View view_accout_below;
     private String mPlatformName = "";
@@ -71,14 +66,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     }
 
     protected void initTitle() {
-        if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_rela_all);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
+        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
     }
 
     @Override
@@ -92,7 +81,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         tel = intent.getStringExtra(PHONE_NUM);
         zoneCode = intent.getStringExtra(ZONE_CODE);
 
-        bindMap = new HashMap<String, String>();
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -115,7 +103,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         };
     }
 
-
     private void initView() {
         TextView title = (TextView) findViewById(R.id.title);
         title.setText("账号与安全");
@@ -128,20 +115,16 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         view_weibo = (LeftAndRightTextView) findViewById(R.id.view_weibo);
         view_meizu = (LeftAndRightTextView) findViewById(R.id.view_meizu);
         view_modify_secret = (LeftAndRightTextView) findViewById(R.id.view_modify_secret);
-        ll_help = (LinearLayout) findViewById(R.id.ll_help);
         view_accout_below = findViewById(R.id.view_accout_below);
 
         view_meizu.setVisibility(View.GONE);
         view_accout_below.setVisibility(View.GONE);
-        view_email_accout.setVisibility(View.GONE);
 
         addViewListener();
         shwoPhoneNum();
     }
 
-
     private void shwoPhoneNum() {
-
         if (TextUtils.isEmpty(tel)) {
             rl_phone_accout.setVisibility(View.VISIBLE);
             view_phone_accout.setVisibility(View.GONE);
@@ -153,79 +136,16 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     }
 
     private void addViewListener() {
-
         ll_accout.setOnClickListener(this);
-        ll_help.setOnClickListener(this);
+        findViewById(R.id.tv_help).setOnClickListener(this);
         findViewById(R.id.back).setOnClickListener(this);
 
         view_phone_accout.init("手机号", unbindStr, false, true, null);
-        view_email_accout.init("邮箱", unbindStr, false, true,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-                        String email = bindMap.get("email");
-                        if (TextUtils.isEmpty(email)) {
-                            return;
-                        } else {
-                            showUnbindThirdParty("email");
-                        }
-                    }
-                });
-
-        view_weixin.init("微信号", unbindStr, true, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-
-                        String weixin = bindMap.get("weixin");
-                        if (TextUtils.isEmpty(weixin)) {
-                            loginByThrid(LoginManager.LOGIN_WX, "微信号");
-                        } else {
-                            showUnbindThirdParty("weixin");
-                        }
-                    }
-                });
-
-        view_qq.init("QQ号", unbindStr, true, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-                        String qq = bindMap.get("qq");
-                        if (TextUtils.isEmpty(qq)) {
-                            loginByThrid(LoginManager.LOGIN_QQ, "QQ号");
-                        } else {
-                            showUnbindThirdParty("qq");
-                        }
-                    }
-                });
-
-        view_weibo.init("微博号", unbindStr, false, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-
-                        String weibo = bindMap.get("weibo");
-                        if (TextUtils.isEmpty(weibo)) {
-                            loginByThrid(LoginManager.LOGIN_WB, "微博号");
-                        } else {
-                            showUnbindThirdParty("weibo");
-                        }
-                    }
-                });
-
-        view_meizu.init("魅族", unbindStr, false, false,
-                new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-                    @Override
-                    public void onClick() {
-                        String meizu = bindMap.get("meizu");
-                        if (TextUtils.isEmpty(meizu)) {
-                            return;
-                        } else {
-                            showUnbindThirdParty("meizu");
-                        }
-
-                    }
-                });
+        view_email_accout.init("邮箱", unbindStr, false, true, getThirdLAndRCallback("email"));
+        view_weixin.init("微信号", unbindStr, true, false, getThirdLAndRCallback("weixin"));
+        view_qq.init("QQ号", unbindStr, true, false, getThirdLAndRCallback("qq"));
+        view_weibo.init("微博号", unbindStr, false, false, getThirdLAndRCallback("weibo"));
+        view_meizu.init("魅族", unbindStr, false, false, getThirdLAndRCallback("meizu"));
 
         view_modify_secret.init("修改密码", "", false, true,
                 new LeftAndRightTextView.LeftAndRightTextViewCallback() {
@@ -234,15 +154,41 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         motifySecret();
                     }
                 });
+    }
 
+    /**
+     * @param typeKey "weibo","qq","weixin"
+     */
+    private LeftAndRightTextView.LeftAndRightTextViewCallback getThirdLAndRCallback(final String typeKey) {
+        return new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+            @Override
+            public void onClick() {
+                String type = bindMap.get(typeKey);
+                if (TextUtils.isEmpty(type)) {
+                    switch (typeKey) {
+                        case "email":
+                        case "meizui":
+                            return;
+                        case "weibo":
+                            loginByThrid(LoginManager.LOGIN_WB, "微博号");
+                            break;
+                        case "qq":
+                            loginByThrid(LoginManager.LOGIN_QQ, "QQ号");
+                            break;
+                        case "weixin":
+                            loginByThrid(LoginManager.LOGIN_WX, "微信号");
+                            break;
+                    }
+                } else
+                    showUnbindThirdParty(typeKey);
+            }
+        };
     }
 
     private void motifySecret() {
-
         if (TextUtils.isEmpty(tel)) {
             gotoBindPhoneNum(this);
         } else {
-
             final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
             xhDialog.setTitle("修改登录密码" + "\n将给手机" +
                     hidePhoneNum(tel) + "发送验证码")
@@ -267,72 +213,56 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         }
     }
 
-
     public void getData() {
-
-        String param = "type=getData&devCode=" + XGPushServer.getXGToken(this);
+        String param = new StringBuffer()
+                .append("type=getData")
+                .append("&devCode=").append(XGPushServer.getXGToken(this)).toString();
         ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback(this) {
-
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
-                    if (listReturn.size() > 0) {
-                        Map<String, String> user_info = listReturn.get(0);
-                        tel = user_info.get("tel");
-                        zoneCode = user_info.get("phoneZone");
-                        shwoPhoneNum();
-                    }
-                } else {
-                    loadManager.setFailClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            loadManager.hideLoadFaildBar();
-                            if (handler != null)
-                                handler.sendEmptyMessage(ONREFRESH);
-                        }
-                    });
-                }
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> user_info = StringManager.getFirstMap(returnObj);
+                    tel = user_info.get("tel");
+                    zoneCode = user_info.get("phoneZone");
+                    shwoPhoneNum();
+                } else
+                    setFailClickListener();
             }
         });
-
 
         ReqInternet.in().doPost(StringManager.api_getThirdBind, "", new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
-                    if (listReturn.size() > 0) {
-                        Map<String, String> thirdBind_info = listReturn.get(0);
-                        setBindInfo(thirdBind_info);
-                    }
-                } else {
-                    loadManager.setFailClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            loadManager.hideLoadFaildBar();
-                            if (handler != null)
-                                handler.sendEmptyMessage(ONREFRESH);
-
-                        }
-                    });
-                }
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> thirdBind_info = StringManager.getFirstMap(returnObj);
+                    setBindInfo(thirdBind_info);
+                } else
+                    setFailClickListener();
             }
         });
     }
 
+    private void setFailClickListener(){
+        loadManager.setFailClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadManager.hideLoadFaildBar();
+                if (handler != null)
+                    handler.sendEmptyMessage(ONREFRESH);
+            }
+        });
+    }
 
     private void setBindInfo(Map<String, String> info) {
+        if(info == null) return;
 
         bindMap.clear();
         String bindStr;
         bindStr = parseData("email", info);
         if (TextUtils.isEmpty(bindStr)) {
-            view_email_accout.setVisibility(View.GONE);
             view_accout_below.setVisibility(View.GONE);
         } else {
             view_email_accout.setRightText(bindStr);
-            view_email_accout.setVisibility(View.VISIBLE);
             view_accout_below.setVisibility(View.VISIBLE);
         }
 
@@ -353,15 +283,10 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     }
 
     private String parseData(String type, Map<String, String> info) {
-
         String str = info.get(type);
-
         if (TextUtils.isEmpty(str))
             return null;
-        ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(str);
-        if (maps.size() < 1)
-            return null;
-        Map<String, String> map = maps.get(0);
+        Map<String, String> map = StringManager.getFirstMap(str);
         if (map.size() < 1)
             return null;
 
@@ -369,37 +294,32 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             String name = map.get("name");
             bindMap.put(type, name);
             return name;
-        } else {
+        } else
             return null;
-        }
     }
 
-    private void showUnbindThirdParty(final String type) {
 
+
+    private void showUnbindThirdParty(final String type) {
         String title = "";
         String tongjiStr = "";
 
-        if ("email".equals(type)) {
-            title = "邮箱";
-        } else if ("qq".equals(type)) {
-            title = "QQ号";
-        } else if ("weibo".equals(type)) {
-            title = "微博号";
-        } else if ("weixin".equals(type)) {
-            title = "微信号";
-        } else if ("meizu".equals(type)) {
-            title = "魅族号";
+        switch (type) {
+            case "email": title = "邮箱"; break;
+            case "qq": title = "QQ号"; break;
+            case "weibo": title = "微博号"; break;
+            case "weixin": title = "微信号"; break;
+            case "meizu": title = "魅族号"; break;
+            default:
+                break;
         }
 
-        tongjiStr = title;
-        if("邮箱".equals(tongjiStr)){
-            tongjiStr = "解绑邮箱";
-        }
+        tongjiStr = "邮箱".equals(title) ? "解绑邮箱" : title;
 
         if (TextUtils.isEmpty(tel) && bindMap.size() == 1) {
             final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
             final String finalTitle1 = tongjiStr;
-            xhDialog.setTitle("该账号为唯一登录方式，" + "\n绑定手机号才能解绑")
+            xhDialog.setTitle("该账号为唯一登录方式，\n绑定手机号才能解绑")
                     .setSureButton("我知道了", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -414,7 +334,6 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             return;
         }
 
-
         final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
 
         final String finalTitle = tongjiStr;
@@ -422,8 +341,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                 .setCanselButton("取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, finalTitle, "弹框解绑，选择取消");
                         xhDialog.cancel();
+                        XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, finalTitle, "弹框解绑，选择取消");
                     }
                 })
                 .setSureButton("确定", new View.OnClickListener() {
@@ -441,14 +360,11 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "弹框解绑，选择确定");
                             unbindThirdParty(type);
                         }
-
                     }
                 })
                 .setSureButtonTextColor("#007aff")
                 .setCancelButtonTextColor("#007aff");
         xhDialog.show();
-
-
     }
 
     private void unbindEmail() {
@@ -458,8 +374,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             @Override
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(msg);
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    ArrayList<Map<String, String>> listReturn = StringManager.getListMapByJson(msg);
                     if (listReturn.size() > 0) {
                         Map<String, String> map = listReturn.get(0);
                         if ("2".equals(map.get("result"))) {
@@ -472,17 +388,8 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         }
 
                     }
-                } else {
-                    loadManager.showLoadFaildBar();
-                    loadManager.setFailClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            loadManager.hideLoadFaildBar();
-
-                        }
-                    });
-                }
-
+                } else
+                    showLoadFaildBar();
             }
         });
     }
@@ -494,42 +401,37 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             @Override
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
-                String tempStr = type;
-                if ("meizu".equals(tempStr)) {
-                    tempStr = "tempStr";
-                }
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(msg);
-                    if (listReturn.size() > 0) {
-                        Map<String, String> map = listReturn.get(0);
-                        if ("2".equals(map.get("result"))) {
-                            Tools.showToast(AccoutActivity.this, "解绑成功");
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, tempStr, "解绑成功");
-                            getData();
-                        } else {
-                            Tools.showToast(AccoutActivity.this, "解绑失败，" + map.get("reason"));
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, tempStr, "解绑失败");
-                        }
+                String tempStr = "meizu".equals(type) ? "tempStr" : type;
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> map = StringManager.getFirstMap(msg);
+                    if ("2".equals(map.get("result"))) {
+                        getData();
+                        Tools.showToast(AccoutActivity.this, "解绑成功");
+                        XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, tempStr, "解绑成功");
+                    } else {
+                        Tools.showToast(AccoutActivity.this, "解绑失败，" + map.get("reason"));
+                        XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, tempStr, "解绑失败");
                     }
                 } else {
-                    loadManager.showLoadFaildBar();
                     XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, tempStr, "解绑失败");
-                    loadManager.setFailClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            loadManager.hideLoadFaildBar();
-                        }
-                    });
+                    showLoadFaildBar();
                 }
-
             }
         });
     }
 
+    private void showLoadFaildBar(){
+        loadManager.showLoadFaildBar();
+        loadManager.setFailClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadManager.hideLoadFaildBar();
+            }
+        });
+    }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.ll_accout:
                 if (TextUtils.isEmpty(tel)) {
@@ -538,24 +440,19 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                     gotoChangePhone(this, zoneCode, tel);
                 }
                 break;
-            case R.id.ll_help:
+            case R.id.tv_help:
                 gotoFeedBack();
                 break;
             case R.id.title_rela_all:
-                onPressTopBar();
-                break;
             case R.id.back:
                 onPressTopBar();
             default:
                 break;
         }
-
     }
 
     @Override
     public void onBackPressed() {
-//        finish();
-
         if (loadManager.isShowingProgressBar()) {
             loadManager.hideProgressBar();
         } else {
@@ -585,36 +482,30 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         }
     }
 
-    /**
-     * 授权。如果授权成功，则获取用户信息</br>
-     */
+    /** 授权。如果授权成功，则获取用户信息</br> */
     public void thirdAuth(final String platform, final String type) {
         loadManager.showProgressBar();
-        Tools.showToast(mAct, "授权开始...");
-        ShareSDK.initSDK(mAct);
-        Platform pf = ShareSDK.getPlatform(mAct, platform);
-        if (pf.isValid()) {
-            pf.removeAccount();
+//        Tools.showToast(mAct, "授权开始...");
+        Platform pf = ShareSDK.getPlatform(platform);
+        if (pf.isAuthValid()) {
+            pf.removeAccount(true);
         }
         //false为客户端   true为网页版
         pf.SSOSetting(false);
         //设置监听
-        //Setting listener
         pf.setPlatformActionListener(new PlatformActionListener() {
 
             @Override
             public void onError(Platform arg0, int arg1, Throwable arg2) {
-
                 AccoutActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败");
-                        Tools.showToast(AccoutActivity.this, "授权出错...");
+//                        Tools.showToast(AccoutActivity.this, "授权出错...");
                         loadManager.hideProgressBar();
-                        UtilLog.reportError("用户授权出错", null);
+                        LogManager.reportError("用户授权出错", null);
                     }
                 });
-
             }
 
             @Override
@@ -627,17 +518,19 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         if (action == Platform.ACTION_USER_INFOR) {
                             String devCode = XGPushServer.getXGToken(mAct);
                             PlatformDb plfDb = plat.getDb();
-                            param = "type=thirdLogin&devCode=" + devCode +
-                                    "&p1=" + plfDb.getToken() +
-                                    "&p2=" + plfDb.getUserId() +
-                                    "&p3=" + mPlatformName +
-                                    "&p4=" + plfDb.getUserName() +
-                                    "&p5=" + plfDb.getUserIcon() +
-                                    "&p6=" + getGender(plfDb.getUserGender());
+                            StringBuffer stringBuffer = new StringBuffer().append("type=thirdLogin")
+                                    .append("&devCode=").append(devCode)
+                                    .append("&p1=").append(plfDb.getToken())
+                                    .append("&p2=").append(plfDb.getUserId())
+                                    .append("&p3=").append(mPlatformName)
+                                    .append("&p4=").append(plfDb.getUserName())
+                                    .append("&p5=").append(plfDb.getUserIcon())
+                                    .append("&p6=").append(getGender(plfDb.getUserGender()));
                             if (platform.equals(ShareTools.WEI_XIN)) {
-                                param += "&p7=" + res.get("unionid").toString();
+                                stringBuffer.append("&p7=").append(res.get("unionid").toString());
                             }
-                            UtilLog.print("d", "---------第三方用户信息----------" + res.toString());
+                            param = stringBuffer.toString();
+                            LogManager.print("d", "---------第三方用户信息----------" + res.toString());
                         }
                         //
                         if (param.equals("")) {
@@ -647,19 +540,17 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                         }
 
                         final String finalParam = param;
-
                         ReqInternet.in().doPost(StringManager.api_getUserInfo, finalParam.toString(),
                                 new InternetCallback(AccoutActivity.this) {
 
                                     @Override
                                     public void loaded(int flag, String url, Object returnObj) {
-                                        if (flag >= UtilInternet.REQ_OK_STRING) {
+                                        if (flag >= ReqInternet.REQ_OK_STRING) {
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定成功");
                                             getData();
                                         } else {
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败");
                                             XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "绑定失败原因：已被绑定过");
-                                            toastFaildRes(flag, true, returnObj);
                                         }
                                         mAct.loadManager.hideProgressBar();
                                     }
@@ -670,13 +561,12 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
             @Override
             public void onCancel(Platform arg0, int arg1) {
-                Tools.showToast(AccoutActivity.this, "取消授权...");
+                Tools.showToast(AccoutActivity.this, "登录失败");
                 loadManager.hideProgressBar();
             }
         });
         pf.showUser(null);
     }
-
 
     private static String getGender(String gender) {
         if ("m".equals(gender))//男
@@ -690,9 +580,9 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(handler!=null){
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
-            handler=null;
+            handler = null;
         }
     }
 }

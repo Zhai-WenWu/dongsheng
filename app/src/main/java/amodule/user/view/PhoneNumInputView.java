@@ -23,15 +23,11 @@ import com.xiangha.R;
 
 public class PhoneNumInputView extends RelativeLayout implements View.OnClickListener {
 
-
-    private final Context context;
     private final LinearLayout ll_country_id;
     private final ImageView iv_del;
     private TextView user_contryId;
     private EditText user_phone_number;
     private PhoneNumInputViewCallback callback;
-    public static final String ZONE_CODE = "zoneCode";
-    public static final String PHONE_NUM = "phoneNum";
 
     public PhoneNumInputView(Context context) {
         this(context, null);
@@ -44,48 +40,39 @@ public class PhoneNumInputView extends RelativeLayout implements View.OnClickLis
     public PhoneNumInputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.a_login_phone_info, this, true);
-        this.context = context;
         user_contryId = (TextView) findViewById(R.id.user_contryId);
         user_phone_number = (EditText) findViewById(R.id.user_phone_number);
         ll_country_id = (LinearLayout) findViewById(R.id.ll_country_id);
         iv_del = (ImageView) findViewById(R.id.iv_del);
+
         iv_del.setVisibility(GONE);
+
         ll_country_id.setOnClickListener(this);
         iv_del.setOnClickListener(this);
         user_phone_number.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         user_phone_number.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if ("86".equals(getZoneCode())) {
-                    if (count == 1) {
-                        int length = s.toString().length();
-                        if (length == 3 || length == 8) {
-                            user_phone_number.setText(s + " ");
-                            user_phone_number.setSelection(user_phone_number.getText().toString().length());
-                        }
+                boolean isChina = "86".equals(getZoneCode());
+                if (isChina && count == 1) {
+                    int length = s.toString().length();
+                    if (length == 3 || length == 8) {
+                        user_phone_number.setText(s + " ");
+                        user_phone_number.setSelection(user_phone_number.getText().toString().length());
                     }
-
-                    user_phone_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(13)});
-                }else{
-                    user_phone_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
                 }
+                InputFilter inputFilter = new InputFilter.LengthFilter(isChina ? 13 : 20);
+                user_phone_number.setFilters(new InputFilter[]{inputFilter});
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
-                if (user_phone_number.getText().length() > 0) {
-                    iv_del.setVisibility(VISIBLE);
-                } else {
-                    iv_del.setVisibility(GONE);
-                }
+                boolean isVisibility = user_phone_number.getText().length() > 0;
+                iv_del.setVisibility(isVisibility ? VISIBLE : GONE);
                 callback.onPhoneInfoChanged();
             }
         });
@@ -93,27 +80,17 @@ public class PhoneNumInputView extends RelativeLayout implements View.OnClickLis
         user_phone_number.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    iv_del.setVisibility(GONE);
-                } else {
-                    if (user_phone_number.getText().length() > 0) {
-                        iv_del.setVisibility(VISIBLE);
-                    } else {
-                        iv_del.setVisibility(GONE);
-                    }
-
-                }
+                boolean isVisibility = hasFocus && user_phone_number.getText().length() > 0;
+                iv_del.setVisibility(isVisibility ? VISIBLE : GONE);
             }
         });
     }
 
-
     public void init(String hint, String zoneCode, String phoneNum, PhoneNumInputViewCallback callback) {
         this.callback = callback;
 
-        if (!TextUtils.isEmpty(zoneCode)) {
+        if (!TextUtils.isEmpty(zoneCode))
             user_contryId.setText("+" + zoneCode);
-        }
 
         if (!TextUtils.isEmpty(phoneNum)) {
             user_phone_number.setText("86".equals(zoneCode)
@@ -143,13 +120,10 @@ public class PhoneNumInputView extends RelativeLayout implements View.OnClickLis
         if (!TextUtils.isEmpty(code))
             user_contryId.setText(code);
 
-        if ("86".equals(code)) {
-            user_phone_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(13)});
-        } else {
-            user_phone_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-        }
+        boolean isChina = "86".equals(code);
+        InputFilter inputFilter = new InputFilter.LengthFilter(isChina ? 13 : 20);
+        user_phone_number.setFilters(new InputFilter[]{inputFilter});
     }
-
 
     public String getZoneCode() {
         return user_contryId.getText().toString().replace("+", "");
@@ -159,11 +133,9 @@ public class PhoneNumInputView extends RelativeLayout implements View.OnClickLis
         return user_phone_number.getText().toString().replace(" ", "");
     }
 
-
     public boolean isDataAbsence() {
         return TextUtils.isEmpty(getZoneCode()) || TextUtils.isEmpty(getPhoneNum());
     }
-
 
     public interface PhoneNumInputViewCallback {
 

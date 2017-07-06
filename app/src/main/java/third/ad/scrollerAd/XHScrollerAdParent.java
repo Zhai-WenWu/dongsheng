@@ -1,8 +1,10 @@
 package third.ad.scrollerAd;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -15,12 +17,12 @@ import third.ad.tools.AdConfigTools;
  */
 public abstract class XHScrollerAdParent {
     public static final String ADKEY_GDT = "sdk_gdt";
-    public static final String ADKEY_INMOBI = "sdk_inmobi";
+//    public static final String ADKEY_INMOBI = "sdk_inmobi";
     public static final String ADKEY_API = "api_tfp";
     public static final String ADKEY_BANNER = "xh";
 
     public static final String TAG_GDT = "gdt";
-    public static final String TAG_INMOBI = "inmobi";
+//    public static final String TAG_INMOBI = "inmobi";
     public static final String TAG_API = "api";
     public static final String TAG_BANNER = "personal";
 
@@ -139,5 +141,60 @@ public abstract class XHScrollerAdParent {
         }else{
             return LoginManager.isShowAd();
         }
+    }
+
+    /**
+     * 判断当前是否支持该广告类型
+     * @param type
+     * @return
+     */
+    public static boolean supportType(String type){
+        if(!TextUtils.isEmpty(type)&&(XHScrollerAdParent.TAG_GDT.equals(type)||XHScrollerAdParent.TAG_BANNER.equals(type)
+        || XHScrollerAdParent.TAG_API.equals(type))){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取当前广告尺寸
+     * @param type---广告类型
+     * @param loid---腾讯API的loid
+     * @param viewTag ----外部要显示的图片样式 1-大图，2-小图
+     */
+    public static Map getAdImageSize(String type,String loid,String viewTag){
+        if(TextUtils.isEmpty(type)||TextUtils.isEmpty(viewTag))return null;
+        Map<String,String> map = new HashMap<>();
+        if(ADKEY_GDT.equals(type)){//广点通
+            map.put("width","1280");
+            map.put("height","720");
+            return map;
+
+        }else if(ADKEY_API.equals(type)){//腾讯API
+            if("1".equals(viewTag)){
+                if(!TextUtils.isEmpty(loid)&&loid.equals("201")){
+                    map.put("width","640");
+                    map.put("height","246");
+                }else {
+                    map.put("width","640");
+                    map.put("height","330");
+                }
+
+            }else if("2".equals(viewTag)){
+                map.put("width","230");
+                map.put("height","152");
+            }
+            return map;
+        }else if(ADKEY_BANNER.equals(type)){//xh自己的广告
+            if("1".equals(viewTag)){
+                map.put("width","750");
+                map.put("height","464");
+            }else if("2".equals(viewTag)){
+                map.put("width","240");
+                map.put("height","180");
+            }
+            return map;
+        }
+        return null;
     }
 }

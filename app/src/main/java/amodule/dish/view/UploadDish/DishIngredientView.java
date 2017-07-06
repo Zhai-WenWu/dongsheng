@@ -30,8 +30,7 @@ import xh.basic.tool.UtilString;
  * 食材和辅料控制
  * @author FangRuijiao
  * DishIngredientView
- * @TODO 
- * @data 2015年10月14日下午4:36:25 
+ * @data 2015年10月14日下午4:36:25
  */
 @SuppressLint("InflateParams")
 public class DishIngredientView{

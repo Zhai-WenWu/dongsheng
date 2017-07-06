@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.lansosdk.videoeditor.MediaInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -171,15 +170,15 @@ public class StepVideoPosCompute {
 
     private float getVideoDuraton(String path) {
         float time = 0f;
-        if(Tools.isFileExists(path)){
-            MediaInfo mediaInfo = new MediaInfo(path);
-            if(mediaInfo!=null){
-                mediaInfo.prepare();
-            }
-            if(mediaInfo!=null){
-                time = mediaInfo.vDuration;
-            }
-        }
+//        if(Tools.isFileExists(path)){
+//            MediaInfo mediaInfo = new MediaInfo(path);
+//            if(mediaInfo!=null){
+//                mediaInfo.prepare();
+//            }
+//            if(mediaInfo!=null){
+//                time = mediaInfo.vDuration;
+//            }
+//        }
         return time;
     }
 }

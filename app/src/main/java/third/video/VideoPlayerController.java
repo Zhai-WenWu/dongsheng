@@ -2,6 +2,7 @@ package third.video;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.TimedText;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -15,8 +16,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoExtListeners.OnVDVideoCompletionListener;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
@@ -62,6 +65,7 @@ public class VideoPlayerController {
     protected View view_Tip;
     private boolean isAutoPaly = false;//是否是wifi状态
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
+    private VDVideoViewListeners.OnProgressUpdateListener onProgressUpdateListener;
 
     public VideoPlayerController(Context context) {
         this.mContext = context;
@@ -97,8 +101,9 @@ public class VideoPlayerController {
             public void onVDVideoCompletion(VDVideoInfo info, int status) {
             }
         });
-
+setControlLayerVisibility(false);
         VDVideoViewController controller = VDVideoViewController.getInstance(context);
+        controller.pause();
         if (controller != null) {
             controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
                 @Override
@@ -106,6 +111,26 @@ public class VideoPlayerController {
                     if (mOnPlayingCompletionListener != null) {
                         mOnPlayingCompletionListener.onPlayingCompletion();
                     }
+                }
+            });
+//            controller.touchScreenHorizonScrollEvent();
+            controller.setSeekPause(true);
+            controller.addOnSeekCompleteListener(new VDVideoViewListeners.OnSeekCompleteListener() {
+                @Override
+                public void onSeekComplete() {
+
+                }
+            });
+
+            controller.addOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
+                @Override
+                public void onProgressUpdate(long current, long duration) {
+                    if(onProgressUpdateListener != null) onProgressUpdateListener.onProgressUpdate(current, duration);
+                }
+
+                @Override
+                public void onDragProgess(long current, long duration) {
+                    if(onProgressUpdateListener != null) onProgressUpdateListener.onDragProgess(current, duration);
                 }
             });
         }
@@ -361,7 +386,7 @@ public class VideoPlayerController {
             public Map<String, String> getReqHeader(Map<String, String> header, String url,
                                                     Map<String, String> params) {
                 mVideoInfoRequestNumber++;
-                return new HashMap<String, String>();
+                return new HashMap<>();
             }
         });
     }
@@ -380,7 +405,10 @@ public class VideoPlayerController {
         mVDVideoView.open(mContext, videoInfo);
     }
 
-
+    public void setControlLayerVisibility(boolean isShow){
+        if(mVDVideoView != null)
+            mVDVideoView.findViewById(R.id.controlLayout1).setVisibility(isShow?View.VISIBLE:View.GONE);
+    }
 
     private String getData(List<Map<String, String>> list, String key) {
         if (list.size() > 0) {
@@ -472,6 +500,12 @@ public class VideoPlayerController {
             return mVDVideoView.getIsPlaying();
         }
         return false;
+    }
+
+    public void onStart(){
+        if(mVDVideoView != null){
+            mVDVideoView.onStart();
+        }
     }
 
     public void onResume() {
@@ -631,5 +665,9 @@ public class VideoPlayerController {
 
     public void removePlayingCompletionListener() {
         mOnPlayingCompletionListener = null;
+    }
+
+    public void setOnProgressUpdateListener(VDVideoViewListeners.OnProgressUpdateListener onProgressUpdateListener) {
+        this.onProgressUpdateListener = onProgressUpdateListener;
     }
 }

@@ -193,7 +193,7 @@ public class VideoDishUploadListPool extends UploadListPool {
      */
     public void cancelUpload() {
         super.cancelUpload();
-        MediaHandleControl.delAllMediaHandlerData(uploadPoolData.getDraftId());
+//        MediaHandleControl.delAllMediaHandlerData(uploadPoolData.getDraftId());
         resetDbData();
         XHClick.mapStat(XHApplication.in(), "a_videodish_uploadlist", "取消上传", "");
     }
@@ -321,7 +321,7 @@ public class VideoDishUploadListPool extends UploadListPool {
     private void deleteData() {
         UploadDishSqlite dishSqlite = new UploadDishSqlite(XHApplication.in().getApplicationContext());
         dishSqlite.deleteById(uploadPoolData.getDraftId());
-        MediaHandleControl.delAllMediaHandlerData(uploadPoolData.getDraftId());
+//        MediaHandleControl.delAllMediaHandlerData(uploadPoolData.getDraftId());
     }
 
 

@@ -56,7 +56,7 @@ public class UploadDishNormalControl extends UploadDishParrentControl implements
 
     /**
      * 初始化View
-     * @TODO 传菜谱界面主控制_构造 绑定点击事件 建立定时存草稿timer
+     * 传菜谱界面主控制_构造 绑定点击事件 建立定时存草稿timer
      */
     @Override
     protected void initView() {
@@ -193,7 +193,7 @@ public class UploadDishNormalControl extends UploadDishParrentControl implements
     /**
      * 存草稿
      * @param subjectType 存储菜谱的不同状态(标示菜谱的状态： 草稿、发布中、编辑中、后台发布 )
-     * @TODO 调用数据层存菜谱草稿数据
+     * 调用数据层存菜谱草稿数据
      */
     @Override
     public int onSaveDraft(String subjectType) {
@@ -249,7 +249,6 @@ public class UploadDishNormalControl extends UploadDishParrentControl implements
                 mUploadDishControl.startUpload(uploadDishData);
                 XHClick.track(mAct,"发菜谱");
             }else {
-                Tools.showToast(mAct, "请先登录");
                 Intent it = new Intent(mAct, LoginByAccout.class);
                 mAct.startActivity(it);
             }

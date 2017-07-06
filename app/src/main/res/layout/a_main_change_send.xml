@@ -7,21 +7,10 @@
     android:onClick="onCloseThis"
     android:background="@android:color/transparent">
 
-    <ImageView
-        android:id="@+id/change_send_tast"
-        android:layout_width="@dimen/dp_185"
-        android:layout_height="@dimen/dp_65"
-        android:layout_marginRight="@dimen/dp_15"
-        android:layout_marginTop="@dimen/dp_49"
-        android:layout_marginBottom="@dimen/dp_49"
-        android:layout_alignParentRight="true"
-        />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/change_send_tast"
         android:layout_alignParentBottom="true"
         android:gravity="bottom">
         <GridView

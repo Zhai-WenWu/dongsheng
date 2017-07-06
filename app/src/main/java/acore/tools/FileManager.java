@@ -24,6 +24,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
+import acore.dialogManager.VersionOp;
+import acore.override.XHApplication;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
@@ -63,7 +65,9 @@ public class FileManager extends UtilFile{
 	public static final String xmlFile_adIsShow = "adIsShow";
 	public static final String xmlKey_XGToken = "token";
 	public static final String xmlKey_showNum = "showNum";
+	public static final String xmlKey_protocol = "protocol";
 	public static final String xmlKey_domain = "domain";
+	public static final String xmlKey_growingioopen = "growingioopen";
 	public static final String xmlKey_mall_domain = "mall_domain";
 	public static final String xmlKey_isIndexData = "isIndexData";
 	public static final String xmlKey_device = "device";
@@ -132,7 +136,7 @@ public class FileManager extends UtilFile{
 	public static final  String MATCH_WORDS_CREATE_TIME = "match_words_create_time"; //热搜词库，创建时间
 	public static final  String SHOW_NO_WIFI = "show_no_wifi";
 	public static final  String STATICTIS_S6 = "statictis_s6";//s6统计数据体
-	public static final  String file_homeTopModle = "homeTopModle";//首页一级导航的内置数据
+	public static final  String file_homeTopModle = "homeTopModle" + VersionOp.getVerName(XHApplication.in());//首页一级导航的内置数据
 
 
 	/**

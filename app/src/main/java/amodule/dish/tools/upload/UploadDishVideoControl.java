@@ -522,12 +522,11 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
                 //结束定时存储草稿的操作
                 timer.cancel();
                 XHClick.track(mAct,"下一步，合成视频");
-                MediaHandleControl.delAllMediaHandlerData(uploadDishData.getId());
+//                MediaHandleControl.delAllMediaHandlerData(uploadDishData.getId());
                 Intent handleIntent = new Intent(mAct, MediaHandleActivity.class);
                 handleIntent.putExtra("uploadDishData",uploadDishData);
                 mAct.startActivity(handleIntent);
             }else {
-                Tools.showToast(mAct, "请先登录");
                 Intent it = new Intent(mAct, LoginByAccout.class);
                 mAct.startActivity(it);
             }
@@ -880,7 +879,6 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
         final Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                // TODO Auto-generated method stub
                 super.handleMessage(msg);
                 Bitmap bmp = (Bitmap)msg.obj;
                 if(bmp != null){

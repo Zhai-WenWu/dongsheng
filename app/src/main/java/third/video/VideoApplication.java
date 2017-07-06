@@ -2,6 +2,7 @@ package third.video;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sina.sinavideo.coreplayer.splayer.ContextUtils;
 import com.sina.sinavideo.coreplayer.splayer.IOUtils;
@@ -25,7 +26,6 @@ public class VideoApplication {
 	private static VideoApplication mVideoApp = null;
 //	static String libsplayerUrl = "http://www.huher.com:9810/test/zip/";
 	static String suffixName = ".7z";
-	static int count = 0;
 	public static boolean initSuccess = false;
 	static boolean isIniting = false;
 
@@ -40,6 +40,8 @@ public class VideoApplication {
 	
 	public void initialize(Context context){
 		initSuccess = SPlayer.isInitialized(context);
+		Log.i("tzy","initialize ed");
+		Log.i("tzy","initSuccess = " + initSuccess);
 		if(!initSuccess){
 			getLibs(context);
 		}
@@ -51,12 +53,14 @@ public class VideoApplication {
 		}
 		isIniting = true;
 		String libsplayerUrl = AppCommon.getAppData(context, "videoDecUrl");
+		Log.i("tzy","libsplayerUrl = " + libsplayerUrl);
 		if(TextUtils.isEmpty(libsplayerUrl)){
 			isIniting = false;
 			initSuccess = true;
 			return;
 		}
 		String url = libsplayerUrl + SPlayer.getVitamioType() + suffixName;
+		Log.i("tzy","url = " + url);
 		final String libPath = SPlayer.getLibraryPath() + SPlayer.COMPRESS_LIBS_NAME;
 		if(FileManager.ifFileModifyByCompletePath(libPath, -1) == null){
 			ReqInternet.in().getInputStream(url, new InternetCallback(context) {
@@ -118,14 +122,6 @@ public class VideoApplication {
 			initSuccess = !inited;
 			isIniting = false;
 		}
-	}
-	
-	private String getData(List<Map<String,String>> list,String key){
-		if(list.size() > 0){
-			Map<String,String> map = list.get(0);
-			return map.get(key);
-		}
-		return "";
 	}
 
 	public boolean isInitSuccess(){

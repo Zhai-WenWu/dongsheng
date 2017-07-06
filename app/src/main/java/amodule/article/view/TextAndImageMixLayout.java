@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.text.style.CharacterStyle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -17,8 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +31,11 @@ import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
+import amodule.article.view.richtext.RichText;
+import amodule.article.view.richtext.RichURLSpan;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
-import xh.windowview.XhDialog;
 
 import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
 
@@ -116,6 +116,7 @@ public class TextAndImageMixLayout extends LinearLayout
                     break;
                 case BaseView.URLS:
                     //do nothing
+                    handlerUrls(map.get("urls"));
                     break;
                 default:
                     break;
@@ -128,6 +129,52 @@ public class TextAndImageMixLayout extends LinearLayout
                 removeViewAt(index);
             }
         }
+    }
+
+    /**
+     * [{"title":"hjjbjjjjj","url":"http:\/\/www.baidu.com"}]}
+     * @param urls
+     */
+    private void handlerUrls(String urls) {
+        List<Map<String,String>> urlsArray = StringManager.getListMapByJson(urls);
+        for(int i = 0; i < getChildCount() ; i++){
+            BaseView view = (BaseView) getChildAt(i);
+            if(view instanceof EditTextView){
+                EditTextView editTextView = ((EditTextView)view);
+                String text = editTextView.getText().toString();
+                int textLength = text.length();
+                for (int index = 0; index < urlsArray.size(); index++) {
+                    Map<String, String> linkMap = urlsArray.get(index);
+                    String desc = linkMap.get(RichText.KEY_TITLE);
+                    String url = linkMap.get(RichText.KEY_URL);
+                    String textTemp = text;
+                    int defatultStart = 0;
+                    while (textTemp.indexOf(desc) >= 0 && defatultStart < textLength){
+                        int startIndex = textTemp.indexOf(desc);
+                        int endIndesc = startIndex + desc.length();
+                        int realStartIndex = startIndex + defatultStart;
+                        int realEndIndex = endIndesc + defatultStart;
+                        //判断当前光标位置
+                        if(containsSpan(realStartIndex,realEndIndex,editTextView,url)){
+                            editTextView.setupTextLink(url,desc,realStartIndex,realEndIndex);
+                            break;
+                        }
+                        textTemp = textTemp.substring(startIndex + desc.length() , textTemp.length());
+                        defatultStart += startIndex + desc.length();
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean containsSpan(int startIndex,int endIndex,EditTextView editTextView,String url){
+        CharacterStyle[] spans = editTextView.getText().getSpans(startIndex, endIndex, CharacterStyle.class);
+        for (CharacterStyle span : spans) {
+            if (span instanceof RichURLSpan) {
+                return ((RichURLSpan)span).getURL().equals(url);
+            }
+        }
+        return false;
     }
 
     /**
@@ -162,37 +209,37 @@ public class TextAndImageMixLayout extends LinearLayout
             html = htmlTmep.substring(htmlTmep.indexOf(">") + 1, htmlTmep.length());
         Log.i("tzy","html = " + html);
         //处理<a></a>
-        while (htmlTmep.indexOf("<a") >= 0) {
-            int startIndex = htmlTmep.indexOf("<a");
-            int endIndex = htmlTmep.indexOf("</a>") + 4;
-            if (startIndex >= 0 && startIndex < htmlTmep.length()
-                    && endIndex >= 0 && endIndex < htmlTmep.length()) {
-                String aTagData = htmlTmep.substring(startIndex, endIndex);
-                String title = aTagData.substring(aTagData.indexOf(">") + 1, aTagData.indexOf("</a>"));
-                String url = "";
-                String apropertyStr = aTagData.substring(aTagData.indexOf("<a") + 2, aTagData.indexOf(">"));
-                String[] aproperties = apropertyStr.split(" ");
-                for (String property : aproperties) {
-                    if (property.contains("href")) {
-                        url = property.substring(property.indexOf("\"") + 1, property.lastIndexOf("\""));
-                        break;
-                    }
-                }
-                Log.i("tzy", "htmlTmep = " + htmlTmep);
-                Log.i("tzy", "title = " + title);
-                Log.i("tzy", "url = " + url);
-                if (!TextUtils.isEmpty(title)
-                        && !TextUtils.isEmpty(url))
-                    editTextView.addLinkToData(url, title);
-                htmlTmep = htmlTmep.replace(htmlTmep.indexOf(aTagData), htmlTmep.indexOf(aTagData) + aTagData.length(), "");
-            }
-        }
+//        while (htmlTmep.indexOf("<a") >= 0) {
+//            int startIndex = htmlTmep.indexOf("<a");
+//            int endIndex = htmlTmep.indexOf("</a>") + 4;
+//            if (startIndex >= 0 && startIndex < htmlTmep.length()
+//                    && endIndex >= 0 && endIndex < htmlTmep.length()) {
+//                String aTagData = htmlTmep.substring(startIndex, endIndex);
+//                String title = aTagData.substring(aTagData.indexOf(">") + 1, aTagData.indexOf("</a>"));
+//                String url = "";
+//                String apropertyStr = aTagData.substring(aTagData.indexOf("<a") + 2, aTagData.indexOf(">"));
+//                String[] aproperties = apropertyStr.split(" ");
+//                for (String property : aproperties) {
+//                    if (property.contains("href")) {
+//                        url = property.substring(property.indexOf("\"") + 1, property.lastIndexOf("\""));
+//                        break;
+//                    }
+//                }
+//                Log.i("tzy", "htmlTmep = " + htmlTmep);
+//                Log.i("tzy", "title = " + title);
+//                Log.i("tzy", "url = " + url);
+//                if (!TextUtils.isEmpty(title)
+//                        && !TextUtils.isEmpty(url))
+//                    editTextView.addLinkToData(url, title);
+//                htmlTmep = htmlTmep.replace(htmlTmep.indexOf(aTagData), htmlTmep.indexOf(aTagData) + aTagData.length(), "");
+//            }
+//        }
         //删除<p></p>
-        html = html.replace(propertyStr, "");
-        html = html.replace("</p>", "");
+        html = new String(html.replace(propertyStr, "").replace("<br></p>", ""));
         if("<br>".equals(html)){
             html = "";
         }
+        Log.i("tzy","html = " + html);
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
         editTextView.setSelection(editTextView.getRichText().getText().length());
@@ -280,10 +327,11 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         });
         currentEditText.setOnSelectBoldCallback(onSelectBoldCallback);
-        currentEditText.setOnSelectUnderline(onSelectUnderlineCallback);
+        currentEditText.setOnSelectUnderlineCallback(onSelectUnderlineCallback);
+        currentEditText.setOnSelectCenterCallback(onSelectCenterCallback);
         if (!TextUtils.isEmpty(content)) {
             view.setText(content);
-            view.setSelection(view.getRichText().getText().length());
+//            view.setSelection(view.getRichText().getText().length());
         }
         view.getRichText().setHint(indexOfChild(view) == 0 ? "添加内容" : "");
         return view;
@@ -493,10 +541,11 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setVideo(VideoShowView.VideoDefaultClickCallback callback) {
         VideoShowView view = new VideoShowView(getContext());
-        LayoutParams layoutparams = getChildLayoutParams();
-        int dp_20 = Tools.getDimen(getContext(), R.dimen.dp_20);
+        LinearLayout.LayoutParams layoutparams = getChildLayoutParams();
+        int dp_5 = Tools.getDimen(getContext(), R.dimen.dp_5);
+        int dp_15 = Tools.getDimen(getContext(), R.dimen.dp_15);
 //        view.setPadding(dp_20,dp_20,dp_20,0);
-        layoutparams.setMargins(0, dp_20, 0, 0);
+        layoutparams.setMargins(0, dp_5, 0, 0);
         addView(view, 0, layoutparams);
         view.setEnableEdit(true);
         view.setmOnRemoveCallback(this);
@@ -505,6 +554,9 @@ public class TextAndImageMixLayout extends LinearLayout
         if (callback != null)
             view.setVideoDefaultClickCallback(callback);
         currentEditText.getRichText().setHint("添加视频介绍");
+        layoutparams = (LayoutParams) currentEditText.getLayoutParams();
+        layoutparams.setMargins(0, dp_15, 0, 0);
+        currentEditText.setLayoutParams(layoutparams);
     }
 
     //=============文本操作=====================================
@@ -571,32 +623,32 @@ public class TextAndImageMixLayout extends LinearLayout
      *
      * @return
      */
-    private LayoutParams getChildLayoutParams() {
-        return new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    private LinearLayout.LayoutParams getChildLayoutParams() {
+        return new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
     }
 
     @Override
     public void onRemove(final BaseView view) {
-        if (isSecondEdit) {
+//        if (isSecondEdit) {
             removeBaseView(view);
-        } else {
-            final XhDialog dialog = new XhDialog(getContext());
-            dialog.setTitle("确定删除？");
-            dialog.setCanselButton("取消", new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                }
-            });
-            dialog.setSureButton("确定", new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeBaseView(view);
-                    dialog.cancel();
-                }
-            });
-            dialog.show();
-        }
+//        } else {
+//            final XhDialog dialog = new XhDialog(getContext());
+//            dialog.setTitle("确定删除？");
+//            dialog.setCanselButton("取消", new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dialog.cancel();
+//                }
+//            });
+//            dialog.setSureButton("确定", new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    removeBaseView(view);
+//                    dialog.cancel();
+//                }
+//            });
+//            dialog.show();
+//        }
     }
 
     /**
@@ -688,7 +740,7 @@ public class TextAndImageMixLayout extends LinearLayout
         for (int index = 0; index < getChildCount(); index++) {
             View view = getChildAt(index);
             if (view instanceof EditTextView) {
-                String text = ((EditTextView) view).getText().toString();
+                String text = ((EditTextView) view).getText().toString().trim();
                 if (!TextUtils.isEmpty(text)) {
                     hasText = true;
                     return hasText;
@@ -858,6 +910,7 @@ public class TextAndImageMixLayout extends LinearLayout
 
     private EditTextView.OnSelectBoldCallback onSelectBoldCallback;
     private EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback;
+    private EditTextView.OnSelectCenterCallback onSelectCenterCallback;
 
     public void setOnSelectBoldCallback(EditTextView.OnSelectBoldCallback onSelectBoldCallback) {
         this.onSelectBoldCallback = onSelectBoldCallback;
@@ -865,5 +918,9 @@ public class TextAndImageMixLayout extends LinearLayout
 
     public void setOnSelectUnderlineCallback(EditTextView.OnSelectUnderlineCallback onSelectUnderlineCallback) {
         this.onSelectUnderlineCallback = onSelectUnderlineCallback;
+    }
+
+    public void setOnSelectCenterCallback(EditTextView.OnSelectCenterCallback onSelectCenterCallback) {
+        this.onSelectCenterCallback = onSelectCenterCallback;
     }
 }

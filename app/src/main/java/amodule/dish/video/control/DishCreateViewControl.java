@@ -26,7 +26,6 @@ import java.util.Map;
 import amodule.dish.db.UploadDishData;
 import xh.basic.tool.UtilString;
 
-import static amodule.dish.video.control.MediaHandleControl.getViewBitmap;
 
 /**
  * 清单
@@ -230,14 +229,14 @@ public class DishCreateViewControl {
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         view_one.layout(0, 0, view_one.getMeasuredWidth(), view_one.getMeasuredHeight());
         //下面的代码和上面的是一样的
-        Bitmap bitmap = getViewBitmap(view_one);
+//        Bitmap bitmap = getViewBitmap(view_one);
         // 把一个View转换成图片
         File file = new File(now_path_img);
         if (!file.exists()) file.mkdirs();
         File files = new File(now_path_img + "/"+imgName);
         boolean imge = false;
         try {
-            imge = bitmap.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(files));
+//            imge = bitmap.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(files));
         } catch (Exception e) {
         }
         if (imge) {

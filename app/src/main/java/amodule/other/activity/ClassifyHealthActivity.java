@@ -1,5 +1,6 @@
 package amodule.other.activity;
 ;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
+import amodule.main.Main;
 import amodule.other.fragment.ClassifyHealthFragment;
 
 /**
@@ -46,7 +48,7 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
         initActivity("", 2, 0, 0, R.layout.classify_health_layout);
         mSelectedPos = getIntent().getIntExtra("selectedPos", 0);
         initData();
-//        initStatusBar();
+        initStatusBar();
         initView();
     }
 
@@ -117,14 +119,17 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
      * 初始化状态栏
      */
     private void initStatusBar() {
-        if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.bar_title);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
+//        if (Tools.isShowTitle()) {
+//            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+//            int height = dp_45 + Tools.getStatusBarHeight(this);
+//            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.bar_title);
+//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+//            bar_title.setLayoutParams(layout);
+//            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
+//        }
+        findViewById(R.id.bar_title).setBackgroundColor(getResources().getColor(R.color.common_top_bg));
+        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
     }
 
     @Override

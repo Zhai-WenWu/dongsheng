@@ -35,6 +35,7 @@ import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
+import amodule.article.db.UploadArticleData;
 import amodule.article.upload.ArticleUploadListPool;
 import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
@@ -78,6 +79,8 @@ public class ArticleUploadListActivity extends BaseActivity {
 
     private int dataType;
 
+    private boolean isSecondEdit = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +107,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         timesStamp = intent.getStringExtra("time");
         coverPath = intent.getStringExtra("coverPath");
         finalVideoPath = intent.getStringExtra("finalVideoPath");
+        Log.i("articleUpload","initData() draftId:" + draftId + "    timesStamp:" + timesStamp + "    coverPath:" + coverPath + "    finalVideoPath:" + finalVideoPath);
         isStopUpload = false;
     }
 
@@ -119,9 +123,15 @@ public class ArticleUploadListActivity extends BaseActivity {
                         draftId,coverPath,finalVideoPath,timesStamp, generateUiCallback());
         uploadPoolData = listPool.getUploadPoolData();
 
-        if(uploadPoolData.getUploadArticleData() == null){
+        UploadArticleData articleData = uploadPoolData.getUploadArticleData();
+        if(articleData == null){
             finish();
             return;
+        }
+        isSecondEdit = !TextUtils.isEmpty(articleData.getCode());
+
+        if (listPool instanceof ArticleUploadListPool) {
+            ((ArticleUploadListPool)listPool).setIsSecondEdit(isSecondEdit);
         }
         dishName = uploadPoolData.getTitle();
         arrayList = uploadPoolData.getListData();
@@ -129,9 +139,15 @@ public class ArticleUploadListActivity extends BaseActivity {
             tv_title.setText(dishName.length() > 7 ? dishName.substring(0,6) + "..." : dishName);
         }
 
-        if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
-            allStartOrPause(true);
-        } else {
+        boolean isAutoUpload = getIntent().getBooleanExtra("isAutoUpload",false);
+        if(isAutoUpload) {
+            if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
+                allStartOrPause(true);
+            } else {
+                allStartOrPause(false);
+                hintNetWork();
+            }
+        }else{
             allStartOrPause(false);
         }
 
@@ -162,10 +178,10 @@ public class ArticleUploadListActivity extends BaseActivity {
                 refreshUploadView();
                 if (flag) {
                     isStopUpload = false;
-                    gotoFriendHome();
                 } else {
                     isStopUpload = true;
                 }
+//                gotoFriendHome();
             }
         };
     }
@@ -304,10 +320,13 @@ public class ArticleUploadListActivity extends BaseActivity {
                     String imgPath = arrayList.get(position).get("path");
                     if(String.valueOf(UploadItemData.TYPE_VIDEO).equals(arrayList.get(position).get("type")))
                         imgPath = arrayList.get(position).get("videoImage");
-                    view.findViewById(R.id.iv_cover_dish).setVisibility(View.VISIBLE);
+                    ImageView ivCoverDish = (ImageView) view.findViewById(R.id.iv_cover_dish);
+                    ivCoverDish.setVisibility(View.VISIBLE);
                     view.findViewById(R.id.iv_cover_dish_last).setVisibility(View.GONE);
                     Glide.with(ArticleUploadListActivity.this).load(imgPath)
-                            .into(((ImageView) view.findViewById(R.id.iv_cover_dish)));
+                            .override(Tools.getDimen(ArticleUploadListActivity.this,R.dimen.dp_123)
+                                    ,Tools.getDimen(ArticleUploadListActivity.this,R.dimen.dp_69))
+                            .into(ivCoverDish);
                 }
                 ((ProgressBar) view.findViewById(R.id.pb_progress)).setProgress(Integer.parseInt(itemMap.get("progress")));
                 ((ProgressBar) view.findViewById(R.id.pb_progress_pause)).setProgress(Integer.parseInt(itemMap.get("progress")));
@@ -400,6 +419,8 @@ public class ArticleUploadListActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+
+
     private void goBack() {
         gotoFriendHome();
         if (!isStopUpload) {
@@ -480,20 +501,26 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void hintNetWork(){
-        final XhDialog xhDialog = new XhDialog(ArticleUploadListActivity.this);
-        xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
-                .setCanselButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-                    }
-                }).setSureButton("确定", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                xhDialog.cancel();
-                allStartOrPause(true);
-            }
-        }).show();
+//        if(ToolsDevice.getNetActiveState(ArticleUploadListActivity.this)) {
+            final XhDialog xhDialog = new XhDialog(ArticleUploadListActivity.this);
+            xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
+                    .setCanselButton("取消", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            xhDialog.cancel();
+                        }
+                    }).setSureButton("确定", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    xhDialog.cancel();
+                    allStartOrPause(true);
+                }
+            }).setSureButtonTextColor("#333333")
+                    .setCancelButtonTextColor("#333333")
+                    .show();
+//        }else{
+//            Tools.showToast(ArticleUploadListActivity.this,"网络错误，请检查网络或重试");
+//        }
     }
 
 

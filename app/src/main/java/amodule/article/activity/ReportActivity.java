@@ -76,13 +76,10 @@ public class ReportActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!LoginManager.isLogin() && !mFlag) {
-            mFlag = true;
-            Intent intent = new Intent(this, LoginByAccout.class);
-            this.startActivity(intent);
-            return;
-        }
-        if (!LoginManager.isLogin() && mFlag) {
+        if (!LoginManager.isLogin()
+                || (!TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                        && !TextUtils.isEmpty(mUserCode)
+                        && mUserCode.equals(LoginManager.userInfo.get("code")))) {
             finish();
             return;
         }
@@ -274,7 +271,7 @@ public class ReportActivity extends BaseActivity {
 
     public void onCommitClick() {
         if (mLastSelectedReportChild == null) {
-            Tools.showToast(ReportActivity.this, "请选择举报理由");
+            Tools.showToast(ReportActivity.this, "请选择举报原因");
             return;
         }
         mCommitBtn.setClickable(false);

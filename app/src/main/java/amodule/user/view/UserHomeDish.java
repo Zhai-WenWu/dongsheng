@@ -35,6 +35,7 @@ import amodule.dish.db.UploadDishData;
 import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Main;
+import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.MyDraft;
 import amodule.user.adapter.AdapterUserDish;
@@ -115,12 +116,20 @@ public class UserHomeDish extends TabContentView {
                         if (flag >= UtilInternet.REQ_OK_STRING) {
                             listDataMyDish.remove(index);
                             adapter.notifyDataSetChanged();
+                            if (FriendHome.isAlive) {
+                                Intent broadIntent = new Intent();
+                                broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
+                                Main.allMain.sendBroadcast(broadIntent);
+                            }
                         }
                     }
                 });
             }
         }, tongjiId);
         adapter.roundImgPixels = Tools.getDimen(mAct, R.dimen.dp_400);
+        adapter.playImgWH = Tools.getDimen(mAct, R.dimen.dp_45);
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data, String textRepresentation) {

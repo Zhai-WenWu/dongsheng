@@ -105,15 +105,8 @@ public class UserSetting extends BaseLoginActivity implements OnClickListener {
     }
 
     private void initTitles() {
-        if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-
-            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_all_rela);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
+        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
     }
 
     private void init() {

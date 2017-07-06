@@ -76,6 +76,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         contentLoad();
     }
 
+
     private void initData() {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
@@ -108,6 +109,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (ArticleVideoSelectorActivity.this.isFinishing())
+                    return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE || newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     Glide.with(ArticleVideoSelectorActivity.this).resumeRequests();
                 } else {
@@ -176,6 +179,13 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
+        Glide.with(this).resumeRequests();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Glide.with(this).pauseRequests();
     }
 
     /**
@@ -270,8 +280,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cancel:
-                setResult(RESULT_CANCELED);
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_back:
                 v.postDelayed(new Runnable() {
@@ -351,6 +360,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                     finish();
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mCategoryPopup != null && mCategoryPopup.isShowing())
+            mCategoryPopup.dismiss();
+        else{
+            setResult(RESULT_CANCELED);
+            super.onBackPressed();
         }
     }
 }

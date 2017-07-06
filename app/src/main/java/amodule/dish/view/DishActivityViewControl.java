@@ -24,17 +24,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.tools.ADDishContorl;
-import amodule.main.Main;
 import aplug.basic.ReqInternet;
+import aplug.web.tools.WebviewManager;
+import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
@@ -48,6 +51,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 public class DishActivityViewControl {
     private Activity activity;
     private RelativeLayout bar_title_1;
+    private XHWebView xhWebView;
     private ListView listview;
     private DishTitleViewControl dishTitleViewControl;
     private DishHeaderView dishHeaderView;
@@ -63,15 +67,18 @@ public class DishActivityViewControl {
     private AdapterDishNew adapter;
 
     private ArrayList<Map<String, String>> stepList;//步骤图list
-    private ArrayList<Map<String, String>> list_makes;//步骤图
     private boolean isOnClickImageShow= false;
     private RelativeLayout dishVidioLayout;
+    private RelativeLayout dregdeVipLayout;
+    private TextView dredgeVipImmediately;
     private View view_oneImage;
+    private TextView textPractice;
     private String state;
     private LoadManager loadManager;
     private String code;
     private boolean isGoLoading = true;
     public String dishJson;//历史记录中dishInfo的数据
+    private boolean hasPermission = true;
 
     private int statusBarHeight = 0;//广告所用bar高度
     private DishViewCallBack callBack;
@@ -101,9 +108,10 @@ public class DishActivityViewControl {
         dishTitleViewControl= new DishTitleViewControl(activity);
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
-        initView();
-        setAdapterData(null, true);
         initTitle();
+        initView();
+        stepList = new ArrayList<>();
+        setAdapterData(null, true);
     }
     /**
      * 处理标题状态栏
@@ -119,13 +127,17 @@ public class DishActivityViewControl {
 //        }
 //        bar_title_1.setBackgroundColor(Color.parseColor("#00ffffff"));
 //        bar_title_1.setBackgroundResource(R.drawable.bar_dish_gradient);
-        bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
+//        bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
     }
 
-    /**
-     * 初始化view数据-----考虑以后抽成一个单独处理view
-     */
+    /** 初始化view数据-----考虑以后抽成一个单独处理view */
     private void initView() {
+        WebviewManager manager = new WebviewManager(activity,loadManager,true);
+        xhWebView = manager.createWebView(R.id.XHWebview);
+        //开通VIP
+        dregdeVipLayout = (RelativeLayout) activity.findViewById(R.id.dredge_vip_bottom_layout);
+        dredgeVipImmediately = (TextView) activity.findViewById(R.id.dredge_vip_immediately);
+
         //头部view处理
         dishHeaderView= new DishHeaderView(activity);
         dishHeaderView.initView(activity);
@@ -141,14 +153,16 @@ public class DishActivityViewControl {
         dishFootView=new DishFootView(activity);
         dishFootView.initView(activity);
 
-        TextView text = new TextView(activity);
-        text.setPadding(Tools.getDimen(activity, R.dimen.dp_15), Tools.getDimen(activity, R.dimen.dp_25), 0, 0);
-        text.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
-        text.setTextColor(Color.parseColor("#333333"));
-        TextPaint tp = text.getPaint();
+        //做法
+        textPractice = new TextView(activity);
+        textPractice.setPadding(Tools.getDimen(activity, R.dimen.dp_15), Tools.getDimen(activity, R.dimen.dp_25), 0, 0);
+        textPractice.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
+        textPractice.setTextColor(Color.parseColor("#333333"));
+        TextPaint tp = textPractice.getPaint();
         tp.setFakeBoldText(true);
-        text.setText("做法");
-        dishHeaderView.addView(text);
+        textPractice.setText("做法");
+        dishHeaderView.addView(textPractice);
+        textPractice.setVisibility(View.GONE);
 
         //吃是一种艺术
         Button loadMoreBtn = new Button(activity);
@@ -166,6 +180,18 @@ public class DishActivityViewControl {
         listview.addHeaderView(dishHeaderView, null, false);
         listview.addFooterView(dishFootView);
         setGlideViewListener();
+    }
+
+    public void reset(){
+        dishTitleViewControl.reset();
+        dishHeaderView.reset();
+        dishFootView.reset();
+        if(stepList != null)stepList.clear();
+        adapter.notifyDataSetChanged();
+        xhWebView.setVisibility(View.GONE);
+        dregdeVipLayout.setVisibility(View.GONE);
+        if (dishHeaderView != null)
+            dishHeaderView.setLoginStatus();
     }
 
     /**
@@ -197,11 +223,28 @@ public class DishActivityViewControl {
     public void setDishJson(String dishjson){
         this.dishJson=dishjson;
     }
+
+    /**
+     *
+     * @param pagePermission
+     * @return
+     */
+    public boolean analyzePagePermissionData(Map<String,String> pagePermission){
+        if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
+            String url = pagePermission.get("url");
+            xhWebView.loadUrl(url);
+            xhWebView.setVisibility(View.VISIBLE);
+            return false;
+        }
+        xhWebView.setVisibility(View.GONE);
+        return true;
+    }
+
     /**
      * 根据数据处理view
      * @param list
      */
-    public void analyzeData(ArrayList<Map<String, String>> list) {
+    public void analyzeData(ArrayList<Map<String, String>> list,Map<String,String> permissionMap) {
         String lable = list.get(0).get("lable");
         ArrayList<Map<String, String>> listmaps = UtilString.getListMapByJson(list.get(0).get("data"));
         //当前数据状态
@@ -213,13 +256,13 @@ public class DishActivityViewControl {
         }
         if (lable.equals("dishInfo")) {//第一页整体业务标示
             dishJson = list.get(0).get("data");//第一页数据保留下来
-            analyzeDishInfoData(listmaps);
+            analyzeDishInfoData(listmaps,permissionMap);
         } else if (lable.equals("recommendDishMenu")) {//菜谱推荐
-            dishFootView.analyzeMenuData(listmaps);
+            dishFootView.analyzeMenuData(listmaps,permissionMap);
         } else if (lable.equals("relatedRecommend")) {//相关推荐
-            dishFootView.analyzeRelatedData(listmaps);
+            dishFootView.analyzeRelatedData(listmaps,permissionMap);
         } else if (lable.equals("wonderfulRecommend")) {//精彩推荐
-            dishFootView.analyzeWonderfulData(listmaps,adDishContorl);
+            dishFootView.analyzeWonderfulData(listmaps,adDishContorl,permissionMap);
         }
     }
 
@@ -227,16 +270,26 @@ public class DishActivityViewControl {
      * 解析数据-----业务标示是“dishInfo”
      *
      * @param list
+     * @param permissionMap
      */
-    public void analyzeDishInfoData(ArrayList<Map<String, String>> list) {
+    public void analyzeDishInfoData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         dishInfoMap = list.get(0);
-        if(dishInfoMap.get("hasVideo").equals("2")){
-            isHasVideo = true;
-            XHClick.track(activity,"浏览视频菜谱详情页");
-        }else{
-            XHClick.track(activity,"浏览图文菜谱详情页");
-        }
+        isHasVideo = dishInfoMap.get("hasVideo").equals("2");
+        XHClick.track(activity,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         dishTitleViewControl.setData(dishInfoMap,code,dishJson,isHasVideo,dishInfoMap.get("dishState"),loadManager);
+        Map<String, String> customer = StringManager.getFirstMap(list.get(0).get("customer"));
+        if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
+                && customer.get("code").equals(LoginManager.userInfo.get("code"))) {
+            state = "";
+            dishTitleViewControl.setstate(state);
+        }
+        dishTitleViewControl.setViewState();
+        if(permissionMap != null && permissionMap.containsKey("offLine")){
+            Map<String,String> offlineMap = StringManager.getFirstMap(permissionMap.get("offLine"));
+            offlineMap = StringManager.getFirstMap(offlineMap.get("common"));
+            dishTitleViewControl.setOfflineLayoutVisibility("2".equals(offlineMap.get("isShow")));
+        }
+
         //头部view
         dishHeaderView.setData(list, new DishHeaderView.DishHeaderVideoCallBack() {
             @Override
@@ -253,26 +306,42 @@ public class DishActivityViewControl {
                 setViewOneState();
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
-        });
+        },permissionMap);
         adapter.notifyDataSetChanged();
-        //步骤
-        list_makes = UtilString.getListMapByJson(list.get(0).get("makes"));
-        for (int i = 0, size = list_makes.size(); i < size; i++) {
-            list_makes.get(i).put("style", DishStepView.DISH_STYLE_STEP);
+
+        ArrayList<Map<String,String>> list_makes = new ArrayList<>();
+        Map<String,String> commonPermission = StringManager.getFirstMap(permissionMap.get("video"));
+        commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
+        final String url = commonPermission.get("url");
+        if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
+                ){
+            hasPermission = true;
+            dishTitleViewControl.setOfflineLayoutVisibility(true);
+            textPractice.setVisibility(View.VISIBLE);
+            //步骤
+            list_makes = StringManager.getListMapByJson(list.get(0).get("makes"));
+            for (int i = 0, size = list_makes.size(); i < size; i++) {
+                list_makes.get(i).put("style", DishStepView.DISH_STYLE_STEP);
+            }
+        }else{
+            hasPermission = false;
+            String buttonStr = commonPermission.get("button2");
+            if(!TextUtils.isEmpty(buttonStr))
+                dredgeVipImmediately.setText(buttonStr);
+            dregdeVipLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!TextUtils.isEmpty(url))
+                        AppCommon.openUrl(activity,url,true);
+                }
+            });
         }
         setAdapterData(list_makes, false);
         //小贴士
-        ArrayList<Map<String, String>> list_exp = new ArrayList<>();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("remark", list.get(0).get("remark"));
-        map.put("commentNum", list.get(0).get("commentNum"));
+        Map<String, String> map = new HashMap<>();
+        map.putAll(list.get(0));
         map.put("style", DishExplainView.DISH_STYLE_EXP);
-        map.put("subjectCode", list.get(0).get("subjectCode"));
-        map.put("name", list.get(0).get("name"));
-        map.put("code", list.get(0).get("code"));
-        dishFootView.setDataExplain(map);
-//        list_exp.add(map);
-//        setAdapterData(list_exp, false);
+        dishFootView.setDataExplain(map,permissionMap);
 
         //分享
         ArrayList<Map<String, String>> list_share = new ArrayList<>();
@@ -289,17 +358,9 @@ public class DishActivityViewControl {
         list_share.add(map_share);
 //        setAdapterData(list_share, false);
 //        dishFootView.setDataShare(map_share);
-
-        Map<String, String> customer = StringManager.getFirstMap(list.get(0).get("customer"));
-        if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
-                && customer.get("code").equals(LoginManager.userInfo.get("code"))) {
-            state = "";
-            dishTitleViewControl.setstate(state);
-        }
         if ("2".equals(list.get(0).get("hasVideo")) && (list_makes == null || list_makes.size() <= 0)) {
             tongjiId = "a_menu_detail_onlyvideo430";
         }
-        dishTitleViewControl.setViewState();
     }
 
     /**
@@ -308,14 +369,14 @@ public class DishActivityViewControl {
      * @param list
      * @param isInit
      */
-    private void setAdapterData(ArrayList<Map<String, String>> list, boolean isInit) {
+    private void setAdapterData(final ArrayList<Map<String, String>> list, boolean isInit) {
         if (isInit) {
-            stepList = new ArrayList<Map<String, String>>();
+
             adapter = new AdapterDishNew(listview, stepList, 0, null, null);
             adapter.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
                 @Override
                 public void onClickPosition(int position) {
-                    if(!getStateMakes(list_makes)){//无图时不执行
+                    if(!getStateMakes(stepList)){//无图时不执行
                         return;
                     }
                     if(!isOnClickImageShow){
@@ -325,7 +386,7 @@ public class DishActivityViewControl {
                     XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "步骤图点击");
                     Intent intent = new Intent(activity, MoreImageShow.class);
                     ArrayList<Map<String, String>> listdata = new ArrayList<Map<String, String>>();
-                    listdata.addAll(list_makes);
+                    listdata.addAll(stepList);
                     if (!TextUtils.isEmpty(dishInfoMap.get("remark"))) {
                         Map<String, String> map_temp = new HashMap<String, String>();
                         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
@@ -335,7 +396,7 @@ public class DishActivityViewControl {
                             map_temp.put("img", "");
                         }
                         map_temp.put("info", "小贴士：\n" + dishInfoMap.get("remark"));
-                        map_temp.put("num", String.valueOf(list_makes.size() + 1));
+                        map_temp.put("num", String.valueOf(stepList.size() + 1));
                         listdata.add(map_temp);
                     }
                     intent.putExtra("data", listdata);
@@ -359,8 +420,8 @@ public class DishActivityViewControl {
      * @return true --有图片，false---无图片
      */
     private boolean getStateMakes(ArrayList<Map<String, String>> listdata){
-        if(listdata!=null&&listdata.size()>0){
-            for(int i=0,size=listdata.size();i<size;i++){
+        if(listdata != null && listdata.size() > 0){
+            for(int i = 0 , size = listdata.size() ; i < size ; i++){
                 if(!TextUtils.isEmpty(listdata.get(i).get("img")))
                     return true;
             }
@@ -409,6 +470,18 @@ public class DishActivityViewControl {
                 dishHeaderView.onListViewScroll();
                 if(dishFootView!=null)
                 dishFootView.onListViewScroll();
+
+                if(isHasVideo && dishHeaderView != null && dishHeaderView.getVideoView() != null){
+                    View headerView = dishHeaderView.getVideoView();
+                    int[] location = new int[2];
+                    headerView.getLocationOnScreen(location);
+                    int viewBottom = location[1] + headerView.getHeight();
+                    int mixHeight = Tools.getStatusBarHeight(activity) + Tools.getDimen(activity,R.dimen.dp_45);
+                    if(viewBottom <= mixHeight && !hasPermission){
+                        dregdeVipLayout.setVisibility(View.VISIBLE);
+                    }else
+                        dregdeVipLayout.setVisibility(View.GONE);
+                }
             }
         });
         listview.setOnTouchListener(new View.OnTouchListener() {

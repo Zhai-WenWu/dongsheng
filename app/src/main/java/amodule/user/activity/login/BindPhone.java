@@ -15,6 +15,7 @@ import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SecretInputView;
+import amodule.user.view.SpeechaIdentifyInputView;
 
 /**
  * Created by ：fei_teng on 2017/2/21 16:40.
@@ -24,10 +25,13 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
 
     private TextView tv_top_right;
     private PhoneNumInputView phone_info;
-    private IdentifyInputView phone_identify;
+    private IdentifyInputView login_identify;
+    private SpeechaIdentifyInputView speechaIdentifyInputView;
     private SecretInputView user_secret;
     private NextStepView btn_next_step;
     private String loginType;
+
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +52,31 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
 
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
-        phone_identify = (IdentifyInputView) findViewById(R.id.phone_identify);
+        login_identify = (IdentifyInputView) findViewById(R.id.phone_identify);
+        speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
         user_secret = (SecretInputView) findViewById(R.id.user_secret);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
+        speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadManager.showProgressBar();
+                String phoneNum = phone_info.getPhoneNum();
+                reqIdentifySpeecha(phoneNum,new BaseLoginCallback(){
+                    @Override
+                    public void onSuccess() {
+                        loadManager.hideProgressBar();
+                        speechaIdentifyInputView.setState(false);
+                        login_identify.setOnBtnClickState(false);
+                        login_identify.startCountDown();
+                    }
+
+                    @Override
+                    public void onFalse(int flag) {
+                        loadManager.hideProgressBar();
+                    }
+                });
+            }
+        });
 
         tv_top_right.setOnClickListener(this);
         phone_info.init("手机号", "86", "", new PhoneNumInputView.PhoneNumInputViewCallback() {
@@ -65,10 +91,17 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
             }
         });
 
-        phone_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback() {
+        login_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback() {
             @Override
             public void onCountDownEnd() {
-
+                final String zoneCode = phone_info.getZoneCode();
+                if ("86".equals(zoneCode)) {
+                    if (isFirst) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                    }
+                    speechaIdentifyInputView.setState(true);
+                }
             }
 
             @Override
@@ -84,7 +117,7 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                             @Override
                             public void onSuccess() {
                                 dataStatistics("绑定失败：手机号已被绑定");
-                                phone_identify.btnClickTrue();
+                                login_identify.setOnBtnClickState(true);
                                 Toast.makeText(BindPhone.this, "已被其他账号绑定，不能重复绑定", Toast.LENGTH_SHORT).show();
                             }
 
@@ -92,26 +125,25 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                             public void onFalse(int flag) {
                                 dataStatistics("绑定手机号页，获取验证码");
                                 loadManager.showProgressBar();
-                                phone_identify.startCountDown();
-                                reqIdentifyCode(phone_info.getZoneCode(), phone_info.getPhoneNum(),
-                                        new SMSSendCallback() {
-                                            @Override
-                                            public void onSendSuccess() {
-                                                loadManager.hideProgressBar();
-                                                phone_identify.startCountDown();
-                                            }
+                                login_identify.startCountDown();
+                                reqIdentifyCode(phone_info.getZoneCode(), phone_info.getPhoneNum(),new SMSSendCallback() {
+                                        @Override
+                                        public void onSendSuccess() {
+                                            loadManager.hideProgressBar();
+                                            login_identify.startCountDown();
+                                            speechaIdentifyInputView.setState(false);
+                                        }
 
-                                            @Override
-                                            public void onSendFalse() {
-                                                loadManager.hideProgressBar();
-                                                phone_identify.btnClickTrue();
-                                                dataStatistics("绑定失败：验证码超限");
-                                            }
-                                        });
-
+                                        @Override
+                                        public void onSendFalse() {
+                                            loadManager.hideProgressBar();
+                                            login_identify.setOnBtnClickState(true);
+                                            speechaIdentifyInputView.setState(true);
+                                            dataStatistics("绑定失败：验证码超限");
+                                        }
+                                    });
                             }
                         });
-
             }
         });
 
@@ -129,7 +161,7 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
         });
         user_secret.showSecret();
 
-        btn_next_step.init("提交", "", "", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("提交", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
 
@@ -142,7 +174,7 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                     }
 
                     bindPhone(BindPhone.this, phone_info.getZoneCode(), phone_info.getPhoneNum(),
-                            phone_identify.getIdentify(),
+                            login_identify.getIdentify(),
                             new BaseLoginCallback() {
                                 @Override
                                 public void onSuccess() {
@@ -164,31 +196,22 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                 }
 
             }
-
-            @Override
-            public void onClickLeftView() {
-
-            }
-
-            @Override
-            public void onClickRightView() {
-
-            }
         });
     }
 
 
     private void refreshNextStepBtnState() {
 
-        btn_next_step.setClickCenterable(!(phone_info.isDataAbsence()
-                || phone_identify.isIdentifyCodeEmpty()
-                || user_secret.isEmpty()));
+        btn_next_step.setClickCenterable(
+                !(phone_info.isDataAbsence()
+                        || login_identify.isIdentifyCodeEmpty()
+                        || user_secret.isEmpty())
+        );
 
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.tv_top_right:
                 dataStatistics("跳过绑定手机号");
@@ -198,7 +221,6 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
                 break;
         }
     }
-
 
 
     private void dataStatistics(String threeLevel) {

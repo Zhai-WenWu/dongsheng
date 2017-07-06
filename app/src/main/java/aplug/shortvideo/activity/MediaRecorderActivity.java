@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.lansosdk.videoeditor.MediaInfo;
 import com.ta.utdid2.android.utils.StringUtils;
 import com.xiangha.R;
 
@@ -498,23 +497,23 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
                    Tools.showToast(this, "没有录制声音,请打开权限后重新录制");
                    return duration;
                }
-                MediaInfo mediaInfo= new MediaInfo(videoPath);
-                mediaInfo.prepare();
-                duration= (int) (mediaInfo.vDuration*1000);
-                if (duration < RECORD_TIME_MIN) {
-                    if (duration == 0) {
-                        mCameraSwitch.setVisibility(View.VISIBLE);
-                    } else {
-                        MediaHandleControl.deleteFile(videoPath);
-                        Tools.showToast(this, "录制时间太短");
-
-                    }
-                } else {
-                    Tools.showToast(this, "录制完成");
-                    //转码去
-                    startHandlerVideo();
-
-                }
+//                MediaInfo mediaInfo= new MediaInfo(videoPath);
+//                mediaInfo.prepare();
+//                duration= (int) (mediaInfo.vDuration*1000);
+//                if (duration < RECORD_TIME_MIN) {
+//                    if (duration == 0) {
+//                        mCameraSwitch.setVisibility(View.VISIBLE);
+//                    } else {
+//                        MediaHandleControl.deleteFile(videoPath);
+//                        Tools.showToast(this, "录制时间太短");
+//
+//                    }
+//                } else {
+//                    Tools.showToast(this, "录制完成");
+//                    //转码去
+//                    startHandlerVideo();
+//
+//                }
             }
             return duration;
         }catch (Exception e){
@@ -688,47 +687,47 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
      */
     private void handlerAudio(){
 
-        videoEditor.executePcmEncodeAac(audioPath,44100,2,audioPath.replace("raw","aac"));
-        MediaHandleControl.deleteFile(audioPath);
-        audioPath= audioPath.replace("raw","aac");
+//        videoEditor.executePcmEncodeAac(audioPath,44100,2,audioPath.replace("raw","aac"));
+//        MediaHandleControl.deleteFile(audioPath);
+//        audioPath= audioPath.replace("raw","aac");
     }
 
     /**
      * 画面裁剪
      */
     private void handlerPapersVideo(){
-        MediaInfo mediaInfo = new MediaInfo(videoPath);
-        mediaInfo.prepare();
-        Log.i("zhangyujian",mediaInfo.vWidth+":::::::"+mediaInfo.vHeight+"::::::"+mediaInfo.vCodecName);
-        Log.i("zhangyujian",mediaInfo.vHeight*3/4+":::::::"+mediaInfo.vHeight);
-        Log.i("zhangyujian",checkVideoSize(mediaInfo.vHeight*3/4)+":::::::"+checkVideoSize(mediaInfo.vHeight));
-        videoEditor.executeVideoFrameCrop(videoPath,checkVideoSize(mediaInfo.vHeight*3/4),checkVideoSize(mediaInfo.vHeight),0,0,pathDirs+"/parper.mp4",mediaInfo.vCodecName,(int) (mediaInfo.vBitRate*1.2f));
-        MediaInfo mediaInfo_parper = new MediaInfo(pathDirs+"/parper.mp4");
-        mediaInfo_parper.prepare();
-        if(Build.MODEL.startsWith("SM"))//锤子手机特殊处理
-            videoEditor.executeVideoRotate90Clockwise(pathDirs+"/parper.mp4","h264", (int) (mediaInfo_parper.vBitRate*1.2f),pathDirs+"/no.mp4");
-        else
-            videoEditor.executeVideoRotate90Clockwise(pathDirs+"/parper.mp4",mediaInfo_parper.vCodecName, (int) (mediaInfo_parper.vBitRate*1.2f),pathDirs+"/no.mp4");
-        MediaHandleControl.deleteFile(videoPath);
-        MediaHandleControl.deleteFile(pathDirs+"/parper.mp4");
+//        MediaInfo mediaInfo = new MediaInfo(videoPath);
+//        mediaInfo.prepare();
+//        Log.i("zhangyujian",mediaInfo.vWidth+":::::::"+mediaInfo.vHeight+"::::::"+mediaInfo.vCodecName);
+//        Log.i("zhangyujian",mediaInfo.vHeight*3/4+":::::::"+mediaInfo.vHeight);
 //        Log.i("zhangyujian",checkVideoSize(mediaInfo.vHeight*3/4)+":::::::"+checkVideoSize(mediaInfo.vHeight));
+//        videoEditor.executeVideoFrameCrop(videoPath,checkVideoSize(mediaInfo.vHeight*3/4),checkVideoSize(mediaInfo.vHeight),0,0,pathDirs+"/parper.mp4",mediaInfo.vCodecName,(int) (mediaInfo.vBitRate*1.2f));
+//        MediaInfo mediaInfo_parper = new MediaInfo(pathDirs+"/parper.mp4");
+//        mediaInfo_parper.prepare();
+//        if(Build.MODEL.startsWith("SM"))//锤子手机特殊处理
+//            videoEditor.executeVideoRotate90Clockwise(pathDirs+"/parper.mp4","h264", (int) (mediaInfo_parper.vBitRate*1.2f),pathDirs+"/no.mp4");
+//        else
+//            videoEditor.executeVideoRotate90Clockwise(pathDirs+"/parper.mp4",mediaInfo_parper.vCodecName, (int) (mediaInfo_parper.vBitRate*1.2f),pathDirs+"/no.mp4");
+//        MediaHandleControl.deleteFile(videoPath);
+//        MediaHandleControl.deleteFile(pathDirs+"/parper.mp4");
+////        Log.i("zhangyujian",checkVideoSize(mediaInfo.vHeight*3/4)+":::::::"+checkVideoSize(mediaInfo.vHeight));
     }
     /**哦
      * 给视频加音频
      */
     private void handlerAudioVideo(){
-        videoEditor.executeVideoMergeAudio(pathDirs+"/no.mp4",audioPath,videoPath);
-        MediaHandleControl.deleteFile(audioPath);
-        MediaHandleControl.deleteFile(pathDirs+"/no.mp4");
+//        videoEditor.executeVideoMergeAudio(pathDirs+"/no.mp4",audioPath,videoPath);
+//        MediaHandleControl.deleteFile(audioPath);
+//        MediaHandleControl.deleteFile(pathDirs+"/no.mp4");
     }
 
     /**
      * 截取第一帧图片
      */
     private void handlerParperImage(){
-        MediaInfo mediaInfo = new MediaInfo(videoPath);
-        mediaInfo.prepare();
-        videoEditor.executeGetOneFrame(videoPath,mediaInfo.vCodecName,0.1f,480,360,imagePath);
+//        MediaInfo mediaInfo = new MediaInfo(videoPath);
+//        mediaInfo.prepare();
+//        videoEditor.executeGetOneFrame(videoPath,mediaInfo.vCodecName,0.1f,480,360,imagePath);
     }
 
     protected ProgressDialog mProgressDialog;

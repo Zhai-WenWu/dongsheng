@@ -22,6 +22,7 @@ import acore.tools.StringManager;
 import third.ad.tools.GdtAdTools;
 import xh.basic.tool.UtilString;
 
+import static third.ad.control.AdControlHomeDish.tag_yu;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -48,6 +49,9 @@ public class XHAllAdControl {
     private boolean isQuanList = false;//是否是生活圈列表结构。
     private int getCountGdtData = 6;//获取广点通数据个数，默认6个
 
+    private boolean isNeedRefersh = false;//是否需要刷新
+    private long oneAdTime;//第一次请求广告的时间。
+    public long showTime= 30*60*1000;//广告的过期时间。30分钟
 
     /**
      * 初始化
@@ -143,7 +147,7 @@ public class XHAllAdControl {
      */
     private void handlerAdData(String adData, ArrayList<Map<String, String>> arrayList, String data) {
         Map<String, String> map_ad = StringManager.getFirstMap(adData);
-        if (map_ad.get("open").equals("2")) {
+        if (map_ad.get("open").equals("2")&&XHScrollerAdParent.supportType(map_ad.get("type"))) {
             /*banner广告数据存储到广告体*/
             if (map_ad.get("type").equals("personal"))
                 map_ad.put("data", data);
@@ -215,9 +219,6 @@ public class XHAllAdControl {
                 case "gdt":
                     parent = new XHScrollerGdt(backIds, i);
                     break;
-                case "inmobi":
-                    parent = new XHScrollerInMobi(act, data, backIds, i);
-                    break;
                 case "personal":
                     parent = new XHScrollerSelf(data, backIds, i, act);
                     break;
@@ -239,6 +240,7 @@ public class XHAllAdControl {
      */
     private void startAdRequest() {
         int size = listAdContrls.size();
+        if(size>0) oneAdTime = System.currentTimeMillis();//第一时间。
         for (int i = 0; i < size; i++) {
             if (listAdContrls.get(i) != null) {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
@@ -374,5 +376,18 @@ public class XHAllAdControl {
                     listAdContrls.get(i).releaseView();
             }
         }
+    }
+
+    /**
+     * 是否需要刷新
+     * @return
+     */
+    public boolean isNeedRefersh() {
+        long nowTime = System.currentTimeMillis();
+        Log.i(tag_yu,"nowTime:::"+nowTime+":::"+oneAdTime+"：：："+(nowTime-oneAdTime)+":::"+showTime);
+        if(nowTime-oneAdTime>=showTime){//当前广告已过期
+            return true;
+        }
+        return false;
     }
 }

@@ -12,7 +12,6 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,7 +34,7 @@ import static com.xiangha.R.id.v_no_data_search;
  * Created by ：airfly on 2016/10/14 15:21.
  */
 
-public class CaipuSearchResultView extends LinearLayout{
+public class CaipuSearchResultView extends LinearLayout {
 
     private AtomicInteger actIn;
     private Context context;
@@ -101,7 +100,6 @@ public class CaipuSearchResultView extends LinearLayout{
 
         createCallback();
         adapterCaipuSearch = new AdapterCaipuSearch(mActivity, list_search_result, caipuSearchResultCallback);
-
     }
 
 
@@ -183,12 +181,12 @@ public class CaipuSearchResultView extends LinearLayout{
     public void onClearcSearchWord() {
 
         clearSearchResult();
-        adapterCaipuSearch.refresh(false,mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+        adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
         adNum = 0;
     }
 
 
-    private void clearSearchResult(){
+    private void clearSearchResult() {
         mListCaipuData.clear();
         mListShicaiData.clear();
         mListCaidanData.clear();
@@ -209,7 +207,7 @@ public class CaipuSearchResultView extends LinearLayout{
         isFirstPage = currentCaipuPage == 1;
 
         loadManager.changeMoreBtn(list_search_result, ReqInternet.REQ_OK_STRING, -1, -1, currentCaipuPage, isFirstPage);
-        if(isRefreash.get()){
+        if (isRefreash.get()) {
             loadManager.hideProgressBar();
             isRefreash.set(false);
         }
@@ -223,48 +221,45 @@ public class CaipuSearchResultView extends LinearLayout{
                         mListCaipuData.clear();
                         mListShicaiData.clear();
                     }
-                    List<Map<String, String>> returnData = StringManager.getListMapByJson(returnObj);
-                    if (returnData.size() > 0) {
-                        Map<String, String> map = returnData.get(0);
-                        if (map != null && map.containsKey("dishs")) {
-                            String caipuStr = map.get("dishs");
-                            ArrayList<Map<String, String>> tempList = StringManager.getListMapByJson(caipuStr);
-                            for (int k = 0; k < tempList.size(); k++) {
-                                Map<String, String> map1 = tempList.get(k);
-                                if (map1.containsKey("customers")) {
-                                    ArrayList<Map<String, String>> customer = StringManager.getListMapByJson(map1.get("customers"));
-                                    map1.put("cusNickName", customer.get(0).get("nickName"));
-                                    map1.remove("customers");
-                                }
-                                map1.put("allClick", map1.get("allClick") + "浏览");
-                                map1.put("favorites", map1.get("favorites") + "收藏");
+                    Map<String, String> map = StringManager.getFirstMap(returnObj);
+                    if (map != null && map.containsKey("dishs")) {
+                        String caipuStr = map.get("dishs");
+                        ArrayList<Map<String, String>> tempList = StringManager.getListMapByJson(caipuStr);
+                        for (int k = 0; k < tempList.size(); k++) {
+                            Map<String, String> map1 = tempList.get(k);
+                            if (map1.containsKey("customers")) {
+                                ArrayList<Map<String, String>> customer = StringManager.getListMapByJson(map1.get("customers"));
+                                map1.put("cusNickName", customer.get(0).get("nickName"));
+                                map1.remove("customers");
                             }
-                            mListCaipuData.addAll(tempList);
+                            map1.put("allClick", map1.get("allClick") + "浏览");
+                            map1.put("favorites", map1.get("favorites") + "收藏");
+                        }
+                        mListCaipuData.addAll(tempList);
 
-                            if (isFirstPage
-                                    && map != null
-                                    && map.containsKey("theIngre")) {
-                                String shicaiStr = map.get("theIngre");
-                                ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
-                                for (Map<String, String> map2 : tempList2) {
-                                    map2.put("allClick", map2.get("allClick") + "浏览");
-                                    map2.put("name", map2.get("name") + "百科");
-                                }
-                                mListShicaiData.addAll(tempList2);
+                        if (isFirstPage
+                                && map != null
+                                && map.containsKey("theIngre")) {
+                            String shicaiStr = map.get("theIngre");
+                            ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
+                            for (Map<String, String> map2 : tempList2) {
+                                map2.put("allClick", map2.get("allClick") + "浏览");
+                                map2.put("name", map2.get("name") + "百科");
                             }
+                            mListShicaiData.addAll(tempList2);
+                        }
 
-                            if (!isFirstPage) {
-                                loadCount = mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum;
-                                if (adapterCaipuSearch == null) {
-                                    adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
-                                }
-                                adNum = adapterCaipuSearch.refresh(isFirstPage,mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
-                                currentCaipuPage = loadManager.changeMoreBtn(list_search_result, flag, LoadManager.FOOTTIME_PAGE, loadCount, currentCaipuPage, isFirstPage);
+                        if (!isFirstPage) {
+                            loadCount = mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum;
+                            if (adapterCaipuSearch == null) {
+                                adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
                             }
-                        } else {
-                            if (!isFirstPage) {
-                                setLoadMoreBtn();
-                            }
+                            adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                            currentCaipuPage = loadManager.changeMoreBtn(list_search_result, flag, LoadManager.FOOTTIME_PAGE, loadCount, currentCaipuPage, isFirstPage);
+                        }
+                    } else {
+                        if (!isFirstPage) {
+                            setLoadMoreBtn();
                         }
                     }
                 } else {
@@ -391,7 +386,7 @@ public class CaipuSearchResultView extends LinearLayout{
 
         adapterCaipuSearch.clearAdList();
         adNum = 0;
-        adNum = adapterCaipuSearch.refresh(true,mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+        adNum = adapterCaipuSearch.refresh(true, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
         currentCaipuPage = loadManager.changeMoreBtn(list_search_result, firstCaipuLoadFlag, LoadManager.FOOTTIME_PAGE,
                 mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum, currentCaipuPage, true);
         if (mListCaipuData.size() < 1)

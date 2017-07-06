@@ -170,7 +170,6 @@ public class UploadListControl {
      * @return progress   上传进度
      */
     public int initUpload(UploadItemData data) {
-
         if (!TextUtils.isEmpty(data.getRecMsg())) {
             return 100;
         }
@@ -438,8 +437,9 @@ public class UploadListControl {
                         }
                     };
                     Log.i("articleUpload", "uploadLastInfo() params:" + MapToString(itemData.getUploadMsg(), "&", "="));
-                    if (path.contains("Main7")) {
-                        ReqEncyptInternet.in().doEncypt(path, MapToString(itemData.getUploadMsg(), "&", "="), internetCallback);
+                    if (path.contains("main7")) {
+                        Log.i("articleUpload", "uploadLastInfo() doEncypt()");
+                        ReqEncyptInternet.in().doEncypt(path, itemData.getUploadMsg(), internetCallback);
                     } else {
                         ReqInternet.in().doPost(path, itemData.getUploadMsg(), internetCallback);
                     }

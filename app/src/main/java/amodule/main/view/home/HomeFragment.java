@@ -3,6 +3,7 @@ package amodule.main.view.home;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -56,6 +57,7 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.ad.control.AdControlHomeDish;
+import third.ad.control.AdControlNormalDish;
 import third.ad.control.AdControlParent;
 import third.ad.option.AdOptionList;
 import third.ad.option.AdOptionParent;
@@ -66,10 +68,10 @@ import third.video.VideoPlayerController;
 
 import static amodule.main.activity.MainHome.tag;
 import static com.xiangha.R.id.return_top;
+import static third.ad.control.AdControlHomeDish.tag_yu;
 
-public class HomeFragment extends Fragment{
-    /** 保存板块信息的key */
-    protected static final String MODULEDATA = "moduleData";
+public class HomeFragment extends BaseHomeFragment{
+
     public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
 
     private HomeModuleBean homeModuleBean;//数据的结构
@@ -194,39 +196,11 @@ public class HomeFragment extends Fragment{
                 isSetAd = false;
             }
             if(isSetAd && adControlParent == null){
-                adControlParent = new AdOptionList(adPlayIds,adIndexs) {
-                    @Override
-                    public Map<String, String> getAdListItemData(String title, String desc, String iconUrl, String imageUrl, String adTag) {
-                        return setAdData(title,desc,iconUrl,imageUrl,adTag);
-                    }
-                };
-                adControlParent.getAdData(mActivity,statisticKey);
 
-                return new AdControlParent(adControlParent);
+                return new AdControlNormalDish(statisticKey,adPlayIds);
             }
         }
         return null;
-    }
-
-
-    private Map<String, String> setAdData(String title, String desc, String iconUrl, String imageUrl, String adTag){
-        Map<String, String> map = new HashMap<>();
-        map.put("name", title);
-        map.put("img", imageUrl);
-        map.put("content",desc);
-        map.put("allClick", String.valueOf(Tools.getRandom(6000,20000)));
-        map.put("commentNum", String.valueOf(Tools.getRandom(5,20)));
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("nickName",title);
-            jsonArray.put(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        map.put("customer",jsonArray.toString());
-
-        return map;
     }
 
     @Nullable
@@ -292,10 +266,9 @@ public class HomeFragment extends Fragment{
     protected void onVisible() {
         preLoad();
         if (mLoadManager != null && mListview != null) {
-            Button loadMore = mLoadManager.getSingleLoadMore(mListview);
-            if (loadMore != null) {
-                loadMore.setVisibility(mListData.size() == 0 ? View.INVISIBLE : View.VISIBLE);
-            }
+            if( mListData.size() == 0){
+                mLoadManager.showProgressBar();
+            }else mLoadManager.hideProgressBar();
         }
     }
     protected void onInvisible() {
@@ -386,6 +359,9 @@ public class HomeFragment extends Fragment{
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh){
+        if(refresh){
+            isNeedRefresh(false);
+        }
         String params="";
         LoadOver = true;
 //        mLoadManager.showProgressBar();
@@ -461,6 +437,13 @@ public class HomeFragment extends Fragment{
                         //当前只有向上刷新，并且服务端确认可以刷新数据
                         if (compelClearData || (refresh && !TextUtils.isEmpty(listmaps.get(0).get("reset")) && "2".equals(listmaps.get(0).get("reset")))) {
                             mListData.clear();
+                            isNeedRefresh(true);
+                            //强制刷新，重置数据
+                            if(!TextUtils.isEmpty(listmaps.get(0).get("backurl")))
+                                backUrl = listmaps.get(0).get("backurl");
+                            if(!TextUtils.isEmpty(listmaps.get(0).get("nexturl")))
+                                nextUrl = listmaps.get(0).get("nexturl");
+
                         }
                         //初始化二级
                         initContextView(listmaps.get(0).get("trigger_two_type"));
@@ -479,7 +462,7 @@ public class HomeFragment extends Fragment{
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
-                                        Log.i("zhangyujian","listDatas:::"+listDatas.size());
+                                        Log.i(tag_yu,"listDatas::111:"+listDatas.size());
                                         listDatas = mAdControl.getNewAdData(listDatas, true);
 
                                         upDataSize+=listDatas.size();
@@ -487,26 +470,26 @@ public class HomeFragment extends Fragment{
                                     mListData.addAll(0, listDatas);//插入到第一个位置
                                 } else {
                                     //查询往期推荐的index：如果当前是每日推荐，并且还未给AdControl设置过加入的位置，则查询往期推荐的index，广告插到此条上面
-                                    if (isDayDish && !isSetIndex) {
-                                        int index = 0;
-                                        for (Map<String, String> map : listDatas) {
-                                            if (!TextUtils.isEmpty(map.get("pastRecommed"))) {
-                                                oldDayDishIndex = index;
-                                                break;
-                                            }
-                                            index++;
-                                        }
-                                        //如果当前是每日推荐，并且还未给AdControl设置过加入的位置，则设置
-                                        if (oldDayDishIndex > 0 && mAdControl != null) {
-                                            isSetIndex = true;
-                                            mAdControl.setIndexs(new Integer[]{oldDayDishIndex});
-                                        }
-                                    }
+//                                    if (isDayDish && !isSetIndex) {
+//                                        int index = 0;
+//                                        for (Map<String, String> map : listDatas) {
+//                                            if (!TextUtils.isEmpty(map.get("pastRecommed"))) {
+//                                                oldDayDishIndex = index;
+//                                                break;
+//                                            }
+//                                            index++;
+//                                        }
+//                                        //如果当前是每日推荐，并且还未给AdControl设置过加入的位置，则设置
+//                                        if (oldDayDishIndex > 0 && mAdControl != null) {
+//                                            isSetIndex = true;
+////                                            mAdControl.setIndexs(new Integer[]{oldDayDishIndex});
+//                                        }
+//                                    }
                                     mListData.addAll(listDatas);//顺序插入
                                     //如果需要加广告，插入广告
                                     if (mAdControl != null) {
                                         //插入广告
-                                        Log.i("zhangyujian","mListData:::"+mListData.size()+"::"+upDataSize);
+                                        Log.i(tag_yu,"mListData::222:"+mListData.size()+"::"+upDataSize);
                                         if(upDataSize>0 && isRecom)
                                             mAdControl.setLimitNum(upDataSize);
                                         mListData = mAdControl.getNewAdData(mListData, false);
@@ -633,6 +616,7 @@ public class HomeFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(tag_yu,"homeframg：onResume：：");
         if(statrTime<=0&& isRecom()){
             statrTime=System.currentTimeMillis();
         }
@@ -642,6 +626,7 @@ public class HomeFragment extends Fragment{
     public void onPause() {
         super.onPause();
         stopVideo();
+        Log.i(tag_yu,"homeframg：onPause：：");
     }
 
     public HomeModuleBean getmoduleBean() {
@@ -973,5 +958,75 @@ public class HomeFragment extends Fragment{
             XHClick.saveStatictisFile("home",MainHome.recommedType_statictus,"","",String.valueOf(scrollDataIndex),"list","","","","","");
             scrollDataIndex=-1;
         }
+    }
+
+    /**
+     * 刷新广告数据
+     * @param isForceRefresh 是否强制刷新广告
+     */
+    public void isNeedRefresh(boolean isForceRefresh){
+        if(mAdControl==null||mListData==null||adapterListView==null)return;//条件过滤
+        boolean state=mAdControl.isNeedRefresh();
+        Log.i(tag_yu,"isNeedRefresh::::"+state+":::"+homeModuleBean.getTitle()+"：：：isForceRefresh：："+isForceRefresh);
+        if(isForceRefresh)state=isForceRefresh;//强制刷新
+//        state=true;
+        if(state){
+            //重新请求广告
+            mAdControl.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
+                @Override
+                public void adDataBack(int tag, int nums) {
+                    if(tag>=1&&nums>0) {
+                        handlerMainThreadUIAD();
+                    }
+                }
+            });
+            mAdControl.refreshData();
+            if(mAdControl instanceof AdControlHomeDish){//推荐首页
+                ((AdControlHomeDish)mAdControl).setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
+                    @Override
+                    public void loadNumberCallBack(int Number) {
+                        if(Number>7){
+                            handlerMainThreadUIAD();
+                        }
+                    }
+                });
+            }else if(mAdControl instanceof  AdControlNormalDish){//其他标准列表结构
+                ((AdControlNormalDish)mAdControl).setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
+                    @Override
+                    public void loadNumberCallBack(int Number) {
+                        if(Number>7){
+                            handlerMainThreadUIAD();
+                        }
+                    }
+                });
+            }
+
+            //去掉全部的广告位置
+            int size= mListData.size();
+            ArrayList<Map<String,String>> listTemp = new ArrayList<>();
+            for(int i=0;i<size;i++){
+                if(mListData.get(i).containsKey("adstyle")&&"ad".equals(mListData.get(i).get("adstyle"))){
+                    listTemp.add(mListData.get(i));
+                }
+            }
+            Log.i(tag_yu,"删除广告");
+            if(listTemp.size()>0){
+                mListData.removeAll(listTemp);
+            }
+            adapterListView.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 处理广告在主线程中处理
+     */
+    private void handlerMainThreadUIAD(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mListData = mAdControl.getNewAdData(mListData, false);
+                if(adapterListView!=null)adapterListView.notifyDataSetChanged();
+            }
+        });
     }
 }

@@ -9,12 +9,12 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -22,9 +22,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
@@ -46,7 +43,6 @@ import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
-import acore.tools.ImgManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -62,9 +58,7 @@ import amodule.quan.db.CircleSqlite;
 import amodule.user.activity.ChangeUrl;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
-import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
-import aplug.basic.SubBitmapTarget;
 import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
@@ -226,7 +220,7 @@ public class AppCommon {
                     }
                 }
                 if (!TextUtils.isEmpty(url) && urls.length > 1) {
-                    //TODO 不会有.app了，变成包名加类名啦
+                    //不会有.app了，变成包名加类名啦
                     int indexs = url.indexOf(".app");
                     String data = url.substring(0, indexs + 4); //+4是为了加上.app4个字符
                     XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
@@ -289,6 +283,17 @@ public class AppCommon {
             return;
         } else if (url.indexOf("GoodsList.app") > -1) { //返现商品列表
             return;
+        } else if(url.indexOf("link.app")==0){//外链
+            String temp = url.substring(url.indexOf("?") + 1, url.length());
+            LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
+            String openUrl = map_link.get("url");
+            Intent intentLink = new Intent();
+            intentLink.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse(openUrl);
+            intentLink.setData(content_url);
+            act.startActivity(intentLink);
+            return;
+
         }
         intent = parseURL(XHApplication.in(), bundle, url);
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
@@ -441,7 +446,7 @@ public class AppCommon {
      */
     public synchronized static void saveAppData() {
         final String appDataPath = FileManager.getDataDir() + FileManager.file_appData;
-        if (FileManager.ifFileModifyByCompletePath(appDataPath, 6 * 60) == null) {
+//        if (FileManager.ifFileModifyByCompletePath(appDataPath, 6 * 60) == null) {
             ReqInternet.in().doGet(StringManager.api_appData + "?type=newData", new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, final Object returnObj) {
@@ -463,7 +468,7 @@ public class AppCommon {
                     }.start();
                 }
             });
-        }
+//        }
     }
 
     /**
@@ -490,52 +495,6 @@ public class AppCommon {
             jsonStr = dataArray.get(0).get(key);
         }
         return jsonStr;
-    }
-
-    // 保存welcome页数据
-    public static void saveWelcomeInfo(String json) {
-        Map<String, String> map = getWelcomeInfo();
-        if (json == null || json.length() < 10) {
-            delWelcomeInfo(map);
-        } else {
-            String file_content = FileManager.readFile(FileManager.getDataDir() + FileManager.file_welcome);
-            file_content = file_content.trim();
-            if (!file_content.equals(json)) {
-                delWelcomeInfo(map);
-                FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_showNum, "0");
-                FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_welcome, json, false);
-                if (map != null && map.containsKey("img")) {
-                    String imgUrl = map.get("img");
-                    BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
-                            .load(imgUrl)
-                            .setSaveType(LoadImage.SAVE_LONG)
-                            .build();
-                    if (bitmapRequest != null) {
-                        bitmapRequest.into(new SubBitmapTarget() {
-                            @Override
-                            public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    }
-
-    // 删除welcome页数据
-    private static void delWelcomeInfo(Map<String, String> map) {
-        if (map != null && map.get("img") != null)
-            ImgManager.delImg(map.get("img"));
-        FileManager.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_welcome);
-    }
-
-    // 从文件获取welcome页数据
-    public static Map<String, String> getWelcomeInfo() {
-        String file_content = FileManager.readFile(FileManager.getDataDir() + FileManager.file_welcome);
-        if (file_content.length() > 10)
-            return getListMapByJson(file_content).get(0);
-        return null;
     }
 
     /**
@@ -762,9 +721,7 @@ public class AppCommon {
 
     public synchronized static void saveUrlRuleFile(Context context) {
         final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
-//		/**
-//		 * 方便测试 
-//		 */
+		//方便测试
 //		if(FileManager.ifFileModifyByCompletePath(urlRulePath, -1) == null){
 //			String urlRuleData = FileManager.getFromAssets(context, FileManager.file_urlRule);
 //			FileManager.saveFileToCompletePath(urlRulePath, urlRuleData, false);
@@ -1007,6 +964,7 @@ public class AppCommon {
 
     public static boolean isVip(String data){
         boolean isVip = false;
+
         if(TextUtils.isEmpty(data))
             return false;
         if("2".equals(data)){

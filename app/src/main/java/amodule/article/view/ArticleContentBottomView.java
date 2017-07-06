@@ -62,7 +62,7 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
             if(TextUtils.isEmpty(repAddressStr) || "null".equals(repAddressStr)){
                 articleRepintSource.setText("转载");
             }else{
-                articleRepintSource.setText("转载：" + repAddressStr);
+                articleRepintSource.setText("转载: " + repAddressStr);
             }
             articleRepintSource.setVisibility(VISIBLE);
         }
@@ -95,6 +95,10 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
         public void onReportClick();
     }
     public void setOnReportClickCallback(OnReportClickCallback callback){
+        if(callback == null){
+            findViewById(R.id.article_report).setVisibility(GONE);
+            return;
+        }
         this.mOnReportClickCallback = callback;
         findViewById(R.id.article_report).setVisibility(VISIBLE);
     }

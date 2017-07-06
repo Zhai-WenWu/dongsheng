@@ -2,6 +2,7 @@ package amodule.article.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -65,9 +66,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         defaultLayout = (LinearLayout) findViewById(R.id.default_layout);
         int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
         int height = width * 9 / 16;
-        defaultLayout.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+        defaultLayout.setLayoutParams(new LayoutParams(width,height));
         coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        coverImage.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+        coverImage.setLayoutParams(new LayoutParams(width,height));
         defaultLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,14 +135,15 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                             }else{
                                 int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
                                 int height = width * 9 / 16;
-                                coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                coverImage.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+                                coverImage.setLayoutParams(new LayoutParams(width,height));
+                                coverImage.setScaleType(imageWidth > imageHieght?ImageView.ScaleType.CENTER_CROP:ImageView.ScaleType.FIT_CENTER);
+                                coverImage.setBackgroundColor(Color.parseColor("#000000"));
                                 coverImage.setImageBitmap(bitmap);
                             }
                         }
                     }
                 });
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 Tools.getDimen(getContext(), R.dimen.dp_200));//
         videoLayout.setPadding(0, 0, 0, ToolsDevice.dp2px(getContext(), 5));
         videoLayout.setLayoutParams(params);
@@ -171,8 +173,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                             }else{
                                 int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
                                 int height = width * 9 / 16;
-                                coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                coverImage.setLayoutParams(new RelativeLayout.LayoutParams(width,height));
+                                coverImage.setLayoutParams(new LayoutParams(width,height));
+                                coverImage.setScaleType(imageWidth > imageHieght?ImageView.ScaleType.CENTER_CROP:ImageView.ScaleType.FIT_CENTER);
+                                coverImage.setBackgroundColor(Color.parseColor("#000000"));
                                 coverImage.setImageBitmap(bitmap);
                             }
                         }

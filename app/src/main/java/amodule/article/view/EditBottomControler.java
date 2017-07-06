@@ -21,6 +21,7 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
     private ImageView textEditImage;
     private ImageView textBoldImage;
     private ImageView textUnderlineImage;
+    private ImageView textCenterImage;
 
     private OnSelectImageCallback mOnSelectImageCallback;
     private OnSelectVideoCallback mOnSelectVideoCallback;
@@ -47,6 +48,7 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
         textEditImage = (ImageView) findViewById(R.id.edit_text);
         textBoldImage = (ImageView) findViewById(R.id.text_bold);
         textUnderlineImage = (ImageView) findViewById(R.id.text_underline);
+        textCenterImage = (ImageView) findViewById(R.id.text_center);
 
         //设置监听
         findViewById(R.id.select_image).setOnClickListener(this);
@@ -158,6 +160,10 @@ public class EditBottomControler extends LinearLayout implements View.OnClickLis
 
     public void setTextUnderlineImageSelection(boolean isSelected){
         textUnderlineImage.setSelected(isSelected);
+    }
+
+    public void setTextCenterImageSelection(boolean isSelected){
+        textCenterImage.setSelected(isSelected);
     }
 
     public interface OnSelectImageCallback {

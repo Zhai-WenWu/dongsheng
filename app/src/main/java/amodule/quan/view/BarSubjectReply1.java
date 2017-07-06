@@ -126,7 +126,6 @@ public class BarSubjectReply1 extends LinearLayout{
 					// 跳转到登录
 					Intent intent = new Intent(act,LoginByAccout.class);
 					act.startActivity(intent);
-					Tools.showToast(act, "请先登录");
 					return;
 				}
 				XHClick.track(getContext(), "美食贴点赞");

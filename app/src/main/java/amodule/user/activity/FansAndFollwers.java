@@ -73,7 +73,6 @@ public class FansAndFollwers extends BaseActivity implements OnClickListener {
 			}
 		});
 		// TitleBar选择初始化
-		findViewById(R.id.leftText).setVisibility(View.VISIBLE);
 		findViewById(R.id.leftImgBtn).setVisibility(View.VISIBLE);
 		left_btn = (Button) findViewById(R.id.fans_btnLeftChannel);
 		left_btn.setOnClickListener(this);

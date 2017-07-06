@@ -91,7 +91,7 @@ public class UserHomeAnswer extends TabContentView {
 		mGotoBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO 跳转到问答发布页面
+				//跳转到问答发布页面
 			}
 		});
 		theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);
@@ -230,12 +230,14 @@ public class UserHomeAnswer extends TabContentView {
 				int loadCount = 0;
 				if (flag >= UtilInternet.REQ_OK_STRING) {
 					loadCount = parseInfo(returnObj);
-				} else {
-					Tools.showToast(mAct, returnObj.toString());
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;
 				currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,datas.size() == 0);
+				if (flag < UtilInternet.REQ_OK_STRING) {
+					Tools.showToast(mAct, returnObj.toString());
+					return;
+				}
 				onDataReady(true);
 				setHeadViewHeight();
 			}

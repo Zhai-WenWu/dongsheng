@@ -220,7 +220,6 @@ public class ShowSubject extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				finish();
 			}
 		});
@@ -373,7 +372,6 @@ public class ShowSubject extends BaseActivity {
 
 	//登录
 	private void goLogin() {
-		Tools.showToast(getApplicationContext(), "请先登录");
 		Intent intent = new Intent(this, LoginByAccout.class);
 		startActivity(intent);
 	}
@@ -466,6 +464,10 @@ public class ShowSubject extends BaseActivity {
 				Log.i("zhangyujian","onScrollStateChanged:::"+scrollState);
 			}
 		});
+		//填充底部footer避免遮盖
+		View fillFooterView = new View(this);
+		fillFooterView.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_45));
+		listSubject.addFooterView(fillFooterView,null,false);
 	}
 
 	/**
