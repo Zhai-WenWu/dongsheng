@@ -166,7 +166,7 @@ public class ArticleCommentView extends ItemBaseView {
                     }
 
                     @Override
-                    public void onDeleteReplayClick(String comment_id, String replay_id) {
+                    public void onDeleteReplayClick(int index,String comment_id, String replay_id) {
                     }
 
                     @Override

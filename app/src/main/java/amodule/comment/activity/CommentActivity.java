@@ -221,9 +221,29 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             }
 
             @Override
-            public void onDeleteReplayClick(String comment_id, String replay_id) {
+            public void onDeleteReplayClick(final int replayIndex, String comment_id, String replay_id) {
                 XHClick.mapStat(CommentActivity.this,deleteTongjiId,deleteTwoLeven,"点击楼中楼的删除按钮");
-                requstInternet(StringManager.api_delReplay,"type=" + type + "&code=" + code + "&commentId="+comment_id + "&replayId=" + replay_id);
+                ReqEncyptInternet.in().doEncypt(StringManager.api_delReplay, "type=" + type + "&code=" + code + "&commentId="+comment_id + "&replayId=" + replay_id,
+                        new InternetCallback(CommentActivity.this) {
+                    @Override
+                    public void loaded(int flag, String s, Object o) {
+                        Log.i("commentReplay","deleteReplay() flag:" + flag + "   obj:" + o);
+//                        Log.i("commentReplay","deleteReplay() position:" + position + "  listArray.size():" + listArray.size() + "   replayIndex:" + replayIndex);
+                        if(flag >= ReqInternet.REQ_OK_STRING){
+                            if(position < listArray.size()) {
+                                Map<String, String> map = listArray.get(position);
+                                String replay = map.get("replay");
+                                ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(replay);
+//                                Log.i("commentReplay","deleteReplay() arrayList.size():" + arrayList.size());
+                                if (replayIndex < arrayList.size()) {
+                                    arrayList.remove(replayIndex);
+                                    map.put("replay", StringManager.getJsonByArrayList(arrayList).toString());
+                                    viewCommentItem.addReplayView(arrayList, true);
+                                }
+                            }
+                        }
+                    }
+                });
             }
 
             @Override

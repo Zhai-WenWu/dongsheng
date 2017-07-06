@@ -344,13 +344,18 @@ public class ViewCommentItem extends LinearLayout {
         }
     }
 
-    public void addReplayView(Object replay, boolean isClear){
+    public void addReplayView(String replay, boolean isClear){
+        ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
+        addReplayView(replayArray,isClear);
+    }
+
+    public void addReplayView(final ArrayList<Map<String, String>> replayArray, boolean isClear){
         if(isClear)commentReplay.removeAllViews();
-        final ArrayList<Map<String, String>> replayArray = StringManager.getListMapByJson(replay);
         Log.i("commentReplay","addReplayView() replayArray.size:" + replayArray.size());
         View view;
         MultifunctionTextView replayTv;
         boolean isReset = false;
+        int index = 0;
         for(final Map<String, String> replayMap:replayArray) {
             view = layoutInflater.inflate(R.layout.a_comment_item_replay_cotent,null);
             replayTv = (MultifunctionTextView) view.findViewById(R.id.comment_item_replay_item_tv);
@@ -431,6 +436,7 @@ public class ViewCommentItem extends LinearLayout {
             replayTv.setText(multifunctionText);
             replayTv.setCopyText(content);
             if(isHaveLongClickRight) {
+                final int replayIndex = index;
                 final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
                 replayTv.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
                     @Override
@@ -439,7 +445,7 @@ public class ViewCommentItem extends LinearLayout {
                             if (isReport)
                                 mListener.onReportReplayClick(comment_id, replayMap.get("replay_id"), replay_ucode, replay_uname, content);
                             else
-                                mListener.onDeleteReplayClick(comment_id, replayMap.get("replay_id"));
+                                mListener.onDeleteReplayClick(replayIndex,comment_id, replayMap.get("replay_id"));
                         }
                     }
                 });
@@ -450,6 +456,7 @@ public class ViewCommentItem extends LinearLayout {
             commentReplay.setVisibility(View.VISIBLE);
             commentReplayImg.setVisibility(View.VISIBLE);
             commentReplay.addView(view);
+            index++;
         }
         if(isReset){
             new Thread(new Runnable() {
@@ -545,7 +552,7 @@ public class ViewCommentItem extends LinearLayout {
          */
         public void onDeleteCommentClick(String comment_id,String deleteType);
         public void onReportReplayClick(String comment_id, String replay_id,String replay_user_code,String replay_user_name,String reportContent);
-        public void onDeleteReplayClick(String comment_id, String replay_id);
+        public void onDeleteReplayClick(int index,String comment_id, String replay_id);
         public void onPraiseClick(String comment_id);
 
         /**
