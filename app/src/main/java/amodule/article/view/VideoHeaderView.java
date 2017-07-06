@@ -356,13 +356,18 @@ public class VideoHeaderView extends RelativeLayout {
             public void onProgressUpdate(long current, long duration) {
                 int currentS = Math.round(current/1000f);
                 int durationS = Math.round(duration/1000f);
+                if(limitTime > durationS){
+                    mVideoPlayerController.setControlLayerVisibility(true);
+                }
                 if(isHaspause){
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
                     return;
                 }
-                if((currentS > limitTime || limitTime > durationS) && !isContinue){
+                if((currentS > limitTime
+//                        || limitTime > durationS
+                ) && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
@@ -376,13 +381,18 @@ public class VideoHeaderView extends RelativeLayout {
             public void onDragProgess(long current, long duration) {
                 int currentS = Math.round(current/1000f);
                 int durationS = Math.round(duration/1000f);
+                if(limitTime > durationS){
+                    mVideoPlayerController.setControlLayerVisibility(true);
+                }
                 if(isHaspause){
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
                     mVideoPlayerController.onPause();
                     mVideoPlayerController.onResume();
                     return;
                 }
-                if((currentS > limitTime || limitTime > durationS) && !isContinue){
+                if((currentS > limitTime
+//                        || limitTime > durationS
+                ) && !isContinue){
                     currentTime = current;
                     dredgeVipLayout.setVisibility(VISIBLE);
                     VDVideoViewController.getInstance(activity).setSeekPause(true);
