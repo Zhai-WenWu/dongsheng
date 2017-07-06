@@ -611,6 +611,7 @@ public class Main extends Activity implements OnClickListener {
             if (allTab.containsKey("MainIndex")) {
                 MainHome mainIndex = (MainHome) allTab.get("MainIndex");
                 mainIndex.setRecommedTime(System.currentTimeMillis());
+                mainIndex.onResumeFake();
             }
         }
         //特殊逻辑

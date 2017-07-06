@@ -105,15 +105,15 @@ public class CoreService extends NormalService {
         if (dayCount >= 1
                 || dayCount < 4) {
             //
-            return todayCount < 4;
-        } else if (dayCount >= 4
-                || dayCount < 7) {
-            //
             return todayCount < 3;
-        } else if (dayCount >= 7
-                || dayCount < 14) {
+        } else if (dayCount >= 4
+                || dayCount < 8) {
             //
             return todayCount < 2;
+        } else if (dayCount >= 8
+                || dayCount < 14) {
+            //
+            return todayCount < 1;
         } else if (dayCount >= 14) {
             //
             return todayCount < 1;
