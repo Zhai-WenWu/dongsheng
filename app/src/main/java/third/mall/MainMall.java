@@ -44,7 +44,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 	// 加载管理
 	private TextView mall_news_num;
 	private TextView mall_news_num_two;
-	public static XHWebView webview = null;
+	public XHWebView webview = null;
 	public static int webViewNum = 0;
 	public WebviewManager webViewManager = null;
 	private MallCommon common;
@@ -227,11 +227,6 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 		super.onDestroy();
 	}
 	
-	//供外部吊起reload
-	public static void reloadWebView(){
-		if(webview != null)
-			webview.reload();
-	}
 
 	public void scrollTop(){
 		webview.setScrollY(0);
