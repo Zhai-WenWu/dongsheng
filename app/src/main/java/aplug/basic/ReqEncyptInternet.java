@@ -255,6 +255,9 @@ public class ReqEncyptInternet extends UtilInternet {
         if(listInternet!=null&&listInternet.size()>0)listInternet.clear();
     }
     public static boolean isNumeric(String str) {
+        if(TextUtils.isEmpty(str)){
+            return false;
+        }
         for (int i=0; i<str.length();i++){
             if(!Character.isDigit(str.charAt(i))){
                 return false;
