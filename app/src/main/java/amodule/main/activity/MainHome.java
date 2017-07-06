@@ -64,6 +64,7 @@ public class MainHome extends MainBaseActivity {
     private RelativeLayout mSearch;
     private ImageView mMoreBtn;
     private int itemPosition = 0;//当前所在位置.
+    private int resumeCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,7 +293,13 @@ public class MainHome extends MainBaseActivity {
         Log.i("zyj","mainHome::onresume");
         refreshAdData();
         //为了解决首页打开webview后再调用此句再打开的webView的大小就不是0*0啦
-        SpecialWebControl.initSpecialWeb(this,"index","","");
+        onResumeFake();
+    }
+
+    public void onResumeFake(){
+        if(resumeCount != 0)
+            SpecialWebControl.initSpecialWeb(this,"index","","");
+        resumeCount++;
     }
 
     @Override
