@@ -231,13 +231,15 @@ public class Welcome extends BaseActivity {
     }
 
     private void showSkipContainer(){
+        textLead.setVisibility(View.VISIBLE);
+        textSkip.setVisibility(View.VISIBLE);
+        mADLayout.setVisibility(View.VISIBLE);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration(500);
         alphaAnimation.setFillAfter(true);
         findViewById(R.id.image).setVisibility(View.GONE);
         mADLayout.startAnimation(alphaAnimation);
 
-        mADLayout.setVisibility(View.VISIBLE);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
