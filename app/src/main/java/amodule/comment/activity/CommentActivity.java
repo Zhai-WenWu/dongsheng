@@ -199,12 +199,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
+                Log.i("commentReplay","onReportReplayClick()");
                 if(!LoginManager.isLogin()){
                     startActivity(new Intent(CommentActivity.this, LoginByAccout.class));
                     return;
                 }
-                if(LoginManager.isLogin()
-                        && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+                if(!TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                         && !TextUtils.isEmpty(replay_user_code)
                         && !replay_user_code.equals(LoginManager.userInfo.get("code"))){
                     XHClick.mapStat(CommentActivity.this,reportTongjiId,reportTwoLeven,"点击楼中楼的举报");
@@ -465,6 +465,11 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
                     if(arrayList.size() > 0) {
                         Map<String,String> dataMap = arrayList.get(0);
+                        String status = dataMap.get("status");
+                        if(!"2".equals(status)){
+                            CommentActivity.this.finish();
+                            return;
+                        }
                         String dataList = dataMap.get("list");
                         String dataPage = dataMap.get("page");
                         String titleInfo = dataMap.get("info");

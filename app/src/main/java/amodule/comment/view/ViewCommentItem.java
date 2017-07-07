@@ -443,7 +443,7 @@ public class ViewCommentItem extends LinearLayout {
                     public void onClick(View v) {
                         if (mListener != null) {
                             if (isReport)
-                                mListener.onReportReplayClick(comment_id, replayMap.get("replay_id"), replay_ucode, replay_uname, content);
+                                mListener.onReportReplayClick(comment_id, replayMap.get("replay_id"), ucode, uName, content);
                             else
                                 mListener.onDeleteReplayClick(replayIndex,comment_id, replayMap.get("replay_id"));
                         }
