@@ -752,7 +752,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     .setSureButton("退出", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            sqLite.deleteById(uploadArticleData.getId());
+                            if (uploadArticleData != null) {
+                                sqLite.deleteById(uploadArticleData.getId());
+                            }
                             xhDialog.cancel();
                             finshActivity();
                         }
