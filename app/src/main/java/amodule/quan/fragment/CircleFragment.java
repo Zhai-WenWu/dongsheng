@@ -293,9 +293,6 @@ public class CircleFragment extends Fragment {
                     index_size=0;
                     if (mPlateData != null)
                         mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
-                    for(Map<String,String> map :mListData){
-                        Log.i("tzy",map.toString());
-                    }
                     mAdapter.notifyDataSetChanged();
                     index_size=mListData.size();
                 }else{
