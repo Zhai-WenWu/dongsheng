@@ -439,11 +439,16 @@ public class DetailDish extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (dishActivityViewControl == null)
+            return;
         if (requestCode == 1000 && data != null) {
             dishActivityViewControl.getDishHeaderView().getdDshAboutView().setNewFollowState(String.valueOf(data.getExtras().get("folState")));
         }else if(requestCode==10000&& resultCode== Activity.RESULT_OK){
-            String subjectCode=dishActivityViewControl.getDishInfoMap().get("subjectCode");
-            String url="subjectInfo.app?code=" + subjectCode + "&title=" + dishActivityViewControl.getDishInfoMap().get("name");
+            Map<String, String> dishInfoMap = dishActivityViewControl.getDishInfoMap();
+            if (dishInfoMap == null)
+                return;
+            String subjectCode=dishInfoMap.get("subjectCode");
+            String url="subjectInfo.app?code=" + subjectCode + "&title=" + dishInfoMap.get("name");
             AppCommon.openUrl(this,url,true);
         }
     }
