@@ -623,12 +623,14 @@ public class FriendHome extends BaseActivity {
 								TabContentView currTabView = mTabContentViews.get(tabIndex);
 								if (currTabView != null) {
 									String tabType = currTabView.getDataMap().get("type");
-									if (dataType.equals(tabType) && mIsResumming) {
-										mTabRefreshTypes.remove(tabType);
-										CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
-										currTabView.onResume("resume");
-									} else if (!mTabRefreshTypes.contains(dataType)) {
-										mTabRefreshTypes.add(dataType);
+									if (mTabRefreshTypes != null) {
+										if (dataType.equals(tabType) && mIsResumming) {
+											mTabRefreshTypes.remove(tabType);
+											CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
+											currTabView.onResume("resume");
+										} else if (!mTabRefreshTypes.contains(dataType)) {
+											mTabRefreshTypes.add(dataType);
+										}
 									}
 								}
 							}
