@@ -122,12 +122,14 @@ public class Main extends Activity implements OnClickListener {
     private long homebackTime;
     private boolean isForeground = true;
     private int nowTab = 0;//当前选中tab
-    private boolean isInit = false;
     public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
-
+    private boolean isInit=false;//是否已经进行初始化
+    private WelcomeDialog welcomeDialog;//dialog,显示
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
+
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
         //腾讯统计
@@ -161,7 +163,7 @@ public class Main extends Activity implements OnClickListener {
             }
         }
         mainInitDataControl = new MainInitDataControl();
-        WelcomeDialog welcomeDialog = LoginManager.isShowAd() ?
+        welcomeDialog = LoginManager.isShowAd() ?
                 new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
         long endTime1 = System.currentTimeMillis();
@@ -186,7 +188,6 @@ public class Main extends Activity implements OnClickListener {
                 new DialogControler().showDialog();
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
-
 
                 boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
                 if (!isShow)
@@ -233,6 +234,9 @@ public class Main extends Activity implements OnClickListener {
         @Override
         public void dialogOnLayout() {
             Log.i("zhangyujian", "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            if(!isInit){
+                dialogOnCreate();
+            }
             AdControlHomeDish.getInstance();
             setCurrentTabByIndex(defaultTab);
             init();
@@ -246,6 +250,7 @@ public class Main extends Activity implements OnClickListener {
         public void dialogOnCreate() {
             initUI();
             initData();
+            isInit=true;
         }
 
         @Override
@@ -291,12 +296,7 @@ public class Main extends Activity implements OnClickListener {
      */
     @SuppressLint("HandlerLeak")
     private void initUI() {
-        Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
         setContentView(R.layout.xh_main);
-//        ToolsDevice.modifyStateTextColor(this);//StatusBar 背景色为深色，不需要修改文字颜色
-//        if (Tools.isShowTitle()) {
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        }
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
 
@@ -839,5 +839,14 @@ public class Main extends Activity implements OnClickListener {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         Log.i("zhangyujian", "main::onPostCreate");
+    }
+
+    @Override
+    protected void onDestroy() {
+        //activity关闭之前必须关闭dilaog
+        if(welcomeDialog!=null&&welcomeDialog.isShowing()){
+            welcomeDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

@@ -24,7 +24,7 @@
                     android:id="@+id/tv_now_protocol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="当前选择协议："
+                    android:text="网络协议："
                     android:textSize="@dimen/sp_20"/>
 
                 <RadioGroup
@@ -50,7 +50,7 @@
                     android:id="@+id/tv_now_domain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="当前选择域："
+                    android:text="香哈服务器切换："
                     android:textSize="@dimen/sp_20"/>
 
                 <RadioGroup
@@ -120,7 +120,7 @@
                     android:id="@+id/mall_tv_now_domain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="电商当前选择域："
+                    android:text="电商服务器切换："
                     android:textSize="@dimen/sp_20"/>
 
                 <RadioGroup

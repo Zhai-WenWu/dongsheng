@@ -194,15 +194,6 @@
             android:scaleType="fitXY"
             android:visibility="gone"/>
 
-        <ImageView
-            android:id="@+id/ad_tag"
-            android:layout_width="@dimen/dp_35"
-            android:layout_height="@dimen/dp_16.5"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/home_item_adtag_black"
-            android:visibility="gone"/>
-
     </RelativeLayout>
 
     <TextView
@@ -238,6 +229,15 @@
             android:layout_height="@dimen/dp_14"
             android:layout_marginRight="@dimen/dp_4"
             android:src="@drawable/top"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/ad_tag"
+            android:layout_width="@dimen/dp_37"
+            android:layout_height="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_5"
+            android:scaleType="centerInside"
+            android:src="@drawable/home_item_adicon"
             android:visibility="gone"/>
 
         <LinearLayout
