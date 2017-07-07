@@ -197,8 +197,7 @@ public class HomeRecipeItem extends HomeItem {
         if (mDataMap.containsKey("name")) {
             title = mDataMap.get("name");
         }
-        String lineText = (TextUtils.isEmpty(desc) || TextUtils.isEmpty(title) ? "" : " | ");
-        String titleText = title + lineText + desc;
+        String titleText = !mIsAd ? title : desc;
         if (MainHome.recommedType.equals(type)) {
             if (!TextUtils.isEmpty(titleText) && mTitleTop != null) {
 
