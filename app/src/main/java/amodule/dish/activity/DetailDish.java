@@ -127,6 +127,9 @@ public class DetailDish extends BaseActivity {
             detailPermissionMap.clear();
             permissionMap.clear();
             dishJson = "";
+            if (mHandler == null) {
+                initData();
+            }
             mHandler.sendEmptyMessage(LOAD_DISH);
         }
     }
