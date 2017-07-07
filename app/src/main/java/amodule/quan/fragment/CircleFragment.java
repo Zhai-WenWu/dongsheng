@@ -291,7 +291,8 @@ public class CircleFragment extends Fragment {
             public void dataBack() {
                 if(isLoadAd){
                     index_size=0;
-                    mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                    if (mPlateData != null)
+                        mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
                     for(Map<String,String> map :mListData){
                         Log.i("tzy",map.toString());
                     }
