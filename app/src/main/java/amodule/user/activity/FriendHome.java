@@ -650,6 +650,8 @@ public class FriendHome extends BaseActivity {
 	}
 
 	private void updateTabNum(boolean isDel) {
+		if (tabMainMyself == null || tabMainMyselfFloat == null)
+			return;
 		View view1 = tabMainMyself.getChildAt(tabIndex);
 		View view2 = tabMainMyselfFloat.getChildAt(tabIndex);
 		TextView tv = (TextView) view1.findViewById(R.id.tab_data);
