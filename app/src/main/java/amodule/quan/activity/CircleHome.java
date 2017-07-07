@@ -350,9 +350,9 @@ public class CircleHome extends BaseFragmentActivity implements OnClickListener 
             int length = fragmentArray.size();
             for (int index = 0; index < length; index++) {
                 CircleFragment refreshFragment = (CircleFragment) fragmentArray.get(index);
-                if (TextUtils.isEmpty(mid) && refreshFragment.getmPlateData()!=null&&refreshFragment.getmPlateData().getPosition() == 0) {
+                if (TextUtils.isEmpty(mid) && refreshFragment!=null && refreshFragment.getmPlateData()!=null&&refreshFragment.getmPlateData().getPosition() == 0) {
                     return refreshFragment;
-                } else if (refreshFragment.getmPlateData()!=null&&mid.equals(refreshFragment.getmPlateData().getMid())) {
+                } else if (refreshFragment!=null && refreshFragment.getmPlateData()!=null&&mid.equals(refreshFragment.getmPlateData().getMid())) {
                     return refreshFragment;
                 }
             }
