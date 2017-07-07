@@ -20,6 +20,7 @@ import acore.tools.StringManager;
 import amodule.dish.view.ImageMoreAdView;
 import amodule.dish.view.ImageMoreCommenView;
 import amodule.dish.view.ImageMoreView;
+import amodule.dish.view.MoreImageViewPager;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 
@@ -29,7 +30,7 @@ import third.ad.tools.AdPlayIdConfig;
  */
 public class MoreImageShow extends BaseActivity{
     public static final String[] AD_IDS = new String[]{AdPlayIdConfig.DETAIL_DISH_MAKE};
-    private ViewPager viewPager;
+    private MoreImageViewPager viewPager;
     private ArrayList<ImageMoreView> classContainter = new ArrayList<>();
     private List<Map<String,String>> mList = new ArrayList<>();
     private MyAdapter myAdapter;
@@ -55,32 +56,11 @@ public class MoreImageShow extends BaseActivity{
             map.put("num",map.get("num") + "");
             map.put("numHe","/" + size);
         }
-
-//        Map<String,String> map;
-//        for(int i = 0; i < 6; i++){
-//            map = new HashMap<>();
-//            map.put("title","我是标题" + (i + 1));
-//            map.put("info","对应的食材有对应的功效或相克的内容时，展示对应的标识。点击后默认进入功效与作用的页面，如果没有功效与作用的内容，进入相克的页面。");
-//            map.put("num",(i + 1) + "");
-//            map.put("numHe","/" + 6);
-//            if(i == 1){
-//                map.put("img","http://s1.cdn.xiangha.com/quan/201608/1009/57aa88906786b.jpg/MTAwMHgw");
-//                map.put("info","对应的食材有对应的功效或相克的内容时，展示对应的标识。点击后默认进入功效与作用的页面，如果没有功效与作用的内容，进入相克的页面。对应的食材有对应的功效或相克的内容时，展示对应的标识。点击后默认进入功效与作用的页面，如果没有功效与作用的内容，进入相克的页面。对应的食材有对应的功效或相克的内容时，展示对应的标识。点击后默认进入功效与作用的页面，如果没有功效与作用的内容，进入相克的页面。对应的食材有对应的功效或相克的内容时，展示对应的标识。点击后默认进入功效与作用的页面，如果没有功效与作用的内容，进入相克的页面。");
-//            }
-//            else if(i == 3) {
-//                map.put("img","");
-//            }
-//            else map.put("img","http://s1.cdn.xiangha.com/quan/201608/1017/57aaf036381ee.jpg/MTAwMHgw");
-//            if(i == 2){
-//                map.put("info","对应的食材有对应的功效或相克的内容时");
-//            }
-//            mList.add(map);
-//        }
         init();
     }
 
     private void init() {
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (MoreImageViewPager) findViewById(R.id.viewpager);
         ImageMoreView.IS_SHOW = true;
         ImageMoreView imageMoreView;
         for(int i = 0; i < mList.size(); i ++){
