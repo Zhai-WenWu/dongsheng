@@ -347,7 +347,7 @@ public abstract class AdOptionParent {
 
     public void onAdShow(Map<String, String> map, View view) {
         Log("onAdShow");
-        if (!"2".equals(map.get("isShow"))) {
+        if (map!=null && !"2".equals(map.get("isShow"))) {
             Log("--------------onAdShow----------------");
             xhAllAdControl.onAdBind(Integer.parseInt(map.get("indexOnData")), view, map.get("index"));
             map.put("isShow", "2");
@@ -357,12 +357,14 @@ public abstract class AdOptionParent {
     public void onAdClick(Map<String, String> map) {
         Log("onAdClick() imgs:" + map.get("imgs"));
         Log("onAdClick() indexOnData:" + map.get("indexOnData") + "   index:" + map.get("index") + "  adClass:" + map.get("adClass") + "   stype:" + map.get("stype") + "   type:" + map.get("type"));
-        xhAllAdControl.onAdClick(Integer.parseInt(map.get("indexOnData")), map.get("index"));
+        if(map!=null)
+            xhAllAdControl.onAdClick(Integer.parseInt(map.get("indexOnData")), map.get("index"));
     }
 
     public void onAdHintClick(Activity act, Map<String, String> map,final String eventID, final String twoLevel){
         Log("onAdHintClick");
-        AppCommon.onAdHintClick(act,xhAllAdControl,Integer.parseInt(map.get("indexOnData")), map.get("index"),eventID,twoLevel);
+        if(map!=null)
+            AppCommon.onAdHintClick(act,xhAllAdControl,Integer.parseInt(map.get("indexOnData")), map.get("index"),eventID,twoLevel);
     }
 
     public void Log(String content){
