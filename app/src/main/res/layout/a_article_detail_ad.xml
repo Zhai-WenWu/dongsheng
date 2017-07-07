@@ -29,15 +29,6 @@
             android:background="#19ffffff"
             android:visibility="visible"/>
 
-        <ImageView
-            android:id="@+id/ad_tag"
-            android:layout_width="@dimen/dp_35"
-            android:layout_height="@dimen/dp_16.5"
-            android:layout_alignBottom="@+id/img"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/home_item_adtag_black"
-            android:visibility="visible"/>
-
     </RelativeLayout>
 
     <TextView
@@ -52,12 +43,23 @@
         android:textSize="@dimen/sp_17"
         android:visibility="visible"/>
 
+    <ImageView
+        android:id="@+id/ad_tag"
+        android:layout_width="@dimen/dp_37"
+        android:layout_height="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_5"
+        android:scaleType="centerInside"
+        android:src="@drawable/home_item_adicon"
+        android:visibility="visible"
+        android:layout_below="@+id/container"/>
+
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/dp_0.5"
         android:layout_below="@+id/container"
+        android:layout_toRightOf="@+id/ad_tag"
         android:layout_marginRight="@dimen/dp_20"
         android:maxLength="5"
         android:maxLines="1"

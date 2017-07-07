@@ -134,6 +134,15 @@
                     android:src="@drawable/top"
                     android:visibility="gone"/>
 
+                <ImageView
+                    android:id="@+id/ad_tag"
+                    android:layout_width="@dimen/dp_37"
+                    android:layout_height="@dimen/dp_15"
+                    android:scaleType="centerInside"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:src="@drawable/home_item_adicon"
+                    android:visibility="gone"/>
+
                 <LinearLayout
                     android:id="@+id/name_gourmet"
                     android:layout_width="wrap_content"
@@ -216,14 +225,6 @@
                 android:background="#19ffffff"
                 android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/ad_tag"
-                android:layout_width="@dimen/dp_35"
-                android:layout_height="@dimen/dp_16.5"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/home_item_adtag_black"
-                android:visibility="gone"/>
         </RelativeLayout>
 
         <View
