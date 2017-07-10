@@ -101,6 +101,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
     private Long startTime;//统计使用的时间
+    private boolean webviewLoadOver = false;
 
 
     @Override
@@ -271,10 +272,14 @@ public class ArticleDetailActivity extends BaseActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     //设置触摸收起键盘
-                    case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_DOWN:
                         if (TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString()))
                             mArticleCommentBar.setEditTextShow(false);
                         ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
+//                        if(adView != null)
+//                            adView.clearFocus();
+//                        if(webView != null)
+//                            webView.clearFocus();
                         break;
                 }
                 return false;
@@ -300,7 +305,7 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutTwo);
         layout.addView(linearLayoutThree);
 
-        listView.addHeaderView(layout);
+        listView.addHeaderView(layout,null,false);
     }
 
     /** 数据初始化 **/
@@ -402,7 +407,8 @@ public class ArticleDetailActivity extends BaseActivity {
         Log.i("tzy","adView = "+ adView);
         if (articleContentBottomView == null
                 || isFinishing()
-                || adView != null)
+                || adView != null
+                || !webviewLoadOver)
             return;
         adView = mArticleAdContrler.getBigAdView(adDataMap);
         articleContentBottomView.addViewToAdLayout(adView);
@@ -475,11 +481,31 @@ public class ArticleDetailActivity extends BaseActivity {
         listView.setVisibility(View.VISIBLE);
 
         WebviewManager manager = new WebviewManager(this, loadManager, true);
-        if (webView == null)
+        manager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
+            @Override
+            public void onLoadFinish() {
+                webviewLoadOver = true;
+                if (adDataMap != null) {
+                    showAd(adDataMap);
+                }
+            }
+        });
+        if (webView == null){
             webView = manager.createWebView(0);
+            webView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString()))
+                        mArticleCommentBar.setEditTextShow(false);
+                    ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
+                    return false;
+                }
+            });
+        }
         if (linearLayoutTwo.getChildCount() == 0)
             linearLayoutTwo.addView(webView);
         manager.setJSObj(webView, new JsAppCommon(this, webView, loadManager, barShare));
+
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         String htmlStr = mapArticle.get("html");
         if (htmlStr.indexOf("&lt;") >= 0)
@@ -542,8 +568,6 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
             }
         });
-        if (adDataMap != null && !adDataMap.isEmpty())
-            showAd(adDataMap);
 
         commentNum = mapArticle.get("commentNumber");
         Log.i("tzy", "commentNum = " + commentNum);
