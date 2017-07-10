@@ -182,6 +182,17 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!--mta统计 start-->
 
+    <!--百度 AD start-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 以下为可选权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--百度 AD end-->
+
     <application
         android:name="acore.override.XHApplication"
         android:allowBackup="false"
@@ -1388,6 +1399,30 @@
         <meta-data android:name="Mob-AppKey" android:value="10e22f093f255"/>
         <meta-data android:name="Mob-AppSecret" android:value="bb71787a9ec63116377a83c3ecac048a"/>
         <!--mobssms end-->
+
+        <meta-data
+            android:name="BaiduMobAd_APP_ID"
+            android:value="我的appid" />
+
+        <!--Baidu AD-->
+        <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现效率 -->
+        <!--<provider-->
+            <!--android:name="com.baidu.mobads.openad.FileProvider"-->
+            <!--android:authorities="${packageName}.bd.provider"-->
+            <!--android:exported="false"-->
+            <!--android:grantUriPermissions="true">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
+                <!--android:resource="@xml/bd_file_paths" />-->
+        <!--</provider>-->
+
+        <!-- for baidu xadsdk internal web-browser -->
+        <!-- 非信息广告必须添加 -->
+        <activity
+            android:name="com.baidu.mobads.AppActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--Baidu AD end-->
 
     </application>
 

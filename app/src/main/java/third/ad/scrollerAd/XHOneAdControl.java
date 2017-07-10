@@ -39,6 +39,9 @@ public class XHOneAdControl {
             if(listAdParent.get(index) instanceof XHScrollerGdt){
                 ((XHScrollerGdt)listAdParent.get(index)).setGdtData(xhAdControlCallBack.onGdtNativeData());
             }
+            if(listAdParent.get(index) instanceof XHScrollerBaidu){
+                ((XHScrollerBaidu)listAdParent.get(index)).setNativeResponse(xhAdControlCallBack.onBaiduNativeData());
+            }
             listAdParent.get(index).setIndexControl(index_controls);
             listAdParent.get(index).getAdDataWithBackAdId(new XHScrollerAdParent.XHAdDataCallBack() {
                 @Override
