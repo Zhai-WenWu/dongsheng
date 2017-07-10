@@ -294,6 +294,9 @@ public class ArticleDetailActivity extends BaseActivity {
 
         linearLayoutTwo = new LinearLayout(this);
         linearLayoutTwo.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dp_10);
+        linearLayoutTwo.setLayoutParams(params);
 
         linearLayoutThree = new LinearLayout(this);
         linearLayoutThree.setOrientation(LinearLayout.VERTICAL);
