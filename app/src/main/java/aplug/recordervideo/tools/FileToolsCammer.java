@@ -1,5 +1,6 @@
 package aplug.recordervideo.tools;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.LruCache;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,6 +31,7 @@ import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.db.RecorderVideoData;
 import aplug.recordervideo.view.RecorderVideoPreviewView;
@@ -222,7 +226,9 @@ public class FileToolsCammer {
         String imgPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
         if(new File(videoPath).exists()) {
             if (new File(imgPath).exists()) {
-                bitmap = BitmapFactory.decodeFile(imgPath);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                bitmap = BitmapFactory.decodeFile(imgPath, options);
             } else {
                 bitmap = ToolsCammer.getFrameAtTime(videoPath);
                 FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
