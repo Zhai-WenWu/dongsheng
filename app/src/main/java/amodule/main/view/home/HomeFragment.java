@@ -48,6 +48,7 @@ import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.HomeTabHScrollView;
 import amodule.main.view.ReplayAndShareView;
 import amodule.main.view.item.HomeAlbumItem;
+import amodule.main.view.item.HomeAnyImgStyleItem;
 import amodule.main.view.item.HomeItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
@@ -862,6 +863,9 @@ public class HomeFragment extends BaseHomeFragment{
                     break;
                 case AdapterListView.type_threeImage:
                     viewTop= new HomePostItem(mActivity);
+                    break;
+                case AdapterListView.type_anyImage:
+                    viewTop= new HomeAnyImgStyleItem(mActivity);
                     break;
                 case AdapterListView.type_rightImage:
                 case AdapterListView.type_noImage:
