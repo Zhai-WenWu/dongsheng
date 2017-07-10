@@ -59,7 +59,7 @@ import static acore.tools.ToolsDevice.getWindowPx;
  */
 public class XHClick {
     public static final int CIRCULATION_TIME = 30000;
-    public static final int HOME_STATICTIS_TIME = 10 * 1000;
+    public static int HOME_STATICTIS_TIME = 10 * 1000;
     public static final int NOTIFY_A = 1;
     public static final int NOTIFY_B = 2;
     public static final int NOTIFY_C = 3;
@@ -431,7 +431,6 @@ public class XHClick {
         };
         //启动计时器 30秒后执行
         handler.postDelayed(runnable, CIRCULATION_TIME);
-
         //********首页统计10秒循环统计
         handlerStatictis = new Handler(Looper.getMainLooper());
         runnableStatictis = new Runnable() {
@@ -452,7 +451,7 @@ public class XHClick {
      * @param allActivity
      */
     public static void finishToSendPath(Context allActivity) {
-        newHomeStatictis(true, "");
+        newHomeStatictis(true, null);
         registerUserUseTimeSuperProperty(allActivity);
         stopTime = System.currentTimeMillis();
         double liveTime = (stopTime - startTime) / 1000.0;
@@ -490,7 +489,7 @@ public class XHClick {
      * 当按下home按钮的时候监听到,发送请求
      */
     public static void HomeKeyListener(Context allActivity) {
-        newHomeStatictis(true, "");
+        newHomeStatictis(true, null);
         stopTime = System.currentTimeMillis();
         double liveTime = (stopTime - startTime) / 1000.0;
         //设置只保留一位小数
@@ -863,9 +862,9 @@ public class XHClick {
      * 轮训统计首页请求数据
      */
     private static void loopHandlerStatictis() {
-        String data = FileManager.loadShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6).toString();
-        if (!TextUtils.isEmpty(data)) {
-            newHomeStatictis(true, "");
+        ArrayList<String> data= StatictisSQLiteDataBase.getInstance().selectAllData();
+        if (data!=null&&data.size()>0) {
+            newHomeStatictis(true, null);
         }
     }
 
@@ -875,22 +874,23 @@ public class XHClick {
      * @param isResetData 是否要重置参数数据
      * @param data        参数数据块
      */
-    public static synchronized void newHomeStatictis(final boolean isResetData, String data) {
+    public static synchronized void newHomeStatictis(boolean isResetData, ArrayList<String> data) {
         try {
             String url = StringManager.API_STATISTIC_S6;
             String baseData = getStatictisParams();
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
-            if (TextUtils.isEmpty(data))
-                data = FileManager.loadShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6).toString();
+            if (isResetData&&(data==null||data.size()<=0)) {
+                data = StatictisSQLiteDataBase.getInstance().selectAllData();
+                StatictisSQLiteDataBase.getInstance().deleteAllData();
+            }
             Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
             JSONObject jsonObject = MapToJson(baseMap);
-            if (!TextUtils.isEmpty(data)) {
+            if (data!=null&&data.size()>0) {
                 JSONArray jsonArray = new JSONArray();
-                String[] strs = data.split("&&");
-                int lenght = strs.length;
+                int lenght = data.size();
                 for (int i = 0; i < lenght; i++) {
-                    if (!TextUtils.isEmpty(strs[i])) {
-                        jsonArray.put(MapToJson(UtilString.getMapByString(strs[i], "&", "=")));
+                    if (!TextUtils.isEmpty(data.get(i))) {
+                        jsonArray.put(MapToJson(UtilString.getMapByString(data.get(i), "&", "=")));
                     }
                 }
                 jsonObject.put("log_data", jsonArray);
@@ -899,13 +899,13 @@ public class XHClick {
             }
             LinkedHashMap<String,String> map1= new LinkedHashMap<>();
             map1.put("log_json",jsonObject.toString());
+            Log.i("wyl","log_json::::"+jsonObject.toString());
 
             ReqInternet.in().doPost(url, map1, new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
-                        if (isResetData)
-                            FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, "");
+                        Log.i("wyl","上传数据s6");
                     } else {
 
                     }
@@ -975,7 +975,6 @@ public class XHClick {
                                                       String show_num, String event, String stop_time, String uri_name,
                                                       String position, String button_name, String deep) {
         try {
-            final String data = FileManager.loadShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6).toString();
 
             //对数据进行存储
             long time = System.currentTimeMillis();
@@ -996,24 +995,21 @@ public class XHClick {
             params += "&button_name=" + button_name;
             params += "&deep=" + deep;
 //            Log.i("zhangyujian","加载数据：：："+params);
-            if (TextUtils.isEmpty(data)) {
+            //默认插入数据
+            StatictisSQLiteDataBase.getInstance().insterData(params);
+            Log.i("wyl","位置：::"+StatictisSQLiteDataBase.getInstance().getDataNum());
+            if (StatictisSQLiteDataBase.getInstance().getDataNum() >= 500) {
+                    //获取全部数据
+                final ArrayList<String> list= StatictisSQLiteDataBase.getInstance().selectAllData();
+                    //删除全部数据
+                StatictisSQLiteDataBase.getInstance().deleteAllData();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        newHomeStatictis(false, list);
+                    }
+                });
 
-                FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, params);
-            } else {
-                String[] strs = data.split("&&");
-                if (strs.length >= 500) {
-                    FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, "");
-//                    Log.i("zhangyujian","数据超过1000条，请求数据");
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            newHomeStatictis(false, data);
-                        }
-                    });
-
-                } else {
-                    FileManager.saveShared(XHApplication.in(), FileManager.STATICTIS_S6, FileManager.STATICTIS_S6, data + "&&" + params);
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();

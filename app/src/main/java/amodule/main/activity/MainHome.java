@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
@@ -75,6 +76,13 @@ public class MainHome extends MainBaseActivity {
         initView();
         initData();
         initModuleData();
+        String logPostTime = AppCommon.getConfigByLocal("logPostTime");
+        if(!TextUtils.isEmpty(logPostTime)){
+            Map<String,String> map=StringManager.getFirstMap(logPostTime);
+            if(map!=null&&map.containsKey("postTime")&&!TextUtils.isEmpty(map.get("postTime"))) {
+                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
+            }
+        }
     }
 
     /**
