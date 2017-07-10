@@ -1386,7 +1386,7 @@ public class RichText extends EditText implements TextWatcher {
     private String getClipFirstText(ClipboardManager manager) {
         String addedText = "";
         if (manager.hasPrimaryClip() && manager.getPrimaryClip().getItemCount() > 0) {
-            addedText = manager.getPrimaryClip().getItemAt(0).getText() + "";
+            addedText = manager.getPrimaryClip().getItemAt(0).coerceToText(getContext()) + "";
         }
         return addedText;
     }
