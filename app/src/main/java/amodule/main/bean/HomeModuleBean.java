@@ -15,14 +15,14 @@ public class HomeModuleBean implements Serializable{
     private String twoData;//二级数据
     private String webUrl;//加载页面的链接
     private String isSelf;//是否为站外链接 1：否 2：是
-    private String openSelf;//是否在当前WebView页面打开 1：否 2：是
+    private String openMode;//1：当前WebView页面打开 2：APP内新页面打开 3：跳转到其他APP打开  标注：其他的走默认方式
 
-    public String getOpenSelf() {
-        return openSelf;
+    public String getOpenMode() {
+        return openMode;
     }
 
-    public void setOpenSelf(String openSelf) {
-        this.openSelf = openSelf;
+    public void setOpenMode(String openMode) {
+        this.openMode = openMode;
     }
 
     public void setIsSelf(String isSelf) {

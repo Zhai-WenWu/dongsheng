@@ -233,9 +233,9 @@
 
         <ImageView
             android:id="@+id/ad_tag"
-            android:layout_width="@dimen/dp_37"
+            android:layout_width="@dimen/dp_31"
             android:layout_height="@dimen/dp_15"
-            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_4"
             android:scaleType="centerInside"
             android:src="@drawable/home_item_adicon"
             android:visibility="gone"/>
