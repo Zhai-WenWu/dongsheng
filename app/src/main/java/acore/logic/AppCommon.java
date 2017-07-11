@@ -65,7 +65,6 @@ import aplug.web.ShowWeb;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.mall.aplug.MallStringManager;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;

@@ -117,14 +117,4 @@ public class MallStringManager extends UtilString {
             mall_web_apiUrl = appWebTitle + domain;
         }
     }
-
-    public  static void changeHttpUrl(String http) {
-        if (!TextUtils.isEmpty(http)) {
-            httpData=httpData.replace("https",http);
-            apiTitle = httpData + apiAPI;
-            appWebTitle = httpData + appm;
-            mall_apiUrl =  apiTitle + defaultDomain;
-            mall_web_apiUrl = appWebTitle + defaultDomain;
-        }
-    }
 }

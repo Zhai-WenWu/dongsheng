@@ -32,7 +32,6 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
-import amodule.article.activity.ArticleDetailActivity;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -44,8 +43,6 @@ import amodule.search.avtivity.HomeSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import third.mall.aplug.MallStringManager;
-import xh.basic.tool.UtilFile;
 
 /**
  * 新的框架首页
