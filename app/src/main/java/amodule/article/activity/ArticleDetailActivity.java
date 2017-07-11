@@ -135,6 +135,7 @@ public class ArticleDetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         Glide.with(this).pauseRequests();
+        ToolsDevice.keyboardControl(false,this,mArticleCommentBar);
     }
 
     @Override
