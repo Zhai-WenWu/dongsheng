@@ -138,7 +138,7 @@ public class DetailDish extends BaseActivity {
      * 数据的初始化
      */
     private void init() {
-        initActivity(dishTitle, 2, 0, 0, R.layout.a_dish_detail_new);
+        initActivity(dishTitle, 2, 0, 0, R.layout.a_dish_detail);
         dishActivityViewControl= new DishActivityViewControl(this);
         dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControl.DishViewCallBack() {
             @Override
