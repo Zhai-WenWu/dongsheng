@@ -187,6 +187,7 @@ public class VideoDetailActivity extends BaseActivity {
         }
         mHaederLayout.onPause();
         Glide.with(this).pauseRequests();
+        ToolsDevice.keyboardControl(false,this,mCommentBar);
     }
 
     @Override
