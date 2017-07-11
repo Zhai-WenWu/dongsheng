@@ -70,6 +70,7 @@ public class MainInitDataControl {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                CookieManager.getInstance().removeAllCookie();
                 XHClick.saveFirstStartTime(XHApplication.in());
                 XHClick.registerMonthSuperProperty(XHApplication.in());
             }
@@ -92,7 +93,7 @@ public class MainInitDataControl {
                 MobclickAgent.setDebugMode(true);
                 OnlineConfigAgent.getInstance().updateOnlineConfig(activity);
 
-                CookieManager.getInstance().removeAllCookie();
+
                 //待处理问题。
 //                HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);

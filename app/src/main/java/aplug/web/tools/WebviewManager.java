@@ -18,6 +18,7 @@ import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -69,6 +70,9 @@ public class WebviewManager {
     }
 
     public XHWebView createWebView(int id) {
+        return createWebView(id,true);
+    }
+    public XHWebView createWebView(int id,boolean isCookieSync){
         if (act == null) {
             return null;
         }
@@ -78,10 +82,12 @@ public class WebviewManager {
         }
         if (webview == null)
             webview = new XHWebView(act);
-        CookieSyncManager.createInstance(act);
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.setAcceptCookie(true);
-        cookieManager.removeSessionCookie();//移除无过期时间的cookie
+        if(isCookieSync) {
+            CookieSyncManager.createInstance(act);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.removeSessionCookie();//移除无过期时间的cookie
+        }
         //初始化WebSetting
         initWebSetting(webview);
         webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);

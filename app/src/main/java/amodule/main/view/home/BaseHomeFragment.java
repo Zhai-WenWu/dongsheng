@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class BaseHomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        mRootView = inflater.inflate(R.layout.base_fragment, null);
         mRootView = new RelativeLayout(container.getContext());
         mRootView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         LoadOver = false;
@@ -101,22 +103,8 @@ public class BaseHomeFragment extends Fragment {
 
     private void initView() {
         mWebViewManager = new WebviewManager(mActivity, mLoadManager, false);
-        mWebview = mWebViewManager.createWebView(R.id.XHWebview);
+        mWebview = mWebViewManager.createWebView(0,true);
         mWebViewManager.setJSObj(mWebview, new JsAppCommon(mActivity, mWebview, mLoadManager,null));
-        if (mModuleBean != null && "2".equals(mModuleBean.getIsSelf())) {
-            Map<String,String> header= MallReqInternet.in().getHeader(mActivity);
-            String cookieKey= MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
-            String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-            String[] cookie = cookieStr.split(";");
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.setAcceptCookie(true);
-            for (int i = 0; i < cookie.length; i++) {
-                if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
-                LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
-                cookieManager.setCookie(cookieKey, cookie[i]);
-            }
-            CookieSyncManager.getInstance().sync();
-        }
         mRootView.addView(mWebview, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
     }
 
@@ -143,6 +131,21 @@ public class BaseHomeFragment extends Fragment {
             return;
         if (isRefresh)
             mWebview.setScrollY(0);
+        if (mModuleBean != null && "2".equals(mModuleBean.getIsSelf())) {
+            Map<String,String> header= MallReqInternet.in().getHeader(mActivity);
+            String cookieKey= MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
+            String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+            String[] cookie = cookieStr.split(";");
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            for (int i = 0; i < cookie.length; i++) {
+                if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
+                LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
+                cookieManager.setCookie(cookieKey, cookie[i]);
+            }
+            CookieSyncManager.getInstance().sync();
+        }
+        webUrl= webUrl.replace("https","http");
         mWebview.loadUrl(webUrl);
         LoadOver = true;
     }
@@ -162,7 +165,7 @@ public class BaseHomeFragment extends Fragment {
             mWebview = null;
         }
         if (mRootView != null) {
-            mRootView.removeAllViews();
+//            mRootView.removeAllViews();
             mRootView = null;
         }
     }
