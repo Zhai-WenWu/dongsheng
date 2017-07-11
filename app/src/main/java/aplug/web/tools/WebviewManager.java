@@ -48,9 +48,7 @@ public class WebviewManager {
     private List<XHWebView> mWwebArray;
     private boolean state = true;
 
-    public static final String OPEN_NEW = "OPEN_NEW";
-    public static final String OPEN_SELF = "OPEN_SELF";
-    private String mOpenFlag = OPEN_NEW;
+    private String mOpenMode;//1：当前WebView页面打开 2：APP内新页面打开 3：跳转到其他APP打开  标注：其他的走默认方式
 
     /**
      * 初始化
@@ -66,8 +64,8 @@ public class WebviewManager {
         this.state = state;
     }
 
-    public void setOpenFlag(String openFlag) {
-        mOpenFlag = openFlag;
+    public void setOpenMode(String openMode) {
+        mOpenMode = openMode;
     }
 
     public XHWebView createWebView(int id) {
@@ -212,20 +210,31 @@ public class WebviewManager {
             // 当前页打开
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                if (OPEN_SELF.equals(mOpenFlag)) {
-                    if (!TextUtils.isEmpty(url) && url.startsWith("http"))
-                        view.loadUrl(url);
-                    return false;
-                }
-                if (state) {
-                    loadManager.setLoading(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                if (!TextUtils.isEmpty(mOpenMode)) {
+                    switch (mOpenMode) {
+                        case "1"://当前WebView内打开
+                            if (!TextUtils.isEmpty(url) && url.startsWith("http"))
+                                view.loadUrl(url);
+                            break;
+                        case "2"://APP内新页面打开
                             AppCommon.openUrl(act, url, true);
-                        }
-                    });
+                            break;
+                        case "3"://跳转到其他APP打开，不处理
+
+                            break;
+                    }
+                    return false;
                 } else {
-                    AppCommon.openUrl(act, url, true);
+                    if (state) {
+                        loadManager.setLoading(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AppCommon.openUrl(act, url, true);
+                            }
+                        });
+                    } else {
+                        AppCommon.openUrl(act, url, true);
+                    }
                 }
                 return true;
             }

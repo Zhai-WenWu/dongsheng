@@ -122,8 +122,8 @@ public class BaseHomeFragment extends Fragment {
     public void loadWebData(boolean isRefresh) {
         if (mModuleBean == null)
             return;
-        if ("2".equals(mModuleBean.getOpenSelf()) && mWebViewManager != null) {
-            mWebViewManager.setOpenFlag(WebviewManager.OPEN_SELF);
+        if (mWebViewManager != null) {
+            mWebViewManager.setOpenMode(mModuleBean.getOpenMode());
         }
         String webUrl = mModuleBean.getWebUrl();
         if (TextUtils.isEmpty(webUrl))
