@@ -122,7 +122,7 @@ public class BaseHomeFragment extends Fragment {
     public void loadWebData(boolean isRefresh) {
         if (mModuleBean == null)
             return;
-        if (!"2".equals(mModuleBean.getIsSelf()) && mWebViewManager != null) {
+        if ("2".equals(mModuleBean.getOpenSelf()) && mWebViewManager != null) {
             mWebViewManager.setOpenFlag(WebviewManager.OPEN_SELF);
         }
         String webUrl = mModuleBean.getWebUrl();
@@ -164,7 +164,7 @@ public class BaseHomeFragment extends Fragment {
             mWebview = null;
         }
         if (mRootView != null) {
-//            mRootView.removeAllViews();
+            mRootView.removeAllViews();
             mRootView = null;
         }
     }

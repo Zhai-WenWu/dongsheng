@@ -15,6 +15,15 @@ public class HomeModuleBean implements Serializable{
     private String twoData;//二级数据
     private String webUrl;//加载页面的链接
     private String isSelf;//是否为站外链接 1：否 2：是
+    private String openSelf;//是否在当前WebView页面打开 1：否 2：是
+
+    public String getOpenSelf() {
+        return openSelf;
+    }
+
+    public void setOpenSelf(String openSelf) {
+        this.openSelf = openSelf;
+    }
 
     public void setIsSelf(String isSelf) {
         this.isSelf = isSelf;
