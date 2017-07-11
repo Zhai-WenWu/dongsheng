@@ -83,7 +83,6 @@ public class XHConf extends BasicConf {
 			if(map!=null&&map.containsKey("text")&&!TextUtils.isEmpty(map.get("text"))) {
 				StringManager.httpState=map.get("text").equals("http");
 				StringManager.changeUrl(StringManager.httpState?"http://":"","");
-				MallStringManager.changeHttpUrl(StringManager.httpState?"http":"");
 				Log.i("wyj","MallStringManager.httpData:::"+MallStringManager.httpData);
 			}
 		}
