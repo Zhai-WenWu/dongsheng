@@ -35,7 +35,6 @@ public class MallReqInternet extends UtilInternet{
 	
 	/**
 	 * 单独获取标准header头
-	 * @param callback	从callback对象取cookie
 	 * @return
 	 */
 	public Map<String,String> getHeader(Context context){
@@ -53,6 +52,7 @@ public class MallReqInternet extends UtilInternet{
 	
 	@Override
 	public void doGet(String url, InterCallback callback) {
+		url=StringManager.httpState ? url.replace("https","http") : url;
 		url = MallStringManager.replaceUrl(url);
 		if(!url.equals(MallStringManager.mall_getDsToken))
 			setMD5(url);
@@ -62,6 +62,7 @@ public class MallReqInternet extends UtilInternet{
 
 	@Override
 	public void doPost(String actionUrl, String param, InterCallback callback) {
+		actionUrl=StringManager.httpState ? actionUrl.replace("https","http") : actionUrl;
 //		actionUrl = MallStringManager.replaceUrl(actionUrl);
 //		setMD5(actionUrl);
 //		actionUrl=setStatisticUrl(actionUrl);
@@ -70,6 +71,7 @@ public class MallReqInternet extends UtilInternet{
 
 	@Override
 	public void doPost(String actionUrl, LinkedHashMap<String, String> map,InterCallback callback) {
+		actionUrl=StringManager.httpState ? actionUrl.replace("https","http") : actionUrl;
 		actionUrl = MallStringManager.replaceUrl(actionUrl);
 		setMD5(actionUrl);
 		actionUrl=setStatisticUrl(actionUrl);

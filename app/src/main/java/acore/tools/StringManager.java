@@ -16,6 +16,7 @@ import java.util.Map;
 import xh.basic.tool.UtilString;
 
 public class StringManager extends UtilString {
+    public static boolean httpState=false;//false为https，true为http；
     //固定URL基础配置
     public final static String defaultDomain = ".xiangha.com";
     public final static String defaultProtocol = "https://";

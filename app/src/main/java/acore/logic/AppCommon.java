@@ -859,6 +859,13 @@ public class AppCommon {
                         @Override
                         public void run() {
                             FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_config, msg.toString(), false);
+                            String httpData=getConfigByLocal("netProtocol");
+                            if(!TextUtils.isEmpty(httpData)){
+                                Map<String,String> map=StringManager.getFirstMap(httpData);
+                                if(map!=null&&map.containsKey("text")&&!TextUtils.isEmpty(map.get("text"))) {
+                                    StringManager.httpState=map.get("text").equals("http");
+                                }
+                            }
                         }
                     }).start();
                 }
