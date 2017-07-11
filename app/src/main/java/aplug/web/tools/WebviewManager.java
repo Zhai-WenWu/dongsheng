@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -211,9 +212,9 @@ public class WebviewManager {
             // 当前页打开
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                Log.i("tzy","url = " + url);
                 if (OPEN_SELF.equals(mOpenFlag)) {
-                    view.loadUrl(url);
+                    if (!TextUtils.isEmpty(url) && url.startsWith("http"))
+                        view.loadUrl(url);
                     return false;
                 }
                 if (state) {
@@ -238,6 +239,11 @@ public class WebviewManager {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
+                Log.i("tzy","--------------onReceivedError------------------");
+                Log.i("tzy","errorCode = " + errorCode);
+                Log.i("tzy","description = " + description);
+                Log.i("tzy","failingUrl = " + failingUrl);
+                Log.i("tzy","--------------onReceivedError------------------");
                 webview.loadUrl(ERROR_HTML_URL);
             }
         });
