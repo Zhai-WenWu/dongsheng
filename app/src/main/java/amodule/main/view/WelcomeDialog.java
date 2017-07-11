@@ -395,7 +395,7 @@ public class WelcomeDialog extends Dialog {
         }
         Main.isShowWelcomeDialog=false;//至当前dialog状态
         Log.i("zhangyujian","closeDialog");
-//        WelcomeDialog.this.dismiss();
+        WelcomeDialog.this.dismiss();
         if(isAdLeadClick) {
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.api_vip, true);
         }
