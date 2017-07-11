@@ -19,6 +19,7 @@ import java.util.Map;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.LogManager;
+import acore.tools.StringManager;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;
@@ -116,7 +117,6 @@ public class BaseHomeFragment extends Fragment {
             }
             CookieSyncManager.getInstance().sync();
         }
-        mWebview = new XHWebView(mActivity);
         mRootView.addView(mWebview, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
     }
 
