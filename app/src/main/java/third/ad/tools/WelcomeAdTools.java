@@ -1,5 +1,7 @@
 package third.ad.tools;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -229,39 +231,44 @@ public class WelcomeAdTools {
     }
 
     private void displayBaiduAD() {
-        String adid = analysData(ad_data.get(index_ad));
+        final String adid = analysData(ad_data.get(index_ad));
         if (TextUtils.isEmpty(adid) || null == mBaiduCallback) {
             index_ad++;
             nextAd(false);
             return;
         }
         Log.i("tzy","displayBaiduAD");
-        BaiduAdTools.newInstance().showSplashAD(XHActivityManager.getInstance().getCurrentActivity(),
-                mBaiduCallback.getADLayout(),
-                adid,
-                new BaiduAdTools.BaiduSplashAdCallback() {
-                    @Override
-                    public void onAdPresent() {
-                        mBaiduCallback.onAdPresent();
-                    }
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                BaiduAdTools.newInstance().showSplashAD(XHActivityManager.getInstance().getCurrentActivity(),
+                        mBaiduCallback.getADLayout(),
+                        adid,
+                        new BaiduAdTools.BaiduSplashAdCallback() {
+                            @Override
+                            public void onAdPresent() {
+                                mBaiduCallback.onAdPresent();
+                            }
 
-                    @Override
-                    public void onAdDismissed() {
-                        mBaiduCallback.onAdDismissed();
-                    }
+                            @Override
+                            public void onAdDismissed() {
+                                mBaiduCallback.onAdDismissed();
+                            }
 
-                    @Override
-                    public void onAdFailed(String s) {
-                        index_ad++;
-                        nextAd(false);
-                        mBaiduCallback.onAdFailed(s);
-                    }
+                            @Override
+                            public void onAdFailed(String s) {
+                                index_ad++;
+                                nextAd(false);
+                                mBaiduCallback.onAdFailed(s);
+                            }
 
-                    @Override
-                    public void onAdClick() {
-                        mBaiduCallback.onAdClick();
-                    }
-                });
+                            @Override
+                            public void onAdClick() {
+                                mBaiduCallback.onAdClick();
+                            }
+                        });
+            }
+        });
     }
 
     private String analysData(String data) {
