@@ -48,7 +48,7 @@ public class WebviewManager {
     private List<XHWebView> mWwebArray;
     private boolean state = true;
 
-    private String mOpenMode;//1：当前WebView页面打开 2：APP内新页面打开 3：跳转到其他APP打开  标注：其他的走默认方式
+    private String mOpenMode;//1：当前WebView页面打开 2：APP内新页面打开 3：跳转到其他APP打开  标注：其他的走默认方式 默认："".
 
     /**
      * 初始化
@@ -215,15 +215,13 @@ public class WebviewManager {
                         case "1"://当前WebView内打开
                             if (!TextUtils.isEmpty(url) && url.startsWith("http"))
                                 view.loadUrl(url);
-                            break;
+                            return true;
                         case "2"://APP内新页面打开
                             AppCommon.openUrl(act, url, true);
-                            break;
+                            return true;
                         case "3"://跳转到其他APP打开，不处理
-
-                            break;
+                            return super.shouldOverrideUrlLoading(view, url);
                     }
-                    return false;
                 } else {
                     if (state) {
                         loadManager.setLoading(new OnClickListener() {
