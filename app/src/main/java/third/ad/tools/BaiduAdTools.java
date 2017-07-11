@@ -3,7 +3,6 @@ package third.ad.tools;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.baidu.mobad.feeds.BaiduNative;
@@ -93,7 +92,7 @@ public class BaiduAdTools {
         baiduNative.makeRequest(requestParameters);
     }
 
-    public void getNativeData(View view,final NativeResponse nativeResponse,final AddAdView callback){
+    public void getNativeData(final NativeResponse nativeResponse,final OnHandlerDataCallback callback){
         if(null == nativeResponse){
             return;
         }
@@ -101,9 +100,7 @@ public class BaiduAdTools {
         String desc = nativeResponse.getDesc();
         String iconUrl = nativeResponse.getIconUrl();
         String imageUrl = nativeResponse.getImageUrl();
-        if(null != view){
-
-        }
+        callback.onHandlerData(title,desc,iconUrl,imageUrl);
     }
 
     public interface BaiduSplashAdCallback {
@@ -119,11 +116,8 @@ public class BaiduAdTools {
     }
 
     /** 信息流广告获取内容时的灰度接口 */
-    public static abstract class AddAdView {
-        public abstract void addAdView(String title, String desc, String iconUrl, String imageUrl, View.OnClickListener clickListener);
-
-        public void onClick() {
-        }
+    public static abstract class OnHandlerDataCallback {
+        public abstract void onHandlerData(String title, String desc, String iconUrl, String imageUrl);
     }
 
 }

@@ -64,10 +64,9 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
         if(null == nativeResponse){
             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BAIDU);
         }
-        BaiduAdTools.newInstance().getNativeData(null, nativeResponse, new BaiduAdTools.AddAdView() {
+        BaiduAdTools.newInstance().getNativeData(nativeResponse, new BaiduAdTools.OnHandlerDataCallback() {
             @Override
-            public void addAdView(String title, String desc, String iconUrl, String imageUrl, View.OnClickListener clickListener) {
-                Log.i("tzy", "Baidu NactiveAD addAdView");
+            public void onHandlerData(String title, String desc, String iconUrl, String imageUrl) {
                 if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(imageUrl)){
                     Map<String,String> map= new HashMap<>();
                     map.put("title",title);
