@@ -54,12 +54,15 @@ public class ReqInternet extends UtilInternet {
 
     @Override
     public void doGet(String url, InterCallback callback) {
+        url=StringManager.httpState ? url.replace("https","http") : url;
+
         url = StringManager.replaceUrl(url);
         super.doGet(url, callback);
     }
 
     @Override
     public void doPost(String actionUrl, String param, InterCallback callback) {
+        actionUrl=StringManager.httpState ? actionUrl.replace("https","http") : actionUrl;
         actionUrl = StringManager.replaceUrl(actionUrl);
         super.doPost(actionUrl, param, callback);
     }
@@ -78,6 +81,7 @@ public class ReqInternet extends UtilInternet {
 
     @Override
     public void doPost(String actionUrl, LinkedHashMap<String, String> map, InterCallback callback) {
+        actionUrl=StringManager.httpState ? actionUrl.replace("https","http") : actionUrl;
         actionUrl = StringManager.replaceUrl(actionUrl);
         super.doPost(actionUrl, map, callback);
     }

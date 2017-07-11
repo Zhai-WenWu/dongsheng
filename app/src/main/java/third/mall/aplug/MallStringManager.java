@@ -6,8 +6,8 @@ public class MallStringManager extends UtilString{
 
 	public final static String defaultDomain = ".ds.xiangha.com";
 //	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
-	public final static String apiTitle = "https://api";
-	public final static String appWebTitle = "https://m";
+	public final static String apiTitle = "http://api";
+	public final static String appWebTitle = "http://m";
 	//当前域名
 	public static String domain = defaultDomain;
 	//API请求地址
