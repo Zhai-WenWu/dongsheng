@@ -80,7 +80,6 @@ public class BaseHomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        mRootView = inflater.inflate(R.layout.base_fragment, null);
         mRootView = new RelativeLayout(container.getContext());
         mRootView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         LoadOver = false;
@@ -103,7 +102,7 @@ public class BaseHomeFragment extends Fragment {
 
     private void initView() {
         mWebViewManager = new WebviewManager(mActivity, mLoadManager, false);
-        mWebview = mWebViewManager.createWebView(0,true);
+        mWebview = mWebViewManager.createWebView(0,false);
         mWebViewManager.setJSObj(mWebview, new JsAppCommon(mActivity, mWebview, mLoadManager,null));
         mRootView.addView(mWebview, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
     }
