@@ -45,6 +45,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.mall.aplug.MallStringManager;
+import xh.basic.tool.UtilFile;
 
 /**
  * 新的框架首页
@@ -82,19 +83,6 @@ public class MainHome extends MainBaseActivity {
             Map<String,String> map=StringManager.getFirstMap(logPostTime);
             if(map!=null&&map.containsKey("postTime")&&!TextUtils.isEmpty(map.get("postTime"))) {
                 XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
-            }
-        }
-        String httpData=AppCommon.getConfigByLocal("netProtocol");
-        Log.i("wyj","httpData:::"+httpData);
-        if(!TextUtils.isEmpty(httpData)){
-            Map<String,String> map=StringManager.getFirstMap(httpData);
-            if(map!=null&&map.containsKey("text")&&!TextUtils.isEmpty(map.get("text"))) {
-                StringManager.httpState=map.get("text").equals("http");
-                StringManager.changeUrl(StringManager.httpState?"http://":"","");
-
-                MallStringManager.changeHttpUrl(StringManager.httpState?"http":"");
-//                MallStringManager.httpData=StringManager.httpState ? MallStringManager.httpData.replace("https","http"):MallStringManager.httpData;
-                Log.i("wyj","MallStringManager.httpData:::"+MallStringManager.httpData);
             }
         }
     }
