@@ -144,7 +144,6 @@ public class BaseHomeFragment extends Fragment {
             }
             CookieSyncManager.getInstance().sync();
         }
-        webUrl= webUrl.replace("https","http");
         mWebview.loadUrl(webUrl);
         LoadOver = true;
     }

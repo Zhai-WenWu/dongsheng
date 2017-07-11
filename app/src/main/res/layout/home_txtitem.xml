@@ -72,7 +72,6 @@
             android:layout_marginBottom="@dimen/dp_6"
             android:layout_alignParentLeft="true"
             android:lineSpacingExtra="@dimen/dp_5"
-            android:maxLines="2"
             android:ellipsize="end"
             android:textColor="#666666"
             android:textSize="@dimen/sp_14"
@@ -97,10 +96,10 @@
 
             <ImageView
                 android:id="@+id/ad_tag"
-                android:layout_width="@dimen/dp_37"
+                android:layout_width="@dimen/dp_31"
                 android:layout_height="@dimen/dp_15"
                 android:scaleType="centerInside"
-                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_4"
                 android:src="@drawable/home_item_adicon"
                 android:visibility="gone"/>
 
