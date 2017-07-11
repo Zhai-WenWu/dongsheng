@@ -65,7 +65,6 @@ public class ReqEncyptInternet extends UtilInternet {
      * @param callback
      */
     public void doEncypt(String actionUrl, LinkedHashMap<String,String> map, InternetCallback callback){
-        actionUrl=StringManager.httpState ? actionUrl.replace("https","http") : actionUrl;
         loginNum=0;
         //处理数据
         long time= System.currentTimeMillis();
@@ -86,7 +85,6 @@ public class ReqEncyptInternet extends UtilInternet {
      * @param callback
      */
     public void doEncyptAEC(String actionUrl, String param, InternetCallback callback){
-        actionUrl=StringManager.httpState ? actionUrl.replace("https","http") : actionUrl;
         if(!TextUtils.isEmpty(param)){
             Map<String,String> map =  StringManager.getMapByString(param,"&","=");
             String json= Tools.map2Json(map);

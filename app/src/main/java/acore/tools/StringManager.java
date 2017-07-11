@@ -19,7 +19,7 @@ public class StringManager extends UtilString {
     public static boolean httpState=false;//false为https，true为http；
     //固定URL基础配置
     public final static String defaultDomain = ".xiangha.com";
-    public final static String defaultProtocol = "https://";
+    public static String defaultProtocol = "https://";
     public final static String apiTitle = "api";
     public final static String appWebTitle = "appweb";
     public final static String wwwTitle = "www";
