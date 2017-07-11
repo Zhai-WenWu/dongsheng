@@ -203,6 +203,9 @@ public class AppCommon {
     public static void openUrl(final Activity act, String url, Boolean openThis) {
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
+        if ( !url.startsWith("xiangha://welcome?") && !url.startsWith("http")
+                && (!url.contains(".app") && !url.contains("circleHome"))
+                ) return;
         // 如果识别到外部开启链接，则解析
         try {
             if (url.indexOf("xiangha://welcome?") == 0) {
