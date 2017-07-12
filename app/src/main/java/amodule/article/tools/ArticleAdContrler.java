@@ -130,7 +130,7 @@ public class ArticleAdContrler {
 
     public void onBigAdBind(View adView) {
         if (xhAllAdControlBootom != null && adView != null)
-            xhAllAdControlBootom.onAdBind(0, adView, "0");
+            xhAllAdControlBootom.onAdBind(0, adView, "");
     }
 
     public void onListAdClick(View view, int index, String s) {
