@@ -325,6 +325,13 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
+            android:name="amodule.dish.activity.DetailDishNew"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name="amodule.dish.activity.ListDish"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

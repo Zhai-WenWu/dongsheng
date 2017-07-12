@@ -31,7 +31,6 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.tools.ADDishContorl;
@@ -343,21 +342,6 @@ public class DishActivityViewControl {
         map.put("style", DishExplainView.DISH_STYLE_EXP);
         dishFootView.setDataExplain(map,permissionMap);
 
-        //分享
-        ArrayList<Map<String, String>> list_share = new ArrayList<>();
-        Map<String, String> map_share = new HashMap<>();
-        map_share.put("style", DishShareShow.DISH_STYLE_SHARE);
-        Map<String, String> mapData = dishTitleViewControl.getShareData();
-        map_share.put("type", mapData.get("mType"));
-        map_share.put("title", mapData.get("mTitle"));
-        map_share.put("clickUrl", mapData.get("mClickUrl"));
-        map_share.put("content", mapData.get("mContent"));
-        map_share.put("imgUrl", mapData.get("mImgUrl"));
-        map_share.put("from", "菜谱详情页");
-        map_share.put("parent", "菜谱");
-        list_share.add(map_share);
-//        setAdapterData(list_share, false);
-//        dishFootView.setDataShare(map_share);
         if ("2".equals(list.get(0).get("hasVideo")) && (list_makes == null || list_makes.size() <= 0)) {
             tongjiId = "a_menu_detail_onlyvideo430";
         }

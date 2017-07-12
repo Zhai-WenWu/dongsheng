@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <amodule.dish.view.XhScrollView
+        android:id="@+id/a_dish_detail_new_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <amodule.dish.view.DishHeaderViewNew
+                android:id="@+id/a_dish_detail_new_headview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <aplug.web.view.XHWebView
+                android:id="@+id/a_dish_detail_new_web"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include
+                android:id="@+id/a_dish_detail_new_footer"
+                layout="@layout/a_dish_detail_new_footer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                />
+
+        </LinearLayout>
+
+    </amodule.dish.view.XhScrollView>
+
+    <include
+        android:id="@+id/a_dish_detail_new_title"
+        layout="@layout/a_dish_detail_bar_title_new"
+        />
+        <!--android:visibility="gone"-->
+
+</RelativeLayout>
