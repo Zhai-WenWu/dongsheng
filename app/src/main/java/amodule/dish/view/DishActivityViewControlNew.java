@@ -61,7 +61,7 @@ public class DishActivityViewControlNew {
     private Map<String, String> dishInfoMap;//dishInfo数据
     private String dishJson;//历史记录中dishInfo的数据
 
-    private DishTitleViewControl dishTitleViewControl;
+    private DishTitleViewControlNew dishTitleViewControl;
     private DishHeaderViewNew dishHeaderView;
     private ADDishContorl adDishContorl;
 
@@ -81,7 +81,7 @@ public class DishActivityViewControlNew {
         this.code = code;
         this.callBack = callBack;
         //处理标题
-        dishTitleViewControl= new DishTitleViewControl(mAct);
+        dishTitleViewControl= new DishTitleViewControlNew(mAct);
         dishTitleViewControl.initView(mAct);
         dishTitleViewControl.setstate(state);
         initView();
@@ -337,7 +337,7 @@ public class DishActivityViewControlNew {
      * 获取头部控件
      * @return
      */
-    public DishTitleViewControl getDishTitleViewControl(){
+    public DishTitleViewControlNew getDishTitleViewControl(){
         return dishTitleViewControl;
     }
 

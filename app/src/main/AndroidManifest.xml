@@ -1122,7 +1122,7 @@
         <!-- *************************************** END-umeng *************************************** -->
         <!-- ***************Mob分享*************** -->
         <activity
-            android:name="third.share.ShareActivity"
+            android:name="third.share.ShareActivityBottom"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -1136,7 +1136,7 @@
             android:theme="@style/common_trans_parent_theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="third.share.UserHomeShare"
+            android:name="third.share.ShareActivityDialog"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

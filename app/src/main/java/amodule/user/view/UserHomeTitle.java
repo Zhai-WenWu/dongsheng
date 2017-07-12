@@ -33,7 +33,7 @@ import amodule.user.activity.login.UserSetting;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import aplug.imageselector.ShowImageActivity;
-import third.share.UserHomeShare;
+import third.share.ShareActivityDialog;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
@@ -70,7 +70,7 @@ public class UserHomeTitle {
         friend_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mAct, UserHomeShare.class);
+                Intent intent = new Intent(mAct, ShareActivityDialog.class);
                 intent.putExtra("tongjiId", isMyself ? "a_my":"a_user");
                 intent.putExtra("nickName", userinfo_map.get("nickName"));
                 intent.putExtra("imgUrl", userinfo_map.get("img"));

@@ -1,19 +1,20 @@
 package amodule.dish.db;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import xh.basic.tool.UtilFile;
-import xh.basic.tool.UtilString;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.ImgManager;
 import acore.tools.Tools;
-import android.content.Context;
 import aplug.basic.LoadImage;
+import xh.basic.tool.UtilFile;
+import xh.basic.tool.UtilString;
 
 public class DataOperate {
 	//没登录时默认离线菜谱个数
@@ -120,7 +121,6 @@ public class DataOperate {
 	
 	/**
 	 * 保存历史记录Code 
-	 * @param historyCode
 	 */
 	public static void saveHistoryCode(String searchWord) {
 		if (searchWord != null && searchWord.trim().length() > 0){

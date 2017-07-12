@@ -195,7 +195,7 @@ public class DetailDishNew extends BaseActivity {
     }
 
     /**
-     * 读取是否有事
+     * 读取是否有离线菜谱
      */
     private void loadHistoryData() {
         //处理延迟操作
@@ -217,14 +217,10 @@ public class DetailDishNew extends BaseActivity {
      */
     private void setRequest() {
         String params = "?code=" + code;
-        if (!TextUtils.isEmpty(state)) {//是当前用户的菜谱。
-            params += "&isNew=1";
-        }
         ReqInternet.in().doGet(StringManager.api_getDishInfoNew + params, new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-                Log.i("tzy","obj = " + obj);
                 //权限检测
                 if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)){
                     if(TextUtils.isEmpty(lastPermission)){
@@ -301,6 +297,7 @@ public class DetailDishNew extends BaseActivity {
         if (lable.equals("dishInfo")) {//第一页整体业务标示
             dishJson = list.get(0).get("data");//第一页数据保留下来
             saveHistoryToDB(dishJson);
+            dishActivityViewControl.setDishJson(dishJson);
             requestWeb();
         }
         dishActivityViewControl.analyzeDishInfoData(listmaps,permissionMap);
