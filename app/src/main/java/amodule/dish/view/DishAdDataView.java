@@ -75,6 +75,7 @@ public class DishAdDataView extends ItemBaseView {
                             setApiADData(adDataMap, parentView);
                             break;
                         case AdPlayIdConfig.ADTYPE_GDT:
+                        case AdPlayIdConfig.ADTYPE_BAIDU:
                         case AdPlayIdConfig.ADTYPE_BANNER:
                             setBigPicADData(adDataMap, parentView);
                             break;
