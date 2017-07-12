@@ -40,8 +40,8 @@ public class VideoApplication {
 	
 	public void initialize(Context context){
 		initSuccess = SPlayer.isInitialized(context);
-		Log.i("tzy","initialize ed");
-		Log.i("tzy","initSuccess = " + initSuccess);
+//		Log.i("tzy","initialize ed");
+//		Log.i("tzy","initSuccess = " + initSuccess);
 		if(!initSuccess){
 			getLibs(context);
 		}
@@ -53,14 +53,14 @@ public class VideoApplication {
 		}
 		isIniting = true;
 		String libsplayerUrl = AppCommon.getAppData(context, "videoDecUrl");
-		Log.i("tzy","libsplayerUrl = " + libsplayerUrl);
+//		Log.i("tzy","libsplayerUrl = " + libsplayerUrl);
 		if(TextUtils.isEmpty(libsplayerUrl)){
 			isIniting = false;
 			initSuccess = true;
 			return;
 		}
 		String url = libsplayerUrl + SPlayer.getVitamioType() + suffixName;
-		Log.i("tzy","url = " + url);
+//		Log.i("tzy","url = " + url);
 		final String libPath = SPlayer.getLibraryPath() + SPlayer.COMPRESS_LIBS_NAME;
 		if(FileManager.ifFileModifyByCompletePath(libPath, -1) == null){
 			ReqInternet.in().getInputStream(url, new InternetCallback(context) {

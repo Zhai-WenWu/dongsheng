@@ -637,7 +637,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         String content = mixLayout.getXHServiceData();
         Log.i("articleUpload", "saveDraft() content:" + content);
         uploadArticleData.setContent(content);
-        Log.i("tzy", "content = " + content);
+//        Log.i("tzy", "content = " + content);
         uploadArticleData.setVideoArray(mixLayout.getVideoArrayMap());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());
         Log.i("articleUpload", "saveDraft() imgs:" + uploadArticleData.getImgs());

@@ -143,7 +143,7 @@ public class DishFootView extends LinearLayout {
                 new XHAllAdControl.XHBackIdsDataCallBack() {
                     @Override
                     public void callBack(Map<String, String> map) {
-                        Log.i("tzy","list = " + list.toString());
+//                        Log.i("tzy","list = " + list.toString());
                         //转化数据，ADData -> NormalData
                         String data = map.get(AdPlayIdConfig.DISH_COMMEND);
                         map = StringManager.getFirstMap(data);

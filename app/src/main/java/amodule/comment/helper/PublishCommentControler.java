@@ -93,7 +93,7 @@ public class PublishCommentControler {
         //removeAllView
         for (int index = 0; index < imageLayout.getChildCount() - 1 ;) {
             imageLayout.removeViewAt(index);
-            Log.i("tzy","image index = " + index);
+//            Log.i("tzy","image index = " + index);
         }
         //添加
         for (final String path : imagePathArray) {

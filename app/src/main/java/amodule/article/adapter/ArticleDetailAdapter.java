@@ -160,7 +160,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
             int spanStart = builder.getSpanStart(span);
             int spanEnd = builder.getSpanEnd(span);
             builder.removeSpan(span);
-            Log.i("tzy", "url = " + span.getURL());
+//            Log.i("tzy", "url = " + span.getURL());
             builder.setSpan(new RichURLSpan(span.getURL(), Color.parseColor("#5c809c"), false) {
                 @Override
                 public void onClick(View widget) {

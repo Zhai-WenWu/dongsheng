@@ -500,7 +500,7 @@ public class VideoDetailActivity extends BaseActivity {
             public void getPower(int flag, String url, Object obj) {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
-                Log.i("tzy","obj = " + obj);
+//                Log.i("tzy","obj = " + obj);
                 //权限检测
                 if(permissionMap.isEmpty()
                         && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
@@ -514,7 +514,7 @@ public class VideoDetailActivity extends BaseActivity {
                         }
                     }
                     permissionMap = StringManager.getFirstMap(obj);
-                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPagePermission = analyzePagePermissionData(pagePermission);
@@ -753,7 +753,7 @@ public class VideoDetailActivity extends BaseActivity {
         }
         if (commentMap != null && allDataListMap.indexOf(commentMap) < 0)
             allDataListMap.add(commentMap);
-        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
+//        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
         detailAdapter.notifyDataSetChanged();
     }
 

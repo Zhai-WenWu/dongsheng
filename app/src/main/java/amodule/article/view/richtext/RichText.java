@@ -1310,13 +1310,13 @@ public class RichText extends EditText implements TextWatcher {
                 while (textTemp.indexOf(desc) >= 0 && defatultStart < text.length()){
                     int startIndex = textTemp.indexOf(desc);
                     int endIndesc = startIndex + desc.length();
-                    Log.i("tzy", "desc = " + desc);
-                    Log.i("tzy", "selStart = " + selStart + " ; selEnd = " + selEnd);
+//                    Log.i("tzy", "desc = " + desc);
+//                    Log.i("tzy", "selStart = " + selStart + " ; selEnd = " + selEnd);
 
                     int realStartIndex = startIndex + defatultStart;
                     int realEndIndex = endIndesc + defatultStart;
-                    Log.i("tzy", "realStartIndex = " + realStartIndex);
-                    Log.i("tzy", "realEndIndex = " + realEndIndex);
+//                    Log.i("tzy", "realStartIndex = " + realStartIndex);
+//                    Log.i("tzy", "realEndIndex = " + realEndIndex);
                     //判断当前光标位置
                     if (selStart == selEnd){
                         if(selStart > realStartIndex && selStart < realEndIndex
@@ -1355,7 +1355,7 @@ public class RichText extends EditText implements TextWatcher {
     @Override
     public boolean showContextMenu() {
         boolean flag = super.showContextMenu();
-        Log.i("tzy","showContextMenu");
+//        Log.i("tzy","showContextMenu");
 //        onSelectionChanged(getSelectionStart(),getSelectionEnd());
         return flag;
     }
@@ -1373,7 +1373,7 @@ public class RichText extends EditText implements TextWatcher {
                 //粘帖
                 final ClipboardManager manager = (ClipboardManager) mContext.getSystemService(CLIPBOARD_SERVICE);
                 String pasteText = getClipFirstText(manager);
-                Log.i("tzy", "copied text: " + pasteText);
+//                Log.i("tzy", "copied text: " + pasteText);
                 pasteText = TextUtils.isEmpty(pasteText) ? "" : pasteText;
                 ClipData clip = ClipData.newPlainText("simple text copy", pasteText);
                 manager.setPrimaryClip(clip);
