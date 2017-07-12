@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -252,7 +251,6 @@ public class ArticleDetailActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
-                                    Log.i("tzy", "position = " + position);
                                     AppCommon.scorllToIndex(listView, position);
                                 }
                             }, 200);
@@ -386,7 +384,7 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleAdContrler.setOnBigAdCallback(new ArticleAdContrler.OnBigAdCallback() {
             @Override
             public void onBigAdData(Map<String, String> adDataMap) {
-                Log.i("tzy","adDataMap = " + adDataMap);
+//                Log.i("tzy","adDataMap = " + adDataMap);
                 if (adDataMap != null) {
                     ArticleDetailActivity.this.adDataMap.putAll(adDataMap);
                     showAd(adDataMap);
@@ -405,10 +403,6 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     public void showAd(Map<String, String> adDataMap) {
-        Log.i("tzy","showAd");
-        Log.i("tzy","adDataMap = " + adDataMap.toString());
-        Log.i("tzy","articleContentBottomView = " + articleContentBottomView);
-        Log.i("tzy","adView = "+ adView);
         if (articleContentBottomView == null
                 || isFinishing()
                 || adView != null
@@ -469,7 +463,6 @@ public class ArticleDetailActivity extends BaseActivity {
      * @param mapArticle
      */
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
-        Log.i("tzy","mapArticle = " + mapArticle.toString());
         if (mapArticle.isEmpty()) return;
 
         if (headerView == null)
@@ -574,7 +567,6 @@ public class ArticleDetailActivity extends BaseActivity {
         });
 
         commentNum = mapArticle.get("commentNumber");
-        Log.i("tzy", "commentNum = " + commentNum);
         mArticleCommentBar.setPraiseAPI(StringManager.api_likeArticle);
         mArticleCommentBar.setData(mapArticle);
         detailAdapter.notifyDataSetChanged();
@@ -616,7 +608,6 @@ public class ArticleDetailActivity extends BaseActivity {
         }
         if (commentMap != null && allDataListMap.indexOf(commentMap) < 0)
             allDataListMap.add(commentMap);
-        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
         detailAdapter.notifyDataSetChanged();
     }
 
