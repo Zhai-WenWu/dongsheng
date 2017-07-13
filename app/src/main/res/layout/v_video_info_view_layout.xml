@@ -2,7 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20">
 
     <TextView
         android:id="@+id/title"
@@ -10,11 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/content_arrow"
         android:lineSpacingExtra="@dimen/dp_3"
-        android:paddingBottom="@dimen/dp_16"
-        android:paddingLeft="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_6"
         android:paddingTop="@dimen/dp_20"
         android:textColor="#494949"
-        android:textSize="@dimen/dp_24"
+        android:textSize="@dimen/sp_22"
         android:textStyle="bold"
         android:visibility="visible"/>
 
@@ -23,7 +24,7 @@
         android:layout_width="@dimen/dp_43"
         android:layout_height="@dimen/dp_45"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/dp_2"
+        android:layout_marginRight="-18dp"
         android:layout_marginTop="@dimen/dp_11"
         android:paddingRight="@dimen/dp_18"
         android:paddingTop="@dimen/dp_18"
@@ -44,10 +45,9 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp_20"
-            android:paddingRight="@dimen/dp_20"
             android:textColor="#535353"
             android:lineSpacingExtra="@dimen/dp_6"
+            android:paddingTop="@dimen/dp_10"
             android:paddingBottom="@dimen/dp_10"
             android:lineSpacingMultiplier="1"
             android:visibility="gone"
@@ -59,7 +59,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/content_layout"
-        android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_10"
         android:orientation="horizontal">
 
@@ -127,7 +126,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/content_layout"
-        android:layout_marginRight="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_10"
         android:text="2017-09-10"
         android:textColor="#B6B5B5"
