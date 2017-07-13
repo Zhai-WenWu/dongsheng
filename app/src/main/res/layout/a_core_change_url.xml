@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/activityLayout"
-                style="@style/layout"
-    >
+    android:id="@+id/activityLayout"
+    style="@style/layout">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -11,165 +10,152 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
 
-            <LinearLayout
-                android:id="@+id/xiangha_linear"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="网络协议："
+                android:textStyle="bold"
+                android:textSize="@dimen/sp_20" />
+
+            <RadioGroup
+                android:id="@+id/rg_protocol"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_10">
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_now_protocol"
+                <RadioButton
+                    android:id="@+id/protocol1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="网络协议："
-                    android:textSize="@dimen/sp_20"/>
+                    android:text="https://" />
 
-                <RadioGroup
-                    android:id="@+id/rg_protocol"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <RadioButton
-                        android:id="@+id/protocol1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="https://"/>
-
-                    <RadioButton
-                        android:id="@+id/protocol2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="http://"/>
-                </RadioGroup>
-
-                <TextView
-                    android:id="@+id/tv_now_domain"
+                <RadioButton
+                    android:id="@+id/protocol2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="香哈服务器切换："
-                    android:textSize="@dimen/sp_20"/>
-
-                <RadioGroup
-                    android:id="@+id/rg_domain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <RadioButton
-                        android:id="@+id/radio1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=".xiangha.com"/>
-
-                    <RadioButton
-                        android:id="@+id/radio2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=".ixiangha.com"/>
-                </RadioGroup>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_0.5"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:background="#dddddd"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="端口号："/>
-
-                    <EditText
-                        android:id="@+id/et_input1"
-                        android:layout_width="@dimen/dp_80"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:hint="80"
-                        android:inputType="phone|number"
-                        android:maxLength="4"
-                        android:numeric="integer"
-                        android:singleLine="true"/>
-                </LinearLayout>
-            </LinearLayout>
+                    android:text="http://" />
+            </RadioGroup>
 
             <View
-                android:id="@+id/change_line"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0.5"
                 android:layout_below="@+id/xiangha_linear"
-                android:background="#e1e2e4"/>
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="#e1e2e4" />
 
-            <LinearLayout
-                android:id="@+id/mall_linear"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/change_line"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_10">
+                android:text="香哈测试端口："
+                android:textStyle="bold"
+                android:textSize="@dimen/sp_20" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/mall_tv_now_domain"
+                    android:id="@+id/xh_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="电商服务器切换："
-                    android:textSize="@dimen/sp_20"/>
+                    android:layout_centerVertical="true"
+                    android:text="ixiangha.com"
+                    android:textSize="@dimen/sp_20" />
 
-                <RadioGroup
-                    android:id="@+id/mall_rg_domain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <RadioButton
-                        android:id="@+id/mall_radio1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=".ds.xiangha.com"/>
-
-                    <RadioButton
-                        android:id="@+id/mall_radio2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=".ds.mamaweiyang.net"/>
-                </RadioGroup>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_0.5"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:background="#dddddd"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/xh_et"
+                    android:layout_width="@dimen/dp_80"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_toRightOf="@+id/xh_tv"
+                    android:maxLines="1"
+                    android:maxLength="4"
+                    android:inputType="number" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="端口号："/>
+                <Switch
+                    android:id="@+id/xh_switch"
+                    android:layout_width="wrap_content"
+                    android:switchMinWidth="@dimen/dp_10"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/xh_et"
+                    android:thumbTextPadding="@dimen/dp_5"
+                    android:switchPadding="@dimen/dp_5"
+                    android:textOff="OFF"
+                    android:textOn="ON"/>
+            </RelativeLayout>
 
-                    <EditText
-                        android:id="@+id/mall_et_input1"
-                        android:layout_width="@dimen/dp_80"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:hint="80"
-                        android:inputType="phone|number"
-                        android:maxLength="4"
-                        android:numeric="integer"
-                        android:singleLine="true"/>
-                </LinearLayout>
-            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_below="@+id/xiangha_linear"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="#e1e2e4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电商测试端口："
+                android:textStyle="bold"
+                android:textSize="@dimen/sp_20" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/mall_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="mamaweiyang.net"
+                    android:textSize="@dimen/sp_20" />
+
+                <EditText
+                    android:id="@+id/mall_et"
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_toRightOf="@+id/mall_tv"
+                    android:maxLines="1"
+                    android:maxLength="4"
+                    android:inputType="number" />
+
+                <Switch
+                    android:id="@+id/mall_switch"
+                    android:layout_width="wrap_content"
+                    android:switchMinWidth="@dimen/dp_10"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:switchPadding="@dimen/dp_5"
+                    android:textOff="OFF"
+                    android:textOn="ON"
+                    android:thumbTextPadding="@dimen/dp_5"
+                    android:layout_toRightOf="@+id/mall_et" />
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_0.5"
+                android:layout_below="@+id/xiangha_linear"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="#e1e2e4" />
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
