@@ -24,7 +24,7 @@
         android:layout_width="@dimen/dp_43"
         android:layout_height="@dimen/dp_45"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="-18dp"
+        android:layout_marginRight="@dimen/dp__18"
         android:layout_marginTop="@dimen/dp_11"
         android:paddingRight="@dimen/dp_18"
         android:paddingTop="@dimen/dp_18"
