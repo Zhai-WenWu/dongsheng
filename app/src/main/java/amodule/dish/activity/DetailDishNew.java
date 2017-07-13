@@ -35,6 +35,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.DishActivityViewControlNew;
+import amodule.main.Main;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;
@@ -127,6 +128,7 @@ public class DetailDishNew extends BaseActivity {
     private void init() {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.a_dish_detail_new);
+        level = 2;
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //            String colors = Tools.getColorStr(this, R.color.transparent);
@@ -368,6 +370,7 @@ public class DetailDishNew extends BaseActivity {
 
     @Override
     protected void onResume() {
+        Log.i("DetailDishActivity","onResume() colse_level:" + Main.colse_level);
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
         Rect outRect = new Rect();
@@ -382,6 +385,7 @@ public class DetailDishNew extends BaseActivity {
 
     @Override
     protected void onPause() {
+        Log.i("DetailDishActivity","onPause()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
         if (mVideoPlayerController != null) {
@@ -393,6 +397,7 @@ public class DetailDishNew extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i("DetailDishActivity","onDestroy()");
         if (mVideoPlayerController != null) {
             mVideoPlayerController.onDestroy();
         }
@@ -407,6 +412,7 @@ public class DetailDishNew extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        Log.i("DetailDishActivity","onBackPressed()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onBackPressed();
     }

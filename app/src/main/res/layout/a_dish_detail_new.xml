@@ -9,12 +9,14 @@
         android:id="@+id/a_dish_detail_new_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/dp_100"
+            android:paddingBottom="@dimen/dp_89"
             android:orientation="vertical"
             >
 
@@ -46,10 +48,12 @@
         />
 
     <include
+        android:id="@+id/a_dish_detail_new_footer_hover"
         layout="@layout/a_dish_detail_new_footer_hover"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_50"
         android:layout_alignParentBottom="true"
+        android:visibility="gone"
         />
 
 </RelativeLayout>

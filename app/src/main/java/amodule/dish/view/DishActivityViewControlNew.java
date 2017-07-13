@@ -20,6 +20,7 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
@@ -72,16 +73,26 @@ public class DishActivityViewControlNew {
         this.loadManager = loadManager;
         this.code = code;
         this.callBack = callBack;
+        initView();
+
         //处理标题
         dishTitleViewControl= new DishTitleViewControlNew(mAct);
         dishTitleViewControl.initView(mAct);
         dishTitleViewControl.setstate(state);
         mFootControl = new DishFootControl(mAct);
-        mFootControl.init("122","233");
-        initView();
     }
 
     private void initView(){
+        View leftClose = mAct.findViewById(R.id.leftClose);
+        leftClose.setVisibility(View.VISIBLE);
+        leftClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Main.colse_level = 1;
+                mAct.finish();
+            }
+        });
+
         WebviewManager manager = new WebviewManager(mAct,loadManager,true);
         xhWebView = manager.createWebView(R.id.XHWebview);
 
@@ -102,7 +113,6 @@ public class DishActivityViewControlNew {
         dishHeaderView.initView(mAct,videoLayoutHeight);
         mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
         setGlideViewListener();
-        mXhWebView.loadUrl("http://appweb.xiangha.com/zhishi/nousInfo?code=240922");
     }
 
     private void setGlideViewListener(){
@@ -160,6 +170,7 @@ public class DishActivityViewControlNew {
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight);
                             dishVidioLayout.setLayoutParams(layoutParams);
                         }
+                        mFootControl.hindGoodLayout();
                         break;
                 }
                 return false;
@@ -175,6 +186,7 @@ public class DishActivityViewControlNew {
      */
     public void analyzeDishInfoData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         dishInfoMap = list.get(0);
+        mXhWebView.loadUrl("http://appweb.xiangha.com/zhishi/nousInfo?code=240922");
         isHasVideo = dishInfoMap.get("hasVideo").equals("2");
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         dishTitleViewControl.setData(dishInfoMap,code,dishJson,isHasVideo,dishInfoMap.get("dishState"),loadManager);
@@ -208,6 +220,8 @@ public class DishActivityViewControlNew {
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
         },permissionMap);
+        mFootControl.init("122","233","");
+        mScrollView.setVisibility(View.VISIBLE);
     }
 
     /**
