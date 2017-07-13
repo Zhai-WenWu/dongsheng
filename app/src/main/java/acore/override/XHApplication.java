@@ -3,13 +3,16 @@ package acore.override;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
+import com.xiangha.R;
 
 import acore.dialogManager.VersionOp;
 import acore.override.helper.XHActivityManager;
@@ -81,6 +84,13 @@ public class XHApplication extends MobApplication {
         ReqInternet.init(getApplicationContext());
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
+
+        // 百度AD-设置'广告着陆页'动作栏的颜色主题
+        AppActivity.getActionBarColorTheme().setBackgroundColor(Color.parseColor(getString(R.color.common_top_bg)));
+        int commonTopTextColor = Color.parseColor(getString(R.color.common_top_text));
+        AppActivity.getActionBarColorTheme().setTitleColor(commonTopTextColor);
+        AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
+        AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
 
         AndFixTools.getAndFix().initPatchManager(this);
 
