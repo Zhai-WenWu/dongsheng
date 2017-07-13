@@ -95,7 +95,7 @@ public abstract class AdOptionParent {
                                     adMap.put("imgUrl",adMap.get("imgUrl2"));
                                 }
                                 Map<String, String> newMap = getAdListItemData(adMap.get("title"), adMap.get("desc"),
-                                        adMap.get("iconUrl"), adMap.get("imgUrl"), adMap.get("type"));
+                                        adMap.get("iconUrl"), adMap.get("imgUrl"), adMap.get("type"),adMap.containsKey("isDownloadApp") ? adMap.get("isDownloadApp"):"");
                                 if(newMap != null) {
                                     if(!newMap.containsKey("adClass")) newMap.put("adClass",adMap.get("type"));
 
@@ -230,6 +230,13 @@ public abstract class AdOptionParent {
                                     } else {
                                         adMap.put("style", "4");
                                     }
+                                } else if(XHScrollerAdParent.ADKEY_BAIDU.equals(adMap.get("adClass"))
+                                        && "1".equals(adMap.get("isDownloadApp"))) {
+                                    JSONObject styleObject = new JSONObject();
+                                    styleObject.put("url", adMap.get("img"));
+                                    styleObject.put("type", "2");
+                                    styleData.put(styleObject);
+                                    adMap.put("style","2");
                                 } else {
                                     int aboveIndex = index - 1; //广告要跟上一个样式保持一致
                                     if(aboveIndex < 0) aboveIndex = index;
@@ -378,8 +385,9 @@ public abstract class AdOptionParent {
      * @param iconUrl
      * @param imageUrl
      * @param adTag----广告类型：百度、广点通、自由
+     * @param  isDownloadApp-----是否是下载类型（暂时只有百度添加此参数）
      */
-    public abstract Map<String, String> getAdListItemData(final String title, final String desc, final String iconUrl, String imageUrl, String adTag);
+    public abstract Map<String, String> getAdListItemData(final String title, final String desc, final String iconUrl, String imageUrl, String adTag,String isDownloadApp);
 
     public int getLimitNum() {
         return limitNum;

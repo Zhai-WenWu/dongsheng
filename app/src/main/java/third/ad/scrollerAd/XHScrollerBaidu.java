@@ -66,7 +66,7 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
         }
         BaiduAdTools.newInstance().getNativeData(nativeResponse, new BaiduAdTools.OnHandlerDataCallback() {
             @Override
-            public void onHandlerData(String title, String desc, String iconUrl, String imageUrl) {
+            public void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isDownloadApp) {
                 if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(imageUrl)){
                     Map<String,String> map= new HashMap<>();
                     map.put("title",title);
@@ -74,6 +74,7 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
                     map.put("iconUrl",iconUrl);
                     map.put("imgUrl",imageUrl);
                     map.put("type",XHScrollerAdParent.ADKEY_BAIDU);
+                    map.put("isDownloadApp",isDownloadApp?"2":"1");
                     map.put("hide","1");//2隐藏，1显示
                     if(TextUtils.isEmpty(imageUrl)){
                         xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BAIDU);

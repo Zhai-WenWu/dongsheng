@@ -100,7 +100,12 @@ public class BaiduAdTools {
         String desc = nativeResponse.getDesc();
         String iconUrl = nativeResponse.getIconUrl();
         String imageUrl = nativeResponse.getImageUrl();
-        callback.onHandlerData(title,desc,iconUrl,imageUrl);
+        boolean isDownloadApp = nativeResponse.isDownloadApp();
+//        Log.i("tzy","----------------------");
+//        Log.i("tzy","imageUrl = " + imageUrl);
+//        Log.i("tzy","width = " + nativeResponse.getMainPicWidth());
+//        Log.i("tzy","height = " + nativeResponse.getMainPicHeight());
+        callback.onHandlerData(title,desc,iconUrl,imageUrl,isDownloadApp);
     }
 
     public interface BaiduSplashAdCallback {
@@ -117,7 +122,7 @@ public class BaiduAdTools {
 
     /** 信息流广告获取内容时的灰度接口 */
     public static abstract class OnHandlerDataCallback {
-        public abstract void onHandlerData(String title, String desc, String iconUrl, String imageUrl);
+        public abstract void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isDownloadApp);
     }
 
 }
