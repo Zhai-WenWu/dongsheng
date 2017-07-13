@@ -20,7 +20,6 @@
         android:gravity="center"
         android:paddingLeft="@dimen/dp_50"
         android:paddingRight="@dimen/dp_50"
-        android:text="title"
         android:visibility="visible" />
 
     <include

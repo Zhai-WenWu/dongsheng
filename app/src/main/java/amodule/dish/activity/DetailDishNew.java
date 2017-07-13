@@ -1,7 +1,6 @@
 package amodule.dish.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
@@ -35,7 +34,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
-import amodule.dish.tools.ADDishContorl;
 import amodule.dish.view.DishActivityViewControlNew;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
@@ -57,7 +55,6 @@ public class DetailDishNew extends BaseActivity {
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
 
-    private ADDishContorl adDishContorl;
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private DishActivityViewControlNew dishActivityViewControl;//view处理控制
 
@@ -76,13 +73,6 @@ public class DetailDishNew extends BaseActivity {
     private long startTime= 0;
     private String data_type="";
     private String module_type="";
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-        adDishContorl= new ADDishContorl();
-        adDishContorl.getAdData(DetailDishNew.this);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +102,6 @@ public class DetailDishNew extends BaseActivity {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        dishActivityViewControl.setAdDishControl(adDishContorl);
         startTime= System.currentTimeMillis();
     }
 
@@ -252,11 +241,9 @@ public class DetailDishNew extends BaseActivity {
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
                         analyzeData(StringManager.getListMapByJson(o),detailPermissionMap);
                     } else {
-                        dishActivityViewControl.setIsGoLoading(false);
                         loadManager.loadOver(flag, 1, true);
                     }
-                } else
-                    dishActivityViewControl.setIsGoLoading(false);
+                }
                 if(ToolsDevice.isNetworkAvailable(context)|| !LoadImage.SAVE_LONG.equals(imgLevel)){
                     loadManager.loadOver(flag, 1, true);
                 }else loadManager.hideProgressBar();
@@ -270,10 +257,7 @@ public class DetailDishNew extends BaseActivity {
      */
     private void analyzeHistoryData() {
         ArrayList<Map<String, String>> listmaps = UtilString.getListMapByJson(dishJson);
-        if (listmaps.size() > 0)
-            dishActivityViewControl.setIsGoLoading(true);
-        else {
-            dishActivityViewControl.setIsGoLoading(false);
+        if (listmaps.size() < 1){
             return;
         }
         dishActivityViewControl.analyzeDishInfoData(listmaps, new HashMap<String, String>());

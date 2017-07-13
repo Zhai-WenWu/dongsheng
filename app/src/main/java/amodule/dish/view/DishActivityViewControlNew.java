@@ -20,7 +20,6 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.tools.ADDishContorl;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
@@ -39,10 +38,6 @@ public class DishActivityViewControlNew {
     private XHWebView xhWebView;
 
     private int wm_height;//屏幕高度
-    //标题 + 状态栏的高度
-    private int topRedundant;
-    //底部全导航的高度
-    private int bottomRedundant;
     private int adBarHeight = 0;//广告所用bar高度
     //广告所用bar高度;图片/视频高度
     private int statusBarHeight = 0,videoLayoutHeight;
@@ -55,15 +50,14 @@ public class DishActivityViewControlNew {
     private boolean isShowTitleColor=false;
     private boolean isHasVideo = false;
     private boolean isRecored = false;
-    private boolean isGoLoading = true;
     private int firstItemIndex = 0;
 
     private Map<String, String> dishInfoMap;//dishInfo数据
     private String dishJson;//历史记录中dishInfo的数据
 
     private DishTitleViewControlNew dishTitleViewControl;
+    private DishFootControl mFootControl;
     private DishHeaderViewNew dishHeaderView;
-    private ADDishContorl adDishContorl;
 
 
     private DishViewCallBack callBack;
@@ -71,8 +65,6 @@ public class DishActivityViewControlNew {
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
-        topRedundant = Tools.getDimen(activity, R.dimen.dp_45) ;
-        bottomRedundant = 0;
     }
 
     public void init(String state, LoadManager loadManager, String code, DishViewCallBack callBack) {
@@ -84,6 +76,8 @@ public class DishActivityViewControlNew {
         dishTitleViewControl= new DishTitleViewControlNew(mAct);
         dishTitleViewControl.initView(mAct);
         dishTitleViewControl.setstate(state);
+        mFootControl = new DishFootControl(mAct);
+        mFootControl.init("122","233");
         initView();
     }
 
@@ -307,22 +301,6 @@ public class DishActivityViewControlNew {
         }
         xhWebView.setVisibility(View.GONE);
         return true;
-    }
-
-    /**
-     * 设置是否可加载
-     * @param isGoLoading
-     */
-    public void setIsGoLoading(boolean isGoLoading){
-        this.isGoLoading=isGoLoading;
-    }
-
-    /**
-     * 添加广告控制
-     * @param adDishContorl
-     */
-    public void setAdDishControl(ADDishContorl adDishContorl){
-        this.adDishContorl=adDishContorl;
     }
 
     /**

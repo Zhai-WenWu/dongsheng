@@ -14,6 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="@dimen/dp_100"
             android:orientation="vertical"
             >
 
@@ -32,7 +33,7 @@
                 android:id="@+id/a_dish_detail_new_footer"
                 layout="@layout/a_dish_detail_new_footer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_40"
+                android:layout_height="wrap_content"
                 />
 
         </LinearLayout>
@@ -43,6 +44,12 @@
         android:id="@+id/a_dish_detail_new_title"
         layout="@layout/a_dish_detail_bar_title_new"
         />
-        <!--android:visibility="gone"-->
+
+    <include
+        layout="@layout/a_dish_detail_new_footer_hover"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        />
 
 </RelativeLayout>
