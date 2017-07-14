@@ -98,6 +98,10 @@ public class BaiduAdTools {
         }
         String title = nativeResponse.getTitle();
         String desc = nativeResponse.getDesc();
+        if(title.length() > desc.length()){
+            title = nativeResponse.getDesc();
+            desc = nativeResponse.getTitle();
+        }
         String iconUrl = nativeResponse.getIconUrl();
         String imageUrl = nativeResponse.getImageUrl();
         boolean isDownloadApp = nativeResponse.isDownloadApp();
@@ -108,7 +112,7 @@ public class BaiduAdTools {
         callback.onHandlerData(title,desc,iconUrl,imageUrl,isDownloadApp);
     }
 
-    public interface BaiduSplashAdCallback {
+    public static interface BaiduSplashAdCallback {
         public void onAdPresent();
         public void onAdDismissed();
         public void onAdFailed(String s);
