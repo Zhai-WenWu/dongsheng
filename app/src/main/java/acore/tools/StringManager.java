@@ -235,8 +235,9 @@ public class StringManager extends UtilString {
     public final static String api_monitoring_5 = "http://stat.xiangha.com/s5.gif"; //广告统计
     public final static String api_clickAds = apiUrl + "main6/ads/clickAds"; //广告统计,用于加积分
     public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改贴子模块
-    //新菜谱详情页
+    //菜谱详情页
     public final static String api_getDishInfoNew = apiUrl + urlSection.get("caipu6") + "info";
+    public final static String api_getDishTopInfo = apiUrl + "main7/dish/topInfo";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶

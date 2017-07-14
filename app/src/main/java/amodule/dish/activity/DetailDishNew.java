@@ -40,12 +40,13 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
-import xh.basic.tool.UtilString;
 
 import static com.xiangha.R.id.share_layout;
 import static java.lang.System.currentTimeMillis;
+import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * Created by Fang Ruijiao on 2017/7/11.
@@ -141,16 +142,6 @@ public class DetailDishNew extends BaseActivity {
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
                 DetailDishNew.this.mVideoPlayerController=mVideoPlayerController;
             }
-
-            @Override
-            public void gotoRequest() {
-                loadManager.setLoading(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setRequest();
-                    }
-                },false);
-            }
         });
         initData();
         loadManager.setLoading(new View.OnClickListener() {
@@ -197,7 +188,7 @@ public class DetailDishNew extends BaseActivity {
                 dishJson = DataOperate.buyBurden(XHApplication.in(), code);
                 dishActivityViewControl.setDishJson(dishJson);
                 //获取手机中的离线菜谱数量
-                AppCommon.buyBurdenNum = UtilString.getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
+                AppCommon.buyBurdenNum = getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
                 mHandler.sendEmptyMessage(LOAD_DISH);
             }
         }).start();
@@ -208,7 +199,7 @@ public class DetailDishNew extends BaseActivity {
      */
     private void setRequest() {
         String params = "?code=" + code;
-        ReqInternet.in().doGet(StringManager.api_getDishInfoNew + params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doGet(StringManager.api_getDishTopInfo + params, new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
@@ -241,7 +232,7 @@ public class DetailDishNew extends BaseActivity {
                     if(!hasPermission || !contiunRefresh) return;
                     dishActivityViewControl.reset();
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
-                        analyzeData(StringManager.getListMapByJson(o),detailPermissionMap);
+                        analyzeData(String.valueOf(o),detailPermissionMap);
                     } else {
                         loadManager.loadOver(flag, 1, true);
                     }
@@ -251,6 +242,15 @@ public class DetailDishNew extends BaseActivity {
                 }else loadManager.hideProgressBar();
             }
         });
+
+        ReqEncyptInternet.in().doGet(StringManager.api_getDishInfo + params, new InternetCallback(DetailDishNew.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if(i >= ReqInternet.REQ_OK_STRING){
+                    dishActivityViewControl.analyzeUserShowDishInfoData(String.valueOf(o));
+                }
+            }
+        });
     }
 
     /**
@@ -258,7 +258,7 @@ public class DetailDishNew extends BaseActivity {
      * 历史记录都是:dishInfo的数据
      */
     private void analyzeHistoryData() {
-        ArrayList<Map<String, String>> listmaps = UtilString.getListMapByJson(dishJson);
+        ArrayList<Map<String, String>> listmaps = getListMapByJson(dishJson);
         if (listmaps.size() < 1){
             return;
         }
@@ -269,24 +269,21 @@ public class DetailDishNew extends BaseActivity {
 
     /**
      * 处理业务数据
-     * @param list
+     * @param data
      */
-    private void analyzeData(ArrayList<Map<String, String>> list,Map<String,String> permissionMap) {
-        String lable = list.get(0).get("lable");
-        ArrayList<Map<String, String>> listmaps = StringManager.getListMapByJson(list.get(0).get("data"));
+    private void analyzeData(String data,Map<String,String> permissionMap) {
+        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
         //第一页未请求到数据，直接关闭改页面
-        if (listmaps.size() == 0 && lable.equals("dishInfo")) {
+        if (list.size() < 1) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
             DetailDishNew.this.finish();
             return;
         }
-        if (lable.equals("dishInfo")) {//第一页整体业务标示
-            dishJson = list.get(0).get("data");//第一页数据保留下来
-            saveHistoryToDB(dishJson);
-            dishActivityViewControl.setDishJson(dishJson);
-            requestWeb();
-        }
-        dishActivityViewControl.analyzeDishInfoData(listmaps,permissionMap);
+        dishJson = data;//数据保留下来
+        saveHistoryToDB(dishJson);
+        dishActivityViewControl.setDishJson(dishJson);
+        requestWeb();
+        dishActivityViewControl.analyzeDishInfoData(list,permissionMap);
 
     }
     private boolean saveHistory = false;
@@ -311,7 +308,7 @@ public class DetailDishNew extends BaseActivity {
     private JSONObject handlerJSONData(String dishJson) {
         JSONObject jsonObject = new JSONObject();
         try {
-            ArrayList<Map<String, String>> dishInfoArray = StringManager.getListMapByJson(dishJson);
+            ArrayList<Map<String, String>> dishInfoArray = getListMapByJson(dishJson);
             if (dishInfoArray.size() > 0) {
                 Map<String, String> dishInfo = dishInfoArray.get(0);
                 jsonObject.put("name", dishInfo.get("name"));
@@ -322,14 +319,14 @@ public class DetailDishNew extends BaseActivity {
                 jsonObject.put("allClick", dishInfo.get("allClick"));
                 jsonObject.put("exclusive", dishInfo.get("exclusive"));
 
-                ArrayList<Map<String, String>> videos = StringManager.getListMapByJson(dishInfo.get("video"));
+                ArrayList<Map<String, String>> videos = getListMapByJson(dishInfo.get("video"));
                 jsonObject.put("hasVideo", videos.size() > 0 ? 2 : 1);
-                ArrayList<Map<String, String>> makes = StringManager.getListMapByJson(dishInfo.get("makes"));
+                ArrayList<Map<String, String>> makes = getListMapByJson(dishInfo.get("makes"));
                 jsonObject.put("isMakeImg", makes.size() > 0 ? 2 : 1);
-                ArrayList<Map<String, String>> burden = StringManager.getListMapByJson(dishInfo.get("burden"));
+                ArrayList<Map<String, String>> burden = getListMapByJson(dishInfo.get("burden"));
                 StringBuffer stringBuffer = new StringBuffer();
                 for (int i = 0; i < burden.size(); i++) {
-                    ArrayList<Map<String, String>> data = StringManager.getListMapByJson(burden.get(i).get("data"));
+                    ArrayList<Map<String, String>> data = getListMapByJson(burden.get(i).get("data"));
                     for (int j = 0; j < data.size(); j++) {
                         stringBuffer.append(data.get(j).get("name")).append(",");
                     }

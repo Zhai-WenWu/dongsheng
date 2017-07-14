@@ -138,19 +138,18 @@ public class DishHeaderViewNew extends LinearLayout {
             };
         } else this.callBack = callBacks;
         Map<String, String> videoMap = list.get(0);
-        String title = videoMap.get("name");
+        String title = videoMap.get("title");
 
         try {
-            String selfVideo = videoMap.get("selfVideo");
-            String hasVideo = videoMap.get("hasVideo");
-            String video = videoMap.get("video");
-            String img = videoMap.get("img");
-            if (!TextUtils.isEmpty(selfVideo)
-                    && !"[]".equals(selfVideo)) {
+            String selfVideo = videoMap.get("video");
+            String img = videoMap.get("coverImg");
+            String type = videoMap.get("type");
+
+            if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
-                    setVideo(hasVideo, video, img, permissionMap);
+                    Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
             } else
-                setVideo(hasVideo, video, img, permissionMap);
+                setImg(img);
         } catch (Exception e) {
             Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
         }
@@ -296,54 +295,52 @@ public class DishHeaderViewNew extends LinearLayout {
         initVideoAd();
         boolean isUrlVaild = false;
         tongjiId = "a_menu_detail_video430";
-        if (!TextUtils.isEmpty(selfVideoJson) && !"[]".equals(selfVideoJson)) {
-            Map<String, String> selfVideoMap = UtilString.getListMapByJson(selfVideoJson).get(0);
-            String videoUrl = selfVideoMap.get("url");
-            if (!TextUtils.isEmpty(videoUrl) && videoUrl.startsWith("http")) {
-                dishVidioLayout.setPadding(0, distance, 0, 0);
-                mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+        Map<String, String> selfVideoMap = UtilString.getListMapByJson(selfVideoJson).get(0);
+        String videoUrl = selfVideoMap.get("url");
+        if (!TextUtils.isEmpty(videoUrl) && videoUrl.startsWith("http")) {
+            dishVidioLayout.setPadding(0, distance, 0, 0);
+            mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
 
-                if(permissionMap != null && permissionMap.containsKey("video")){
+            if(permissionMap != null && permissionMap.containsKey("video")){
 
-                    Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
-                    Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
-                    Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
-                    if(!TextUtils.isEmpty(timeMap.get("time"))){
-                        limitTime = Integer.parseInt(timeMap.get("time"));
-                        Log.i("tzy","limitTime = " + limitTime);
-                        setVipPermision(commonMap);
-                    }
-                }else{
-                    isContinue = true;
-                    isHaspause = false;
-                    dredgeVipLayout.setVisibility(GONE);
-                    mVideoPlayerController.setControlLayerVisibility(true);
-                    VDVideoViewController.getInstance(context).setSeekPause(false);
+                Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
+                Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
+                Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
+                if(!TextUtils.isEmpty(timeMap.get("time"))){
+                    limitTime = Integer.parseInt(timeMap.get("time"));
+                    Log.i("tzy","limitTime = " + limitTime);
+                    setVipPermision(commonMap);
                 }
-
-                DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
-                dishVideoImageView.setData(img, selfVideoMap.get("duration"));
-                mVideoPlayerController.setNewView(dishVideoImageView);
-                mVideoPlayerController.initVideoView2(videoUrl, title, dishVideoImageView);
-                mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
-                    @Override
-                    public void onStatistics() {
-                        XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "视频播放按钮点击");
-                        callBack.videoImageOnClick();
-                    }
-                });
-                //被点击回调
-                mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
-                    @Override
-                    public void onclick() {
-                        setVideoAdData(mapAd, adLayout);
-                    }
-                });
-                dishvideo_img.setVisibility(View.GONE);
-                callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
-                callBack.videoImageOnClick();
-                isUrlVaild = true;
+            }else{
+                isContinue = true;
+                isHaspause = false;
+                dredgeVipLayout.setVisibility(GONE);
+                mVideoPlayerController.setControlLayerVisibility(true);
+                VDVideoViewController.getInstance(context).setSeekPause(false);
             }
+
+            DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
+            dishVideoImageView.setData(img, selfVideoMap.get("duration"));
+            mVideoPlayerController.setNewView(dishVideoImageView);
+            mVideoPlayerController.initVideoView2(videoUrl, title, dishVideoImageView);
+            mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
+                @Override
+                public void onStatistics() {
+                    XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "视频播放按钮点击");
+                    callBack.videoImageOnClick();
+                }
+            });
+            //被点击回调
+            mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
+                @Override
+                public void onclick() {
+                    setVideoAdData(mapAd, adLayout);
+                }
+            });
+            dishvideo_img.setVisibility(View.GONE);
+            callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
+            callBack.videoImageOnClick();
+            isUrlVaild = true;
         }
         return isUrlVaild;
     }
@@ -432,96 +429,37 @@ public class DishHeaderViewNew extends LinearLayout {
 
     /**
      * 展示顶图view,是大图还是视频
-     *
-     * @param hasVideo      》标记是否是视频字段 1---不是 2---是
-     * @param videoJson     》视频数据
-     * @param img           》图片链接
-     * @param permissionMap
+     * @param img          》图片链接
      */
-    private void setVideo(String hasVideo, final String videoJson, final String img, Map<String, String> permissionMap) {
-        if ("2".equals(hasVideo)) {
-            initVideoAd();
-            tongjiId = "a_menu_detail_video430";
-            if (!TextUtils.isEmpty(videoJson) && !"[]".equals(videoJson)) {
-                Map<String, String> dishBurden = UtilString.getListMapByJson(videoJson).get(0);
-                String videoUnique = dishBurden.get("vu");
-                String userUnique = dishBurden.get("uu");
-                dishVidioLayout.setPadding(0, distance, 0, 0);
-                mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+    private void setImg(final String img) {
+        dishvideo_img.setVisibility(View.GONE);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final ImageViewVideo imvv = new ImageViewVideo(activity);
+        imvv.parseItemImg(ImageView.ScaleType.CENTER_CROP, img, false, false, R.drawable.i_nopic, FileManager.save_cache);
+        imvv.setLayoutParams(params);
+        dishVidioLayout.removeAllViews();
+        dishVidioLayout.addView(imvv);
+        dishVidioLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dishVidioLayout.setClickable(false);
+                XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "菜谱大图点击");
+                ArrayList<Map<String, String>> listmap = new ArrayList<>();
+                Map<String, String> map = new HashMap<>();
+                map.put("img", img);
+                map.put("info", "");
+                map.put("num", "1");
+                listmap.add(map);
 
-                if(permissionMap != null && permissionMap.containsKey("video")){
-                    Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
-                    Map<String,String> commonMap = StringManager.getFirstMap(videoPermionMap.get("common"));
-                    Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
-                    if(!TextUtils.isEmpty(timeMap.get("time"))){
-                        limitTime = Integer.parseInt(timeMap.get("time"));
-                        setVipPermision(commonMap);
-                    }
-                }else{
-                    isContinue = true;
-                    isHaspause = false;
-                    dredgeVipLayout.setVisibility(GONE);
-                    mVideoPlayerController.setControlLayerVisibility(true);
-                    VDVideoViewController.getInstance(context).setSeekPause(false);
-                }
-
-                DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
-                dishVideoImageView.setData(img, dishBurden.get("duration"));
-                mVideoPlayerController.setNewView(dishVideoImageView);
-                mVideoPlayerController.initVideoView(videoUnique, userUnique, dishVideoImageView);
-                mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
-                    @Override
-                    public void onStatistics() {
-                        XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "视频播放按钮点击");
-                        callBack.videoImageOnClick();
-                    }
-                });
-                //被点击回调
-                mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
-                    @Override
-                    public void onclick() {
-                        setVideoAdData(mapAd, adLayout);
-                    }
-                });
-                dishvideo_img.setVisibility(View.GONE);
-                callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
-                Log.i("tzy", "getVideoControl time = " + System.currentTimeMillis());
-                callBack.videoImageOnClick();
-
-            } else {
-                Toast.makeText(context, "视频地址信息错误", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(activity, MoreImageShow.class);
+                intent.putExtra("data", listmap);
+                intent.putExtra("from", "dish");
+                intent.putExtra("index", 0);
+                intent.putExtra("isShowAd", false);
+                dishVidioLayout.setClickable(true);
+                activity.startActivity(intent);
             }
-        } else {
-            dishvideo_img.setVisibility(View.GONE);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            final ImageViewVideo imvv = new ImageViewVideo(activity);
-            imvv.parseItemImg(ImageView.ScaleType.CENTER_CROP, img, false, false, R.drawable.i_nopic, FileManager.save_cache);
-            imvv.setLayoutParams(params);
-            dishVidioLayout.removeAllViews();
-            dishVidioLayout.addView(imvv);
-            dishVidioLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dishVidioLayout.setClickable(false);
-                    XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "菜谱大图点击");
-                    ArrayList<Map<String, String>> listmap = new ArrayList<Map<String, String>>();
-                    Map<String, String> map = new HashMap<String, String>();
-                    map.put("img", img);
-                    map.put("info", "");
-                    map.put("num", "1");
-                    listmap.add(map);
-
-                    Intent intent = new Intent(activity, MoreImageShow.class);
-                    intent.putExtra("data", listmap);
-                    intent.putExtra("from", "dish");
-                    intent.putExtra("index", 0);
-                    intent.putExtra("isShowAd", false);
-                    dishVidioLayout.setClickable(true);
-                    activity.startActivity(intent);
-                }
-            });
-        }
-//        setViewOneState();
+        });
         callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
     }
 

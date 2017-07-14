@@ -41,7 +41,7 @@ public class DishFootControl implements View.OnClickListener{
     private LinearLayout mAdLayout,goodLayoutParent,goodLayout,trampleLayout,userDishLayout;
     private RelativeLayout mRecomentLayout;
     private TextView mRecommentNum,mRelevantTv,mHoverNum,mQuizTv;
-    private ImageView mGoodShow;
+    private ImageView mGoodShow,mGoodImg;
 
     private String code;
 
@@ -49,8 +49,7 @@ public class DishFootControl implements View.OnClickListener{
         mAct = act;
     }
 
-    public void init(String recomenNum,String hoverNum,String dishJson){
-
+    public void init(String hoverNum){
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan);
 
@@ -63,6 +62,7 @@ public class DishFootControl implements View.OnClickListener{
         mRelevantTv = (TextView) mAct.findViewById(R.id.a_dish_detail_new_relevantTv);
         mHoverNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_number);
         mQuizTv = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_tv);
+        mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
         mGoodShow = (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
 
         DishAdDataViewNew dishAdDataView = new DishAdDataViewNew(mAct);
@@ -73,14 +73,14 @@ public class DishFootControl implements View.OnClickListener{
         mRelevantTv.setOnClickListener(this);
         mQuizTv.setOnClickListener(this);
         mGoodShow.setOnClickListener(this);
-        mRecommentNum.setText(recomenNum + "道");
         mHoverNum.setText(hoverNum);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
-
-        initUserDish(dishJson);
     }
 
-    private void initUserDish(String dishJson){
+    public void initUserDish(String dishJson){
+        //TODO
+        dishJson = "";
+        mRecommentNum.setText(125 + "个作品");
         LayoutInflater inflater = LayoutInflater.from(mAct);
         ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dishJson);
         Map<String, String> dataMap;
@@ -95,8 +95,10 @@ public class DishFootControl implements View.OnClickListener{
             dataMap.put("dishTime","1" + i + "小时前");
             arrayList.add(dataMap);
         }
-        if(arrayList.size() > 0)
+        if(arrayList.size() > 0) {
             mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.VISIBLE);
+            mRecomentLayout.setVisibility(View.VISIBLE);
+        }
         else{
             mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.GONE);
             return;

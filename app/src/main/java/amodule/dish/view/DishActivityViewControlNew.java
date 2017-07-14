@@ -180,23 +180,26 @@ public class DishActivityViewControlNew {
 
     /**
      * 解析数据-----业务标示是“dishInfo”
-     *
      * @param list
      * @param permissionMap
      */
     public void analyzeDishInfoData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         dishInfoMap = list.get(0);
-        mXhWebView.loadUrl("http://appweb.xiangha.com/zhishi/nousInfo?code=240922");
-        isHasVideo = dishInfoMap.get("hasVideo").equals("2");
+        String htmlUrl = dishInfoMap.get("htmlUrl");
+        mXhWebView.loadUrl(htmlUrl);
+        isHasVideo = dishInfoMap.get("type").equals("2");
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
+
         dishTitleViewControl.setData(dishInfoMap,code,dishJson,isHasVideo,dishInfoMap.get("dishState"),loadManager);
-        Map<String, String> customer = StringManager.getFirstMap(list.get(0).get("customer"));
+
+        Map<String, String> customer = StringManager.getFirstMap(dishInfoMap.get("customer"));
         if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
                 && customer.get("code").equals(LoginManager.userInfo.get("code"))) {
             state = "";
             dishTitleViewControl.setstate(state);
         }
         dishTitleViewControl.setViewState();
+
         if(permissionMap != null && permissionMap.containsKey("offLine")){
             Map<String,String> offlineMap = StringManager.getFirstMap(permissionMap.get("offLine"));
             offlineMap = StringManager.getFirstMap(offlineMap.get("common"));
@@ -220,8 +223,12 @@ public class DishActivityViewControlNew {
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
         },permissionMap);
-        mFootControl.init("122","233","");
+        mFootControl.init(dishInfoMap.get("likeNum"));
         mScrollView.setVisibility(View.VISIBLE);
+    }
+
+    public void analyzeUserShowDishInfoData(String dishJson){
+        mFootControl.initUserDish(dishJson);
     }
 
     /**
@@ -334,14 +341,6 @@ public class DishActivityViewControlNew {
     }
 
     /**
-     * 获取头view
-     * @return
-     */
-    public DishHeaderViewNew getDishHeaderView(){
-        return dishHeaderView;
-    }
-
-    /**
      * 获取第一页集合
      * @return
      */
@@ -357,8 +356,7 @@ public class DishActivityViewControlNew {
         this.adBarHeight = adBarHeight;
     }
     public interface DishViewCallBack{
-        public void getVideoPlayerController(VideoPlayerController mVideoPlayerController);
-        public void gotoRequest();
+        void getVideoPlayerController(VideoPlayerController mVideoPlayerController);
 
     }
 

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -233,29 +234,25 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         }
     }
 
-    /**
-     * 分享
-     */
-    private void doshare() {
-        BarShare barShare = new BarShare(detailDish, "菜谱详情页", "菜谱");
-        Map<String, String> mapData = getShareData();
-        if(mapData.containsKey("isVideo") && mapData.get("isVideo").equals("2") && mVideoPlayerController != null
-                && mVideoPlayerController.getVideoImageView() != null && mVideoPlayerController.getVideoImageView().getBitmap() != null){
-            barShare.setShare(mapData.get("mTitle"), mapData.get("mContent"), mVideoPlayerController.getVideoImageView().getBitmap(), mapData.get("mClickUrl"));
-        }else if (mapData.get("mType").equals(BarShare.IMG_TYPE_WEB)) {
-            barShare.setShare(mapData.get("mType"), mapData.get("mTitle"), mapData.get("mContent"), mapData.get("mImgUrl"), mapData.get("mClickUrl"));
-        }
-        barShare.openShare();
-    }
-
     private void openShare() {
-        Map<String, String> mapData = getShareData();
+        boolean isAuthor = false;
+        String nickName = "",code = "";
+        ArrayList<Map<String, String>> cusArray = UtilString.getListMapByJson(dishInfoMap.get("customer"));
+        if(cusArray.size()>0) {
+            Map<String, String> cusMap = UtilString.getListMapByJson(dishInfoMap.get("customer")).get(0);
+            code = cusMap.get("code");
+            nickName = cusMap.get("nickName");
+            //登录并是自己的菜谱贴
+            if (LoginManager.isLogin() && !TextUtils.isEmpty(code) && code.equals(LoginManager.userInfo.get("code"))) {
+                isAuthor = true;
+            }
+        }
+        Map<String, String> mapData = getShareData(isAuthor);
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
-        //TODO
-        boolean isAuthor = true;
         intent.putExtra("tongjiId", isAuthor ? "a_my" : "a_user");
-        intent.putExtra("nickName", mapData.get("nickName"));
-        intent.putExtra("code", mapData.get("code"));
+        intent.putExtra("isHasReport", !isAuthor);
+        intent.putExtra("nickName", nickName);
+        intent.putExtra("code", code);
         intent.putExtra("imgUrl", mapData.get("mImgUrl"));
         intent.putExtra("clickUrl", mapData.get("mClickUrl"));
         intent.putExtra("title", mapData.get("mTitle"));
@@ -265,36 +262,34 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         detailDish.startActivity(intent);
     }
 
-    public Map<String, String> getShareData() {
+    public Map<String, String> getShareData(boolean isAuthor) {
         //点击显示数据
-        String mType = "", mTitle = "", mClickUrl = "", mContent = "", mImgUrl = "",isVideo="";
-        //是否是自己区分数据
-        String code = UtilString.getListMapByJson(dishInfoMap.get("customer")).get(0).get("code");
+        String mType, mTitle, mClickUrl, mContent, mImgUrl,isVideo;
         //登录并是自己的菜谱贴
-        if (LoginManager.isLogin() && !TextUtils.isEmpty(code) && code.equals(LoginManager.userInfo.get("code"))) {
-            mTitle = "【香哈菜谱】我上传了" + dishInfoMap.get("name") + "的做法";
+        if (isAuthor) {
+            mTitle = "【香哈菜谱】我上传了" + dishInfoMap.get("title") + "的做法";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
-            mContent = "我在香哈做出了史上最好吃的" + dishInfoMap.get("name") + "，进来请你免费享用！";
-            mImgUrl = dishInfoMap.get("img");
+            mContent = "我在香哈做出了史上最好吃的" + dishInfoMap.get("title") + "，进来请你免费享用！";
+            mImgUrl = dishInfoMap.get("coverImg");
             mType = BarShare.IMG_TYPE_WEB;
             isVideo="1";
             //不是自己的菜谱贴
         } else if (isHasVideo) {
-            mTitle = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
+            mTitle = "【香哈菜谱】看了" + dishInfoMap.get("title") + "的教学视频，我已经学会了，味道超赞！";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
             mContent = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ ";
-            mImgUrl = dishInfoMap.get("img");
+            mImgUrl = dishInfoMap.get("coverImg");
             mType = BarShare.IMG_TYPE_WEB;
             isVideo="2";
         } else {
-            mTitle = "【香哈菜谱】" + dishInfoMap.get("name") + "的做法";
+            mTitle = "【香哈菜谱】" + dishInfoMap.get("title") + "的做法";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
-            mContent = "我又学会了一道" + dishInfoMap.get("name") + "，太棒了，强烈推荐你也用香哈学做菜！";
-            mImgUrl = dishInfoMap.get("img");
+            mContent = "我又学会了一道" + dishInfoMap.get("title") + "，太棒了，强烈推荐你也用香哈学做菜！";
+            mImgUrl = dishInfoMap.get("coverImg");
             mType = BarShare.IMG_TYPE_WEB;
             isVideo="1";
         }
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("mType", mType);
         map.put("mTitle", mTitle);
         map.put("mClickUrl", mClickUrl);
@@ -402,14 +397,14 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                     if (isShow) {
                                         mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？");
                                         if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
-                                            String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
+                                            String title = "【香哈菜谱】看了" + dishInfoMap.get("title") + "的教学视频，我已经学会了，味道超赞！";
                                             String clickUrl = StringManager.wwwUrl + "video/caipu/" + dishInfoMap.get("code");
                                             ;
                                             String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " + clickUrl;
 //                                            Bitmap bitmap = mVideoPlayerController.getVideoImageView().getBitmap();
 //                                            String imgUrl = ShareTools.getBarShare(DetailDish.this).saveDrawable(bitmap, FileManager.save_cache + "/share_" + currentTimeMillis() + ".png");
                                             String type = BarShare.IMG_TYPE_WEB;
-                                            String imgUrl = dishInfoMap.get("img");
+                                            String imgUrl = dishInfoMap.get("coverImg");
                                             if (imgUrl == null) {
                                                 type = ShareTools.IMG_TYPE_RES;
                                                 imgUrl = "" + R.drawable.umen_share_launch;
@@ -417,10 +412,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                             mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
                                         } else {
                                             String type = BarShare.IMG_TYPE_WEB;
-                                            String title = "【香哈菜谱】" +  dishInfoMap.get("name") + "的做法";
+                                            String title = "【香哈菜谱】" +  dishInfoMap.get("title") + "的做法";
                                             String clickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
-                                            String content = "我又学会了一道" + dishInfoMap.get("name") + "，太棒了，强烈推荐你也用香哈学做菜！";
-                                            String imgUrl = dishInfoMap.get("img");
+                                            String content = "我又学会了一道" + dishInfoMap.get("title") + "，太棒了，强烈推荐你也用香哈学做菜！";
+                                            String imgUrl = dishInfoMap.get("coverImg");
                                             mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
                                         }
                                         XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");

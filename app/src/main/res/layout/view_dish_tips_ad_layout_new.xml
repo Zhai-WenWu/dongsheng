@@ -4,14 +4,12 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/dp_20"
     >
 
     <RelativeLayout
         android:id="@+id/ad_big_pic_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dp_10"
         android:visibility="visible">
 
         <TextView

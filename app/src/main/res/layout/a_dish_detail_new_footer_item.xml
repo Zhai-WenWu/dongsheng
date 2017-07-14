@@ -1,80 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/a_dish_detail_show_img"
         android:layout_width="@dimen/dp_170"
         android:layout_height="@dimen/dp_170"
         android:layout_marginLeft="@dimen/dp_8"
-        android:scaleType="centerCrop"
-        android:src="@drawable/i_nopic"
-        />
+        android:scaleType="centerCrop" />
 
-    <RelativeLayout
-        android:layout_width="@dimen/dp_170"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_12"
-        android:paddingLeft="@dimen/dp_18"
-        android:paddingRight="@dimen/dp_10"
-        android:orientation="horizontal"
-        >
-
-        <ImageView
-            android:id="@+id/a_dish_detail_user_icon"
-            android:layout_width="@dimen/dp_28"
-            android:layout_height="@dimen/dp_28"
-            android:scaleType="centerCrop"
-            />
-
-        <TextView
-            android:id="@+id/a_dish_detail_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/a_dish_detail_user_icon"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:text="小鱼儿"
-            />
-
-        <TextView
-            android:id="@+id/a_dish_detail_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="1天前"
-            />
-    </RelativeLayout>
-    
     <LinearLayout
         android:layout_width="@dimen/dp_170"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="vertical"
         android:layout_marginLeft="@dimen/dp_8"
-        android:gravity="center"
+        android:layout_below="@+id/a_dish_detail_show_img"
+        android:background="@drawable/bg_dish_user_show_subject"
         >
-        
-        <ImageView
-            android:id="@+id/a_dish_detail_zan"
-            android:layout_width="@dimen/dp_27"
-            android:layout_height="@dimen/dp_39"
-            android:padding="@dimen/dp_5"
-            />
 
-        <TextView
-            android:id="@+id/a_dish_detail_zan_numer"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textColor="#333"
-            android:textSize="@dimen/sp_14"
-            />
-        
+            android:layout_below="@+id/a_dish_detail_show_img"
+            android:layout_marginTop="@dimen/dp_12"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_18"
+            android:paddingRight="@dimen/dp_10">
+
+            <ImageView
+                android:id="@+id/a_dish_detail_user_icon"
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="@dimen/dp_28"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/a_dish_detail_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/a_dish_detail_user_icon"
+                android:textColor="#b5b4b4"
+                android:textSize="@dimen/sp_11" />
+
+            <TextView
+                android:id="@+id/a_dish_detail_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="#b5b4b4"
+                android:textSize="@dimen/sp_11" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_10"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/a_dish_detail_zan"
+                android:layout_width="@dimen/dp_27"
+                android:layout_height="@dimen/dp_39"
+                android:padding="@dimen/dp_5" />
+
+            <TextView
+                android:id="@+id/a_dish_detail_zan_numer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333"
+                android:textSize="@dimen/sp_14" />
+
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

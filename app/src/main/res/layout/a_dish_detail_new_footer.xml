@@ -21,13 +21,6 @@
         android:layout_marginTop="@dimen/dp_20"
         android:orientation="vertical" />
 
-    <View
-        android:id="@+id/a_dish_detail_new_line1"
-        style="@style/lineView"
-        android:layout_below="@+id/a_dish_detail_new_tieshi_ad"
-        android:layout_marginLeft="@dimen/dp_10"
-        />
-
     <RelativeLayout
         android:id="@+id/a_dish_detail_new_xiangguan"
         android:layout_width="match_parent"
@@ -35,16 +28,24 @@
         android:layout_marginTop="@dimen/dp_20"
         android:layout_marginBottom="@dimen/dp_18"
         android:layout_marginLeft="@dimen/dp_10"
-        android:layout_below="@+id/a_dish_detail_new_line1"
+        android:layout_below="@+id/a_dish_detail_new_tieshi_ad"
+        android:visibility="gone"
         >
+
+        <View
+            android:id="@+id/a_dish_detail_new_line1"
+            android:layout_marginBottom="@dimen/dp_20"
+            style="@style/lineView"
+            />
 
         <TextView
             android:id="@+id/a_dish_detail_new_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/a_dish_detail_new_tv_num"
-            android:layout_centerVertical="true"
+            android:layout_below="@+id/a_dish_detail_new_line1"
             android:text="哈友晒的这道菜"
+            android:textStyle="bold"
             android:textColor="#333"
             android:textSize="@dimen/sp_17"
             />
@@ -54,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_below="@+id/a_dish_detail_new_line1"
             android:layout_marginRight="@dimen/dp_4"
             android:text="120个作品"
             android:textColor="@color/comment_color"
@@ -71,6 +72,7 @@
         android:layout_below="@+id/a_dish_detail_new_xiangguan"
         android:layout_marginBottom="@dimen/dp_16"
         android:layout_marginLeft="@dimen/dp_2"
+        android:visibility="gone"
         >
         <LinearLayout
             android:id="@+id/a_dish_detail_new_xiangguan_scroll_linear"
@@ -82,18 +84,11 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <View
-        android:id="@+id/a_dish_detail_new_line2"
-        style="@style/lineView"
-        android:layout_below="@+id/a_dish_detail_new_xiangguan_scroll"
-        android:layout_marginLeft="@dimen/dp_10"
-        />
-
     <TextView
         android:id="@+id/a_dish_detail_new_relevantTv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_46"
-        android:layout_below="@+id/a_dish_detail_new_line2"
+        android:layout_below="@+id/a_dish_detail_new_xiangguan_scroll"
         android:layout_marginTop="@dimen/dp_20"
         android:layout_marginLeft="@dimen/dp_10"
         android:background="@drawable/bg_round_red_type2"
