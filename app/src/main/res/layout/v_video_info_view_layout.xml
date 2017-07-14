@@ -15,7 +15,7 @@
         android:paddingBottom="@dimen/dp_6"
         android:paddingTop="@dimen/dp_20"
         android:textColor="#494949"
-        android:textSize="@dimen/sp_22"
+        android:textSize="@dimen/sp_20"
         android:textStyle="bold"
         android:visibility="visible"/>
 
@@ -31,7 +31,7 @@
         android:paddingBottom="@dimen/dp_18"
         android:paddingLeft="@dimen/dp_10"
         android:scaleType="fitXY"
-        android:src="@drawable/arrow_down"
+        android:src="@drawable/arrow_down2"
         android:visibility="gone"/>
 
     <LinearLayout

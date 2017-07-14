@@ -61,11 +61,11 @@ public class VideoInfoView extends ItemBaseView {
                 if (arrow.isSelected()) {
                     content.setVisibility(GONE);
                     arrow.setSelected(false);
-                    arrow.setImageResource(R.drawable.arrow_down);
+                    arrow.setImageResource(R.drawable.arrow_down2);
                 } else {
                     content.setVisibility(VISIBLE);
                     arrow.setSelected(true);
-                    arrow.setImageResource(R.drawable.arrow_up);
+                    arrow.setImageResource(R.drawable.arrow_up2);
                 }
             }
         });
