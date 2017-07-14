@@ -98,18 +98,11 @@ public class BaiduAdTools {
         }
         String title = nativeResponse.getTitle();
         String desc = nativeResponse.getDesc();
-        if(title.length() > desc.length()){
-            title = nativeResponse.getDesc();
-            desc = nativeResponse.getTitle();
-        }
         String iconUrl = nativeResponse.getIconUrl();
         String imageUrl = nativeResponse.getImageUrl();
-        boolean isDownloadApp = nativeResponse.isDownloadApp();
-//        Log.i("tzy","----------------------");
-//        Log.i("tzy","imageUrl = " + imageUrl);
-//        Log.i("tzy","width = " + nativeResponse.getMainPicWidth());
-//        Log.i("tzy","height = " + nativeResponse.getMainPicHeight());
-        callback.onHandlerData(title,desc,iconUrl,imageUrl,isDownloadApp);
+//        boolean isBigPic = nativeResponse.getMainPicWidth() >= 720;
+        boolean isBigPic = nativeResponse.isDownloadApp();
+        callback.onHandlerData(title,desc,iconUrl,imageUrl,isBigPic);
     }
 
     public static interface BaiduSplashAdCallback {
@@ -126,7 +119,7 @@ public class BaiduAdTools {
 
     /** 信息流广告获取内容时的灰度接口 */
     public static abstract class OnHandlerDataCallback {
-        public abstract void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isDownloadApp);
+        public abstract void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isBigPic);
     }
 
 }

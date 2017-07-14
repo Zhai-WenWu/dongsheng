@@ -85,7 +85,7 @@ public class SearchResultAdDataProvider {
                     }
                 }
             }
-        }, "search_list");
+        }, "search_list",false);
     }
 
     public ArrayList<Map<String,String>> getAdDataList(){

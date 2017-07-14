@@ -60,6 +60,7 @@ public class XHAllAdControl {
     private long oneAdTime;//第一次请求广告的时间。
     public long showTime= 30*60*1000;//广告的过期时间。30分钟
 
+    private boolean isJudgePicSize = false;
     private boolean isLoadOverGdt = false;
     private boolean isLoadOverBaidu = false;
 
@@ -70,24 +71,25 @@ public class XHAllAdControl {
      * @param xhBackIdsDataCallBack 回调
      * @param act 所在的activity
      * @param StatisticKey          统计key
+     * @param isJudgePicSize 是否判断大图
      */
-    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey,boolean isJudgePicSize) {
         this.listIds = listIds;
         this.act = act;
         this.xhBackIdsDataCallBack = xhBackIdsDataCallBack;
         this.StatisticKey = StatisticKey;
+        this.isJudgePicSize = isJudgePicSize;
         if(listIds.size()>0)getCountGdtData=listIds.size();
         getStiaticsData();
         getAllAdData();
     }
 
-    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, String StatisticKey) {
-        this.listIds = listIds;
-        this.xhBackIdsDataCallBack = xhBackIdsDataCallBack;
-        this.StatisticKey = StatisticKey;
-        if(listIds.size()>0)getCountGdtData=listIds.size();
-        getStiaticsData();
-        getAllAdData();
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
+        this(listIds,xhBackIdsDataCallBack,act,StatisticKey,false);
+    }
+
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, String StatisticKey,boolean isJudgePicSize) {
+        this(listIds,xhBackIdsDataCallBack,null,StatisticKey,isJudgePicSize);
     }
 
     /**
@@ -274,6 +276,7 @@ public class XHAllAdControl {
                     break;
                 case "baidu":
                     parent = new XHScrollerBaidu(backIds,i);
+                    ((XHScrollerBaidu)parent).setJudgePicSize(isJudgePicSize);
                     break;
                 default:
                     break;
@@ -452,5 +455,13 @@ public class XHAllAdControl {
             return true;
         }
         return false;
+    }
+
+    public boolean isJudgePicSize() {
+        return isJudgePicSize;
+    }
+
+    public void setJudgePicSize(boolean judgePicSize) {
+        isJudgePicSize = judgePicSize;
     }
 }

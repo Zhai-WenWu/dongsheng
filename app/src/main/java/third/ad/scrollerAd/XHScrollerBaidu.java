@@ -21,6 +21,7 @@ import third.ad.tools.BaiduAdTools;
 public class XHScrollerBaidu extends XHScrollerAdParent {
     private Map<String,String> map_data;
     private NativeResponse nativeResponse;
+    private boolean isJudgePicSize = false;
     public XHScrollerBaidu(String mAdPlayId, int num) {
         super(mAdPlayId, num);
         key = "sdk_baidu";
@@ -66,17 +67,24 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
         }
         BaiduAdTools.newInstance().getNativeData(nativeResponse, new BaiduAdTools.OnHandlerDataCallback() {
             @Override
-            public void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isDownloadApp) {
-                if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(imageUrl)){
+            public void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isBigPic) {
+                if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(desc)&&!TextUtils.isEmpty(imageUrl)){
                     Map<String,String> map= new HashMap<>();
-                    map.put("title",title);
-                    map.put("desc",desc);
+                    if(title.length() > desc.length()){
+                        //交换title和desc
+                        map.put("title",desc);
+                        map.put("desc",title);
+                    }else{
+                        map.put("title",title);
+                        map.put("desc",desc);
+                    }
                     map.put("iconUrl",iconUrl);
                     map.put("imgUrl",imageUrl);
                     map.put("type",XHScrollerAdParent.ADKEY_BAIDU);
-                    map.put("isDownloadApp",isDownloadApp?"2":"1");
+                    map.put("isBigPic",isBigPic?"2":"1");
                     map.put("hide","1");//2隐藏，1显示
-                    if(TextUtils.isEmpty(imageUrl)){
+                    if(TextUtils.isEmpty(imageUrl)
+                            || (isJudgePicSize && !isBigPic)) {
                         xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BAIDU);
                     }else{
                         map_data=map;
@@ -90,5 +98,13 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
 
     public void setNativeResponse(NativeResponse nativeResponse) {
         this.nativeResponse = nativeResponse;
+    }
+
+    public boolean isJudgePicSize() {
+        return isJudgePicSize;
+    }
+
+    public void setJudgePicSize(boolean judgePicSize) {
+        isJudgePicSize = judgePicSize;
     }
 }

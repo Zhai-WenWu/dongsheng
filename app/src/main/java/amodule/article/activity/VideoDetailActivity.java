@@ -431,7 +431,7 @@ public class VideoDetailActivity extends BaseActivity {
             }
         });
         View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_34));
         listView.addFooterView(view);
         //请求文章数据
         requestVideoData(false);
@@ -499,7 +499,6 @@ public class VideoDetailActivity extends BaseActivity {
             public void getPower(int flag, String url, Object obj) {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
-                Log.i("tzy","obj = " + obj);
                 //权限检测
                 if(permissionMap.isEmpty()
                         && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)

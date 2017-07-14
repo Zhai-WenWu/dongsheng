@@ -158,8 +158,9 @@ public class ADDishContorl {
                     }
                 }
             }
-        }, (Activity) context, "result_works");
-
+        }, (Activity) context, "result_works",true);
+        //需要判断百度图片大小
+        xhAllAdControl.setJudgePicSize(true);
     }
 
 }

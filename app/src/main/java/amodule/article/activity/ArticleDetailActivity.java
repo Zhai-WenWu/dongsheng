@@ -362,7 +362,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                 });
         View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_43));
         listView.addFooterView(view);
         //请求文章数据
         requestArticleData(false);

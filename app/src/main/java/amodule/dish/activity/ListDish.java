@@ -132,7 +132,7 @@ public class ListDish extends BaseActivity {
                     }
                 });
             }
-        }, statisticKey);
+        }, statisticKey,true);
         adapter.setXHAllControl(xhAllAdControl);
     }
 
