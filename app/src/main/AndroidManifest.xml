@@ -475,6 +475,25 @@
 
         <!--article end-->
 
+        <!--answer start-->
+        <activity android:name="amodule.answer.activity.AskAnswerFullWebActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name="amodule.answer.activity.AskAnswerEditActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name="amodule.answer.activity.QAReportActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--answer end-->
 
         <!-- health start -->
         <activity

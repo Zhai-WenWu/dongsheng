@@ -315,6 +315,11 @@ public class StringManager extends UtilString {
     public final static String api_article = mUrl + "article/";//文章详情页m
     public final static String api_Video = mUrl + "videoInfo/";//视频详情页m
 
+    /*付费问答*/
+    public final static String API_QA_NEWS_NUM = apiUrl + "main7/qa/getQaNewsNum";//获取问答新消息条数
+    public final static String API_QA_GETREPORT = apiUrl + "main7/qa/getReport";//获取问答问答举报信息
+    public final static String API_QA_COMMITREPORT = apiUrl + "main7/qa/addReport";//提交问答举报
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {

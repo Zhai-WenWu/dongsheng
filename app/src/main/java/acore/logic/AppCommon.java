@@ -74,6 +74,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 public class AppCommon {
     public static int quanMessage = 0; // 美食圈新消息条数
     public static int feekbackMessage = 0; // 系统新消息条数
+    public static int myQAMessage = 0;//我的问答新消息条数
     public static int buyBurdenNum = 0; // 离线清单条数
     public static int follwersNum = -1; // 关注人数
 
@@ -97,7 +98,7 @@ public class AppCommon {
                         feekbackMessage = Integer.parseInt(alertArr[2]);
                         try {
                             // 所有消息数
-                            Main.setNewMsgNum(3, quanMessage + feekbackMessage);
+                            notifyMsgNumChange();
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;
@@ -115,6 +116,10 @@ public class AppCommon {
                 }
             }
         });
+    }
+
+    public static void notifyMsgNumChange() {
+        Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage);
     }
 
     /**

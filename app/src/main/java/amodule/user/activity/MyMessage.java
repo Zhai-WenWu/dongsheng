@@ -1,10 +1,12 @@
 package amodule.user.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -22,13 +25,14 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
+import amodule.answer.activity.AskAnswerFullWebActivity;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterMainMsg;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
 import xh.basic.internet.UtilInternet;
@@ -51,42 +55,49 @@ public class MyMessage extends MainBaseActivity {
 	private boolean clickFlag = true , isCreated=false;
 	private boolean isShowData=true;
 
+	private TextView mMyQANum;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_common_message);
 		Main.allMain.allTab.put("MyMessage", this);
 		init();
-//		initTitle();
 		XHClick.track(this, "浏览消息列表页");
-	}
-
-	private void initTitle() {
-		if(Tools.isShowTitle()) {
-			int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-			int height = dp_45 + Tools.getStatusBarHeight(this);
-
-			RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.msg_title_bar_rela);
-			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-			bar_title.setLayoutParams(layout);
-			bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mIsOnResuming = true;
 		if(LoginManager.isLogin()&&isShowData){
 			onRefresh();
 		}
+		startPollingQANum();
 	}
-	/* 
+	/*
 	 * 设置消息当从消息返回时
 	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mIsOnResuming = false;
+//		pausePollingQANum();
 	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		mIsOnResuming = false;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mIsOnResuming = false;
+		endPollingQANum();
+	}
+
 	/**
 	 * 外面调用的刷新
 	 */
@@ -117,7 +128,6 @@ public class MyMessage extends MainBaseActivity {
 	private void init() {
 		// title初始化
 		TextView title = (TextView) findViewById(R.id.msg_title_tv);
-		// title.setPadding(Tools.dp2px(this, 30), 0, 0, 0);
 		title.setText("消息");
 		msg_title_sort = (TextView) findViewById(R.id.msg_title_sort);
 		msg_title_sort.setText("未读");
@@ -128,8 +138,6 @@ public class MyMessage extends MainBaseActivity {
 		TextView tv_back = (TextView) findViewById(R.id.leftText);
 		tv_back.setClickable(true);
 		img_back.setClickable(true);
-//		tv_back.setOnClickListener(backClick);
-//		img_back.setOnClickListener(backClick);
 		tv_back.setVisibility(View.GONE);
 		img_back.setVisibility(View.GONE);
 		findViewById(R.id.no_admin_linear).setOnClickListener(new OnClickListener() {
@@ -145,18 +153,40 @@ public class MyMessage extends MainBaseActivity {
 		listMessage.bigDownText = "下拉刷新";
 		listMessage.bigReleaseText = "松开刷新";
 		RelativeLayout headerView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.a_common_message_header, null);
+		RelativeLayout headerSecretary = (RelativeLayout) headerView.findViewById(R.id.secretary);
+		RelativeLayout headerMyQA = (RelativeLayout) headerView.findViewById(R.id.my_qa);
+		mMyQANum = (TextView) headerMyQA.findViewById(R.id.qa_msg_num);
 		feekback_msg_num = (TextView) headerView.findViewById(R.id.feekback_msg_num);
 		listMessage.addHeaderView(headerView, null, false);
-		headerView.setOnClickListener(new OnClickListener() {
+		OnClickListener clickListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startFeekback();
+				switch (v.getId()) {
+					case R.id.secretary:
+						startFeekback();
+						break;
+					case R.id.my_qa:
+						if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
+							mMyQANum.setText("");
+							mMyQANum.setVisibility(View.GONE);
+							AppCommon.myQAMessage = 0;
+							AppCommon.notifyMsgNumChange();
+						}
+						Intent intent = new Intent(MyMessage.this, AskAnswerFullWebActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putString("url", "");
+						bundle.putString("tab", "");
+						intent.putExtras(bundle);
+						startActivity(intent);
+						break;
+				}
 			}
-		});
+		};
+		headerSecretary.setOnClickListener(clickListener);
+		headerMyQA.setOnClickListener(clickListener);
 		setFeekbackMsg();
 		listDataMessage = new ArrayList<Map<String, String>>();
 		adapter = new AdapterMainMsg(this, listMessage, listDataMessage, 0, null, null);
-//		adapter.imgResource = R.drawable.bg_round_zannum;
 		loadManager.setLoading(listMessage, adapter, true, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -380,4 +410,92 @@ public class MyMessage extends MainBaseActivity {
 			load(true);
 		}
 	};
+
+	private final String mAskFlag = "ask";
+	private final String mAnswerFlag = "answer";
+	private Map<String, String> mFlagMap = new HashMap<String, String>();
+	private boolean mIsLoadingQANum;
+	private boolean mIsOnResuming;
+	//轮询我的问答消息数字
+	private void pollingQANum() {
+		if (mIsLoadingQANum)
+			return;
+		mIsLoadingQANum = true;
+		ReqEncyptInternet.in().doEncypt(StringManager.API_QA_NEWS_NUM, "", new InternetCallback(this) {
+			@Override
+			public void loaded(int i, String s, Object o) {
+				mIsLoadingQANum = false;
+				if (i >= UtilInternet.REQ_OK_STRING) {
+					Map<String, String> map = StringManager.getFirstMap(o);
+					if (map != null) {
+						String askNum = map.get(mAskFlag);
+						String answerNum = map.get(mAnswerFlag);
+						int totalNum = 0;
+						if (mMyQANum != null) {
+							if (!TextUtils.isEmpty(askNum))  {
+								try {
+									totalNum = Integer.parseInt(askNum);
+									if (!mFlagMap.containsKey(mAskFlag))
+										mFlagMap.put(mAskFlag, "");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							if (!TextUtils.isEmpty(answerNum)) {
+								try {
+									totalNum += Integer.parseInt(answerNum);
+									if (!mFlagMap.containsKey(mAnswerFlag))
+										mFlagMap.put(mAnswerFlag, "");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							AppCommon.myQAMessage = totalNum;
+							AppCommon.notifyMsgNumChange();
+							if (!mIsOnResuming)
+								return;
+							if (totalNum > 0) {
+								mMyQANum.setText(String.valueOf(totalNum));
+								if (mMyQANum.getVisibility() != View.VISIBLE)
+									mMyQANum.setVisibility(View.VISIBLE);
+							} else {
+								mMyQANum.setVisibility(View.GONE);
+							}
+						}
+					}
+				} else {
+
+				}
+			}
+		});
+	}
+
+	private static final int POLLINT_INTERVAL = 5 * 1000;
+	private Runnable pollingQANumRun = new Runnable() {
+		@Override
+		public void run() {
+			pollingQANum();
+			if (mMainHandler != null)
+				mMainHandler.postDelayed(pollingQANumRun, POLLINT_INTERVAL);
+		}
+	};
+
+	private Handler mMainHandler = new Handler(Looper.getMainLooper());
+	private void startPollingQANum() {
+		pausePollingQANum();
+		if (mMainHandler != null)
+			mMainHandler.post(pollingQANumRun);
+	}
+
+	private void pausePollingQANum() {
+		if (mMainHandler != null)
+			mMainHandler.removeCallbacks(pollingQANumRun);
+	}
+
+	private void endPollingQANum() {
+		if (mMainHandler != null)
+			mMainHandler.removeCallbacks(pollingQANumRun);
+		mMainHandler = null;
+	}
+
 }
