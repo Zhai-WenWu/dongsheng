@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +19,7 @@ import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -46,9 +48,7 @@ public class WebviewManager {
     private List<XHWebView> mWwebArray;
     private boolean state = true;
 
-    public static final String OPEN_NEW = "OPEN_NEW";
-    public static final String OPEN_SELF = "OPEN_SELF";
-    private String mOpenFlag = OPEN_NEW;
+    private String mOpenMode;//1：当前WebView页面打开 2：APP内新页面打开 3：跳转到其他APP打开  标注：其他的走默认方式 默认："".
 
     /**
      * 初始化
@@ -64,11 +64,14 @@ public class WebviewManager {
         this.state = state;
     }
 
-    public void setOpenFlag(String openFlag) {
-        mOpenFlag = openFlag;
+    public void setOpenMode(String openMode) {
+        mOpenMode = openMode;
     }
 
     public XHWebView createWebView(int id) {
+        return createWebView(id,true);
+    }
+    public XHWebView createWebView(int id,boolean isCookieSync){
         if (act == null) {
             return null;
         }
@@ -78,10 +81,12 @@ public class WebviewManager {
         }
         if (webview == null)
             webview = new XHWebView(act);
-        CookieSyncManager.createInstance(act);
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.setAcceptCookie(true);
-        cookieManager.removeSessionCookie();//移除无过期时间的cookie
+        if(isCookieSync) {
+            CookieSyncManager.createInstance(act);
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.removeSessionCookie();//移除无过期时间的cookie
+        }
         //初始化WebSetting
         initWebSetting(webview);
         webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -205,20 +210,29 @@ public class WebviewManager {
             // 当前页打开
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                Log.i("tzy","url = " + url);
-                if (OPEN_SELF.equals(mOpenFlag)) {
-                    view.loadUrl(url);
-                    return false;
-                }
-                if (state) {
-                    loadManager.setLoading(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                if (!TextUtils.isEmpty(mOpenMode)) {
+                    switch (mOpenMode) {
+                        case "1"://当前WebView内打开
+                            if (!TextUtils.isEmpty(url) && url.startsWith("http"))
+                                view.loadUrl(url);
+                            return true;
+                        case "2"://APP内新页面打开
                             AppCommon.openUrl(act, url, true);
-                        }
-                    });
+                            return true;
+                        case "3"://跳转到其他APP打开，不处理
+                            return super.shouldOverrideUrlLoading(view, url);
+                    }
                 } else {
-                    AppCommon.openUrl(act, url, true);
+                    if (state) {
+                        loadManager.setLoading(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AppCommon.openUrl(act, url, true);
+                            }
+                        });
+                    } else {
+                        AppCommon.openUrl(act, url, true);
+                    }
                 }
                 return true;
             }
@@ -232,6 +246,11 @@ public class WebviewManager {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
+//                Log.i("tzy","--------------onReceivedError------------------");
+//                Log.i("tzy","errorCode = " + errorCode);
+//                Log.i("tzy","description = " + description);
+//                Log.i("tzy","failingUrl = " + failingUrl);
+//                Log.i("tzy","--------------onReceivedError------------------");
                 webview.loadUrl(ERROR_HTML_URL);
             }
         });

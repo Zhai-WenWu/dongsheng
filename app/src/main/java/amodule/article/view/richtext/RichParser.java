@@ -33,15 +33,15 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
+//import android.util.Log;
 
 public class RichParser {
     public static Spanned fromHtml(String source) {
-        Log.i("tzy", "source = " + source);
+//        Log.i("tzy", "source = " + source);
         String sourceAfter = source.replaceAll("&lt;div align=\"center\"&gt;", "<center>")
                 .replaceAll("&lt;div style=\"text-align:center;\"&gt;", "<center>")
                 .replaceAll("&lt;/div&gt;", "</center>");
-        Log.i("tzy", "sourceAfter = " + sourceAfter);
+//        Log.i("tzy", "sourceAfter = " + sourceAfter);
         return Html.fromHtml(sourceAfter, null, new RichTagHandler());
     }
 
@@ -232,8 +232,8 @@ public class RichParser {
             }
 
             withinStyle(out, text, i, next);
-            Log.i("tzy","text = " + text);
-            Log.i("tzy","out = " + out);
+//            Log.i("tzy","text = " + text);
+//            Log.i("tzy","out = " + out);
             for (int j = spans.length - 1; j >= 0; j--) {
                 if (spans[j] instanceof URLSpan) {
                     out.append("</a>");

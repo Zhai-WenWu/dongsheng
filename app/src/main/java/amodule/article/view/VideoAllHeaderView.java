@@ -69,6 +69,7 @@ public class VideoAllHeaderView extends LinearLayout {
             setVisibility(GONE);
             return;
         }
+
         videoInfoView.setType(mCurrType);
         setVisibility(VISIBLE);
         if(!isOnlyUser){
@@ -84,8 +85,18 @@ public class VideoAllHeaderView extends LinearLayout {
             },detailPermissionMap);
             //设置videoinfo数据
             videoInfoView.setData(mapVideo);
+            setUserData(mapVideo);
         }
 
+    }
+
+    public void setupCommentNum(String commentNumStr){
+        if(videoInfoView != null && !TextUtils.isEmpty(commentNumStr)){
+            videoInfoView.setupConmentNum(commentNumStr);
+        }
+    }
+
+    public void setUserData(Map<String, String> mapVideo){
         //设置用户数据
         if (mapVideo.containsKey("customer") && !TextUtils.isEmpty(mapVideo.get("customer"))) {
             Map<String, String> mapUser = StringManager.getFirstMap(mapVideo.get("customer"));

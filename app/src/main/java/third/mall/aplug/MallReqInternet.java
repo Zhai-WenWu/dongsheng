@@ -35,7 +35,6 @@ public class MallReqInternet extends UtilInternet{
 	
 	/**
 	 * 单独获取标准header头
-	 * @param callback	从callback对象取cookie
 	 * @return
 	 */
 	public Map<String,String> getHeader(Context context){

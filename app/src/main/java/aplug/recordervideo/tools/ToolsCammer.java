@@ -9,6 +9,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -76,8 +77,9 @@ public class ToolsCammer {
         MediaMetadataRetriever media = new MediaMetadataRetriever();
         media.setDataSource(filePath);
         Bitmap bitmap = media.getFrameAtTime();
+        if (bitmap != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            bitmap.setConfig(Bitmap.Config.RGB_565);
         media.release();
-        media = null;
         return bitmap;
     }
 

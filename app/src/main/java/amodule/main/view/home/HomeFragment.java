@@ -48,6 +48,7 @@ import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.HomeTabHScrollView;
 import amodule.main.view.ReplayAndShareView;
 import amodule.main.view.item.HomeAlbumItem;
+import amodule.main.view.item.HomeAnyImgStyleItem;
 import amodule.main.view.item.HomeItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
@@ -185,7 +186,7 @@ public class HomeFragment extends BaseHomeFragment{
                 statisticKey = "other_top_list";
                 adPlayIds = AdPlayIdConfig.MAIN_HOME_ZHISHI_LIST;
             }else if("day".equals(type)){ //每日三餐
-                statisticKey = "other_threeMeals_list";
+                statisticKey = "sc_list";
                 isDayDish = true;
                 adPlayIds = AdPlayIdConfig.COMMEND_THREE_MEALS;
                 adIndexs = new Integer[]{};
@@ -437,6 +438,7 @@ public class HomeFragment extends BaseHomeFragment{
                         //当前只有向上刷新，并且服务端确认可以刷新数据
                         if (compelClearData || (refresh && !TextUtils.isEmpty(listmaps.get(0).get("reset")) && "2".equals(listmaps.get(0).get("reset")))) {
                             mListData.clear();
+                            Log.i("wyj","刷新数据：清集合");
                             isNeedRefresh(true);
                             //强制刷新，重置数据
                             if(!TextUtils.isEmpty(listmaps.get(0).get("backurl")))
@@ -862,6 +864,9 @@ public class HomeFragment extends BaseHomeFragment{
                     break;
                 case AdapterListView.type_threeImage:
                     viewTop= new HomePostItem(mActivity);
+                    break;
+                case AdapterListView.type_anyImage:
+                    viewTop= new HomeAnyImgStyleItem(mActivity);
                     break;
                 case AdapterListView.type_rightImage:
                 case AdapterListView.type_noImage:

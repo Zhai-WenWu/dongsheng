@@ -3,6 +3,8 @@
     <!-- 控件大小 *2.8 -->
     <dimen name="dp__100">-280dp</dimen>
     <dimen name="dp__30">-84dp</dimen>
+    <dimen name="dp__20">-56dp</dimen>
+    <dimen name="dp__18">-50.4dp</dimen>
     <dimen name="dp__15">-42dp</dimen>
     <dimen name="dp__10">-28dp</dimen>
     <dimen name="dp__9.5">-26.6dp</dimen>

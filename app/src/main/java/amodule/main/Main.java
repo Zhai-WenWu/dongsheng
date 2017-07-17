@@ -605,7 +605,7 @@ public class Main extends Activity implements OnClickListener {
             if (allTab.containsKey("MainIndex")) {
                 MainHome mainIndex = (MainHome) allTab.get("MainIndex");
                 mainIndex.saveNowStatictis();
-                XHClick.newHomeStatictis(true, "");
+                XHClick.newHomeStatictis(true, null);
             }
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
             if (allTab.containsKey("MainIndex")) {

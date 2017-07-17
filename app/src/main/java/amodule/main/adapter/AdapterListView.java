@@ -22,7 +22,7 @@ import third.ad.control.AdControlParent;
  * 首页对个类型item
  */
 public class AdapterListView extends BaseAdapter{
-
+    //*********item样式，两个位置使用，1、当前adapter中，2、homefragment中的置顶数据****************
     public final static String type_tagImage = "1";//大图
     public final static String type_rightImage = "2";//右图
     public final static String type_threeImage = "3";//三图

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
@@ -31,7 +32,6 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
-import amodule.article.activity.ArticleDetailActivity;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -75,6 +75,13 @@ public class MainHome extends MainBaseActivity {
         initView();
         initData();
         initModuleData();
+        String logPostTime = AppCommon.getConfigByLocal("logPostTime");
+        if(!TextUtils.isEmpty(logPostTime)){
+            Map<String,String> map=StringManager.getFirstMap(logPostTime);
+            if(map!=null&&map.containsKey("postTime")&&!TextUtils.isEmpty(map.get("postTime"))) {
+                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
+            }
+        }
     }
 
     /**
@@ -257,6 +264,7 @@ public class MainHome extends MainBaseActivity {
             bean.setType(listModule.get(i).get("type"));
             bean.setWebUrl(listModule.get(i).get("webUrl"));
             bean.setIsSelf(listModule.get(i).get("isSelf"));
+            bean.setOpenMode(listModule.get(i).get("openMode"));
             String level = listModule.get(i).get("level");
             if (!TextUtils.isEmpty(level)) {
                 bean.setTwoData(level);//设置二级数据内容

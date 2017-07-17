@@ -165,7 +165,8 @@ public class OfflineDish extends BaseActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,int positon, long arg3) {
 				if(isAddHeadView) positon --; //原因，添加了一个HeadView
-				final int newPositon = positon; 
+				final int newPositon = positon;
+				if(newPositon>=arrayList.size())return true;
 				final Map<String, String> map = arrayList.get(newPositon);
 				new AlertDialog.Builder(OfflineDish.this)
 						.setIcon(android.R.drawable.ic_dialog_alert)

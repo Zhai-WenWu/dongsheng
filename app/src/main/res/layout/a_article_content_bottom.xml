@@ -9,7 +9,6 @@
         android:id="@+id/artilce_repint_source"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
         android:ellipsize="end"
         android:paddingBottom="@dimen/dp_16"
         android:paddingLeft="@dimen/dp_20"

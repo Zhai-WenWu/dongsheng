@@ -187,6 +187,7 @@ public class VideoDetailActivity extends BaseActivity {
         }
         mHaederLayout.onPause();
         Glide.with(this).pauseRequests();
+        ToolsDevice.keyboardControl(false,this,mCommentBar);
     }
 
     @Override
@@ -297,7 +298,7 @@ public class VideoDetailActivity extends BaseActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     //设置触摸收起键盘
-                    case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_DOWN:
                         if (TextUtils.isEmpty(mCommentBar.getEditText().getText().toString()))
                             mCommentBar.setEditTextShow(false);
                         ToolsDevice.keyboardControl(false, VideoDetailActivity.this, mCommentBar.getEditText());
@@ -340,6 +341,8 @@ public class VideoDetailActivity extends BaseActivity {
                             int commentCount = Integer.parseInt(commentNum);
                             commentMap.put("commentNum", "" + ++commentCount);
                             commentNum = String.valueOf(commentCount);
+                            //刷新头部评论
+                            mHaederLayout.setupCommentNum(commentNum);
                             Map<String, String> dataMap = StringManager.getFirstMap(commentMap.get("data"));
                             ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get("list"));
                             list.add(0, newData);
@@ -512,7 +515,7 @@ public class VideoDetailActivity extends BaseActivity {
                         }
                     }
                     permissionMap = StringManager.getFirstMap(obj);
-                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPagePermission = analyzePagePermissionData(pagePermission);
@@ -526,13 +529,17 @@ public class VideoDetailActivity extends BaseActivity {
 
             @Override
             public void loaded(int flag, String url, Object object) {
-                if(!hasPagePermission || !contiunRefresh) {
-                    loadManager.hideProgressBar();
-                    return;
-                }
                 //没有数据直接退出
                 if(TextUtils.isEmpty((String) object)){
                     VideoDetailActivity.this.finish();
+                    return;
+                }
+                //无论如何都刷新用户数据
+                if (!onlyUser)
+                    mHaederLayout.setUserData(StringManager.getFirstMap(object));
+                //判断权限是否更新
+                if(!hasPagePermission || !contiunRefresh) {
+                    loadManager.hideProgressBar();
                     return;
                 }
                 if (!onlyUser)
@@ -747,7 +754,7 @@ public class VideoDetailActivity extends BaseActivity {
         }
         if (commentMap != null && allDataListMap.indexOf(commentMap) < 0)
             allDataListMap.add(commentMap);
-        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
+//        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
         detailAdapter.notifyDataSetChanged();
     }
 
