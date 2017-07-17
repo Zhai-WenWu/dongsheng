@@ -243,6 +243,7 @@ public class ArticleAdContrler {
         });
         final View adTag = adView.findViewById(R.id.ad_tag);
         if(adTag != null){
+            adTag.setVisibility(View.VISIBLE);
             adTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
