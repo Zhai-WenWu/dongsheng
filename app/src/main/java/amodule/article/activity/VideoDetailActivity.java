@@ -341,6 +341,8 @@ public class VideoDetailActivity extends BaseActivity {
                             int commentCount = Integer.parseInt(commentNum);
                             commentMap.put("commentNum", "" + ++commentCount);
                             commentNum = String.valueOf(commentCount);
+                            //刷新头部评论
+                            mHaederLayout.setupCommentNum(commentNum);
                             Map<String, String> dataMap = StringManager.getFirstMap(commentMap.get("data"));
                             ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get("list"));
                             list.add(0, newData);

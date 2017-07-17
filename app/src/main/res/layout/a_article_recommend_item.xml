@@ -110,7 +110,7 @@
                 android:id="@+id/rec_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="@integer/maxEms"
+                android:maxLines="2"
                 android:layout_marginBottom="@dimen/dp_9"
                 android:lineSpacingExtra="@dimen/dp_4"
                 android:textColor="@color/c_black_text"
