@@ -32,7 +32,7 @@ public class DishActivityViewControlNew {
 
     private Activity mAct;
     private RelativeLayout bar_title_1;
-    private XHWebView mXhWebView;
+    private DishWebView mXhWebView;
     private XhScrollView mScrollView;
     private View view_oneImage;
     private RelativeLayout dishVidioLayout;
@@ -77,7 +77,7 @@ public class DishActivityViewControlNew {
 
         //处理标题
         dishTitleViewControl= new DishTitleViewControlNew(mAct);
-        dishTitleViewControl.initView(mAct);
+        dishTitleViewControl.initView(mAct,mXhWebView);
         dishTitleViewControl.setstate(state);
         mFootControl = new DishFootControl(mAct);
     }
@@ -106,7 +106,7 @@ public class DishActivityViewControlNew {
         layoutParams = (RelativeLayout.LayoutParams) title_state_bar.getLayoutParams();
         layoutParams.height = statusBarHeight;
 
-        mXhWebView = (XHWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
+        mXhWebView = (DishWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
         //头部view处理
         dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
         videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
@@ -185,8 +185,8 @@ public class DishActivityViewControlNew {
      */
     public void analyzeDishInfoData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         dishInfoMap = list.get(0);
-        String htmlUrl = dishInfoMap.get("htmlUrl");
-        mXhWebView.loadUrl(htmlUrl);
+        mXhWebView.loadDishData(dishInfoMap.get("code"));
+
         isHasVideo = dishInfoMap.get("type").equals("2");
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
 
@@ -223,7 +223,7 @@ public class DishActivityViewControlNew {
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
         },permissionMap);
-        mFootControl.init(dishInfoMap.get("likeNum"));
+        mFootControl.init(dishInfoMap.get("allClick"));
         mScrollView.setVisibility(View.VISIBLE);
     }
 

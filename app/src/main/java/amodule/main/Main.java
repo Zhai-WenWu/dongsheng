@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
@@ -192,6 +191,7 @@ public class Main extends Activity implements OnClickListener {
                 boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
                 if (!isShow)
                     showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？");
+                AppCommon.setDishMould();
             }
         }
 

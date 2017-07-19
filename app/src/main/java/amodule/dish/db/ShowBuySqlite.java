@@ -1,16 +1,17 @@
 package amodule.dish.db;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import acore.logic.AppCommon;
 import acore.tools.ImgManager;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 public class ShowBuySqlite extends SQLiteOpenHelper{
 	public static final int PageSize = 10;// 分页时，每页的数据总数
@@ -91,7 +92,7 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 	
 	/**
 	 * 查询数据库
-	 * @param id
+	 * @param code
 	 * @return
 	 */
 	public String selectByCode(String code) {
@@ -100,13 +101,14 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 		try {
 			writableDatabase = getWritableDatabase();
 			cur = writableDatabase.query(TB_MAIN_ENAME, null,
-					ShowBuyData.bd_code+"=" +  code , null, null, null, null);// 查询并获得游标
+					ShowBuyData.bd_code+"=" + code , null, null, null, null);// 查询并获得游标
 			String json="";
 			if (cur.moveToFirst()) {// 判断游标是否为空
 				json = cur.getString(cur.getColumnIndex(ShowBuyData.bd_json));
 			}
 			return json;
-		}finally{
+		}
+		finally{
 			close(cur, writableDatabase);
 		}
 	}

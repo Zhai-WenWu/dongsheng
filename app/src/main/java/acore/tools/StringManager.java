@@ -238,6 +238,7 @@ public class StringManager extends UtilString {
     //菜谱详情页
     public final static String api_getDishInfoNew = apiUrl + urlSection.get("caipu6") + "info";
     public final static String api_getDishTopInfo = apiUrl + "main7/dish/topInfo";
+    public final static String api_getDishMould = apiUrl + "main7/dish/layout";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶

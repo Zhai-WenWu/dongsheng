@@ -161,7 +161,8 @@ public class DetailDishNew extends BaseActivity {
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case LOAD_DISH://读取历史记录回来
-                        if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
+                        Log.i("detailDish","load_dish dishJson:" + dishJson);
+                        if (dishJson.length() > 10) {
                             imgLevel = LoadImage.SAVE_LONG;
                             analyzeHistoryData();
                         } else
@@ -186,6 +187,7 @@ public class DetailDishNew extends BaseActivity {
             public void run() {
                 //获取离线菜谱的 json 数据
                 dishJson = DataOperate.buyBurden(XHApplication.in(), code);
+
                 dishActivityViewControl.setDishJson(dishJson);
                 //获取手机中的离线菜谱数量
                 AppCommon.buyBurdenNum = getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
@@ -259,7 +261,7 @@ public class DetailDishNew extends BaseActivity {
      */
     private void analyzeHistoryData() {
         ArrayList<Map<String, String>> listmaps = getListMapByJson(dishJson);
-        if (listmaps.size() < 1){
+        if (listmaps.size() == 0){
             return;
         }
         dishActivityViewControl.analyzeDishInfoData(listmaps, new HashMap<String, String>());

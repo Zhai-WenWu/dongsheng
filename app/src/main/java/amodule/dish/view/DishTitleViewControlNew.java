@@ -53,11 +53,11 @@ import static com.xiangha.R.id.share_layout;
 /**
  * Created by Administrator on 2016/9/21.
  */
-
 public class DishTitleViewControlNew implements View.OnClickListener{
     private Context context;
+    private DishWebView mDishWebView;
     private ImageView offImg, favImg;
-    private TextView offText, favText;
+    private TextView offText, favText,titleView;
     private Activity detailDish;
     private String state,dishState;
     private Map<String, String> dishInfoMap;//dishInfo数据
@@ -69,14 +69,16 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private boolean isHasVideo;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
+
     public DishTitleViewControlNew(Context context){
         this.context= context;
     }
 
-    public void initView(Activity detailDish) {
+    public void initView(Activity detailDish,DishWebView xhWebView) {
         this.detailDish= detailDish;
+        mDishWebView = xhWebView;
         //处理标题
-        TextView title = (TextView)detailDish.findViewById(R.id.title);
+        titleView = (TextView)detailDish.findViewById(R.id.title);
         detailDish.findViewById(back).setOnClickListener(this);
         detailDish.findViewById(off_layout).setOnClickListener(this);
         detailDish.findViewById(fav_layout).setOnClickListener(this);
@@ -267,25 +269,25 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         String mType, mTitle, mClickUrl, mContent, mImgUrl,isVideo;
         //登录并是自己的菜谱贴
         if (isAuthor) {
-            mTitle = "【香哈菜谱】我上传了" + dishInfoMap.get("title") + "的做法";
+            mTitle = "【香哈菜谱】我上传了" + dishInfoMap.get("name") + "的做法";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
-            mContent = "我在香哈做出了史上最好吃的" + dishInfoMap.get("title") + "，进来请你免费享用！";
-            mImgUrl = dishInfoMap.get("coverImg");
+            mContent = "我在香哈做出了史上最好吃的" + dishInfoMap.get("name") + "，进来请你免费享用！";
+            mImgUrl = dishInfoMap.get("img");
             mType = BarShare.IMG_TYPE_WEB;
             isVideo="1";
             //不是自己的菜谱贴
         } else if (isHasVideo) {
-            mTitle = "【香哈菜谱】看了" + dishInfoMap.get("title") + "的教学视频，我已经学会了，味道超赞！";
+            mTitle = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
             mContent = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ ";
-            mImgUrl = dishInfoMap.get("coverImg");
+            mImgUrl = dishInfoMap.get("img");
             mType = BarShare.IMG_TYPE_WEB;
             isVideo="2";
         } else {
-            mTitle = "【香哈菜谱】" + dishInfoMap.get("title") + "的做法";
+            mTitle = "【香哈菜谱】" + dishInfoMap.get("name") + "的做法";
             mClickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
-            mContent = "我又学会了一道" + dishInfoMap.get("title") + "，太棒了，强烈推荐你也用香哈学做菜！";
-            mImgUrl = dishInfoMap.get("coverImg");
+            mContent = "我又学会了一道" + dishInfoMap.get("name") + "，太棒了，强烈推荐你也用香哈学做菜！";
+            mImgUrl = dishInfoMap.get("img");
             mType = BarShare.IMG_TYPE_WEB;
             isVideo="1";
         }
@@ -355,6 +357,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
             } else {
                 Log.i("DetailDish","dishJson:" + dishJson);
                 DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
+                mDishWebView.saveDishData();
                 offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
                 offText.setText("已下载");
                 Tools.showToast(detailDish.getApplicationContext(), "已成功下载到离线清单中");
@@ -397,14 +400,14 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                     if (isShow) {
                                         mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？");
                                         if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
-                                            String title = "【香哈菜谱】看了" + dishInfoMap.get("title") + "的教学视频，我已经学会了，味道超赞！";
+                                            String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
                                             String clickUrl = StringManager.wwwUrl + "video/caipu/" + dishInfoMap.get("code");
                                             ;
                                             String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " + clickUrl;
 //                                            Bitmap bitmap = mVideoPlayerController.getVideoImageView().getBitmap();
 //                                            String imgUrl = ShareTools.getBarShare(DetailDish.this).saveDrawable(bitmap, FileManager.save_cache + "/share_" + currentTimeMillis() + ".png");
                                             String type = BarShare.IMG_TYPE_WEB;
-                                            String imgUrl = dishInfoMap.get("coverImg");
+                                            String imgUrl = dishInfoMap.get("img");
                                             if (imgUrl == null) {
                                                 type = ShareTools.IMG_TYPE_RES;
                                                 imgUrl = "" + R.drawable.umen_share_launch;
@@ -412,10 +415,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                             mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
                                         } else {
                                             String type = BarShare.IMG_TYPE_WEB;
-                                            String title = "【香哈菜谱】" +  dishInfoMap.get("title") + "的做法";
+                                            String title = "【香哈菜谱】" +  dishInfoMap.get("name") + "的做法";
                                             String clickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
-                                            String content = "我又学会了一道" + dishInfoMap.get("title") + "，太棒了，强烈推荐你也用香哈学做菜！";
-                                            String imgUrl = dishInfoMap.get("coverImg");
+                                            String content = "我又学会了一道" + dishInfoMap.get("name") + "，太棒了，强烈推荐你也用香哈学做菜！";
+                                            String imgUrl = dishInfoMap.get("img");
                                             mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
                                         }
                                         XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");

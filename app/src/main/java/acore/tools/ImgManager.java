@@ -96,7 +96,6 @@ public class ImgManager extends UtilImage{
 	 * 将Bitmap转换成InputStream
 	 * 
 	 * @param bitmap
-	 * @param  最大kb值
 	 * @return
 	 */
 	public static InputStream bitmapToInputStream(Bitmap bitmap, int kb) {

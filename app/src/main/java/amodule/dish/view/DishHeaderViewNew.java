@@ -142,7 +142,7 @@ public class DishHeaderViewNew extends LinearLayout {
 
         try {
             String selfVideo = videoMap.get("video");
-            String img = videoMap.get("coverImg");
+            String img = videoMap.get("img");
             String type = videoMap.get("type");
 
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
