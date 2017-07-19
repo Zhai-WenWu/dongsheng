@@ -18,6 +18,7 @@ import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
 import acore.tools.Tools;
+import amodule.main.Main;
 import aplug.basic.ReqInternet;
 import third.mall.MainMall;
 import third.mall.alipay.MallAlipay;
@@ -224,6 +225,7 @@ public class MallCommon {
 					//保存到sp中
 					num_shopcat= Integer.parseInt(num);
 					if(num_shopcat>0){
+						Main.setNewMsgNum(1,MallCommon.num_shopcat);
 						if(num_shopcat>9){
 							view.setVisibility(View.GONE);
 							view_two.setVisibility(View.VISIBLE);
@@ -239,6 +241,7 @@ public class MallCommon {
 						}
 //						Main.setNewMsgNum(Integer.parseInt(CommonBottomView.BOTTOM_TWO),num_shopcat);
 					}else{
+						Main.setNewMsgNum(1,0);
 						view.setVisibility(View.GONE);
 						view_two.setVisibility(View.GONE);
 					}
