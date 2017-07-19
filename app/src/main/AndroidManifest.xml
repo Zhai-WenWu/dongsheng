@@ -39,25 +39,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- umeng dplus -->
 
-
-    <!-- 百度AD -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <!-- 以下为可选权限 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS"/>
-    <!-- 百度AD end -->
-
-
     <!-- 登录 and 分享 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -182,6 +163,15 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!--mta统计 start-->
 
+    <!--hotfix start-->
+    <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 外部存储读权限，调试工具加载本地补丁需要 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!--hotfix end-->
+
     <application
         android:name="acore.override.XHApplication"
         android:allowBackup="false"
@@ -235,6 +225,14 @@
         <!-- 小米账号 -->
         <!-- <activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" /> -->
         <!-- main start -->
+        <activity
+            android:name="com.xiangha.Welcome"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -285,12 +283,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="com.xiangha.Welcome"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustPan"/>
         <!-- main end -->
         <activity
             android:name="third.fanli.GoodsListActivity"
@@ -322,7 +314,7 @@
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.dish.activity.ListDish"
@@ -635,7 +627,7 @@
             android:name="amodule.search.avtivity.HomeSearch"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
         <!-- global search end -->
 
@@ -1388,6 +1380,18 @@
         <meta-data android:name="Mob-AppKey" android:value="10e22f093f255"/>
         <meta-data android:name="Mob-AppSecret" android:value="bb71787a9ec63116377a83c3ecac048a"/>
         <!--mobssms end-->
+
+        <!--hotfix start-->
+        <meta-data
+            android:name="com.taobao.android.hotfix.IDSECRET"
+            android:value="24532418-1" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.APPSECRET"
+            android:value="d3cf812ac75b716a532e0640fcd1e90e" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.RSASECRET"
+            android:value="MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDSFAsNRNXNYTRGfo7QCPYKsn5Hsg7C4vbOQySJa+HGh8L05uFCpDgsT5VLw2CekI4lMUI8W/EsZdHqN+7VGo4oIjj5uALLTUESsxyD4T/1/9XxQhDWgDQ2SYN3KHqUpJnFzo0IuW03z6L80JWHxhx64y/1vz64+LDXzLXW9EG1SDiWALfNWCfh/us/ooPQE0JdYRkls+GDw6w+zUhJeOTybAM+GDsIbvt8PCew9N/avFDxfd7s8fM8I/1GhlIpdcsumzjXGsXgFCpg6LYjSh+prlD0qGzpYwiSE8Pi7heq4mvNEfrND3jxU+IoXNZmrOtBX3IpSWLj+lk4RgpklU89AgMBAAECggEABzPmuRq+Fd+aUjxumxVjkjRSfhTNysLLYYEN1KRdRlhLR+hOmuFUh7hmzwUw397m8MGCmt0wJKyNCPHH/4h8jUW3HGDBv8SzUXfQp3jmn4GZDT+Noj0dDStyFXjO0x/dodmWHlF1PC+jT/W62r/hJBl8AHoBJYhpT8zWAzu2sQdr8q0ugbzT4VOtmfyK446dJTtaKHXUJVbhsm1CQQPenJaq9vzKTDzTu+FdV8eHNKixP/2tFKNPOEsemj3A4woLzCJhdImNGyc/MUAe/PcP+ZdSV6TrtuAIFu0o4gB8YcTQ1bv7DPVzB16OYTAi2dd5wiFnIk+k2aFcDepTDZUlYQKBgQD2d7HFLEGpeH3hSsKE6VjNUFmeveZhlQkZGRpbqwTXAlRo68jVLsb/W/Fd1gwNsPUmxh8Qs0hHNMHabHTrCuTBaROluuSSy74Wi6fmhONA82hJ/KyHhEXgwX1TeWviMeqPVcqHjftBtNY/WghUzPSE7HBlf1Xo0urg3bcwJ89wSQKBgQDaNA3ff43vhtWVN4Hna6CD4RwOFGhgA1jRqNZHY8P2MDPohD1AIuYUbS7210dFNfrmMIFumjsP/Yv1zvnrMAFkNhJjROJGI60xvWf5w08t7r+2Mkk2pmyutlr9UyLrgM6MxDPg97O3/1uZfi3EBiToB1RNhb8qK7IymPLFvZrPVQKBgQDnYC6O/6EUy3zBB0HdLIKlHA1GLNgeO58y5JIOBFqizhkX9mGvYB6Ik3Pft5XRNJKwN8XqE6SC1FA4ESEhljRyLYa4St9Rv9tPpwOUMKR20QrSilYdUluXR42z04Un79xXex6Kawu4/18yUf8IPPA/6QcLAaNQ0tCVEQ9sMbNXoQKBgDgPw7i2hvsRg3KRDlks99KqVZDwgViZw4oqfNNeuIxaGhwVTb9auA5rdvOIoBESK2JU+Aw4qBAVro37HY7liJX8poDGw/QNWoQ7C6nKGl/MxYjEJrdZzvacd4g6gfBL6cWU61dTjOMrQpePKacBhR3wNCKuyEzHaUNCtK1FZ675AoGACZxGaGBEC7irrz1ERda0LKPOrCnebJL9hKM3x6IOPs/ugwM3n0wpQGjYwNGZldIwQZeimvveCD7Xin1kVFM4VjUj7kq6ykco5Jk/w8MDtZMJABk+SgaFDMMwuBhjC7cH37EGWXgNMUYG+JkE9Mroq1ocjj4r37tnci3ETxMN0PU=" />
+        <!--hotfix end-->
 
     </application>
 

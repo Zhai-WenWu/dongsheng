@@ -40,7 +40,6 @@ import aplug.service.alarm.PushAlarm;
 import aplug.service.base.ServiceManager;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.TencenApiAdTools;
-import third.andfix.AndFixTools;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
 import third.video.VideoApplication;
@@ -138,7 +137,6 @@ public class MainInitDataControl {
 
         ServiceManager.startProtectService(act);
 
-        AndFixTools.getAndFix().doGetFixFile(act);
         AppCommon.saveUrlRuleFile(act);
         //请求本地推送data
         new XGLocalPushServer(act).getNousLocalPushData();
