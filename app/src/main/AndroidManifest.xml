@@ -579,6 +579,13 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
+            android:name="amodule.quan.activity.FollowSubject"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
             android:name="amodule.quan.activity.CircleFind"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

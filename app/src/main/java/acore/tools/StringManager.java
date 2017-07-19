@@ -180,6 +180,7 @@ public class StringManager extends UtilString {
     public final static String api_circlegetInfo = apiUrl + "main6/tie/getInfo";
     public final static String api_circleSafaList = apiUrl + "main6/tie/safaList";
     public final static String api_topCustomer = apiUrl + "main6/tie/topCustomer";
+    public final static String api_getFollowSubjectList = apiUrl + "main6/tie/getDishList"; //跟帖列表
     //成员操作
     public final static String api_circleCustomerPower = apiUrl + urlSection.get("quan6") + "customerPower";
 

@@ -221,7 +221,7 @@ public class CircleFragment extends Fragment {
 
     private void init() {
         //更新ListView的空header的高度
-        mAdapter = new AdapterCircle(mActivity, mListview, mListData, (mPlateData!=null&&!TextUtils.isEmpty(mPlateData.getCid()))?mPlateData.getCid():"");
+        mAdapter = new AdapterCircle(mActivity, mListview, mListData);
         mAdapter.setModuleName((mPlateData!=null&&!TextUtils.isEmpty(mPlateData.getName()))?mPlateData.getName():"");
         mAdapter.setCircleName(mCircleName);
         if (!LoadOver) {
