@@ -546,8 +546,7 @@ public class VideoDetailActivity extends BaseActivity {
                     resetData();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysVideoData(onlyUser, StringManager.getFirstMap(object),detailPermissionMap);
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 if (!onlyUser)
                     requestRelateData(false);//请求
 
@@ -644,8 +643,7 @@ public class VideoDetailActivity extends BaseActivity {
                     detailAdapter.notifyDataSetChanged();
 //                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
 //                    listView.removeFooterView(loadManager.getSingleLoadMore(listView));
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 Map<String,String> commonPermission = StringManager.getFirstMap(detailPermissionMap.get("video"));
                 commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
                 if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
@@ -733,11 +731,9 @@ public class VideoDetailActivity extends BaseActivity {
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
-
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysForumData(isRefresh, object);
-                } else
-                    toastFaildRes(flag, true, object);
+                }
             }
         });
     }
@@ -853,8 +849,6 @@ public class VideoDetailActivity extends BaseActivity {
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
                                 Main.allMain.sendBroadcast(broadIntent);
                             }
-                        } else {
-                            toastFaildRes(flag, true, obj);
                         }
                     }
                 });

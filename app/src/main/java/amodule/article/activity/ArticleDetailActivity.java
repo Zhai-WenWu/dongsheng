@@ -588,8 +588,7 @@ public class ArticleDetailActivity extends BaseActivity {
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysForumData(isRefresh, object);
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 if (page < 1)
                     requestRelateData();
             }
@@ -632,8 +631,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     detailAdapter.notifyDataSetChanged();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                     listView.removeFooterView(loadManager.getSingleLoadMore(listView));
-                } else
-                    toastFaildRes(flag, true, object);
+                }
             }
         });
     }
@@ -788,8 +786,6 @@ public class ArticleDetailActivity extends BaseActivity {
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
                                 Main.allMain.sendBroadcast(broadIntent);
                             }
-                        } else {
-                            toastFaildRes(flag, true, obj);
                         }
                     }
                 });
