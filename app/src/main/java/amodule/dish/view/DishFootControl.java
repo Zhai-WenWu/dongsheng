@@ -43,13 +43,16 @@ public class DishFootControl implements View.OnClickListener{
     private TextView mRecommentNum,mRelevantTv,mHoverNum,mQuizTv;
     private ImageView mGoodShow,mGoodImg;
 
-    private String code;
+    private String code,mDishName;
 
-    public DishFootControl(Activity act){
+    public DishFootControl(Activity act,String code){
         mAct = act;
+        this.code = code;
     }
 
-    public void init(String hoverNum){
+    public void init(String hoverNum,String dishName){
+        mDishName = dishName;
+
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan);
 
@@ -203,7 +206,9 @@ public class DishFootControl implements View.OnClickListener{
                 break;
             case R.id.a_dish_detail_new_relevantTv: //晒我做的这道菜
                 Intent showIntent = new Intent(mAct, UploadSubjectNew.class);
+                showIntent.putExtra("title",mDishName);
                 showIntent.putExtra("dishCode",code);
+                showIntent.putExtra("skip", true);
                 mAct.startActivity(showIntent);
                 break;
             case R.id.a_dish_detail_new_footer_hover_tv: //提问作者

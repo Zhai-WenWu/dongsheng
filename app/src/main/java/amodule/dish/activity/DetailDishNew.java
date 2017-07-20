@@ -200,8 +200,8 @@ public class DetailDishNew extends BaseActivity {
      * 请求网络
      */
     private void setRequest() {
-        String params = "?code=" + code;
-        ReqEncyptInternet.in().doGet(StringManager.api_getDishTopInfo + params, new InternetCallback(this) {
+        String params = "code=" + code;
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
@@ -245,7 +245,7 @@ public class DetailDishNew extends BaseActivity {
             }
         });
 
-        ReqEncyptInternet.in().doGet(StringManager.api_getDishInfo + params, new InternetCallback(DetailDishNew.this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishInfo,params, new InternetCallback(DetailDishNew.this) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
@@ -316,7 +316,7 @@ public class DetailDishNew extends BaseActivity {
                 jsonObject.put("name", dishInfo.get("name"));
                 jsonObject.put("img", dishInfo.get("img"));
                 jsonObject.put("code", code);
-                jsonObject.put("isFine", dishInfo.get("rank"));
+                jsonObject.put("isFine", dishInfo.get("isFine"));
                 jsonObject.put("favorites", dishInfo.get("favorites"));
                 jsonObject.put("allClick", dishInfo.get("allClick"));
                 jsonObject.put("exclusive", dishInfo.get("exclusive"));

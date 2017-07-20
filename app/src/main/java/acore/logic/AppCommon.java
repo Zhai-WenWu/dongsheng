@@ -1021,7 +1021,7 @@ public class AppCommon {
     }
 
     public static void setDishMould(){
-        ReqEncyptInternet.in().doGet(StringManager.api_getDishMould, new InternetCallback(Main.allMain.getApplicationContext()) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishMould,"", new InternetCallback(Main.allMain.getApplicationContext()) {
             @Override
             public void loaded(int i, String s, final Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){

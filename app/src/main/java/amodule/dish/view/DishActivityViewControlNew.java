@@ -79,7 +79,7 @@ public class DishActivityViewControlNew {
         dishTitleViewControl= new DishTitleViewControlNew(mAct);
         dishTitleViewControl.initView(mAct,mXhWebView);
         dishTitleViewControl.setstate(state);
-        mFootControl = new DishFootControl(mAct);
+        mFootControl = new DishFootControl(mAct,code);
     }
 
     private void initView(){
@@ -223,7 +223,7 @@ public class DishActivityViewControlNew {
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
         },permissionMap);
-        mFootControl.init(dishInfoMap.get("allClick"));
+        mFootControl.init(dishInfoMap.get("allClick"),dishInfoMap.get("name"));
         mScrollView.setVisibility(View.VISIBLE);
     }
 

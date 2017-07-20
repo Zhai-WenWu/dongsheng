@@ -1,7 +1,6 @@
 package amodule.quan.tool;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,8 +26,8 @@ public class UploadSubjectLocationControl {
 	//--------- end 定位------------
 	private boolean isLocation = false,isOneShowLocation=true;
 		
-	public UploadSubjectLocationControl(UploadSubjectNew upload){
-		mLocationSys = upload.mLocationSys;
+	public UploadSubjectLocationControl(UploadSubjectNew upload,LocationSys locationSys){
+		mLocationSys = locationSys;
 		upload.findViewById(R.id.ll_location).setOnClickListener(upload);
 		//获取地理信息
 		iv_location = (ImageView)upload.findViewById(R.id.iv_location);

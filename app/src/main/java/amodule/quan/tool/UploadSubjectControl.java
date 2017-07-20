@@ -132,6 +132,7 @@ public class UploadSubjectControl extends UploadHelper{
 		pamras.put("videoSImg", videoSImg);
 		if(!TextUtils.isEmpty(subjectData.getDishCode())){
 			pamras.put("dishCode", subjectData.getDishCode());
+			pamras.put("fraction", String.valueOf(subjectData.getScoreNum()));
 		}
 		if(SubjectData.TYPE_REPLY.equals(subjectData.getType())){
 			pamras.put("code", subjectData.getCode());

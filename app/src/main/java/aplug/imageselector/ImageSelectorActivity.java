@@ -50,7 +50,6 @@ import aplug.imageselector.bean.Folder;
 import aplug.imageselector.bean.Image;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import xh.basic.tool.UtilLog;
-import xh.windowview.XhDialog;
 
 /**
  * @author Eva
@@ -104,6 +103,11 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	private int mode;
 	private int loaderId = 0;
 
+	/**
+	 * 当没有选择图片的时候是否可以退出这个界面
+	 */
+	private boolean isCanBackOnNoChoose = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -136,6 +140,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		}
 	}
 	private void initView() {
+		if(!isCanBackOnNoChoose) findViewById(R.id.btn_back).setVisibility(View.GONE);
+
 		// 初始化，先隐藏当前timeline
 		mTimeLineText = (TextView) findViewById(R.id.timeline_area);
 		mTimeLineText.setVisibility(View.GONE);
@@ -175,6 +181,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	// 初始化数据
 	private void initData() {
 		Intent intent = getIntent();
+		isCanBackOnNoChoose = intent.getBooleanExtra("isCanBackOnNoChoose",true);
 		// 选择图片数量
 		mDefaultCount = intent.getIntExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT , 1);
 		// 图片选择模式
@@ -633,6 +640,9 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 
 	@Override
 	public void onBackPressed() {
+		if(!isCanBackOnNoChoose)
+			return;
+
 		if (loaderId != 0) {
 			loaderId = 0;
 			mTitle.setText("全部图片");

@@ -138,7 +138,7 @@ public class DishExplainView extends ItemBaseView {
         }
         intent.putExtra("title", mapData.get("name"));
         intent.putExtra("dishCode", mapData.get("code"));
-        intent.putExtra("subjectCode", mapData.get("subjectCode"));
+//        intent.putExtra("subjectCode", mapData.get("subjectCode"));
         intent.putExtra("skip", true);
         intent.setClass(context, UploadSubjectNew.class);
 //        context.startActivity(intent);
