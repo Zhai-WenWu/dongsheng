@@ -164,7 +164,7 @@ public abstract class MallInternetCallback extends InterCallback {
 	 * @param returnObj
 	 * @return
 	 */
-	public String toastFaildRes(int flag, boolean showNetError, Object returnObj) {
+	private String toastFaildRes(int flag, boolean showNetError, Object returnObj) {
 		String returnRes = returnObj.toString();
 		if (returnRes.length() > 0) {
 			if (showNetError)

@@ -119,8 +119,6 @@ public class CircleFind extends BaseActivity{
 					// 如果是重新加载的,选中第一个tab.
 					if (isForward)
 						mLvSur.setSelection(1);
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 //				if (everyPage == 0)
 //					everyPage = loadCount;

@@ -405,8 +405,6 @@ public class DishTitleViewControl implements View.OnClickListener{
                                         XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");
                                     }
                                 }
-                            } else {
-                                toastFaildRes(flag, true, returnObj);
                             }
                         }
                     });

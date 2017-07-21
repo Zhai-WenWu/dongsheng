@@ -333,8 +333,6 @@ public class ListDish extends BaseActivity {
                         arrayList.add(map);
                     }
                     adapter.notifyDataSetChanged();
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 if (everyPage == 0) everyPage = loadPage;
                 currentPage = loadManager.changeMoreBtn(flag, everyPage, loadPage, currentPage, arrayList.size() == 0);

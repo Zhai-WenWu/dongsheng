@@ -550,8 +550,6 @@ public class HomeFragment extends BaseHomeFragment{
                         }
 
                     }
-                }else{
-                     toastFaildRes(flag, true, object);
                 }
                 mLoadManager.hideProgressBar();
                 mLoadManager.changeMoreBtn(mListview, flag, LoadManager.FOOTTIME_PAGE, refresh?mListData.size():loadCount, 0, refresh);

@@ -45,6 +45,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import acore.dialogManager.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import aplug.recordervideo.tools.SortComparator;
@@ -54,6 +55,16 @@ import xh.basic.tool.UtilLog;
 @SuppressLint("SimpleDateFormat")
 public class Tools {
 
+    /**
+     * 是否是debug
+     * @param context
+     * @return
+     */
+    public static boolean isDebug(Context context){
+        String versoinName = VersionOp.getVerName(context);
+        String[] temp = versoinName.split("\\.");
+        return temp.length != 3;
+    }
 
     /**
      * 获取指定格式的时间(注意ms数不能溢出)

@@ -180,8 +180,6 @@ public class ZhishiResultView extends RelativeLayout {
                             nousAdapter.notifyDataSetChanged();
                         }
                     }
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 hideProgresBar();
                 //如果没有数据显示提示

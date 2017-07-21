@@ -173,8 +173,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
                         });
                     }
                     list.clear();
-                } else
-                    toastFaildRes(flag, true, returnObj);
+                }
                 mActivity.loadManager.hideProgressBar();
             }
         });

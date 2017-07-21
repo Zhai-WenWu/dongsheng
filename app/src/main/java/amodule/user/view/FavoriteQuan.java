@@ -210,8 +210,6 @@ public class FavoriteQuan {
 					// 如果是重新加载的,选中第一个tab.
 					if (isForward)
 						list_quan.setSelection(1);
-				} else{
-					toastFaildRes(flag,true,returnObj);
 //					viewquan_refresh_img.clearAnimation();
 				}
 				//判断有无数据

@@ -242,10 +242,6 @@ public abstract class InternetCallback extends InterCallback {
 		if (!header.containsKey("Charset"))
 			header.put("Charset", XHConf.net_encode);
 
-		//webp格式
-//		if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-//			header.put("Accept", "image/webp");
-//		}
 		return super.getReqHeader(header, url, params);
 	}
 
@@ -264,7 +260,7 @@ public abstract class InternetCallback extends InterCallback {
 	 * @param returnObj
 	 * @return
 	 */
-	public String toastFaildRes(int flag, boolean showNetError, Object returnObj) {
+	private String toastFaildRes(int flag, boolean showNetError, Object returnObj) {
 		String returnRes = returnObj.toString();
 		if (returnRes.length() > 0) {
 			if (showNetError)

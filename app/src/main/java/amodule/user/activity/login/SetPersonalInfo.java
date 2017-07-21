@@ -316,9 +316,6 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
                             showCover(img);
                         }
                     }
-
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
             }
         });

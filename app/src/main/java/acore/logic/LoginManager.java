@@ -314,8 +314,6 @@ public class LoginManager {
                                 ((AccoutActivity) mAct).getData();
                         }
                     }
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 mAct.loadManager.hideProgressBar();
             }

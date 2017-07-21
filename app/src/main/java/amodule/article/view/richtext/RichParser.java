@@ -33,14 +33,15 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-//import android.util.Log;
+import android.util.Log;
 
 public class RichParser {
     public static Spanned fromHtml(String source) {
 //        Log.i("tzy", "source = " + source);
         String sourceAfter = source.replaceAll("&lt;div align=\"center\"&gt;", "<center>")
                 .replaceAll("&lt;div style=\"text-align:center;\"&gt;", "<center>")
-                .replaceAll("&lt;/div&gt;", "</center>");
+                .replaceAll("&lt;/div&gt;", "</center><br>")
+                .replaceAll("<br><br></center>", "<br></center>");
 //        Log.i("tzy", "sourceAfter = " + sourceAfter);
         return Html.fromHtml(sourceAfter, null, new RichTagHandler());
     }
@@ -49,6 +50,21 @@ public class RichParser {
         StringBuilder out = new StringBuilder();
         withinHtml(out, text);
         return tidy(out.toString());
+    }
+
+    /**
+     * 输出方法
+     * @param html
+     * @return
+     */
+    private static String tidy(String html) {
+        return html.replaceAll("</ul>(<br>)?", "</ul>")
+                .replaceAll("</blockquote>(<br>)?", "</blockquote>")
+                .replaceAll("<center>", "&lt;div style=\"text-align:center;\"&gt;")
+                //先处理标签内换行问题
+                .replaceAll("<br></center>", "<br><br></center>")
+                //在处理标签外换行问题
+                .replaceAll("</center><br>", "&lt;/div&gt;");
     }
 
     private static void withinHtml(StringBuilder out, Spanned text) {
@@ -302,10 +318,4 @@ public class RichParser {
         }
     }
 
-    private static String tidy(String html) {
-        return html.replaceAll("</ul>(<br>)?", "</ul>")
-                .replaceAll("</blockquote>(<br>)?", "</blockquote>")
-                .replaceAll("<center>", "&lt;div style=\"text-align:center;\"&gt;")
-                .replaceAll("</center>", "&lt;/div&gt;");
-    }
 }

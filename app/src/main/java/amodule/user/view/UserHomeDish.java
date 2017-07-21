@@ -320,8 +320,6 @@ public class UserHomeDish extends TabContentView {
                     isBlankSpace = false;
                     adapter.notifyDataSetChanged();
                     setHeadViewHeight();
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 if (everyPage == 0)
                     everyPage = loadPage;

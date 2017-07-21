@@ -202,11 +202,9 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 				String url =StringManager.api_addJingHua+"?code="+code;
 				QuanRecommend.this.finish();
 				ReqInternet.in().doGet(url, new InternetCallback(QuanRecommend.this) {
-					
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {
 						if (flag < UtilInternet.REQ_OK_STRING){
-							toastFaildRes(flag,true,returnObj);
 						}
 					}
 				});
