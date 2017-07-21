@@ -59,6 +59,7 @@ import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
+import amodule.dish.tools.DishMouldControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
 import amodule.main.activity.MainChangeSend;
@@ -191,7 +192,7 @@ public class Main extends Activity implements OnClickListener {
                 boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
                 if (!isShow)
                     showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？");
-                AppCommon.setDishMould();
+                DishMouldControl.setDishMould(null);
             }
         }
 

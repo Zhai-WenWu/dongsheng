@@ -223,12 +223,16 @@ public class DishActivityViewControlNew {
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
         },permissionMap);
-        mFootControl.init(dishInfoMap.get("allClick"),dishInfoMap.get("name"));
+        mFootControl.init(dishInfoMap.get("name"));
         mScrollView.setVisibility(View.VISIBLE);
     }
 
     public void analyzeUserShowDishInfoData(String dishJson){
         mFootControl.initUserDish(dishJson);
+    }
+
+    public void analyzeDishLikeNumberInfoData(String dishJson){
+        mFootControl.initLikeState(dishJson);
     }
 
     /**

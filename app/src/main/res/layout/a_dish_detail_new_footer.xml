@@ -57,7 +57,6 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/a_dish_detail_new_line1"
             android:layout_marginRight="@dimen/dp_4"
-            android:text="120个作品"
             android:textColor="@color/comment_color"
             android:textSize="@dimen/sp_14"
             />

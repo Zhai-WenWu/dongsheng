@@ -245,11 +245,20 @@ public class DetailDishNew extends BaseActivity {
             }
         });
 
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishInfo,params, new InternetCallback(DetailDishNew.this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDishNew.this) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
                     dishActivityViewControl.analyzeUserShowDishInfoData(String.valueOf(o));
+                }
+            }
+        });
+
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDishNew.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING){
+                    dishActivityViewControl.analyzeDishLikeNumberInfoData(String.valueOf(o));
                 }
             }
         });

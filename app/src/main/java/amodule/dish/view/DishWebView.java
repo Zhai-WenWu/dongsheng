@@ -10,8 +10,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import acore.logic.AppCommon;
 import acore.tools.FileManager;
+import amodule.dish.tools.DishMouldControl;
 import aplug.web.view.XHWebView;
 
 /**
@@ -123,15 +123,24 @@ public class DishWebView extends XHWebView {
         return true;
     }
 
-    private void loadMould(String code){
-        String html = AppCommon.getDishMould();
-        boolean isContains = html.contains("dishCode = '';");
-        Log.d(TAG,"loadMould() isContains:" + isContains);
-//        Log.d(TAG,"loadMould() replay:" + "dishCode = '" + code + "';");
-//        html = html.replace("dishCode = '';","dishCode = '" + code + "';");
-//        FileManager.saveFileToCompletePath(FileManager.getSDDir() + "long/html.txt",html,false);
-//        loadData(html,"text/html; charset=UTF-8", null);
-        loadDataWithBaseURL(null,html,"text/html","utf-8", null);
+    private void loadMould(final String code){
+        DishMouldControl.getDishMould(new DishMouldControl.OnDishMouldListener() {
+            @Override
+            public void loaded(boolean isSucess, String data) {
+                if(isSucess){
+                    Log.d(TAG,"loadMould() data:" + data);
+                    data = data.replace("<{code}>",code);
+                    final String html = data;
+                    DishWebView.this.post(new Runnable() {
+                        @Override
+                        public void run() {
+//                            loadData(html,"text/html; charset=UTF-8", null);
+                            loadDataWithBaseURL(null,html,"text/html","utf-8", null);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     final class InJavaScriptLocalObj {

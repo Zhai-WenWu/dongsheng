@@ -17,7 +17,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.tools.FileManager;
@@ -27,9 +27,14 @@ import amodule.dish.activity.RelevantDishList;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.FriendHome;
+import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
+import aplug.basic.ReqEncyptInternet;
+import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
+
+import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * Created by Fang Ruijiao on 2017/7/13.
@@ -45,12 +50,14 @@ public class DishFootControl implements View.OnClickListener{
 
     private String code,mDishName;
 
+    private boolean dishLikeState = false;
+
     public DishFootControl(Activity act,String code){
         mAct = act;
         this.code = code;
     }
 
-    public void init(String hoverNum,String dishName){
+    public void init(String dishName){
         mDishName = dishName;
 
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
@@ -76,76 +83,86 @@ public class DishFootControl implements View.OnClickListener{
         mRelevantTv.setOnClickListener(this);
         mQuizTv.setOnClickListener(this);
         mGoodShow.setOnClickListener(this);
-        mHoverNum.setText(hoverNum);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
     }
 
     public void initUserDish(String dishJson){
-        //TODO
-        dishJson = "";
-        mRecommentNum.setText(125 + "个作品");
-        LayoutInflater inflater = LayoutInflater.from(mAct);
-        ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dishJson);
-        Map<String, String> dataMap;
-        for(int i = 0; i < 4; i ++){
-            dataMap = new HashMap<>();
-            dataMap.put("zanNumber",String.valueOf(10 + i));
-            dataMap.put("subjectCode","1020" + String.valueOf(10 + i));
-            dataMap.put("userCode","2350" + String.valueOf(10 + i));
-            dataMap.put("dishImg","http://s1.cdn.xiangha.com/caipu/201608/2512/251224023359.jpg/OTAweDYwMA");
-            dataMap.put("userImg","http://s1.cdn.xiangha.com/i/201605/2719/57482b15bf2d9.jpg/MTAweDEwMA");
-            dataMap.put("userName","米西" + i);
-            dataMap.put("dishTime","1" + i + "小时前");
-            arrayList.add(dataMap);
-        }
+        ArrayList<Map<String, String>> arrayList = getListMapByJson(dishJson);
         if(arrayList.size() > 0) {
-            mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.VISIBLE);
-            mRecomentLayout.setVisibility(View.VISIBLE);
-        }
-        else{
+            Map<String, String> TieMap = arrayList.get(0);
+            mRecommentNum.setText(TieMap.get("totalNum") + "个作品");
+            LayoutInflater inflater = LayoutInflater.from(mAct);
+            arrayList = getListMapByJson(TieMap.get("list"));
+            if (arrayList.size() > 0) {
+                mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.VISIBLE);
+                mRecomentLayout.setVisibility(View.VISIBLE);
+            } else {
+                mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.GONE);
+                return;
+            }
+            View view;
+            for (final Map<String, String> map : arrayList) {
+                view = inflater.inflate(R.layout.a_dish_detail_new_footer_item, null);
+                ImageView dishImg = (ImageView) view.findViewById(R.id.a_dish_detail_show_img);
+                ImageView userImg = (ImageView) view.findViewById(R.id.a_dish_detail_user_icon);
+                ImageView zanImg = (ImageView) view.findViewById(R.id.a_dish_detail_zan);
+                TextView userName = (TextView) view.findViewById(R.id.a_dish_detail_user_name);
+                TextView dishTime = (TextView) view.findViewById(R.id.a_dish_detail_time);
+                TextView zanNumber = (TextView) view.findViewById(R.id.a_dish_detail_zan_numer);
+
+                String customer = map.get("customer");
+                ArrayList<Map<String, String>> customerArray = StringManager.getListMapByJson(customer);
+                if(customerArray.size() > 0) {
+                    Map<String, String> customerMap = customerArray.get(0);
+                    userName.setText(customerMap.get("nickName"));
+                    setViewImage(userImg, customerMap.get("img"), 500);
+                    String userCode = map.get("userCode");
+                    setGotoFriendHome(userImg, userCode);
+                    setGotoFriendHome(userName, userCode);
+                }
+
+                final String zanNumberStr = map.get("likeNum");
+                final String subjectCode = map.get("subjectCode");
+                setViewImage(dishImg, map.get("img"), 0);
+                zanImg.setImageResource(TextUtils.isEmpty(map.get("isLike")) ? R.drawable.z_quan_home_body_ico_good : R.drawable.z_quan_home_body_ico_good_active);
+                dishTime.setText(map.get("timeShow"));
+                zanNumber.setText(zanNumberStr);
+                zanImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Tools.showToast(mAct, zanNumberStr);
+                    }
+                });
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent it = new Intent(mAct, ShowSubject.class);
+                        it.putExtra("code", subjectCode);
+                        mAct.startActivity(it);
+                    }
+                });
+                userDishLayout.addView(view);
+            }
+        }else{
+            userDishLayout.removeAllViews();
+            mRecomentLayout.setVisibility(View.GONE);
             mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.GONE);
-            return;
-        }
-        View view;
-        for(final Map<String,String> map : arrayList){
-            view = inflater.inflate(R.layout.a_dish_detail_new_footer_item,null);
-            ImageView dishImg = (ImageView) view.findViewById(R.id.a_dish_detail_show_img);
-            ImageView userImg = (ImageView) view.findViewById(R.id.a_dish_detail_user_icon);
-            ImageView zanImg = (ImageView) view.findViewById(R.id.a_dish_detail_zan);
-            TextView userName = (TextView) view.findViewById(R.id.a_dish_detail_user_name);
-            TextView dishTime = (TextView) view.findViewById(R.id.a_dish_detail_time);
-            TextView zanNumber = (TextView) view.findViewById(R.id.a_dish_detail_zan_numer);
-
-            final String zanNumberStr = map.get("zanNumber");
-            final String subjectCode = map.get("subjectCode");
-            final String userCode = map.get("userCode");
-
-            setViewImage(dishImg,map.get("dishImg"),0);
-            setViewImage(userImg,map.get("userImg"),500);
-            zanImg.setImageResource(TextUtils.isEmpty(map.get("isZan")) ? R.drawable.z_quan_home_body_ico_good : R.drawable.z_quan_home_body_ico_good_active);
-            userName.setText(map.get("userName"));
-            dishTime.setText(map.get("dishTime"));
-            zanNumber.setText(zanNumberStr);
-
-            setGotoFriendHome(userImg,userCode);
-            setGotoFriendHome(userName,userCode);
-            zanImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Tools.showToast(mAct,zanNumberStr);
-                }
-            });
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(mAct, ShowSubject.class);
-                    it.putExtra("code",subjectCode);
-                    mAct.startActivity(it);
-                }
-            });
-            userDishLayout.addView(view);
         }
     }
+
+    public void initLikeState(String data){
+        ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(data);
+        if(arrayList.size() > 0){
+            Map<String,String> map = arrayList.get(0);
+            mHoverNum.setText(map.get("num"));
+            //点赞/点踩的状态(1:无，2:点踩，3:点赞)
+            dishLikeState = "3".equals(map.get("status"));
+        }else{
+            mHoverNum.setText("0");
+            dishLikeState = false;
+        }
+    }
+
      private void setGotoFriendHome(View view, final String userCode){
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,7 +204,6 @@ public class DishFootControl implements View.OnClickListener{
                         if (img != null && bitmap != null) {
                             // 图片圆角和宽高适应
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
                             UtilImage.setImgViewByWH(v, bitmap, 0, 0, false);
                         }
                     }
@@ -216,10 +232,20 @@ public class DishFootControl implements View.OnClickListener{
                 break;
              case R.id.a_dish_detail_new_footer_hover_good: //有用
                 Tools.showToast(mAct,"有用");
+                 if(!dishLikeState){
+                     dishLikeState = !dishLikeState;
+                     mGoodImg.setImageResource(R.drawable.i_good_activity);
+                     onChangeLikeState(dishLikeState);
+                 }
                  hindGoodLayout();
                 break;
              case R.id.a_dish_detail_new_footer_hover_trample: //没用
                 Tools.showToast(mAct,"没用");
+                 if(dishLikeState){
+                     dishLikeState = !dishLikeState;
+                     mGoodImg.setImageResource(R.drawable.i_good);
+                     onChangeLikeState(dishLikeState);
+                 }
                  hindGoodLayout();
                 break;
             case R.id.a_dish_detail_new_footer_hover_good_show: //展现点赞
@@ -231,5 +257,22 @@ public class DishFootControl implements View.OnClickListener{
 
     public void hindGoodLayout(){
         goodLayoutParent.setVisibility(View.GONE);
+    }
+
+    private void onChangeLikeState(boolean isLike){
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        map.put("code",code);
+        map.put("status",isLike ? "2" : "1");
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback(mAct) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if(i >= ReqInternet.REQ_OK_STRING){
+                    ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
+                    if(arrayList.size() > 0){
+                        mHoverNum.setText(arrayList.get(0).get("num"));
+                    }
+                }
+            }
+        });
     }
 }

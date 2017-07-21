@@ -104,6 +104,8 @@ public class UploadSubjectBottomControl implements View.OnClickListener{
         this.dishName = dishName;
         followDishTv.setText(dishName);
         mAct.findViewById(R.id.score_dish_parentlayout).setVisibility(View.VISIBLE);
+        imgGo.setVisibility(View.GONE);
+        imgClear.setVisibility(View.VISIBLE);
     }
 
     public int getScoreNum(){
@@ -115,12 +117,7 @@ public class UploadSubjectBottomControl implements View.OnClickListener{
     }
 
     public void onActivityResult(Intent data) {
-        dishCode = data.getStringExtra("dishCode");
-        dishName = data.getStringExtra("dishName");
-        followDishTv.setText(dishName);
-        mAct.findViewById(R.id.score_dish_parentlayout).setVisibility(View.VISIBLE);
-        imgGo.setVisibility(View.GONE);
-        imgClear.setVisibility(View.VISIBLE);
+        setDishInfo(data.getStringExtra("dishCode"),data.getStringExtra("dishName"));
         if(mOnBottomListener != null) mOnBottomListener.onChoseFollowDish();
     }
 

@@ -48,7 +48,7 @@ import static com.xiangha.R.id.share_layout;
 import static java.lang.System.currentTimeMillis;
 
 /**
- * 新的菜谱详情页
+ * 菜谱详情页
  * -----离线菜谱处理
  * 页面加载原则：头部跟随view一起初始化，底部有数据再进行加载
  */

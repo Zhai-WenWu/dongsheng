@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -58,7 +57,6 @@ import amodule.quan.db.CircleSqlite;
 import amodule.user.activity.ChangeUrl;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
@@ -1019,38 +1017,5 @@ public class AppCommon {
             }
         }).setBottomButtonColor("#59bdff").show();
     }
-
-    public static void setDishMould(){
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishMould,"", new InternetCallback(Main.allMain.getApplicationContext()) {
-            @Override
-            public void loaded(int i, String s, final Object o) {
-                if(i >= ReqInternet.REQ_OK_STRING){
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
-                            if(arrayList.size() > 0) {
-                                Map<String,String> map = arrayList.get(0);
-                                String path = FileManager.getSDDir() + "long/" + FileManager.file_dishMould;
-                                Log.i("dishMould", "path:" + path);
-                                Log.i("dishMould", "html:" + map.get("html"));
-                                FileManager.saveFileToCompletePath(path, map.get("html"), false);
-                            }
-                        }
-                    }).start();
-                }
-            }
-        });
-    }
-
-    public static String getDishMould(){
-        String path = FileManager.getSDDir() + "long/" + FileManager.file_dishMould;
-//        path = FileManager.getSDDir() + "long/html.html";
-//        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/htmlPrint.txt";
-        String readStr = FileManager.readFile(path);
-        Log.i("dishMould","readStr:" + readStr);
-        return readStr;
-    }
-
 
 }
