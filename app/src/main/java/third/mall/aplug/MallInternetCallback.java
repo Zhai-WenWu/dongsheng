@@ -157,23 +157,16 @@ public abstract class MallInternetCallback extends InterCallback {
 
 	/**
 	 * toast请求失败的返回值
-	 * 
-	 * @param flag
-	 * @param showNetError
-	 *            是否toast网络错误
+	 *
 	 * @param returnObj
 	 * @return
 	 */
-	private String toastFaildRes(int flag, boolean showNetError, Object returnObj) {
+	private void toastFaildRes(Object returnObj) {
 		String returnRes = returnObj.toString();
 		if (returnRes.length() > 0) {
-			if (showNetError)
+			if (Tools.isDebug(context) || Tools.isOpenRequestTip(context))
 				Tools.showToast(context, returnRes);
-			else if (flag > UtilInternet.REQ_STATE_ERROR) {
-				Tools.showToast(context, returnRes);
-			}
 		}
-		return returnRes;
 	}
 
 	public String statTime(String url) {

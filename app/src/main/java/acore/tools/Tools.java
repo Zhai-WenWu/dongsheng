@@ -67,6 +67,16 @@ public class Tools {
     }
 
     /**
+     * 是否开启请求返回值提示
+     * @param context
+     * @return
+     */
+    public static boolean isOpenRequestTip(Context context){
+        String isOpen = FileManager.loadShared(context,FileManager.xmlFile_appInfo,FileManager.xmlKey_request_tip).toString();
+        return "2".equals(isOpen);
+    }
+
+    /**
      * 获取指定格式的时间(注意ms数不能溢出)
      *
      * @param formatStr 形如"yyyy年MM月dd日HH:mm:ss"

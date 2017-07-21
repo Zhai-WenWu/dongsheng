@@ -43,6 +43,8 @@ public class ChangeUrl extends BaseActivity {
     private EditText mMallPortEt;
     private Switch mMallSwitchBtn;
 
+    private Switch mRequsetFailTipSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,6 +199,13 @@ public class ChangeUrl extends BaseActivity {
 
             }
         });
+
+        mRequsetFailTipSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_request_tip, isChecked ? "2" : "1");
+            }
+        });
     }
 
     private void initView() {
@@ -210,6 +219,7 @@ public class ChangeUrl extends BaseActivity {
         mMallPortEt = (EditText) findViewById(R.id.mall_et);
         mXHSwitchBtn = (Switch) findViewById(R.id.xh_switch);
         mMallSwitchBtn = (Switch) findViewById(R.id.mall_switch);
+        mRequsetFailTipSwitch = (Switch) findViewById(R.id.request_fail_tip_switch);
     }
 
     private void initData() {
@@ -259,10 +269,14 @@ public class ChangeUrl extends BaseActivity {
             } else {
                 mMallSwitchBtn.setChecked(false);
             }
-            
+
         } else {
             mMallSwitchBtn.setChecked(false);
         }
         mInitMallData = mMallDomain + mMallPort;
+
+        //初始化是否开启请求返回值提示开关
+        mRequsetFailTipSwitch.setChecked(Tools.isOpenRequestTip(this));
+
     }
 }
