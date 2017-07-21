@@ -27,9 +27,8 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 /**
  * Created by Administrator on 2016/8/5.
  */
-
 public class ShareNewActivity extends Activity{
-    private ArrayList<Map<String,String>> mData = new ArrayList<Map<String,String>>();
+    private ArrayList<Map<String,String>> mData = new ArrayList<>();
     private String[] mNames ;
     private int[] mLogos ;
     private String[] mSharePlatforms ;

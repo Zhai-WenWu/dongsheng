@@ -139,7 +139,6 @@ public class DishHeaderViewNew extends LinearLayout {
         } else this.callBack = callBacks;
         Map<String, String> videoMap = list.get(0);
         String title = videoMap.get("title");
-
         try {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");

@@ -108,7 +108,6 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
         if (isHasVideo) {
             tongjiId = "a_post_detail_video";
         }
-        //TODO
         //设置more
         headerMore.setData(title, subjectInfo.get("type"));
         //获取菜谱数据

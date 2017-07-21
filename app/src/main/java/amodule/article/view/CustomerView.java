@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,15 +20,14 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
-import acore.tools.StringManager;
 import amodule.article.activity.ArticleDetailActivity;
+import amodule.dish.activity.DetailDish;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_ARTICLE;
-import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * PackageName : amodule.article.view
@@ -139,7 +137,7 @@ public class CustomerView extends ItemBaseView {
         @Override
         public void onClick(View v) {
             statistics("用户信息", "用户头像");
-            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), tongjiId, "用户点击", "头像点击量");
+            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId, "用户点击", "头像点击量");
 //            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapUser.get("url"),true);
             Intent intent = new Intent(getContext(), FriendHome.class);
             intent.putExtra("code", mapUser.get("code"));

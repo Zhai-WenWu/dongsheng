@@ -26,6 +26,7 @@ import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 
 /**
+ * 菜谱界面的总控制类
  * Created by Fang Ruijiao on 2017/7/12.
  */
 public class DishActivityViewControlNew {
@@ -57,8 +58,8 @@ public class DishActivityViewControlNew {
     private String dishJson;//历史记录中dishInfo的数据
 
     private DishTitleViewControlNew dishTitleViewControl;
-    private DishFootControl mFootControl;
     private DishHeaderViewNew dishHeaderView;
+    private DishFootControl mFootControl;
 
 
     private DishViewCallBack callBack;

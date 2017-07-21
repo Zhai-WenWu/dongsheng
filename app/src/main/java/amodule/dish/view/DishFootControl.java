@@ -23,7 +23,7 @@ import java.util.Map;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.activity.RelevantDishList;
+import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.FriendHome;
@@ -37,9 +37,9 @@ import xh.basic.tool.UtilImage;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
+ * 菜谱底部原生所有内容：相关美食帖、广告、发帖入口、点赞点踩、提问入口
  * Created by Fang Ruijiao on 2017/7/13.
  */
-
 public class DishFootControl implements View.OnClickListener{
 
     private Activity mAct;
@@ -216,8 +216,8 @@ public class DishFootControl implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.a_dish_detail_new_xiangguan: //点击相关作品
-                Intent intent = new Intent(mAct, RelevantDishList.class);
-                intent.putExtra("code",code);
+                Intent intent = new Intent(mAct, FollowSubject.class);
+                intent.putExtra("dishCode",code);
                 mAct.startActivity(intent);
                 break;
             case R.id.a_dish_detail_new_relevantTv: //晒我做的这道菜

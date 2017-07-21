@@ -324,20 +324,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.dish.activity.DetailDishNew"
-            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.dish.activity.RelevantDishList"
-            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name="amodule.dish.activity.ListDish"
