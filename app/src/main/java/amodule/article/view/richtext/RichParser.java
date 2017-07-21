@@ -33,15 +33,14 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
-//import android.util.Log;
+import android.util.Log;
 
 public class RichParser {
     public static Spanned fromHtml(String source) {
-//        Log.i("tzy", "source = " + source);
         String sourceAfter = source.replaceAll("&lt;div align=\"center\"&gt;", "<center>")
                 .replaceAll("&lt;div style=\"text-align:center;\"&gt;", "<center>")
-                .replaceAll("&lt;/div&gt;", "</center>");
-//        Log.i("tzy", "sourceAfter = " + sourceAfter);
+                .replaceAll("<br><br>&lt;/div&gt;", "<br></center><br>")
+                .replaceAll("&lt;/div&gt;", "</center><br>");
         return Html.fromHtml(sourceAfter, null, new RichTagHandler());
     }
 
@@ -49,6 +48,21 @@ public class RichParser {
         StringBuilder out = new StringBuilder();
         withinHtml(out, text);
         return tidy(out.toString());
+    }
+
+    /**
+     * 输出方法
+     * @param html
+     * @return
+     */
+    private static String tidy(String html) {
+        return html.replaceAll("</ul>(<br>)?", "</ul>")
+                .replaceAll("</blockquote>(<br>)?", "</blockquote>")
+                .replaceAll("<center>", "&lt;div style=\"text-align:center;\"&gt;")
+                .replaceAll("<br><br></center>", "<br><br>&lt;/div&gt;")
+                .replaceAll("<br></center><br>", "<br><br>&lt;/div&gt;")
+                .replaceAll("<br></center>", "&lt;/div&gt;")
+                .replaceAll("</center><br>", "&lt;/div&gt;");
     }
 
     private static void withinHtml(StringBuilder out, Spanned text) {
@@ -302,10 +316,4 @@ public class RichParser {
         }
     }
 
-    private static String tidy(String html) {
-        return html.replaceAll("</ul>(<br>)?", "</ul>")
-                .replaceAll("</blockquote>(<br>)?", "</blockquote>")
-                .replaceAll("<center>", "&lt;div style=\"text-align:center;\"&gt;")
-                .replaceAll("</center>", "&lt;/div&gt;");
-    }
 }
