@@ -111,15 +111,8 @@ public class DishWebView extends XHWebView {
         if(TextUtils.isEmpty(htmlData) || TextUtils.isEmpty(dishCode)){
             return false;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String path = FileManager.getSDDir() + "long/" + dishCode;
-                Log.d(TAG,"path:" + path);
-                FileManager.saveFileToCompletePath(path,htmlData,false);
-                FileManager.saveShared(getContext(),FileManager.file_dishMould,dishCode,path);
-            }
-        }).start();
+        DishWebView.this.loadUrl("javascript:window.local_obj.saveSource('<head>'+" +
+                "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
         return true;
     }
 
@@ -150,6 +143,15 @@ public class DishWebView extends XHWebView {
             htmlData = html;
             Log.d(TAG,"showSource() htmlData:" + htmlData);
         }
+
+        @JavascriptInterface
+        public void saveSource(String html) {
+            String path = DishMouldControl.getOffDishPath() + dishCode;
+            Log.d(TAG,"path:" + path);
+            FileManager.saveFileToCompletePath(path,html,false);
+            FileManager.saveShared(getContext(),FileManager.file_dishMould,dishCode,path);
+        }
+
     }
 
 }

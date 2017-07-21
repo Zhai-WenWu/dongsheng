@@ -58,6 +58,7 @@ public class FileManager extends UtilFile{
 	public static final String file_hotwords = "hotWords";
 	//菜谱模板
 	public static final String file_dishMould = "dishMould";
+	public static final String file_dish = "dishMould";
 
 	public static final String xmlFile_userInfo = "common";
 	public static final String xmlFile_wake = "wake2";

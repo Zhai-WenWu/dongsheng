@@ -26,11 +26,13 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.adapter.AdapterListDish;
 import amodule.dish.db.DataOperate;
+import amodule.dish.tools.DishMouldControl;
 import amodule.user.activity.login.LoginByAccout;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -177,6 +179,8 @@ public class OfflineDish extends BaseActivity {
 								//统计
 								XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "删除" , -1);
 								DataOperate.deleteBuyBurden(OfflineDish.this,map.get("code"));
+								String path = DishMouldControl.getOffDishPath() + map.get("code");
+								FileManager.delDirectoryOrFile(path);
 								arrayList.remove(newPositon);
 								adapter.notifyDataSetChanged();
 								if(arrayList.size()==0)
