@@ -37,12 +37,10 @@ import android.util.Log;
 
 public class RichParser {
     public static Spanned fromHtml(String source) {
-//        Log.i("tzy", "source = " + source);
         String sourceAfter = source.replaceAll("&lt;div align=\"center\"&gt;", "<center>")
                 .replaceAll("&lt;div style=\"text-align:center;\"&gt;", "<center>")
-                .replaceAll("&lt;/div&gt;", "</center><br>")
-                .replaceAll("<br><br></center>", "<br></center>");
-//        Log.i("tzy", "sourceAfter = " + sourceAfter);
+                .replaceAll("<br><br>&lt;/div&gt;", "<br></center><br>")
+                .replaceAll("&lt;/div&gt;", "</center><br>");
         return Html.fromHtml(sourceAfter, null, new RichTagHandler());
     }
 
@@ -61,9 +59,9 @@ public class RichParser {
         return html.replaceAll("</ul>(<br>)?", "</ul>")
                 .replaceAll("</blockquote>(<br>)?", "</blockquote>")
                 .replaceAll("<center>", "&lt;div style=\"text-align:center;\"&gt;")
-                //先处理标签内换行问题
-                .replaceAll("<br></center>", "<br><br></center>")
-                //在处理标签外换行问题
+                .replaceAll("<br><br></center>", "<br><br>&lt;/div&gt;")
+                .replaceAll("<br></center><br>", "<br><br>&lt;/div&gt;")
+                .replaceAll("<br></center>", "&lt;/div&gt;")
                 .replaceAll("</center><br>", "&lt;/div&gt;");
     }
 
