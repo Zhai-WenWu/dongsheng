@@ -43,8 +43,8 @@
 
                     <ImageView
                         android:id="@+id/img_1"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
@@ -75,8 +75,8 @@
 
                     <ImageView
                         android:id="@+id/img_2"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -107,8 +107,8 @@
 
                     <ImageView
                         android:id="@+id/img_3"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -139,8 +139,8 @@
 
                     <ImageView
                         android:id="@+id/img_4"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -171,8 +171,8 @@
 
                     <ImageView
                         android:id="@+id/img_5"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -203,8 +203,8 @@
 
                     <ImageView
                         android:id="@+id/img_6"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -274,8 +274,8 @@
 
                     <ImageView
                         android:id="@+id/admin_iv_1"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -306,8 +306,8 @@
 
                     <ImageView
                         android:id="@+id/admin_iv_2"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -338,8 +338,8 @@
 
                     <ImageView
                         android:id="@+id/admin_iv_3"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -373,8 +373,8 @@
 
                     <ImageView
                         android:id="@+id/quanadmin_iv_1"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
@@ -406,8 +406,8 @@
 
                     <ImageView
                         android:id="@+id/quanadmin_iv_3"
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
+                        android:layout_width="@dimen/dp_21"
+                        android:layout_height="@dimen/dp_21"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_centerVertical="true"
