@@ -75,6 +75,7 @@ import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
+import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
@@ -243,6 +244,7 @@ public class Main extends Activity implements OnClickListener {
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
+            MallCommon.getShoppingNum(Main.this,null,null);
 
         }
 
@@ -357,6 +359,7 @@ public class Main extends Activity implements OnClickListener {
         }
         setTabItemMargins(linear_item, 0, 0, margin);
         setTabItemMargins(linear_item, length - 1, margin, 0);
+
     }
 
     public void setTabItemMargins(ViewGroup viewGroup, int index, int leftMargin, int rightMargin) {
