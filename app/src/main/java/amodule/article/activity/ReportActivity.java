@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,10 +38,9 @@ public class ReportActivity extends BaseActivity {
     private LinearLayout mReportContainer;
     private TextView mAdminDesc;
     private LinearLayout mAdminContainer;
-    private TextView mReportInfo;
+    private ImageView mReportInfo;
     private TextView mName;
     private Button mCommitBtn;
-    private RelativeLayout mBackBtn;
 
     private String mUserCode = "";
     private String mCode = "";
@@ -57,7 +57,7 @@ public class ReportActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("举报", 2, 0, 0, R.layout.report_layout);
+        initActivity("举报", 2, 0, R.layout.report_view_bar_title, R.layout.report_layout);
         Intent intent = getIntent();
         mType = intent.getStringExtra("type");
         mCode = intent.getStringExtra("code"); //主题code
@@ -68,7 +68,6 @@ public class ReportActivity extends BaseActivity {
         mReportContent = intent.getStringExtra("reportContent");
         //获取举报内容列表参数 1、主题；2、评论；3、回复（默认2）
         mReportType = intent.getStringExtra("reportType");
-//        initTitle();
         initView();
         addListener();
     }
@@ -98,28 +97,15 @@ public class ReportActivity extends BaseActivity {
         super.onPause();
     }
 
-    private void initTitle() {
-        if(Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-
-            RelativeLayout bar_title = (RelativeLayout)findViewById(R.id.barTitle);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
-    }
-
     private void initView() {
         mReportScrooView = (MsgScrollView) findViewById(R.id.report_scrollview);
         mReportContainer = (LinearLayout) findViewById(R.id.report_container);
         mAdminDesc = (TextView) findViewById(R.id.admin_report_desc);
         mAdminContainer = (LinearLayout) findViewById(R.id.admin_report_container);
-        mReportInfo = (TextView) findViewById(R.id.report_info);
+        mReportInfo = (ImageView) findViewById(R.id.icon_report);
         mCommitBtn = (Button) findViewById(R.id.report_commit);
         mName = (TextView) findViewById(R.id.title);
         mName.setText("举报 " + mReportName);
-        mBackBtn = (RelativeLayout) findViewById(R.id.back);
     }
 
     private void addListener() {
@@ -127,21 +113,17 @@ public class ReportActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.report_info:
+                    case R.id.icon_report:
                         AppCommon.openUrl(ReportActivity.this, StringManager.api_agreementReport, true);
                         break;
                     case R.id.report_commit:
                         onCommitClick();
-                        break;
-                    case R.id.back:
-                        ReportActivity.this.finish();
                         break;
                 }
             }
         };
         mReportInfo.setOnClickListener(clickListener);
         mCommitBtn.setOnClickListener(clickListener);
-        mBackBtn.setOnClickListener(clickListener);
     }
 
     private void getReportData() {

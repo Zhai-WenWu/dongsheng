@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,17 +38,17 @@ public class QAReportActivity extends BaseActivity {
     private LinearLayout mReportContainer;
     private TextView mAdminDesc;
     private LinearLayout mAdminContainer;
-    private TextView mReportInfo;
+    private ImageView mReportInfo;
     private TextView mName;
     private TextView mBlackText;
     private Button mCommitBtn;
-    private RelativeLayout mBackBtn;
     private RelativeLayout mBlackListContainer;
     private SwitchButton mBlackListSwitchBtn;
 
+    private String mUserCode = "";//被举报的用户code
     private String mReportName = "";//被举报的用户名
     private String mQACode = "";//被举报的问答code
-    private String mType = "5";//类型：5-菜谱问答
+    private String mQAType = "5";//类型：5-菜谱问答
     private String mReportType = "2";//举报类型：1-主题，2-问答
 
     private ReportItem mLastSelectedReportChild;
@@ -58,7 +59,7 @@ public class QAReportActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("举报", 2, 0, 0, R.layout.qa_report_layout);
+        initActivity("举报", 2, 0, R.layout.report_view_bar_title, R.layout.qa_report_layout);
         initData();
         initView();
         addListener();
@@ -89,8 +90,11 @@ public class QAReportActivity extends BaseActivity {
     private void initData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            mUserCode = bundle.getString("userCode");
             mReportName = bundle.getString("reportName", "");
             mQACode = bundle.getString("qaCode");
+            mQAType = bundle.getString("qaType", "5");
+            mReportType = bundle.getString("reportType", "2");
         }
     }
 
@@ -99,12 +103,11 @@ public class QAReportActivity extends BaseActivity {
         mReportContainer = (LinearLayout) findViewById(R.id.report_container);
         mAdminDesc = (TextView) findViewById(R.id.admin_report_desc);
         mAdminContainer = (LinearLayout) findViewById(R.id.admin_report_container);
-        mReportInfo = (TextView) findViewById(R.id.report_info);
+        mReportInfo = (ImageView) findViewById(R.id.icon_report);
         mCommitBtn = (Button) findViewById(R.id.report_commit);
         mName = (TextView) findViewById(R.id.title);
         mBlackText = (TextView) findViewById(R.id.blacklist_text);
         mName.setText("举报 " + mReportName);
-        mBackBtn = (RelativeLayout) findViewById(R.id.back);
         mBlackListContainer = (RelativeLayout) findViewById(R.id.blacklist_container);
         mBlackListSwitchBtn = (SwitchButton) findViewById(R.id.blacklist_switchBtn);
         mBlackListSwitchBtn.mSwitchOn = false;
@@ -115,14 +118,11 @@ public class QAReportActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.report_info:
+                    case R.id.icon_report:
                         AppCommon.openUrl(QAReportActivity.this, StringManager.api_agreementReport, true);
                         break;
                     case R.id.report_commit:
                         onCommitClick();
-                        break;
-                    case R.id.back:
-                        QAReportActivity.this.finish();
                         break;
                     case R.id.blacklist_switchBtn:
 
@@ -132,7 +132,6 @@ public class QAReportActivity extends BaseActivity {
         };
         mReportInfo.setOnClickListener(clickListener);
         mCommitBtn.setOnClickListener(clickListener);
-        mBackBtn.setOnClickListener(clickListener);
         mBlackListSwitchBtn.setOnChangeListener(new SwitchButton.OnChangeListener() {
             @Override
             public void onChange(SwitchButton sb, boolean state) {
@@ -183,7 +182,7 @@ public class QAReportActivity extends BaseActivity {
                     params += "&";
             }
         }
-        params += "code=" + mQACode + "&type=" + mType + "&reportType=" + mReportType;
+        params += "code=" + mQACode + "&type=" + mQAType + "&reportType=" + mReportType + "&userCode=" + mUserCode;
         ReqEncyptInternet.in().doEncypt(StringManager.API_QA_COMMITREPORT, params, new InternetCallback(QAReportActivity.this) {
             @Override
             public void loaded(int i, String s, Object o) {
