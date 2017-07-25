@@ -244,7 +244,7 @@ public class Main extends Activity implements OnClickListener {
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
-            MallCommon.getShoppingNum(Main.this,null,null);
+            if(LoginManager.isLogin())MallCommon.getShoppingNum(Main.this,null,null);
 
         }
 
