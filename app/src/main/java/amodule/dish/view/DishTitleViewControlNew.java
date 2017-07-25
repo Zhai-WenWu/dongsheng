@@ -65,13 +65,15 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private boolean loading = true;//收藏标示
 
     private String code;
-    private String dishJson;
     private boolean isHasVideo;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
 
-    public DishTitleViewControlNew(Context context){
+    private OnDishTitleControlListener mListener;
+
+    public DishTitleViewControlNew(Context context,OnDishTitleControlListener listener){
         this.context= context;
+        mListener = listener;
     }
 
     public void initView(Activity detailDish,DishWebView xhWebView) {
@@ -110,13 +112,11 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * 设置数据
      * @param dishInfoMaps-----数据集合
      * @param code------code菜谱
-     * @param dishJson----菜谱的基础信息
      * @param isHasVideo----是否是视频贴
      */
-    public void setData(Map<String, String> dishInfoMaps,String code,String dishJson,boolean isHasVideo,String dishState,LoadManager loadManager){
+    public void setData(Map<String, String> dishInfoMaps,String code,boolean isHasVideo,String dishState,LoadManager loadManager){
         this.dishInfoMap=dishInfoMaps;
         this.code= code;
-        this.dishJson =dishJson;
         this.isHasVideo=isHasVideo;
         this.dishState = dishState;
         this.loadManager= loadManager;
@@ -355,12 +355,17 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                     }).create().show();
                 }
             } else {
+                String dishJson = mListener.getOffDishJson();
                 Log.i("DetailDish","dishJson:" + dishJson);
-                DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
-                mDishWebView.saveDishData();
-                offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
-                offText.setText("已下载");
-                Tools.showToast(detailDish.getApplicationContext(), "已成功下载到离线清单中");
+                if(TextUtils.isEmpty(dishJson)){
+                    Tools.showToast(detailDish.getApplicationContext(), "离线失败");
+                }else {
+                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
+                    mDishWebView.saveDishData();
+                    offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
+                    offText.setText("已下载");
+                    Tools.showToast(detailDish.getApplicationContext(), "已成功下载到离线清单中");
+                }
             }
         } else {
             Intent intent = new Intent(detailDish, OfflineDish.class);
@@ -439,7 +444,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         detailDish.findViewById(off_layout).setVisibility(isShow ? (state != null ? View.GONE : View.VISIBLE) : View.GONE);
     }
 
-    public boolean isOfflineLayoutVisibility(){
-        return detailDish.findViewById(off_layout).getVisibility() == View.VISIBLE;
+    public interface OnDishTitleControlListener{
+        public String getOffDishJson();
     }
 }

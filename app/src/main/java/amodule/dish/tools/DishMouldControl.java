@@ -79,7 +79,7 @@ public class DishMouldControl {
     }
 
     public static String getOffDishPath(){
-        return FileManager.getSDDir() + "long/";
+        return FileManager.getSDDir() + "long/offDish/";
     }
 
     public interface OnDishMouldListener{

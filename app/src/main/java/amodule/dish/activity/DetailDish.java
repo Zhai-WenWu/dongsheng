@@ -44,6 +44,9 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 
+import static amodule.dish.db.DataOperate.DISH_INFO;
+import static amodule.dish.db.DataOperate.DISH_LIKE_NUMBER_INFO;
+import static amodule.dish.db.DataOperate.DISH_USER_INFO;
 import static com.xiangha.R.id.share_layout;
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -65,8 +68,8 @@ public class DetailDish extends BaseActivity {
     private Map<String,String> permissionMap = new HashMap<>();
     private Map<String,String> detailPermissionMap = new HashMap<>();
     private int statusBarHeight = 0;//广告所用bar高度
+    private String dishJson;
     public String code, dishTitle, state;//页面开启状态所必须的数据。
-    public String dishJson;//历史记录中dishInfo的数据
     private String imgLevel = FileManager.save_cache;//图片缓存机制---是离线菜谱改变其缓存机制
     public boolean isHasVideo = false;//是否显示视频数据
     private boolean hasPermission = true;
@@ -116,7 +119,6 @@ public class DetailDish extends BaseActivity {
             isHasVideo = false;
             detailPermissionMap.clear();
             permissionMap.clear();
-            dishJson = "";
             if (mHandler == null) {
                 initData();
             }
@@ -188,8 +190,6 @@ public class DetailDish extends BaseActivity {
             public void run() {
                 //获取离线菜谱的 json 数据
                 dishJson = DataOperate.buyBurden(XHApplication.in(), code);
-
-                dishActivityViewControl.setDishJson(dishJson);
                 //获取手机中的离线菜谱数量
                 AppCommon.buyBurdenNum = getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
                 mHandler.sendEmptyMessage(LOAD_DISH);
@@ -266,7 +266,7 @@ public class DetailDish extends BaseActivity {
     }
 
     /**
-     * 处理历史记录：
+     * 处理离线菜谱数据：
      * 历史记录都是:dishInfo的数据
      */
     private void analyzeHistoryData() {
@@ -274,7 +274,11 @@ public class DetailDish extends BaseActivity {
         if (listmaps.size() == 0){
             return;
         }
-        dishActivityViewControl.analyzeDishInfoData(listmaps, new HashMap<String, String>());
+        Map<String, String> dishMap = listmaps.get(0);
+        dishActivityViewControl.analyzeDishInfoData(dishMap.get(DISH_INFO), new HashMap<String, String>());
+        dishActivityViewControl.analyzeUserShowDishInfoData(dishMap.get(DISH_USER_INFO));
+        dishActivityViewControl.analyzeDishLikeNumberInfoData(dishMap.get(DISH_LIKE_NUMBER_INFO));
+
         loadManager.loadOver(ReqInternet.REQ_OK_STRING, 1, true);
         mHandler.sendEmptyMessage(LOAD_DISH_OVER);
     }
@@ -291,11 +295,9 @@ public class DetailDish extends BaseActivity {
             DetailDish.this.finish();
             return;
         }
-        dishJson = data;//数据保留下来
-        saveHistoryToDB(dishJson);
-        dishActivityViewControl.setDishJson(dishJson);
-        requestWeb();
-        dishActivityViewControl.analyzeDishInfoData(list,permissionMap);
+        saveHistoryToDB(data);
+        requestWeb(data);
+        dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
 
     }
     private boolean saveHistory = false;
@@ -349,7 +351,7 @@ public class DetailDish extends BaseActivity {
         return jsonObject;
     }
 
-    private void requestWeb() {
+    private void requestWeb(String dishJson) {
         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
         if(dishInfo != null){
             SpecialWebControl.initSpecialWeb(this,"dishInfo",dishInfo.get("name"),code);

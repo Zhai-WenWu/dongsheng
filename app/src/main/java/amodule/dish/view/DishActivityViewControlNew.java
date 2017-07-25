@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -24,6 +25,10 @@ import amodule.main.Main;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
+
+import static amodule.dish.db.DataOperate.DISH_INFO;
+import static amodule.dish.db.DataOperate.DISH_LIKE_NUMBER_INFO;
+import static amodule.dish.db.DataOperate.DISH_USER_INFO;
 
 /**
  * 菜谱界面的总控制类
@@ -55,7 +60,6 @@ public class DishActivityViewControlNew {
     private int firstItemIndex = 0;
 
     private Map<String, String> dishInfoMap;//dishInfo数据
-    private String dishJson;//历史记录中dishInfo的数据
 
     private DishTitleViewControlNew dishTitleViewControl;
     private DishHeaderViewNew dishHeaderView;
@@ -63,6 +67,8 @@ public class DishActivityViewControlNew {
 
 
     private DishViewCallBack callBack;
+
+    private Map<String,String> offDishMap;
 
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
@@ -74,10 +80,17 @@ public class DishActivityViewControlNew {
         this.loadManager = loadManager;
         this.code = code;
         this.callBack = callBack;
+        offDishMap = new HashMap<>();
+
         initView();
 
         //处理标题
-        dishTitleViewControl= new DishTitleViewControlNew(mAct);
+        dishTitleViewControl= new DishTitleViewControlNew(mAct, new DishTitleViewControlNew.OnDishTitleControlListener() {
+            @Override
+            public String getOffDishJson() {
+                return StringManager.getJsonByMap(offDishMap).toString();
+            }
+        });
         dishTitleViewControl.initView(mAct,mXhWebView);
         dishTitleViewControl.setstate(state);
         mFootControl = new DishFootControl(mAct,code);
@@ -181,17 +194,21 @@ public class DishActivityViewControlNew {
 
     /**
      * 解析数据-----业务标示是“dishInfo”
-     * @param list
+     * @param dishInfo
      * @param permissionMap
      */
-    public void analyzeDishInfoData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
+    public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
+        offDishMap.put(DISH_INFO,dishInfo);
+        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
+        if(list.size() == 0) return;
+
         dishInfoMap = list.get(0);
         mXhWebView.loadDishData(dishInfoMap.get("code"));
 
         isHasVideo = dishInfoMap.get("type").equals("2");
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
 
-        dishTitleViewControl.setData(dishInfoMap,code,dishJson,isHasVideo,dishInfoMap.get("dishState"),loadManager);
+        dishTitleViewControl.setData(dishInfoMap,code,isHasVideo,dishInfoMap.get("dishState"),loadManager);
 
         Map<String, String> customer = StringManager.getFirstMap(dishInfoMap.get("customer"));
         if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
@@ -229,10 +246,12 @@ public class DishActivityViewControlNew {
     }
 
     public void analyzeUserShowDishInfoData(String dishJson){
+        offDishMap.put(DISH_USER_INFO,dishJson);
         mFootControl.initUserDish(dishJson);
     }
 
     public void analyzeDishLikeNumberInfoData(String dishJson){
+        offDishMap.put(DISH_LIKE_NUMBER_INFO,dishJson);
         mFootControl.initLikeState(dishJson);
     }
 
@@ -327,14 +346,6 @@ public class DishActivityViewControlNew {
         }
         xhWebView.setVisibility(View.GONE);
         return true;
-    }
-
-    /**
-     * 外部设置json
-     * @param dishjson
-     */
-    public void setDishJson(String dishjson){
-        this.dishJson=dishjson;
     }
 
     /**

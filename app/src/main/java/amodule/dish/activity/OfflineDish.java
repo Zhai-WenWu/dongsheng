@@ -48,8 +48,7 @@ public class OfflineDish extends BaseActivity {
 	private ArrayList<Map<String, String>> arrayList = null;
 
 	private int currentPage = 0,everyPage = 0,loadPage = 0;
-	public boolean moreFlag = true, offLineOver = false, infoVoer = false;
-	
+
 	public boolean isBlankSpace = true,isAddHeadView = false;
 
 	@Override
@@ -88,7 +87,7 @@ public class OfflineDish extends BaseActivity {
 
 	private void initData() {
 		rightBtn.setText("清空");
-		arrayList = new ArrayList<Map<String, String>>();
+		arrayList = new ArrayList<>();
 		// 绑定列表数据
 		adapter = new AdapterListDish(this , listView , arrayList,
 				R.layout.a_dish_item_menu,
@@ -125,6 +124,8 @@ public class OfflineDish extends BaseActivity {
 								XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "清空" , -x);
 								DataOperate.deleteBuyBurden(OfflineDish.this, "");
 								Tools.showToast(getApplicationContext(), "清除成功");
+								String path = DishMouldControl.getOffDishPath();
+								FileManager.delDirectoryOrFile(path);
 								arrayList.clear();
 								adapter.notifyDataSetChanged();
 								loadManager.hideProgressBar();

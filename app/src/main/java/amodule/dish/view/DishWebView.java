@@ -1,14 +1,11 @@
 package amodule.dish.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import acore.tools.FileManager;
 import amodule.dish.tools.DishMouldControl;
@@ -22,7 +19,7 @@ public class DishWebView extends XHWebView {
 
     private String TAG = "dishMould";
 
-    private String dishCode,htmlData;
+    private String dishCode;
 
     public DishWebView(Context context) {
         super(context);
@@ -47,44 +44,7 @@ public class DishWebView extends XHWebView {
 //        webSettings.setDatabasePath(dbPath);
 
         webSettings.setJavaScriptEnabled(true);
-
         addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
-        setWebViewClient(new WebViewClient() {
-            @Override
-            public void onLoadResource(WebView view, String url) {
-                Log.i(TAG, "onLoadResource url=" + url);
-
-                super.onLoadResource(view, url);
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.i(TAG, "intercept url=" + url);
-                view.loadUrl(url);
-                return true;
-            }
-
-            // 页面开始时调用
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.e(TAG, "onPageStarted");
-                super.onPageStarted(view, url, favicon);
-            }
-
-            // 页面加载完成调用
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                view.loadUrl("javascript:window.local_obj.showSource('<head>'+" +
-                        "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-                super.onPageFinished(view, url);
-            }
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode,String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                Log.e(TAG, "description:" + description + "    errorCode:" + errorCode + "    failingUrl:" + failingUrl);
-            }
-        });
     }
 
     public void loadDishData(String code){
@@ -108,7 +68,7 @@ public class DishWebView extends XHWebView {
     }
 
     public boolean saveDishData(){
-        if(TextUtils.isEmpty(htmlData) || TextUtils.isEmpty(dishCode)){
+        if(TextUtils.isEmpty(dishCode)){
             return false;
         }
         DishWebView.this.loadUrl("javascript:window.local_obj.saveSource('<head>'+" +
@@ -137,13 +97,6 @@ public class DishWebView extends XHWebView {
     }
 
     final class InJavaScriptLocalObj {
-        @JavascriptInterface
-        public void showSource(String html) {
-            Log.d(TAG, html);
-            htmlData = html;
-            Log.d(TAG,"showSource() htmlData:" + htmlData);
-        }
-
         @JavascriptInterface
         public void saveSource(String html) {
             String path = DishMouldControl.getOffDishPath() + dishCode;

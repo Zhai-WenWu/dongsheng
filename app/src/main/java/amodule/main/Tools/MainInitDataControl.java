@@ -26,11 +26,13 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.activity.upload.UploadDishListActivity;
-import amodule.dish.db.ShowBuyData;
-import amodule.dish.db.ShowBuySqlite;
+import amodule.dish.db.DataOperate;
+import amodule.dish.db.DishOffData;
+import amodule.dish.db.DishOffSqlite;
 import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishControl;
 import amodule.quan.db.SubjectData;
@@ -286,8 +288,8 @@ public class MainInitDataControl {
      * @param json
      */
     private void saveDataInDB(String json,Context context) {
-        ShowBuyData buyData = new ShowBuyData();
-        ShowBuySqlite sqlite = new ShowBuySqlite(context);
+        DishOffData buyData = new DishOffData();
+        DishOffSqlite sqlite = new DishOffSqlite(context);
         ArrayList<Map<String, String>> arrayList = getListMapByJson(json);
         for (int i = 0; i < arrayList.size(); i++) {
             buyData.setCode(arrayList.get(i).get("code"));
@@ -298,8 +300,10 @@ public class MainInitDataControl {
             try {
                 array = new JSONArray(json);
                 String newJson = array.get(i).toString();
-                buyData.setJson(newJson);
-                int id = sqlite.insert(context, buyData);
+                Map<String,String> map = new HashMap<>();
+                map.put(DataOperate.DISH_INFO,newJson);
+                buyData.setJson(StringManager.getJsonByMap(map).toString());
+                int id = sqlite.insert(buyData);
                 if (id > 0)
                     AppCommon.buyBurdenNum++;
             } catch (JSONException e) {

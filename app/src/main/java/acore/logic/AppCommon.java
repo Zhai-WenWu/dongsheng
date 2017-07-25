@@ -47,7 +47,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
-import amodule.dish.db.ShowBuySqlite;
+import amodule.dish.db.DishOffSqlite;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.main.Main;
@@ -545,7 +545,7 @@ public class AppCommon {
                         if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
                             // 修改splite数据
                             dishJson = dishJson.replace(nowFav ? "\"isFav\":1" : "\"isFav\":2", nowFav ? "\"isFav\":2" : "\"isFav\":1");
-                            ShowBuySqlite sqlite = new ShowBuySqlite(context);
+                            DishOffSqlite sqlite = new DishOffSqlite(context);
                             sqlite.updateIsFav(code, dishJson);
                         }
                         Tools.showToast(context, nowFav ? "收藏成功" : "取消收藏");

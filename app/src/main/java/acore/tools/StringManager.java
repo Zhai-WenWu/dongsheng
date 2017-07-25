@@ -102,9 +102,13 @@ public class StringManager extends UtilString {
     public final static String api_toGoodContent = apiUrl + "main6/channel/toGoodContent";//好评弹框
     //	/** 香哈协议 */
     public static final String api_agreementXiangha = appWebUrl + "deal/xiangha.html";
-    /** 原创协议 */
+    /**
+     * 原创协议
+     */
     public static final String api_agreementOriginal = appWebUrl + "deal/original.html";
-    /** 举报说明 */
+    /**
+     * 举报说明
+     */
     public static final String api_agreementReport = appWebUrl + "deal/report.html";
 
     public static final String api_nouseInfo = appWebUrl + "zhishi/nousInfo?code=";
@@ -175,7 +179,9 @@ public class StringManager extends UtilString {
     //圈子成员列表
     public final static String api_circleCustomerList = apiUrl + urlSection.get("quan6") + "customerList";
     public final static String api_circleCustomerBlackList = apiUrl + urlSection.get("quan6") + "customerBlackList";
-    /** 圈子列表 */
+    /**
+     * 圈子列表
+     */
     public final static String api_circleSubjectList = apiUrl + "main6/tie/getList";
     public final static String api_circlegetInfo = apiUrl + "main6/tie/getInfo";
     public final static String api_circleSafaList = apiUrl + "main6/tie/safaList";
@@ -269,16 +275,22 @@ public class StringManager extends UtilString {
     public final static String api_modifyPhone = apiUrl + urlSection.get("user6") + "modifyPhone"; //注册手机号
     public final static String api_sendVoiceVerify = apiUrl + "main7/voiceVerify/send"; //获取语音验证码
 
-    /*** 新首页接口*/
+    /***
+     * 新首页接口
+     */
     public final static String API_GET_LEVEL = apiUrl + "main7/recommend/getLevel"; //获取首页层级数据
     public final static String API_RECOMMEND = apiUrl + "main7/recommend/recommend"; //获取首页数据
     public final static String API_LOGIN_APP = apiUrl + "main7/public/loginApp"; //获取首页数据
     public final static String API_RECOMMEND_TOP = apiUrl + "main7/recommend/topv1"; //获取推荐置顶数据
 
-    /*** 个人主页：（视频、文章、问答）接口*/
+    /***
+     * 个人主页：（视频、文章、问答）接口
+     */
     public final static String API_USERMAIN_LEVEL = apiUrl + "main7/article/getClassList";//获取个人主页导航数据
 
-    /*** 推荐列表的统计*/
+    /***
+     * 推荐列表的统计
+     */
     public final static String API_STATISTIC_S6 = "http://stat.xiangha.com/s6.gif"; //新首页统计
 
     /*文章*/
@@ -352,7 +364,6 @@ public class StringManager extends UtilString {
      * 用户编辑一些信息后，经过一些检验
      *
      * @param charSequence ： 判断的内容
-     *
      * @return 如果是全空格，则返回"",否则原样返回，不直接去掉用户故意加的前后空格
      */
     public final static String getUploadString(CharSequence charSequence) {
@@ -369,7 +380,6 @@ public class StringManager extends UtilString {
      * 将字符串转成MD5值
      *
      * @param string
-     *
      * @return
      */
     public static String stringToMD5(String string) {
@@ -403,13 +413,12 @@ public class StringManager extends UtilString {
     }
 
     /**
-     *
      * @param map
      * @param key
      * @return
      */
-    public static boolean getBooleanByEqualsValue(Map<String, String> map, String key){
-        if(map == null || TextUtils.isEmpty(key) || !map.containsKey(key)){
+    public static boolean getBooleanByEqualsValue(Map<String, String> map, String key) {
+        if (map == null || TextUtils.isEmpty(key) || !map.containsKey(key)) {
             return false;
         }
         return "2".equals(map.get(key));
@@ -426,6 +435,20 @@ public class StringManager extends UtilString {
                 }
                 jsonArray.put(jsonObject);
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    public static JSONArray getJsonByMap(Map<String, String> map) {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            for (String key : map.keySet()) {
+                jsonObject.put(key, map.get(key));
+            }
+            jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
