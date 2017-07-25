@@ -161,8 +161,6 @@ public class TimeView {
                     }
                     loadPage = returnList.size();
                     adapter.notifyDataSetChanged();
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 if (everyPage == 0) everyPage = loadPage;
                 currentPage = loadManager.changeMoreBtn(mListView, flag, everyPage, loadPage, currentPage, arrayList.size() == 0);

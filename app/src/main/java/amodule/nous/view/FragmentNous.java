@@ -324,8 +324,6 @@ public class FragmentNous {
                     // 如果是重新加载的,选中第一个tab.
                     if (isForward)
                         listNous.setSelection(1);
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 if (everyPage == 0)
                     everyPage = loadCount;

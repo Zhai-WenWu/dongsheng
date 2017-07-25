@@ -227,6 +227,7 @@ public class SearchResultAdViewGenerater {
         String desc = dataMap.get("desc");
         String iconUrl = dataMap.get("iconUrl");
         String imageUrl = dataMap.get("imgUrl");
+        String allClick = dataMap.get("allClick");
         if (adView != null) {
             ImageViewVideo cover_img = (ImageViewVideo) adView.findViewById(R.id.iv_adCover);
             TextView tv_ad_name = (TextView) adView.findViewById(R.id.tv_ad_name);
@@ -242,9 +243,9 @@ public class SearchResultAdViewGenerater {
                 setViewText(tv_ad_decrip, desc);
             }
 
-            Random random = new Random();
-            int v = random.nextInt(4000) + 6000;
-            setViewText(tv_ad_observed, v + "浏览");
+            if(TextUtils.isEmpty(allClick))
+                allClick = "5189";
+            setViewText(tv_ad_observed, allClick + "浏览");
         }
     }
 

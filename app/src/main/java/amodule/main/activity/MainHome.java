@@ -297,12 +297,21 @@ public class MainHome extends MainBaseActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Log.i("zyj","mainHome::onresume");
         refreshAdData();
         //为了解决首页打开webview后再调用此句再打开的webView的大小就不是0*0啦
         onResumeFake();
+        if(recommedType.equals(listBean.get(itemPosition).getType())) {
+            Log.i("zyj","mainHome::onPause");
+            setRecommedTime(System.currentTimeMillis());
+        }
     }
 
     public void onResumeFake(){
@@ -314,6 +323,10 @@ public class MainHome extends MainBaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(recommedType.equals(listBean.get(itemPosition).getType())) {
+            Log.i("zyj","mainHome::onPause");
+            setRecommedStatistic();
+        }
     }
 
     public class HomePagerAdapter extends FragmentStatePagerAdapter {
@@ -443,6 +456,7 @@ public class MainHome extends MainBaseActivity {
         }
         long nowTime= System.currentTimeMillis();
         if(startTime>0){
+            Log.i("zyj","stop::"+String.valueOf((nowTime-startTime)/1000));
             XHClick.saveStatictisFile("home",recommedType_statictus,"","","","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
             //置数据
             setRecommedTime(0);

@@ -269,7 +269,7 @@ public class ShowSubject extends BaseActivity {
 								favoriteImageView.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 								favoriteTextView.setText(nowFav ? "已收藏" : "  收藏  ");
 							} else {
-								String returnStr = toastFaildRes(flag, true, returnObj);
+								String returnStr = TextUtils.isEmpty((String)returnObj) ? "" : returnObj.toString();
 								if (returnStr.contains("登录")) {
 									goLogin();
 								}
@@ -523,7 +523,6 @@ public class ShowSubject extends BaseActivity {
 						initData();
 					}
 				} else if (flag > UtilInternet.REQ_STATE_ERROR) {
-					toastFaildRes(flag, false, returnObj);
 					ShowSubject.this.finish();
 				} else {
 					initData();

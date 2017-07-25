@@ -2,6 +2,7 @@ package amodule.nous.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -74,7 +75,7 @@ public class NousInfo extends ApiShowWeb {
 										: R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 								favoriteNousTextView.setText(nowFav ? "已收藏" : "  收藏  ");
 							} else {
-								String returnStr = toastFaildRes(flag, true, returnObj);
+								String returnStr = TextUtils.isEmpty((String) returnObj) ? "" : returnObj.toString();
 								if (returnStr.contains("登录")) {
 									Intent intent = new Intent(NousInfo.this, LoginByAccout.class);
 									startActivity(intent);

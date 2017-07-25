@@ -293,7 +293,6 @@ public class DetailIngre extends BaseActivity {
 					}
 					loadManager.hideProgressBar();
 				} else {
-					toastFaildRes(flag, true, returnObj);
 					showNotFound(type);
 				}
 				initScroll();

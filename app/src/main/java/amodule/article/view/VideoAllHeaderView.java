@@ -90,6 +90,12 @@ public class VideoAllHeaderView extends LinearLayout {
 
     }
 
+    public void setupCommentNum(String commentNumStr){
+        if(videoInfoView != null && !TextUtils.isEmpty(commentNumStr)){
+            videoInfoView.setupConmentNum(commentNumStr);
+        }
+    }
+
     public void setUserData(Map<String, String> mapVideo){
         //设置用户数据
         if (mapVideo.containsKey("customer") && !TextUtils.isEmpty(mapVideo.get("customer"))) {

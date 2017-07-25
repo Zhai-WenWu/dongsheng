@@ -318,8 +318,6 @@ public class MyMessage extends MainBaseActivity {
 						findViewById(R.id.tv_noData).setVisibility(View.GONE);
 						isShowData=true;
 					}
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 				listMessage.setVisibility(View.VISIBLE);
 				if (everyPage == 0)

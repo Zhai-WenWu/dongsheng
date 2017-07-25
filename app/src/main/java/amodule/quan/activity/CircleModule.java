@@ -168,7 +168,6 @@ public class CircleModule extends BaseActivity implements OnClickListener {
 					mCircleHeaderView.initMiddleView(mRobRoNoticeData);
 					
 				} else {
-					toastFaildRes(flag, true, msg);
 					mRefreshIcon.clearAnimation();
 				}
 				if (mEveryPageNum == 0) {

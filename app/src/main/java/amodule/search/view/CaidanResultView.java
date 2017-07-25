@@ -176,8 +176,6 @@ public class CaidanResultView extends RelativeLayout {
                                 }
                             }
                         }
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
 
                 hideProgresBar();

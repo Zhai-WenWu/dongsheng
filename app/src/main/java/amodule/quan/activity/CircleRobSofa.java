@@ -145,7 +145,6 @@ public class CircleRobSofa extends BaseActivity implements OnClickListener{
 					//添加置顶和公告data
 					mCircleHeaderView.initMiddleView(mRobRoNoticeData);
 				}else{
-					toastFaildRes(flag,true,msg);
 					mRefreshIcon.clearAnimation();
 				}
 				if(mEveryPageNum == 0){

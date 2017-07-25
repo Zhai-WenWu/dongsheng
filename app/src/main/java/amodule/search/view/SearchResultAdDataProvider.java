@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
 import third.ad.tools.AdPlayIdConfig;
@@ -72,6 +73,7 @@ public class SearchResultAdDataProvider {
                                         &&adDataMap.containsKey("appSearchImg")&&!TextUtils.isEmpty(adDataMap.get("appSearchImg"))){
                                     adDataMap.put("imgUrl",adDataMap.get("appSearchImg"));
                                 }
+                                adDataMap.put("allClick", String.valueOf(Tools.getRandom(4000,10000)));
                                 list.add(adDataMap);
                             }
                         }
@@ -85,7 +87,7 @@ public class SearchResultAdDataProvider {
                     }
                 }
             }
-        }, "search_list");
+        }, "search_list",false);
     }
 
     public ArrayList<Map<String,String>> getAdDataList(){

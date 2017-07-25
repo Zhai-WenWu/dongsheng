@@ -550,8 +550,6 @@ public class HomeFragment extends BaseHomeFragment{
                         }
 
                     }
-                }else{
-                     toastFaildRes(flag, true, object);
                 }
                 mLoadManager.hideProgressBar();
                 mLoadManager.changeMoreBtn(mListview, flag, LoadManager.FOOTTIME_PAGE, refresh?mListData.size():loadCount, 0, refresh);
@@ -618,7 +616,6 @@ public class HomeFragment extends BaseHomeFragment{
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(tag_yu,"homeframg：onResume：：");
         if(statrTime<=0&& isRecom()){
             statrTime=System.currentTimeMillis();
         }
@@ -628,7 +625,6 @@ public class HomeFragment extends BaseHomeFragment{
     public void onPause() {
         super.onPause();
         stopVideo();
-        Log.i(tag_yu,"homeframg：onPause：：");
     }
 
     public HomeModuleBean getmoduleBean() {

@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.baidu.mobad.feeds.NativeErrorCode;
+import com.baidu.mobad.feeds.NativeResponse;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
 import org.json.JSONObject;
@@ -19,6 +21,7 @@ import java.util.Map;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import third.ad.tools.BaiduAdTools;
 import third.ad.tools.GdtAdTools;
 import xh.basic.tool.UtilString;
 
@@ -32,6 +35,7 @@ public class XHAllAdControl {
     private ArrayList<String> listIds;//存储广告位置id的集合
     private Map<String, String> mapBase = new HashMap<>();
     private boolean isShowGdt = false;//是否存在广点通
+    private boolean isShowBaidu = false;//是否存在百度
     private ArrayList<XHOneAdControl> listAdContrls = new ArrayList<>();//子控制类集合
     private Map<String, String> AdData = new HashMap<>();//获取到数据集合
 
@@ -40,8 +44,11 @@ public class XHAllAdControl {
 
     private int count = 0;//返回的数据的个数
     private List<NativeADDataRef> gdtNativeArray = new ArrayList<>();
+    private List<NativeResponse> baiduNativeArray = new ArrayList<>();
     private String GDT_ID = "";//广点
-    private int gdt_index = 0;//取广告位的数据位置
+    private String BAIDU_ID = "";//广点
+    private int gdt_index = 0;//取广告位的数据位置 GDT
+    private int baidu_index = 0;//取广告位的数据位置 Baidu
     private String StatisticKey;
     private String ad_show;//展示一级统计
     private String ad_click;//点击一级统一
@@ -53,6 +60,10 @@ public class XHAllAdControl {
     private long oneAdTime;//第一次请求广告的时间。
     public long showTime= 30*60*1000;//广告的过期时间。30分钟
 
+    private boolean isJudgePicSize = false;
+    private boolean isLoadOverGdt = false;
+    private boolean isLoadOverBaidu = false;
+
     /**
      * 初始化
      *
@@ -60,24 +71,25 @@ public class XHAllAdControl {
      * @param xhBackIdsDataCallBack 回调
      * @param act 所在的activity
      * @param StatisticKey          统计key
+     * @param isJudgePicSize 是否判断大图
      */
-    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey,boolean isJudgePicSize) {
         this.listIds = listIds;
         this.act = act;
         this.xhBackIdsDataCallBack = xhBackIdsDataCallBack;
         this.StatisticKey = StatisticKey;
+        this.isJudgePicSize = isJudgePicSize;
         if(listIds.size()>0)getCountGdtData=listIds.size();
         getStiaticsData();
         getAllAdData();
     }
 
-    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, String StatisticKey) {
-        this.listIds = listIds;
-        this.xhBackIdsDataCallBack = xhBackIdsDataCallBack;
-        this.StatisticKey = StatisticKey;
-        if(listIds.size()>0)getCountGdtData=listIds.size();
-        getStiaticsData();
-        getAllAdData();
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
+        this(listIds,xhBackIdsDataCallBack,act,StatisticKey,false);
+    }
+
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack, String StatisticKey,boolean isJudgePicSize) {
+        this(listIds,xhBackIdsDataCallBack,null,StatisticKey,isJudgePicSize);
     }
 
     /**
@@ -102,11 +114,11 @@ public class XHAllAdControl {
                         ArrayList<Map<String, String>> listTemp_config = StringManager.getListMapByJson(listTemp.get(0).get("adConfig"));
                         String banner = listTemp.get(0).get("banner");
 
-                        /*广告尸体数据集合*/
+                        /*广告实体数据集合*/
                         boolean state = false;//是否打开
                         ArrayList<Map<String, String>> adConfigDataList = new ArrayList<>();
                         Map<String, String> configMap = listTemp_config.get(0);
-                        final String[] keys = {"1","2", "3", "4"};
+                        final String[] keys = {"1","2", "3", "4", "5"};
                         for (String key : keys) {
                             if (configMap.containsKey(key)) {
                                 String value = configMap.get(key);
@@ -129,10 +141,12 @@ public class XHAllAdControl {
                 }
             }
         }
-
+        isLoadOverGdt = !isShowGdt;
+        isLoadOverBaidu = !isShowBaidu;
         //是否存在广点通
-        if (isShowGdt && !TextUtils.isEmpty(GDT_ID)) {
-            getAllGdtData();
+        if ((isShowGdt && !TextUtils.isEmpty(GDT_ID))
+                ||(isShowBaidu && !TextUtils.isEmpty(BAIDU_ID))) {
+            getAllData();
         } else {
             startAdRequest();
         }
@@ -157,7 +171,7 @@ public class XHAllAdControl {
     }
 
     /**
-     * 判断是否是gdt数据
+     * 判断是否是 gdt 或者 baidu 数据
      *
      * @param map_temp 数据体
      */
@@ -170,32 +184,70 @@ public class XHAllAdControl {
                     GDT_ID = map_link.get("adid");
             }
             isShowGdt = true;
+        }else if(map_temp.get("type").equals("baidu") && map_temp.get("open").equals("2")) {
+            if (!isShowBaidu || TextUtils.isEmpty(BAIDU_ID)) {
+                String data = map_temp.get("data");
+                LinkedHashMap<String, String> map_link = UtilString.getMapByString(data, "&", "=");
+                if (map_link.containsKey("adid"))
+                    BAIDU_ID = map_link.get("adid");
+            }
+            isShowBaidu = true;
         }
+    }
+
+    private void getAllData(){
+        getAllGdtData();
+        getAllBaiduData();
     }
 
     /**
      * GDT广告获取
      */
     private void getAllGdtData() {
+        if(isLoadOverGdt) return;
         GdtAdTools.newInstance().loadNativeAD(XHApplication.in(), GDT_ID, getCountGdtData,
                 new GdtAdTools.GdtNativeCallback() {
 
                     @Override
                     public void onNativeLoad(List<NativeADDataRef> data) {
+                        isLoadOverGdt = true;
                         gdtNativeArray = data;
 //                        int num = gdtNativeArray.size();
-                        startAdRequest();
+                        if(isLoadOverGdt && isLoadOverBaidu)
+                            startAdRequest();
                     }
 
                     @Override
                     public void onNativeFail(NativeADDataRef nativeADDataRef, String msg) {
-                        startAdRequest();
+                        isLoadOverGdt = true;
+                        if(isLoadOverGdt && isLoadOverBaidu)
+                            startAdRequest();
                     }
 
                     @Override
                     public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
                     }
                 });
+    }
+
+    private void getAllBaiduData(){
+        if(isLoadOverBaidu) return;
+        BaiduAdTools.newInstance().loadNativeAD(XHApplication.in(), BAIDU_ID, new BaiduAdTools.BaiduNativeCallbck() {
+            @Override
+            public void onNativeLoad(List<NativeResponse> list) {
+                isLoadOverBaidu = true;
+                baiduNativeArray = list;
+                if(isLoadOverGdt && isLoadOverBaidu)
+                    startAdRequest();
+            }
+
+            @Override
+            public void onNativeFail(NativeErrorCode nativeErrorCode) {
+                isLoadOverBaidu = true;
+                if(isLoadOverGdt && isLoadOverBaidu)
+                    startAdRequest();
+            }
+        });
     }
 
     /**
@@ -222,6 +274,10 @@ public class XHAllAdControl {
                 case "personal":
                     parent = new XHScrollerSelf(data, backIds, i, act);
                     break;
+                case "baidu":
+                    parent = new XHScrollerBaidu(backIds,i);
+                    ((XHScrollerBaidu)parent).setJudgePicSize(isJudgePicSize);
+                    break;
                 default:
                     break;
             }
@@ -235,9 +291,7 @@ public class XHAllAdControl {
         listAdContrls.add(xhOneAdControl);
     }
 
-    /**
-     * 开启单条数据
-     */
+    /** 开启单条数据 */
     private void startAdRequest() {
         int size = listAdContrls.size();
         if(size>0) oneAdTime = System.currentTimeMillis();//第一时间。
@@ -275,6 +329,16 @@ public class XHAllAdControl {
                         if (gdtNativeArray != null && gdtNativeArray.size() > gdt_index) {
                             NativeADDataRef temp = gdtNativeArray.get(gdt_index);
                             ++gdt_index;
+                            return temp;
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    public NativeResponse onBaiduNativeData() {
+                        if (baiduNativeArray != null && baiduNativeArray.size() > baidu_index) {
+                            NativeResponse temp = baiduNativeArray.get(baidu_index);
+                            ++baidu_index;
                             return temp;
                         }
                         return null;
@@ -325,6 +389,8 @@ public class XHAllAdControl {
 
         //        public Object onGdtData();
         public NativeADDataRef onGdtNativeData();
+
+        public NativeResponse onBaiduNativeData();
     }
 
     public interface XHBackIdsDataCallBack {
@@ -389,5 +455,13 @@ public class XHAllAdControl {
             return true;
         }
         return false;
+    }
+
+    public boolean isJudgePicSize() {
+        return isJudgePicSize;
+    }
+
+    public void setJudgePicSize(boolean judgePicSize) {
+        isJudgePicSize = judgePicSize;
     }
 }
