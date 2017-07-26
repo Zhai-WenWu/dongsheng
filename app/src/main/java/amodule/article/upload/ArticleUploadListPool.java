@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.http.protocol.HTTP;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -548,10 +548,10 @@ public class ArticleUploadListPool extends UploadListPool {
             ArrayList<Map<String, String>> imgArray = uploadArticleData.getImgArray();
             Log.i("articleUpload", "combineParameter() uploadArticleData.getImgUrl():" + uploadArticleData.getImgUrl());
             Log.i("articleUpload", "combineParameter() uploadArticleData.getVideos():" + uploadArticleData.getVideos());
-            uploadTextData.put("title", Uri.encode(uploadArticleData.getTitle(), HTTP.UTF_8));
+            uploadTextData.put("title", Uri.encode(uploadArticleData.getTitle(), "utf-8"));
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
 //            Log.i("tzy","content = " + content);
-            uploadTextData.put("content", new String(Uri.encode(content, HTTP.UTF_8)));
+            uploadTextData.put("content", new String(Uri.encode(content, "utf-8")));
             uploadTextData.put("isOriginal", String.valueOf(uploadArticleData.getIsOriginal()));
             uploadTextData.put("repAddress", uploadArticleData.getRepAddress());
             uploadTextData.put("img", imgArray.size() > 0 ? imgArray.get(0).get("url") : "");

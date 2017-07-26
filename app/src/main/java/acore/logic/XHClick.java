@@ -11,7 +11,6 @@ import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.dplus.UMADplus;
 
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -611,7 +610,7 @@ public class XHClick {
         String actionUrl = StringManager.api_statisticShare;
         String param;
         try {
-            param = "from=" + URLEncoder.encode(from, HTTP.UTF_8) + "&link=" + link + "&type=" + type;
+            param = "from=" + URLEncoder.encode(from, "utf-8") + "&link=" + link + "&type=" + type;
             Log.i("tzy", "param = " + param);
             ReqInternet.in().doPost(actionUrl, param, new InternetCallback(XHApplication.in()) {
 

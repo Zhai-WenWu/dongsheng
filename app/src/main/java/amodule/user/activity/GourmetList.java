@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import org.apache.http.protocol.HTTP;
+
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -138,7 +138,7 @@ public class GourmetList extends BaseActivity {
 		try {
 			for(Map<String, String> map : data){
 				map.put("title", map.get(""));
-				map.put("url", StringManager.api_soList + "?type=customer&tagName=" + URLEncoder.encode(map.get(""), HTTP.UTF_8));
+				map.put("url", StringManager.api_soList + "?type=customer&tagName=" + URLEncoder.encode(map.get(""), "utf-8"));
 				map.put("select", "0");
 				leftData.add(map);
 //				LogManager.print("d", map.toString());

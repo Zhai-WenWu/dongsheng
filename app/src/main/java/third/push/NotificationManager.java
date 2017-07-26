@@ -1,5 +1,7 @@
 package third.push;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -79,16 +81,23 @@ public class NotificationManager {
      * @param context
      * @param data
      */
+
     private void showNotify(Context context, NotificationData data) {
         if (data == null) {
             return;
         }
         android.app.NotificationManager nManger = (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification();
-        notification.icon = data.iconResId;
-        notification.tickerText = data.ticktext;
-        notification.when = System.currentTimeMillis();
-        notification.setLatestEventInfo(context, data.title, data.content, getContentIntent(context, data));
+        Notification.Builder builder = new Notification.Builder(context)
+                .setAutoCancel(true)
+                .setTicker(data.ticktext)
+                .setContentTitle(data.ticktext)
+                .setContentText(data.ticktext)
+                .setContentIntent(getContentIntent(context, data))
+                .setSmallIcon(data.iconResId)
+                .setWhen(System.currentTimeMillis())
+                .setOngoing(true);
+        notification = builder.getNotification();
         //设置dimiss intent
         if (PushPraserService.TYPE_UMENG.equals(data.channel)
                 && !TextUtils.isEmpty(data.umengMessage)) {
