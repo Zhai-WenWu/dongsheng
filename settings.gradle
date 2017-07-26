@@ -1,1 +1,1 @@
-include ':app',':nicevideoplayer'
+include ':app'

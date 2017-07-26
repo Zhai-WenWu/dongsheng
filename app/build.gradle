@@ -26,7 +26,6 @@ dependencies {
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
-    compile(name: 'nicevideoplayer-debug', ext: 'aar')
     compile(name: 'SMSSDK-3.0.0', ext: 'aar')
     //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     //    compile 'com.github.chrisbanes:photoview:latest.release'
@@ -40,9 +39,6 @@ dependencies {
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-//    compile (project(':nicevideoplayer')) {
-//        exclude (group: 'com.android.support',module: 'appcompat-v7')
-//    }
     compile 'com.android.support:support-fragment:25.3.1'
 }
 

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 适配手机 -->
 <resources>
+    <!--节操播放器-->
+    <dimen name="jc_start_button_w_h_normal">45dp</dimen>
+    <dimen name="jc_start_button_w_h_fullscreen">45dp</dimen>
 
     <!-- Mob分享 -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
