@@ -38,6 +38,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -76,7 +77,7 @@ import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class VideoDetailActivity extends BaseActivity {
+public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private TextView mTitle;
     private ImageView rightButton;
@@ -114,6 +115,7 @@ public class VideoDetailActivity extends BaseActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
 
+    private boolean isBack = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,25 +134,14 @@ public class VideoDetailActivity extends BaseActivity {
         initData();
     }
     //**********************************************Activity生命周期方法**************************************************
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mVideoPlayerController != null && !mVideoPlayerController.isError) {
-            return mVideoPlayerController.onVDKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-    }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (mVideoPlayerController != null) {
-            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                mVideoPlayerController.setIsFullScreen(true);
-            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                mVideoPlayerController.setIsFullScreen(false);
-            }
+    public void onBackPressed() {
+        if(mVideoPlayerController != null && mVideoPlayerController.onBackPressed()){
+            return;
         }
+        isBack = true;
+        super.onBackPressed();
     }
 
     @Override
@@ -183,7 +174,10 @@ public class VideoDetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         if (mVideoPlayerController != null) {
-            mVideoPlayerController.onPause();
+            if(isBack)
+                mVideoPlayerController.onDestroy();
+            else
+                mVideoPlayerController.onPause();
         }
         mHaederLayout.onPause();
         Glide.with(this).pauseRequests();

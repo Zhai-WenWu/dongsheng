@@ -6,7 +6,7 @@
         <item name="android:textSize">@dimen/sp_16</item>
     </style>
    <!-- 半透明效果,例如:下面会弹出三个按钮，上面是半透明的效果 -->
-    <style name="common_TransParentTheme">
+    <style name="common_TransParentTheme" parent="AppMainTheme">
         <item name="android:windowBackground">@color/c_trans_parent</item>
         <item name="android:windowIsTranslucent">true</item>
         <!--Activity切换动画效果-->

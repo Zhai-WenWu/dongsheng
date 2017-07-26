@@ -14,12 +14,15 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
  * 所有关于视频的逻辑都应该写在这里
  * Created by Nathen on 2017/7/2.
  */
-public class MyJCVideoPlayerStandard extends JCVideoPlayerStandard {
-    public MyJCVideoPlayerStandard(Context context) {
+public class XHVideoPlayerStandard extends JCVideoPlayerStandard {
+    private OnPlayCompleteCallback onPlayCompleteCallback = null;
+    private OnPlayStartCallback onPlayStartCallback = null;
+
+    public XHVideoPlayerStandard(Context context) {
         super(context);
     }
 
-    public MyJCVideoPlayerStandard(Context context, AttributeSet attrs) {
+    public XHVideoPlayerStandard(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -49,6 +52,9 @@ public class MyJCVideoPlayerStandard extends JCVideoPlayerStandard {
     @Override
     public void startVideo() {
         super.startVideo();
+        if(onPlayStartCallback != null){
+            onPlayStartCallback.onStart();
+        }
     }
 
     @Override
@@ -89,6 +95,9 @@ public class MyJCVideoPlayerStandard extends JCVideoPlayerStandard {
     @Override
     public void onStateAutoComplete() {
         super.onStateAutoComplete();
+        if(onPlayCompleteCallback != null){
+            onPlayCompleteCallback.onComplte();
+        }
     }
 
     @Override
@@ -109,6 +118,30 @@ public class MyJCVideoPlayerStandard extends JCVideoPlayerStandard {
     @Override
     public void startWindowTiny() {
         super.startWindowTiny();
+    }
+
+    public OnPlayCompleteCallback getOnPlayCompleteCallback() {
+        return onPlayCompleteCallback;
+    }
+
+
+    public void setOnPlayCompleteCallback(OnPlayCompleteCallback onPlayCompleteCallback) {
+        this.onPlayCompleteCallback = onPlayCompleteCallback;
+    }
+
+    public OnPlayStartCallback getOnPlayStartCallback() {
+        return onPlayStartCallback;
+    }
+
+    public void setOnPlayStartCallback(OnPlayStartCallback onPlayStartCallback) {
+        this.onPlayStartCallback = onPlayStartCallback;
+    }
+
+    public interface OnPlayStartCallback{
+        public void onStart();
+    }
+    public interface OnPlayCompleteCallback{
+        public void onComplte();
     }
 
 }

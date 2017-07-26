@@ -18,6 +18,7 @@ import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.widget.ImageViewVideo;
+import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
 /**
@@ -49,70 +50,100 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
     }
 
     public void initView() {
-        try {
-            //视频解码库初始化
-            VideoApplication.getInstence().initialize(mContext);
-        } catch (Exception e) {
-            statisticsInitVideoError(mContext);
-            LogManager.reportError("视频软解包初始化异常", e);
-            return;
-        } catch (Error e) {
-            statisticsInitVideoError(mContext);
-            return;
-        }
 
-        if (mVDVideoView == null) {
-            mVDVideoView = new VDVideoView(mContext);
-            mVDVideoView.setLayers(R.array.my_videoview_layers);
-            mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
-                //暂时未实现
-                @Override
-                public void onVDVideoCompletion(VDVideoInfo info, int status) {
-                }
-            });
-        }
-
-        VDVideoViewController controller = VDVideoViewController.getInstance(mContext);
-        if (controller != null) {
-            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
-                @Override
-                public void onCompletion() {
-                    if (mOnPlayingCompletionListener != null) {
-                        mOnPlayingCompletionListener.onPlayingCompletion();
-                    }
-                }
-            });
-        }
+        videoPlayerStandard = new XHVideoPlayerStandard(mContext);
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
             mPraentViewGroup.removeAllViews();
         }
-        mPraentViewGroup.addView(mVDVideoView);
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
+        mPraentViewGroup.addView(videoPlayerStandard);
         if (!TextUtils.isEmpty(mImgUrl)) {
             if(view_Tip==null){
                 initView(mContext);
                 mPraentViewGroup.addView(view_Tip);
             }
-            if (mImageView == null) {
-                mImageView = new ImageViewVideo(mContext);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
-                mImageView.parseItemImg(ImageView.ScaleType.CENTER_CROP, mImgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
-                mImageView.setLayoutParams(params);
-                mPraentViewGroup.addView(mImageView);
-                this.view_dish=mImageView;
-                mImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setOnClick();
-                    }
-                });
-            }
+            mImageView = new ImageViewVideo(mContext);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
+            mImageView.parseItemImg(ImageView.ScaleType.CENTER_CROP, mImgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
+            mImageView.setLayoutParams(params);
+            mPraentViewGroup.addView(mImageView);
+            this.view_dish=mImageView;
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setOnClick();
+                }
+            });
         }
         String temp= (String) UtilFile.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
+//        try {
+//            //视频解码库初始化
+//            VideoApplication.getInstence().initialize(mContext);
+//        } catch (Exception e) {
+//            statisticsInitVideoError(mContext);
+//            LogManager.reportError("视频软解包初始化异常", e);
+//            return;
+//        } catch (Error e) {
+//            statisticsInitVideoError(mContext);
+//            return;
+//        }
+//
+//        if (mVDVideoView == null) {
+//            mVDVideoView = new VDVideoView(mContext);
+//            mVDVideoView.setLayers(R.array.my_videoview_layers);
+//            mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+//                //暂时未实现
+//                @Override
+//                public void onVDVideoCompletion(VDVideoInfo info, int status) {
+//                }
+//            });
+//        }
+//
+//        VDVideoViewController controller = VDVideoViewController.getInstance(mContext);
+//        if (controller != null) {
+//            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
+//                @Override
+//                public void onCompletion() {
+//                    if (mOnPlayingCompletionListener != null) {
+//                        mOnPlayingCompletionListener.onPlayingCompletion();
+//                    }
+//                }
+//            });
+//        }
+//        if (mPraentViewGroup == null)
+//            return;
+//        if (mPraentViewGroup.getChildCount() > 0) {
+//            mPraentViewGroup.removeAllViews();
+//        }
+//        mPraentViewGroup.addView(mVDVideoView);
+//        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
+//        if (!TextUtils.isEmpty(mImgUrl)) {
+//            if(view_Tip==null){
+//                initView(mContext);
+//                mPraentViewGroup.addView(view_Tip);
+//            }
+//            if (mImageView == null) {
+//                mImageView = new ImageViewVideo(mContext);
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
+//                mImageView.parseItemImg(ImageView.ScaleType.CENTER_CROP, mImgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
+//                mImageView.setLayoutParams(params);
+//                mPraentViewGroup.addView(mImageView);
+//                this.view_dish=mImageView;
+//                mImageView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        setOnClick();
+//                    }
+//                });
+//            }
+//        }
+//        String temp= (String) UtilFile.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
+//        if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
+//            setShowMedia(true);
     }
 }

@@ -267,6 +267,7 @@
             android:name="amodule.main.Main"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
@@ -337,7 +338,7 @@
         <activity
             android:name="amodule.dish.activity.DetailDish"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
-            android:hardwareAccelerated="false"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>

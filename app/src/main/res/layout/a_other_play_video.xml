@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fm.jiecao.jiecaovideoplayer.CustomView.MyJCVideoPlayerStandard
+    <fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard
         android:id="@+id/jc_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

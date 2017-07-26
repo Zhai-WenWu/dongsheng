@@ -1,13 +1,10 @@
 package third.video;
 
 import android.content.Context;
-import android.content.Intent;
-import android.media.TimedText;
-import android.os.Environment;
+import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,57 +12,43 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.sina.sinavideo.sdk.VDVideoExtListeners;
-import com.sina.sinavideo.sdk.VDVideoExtListeners.OnVDVideoCompletionListener;
-import com.sina.sinavideo.sdk.VDVideoView;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
-import com.sina.sinavideo.sdk.utils.VDPlayerSoundManager;
-import com.sina.sinavideo.sdk.widgets.VDVideoFullScreenButton;
-import com.sina.sinavideo.sdk.widgets.VDVideoPlaySeekBar;
 import com.xiangha.R;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.XHClick;
-import acore.override.XHApplication;
-import acore.tools.CPUTool;
 import acore.tools.FileManager;
-import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import aplug.web.VideoShowWeb;
+import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
 public class VideoPlayerController {
     protected Context mContext = null;
     //乐视的secretkey
     private final String secretkey = "5e172624924a79f81d60cb2c28f66c4d";
-    protected VDVideoView mVDVideoView = null;
-    protected ImageViewVideo mImageView = null;
     private String mVideoUnique = "", mUserUnique = "";
+    protected XHVideoPlayerStandard  videoPlayerStandard = null;
+    protected ImageViewVideo mImageView = null;
     private boolean mHasVideoInfo = false;
     private int mVideoInfoRequestNumber = 0;
     protected ViewGroup mPraentViewGroup = null;
     private StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
+    private OnPlayingCompletionListener onPlayingCompletionListener = null;
     protected String mImgUrl = "";
-    public boolean isError = false;
     protected View view_dish;
     protected View view_Tip;
     private boolean isAutoPaly = false;//是否是wifi状态
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
-    private VDVideoViewListeners.OnProgressUpdateListener onProgressUpdateListener;
 
     public VideoPlayerController(Context context) {
         this.mContext = context;
@@ -73,7 +56,7 @@ public class VideoPlayerController {
 
     /**
      * 初始化操作：
-     * @param context
+     * @param context 上下文
      * @param viewGroup---布局容器
      * @param imgUrl---图片路径
      */
@@ -81,66 +64,23 @@ public class VideoPlayerController {
         this.mContext = context;
         this.mPraentViewGroup = viewGroup;
         this.mImgUrl = imgUrl;
-        try {
-            //视频解码库初始化
-            VideoApplication.getInstence().initialize(context);
-        } catch (Exception e) {
-            statisticsInitVideoError(context);
-            LogManager.reportError("视频软解包初始化异常", e);
-            return;
-        } catch (Error e) {
-            statisticsInitVideoError(context);
-            return;
-        }
 
-        mVDVideoView = new VDVideoView(mContext);
-        mVDVideoView.setLayers(R.array.my_videoview_layers);
-        mVDVideoView.setCompletionListener(new OnVDVideoCompletionListener() {
-            //暂时未实现
+        videoPlayerStandard = new XHVideoPlayerStandard(context);
+        videoPlayerStandard.setOnPlayStartCallback(new XHVideoPlayerStandard.OnPlayStartCallback() {
             @Override
-            public void onVDVideoCompletion(VDVideoInfo info, int status) {
+            public void onStart() {
+//                if(view_dish != null)
+//                    view_dish.setVisibility(View.GONE);
             }
         });
-setControlLayerVisibility(false);
-        VDVideoViewController controller = VDVideoViewController.getInstance(context);
-        controller.pause();
-        if (controller != null) {
-            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
-                @Override
-                public void onCompletion() {
-                    if (mOnPlayingCompletionListener != null) {
-                        mOnPlayingCompletionListener.onPlayingCompletion();
-                    }
-                }
-            });
-//            controller.touchScreenHorizonScrollEvent();
-            controller.setSeekPause(true);
-            controller.addOnSeekCompleteListener(new VDVideoViewListeners.OnSeekCompleteListener() {
-                @Override
-                public void onSeekComplete() {
-
-                }
-            });
-
-            controller.addOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
-                @Override
-                public void onProgressUpdate(long current, long duration) {
-                    if(onProgressUpdateListener != null) onProgressUpdateListener.onProgressUpdate(current, duration);
-                }
-
-                @Override
-                public void onDragProgess(long current, long duration) {
-                    if(onProgressUpdateListener != null) onProgressUpdateListener.onDragProgess(current, duration);
-                }
-            });
-        }
+        JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        JCVideoPlayer.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
             mPraentViewGroup.removeAllViews();
         }
-        mPraentViewGroup.addView(mVDVideoView);
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
+        mPraentViewGroup.addView(videoPlayerStandard);
         if (!TextUtils.isEmpty(imgUrl)) {
             if(view_Tip==null){
                 initView(mContext);
@@ -177,7 +117,7 @@ setControlLayerVisibility(false);
             mPraentViewGroup.removeAllViews();
         }
         mPraentViewGroup.removeAllViews();
-        mPraentViewGroup.addView(mVDVideoView);
+        mPraentViewGroup.addView(videoPlayerStandard);
         if(view_Tip!=null)mPraentViewGroup.addView(view_Tip);
         mPraentViewGroup.addView(view_dish);
         view_dish.setOnClickListener(new OnClickListener() {
@@ -188,8 +128,6 @@ setControlLayerVisibility(false);
         });
     }
 
-
-
     /**
      * 广告点击事件
      */
@@ -197,7 +135,6 @@ setControlLayerVisibility(false);
         Log.i("zhangyujian","广告点:::"+mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
-            if (VideoApplication.initSuccess) {
                 if(isShowAd){
                     if(mediaViewCallBack!=null)mediaViewCallBack.onclick();
                     return;
@@ -219,35 +156,16 @@ setControlLayerVisibility(false);
                 if(view_dish!=null){
                     mPraentViewGroup.removeView(view_dish);
                     view_dish=null;
+                    mImageView.setVisibility(View.GONE);
                 }
                 if(view_Tip!=null){
                     mPraentViewGroup.removeView(view_Tip);
                     view_Tip=null;
                 }
-                try {
-                    Log.i("zhangyujian","开始播放:::");
-                    VDVideoViewController controller1 = VDVideoViewController.getInstance(mContext);
-                    if(controller1!=null)controller1.notifyHideTip();
-                    mVDVideoView.play(0);
-                } catch (Exception e) {
-                    isError = true;
-                    Tools.showToast(mContext, "视频解码库加载失败，请重试");
-                    FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/libs/");
-                    initVideoView(mVideoUnique, mUserUnique);
-                    return;
-                }
-                VDVideoViewController controller = VDVideoViewController.getInstance(mContext);
-                if (controller != null) {
-                    controller.resume();
-                    controller.start();
-                }
-
+                    videoPlayerStandard.startVideo();
                 if (mStatisticsPlayCountCallback != null) {
                     mStatisticsPlayCountCallback.onStatistics();
                 }
-            } else {
-                Tools.showToast(mContext, "加载视频解码库中...");
-            }
         } else {
             Tools.showToast(mContext, "努力获取视频信息中...");
             initVideoView(mVideoUnique, mUserUnique);
@@ -258,28 +176,10 @@ setControlLayerVisibility(false);
     /**
      * 初始化视频播放数据
      *
-     * @param videoUnique
-     * @param userUnique
+     * @param videoUnique vu
+     * @param userUnique uu
      */
     public void initVideoView(final String videoUnique, final String userUnique) {
-        if (isError) {
-            mImageView = new ImageViewVideo(mContext);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
-            mImageView.parseItemImg(ScaleType.CENTER_CROP, mImgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
-            mImageView.setLayoutParams(params);
-            mPraentViewGroup.addView(mImageView);
-            mImageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final String url = "http://m.xiangha.com/Dish/video?uu=" + userUnique + "&vu=" + videoUnique + "&height=320&width=100%&pu=b871295ff4&text-align=%27center%27&auto_play=1&extend=0";
-                    Intent intent = new Intent(mContext, VideoShowWeb.class);
-                    intent.putExtra("url", url);
-                    mContext.startActivity(intent);
-                }
-            });
-            return;
-        }
         this.mUserUnique = userUnique;
         this.mVideoUnique = videoUnique;
         String url = getUrl(videoUnique, userUnique);//cebb8cfcb9-----grpbim18nn
@@ -290,19 +190,16 @@ setControlLayerVisibility(false);
                     List<Map<String, String>> list = StringManager.getListMapByJson(msg);
                     if ("0".equals(getData(list, "code"))) {
                         list = StringManager.getListMapByJson(getData(list, "data"));
-                        String title = getData(list, "video_name");
                         list = StringManager.getListMapByJson(getData(list, "video_list"));
                         list = StringManager.getListMapByJson(getData(list, "video_2"));
                         String main_url = getData(list, "main_url");
                         if (!TextUtils.isEmpty(main_url)) {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
                             String vedioUrl = new String(bytes);
-                            VDVideoInfo videoInfo = new VDVideoInfo(vedioUrl);
-                            videoInfo.mTitle = title;
-                            mVDVideoView.open(mContext, videoInfo);
+                            videoPlayerStandard.setUp(vedioUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
-                                mPraentViewGroup.removeView(mImageView);
+                                mPraentViewGroup.removeView(view_dish);
                                 setOnClick();
                             }
 
@@ -318,10 +215,9 @@ setControlLayerVisibility(false);
             }
 
             @Override
-            public Map<String, String> getReqHeader(Map<String, String> header, String url,
-                                                    Map<String, String> params) {
+            public Map<String, String> getReqHeader(Map<String, String> header, String url,Map<String, String> params) {
                 mVideoInfoRequestNumber++;
-                return new HashMap<String, String>();
+                return new HashMap<>();
             }
         });
     }
@@ -329,23 +225,11 @@ setControlLayerVisibility(false);
     /**
      * 初始化视频播放数据
      *
-     * @param videoUnique
-     * @param userUnique
+     * @param videoUnique vu
+     * @param userUnique uu
+     * @param view view
      */
     public void initVideoView(final String videoUnique, final String userUnique, final View view) {
-        if (isError) {
-            mPraentViewGroup.addView(view);
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final String url = "http://m.xiangha.com/Dish/video?uu=" + userUnique + "&vu=" + videoUnique + "&height=320&width=100%&pu=b871295ff4&text-align=%27center%27&auto_play=1&extend=0";
-                    Intent intent = new Intent(mContext, VideoShowWeb.class);
-                    intent.putExtra("url", url);
-                    mContext.startActivity(intent);
-                }
-            });
-            return;
-        }
         this.mUserUnique = userUnique;
         this.mVideoUnique = videoUnique;
         String url = getUrl(videoUnique, userUnique);//cebb8cfcb9-----grpbim18nn
@@ -356,19 +240,17 @@ setControlLayerVisibility(false);
                     List<Map<String, String>> list = StringManager.getListMapByJson(msg);
                     if ("0".equals(getData(list, "code"))) {
                         list = StringManager.getListMapByJson(getData(list, "data"));
-                        String title = getData(list, "video_name");
                         list = StringManager.getListMapByJson(getData(list, "video_list"));
                         list = StringManager.getListMapByJson(getData(list, "video_2"));
                         String main_url = getData(list, "main_url");
                         if (!TextUtils.isEmpty(main_url)) {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
                             String vedioUrl = new String(bytes);
-                            VDVideoInfo videoInfo = new VDVideoInfo(vedioUrl);
-                            videoInfo.mTitle = title;
-                            mVDVideoView.open(mContext, videoInfo);
+                            videoPlayerStandard.setUp(vedioUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
-                                mPraentViewGroup.removeView(view);
+
+                                mImageView.setVisibility(View.GONE);
                                 setOnClick();
                             }
                         } else {
@@ -392,22 +274,14 @@ setControlLayerVisibility(false);
     }
 
     /**
-     * 初始化视频播放数据,直接使用url
+     *  初始化视频播放数据,直接使用url
+     * @param url
+     * @param title
+     * @param view
      */
     public void initVideoView2(final String url,String title, final View view) {
-
+        videoPlayerStandard.setUp(url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
         mHasVideoInfo = true;
-        if (ToolsDevice.isNetworkAvailable(XHApplication.in())){
-            VideoApplication.getInstence().initialize(XHApplication.in());
-        }
-        VDVideoInfo videoInfo = new VDVideoInfo(url);
-        videoInfo.mTitle = title;
-        mVDVideoView.open(mContext, videoInfo);
-    }
-
-    public void setControlLayerVisibility(boolean isShow){
-        if(mVDVideoView != null)
-            mVDVideoView.findViewById(R.id.controlLayout1).setVisibility(isShow?View.VISIBLE:View.GONE);
     }
 
     private String getData(List<Map<String, String>> list, String key) {
@@ -421,12 +295,12 @@ setControlLayerVisibility(false);
     /**
      * 拼接获取视频播放地址的url
      *
-     * @param videoUnique
-     * @param userUnique
-     * @return
+     * @param videoUnique vu
+     * @param userUnique uu
+     * @return 视频url
      */
     private String getUrl(String videoUnique, String userUnique) {
-        String url = "";
+        String url ;
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(StringManager.api_getVideoUrl);
         stringBuffer.append("?");
@@ -464,30 +338,31 @@ setControlLayerVisibility(false);
         return "sign=" + StringManager.stringToMD5(signParam);
     }
 
-    /**
-     * 外部重写keyDown()时调用
-     *
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    public boolean onVDKeyDown(int keyCode, KeyEvent event) {
-        if (mVDVideoView != null) {
-            return mVDVideoView.onVDKeyDown(keyCode, event);
-        }
-        return true;
-    }
-
-    public VDVideoView getVDVideoView() {
-        return mVDVideoView;
-    }
-
-    public void setVDVideoView(VDVideoView mVDVideoView) {
-        this.mVDVideoView = mVDVideoView;
+    public boolean onBackPressed(){
+        return JCVideoPlayer.backPress();
     }
 
     public ImageViewVideo getVideoImageView() {
         return mImageView;
+    }
+
+    public void setOnProgressChangedCallback(JCVideoPlayer.OnProgressChangedCallback callback){
+        if(videoPlayerStandard != null)
+            videoPlayerStandard.setOnProgressChangedCallback(callback);
+    }
+
+    public long getCurrentPositionWhenPlaying(){
+        if(videoPlayerStandard != null){
+            videoPlayerStandard.getCurrentPositionWhenPlaying();
+        }
+        return -1;
+    }
+
+    public long getDuration(){
+        if(videoPlayerStandard != null){
+            videoPlayerStandard.getDuration();
+        }
+        return -1;
     }
 
     /**
@@ -496,55 +371,38 @@ setControlLayerVisibility(false);
      * @return
      */
     public boolean isPlaying() {
-        if (mVDVideoView != null) {
-            return mVDVideoView.getIsPlaying();
+        if (JCMediaManager.instance().mediaPlayer != null) {
+            return JCMediaManager.instance().mediaPlayer.isPlaying();
         }
         return false;
     }
 
     public void onStart(){
-        if(mVDVideoView != null){
-            mVDVideoView.onStart();
+        if(JCMediaManager.instance().mediaPlayer != null){
+            JCMediaManager.instance().mediaPlayer.start();
+            if(videoPlayerStandard != null)
+                videoPlayerStandard.onStatePlaying();
         }
     }
 
     public void onResume() {
         if (mHasVideoInfo) {
-            if (mVDVideoView != null) {
-                mVDVideoView.onResume();
-            }
-        } else if (mVDVideoView != null && !mVDVideoView.getIsPlaying()) {
+            onStart();
+        } else if (JCMediaManager.instance().mediaPlayer != null && !JCMediaManager.instance().mediaPlayer.isPlaying()) {
             initVideoView(mVideoUnique, mUserUnique);
         }
     }
 
     public void onPause() {
-        if (mVDVideoView != null) {
-            mVDVideoView.onPause();
-        }
-    }
-
-    public void onStop() {
-        if (mVDVideoView != null) {
-            mVDVideoView.onStop();
+        if (JCMediaManager.instance().mediaPlayer != null) {
+            JCMediaManager.instance().mediaPlayer.pause();
+            videoPlayerStandard.onStatePause();
         }
     }
 
     public void onDestroy() {
-        if (mVDVideoView != null) {
-            mVDVideoView.release(false);
-        }
-    }
-
-    /**
-     * 设置时候全屏
-     *
-     * @param isFullScreen true ? 全屏 : 不全屏
-     */
-    public void setIsFullScreen(boolean isFullScreen) {
-        if (mVDVideoView != null) {
-            mVDVideoView.setIsFullScreen(isFullScreen);
-        }
+        JCVideoPlayer.releaseAllVideos();
+        JCVideoPlayer.clearSavedProgress(mContext, null);
     }
 
     /**
@@ -565,32 +423,18 @@ setControlLayerVisibility(false);
         this.mStatisticsPlayCountCallback = callback;
     }
 
-    //统计视频初始化错误
-    protected void statisticsInitVideoError(Context context) {
-        isError = true;
-//		Tools.showToast(context, "您的手机暂时不支持播放视频");
-        XHClick.mapStat(context, "init_video_error", "CPU型号", "" + CPUTool.getCpuName());
-        XHClick.mapStat(context, "init_video_error", "手机型号", android.os.Build.BRAND + "_" + android.os.Build.MODEL);
-    }
-
     /**
      * 隐藏全屏按钮
      */
     public void hideFullScreen(){
-        if(mVDVideoView!=null) {
+        if(videoPlayerStandard!=null) {
             //去掉全屏按钮
-            VDVideoFullScreenButton fullscreen1 = (VDVideoFullScreenButton) mVDVideoView.findViewById(R.id.fullscreen1);
-            fullscreen1.setVisibility(View.GONE);
-
-            VDVideoPlaySeekBar playerseek2 = (VDVideoPlaySeekBar) mVDVideoView.findViewById(R.id.playerseek2);
-            //设置滑动条位置
-            RelativeLayout.LayoutParams playerseekParam = (RelativeLayout.LayoutParams) playerseek2.getLayoutParams();
-            playerseekParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+            videoPlayerStandard.fullscreenButton.setVisibility(View.GONE);
         }
     }
 
     public void setMute(boolean isMuted, boolean needNotify) {
-        VDPlayerSoundManager.setMute(mContext, isMuted, needNotify);
+//        VDPlayerSoundManager.setMute(mContext, isMuted, needNotify);
     }
 
     //是否显示广告
@@ -653,21 +497,25 @@ setControlLayerVisibility(false);
     public void setShowMedia(boolean showMedia) {
         isShowMedia = showMedia;
     }
-//    private void play()
+
+    public void setOnPlayingCompletionListener(OnPlayingCompletionListener listener){
+        this.onPlayingCompletionListener = listener;
+        if(videoPlayerStandard != null && onPlayingCompletionListener != null)
+            videoPlayerStandard.setOnPlayCompleteCallback(new XHVideoPlayerStandard.OnPlayCompleteCallback() {
+                @Override
+                public void onComplte() {
+//                    mImageView.setVisibility(View.VISIBLE);
+                    onPlayingCompletionListener.onPlayingCompletion();
+                }
+            });
+    }
+
+    public void removePlayingCompletionListener(){
+        this.onPlayingCompletionListener = null;
+    }
 
     public interface OnPlayingCompletionListener {
-        void onPlayingCompletion();
-    }
-    protected OnPlayingCompletionListener mOnPlayingCompletionListener;
-    public void setOnPlayingCompletionListener(OnPlayingCompletionListener playingCompletionListener) {
-        mOnPlayingCompletionListener = playingCompletionListener;
+        public void onPlayingCompletion();
     }
 
-    public void removePlayingCompletionListener() {
-        mOnPlayingCompletionListener = null;
-    }
-
-    public void setOnProgressUpdateListener(VDVideoViewListeners.OnProgressUpdateListener onProgressUpdateListener) {
-        this.onProgressUpdateListener = onProgressUpdateListener;
-    }
 }

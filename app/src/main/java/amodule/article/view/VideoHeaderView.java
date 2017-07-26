@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ import amodule.dish.view.DishVideoImageView;
 import amodule.dish.view.VideoDredgeVipView;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
@@ -284,8 +286,6 @@ public class VideoHeaderView extends RelativeLayout {
                 isContinue = true;
                 isHaspause = false;
                 dredgeVipLayout.setVisibility(GONE);
-                mVideoPlayerController.setControlLayerVisibility(true);
-                VDVideoViewController.getInstance(activity).setSeekPause(false);
             }
 
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
@@ -351,55 +351,26 @@ public class VideoHeaderView extends RelativeLayout {
                 }
             }
         });
-        mVideoPlayerController.setOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
+        mVideoPlayerController.setOnProgressChangedCallback(new JCVideoPlayer.OnProgressChangedCallback() {
             @Override
-            public void onProgressUpdate(long current, long duration) {
-                int currentS = Math.round(current/1000f);
-                int durationS = Math.round(duration/1000f);
-                if(limitTime > durationS){
-                    mVideoPlayerController.setControlLayerVisibility(true);
-                }
-                if(isHaspause){
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-                    return;
-                }
-                if((currentS > limitTime
-//                        || limitTime > durationS
-                ) && !isContinue){
-                    currentTime = current;
-                    dredgeVipLayout.setVisibility(VISIBLE);
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-                    isHaspause = true;
-                }
-            }
-
-            @Override
-            public void onDragProgess(long current, long duration) {
-                int currentS = Math.round(current/1000f);
-                int durationS = Math.round(duration/1000f);
-                if(limitTime > durationS){
-                    mVideoPlayerController.setControlLayerVisibility(true);
-                }
-                if(isHaspause){
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-                    return;
-                }
-                if((currentS > limitTime
-//                        || limitTime > durationS
-                ) && !isContinue){
-                    currentTime = current;
-                    dredgeVipLayout.setVisibility(VISIBLE);
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-
-                    isHaspause = true;
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int currentS = Math.round(mVideoPlayerController.getCurrentPositionWhenPlaying() / 1000f);
+                int durationS = Math.round(mVideoPlayerController.getDuration() / 1000f);
+                if (currentS >= 0 && durationS >= 0) {
+                    if (isHaspause) {
+                        VDVideoViewController.getInstance(context).setSeekPause(true);
+                        mVideoPlayerController.onPause();
+                        mVideoPlayerController.onResume();
+                        return;
+                    }
+                    if ((currentS > limitTime
+//                            || limitTime > durationS
+                    ) && !isContinue) {
+                        dredgeVipLayout.setVisibility(VISIBLE);
+                        mVideoPlayerController.onPause();
+                        mVideoPlayerController.onResume();
+                        isHaspause = true;
+                    }
                 }
             }
         });

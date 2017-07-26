@@ -111,6 +111,7 @@ public class JCUtils {
      * @param url     if url!=null clear this url progress
      */
     public static void clearSavedProgress(Context context, String url) {
+        if(context == null) return;
         if (TextUtils.isEmpty(url)) {
             SharedPreferences spn = context.getSharedPreferences("JCVD_PROGRESS",
                     Context.MODE_PRIVATE);

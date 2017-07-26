@@ -107,6 +107,8 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
     protected float mGestureDownBrightness;
     protected int mSeekTimePosition;
 
+    public OnProgressChangedCallback onProgressChangedCallback = null;
+
     public JCVideoPlayer(Context context) {
         super(context);
         init(context);
@@ -718,6 +720,9 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if(onProgressChangedCallback != null){
+            onProgressChangedCallback.onProgressChanged(seekBar, progress, fromUser);
+        }
     }
 
     public void startWindowFullscreen() {
@@ -980,7 +985,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
         }
     };
 
-    //TODO 是否有用
+    //是否有用
     public void onSeekComplete() {
 
     }
@@ -1014,4 +1019,11 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
 
     }
 
+    public void setOnProgressChangedCallback(OnProgressChangedCallback callback){
+        this.onProgressChangedCallback = callback;
+    }
+
+    public interface OnProgressChangedCallback{
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser);
+    }
 }

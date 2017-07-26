@@ -29,6 +29,7 @@ import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -52,7 +53,7 @@ import static java.lang.System.currentTimeMillis;
  * -----离线菜谱处理
  * 页面加载原则：头部跟随view一起初始化，底部有数据再进行加载
  */
-public class DetailDish extends BaseActivity {
+public class DetailDish extends BaseAppCompatActivity {
     public static String tongjiId = "a_menu_detail_normal430";//统计标示
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
@@ -74,6 +75,8 @@ public class DetailDish extends BaseActivity {
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
     private String lastPermission = "";
+
+    private boolean isBack = false;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -366,24 +369,13 @@ public class DetailDish extends BaseActivity {
     }
     //**********************************************Activity生命周期方法**************************************************
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mVideoPlayerController != null && !mVideoPlayerController.isError) {
-            return mVideoPlayerController.onVDKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
-        } else {
-            return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+        mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
+        if(mVideoPlayerController != null && mVideoPlayerController.onBackPressed()){
+            return;
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (mVideoPlayerController != null) {
-            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                mVideoPlayerController.setIsFullScreen(true);
-            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                mVideoPlayerController.setIsFullScreen(false);
-            }
-        }
+        isBack = true;
+        super.onBackPressed();
     }
 
     @Override
@@ -423,12 +415,6 @@ public class DetailDish extends BaseActivity {
         //释放资源。
         mHandler.removeCallbacksAndMessages(null);
         mHandler=null;
-    }
-
-    @Override
-    public void onBackPressed() {
-        mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
-        super.onBackPressed();
     }
 
     @Override

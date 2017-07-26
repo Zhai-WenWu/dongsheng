@@ -3,11 +3,9 @@ package amodule.other.activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 
 import com.xiangha.R;
 
@@ -15,12 +13,12 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.Tools;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jiecaovideoplayer.CustomView.MyJCVideoPlayerStandard;
+import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 
 public class PlayVideo extends BaseAppCompatActivity {
 
     private String url, img, name;
-    private MyJCVideoPlayerStandard myJCVideoPlayerStandard;
+    private XHVideoPlayerStandard myJCVideoPlayerStandard;
     boolean isBack = false;
     boolean onceStart = true;
 
@@ -57,7 +55,7 @@ public class PlayVideo extends BaseAppCompatActivity {
     }
 
     private void intiVideoView() {
-        myJCVideoPlayerStandard = ((MyJCVideoPlayerStandard) findViewById(R.id.jc_video));
+        myJCVideoPlayerStandard = ((XHVideoPlayerStandard) findViewById(R.id.jc_video));
         myJCVideoPlayerStandard.setUp(url, JCVideoPlayer.SCREEN_LAYOUT_NORMAL, "");
         JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         JCVideoPlayer.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
