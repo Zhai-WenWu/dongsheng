@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -25,10 +24,6 @@ import amodule.main.Main;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
-
-import static amodule.dish.db.DataOperate.DISH_INFO;
-import static amodule.dish.db.DataOperate.DISH_LIKE_NUMBER_INFO;
-import static amodule.dish.db.DataOperate.DISH_USER_INFO;
 
 /**
  * 菜谱界面的总控制类
@@ -67,8 +62,7 @@ public class DishActivityViewControlNew {
 
 
     private DishViewCallBack callBack;
-
-    private Map<String,String> offDishMap;
+    private String dishJson = "";
 
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
@@ -80,7 +74,6 @@ public class DishActivityViewControlNew {
         this.loadManager = loadManager;
         this.code = code;
         this.callBack = callBack;
-        offDishMap = new HashMap<>();
 
         initView();
 
@@ -88,7 +81,7 @@ public class DishActivityViewControlNew {
         dishTitleViewControl= new DishTitleViewControlNew(mAct, new DishTitleViewControlNew.OnDishTitleControlListener() {
             @Override
             public String getOffDishJson() {
-                return StringManager.getJsonByMap(offDishMap).toString();
+                return dishJson;
             }
         });
         dishTitleViewControl.initView(mAct,mXhWebView);
@@ -198,14 +191,14 @@ public class DishActivityViewControlNew {
      * @param permissionMap
      */
     public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
-        offDishMap.put(DISH_INFO,dishInfo);
+        dishJson = dishInfo;
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
 
         dishInfoMap = list.get(0);
         mXhWebView.loadDishData(dishInfoMap.get("code"));
 
-        isHasVideo = dishInfoMap.get("type").equals("2");
+        isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
 
         dishTitleViewControl.setData(dishInfoMap,code,isHasVideo,dishInfoMap.get("dishState"),loadManager);
@@ -241,17 +234,15 @@ public class DishActivityViewControlNew {
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
         },permissionMap);
-        mFootControl.init(dishInfoMap.get("name"));
+        mFootControl.setDishInfo(dishInfoMap.get("name"));
         mScrollView.setVisibility(View.VISIBLE);
     }
 
     public void analyzeUserShowDishInfoData(String dishJson){
-        offDishMap.put(DISH_USER_INFO,dishJson);
         mFootControl.initUserDish(dishJson);
     }
 
     public void analyzeDishLikeNumberInfoData(String dishJson){
-        offDishMap.put(DISH_LIKE_NUMBER_INFO,dishJson);
         mFootControl.initLikeState(dishJson);
     }
 

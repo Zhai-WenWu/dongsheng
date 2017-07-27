@@ -44,9 +44,6 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 
-import static amodule.dish.db.DataOperate.DISH_INFO;
-import static amodule.dish.db.DataOperate.DISH_LIKE_NUMBER_INFO;
-import static amodule.dish.db.DataOperate.DISH_USER_INFO;
 import static com.xiangha.R.id.share_layout;
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -96,6 +93,12 @@ public class DetailDish extends BaseActivity {
             //保存历史记录
             DataOperate.saveHistoryCode(code);
         }
+        if(TextUtils.isEmpty(code)){
+            Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
+            DetailDish.this.finish();
+            return;
+        }
+
         //保持高亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         new Handler().postDelayed(new Runnable() {
@@ -165,11 +168,14 @@ public class DetailDish extends BaseActivity {
                 switch (msg.what) {
                     case LOAD_DISH://读取历史记录回来
                         Log.i("detailDish","load_dish dishJson:" + dishJson);
-                        if (dishJson.length() > 10) {
+                        if (!TextUtils.isEmpty(dishJson) && dishJson.length() > 10) {
                             imgLevel = LoadImage.SAVE_LONG;
+                            loadOtherData();
                             analyzeHistoryData();
-                        } else
-                            setRequest();
+                        } else {
+                            loadDishInfo();
+                            loadOtherData();
+                        }
                         break;
                     case LOAD_DISH_OVER://数据读取成功
                         findViewById(share_layout).setVisibility(View.VISIBLE);
@@ -200,7 +206,7 @@ public class DetailDish extends BaseActivity {
     /**
      * 请求网络
      */
-    private void setRequest() {
+    private void loadDishInfo() {
         String params = "code=" + code;
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this) {
 
@@ -245,7 +251,10 @@ public class DetailDish extends BaseActivity {
                 }else loadManager.hideProgressBar();
             }
         });
+    }
 
+    private void loadOtherData(){
+        String params = "code=" + code;
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDish.this) {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -270,15 +279,7 @@ public class DetailDish extends BaseActivity {
      * 历史记录都是:dishInfo的数据
      */
     private void analyzeHistoryData() {
-        ArrayList<Map<String, String>> listmaps = getListMapByJson(dishJson);
-        if (listmaps.size() == 0){
-            return;
-        }
-        Map<String, String> dishMap = listmaps.get(0);
-        dishActivityViewControl.analyzeDishInfoData(dishMap.get(DISH_INFO), new HashMap<String, String>());
-        dishActivityViewControl.analyzeUserShowDishInfoData(dishMap.get(DISH_USER_INFO));
-        dishActivityViewControl.analyzeDishLikeNumberInfoData(dishMap.get(DISH_LIKE_NUMBER_INFO));
-
+        dishActivityViewControl.analyzeDishInfoData(dishJson, new HashMap<String, String>());
         loadManager.loadOver(ReqInternet.REQ_OK_STRING, 1, true);
         mHandler.sendEmptyMessage(LOAD_DISH_OVER);
     }
@@ -417,8 +418,10 @@ public class DetailDish extends BaseActivity {
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
         }
         //释放资源。
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler=null;
+        if(mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +13,6 @@ import org.json.JSONObject;
 
 import acore.logic.AppCommon;
 import acore.tools.ImgManager;
-import acore.tools.StringManager;
 
 /**
  * Created by Fang Ruijiao on 2017/7/25.
@@ -48,7 +48,7 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
             String json="";
             if(cur.moveToFirst()){
                 do{
-                    String statedb=cur.getString(cur.getColumnIndex(DishOffData.bd_json));
+                    String statedb = cur.getString(cur.getColumnIndex(DishOffData.bd_json));
                     if(json==""){
                         json="[" + statedb;
                     }else{
@@ -81,7 +81,6 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
             if(cur.moveToFirst()){
                 do{
                     String statedb=cur.getString(cur.getColumnIndex(DishOffData.bd_json));
-                    statedb = StringManager.getListMapByJson(statedb).get(0).get(DataOperate.DISH_INFO);
                     if(json==""){
                         json="[" + statedb;
                     }else{
@@ -112,6 +111,7 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
             if (cur.moveToFirst()) {// 判断游标是否为空
                 json = cur.getString(cur.getColumnIndex(DishOffData.bd_json));
             }
+            if(TextUtils.isEmpty(json)) json = "";
             return json;
         }
         finally{
@@ -258,8 +258,8 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
             close(cur, writableDatabase);
         }
     }
-    private final static String DB_NAME = "tb_showBuy";
-    public static final String TB_MAIN_ENAME ="tb_showBuy";
+    private final static String DB_NAME = "tb_dishData";
+    public static final String TB_MAIN_ENAME ="tb_dishData";
 
     private final String CREATE_MAIN_TABLE_SQL = "create table "+TB_MAIN_ENAME+"("
             + DishOffData.bd_id+" integer primary key autoincrement,"

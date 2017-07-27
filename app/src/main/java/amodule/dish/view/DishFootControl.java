@@ -55,11 +55,10 @@ public class DishFootControl implements View.OnClickListener{
     public DishFootControl(Activity act,String code){
         mAct = act;
         this.code = code;
+        init();
     }
 
-    public void init(String dishName){
-        mDishName = dishName;
-
+    private void init(){
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan);
 
@@ -84,6 +83,10 @@ public class DishFootControl implements View.OnClickListener{
         mQuizTv.setOnClickListener(this);
         mGoodShow.setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+    }
+
+    public void setDishInfo(String dishName) {
+        mDishName = dishName;
     }
 
     public void initUserDish(String dishJson){

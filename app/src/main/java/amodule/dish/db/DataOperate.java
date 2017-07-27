@@ -12,7 +12,6 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.ImgManager;
-import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
 import xh.basic.tool.UtilFile;
@@ -21,10 +20,6 @@ import xh.basic.tool.UtilString;
 public class DataOperate {
 	//没登录时默认离线菜谱个数
 	public static final int MAX_DOWN_DISH=10;
-
-	public static final String DISH_INFO = "dishInfo";
-	public static final String DISH_USER_INFO = "userDishInfo";
-	public static final String DISH_LIKE_NUMBER_INFO = "dishLikeNumberInfo";
 
 	public static void saveBuyBurden(final Context context,final String json) {
 		new Thread(new Runnable() {
@@ -37,16 +32,11 @@ public class DataOperate {
 				DishOffData buyData = new DishOffData();
 				ArrayList<Map<String,String>> arrayList = UtilString.getListMapByJson(json);
 				if(arrayList.size() > 0){
-					Map<String,String> dishMap = arrayList.get(0);
-					String dishInfoJson = dishMap.get(DISH_INFO);
-					ArrayList<Map<String,String>> dishInfoArray = StringManager.getListMapByJson(dishInfoJson);
-					if(dishInfoArray.size() > 0){
-						Map<String,String> dishInfoMap = dishInfoArray.get(0);
-						buyData.setCode(dishInfoMap.get("code"));
-						buyData.setName(dishInfoMap.get("name"));
-						buyData.setAddTime(Tools.getAssignTime("yyyy-MM-dd HH:mm:ss",0));
-						ImgManager.saveImg(dishInfoMap.get("img"),LoadImage.SAVE_LONG);
-					}
+					Map<String,String> dishInfoMap = arrayList.get(0);
+					buyData.setCode(dishInfoMap.get("code"));
+					buyData.setName(dishInfoMap.get("name"));
+					buyData.setAddTime(Tools.getAssignTime("yyyy-MM-dd HH:mm:ss",0));
+					ImgManager.saveImg(dishInfoMap.get("img"),LoadImage.SAVE_LONG);
 					buyData.setJson(json);
 					int id = sqlite.insert(buyData);
 					if(id != -1)AppCommon.buyBurdenNum++;

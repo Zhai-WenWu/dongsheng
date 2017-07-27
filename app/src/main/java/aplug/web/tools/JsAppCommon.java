@@ -30,6 +30,7 @@ import acore.tools.Tools;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.db.DataOperate;
 import amodule.dish.db.DishOffSqlite;
+import amodule.dish.view.DishWebView;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -808,5 +809,12 @@ public class JsAppCommon extends JsBase{
 				}
 			});
 		}
+	}
+
+	@JavascriptInterface
+	public void onLoadFinishCallback(String data){
+//		Log.i(DishWebView.TAG,"onLoadFinishCallback()");
+//		Tools.showToast(mAct,"onLoadFinishCallback()");
+		((DishWebView)mWebView).onLoadFinishCallback(data);
 	}
 }

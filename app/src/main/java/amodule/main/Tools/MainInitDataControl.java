@@ -26,15 +26,15 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
-import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.activity.upload.UploadDishListActivity;
-import amodule.dish.db.DataOperate;
 import amodule.dish.db.DishOffData;
-import amodule.dish.db.DishOffSqlite;
+import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishSqlite;
+import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
+import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
@@ -96,8 +96,9 @@ public class MainInitDataControl {
 
                 CookieManager.getInstance().removeAllCookie();
                 //待处理问题。
-//                HomeToutiaoAdControl.getInstance().getAdData(activity);
+                HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
+                OffDishToFavoriteControl.offDishToFavorite(activity);
             }
         }.start();
         AdConfigTools.getInstance().setRequest(XHApplication.in());
@@ -289,7 +290,7 @@ public class MainInitDataControl {
      */
     private void saveDataInDB(String json,Context context) {
         DishOffData buyData = new DishOffData();
-        DishOffSqlite sqlite = new DishOffSqlite(context);
+        ShowBuySqlite sqlite = new ShowBuySqlite(context);
         ArrayList<Map<String, String>> arrayList = getListMapByJson(json);
         for (int i = 0; i < arrayList.size(); i++) {
             buyData.setCode(arrayList.get(i).get("code"));
@@ -300,10 +301,8 @@ public class MainInitDataControl {
             try {
                 array = new JSONArray(json);
                 String newJson = array.get(i).toString();
-                Map<String,String> map = new HashMap<>();
-                map.put(DataOperate.DISH_INFO,newJson);
-                buyData.setJson(StringManager.getJsonByMap(map).toString());
-                int id = sqlite.insert(buyData);
+                buyData.setJson(newJson);
+                int id = sqlite.insert(context, buyData);
                 if (id > 0)
                     AppCommon.buyBurdenNum++;
             } catch (JSONException e) {

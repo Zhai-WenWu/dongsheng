@@ -1,25 +1,28 @@
 package amodule.dish.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
+import android.view.View;
 
 import acore.tools.FileManager;
+import acore.tools.Tools;
 import amodule.dish.tools.DishMouldControl;
+import aplug.web.tools.JsAppCommon;
+import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 
 /**
  * Created by Fang Ruijiao on 2017/7/17.
  */
-
 public class DishWebView extends XHWebView {
 
-    private String TAG = "dishMould";
+    public static final String TAG = "dishMould";
 
     private String dishCode;
+    private String mHtmlData;
 
     public DishWebView(Context context) {
         super(context);
@@ -36,15 +39,12 @@ public class DishWebView extends XHWebView {
         init();
     }
 
-    private void init(){
-        WebSettings webSettings = getSettings();
-//        webSettings.setDomStorageEnabled(true);
-//        webSettings.setDatabaseEnabled(true);
-//        String dbPath = FileManager.getSDDir() + "long/dbPath";
-//        webSettings.setDatabasePath(dbPath);
-
-        webSettings.setJavaScriptEnabled(true);
-        addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
+    protected void init(){
+        WebviewManager.initWebSetting(this);
+        WebviewManager.setWebChromeClient(this,null);
+        JsAppCommon jsObj = new JsAppCommon((Activity) this.getContext(),this,null,null);
+        addJavascriptInterface(jsObj, jsObj.TAG);
+        setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     }
 
     public void loadDishData(String code){
@@ -59,20 +59,24 @@ public class DishWebView extends XHWebView {
             return;
         }
         String htmlStr = FileManager.readFile(htmlPath);
+        Log.i(TAG,"loadDishData() htmlStr:" + htmlStr);
         if(TextUtils.isEmpty(htmlStr)){
             loadMould(code);
             return;
         }
-//        loadData(htmlStr,"text/html; charset=UTF-8", null);
         loadDataWithBaseURL(null,htmlStr,"text/html","utf-8", null);
     }
 
     public boolean saveDishData(){
-        if(TextUtils.isEmpty(dishCode)){
+        Log.i(TAG,"saveDishData()");
+        Tools.showToast(getContext(),"saveDishData()");
+        if(TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(mHtmlData)){
             return false;
         }
-        DishWebView.this.loadUrl("javascript:window.local_obj.saveSource('<head>'+" +
-                "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+        String path = DishMouldControl.getOffDishPath() + dishCode;
+        Log.d(TAG,"path:" + path);
+        FileManager.saveFileToCompletePath(path,mHtmlData,false);
+        FileManager.saveShared(getContext(),FileManager.file_dishMould,dishCode,path);
         return true;
     }
 
@@ -80,8 +84,9 @@ public class DishWebView extends XHWebView {
         DishMouldControl.getDishMould(new DishMouldControl.OnDishMouldListener() {
             @Override
             public void loaded(boolean isSucess, String data) {
+                Log.d(TAG,"getDishMould() isSucess:" + isSucess);
                 if(isSucess){
-                    Log.d(TAG,"loadMould() data:" + data);
+//                    Log.d(TAG,"loadMould() data:" + data);
                     data = data.replace("<{code}>",code);
                     final String html = data;
                     DishWebView.this.post(new Runnable() {
@@ -96,15 +101,10 @@ public class DishWebView extends XHWebView {
         });
     }
 
-    final class InJavaScriptLocalObj {
-        @JavascriptInterface
-        public void saveSource(String html) {
-            String path = DishMouldControl.getOffDishPath() + dishCode;
-            Log.d(TAG,"path:" + path);
-            FileManager.saveFileToCompletePath(path,html,false);
-            FileManager.saveShared(getContext(),FileManager.file_dishMould,dishCode,path);
-        }
-
+    /**
+     * 当h5所有加载完毕后回调，包括请求网络数据
+     */
+    public void onLoadFinishCallback(String html){
+        mHtmlData = html;
     }
-
 }

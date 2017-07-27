@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import acore.logic.AppCommon;
 import acore.tools.ImgManager;
 
@@ -29,30 +31,55 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
 	}
-	
-	/**
-	 * 查询数据库,得到所有的数据
-	 */
-	public String getAllDataFromDB(){
+
+	public ArrayList<String> getAllCodes(){
+		ArrayList<String> codes = new ArrayList<>();
 		Cursor cur=null;
 		SQLiteDatabase writableDatabase = null;
 		try {
 			writableDatabase = getWritableDatabase();
 			cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
 					null, null, DishOffData.bd_addTime + " desc");// 查询并获得游标
-			String json="";
 			if(cur.moveToFirst()){
-				do{			
-					String statedb=cur.getString(cur.getColumnIndex(DishOffData.bd_json));
-					if(json==""){
-						json="[" + statedb;
-					}else{
-						json +="," + statedb;
-					}
+				do{
+					String code =cur.getString(cur.getColumnIndex(DishOffData.bd_code));
+					codes.add(code);
 				}while(cur.moveToNext());
-				json = json + "]";
 			}
-			return json;
+			return codes;
+		}finally{
+			close(cur, writableDatabase);
+		}
+	}
+	
+	/**
+	 * 查询数据库,得到所有的数据
+	 */
+	public ArrayList<DishOffData> getAllDataFromDB(){
+		Cursor cur=null;
+		SQLiteDatabase writableDatabase = null;
+		try {
+			writableDatabase = getWritableDatabase();
+			cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
+					null, null, DishOffData.bd_addTime + " desc");// 查询并获得游标
+			ArrayList<DishOffData> arrayList = new ArrayList<>();
+			DishOffData dishOffData;
+			if(cur.moveToFirst()){
+				do{
+					dishOffData = new DishOffData();
+					String statedb = cur.getString(cur.getColumnIndex(DishOffData.bd_json));
+					String code = cur.getString(cur.getColumnIndex(DishOffData.bd_code));
+					String name = cur.getString(cur.getColumnIndex(DishOffData.bd_name));
+					String addTime = cur.getString(cur.getColumnIndex(DishOffData.bd_addTime));
+					dishOffData.setJson(statedb);
+					dishOffData.setCode(code);
+					dishOffData.setName(name);
+					dishOffData.setAddTime(addTime);
+					arrayList.add(dishOffData);
+
+				}while(cur.moveToNext());
+			}
+			return arrayList;
 		}finally{
 			close(cur, writableDatabase);
 		}

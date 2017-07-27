@@ -298,6 +298,7 @@ public class Main extends Activity implements OnClickListener {
     @SuppressLint("HandlerLeak")
     private void initUI() {
         setContentView(R.layout.xh_main);
+
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
 

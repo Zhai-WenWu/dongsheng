@@ -32,6 +32,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.adapter.AdapterListDish;
 import amodule.dish.db.DataOperate;
+import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.tools.DishMouldControl;
 import amodule.user.activity.login.LoginByAccout;
 import xh.basic.internet.UtilInternet;
@@ -72,7 +73,6 @@ public class OfflineDish extends BaseActivity {
 	}
 	
 	private OnClickListener onLookLevel = new OnClickListener() {
-		
 		@Override
 		public void onClick(View v) {
 			if (LoginManager.isLogin()) {
@@ -208,7 +208,10 @@ public class OfflineDish extends BaseActivity {
 	// 设置离线列表
 	private void loadOffLine() {
 		currentPage++;
-		setOffLine(UtilString.getListMapByJson(DataOperate.loadPageBuyBurden(OfflineDish.this, currentPage)));
+//		setOffLine(UtilString.getListMapByJson(DataOperate.loadPageBuyBurden(OfflineDish.this, currentPage)));
+
+		ShowBuySqlite sqlite = new ShowBuySqlite(OfflineDish.this);
+		setOffLine(UtilString.getListMapByJson(sqlite.LoadPage(currentPage)));
 		isBlankSpace = false;
 	}
 

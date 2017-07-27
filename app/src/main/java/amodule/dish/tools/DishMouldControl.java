@@ -19,7 +19,6 @@ import aplug.basic.ReqInternet;
 /**
  * Created by Fang Ruijiao on 2017/7/20.
  */
-
 public class DishMouldControl {
 
     public static void setDishMould(final OnDishMouldListener listener){
