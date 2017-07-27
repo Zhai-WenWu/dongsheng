@@ -1,7 +1,6 @@
 package amodule.quan.view;
 
 import android.app.Activity;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,18 +13,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.sina.sinavideo.sdk.VDVideoExtListeners;
-import com.sina.sinavideo.sdk.VDVideoView;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.xiangha.R;
 
 import acore.tools.FileManager;
-import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import third.video.VideoApplication;
+import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
 /**
@@ -36,19 +31,20 @@ public class VideoImageView extends RelativeLayout{
     private ImageView image_bg,load_progress,image_btn_play;
     private RelativeLayout video_layout;
     private boolean isVoice=true;
-    private VDVideoView vdVideoView;
-    private VDVideoInfo videoInfo;
+    private XHVideoPlayerStandard videoPlayerStandard;
     private boolean isbottomView=true;
     private boolean newStart=true;
     private boolean mIsCycle = true;
     private String videoUrl="";
     private LinearLayout tipLayout;
+
     public VideoImageView(Activity context,boolean isbottomView) {
         super(context);
         this.context = context;
         this.isbottomView= isbottomView;
         initView();
     }
+
     public VideoImageView(Activity context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -62,20 +58,10 @@ public class VideoImageView extends RelativeLayout{
     }
 
     private void initView() {
-//        FileManager.loadShared(context,)
         //直接播放
        String temp= (String) UtilFile.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
        if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
            setShowMedia(true);
-        try {
-            //视频解码库初始化
-            VideoApplication.getInstence().initialize(context);
-        } catch (Exception e) {
-            LogManager.reportError("视频软解包初始化异常", e);
-            return;
-        } catch (Error e) {
-            return;
-        }
         LayoutInflater.from(context).inflate(R.layout.view_video_image,this,true);
         image_bg= (ImageView) findViewById(R.id.image_bg);
         image_btn_play= (ImageView) findViewById(R.id.image_btn_play);
@@ -88,8 +74,9 @@ public class VideoImageView extends RelativeLayout{
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
         tipLayout.setLayoutParams(layoutParams);
         //创建视频播放器
-        if (vdVideoView == null) {
-            vdVideoView = new VDVideoView(context);
+        if (videoPlayerStandard == null) {
+            videoPlayerStandard = new XHVideoPlayerStandard(context);
+            videoPlayerStandard.setIsHideTopContainer(true);
             handlerView();
         }
     }
@@ -115,8 +102,9 @@ public class VideoImageView extends RelativeLayout{
         newStart=true;
         this.videoUrl=videoUrl;
         //视频播放信息info
-        videoInfo = new VDVideoInfo(videoUrl);
-        videoInfo.mTitle = "";
+        videoPlayerStandard.setUp(videoUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST);
+//        JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+//        JCVideoPlayer.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 
         handlerListener();
     }
@@ -125,20 +113,14 @@ public class VideoImageView extends RelativeLayout{
      * 处理view初始化
      */
     private void handlerView(){
-        vdVideoView.setLayers(R.array.video_layer);
         int height = (ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_30)) * 3 / 4;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-        vdVideoView.setLayoutParams(layoutParams);
-        ViewGroup viewParent = (ViewGroup) vdVideoView.getParent();
+        videoPlayerStandard.setLayoutParams(layoutParams);
+        ViewGroup viewParent = (ViewGroup) videoPlayerStandard.getParent();
         if (viewParent != null)
             viewParent.removeAllViews();
         //处理数据
-        video_layout.addView(vdVideoView);
-//        if(view_Tip==null){
-//            initView(context);
-//            video_layout.addView(view_Tip);
-//        }
-        vdVideoView.setVDVideoViewContainer(video_layout);
+        video_layout.addView(videoPlayerStandard);
     }
 
     /**
@@ -146,67 +128,40 @@ public class VideoImageView extends RelativeLayout{
      */
     private void handlerListener(){
 
-        VDVideoViewController controller = VDVideoViewController.getInstance(context);
-        if (controller != null) {
-            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
-                @Override
-                public void onCompletion() {
-                    if (mOnPlayingCompletionListener != null) {
-                        mOnPlayingCompletionListener.onPlayingCompletion();
-                    }
-                }
-            });
-        }
-
-        vdVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+        videoPlayerStandard.setOnPlayCompleteCallback(new XHVideoPlayerStandard.OnPlayCompleteCallback() {
             @Override
-            public void onVDVideoCompletion(VDVideoInfo info, int status) {
+            public void onComplte() {
                 if (mIsCycle) {
-                    vdVideoView.play(0);
-                    onResume();
-                    onStart();
+                    videoPlayerStandard.startVideo();
                 }
             }
         });
-        image_bg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                onBegin();
-                newStart=false;
-            }
-        });
-        vdVideoView.setErrorListener(new VDVideoExtListeners.OnVDVideoErrorListener() {
-            @Override
-            public void onVDVideoError(VDVideoInfo vdVideoInfo, int i, int i1) {
-            }
-        });
-        vdVideoView.setPlayerChangeListener(new VDVideoExtListeners.OnVDVideoPlayerChangeListener() {
-            @Override
-            public void OnVDVideoPlayerChangeSwitch(int i, long l) {
-            }
-        });
+        videoPlayerStandard.fullscreenButton.setVisibility(GONE);
         //测试该事件不是每次都会被调用
-        vdVideoView.setPreparedListener(new VDVideoExtListeners.OnVDVideoPreparedListener() {
+        videoPlayerStandard.setOnPlayPreparedCallback(new XHVideoPlayerStandard.OnPlayPreparedCallback() {
             @Override
-            public void onVDVideoPrepared(VDVideoInfo vdVideoInfo) {
+            public void onPrepared() {
                 load_progress.clearAnimation();
                 load_progress.setVisibility(View.GONE);
                 image_bg.setVisibility(View.GONE);
                 image_btn_play.setVisibility(View.GONE);
             }
         });
-        vdVideoView.setOnClickListener(new OnClickListener() {
+        image_bg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(videoClickCallBack!=null)videoClickCallBack.setVideoClick();
+                onBegin();
+                newStart=false;
             }
         });
-        vdVideoView.setPlaylistListener(new VDVideoExtListeners.OnVDVideoPlaylistListener() {
-            @Override
-            public void onPlaylistClick(VDVideoInfo vdVideoInfo, int i) {
-            }
-        });
+        //TODO 未完成转换处
+//        vdVideoView.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(videoClickCallBack!=null)
+//                    videoClickCallBack.setVideoClick();
+//            }
+//        });
         tipLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,54 +200,38 @@ public class VideoImageView extends RelativeLayout{
             return;
         }
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(context));
-        if (vdVideoView != null) {
-            vdVideoView.open(context, videoInfo);
-            if (VideoApplication.initSuccess) {
-                load_progress.setVisibility(View.GONE);
-                image_bg.setVisibility(View.GONE);
-                image_btn_play.setVisibility(View.GONE);
-                Log.i("zhangyujian","isShowMedia:::"+isShowMedia);
-                if(!isShowMedia){
-                    Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
-                    if(isAutoPaly){//当前wifi
-                        tipLayout.setVisibility(View.GONE);
-                    }else{
-                        tipLayout.setVisibility(View.VISIBLE);
-                        return;
-                    }
-                }else tipLayout.setVisibility(View.GONE);
-                try {
-                    VDVideoViewController controller1 = VDVideoViewController.getInstance(context);
-                    if(controller1!=null)controller1.notifyHideTip();
-                    vdVideoView.play(0);
-                } catch (Exception e) {
-                    Tools.showToast(getContext(), "视频解码库加载失败，请重试");
-                    FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/libs/");
+        if (videoPlayerStandard != null) {
+            videoPlayerStandard.setUp(videoUrl,JCVideoPlayer.SCREEN_LAYOUT_LIST);
+            load_progress.setVisibility(View.GONE);
+            image_bg.setVisibility(View.GONE);
+            image_btn_play.setVisibility(View.GONE);
+            Log.i("zhangyujian","isShowMedia:::"+isShowMedia);
+            if(!isShowMedia){
+                Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
+                if(isAutoPaly){//当前wifi
+                    tipLayout.setVisibility(View.GONE);
+                }else{
+                    tipLayout.setVisibility(View.VISIBLE);
                     return;
                 }
-                VDVideoViewController controller = VDVideoViewController.getInstance(getContext());
-                if (controller != null) {
-                    controller.resume();
-                    controller.start();
-                }
-                //不使用进度动画
+            }else tipLayout.setVisibility(View.GONE);
+            //TODO notifyHideTip需要实现
+            videoPlayerStandard.startVideo();
+            //不使用进度动画
 //                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.loading_anim);
 //                load_progress.startAnimation(animation);
 //                load_progress.setVisibility(View.GONE);
 //                image_bg.setVisibility(View.GONE);
 //                image_btn_play.setVisibility(View.GONE);
 //                tipLayout.setVisibility(View.GONE);
-        } else {
-            Tools.showToast(getContext(), "加载视频解码库中...");
         }
-    }
     }
 
     /**
      * 暂停
      */
     public void onVideoPause(){
-        if (vdVideoView != null) {
+        if (videoPlayerStandard != null) {
             load_progress.clearAnimation();
             load_progress.setVisibility(View.GONE);
             image_bg.setVisibility(View.VISIBLE);
@@ -301,28 +240,22 @@ public class VideoImageView extends RelativeLayout{
         }
     }
     public void onResume(){
-        if (vdVideoView != null)
-            vdVideoView.onResume();
+        if (videoPlayerStandard != null){
+            JCMediaManager.instance().mediaPlayer.start();
+            videoPlayerStandard.onStatePlaying();
+        }
     }
-    public void onStart(){
-        if (vdVideoView != null)
-            vdVideoView.onStart();
 
-    }
     public void onPause() {
-        if (vdVideoView != null)
-            vdVideoView.onPause();
-    }
-
-    public void onStop() {
-        if (vdVideoView != null) {
-            vdVideoView.onStop();
+        if (videoPlayerStandard != null){
+            JCMediaManager.instance().mediaPlayer.pause();
+            videoPlayerStandard.onStatePause();
         }
     }
 
     public void onDestroy() {
-        if (vdVideoView != null)
-            vdVideoView.release(false);
+        JCVideoPlayer.releaseAllVideos();
+        JCVideoPlayer.clearSavedProgress(context, null);
     }
 
     private VideoClickCallBack videoClickCallBack;
@@ -336,7 +269,14 @@ public class VideoImageView extends RelativeLayout{
         public void setVideoClick();
     }
     public boolean getIsPlaying(){
-       return vdVideoView.getIsPlaying();
+        if (JCMediaManager.instance().mediaPlayer != null) {
+            try{
+                return JCMediaManager.instance().mediaPlayer.isPlaying();
+            }catch (IllegalStateException e){
+                return false;
+            }
+        }
+       return false;
     }
 
     //是否显示广告

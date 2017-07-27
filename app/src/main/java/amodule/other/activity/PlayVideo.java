@@ -56,7 +56,7 @@ public class PlayVideo extends BaseAppCompatActivity {
 
     private void intiVideoView() {
         myJCVideoPlayerStandard = ((XHVideoPlayerStandard) findViewById(R.id.jc_video));
-        myJCVideoPlayerStandard.setUp(url, JCVideoPlayer.SCREEN_LAYOUT_NORMAL, "");
+        myJCVideoPlayerStandard.setUp(url, JCVideoPlayer.SCREEN_LAYOUT_NORMAL);
         JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         JCVideoPlayer.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         myJCVideoPlayerStandard.startVideo();
@@ -85,17 +85,6 @@ public class PlayVideo extends BaseAppCompatActivity {
             JCMediaManager.instance().mediaPlayer.pause();
             myJCVideoPlayerStandard.onStatePause();
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

@@ -40,6 +40,7 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -1353,8 +1354,15 @@ public class RichText extends EditText implements TextWatcher {
     }
 
     @Override
+    public void createContextMenu(ContextMenu menu) {
+        super.createContextMenu(menu);
+        Log.i("tzy","createContextMenu");
+    }
+
+    @Override
     public boolean showContextMenu() {
         boolean flag = super.showContextMenu();
+        Log.i("tzy","showContextMenu");
 //        Log.i("tzy","showContextMenu");
 //        onSelectionChanged(getSelectionStart(),getSelectionEnd());
         return flag;

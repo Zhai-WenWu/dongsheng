@@ -372,7 +372,11 @@ public class VideoPlayerController {
      */
     public boolean isPlaying() {
         if (JCMediaManager.instance().mediaPlayer != null) {
-            return JCMediaManager.instance().mediaPlayer.isPlaying();
+            try{
+                return JCMediaManager.instance().mediaPlayer.isPlaying();
+            }catch (IllegalStateException e){
+                return false;
+            }
         }
         return false;
     }
@@ -434,7 +438,7 @@ public class VideoPlayerController {
     }
 
     public void setMute(boolean isMuted, boolean needNotify) {
-//        VDPlayerSoundManager.setMute(mContext, isMuted, needNotify);
+        Tools.setMute(mContext);
     }
 
     //是否显示广告

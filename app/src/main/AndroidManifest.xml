@@ -573,6 +573,7 @@
         <activity
             android:name="amodule.quan.activity.CircleRobSofa"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
@@ -621,6 +622,7 @@
         <activity
             android:name="amodule.quan.activity.ShowSubject"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
@@ -687,6 +689,7 @@
         <activity
             android:name="amodule.user.activity.FriendHome"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
@@ -972,6 +975,7 @@
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/common_TransParentTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity

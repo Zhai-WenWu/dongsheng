@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -26,7 +27,7 @@ import amodule.quan.view.CircleHeaderView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-public class CircleRobSofa extends BaseActivity implements OnClickListener{
+public class CircleRobSofa extends BaseAppCompatActivity implements OnClickListener{
 	private DownRefreshList mListView;
 	private RelativeLayout mRefreshlayout;
 	private static LinearLayout mNoSofaLayout;

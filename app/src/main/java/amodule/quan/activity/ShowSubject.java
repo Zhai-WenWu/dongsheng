@@ -41,6 +41,7 @@ import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
@@ -63,7 +64,7 @@ import xh.basic.tool.UtilString;
 import static amodule.quan.activity.FriendQuan.REQUEST_CODE_QUAN_FRIEND;
 
 @SuppressLint ({"ClickableViewAccessibility", "HandlerLeak"})
-public class ShowSubject extends BaseActivity {
+public class ShowSubject extends BaseAppCompatActivity {
 	private BarSubjectFloorOwnerNew louZhuHeadView;// 楼主的view
 	// 踢出去的那些回复框和举报框
 	private BarSubjectReply1 barSubjectReply1;//回复框1
@@ -108,6 +109,9 @@ public class ShowSubject extends BaseActivity {
 	private String data_type = "";//推荐列表过来的数据
 	private String module_type="";
 	private Long startTime;//统计使用的时间
+
+	boolean isBack = false;
+	boolean isOnceStart = true;
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -1002,44 +1006,37 @@ public class ShowSubject extends BaseActivity {
 	public final static int REPORT_LOU_CLICK = 22;// 举报楼层点击
 	public final static int REPORT_LOUZHONGLOU_CLICK = 23;// 举报楼中楼
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		//竖屏
-		if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-			louZhuHeadView.onConfigurationChanged(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		} else { //横屏
-			louZhuHeadView.onConfigurationChanged(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		}
-	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (louZhuHeadView != null && louZhuHeadView.getVideoPlayerController() != null && !louZhuHeadView.getVideoPlayerController().isError) {
-			if (!louZhuHeadView.getVideoPlayerController().onVDKeyDown(keyCode, event)) {
-				return super.onKeyDown(keyCode, event);
-			} else {
-				return true;
-			}
-		} else {
-			return super.onKeyDown(keyCode, event);
-		}
+	public void onBackPressed() {
+		if (louZhuHeadView != null && louZhuHeadView.onBackPressed())
+			return;
+		super.onBackPressed();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (louZhuHeadView != null) {
-			louZhuHeadView.onResume();
+		if(!isOnceStart){
+			if (louZhuHeadView != null) {
+				louZhuHeadView.onResume();
+			}
 		}
+		isOnceStart = false;
 	}
 
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (louZhuHeadView != null) {
-			louZhuHeadView.onPause();
+		if(isBack){
+			if (louZhuHeadView != null) {
+				louZhuHeadView.onDestroy();
+			}
+		}else{
+			if (louZhuHeadView != null) {
+				louZhuHeadView.onPause();
+			}
 		}
 	}
 
@@ -1047,10 +1044,6 @@ public class ShowSubject extends BaseActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		handler.removeCallbacksAndMessages(null);
-
-		if (louZhuHeadView != null) {
-			louZhuHeadView.onDestroy();
-		}
 		UploadSubjectControl.getInstance().setReplyCallback(null);
 	}
 

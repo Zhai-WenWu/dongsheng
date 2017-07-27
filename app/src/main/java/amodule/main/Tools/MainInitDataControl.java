@@ -129,10 +129,6 @@ public class MainInitDataControl {
         //电商首页数据
         MallCommon.getDsInfo(act, null);
 
-        //新浪播放器初始化
-        if(ToolsDevice.isNetworkAvailable(act)){
-            VideoApplication.getInstence().initialize(act);
-        }
         //更新热词匹配数据库
         new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
 

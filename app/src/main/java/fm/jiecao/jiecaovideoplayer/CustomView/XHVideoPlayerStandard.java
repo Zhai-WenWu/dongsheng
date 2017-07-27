@@ -15,6 +15,7 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
  * Created by Nathen on 2017/7/2.
  */
 public class XHVideoPlayerStandard extends JCVideoPlayerStandard {
+    private OnPlayPreparedCallback onPlayPreparedCallback = null;
     private OnPlayCompleteCallback onPlayCompleteCallback = null;
     private OnPlayStartCallback onPlayStartCallback = null;
 
@@ -49,6 +50,10 @@ public class XHVideoPlayerStandard extends JCVideoPlayerStandard {
         return super.onTouch(v, event);
     }
 
+    /**
+     * ============================================================= 生命周期方法 =============================================================
+     */
+
     @Override
     public void startVideo() {
         super.startVideo();
@@ -60,6 +65,8 @@ public class XHVideoPlayerStandard extends JCVideoPlayerStandard {
     @Override
     public void onPrepared() {
         super.onPrepared();
+        if(onPlayPreparedCallback != null)
+            onPlayPreparedCallback.onPrepared();
     }
 
     @Override
@@ -120,6 +127,14 @@ public class XHVideoPlayerStandard extends JCVideoPlayerStandard {
         super.startWindowTiny();
     }
 
+    /**
+     * ============================================================= 生命周期方法 End =============================================================
+     */
+
+    /**
+     * ============================================================= Get & Set =============================================================
+     */
+
     public OnPlayCompleteCallback getOnPlayCompleteCallback() {
         return onPlayCompleteCallback;
     }
@@ -137,11 +152,34 @@ public class XHVideoPlayerStandard extends JCVideoPlayerStandard {
         this.onPlayStartCallback = onPlayStartCallback;
     }
 
+    public OnPlayPreparedCallback getOnPlayPreparedCallback() {
+        return onPlayPreparedCallback;
+    }
+
+    public void setOnPlayPreparedCallback(OnPlayPreparedCallback onPlayPreparedCallback) {
+        this.onPlayPreparedCallback = onPlayPreparedCallback;
+    }
+    /**
+     * ============================================================= Get & Set END =============================================================
+     */
+
+    /**
+     * ============================================================= interface =============================================================
+     */
+
+    public interface OnPlayPreparedCallback{
+        public void onPrepared();
+    }
+
     public interface OnPlayStartCallback{
         public void onStart();
     }
     public interface OnPlayCompleteCallback{
         public void onComplte();
     }
+
+    /**
+     * ============================================================= interface END =============================================================
+     */
 
 }

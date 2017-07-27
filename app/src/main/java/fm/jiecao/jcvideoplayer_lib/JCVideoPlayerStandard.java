@@ -55,6 +55,8 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public TextView quality_high;
     public TextView quality_super;
 
+    boolean isHideTopContainer = false;
+
     protected DismissControlViewTimerTask mDismissControlViewTimerTask;
 
 
@@ -661,7 +663,8 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
     public void setAllControlsVisible(int topCon, int bottomCon, int startBtn, int loadingPro,
                                       int thumbImg, int coverImg, int bottomPro) {
-        topContainer.setVisibility(topCon);
+        if(!isHideTopContainer)
+            topContainer.setVisibility(topCon);
         bottomContainer.setVisibility(bottomCon);
         startButton.setVisibility(startBtn);
         loadingProgressBar.setVisibility(loadingPro);
@@ -843,7 +846,8 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
                         @Override
                         public void run() {
                             bottomContainer.setVisibility(View.INVISIBLE);
-                            topContainer.setVisibility(View.INVISIBLE);
+                            if(!isHideTopContainer)
+                                topContainer.setVisibility(View.INVISIBLE);
                             startButton.setVisibility(View.INVISIBLE);
                             if (currentScreen != SCREEN_WINDOW_TINY) {
                                 bottomProgressBar.setVisibility(View.VISIBLE);
@@ -868,5 +872,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void onCompletion() {
         super.onCompletion();
         cancelDismissControlViewTimer();
+    }
+
+    public void setIsHideTopContainer(boolean isHide){
+        this.isHideTopContainer = isHide;
+        topContainer.setVisibility(GONE);
     }
 }

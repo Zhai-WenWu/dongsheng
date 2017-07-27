@@ -150,7 +150,9 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
     }
 
     public void setUp(String url, int screen, Object... objects) {
-        if (!TextUtils.isEmpty(this.url) && TextUtils.equals(this.url, url)) {
+        if (!TextUtils.isEmpty(this.url)
+//                && TextUtils.equals(this.url, url)
+                ) {
             return;
         }
         this.url = url;

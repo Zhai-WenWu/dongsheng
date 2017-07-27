@@ -63,11 +63,11 @@ public class MediaPreviewActivity extends BaseActivity implements View.OnClickLi
     private String time="";//合成时间戳
     private String coverPath="";//当前大图路径
     public static WeakReference<Activity> mediaPreWeakRe;
-    private VDVideoViewController controller;
+    private DishVideoImageView dishView;
 
+    private VDVideoViewController controller;
     private VDVideoView mVDVideoView;
     private VDVideoInfo videoInfo;
-    private DishVideoImageView dishView;
     private VDVideoControlBottomRelativeContainer container_bottom;
     private VDVideoPlaySeekBar playerseek2;
     private List<Float> videoPoints;
