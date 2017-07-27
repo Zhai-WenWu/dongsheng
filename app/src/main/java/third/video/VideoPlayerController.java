@@ -437,10 +437,6 @@ public class VideoPlayerController {
         }
     }
 
-    public void setMute(boolean isMuted, boolean needNotify) {
-        Tools.setMute(mContext);
-    }
-
     //是否显示广告
     private boolean isShowAd=false;
 

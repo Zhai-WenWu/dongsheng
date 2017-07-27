@@ -43,7 +43,6 @@ import third.ad.tools.TencenApiAdTools;
 import third.andfix.AndFixTools;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
-import third.video.VideoApplication;
 import xh.basic.tool.UtilFile;
 import xh.windowview.XhDialog;
 

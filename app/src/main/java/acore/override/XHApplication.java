@@ -28,8 +28,6 @@ import third.growingio.GrowingIOController;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
 
-import static com.sina.sinavideo.coreplayer.util.AndroidUtil.getProcessName;
-
 public class XHApplication extends MobApplication {
     /**包名*/
     private static final String PACKAGE_NAME = "com.xiangha";
@@ -51,12 +49,12 @@ public class XHApplication extends MobApplication {
 
     @Override
     public void onCreate() {
-        Log.i("zhangyujian", "进程名字::" + getProcessName(this));
+        Log.i("zhangyujian", "进程名字::" + Tools.getProcessName(this));
         startTime = System.currentTimeMillis();
         super.onCreate();
         mAppApplication = this;
         initUmengPush();
-        String processName = getProcessName(this);
+        String processName = Tools.getProcessName(this);
         if (processName != null) {
             if (processName.equals(PACKAGE_NAME)) {//多进程多初始化，只对xiangha进程进行初始化
                 initData();

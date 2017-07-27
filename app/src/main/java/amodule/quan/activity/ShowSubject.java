@@ -1011,6 +1011,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 	public void onBackPressed() {
 		if (louZhuHeadView != null && louZhuHeadView.onBackPressed())
 			return;
+		isBack = true;
 		super.onBackPressed();
 	}
 

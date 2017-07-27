@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -179,6 +180,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         changeUiToCompleteClear();
         cancelDismissControlViewTimer();
         bottomProgressBar.setProgress(100);
+        openVolume();
     }
 
     @Override
@@ -494,6 +496,11 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         setAllControlsVisible(View.VISIBLE, View.INVISIBLE, View.INVISIBLE,
                 View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
         startDismissControlViewTimer();
+        if(currentScreen == SCREEN_LAYOUT_LIST){
+            closeVolume();
+        }else{
+            openVolume();
+        }
     }
 
     public void changeUiToPlayingShow() {

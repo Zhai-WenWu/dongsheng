@@ -25,8 +25,6 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -393,7 +391,6 @@ public class DishHeaderView extends LinearLayout {
                     int durationS = Math.round(mVideoPlayerController.getDuration() / 1000f);
                     if (currentS >= 0 && durationS >= 0) {
                         if (isHaspause) {
-                            VDVideoViewController.getInstance(context).setSeekPause(true);
                             mVideoPlayerController.onPause();
                             mVideoPlayerController.onResume();
                             return;

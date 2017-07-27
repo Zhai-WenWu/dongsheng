@@ -722,7 +722,6 @@ public class HomeFragment extends BaseHomeFragment{
                 }
             }
             mPlayerController.hideFullScreen();
-            mPlayerController.setMute(false, false);
             mPlayerController.setOnClick();
             mPlayerController.setOnPlayingCompletionListener(new VideoPlayerController.OnPlayingCompletionListener() {
                 @Override

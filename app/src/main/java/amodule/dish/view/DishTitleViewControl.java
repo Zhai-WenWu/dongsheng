@@ -221,7 +221,6 @@ public class DishTitleViewControl implements View.OnClickListener{
             Intent intent = new Intent(detailDish, UploadDishActivity.class);
             intent.putExtra("code", code);
             String dishTypeValue = UploadDishActivity.DISH_TYPE_NORMAL;
-            if(isHasVideo)dishTypeValue = UploadDishActivity.DISH_TYPE_VIDEO;
             intent.putExtra(UploadDishActivity.DISH_TYPE_KEY, dishTypeValue);
             intent.putExtra("state", UploadDishActivity.UPLOAD_DISH_EDIT);
             intent.putExtra("titleName", "修改菜谱");

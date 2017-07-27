@@ -987,6 +987,21 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
         }
     };
 
+    public void closeVolume(){
+        if(JCMediaManager.instance().mediaPlayer != null){
+            JCMediaManager.instance().mediaPlayer.setVolume(0,0);
+        }
+    }
+
+    public void openVolume(){
+        if(JCMediaManager.instance().mediaPlayer != null){
+            JCMediaManager.instance().mediaPlayer.setVolume(1,1);
+//            AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+//            JCMediaManager.instance().mediaPlayer.setAudioStreamType(AudioManager.STREAM_SYSTEM);
+
+        }
+    }
+
     //是否有用
     public void onSeekComplete() {
 

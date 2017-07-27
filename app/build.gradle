@@ -20,8 +20,6 @@ dependencies {
     //    compile(name: 'PhotoView-release', ext: 'aar')
     compile(name: 'photoview-release-2.0.0', ext: 'aar')
     compile(name: 'PushSDK-debug', ext: 'aar')
-    compile(name: 'sinavideo_player_core_v2.0-release', ext: 'aar')
-    compile(name: 'sinavideo_player_sdk_v2.0-debug', ext: 'aar')
     compile(name: 'XH_Basic3.0-release', ext: 'aar')
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')

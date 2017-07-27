@@ -193,9 +193,7 @@
 -keep class com.alipay.sdk.app.PayTask{ public *;}
 -keep class com.alipay.sdk.app.AuthTask{ public *;}
 #支付宝混淆end
-#sina播放器 start
--keep class com.sina.sinavideo.**{ *;}
-#sina播放器end
+
 #广点通光 start
 -keep class com.qq.e.** { 
     public protected *; 

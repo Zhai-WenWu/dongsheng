@@ -23,6 +23,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerManager;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
@@ -46,8 +47,7 @@ public class VideoImagePlayerController {
         this.mPraentViewGroup = viewGroup;
         videoPlayerStandard = new XHVideoPlayerStandard(mContext);
         videoPlayerStandard.setIsHideTopContainer(true);
-        Tools.setMute(context);
-
+        videoPlayerStandard.fullscreenButton.setVisibility(View.VISIBLE);
 
         if (mPraentViewGroup == null)
             return;

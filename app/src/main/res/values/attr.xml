@@ -54,19 +54,6 @@
         <attr name="htTitle" format="string" />
     </declare-styleable>
 
-    <!-- 我的结构 -->
-    <array name="my_videoview_layers">
-        <item>@array/my_videoview_layer_controllayer</item>
-    </array>
-    <array name="my_videoview_layer_controllayer">
-        <item>@layout/my_video_ui_layer</item>
-        <item>@layout/my_video_ui_layer_horizontal</item>
-    </array>
-
-    <array name="video_layer">
-        <item>@layout/video_ui_layer</item>
-    </array>
-
     <declare-styleable name="TagTextView">
         <attr name="radius" format="dimension"/>
         <attr name="topLeftRadius" format="dimension"/>

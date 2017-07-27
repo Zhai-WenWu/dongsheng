@@ -25,8 +25,6 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -38,8 +36,6 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.article.activity.VideoDetailActivity;
-import amodule.dish.activity.DetailDish;
 import amodule.dish.view.DishHeaderView;
 import amodule.dish.view.DishVideoImageView;
 import amodule.dish.view.VideoDredgeVipView;
@@ -358,9 +354,8 @@ public class VideoHeaderView extends RelativeLayout {
                 int durationS = Math.round(mVideoPlayerController.getDuration() / 1000f);
                 if (currentS >= 0 && durationS >= 0) {
                     if (isHaspause) {
-                        VDVideoViewController.getInstance(context).setSeekPause(true);
                         mVideoPlayerController.onPause();
-                        mVideoPlayerController.onResume();
+//                        mVideoPlayerController.onResume();
                         return;
                     }
                     if ((currentS > limitTime
@@ -368,7 +363,7 @@ public class VideoHeaderView extends RelativeLayout {
                     ) && !isContinue) {
                         dredgeVipLayout.setVisibility(VISIBLE);
                         mVideoPlayerController.onPause();
-                        mVideoPlayerController.onResume();
+//                        mVideoPlayerController.onResume();
                         isHaspause = true;
                     }
                 }
