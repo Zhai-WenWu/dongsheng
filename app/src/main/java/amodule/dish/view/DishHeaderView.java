@@ -389,18 +389,22 @@ public class DishHeaderView extends LinearLayout {
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     int currentS = Math.round(mVideoPlayerController.getCurrentPositionWhenPlaying() / 1000f);
                     int durationS = Math.round(mVideoPlayerController.getDuration() / 1000f);
+                    Log.i("tzy","currentS = " + currentS + " ; durationS = " + durationS);
+                    Log.i("tzy","limitTime = " + limitTime);
+                    Log.i("tzy","progress = " + progress);
+                    Log.i("tzy","======================================");
                     if (currentS >= 0 && durationS >= 0) {
                         if (isHaspause) {
                             mVideoPlayerController.onPause();
-                            mVideoPlayerController.onResume();
+//                            mVideoPlayerController.onResume();
                             return;
                         }
                         if ((currentS > limitTime
 //                            || limitTime > durationS
-                        ) && !isContinue) {
+                                ) && !isContinue) {
                             dredgeVipLayout.setVisibility(VISIBLE);
                             mVideoPlayerController.onPause();
-                            mVideoPlayerController.onResume();
+//                            mVideoPlayerController.onResume();
                             isHaspause = true;
                         }
                     }
@@ -514,10 +518,24 @@ public class DishHeaderView extends LinearLayout {
 
     public void onResume() {
         isOnResuming = true;
+        if(mVideoPlayerController != null
+                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE))
+            mVideoPlayerController.onResume();
     }
 
     public void onPause() {
         isOnResuming = false;
+        if(mVideoPlayerController != null)
+        mVideoPlayerController.onPause();
+    }
+
+    public void onDestroy() {
+        if(mVideoPlayerController != null)
+        mVideoPlayerController.onDestroy();
+    }
+
+    public boolean onBackPressed(){
+        return mVideoPlayerController != null ? mVideoPlayerController.onBackPressed() : false;
     }
 
     public View getVideoView(){

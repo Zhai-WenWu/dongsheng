@@ -75,18 +75,20 @@ public class VideoHeaderView extends RelativeLayout {
 
     public VideoHeaderView(Context context) {
         super(context);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage, null);
-        addView(view);
+        inflateView();
     }
 
     public VideoHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage, null);
-        addView(view);
+        inflateView();
     }
 
     public VideoHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        inflateView();
+    }
+
+    private void inflateView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage, null);
         addView(view);
     }
@@ -105,13 +107,8 @@ public class VideoHeaderView extends RelativeLayout {
     public void setData(Map<String, String> data, DishHeaderView.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
         if (callBack == null) {
             this.callBack = new DishHeaderView.DishHeaderVideoCallBack() {
-                @Override
-                public void videoImageOnClick() {
-                }
-
-                @Override
-                public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
-                }
+                @Override public void videoImageOnClick() { }
+                @Override public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) { }
             };
         } else this.callBack = callBack;
 
@@ -210,7 +207,8 @@ public class VideoHeaderView extends RelativeLayout {
                     view.setVisibility(View.GONE);
                     if (!mVideoPlayerController.isPlaying()) {
                         mVideoPlayerController.setShowAd(false);
-                        if (isOnResuming) mVideoPlayerController.setOnClick();
+                        if (isOnResuming)
+                            mVideoPlayerController.setOnClick();
                     }
                 }
             }
@@ -264,7 +262,9 @@ public class VideoHeaderView extends RelativeLayout {
         String img = selfVideoMap.get("videoImg");
         if (!TextUtils.isEmpty(videoUrl)
                 && videoUrl.startsWith("http")) {
-            mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+            if(null == mVideoPlayerController)
+                mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+            else onDestroy();
 
             if(permissionMap != null && permissionMap.containsKey("video")){
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
@@ -369,15 +369,35 @@ public class VideoHeaderView extends RelativeLayout {
 
     public void onResume() {
         isOnResuming = true;
+        if(mVideoPlayerController != null
+                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE)){
+            mVideoPlayerController.onResume();
+        }
     }
 
     public void onPause() {
         isOnResuming = false;
+        if(mVideoPlayerController != null){
+            mVideoPlayerController.onPause();
+        }
     }
 
     public void setLoginStatus(){
         if(vipView != null){
             vipView.setLogin();
+        }
+    }
+
+    public boolean onBackPressed() {
+        if(mVideoPlayerController != null){
+            mVideoPlayerController.onBackPressed();
+        }
+        return false;
+    }
+
+    public void onDestroy() {
+        if(mVideoPlayerController != null){
+            mVideoPlayerController.onDestroy();
         }
     }
 }

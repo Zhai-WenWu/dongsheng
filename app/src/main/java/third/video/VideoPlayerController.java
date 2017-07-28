@@ -1,5 +1,6 @@
 package third.video;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
@@ -32,9 +33,12 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
+import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
+
 public class VideoPlayerController {
     protected Context mContext = null;
     //乐视的secretkey
+    @SuppressWarnings("FieldCanBeLocal")
     private final String secretkey = "5e172624924a79f81d60cb2c28f66c4d";
     private String mVideoUnique = "", mUserUnique = "";
     protected XHVideoPlayerStandard  videoPlayerStandard = null;
@@ -66,15 +70,7 @@ public class VideoPlayerController {
         this.mImgUrl = imgUrl;
 
         videoPlayerStandard = new XHVideoPlayerStandard(context);
-        videoPlayerStandard.setOnPlayStartCallback(new XHVideoPlayerStandard.OnPlayStartCallback() {
-            @Override
-            public void onStart() {
-//                if(view_dish != null)
-//                    view_dish.setVisibility(View.GONE);
-            }
-        });
         JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        JCVideoPlayer.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
@@ -116,9 +112,9 @@ public class VideoPlayerController {
         if (mPraentViewGroup.getChildCount() > 0) {
             mPraentViewGroup.removeAllViews();
         }
-        mPraentViewGroup.removeAllViews();
         mPraentViewGroup.addView(videoPlayerStandard);
-        if(view_Tip!=null)mPraentViewGroup.addView(view_Tip);
+        if(view_Tip != null)
+            mPraentViewGroup.addView(view_Tip);
         mPraentViewGroup.addView(view_dish);
         view_dish.setOnClickListener(new OnClickListener() {
             @Override
@@ -132,16 +128,17 @@ public class VideoPlayerController {
      * 广告点击事件
      */
     public void setOnClick() {
-        Log.i("zhangyujian","广告点:::"+mHasVideoInfo);
+        Log.i("tzy","广告点:::"+mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
                 if(isShowAd){
-                    if(mediaViewCallBack!=null)mediaViewCallBack.onclick();
+                    if(mediaViewCallBack != null)
+                        mediaViewCallBack.onclick();
                     return;
                 }
-                Log.i("zhangyujian","isShowMedia:::"+isShowMedia);
+                Log.i("tzy","isShowMedia:::"+isShowMedia);
                 if(!isShowMedia){
-                    Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
+                    Log.i("tzy","isAutoPaly:::"+isAutoPaly);
                     if(isAutoPaly){//当前wifi
                         mPraentViewGroup.removeView(view_Tip);
                         view_Tip=null;
@@ -156,13 +153,13 @@ public class VideoPlayerController {
                 if(view_dish!=null){
                     mPraentViewGroup.removeView(view_dish);
                     view_dish=null;
-                    mImageView.setVisibility(View.GONE);
+//                    mImageView.setVisibility(View.GONE);
                 }
                 if(view_Tip!=null){
                     mPraentViewGroup.removeView(view_Tip);
                     view_Tip=null;
                 }
-                    videoPlayerStandard.startVideo();
+                videoPlayerStandard.startVideo();
                 if (mStatisticsPlayCountCallback != null) {
                     mStatisticsPlayCountCallback.onStatistics();
                 }
@@ -170,7 +167,6 @@ public class VideoPlayerController {
             Tools.showToast(mContext, "努力获取视频信息中...");
             initVideoView(mVideoUnique, mUserUnique);
         }
-
     }
 
     /**
@@ -275,9 +271,9 @@ public class VideoPlayerController {
 
     /**
      *  初始化视频播放数据,直接使用url
-     * @param url
-     * @param title
-     * @param view
+     * @param url 视频链接
+     * @param title 标题
+     * @param view view
      */
     public void initVideoView2(final String url,String title, final View view) {
         videoPlayerStandard.setUp(url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
@@ -302,20 +298,15 @@ public class VideoPlayerController {
     private String getUrl(String videoUnique, String userUnique) {
         String url ;
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(StringManager.api_getVideoUrl);
-        stringBuffer.append("?");
+        stringBuffer.append(StringManager.api_getVideoUrl).append("?");
         String tsParam = "ts=" + (System.currentTimeMillis() / 1000);
-        stringBuffer.append(tsParam);
-        stringBuffer.append("&");
+        stringBuffer.append(tsParam).append("&");
         String userParam = "user=" + userUnique;
-        stringBuffer.append(userParam);
-        stringBuffer.append("&");
+        stringBuffer.append(userParam).append("&");
         String videoParam = "video=" + videoUnique;
-        stringBuffer.append(videoParam);
-        stringBuffer.append("&");
+        stringBuffer.append(videoParam).append("&");
         String vtypeParam = "vtype=mp4";
-        stringBuffer.append(vtypeParam);
-        stringBuffer.append("&");
+        stringBuffer.append(vtypeParam).append("&");
         String signParam = getSign(tsParam, userParam, videoParam, vtypeParam);
         stringBuffer.append(signParam);
         url = stringBuffer.toString();
@@ -325,17 +316,20 @@ public class VideoPlayerController {
     /**
      * 获取sign参数
      *
-     * @param tsParam
-     * @param userParam
-     * @param videoParam
-     * @param vtypeParam
-     * @return
+     * @param tsParam 时间戳
+     * @param userParam uu
+     * @param videoParam vu
+     * @param vtypeParam 视频格式
+     * @return 签名
      */
     private String getSign(String tsParam, String userParam, String videoParam, String vtypeParam) {
-        String signParam = "";
-        signParam = tsParam.replace("=", "") + userParam.replace("=", "") + videoParam.replace("=", "") + vtypeParam.replace("=", "");
-        signParam += secretkey;
-        return "sign=" + StringManager.stringToMD5(signParam);
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(tsParam.replace("=", ""))
+                .append(userParam.replace("=", ""))
+                .append(videoParam.replace("=", ""))
+                .append(vtypeParam.replace("=", ""))
+                .append(secretkey);
+        return "sign=" + StringManager.stringToMD5(stringBuffer.toString());
     }
 
     public boolean onBackPressed(){
@@ -351,16 +345,16 @@ public class VideoPlayerController {
             videoPlayerStandard.setOnProgressChangedCallback(callback);
     }
 
-    public long getCurrentPositionWhenPlaying(){
+    public int getCurrentPositionWhenPlaying(){
         if(videoPlayerStandard != null){
-            videoPlayerStandard.getCurrentPositionWhenPlaying();
+            return videoPlayerStandard.getCurrentPositionWhenPlaying();
         }
         return -1;
     }
 
-    public long getDuration(){
+    public int getDuration(){
         if(videoPlayerStandard != null){
-            videoPlayerStandard.getDuration();
+            return videoPlayerStandard.getDuration();
         }
         return -1;
     }
@@ -368,7 +362,7 @@ public class VideoPlayerController {
     /**
      * 是否正在播放
      *
-     * @return
+     * @return 是否在播放
      */
     public boolean isPlaying() {
         if (JCMediaManager.instance().mediaPlayer != null) {
@@ -382,10 +376,14 @@ public class VideoPlayerController {
     }
 
     public void onStart(){
-        if(JCMediaManager.instance().mediaPlayer != null){
-            JCMediaManager.instance().mediaPlayer.start();
-            if(videoPlayerStandard != null)
-                videoPlayerStandard.onStatePlaying();
+        try{
+            if(JCMediaManager.instance().mediaPlayer != null && videoPlayerStandard.currentState != CURRENT_STATE_PLAYING){
+                JCMediaManager.instance().mediaPlayer.start();
+                if(videoPlayerStandard != null)
+                    videoPlayerStandard.onStatePlaying();
+            }
+        }catch (Exception ignored){
+
         }
     }
 
@@ -398,9 +396,13 @@ public class VideoPlayerController {
     }
 
     public void onPause() {
-        if (JCMediaManager.instance().mediaPlayer != null) {
-            JCMediaManager.instance().mediaPlayer.pause();
-            videoPlayerStandard.onStatePause();
+        try{
+            if (JCMediaManager.instance().mediaPlayer != null && videoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
+                JCMediaManager.instance().mediaPlayer.pause();
+                videoPlayerStandard.onStatePause();
+            }
+        }catch (Exception ignored){
+
         }
     }
 
@@ -415,13 +417,13 @@ public class VideoPlayerController {
      * @author Administrator
      */
     public interface StatisticsPlayCountCallback {
-        public void onStatistics();
+        void onStatistics();
     }
 
     /**
      * 设置播放统计监听
      *
-     * @param callback
+     * @param callback 回调
      */
     public void setStatisticsPlayCountCallback(StatisticsPlayCountCallback callback) {
         this.mStatisticsPlayCountCallback = callback;
@@ -440,17 +442,15 @@ public class VideoPlayerController {
     //是否显示广告
     private boolean isShowAd=false;
 
-    /**
-     * 处理视频被点击回调
-     */
+    /** 处理视频被点击回调 */
     public interface MediaViewCallBack{
-        public void onclick();
+        void onclick();
     }
     private MediaViewCallBack mediaViewCallBack;
 
     /**
      * 设置广告点击回调
-     * @param mediaViewCallBack
+     * @param mediaViewCallBack 回调
      */
     public void setMediaViewCallBack(MediaViewCallBack mediaViewCallBack){
         this.mediaViewCallBack= mediaViewCallBack;
@@ -465,8 +465,9 @@ public class VideoPlayerController {
 
     /**
      * 初始化
-     * @param context
+     * @param context 上下文
      */
+    @SuppressLint({"SetTextI18n", "InflateParams"})
     protected void initView(Context context){
         LayoutParams layoutParams= new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
         view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
@@ -484,7 +485,7 @@ public class VideoPlayerController {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UtilFile.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
                 }
             }).start();
         }
@@ -504,7 +505,6 @@ public class VideoPlayerController {
             videoPlayerStandard.setOnPlayCompleteCallback(new XHVideoPlayerStandard.OnPlayCompleteCallback() {
                 @Override
                 public void onComplte() {
-//                    mImageView.setVisibility(View.VISIBLE);
                     onPlayingCompletionListener.onPlayingCompletion();
                 }
             });
@@ -515,7 +515,7 @@ public class VideoPlayerController {
     }
 
     public interface OnPlayingCompletionListener {
-        public void onPlayingCompletion();
+        void onPlayingCompletion();
     }
 
 }

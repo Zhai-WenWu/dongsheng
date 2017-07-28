@@ -59,7 +59,6 @@ public class DetailDish extends BaseAppCompatActivity {
     private final int LOAD_DISH_OVER = 2;
 
     private ADDishContorl adDishContorl;
-    private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private DishActivityViewControl dishActivityViewControl;//view处理控制
 
     private Handler mHandler;
@@ -139,11 +138,6 @@ public class DetailDish extends BaseAppCompatActivity {
         initActivity(dishTitle, 2, 0, 0, R.layout.a_dish_detail_new);
         dishActivityViewControl= new DishActivityViewControl(this);
         dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControl.DishViewCallBack() {
-            @Override
-            public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
-                DetailDish.this.mVideoPlayerController=mVideoPlayerController;
-            }
-
             @Override
             public void gotoRequest() {
                 loadManager.setLoading(new View.OnClickListener() {
@@ -286,7 +280,8 @@ public class DetailDish extends BaseAppCompatActivity {
     /**
      * 处理业务数据
      *
-     * @param list
+     * @param list 数据
+     * @param permissionMap 权限数据
      */
     private void analyzeData(ArrayList<Map<String, String>> list,Map<String,String> permissionMap) {
         String lable = list.get(0).get("lable");
@@ -365,7 +360,7 @@ public class DetailDish extends BaseAppCompatActivity {
     @Override
     public void onBackPressed() {
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
-        if(mVideoPlayerController != null && mVideoPlayerController.onBackPressed()){
+        if(dishActivityViewControl != null && dishActivityViewControl.onBackPressed()){
             return;
         }
         isBack = true;
@@ -380,9 +375,6 @@ public class DetailDish extends BaseAppCompatActivity {
         this.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         statusBarHeight = outRect.top;
         dishActivityViewControl.setStatusBarHeight(statusBarHeight);
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onResume();
-        }
         dishActivityViewControl.onResume();
     }
 
@@ -390,18 +382,13 @@ public class DetailDish extends BaseAppCompatActivity {
     protected void onPause() {
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onPause();
-        }
         dishActivityViewControl.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onDestroy();
-        }
+        dishActivityViewControl.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");

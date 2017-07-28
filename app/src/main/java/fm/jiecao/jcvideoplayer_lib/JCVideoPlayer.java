@@ -723,7 +723,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if(onProgressChangedCallback != null){
-            onProgressChangedCallback.onProgressChanged(seekBar, progress, fromUser);
+            onProgressChangedCallback.onProgressChanged(seekBar, mSeekTimePosition, fromUser);
         }
     }
 
@@ -995,7 +995,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
 
     public void openVolume(){
         if(JCMediaManager.instance().mediaPlayer != null){
-            JCMediaManager.instance().mediaPlayer.setVolume(1,1);
+            JCMediaManager.instance().mediaPlayer.setVolume(0.5f,0.5f);
 //            AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
 //            JCMediaManager.instance().mediaPlayer.setAudioStreamType(AudioManager.STREAM_SYSTEM);
 

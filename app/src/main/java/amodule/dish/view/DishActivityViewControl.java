@@ -31,7 +31,6 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.tools.ADDishContorl;
@@ -45,9 +44,10 @@ import static amodule.dish.activity.DetailDish.showNumLookImage;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
- * Created by Administrator on 2016/9/22.
+ * PackageName : amodule.dish.view
+ * Created by MrTrying on 2016/9/22 13:42.
+ * E_mail : ztanzeyu@gmail.com
  */
-
 public class DishActivityViewControl {
     private Activity activity;
     private RelativeLayout bar_title_1;
@@ -200,14 +200,14 @@ public class DishActivityViewControl {
 
     /**
      * 添加广告控制
-     * @param adDishContorl
+     * @param adDishContorl 广告控制
      */
     public void setAdDishControl(ADDishContorl adDishContorl){
         this.adDishContorl=adDishContorl;
     }
     /**
      * 外部设置是否是视频
-     * @param isHasVideo
+     * @param isHasVideo 是否是视频
      */
     public void setHasVideo(boolean isHasVideo){
         this.isHasVideo= isHasVideo;
@@ -215,14 +215,14 @@ public class DishActivityViewControl {
 
     /**
      * 设置是否可加载
-     * @param isGoLoading
+     * @param isGoLoading 是否可加载
      */
     public void setIsGoLoading(boolean isGoLoading){
         this.isGoLoading=isGoLoading;
     }
     /**
      * 外部设置json
-     * @param dishjson
+     * @param dishjson json数据
      */
     public void setDishJson(String dishjson){
         this.dishJson=dishjson;
@@ -230,8 +230,8 @@ public class DishActivityViewControl {
 
     /**
      *
-     * @param pagePermission
-     * @return
+     * @param pagePermission 页面权限数据
+     * @return 是否有权限
      */
     public boolean analyzePagePermissionData(Map<String,String> pagePermission){
         if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
@@ -246,7 +246,8 @@ public class DishActivityViewControl {
 
     /**
      * 根据数据处理view
-     * @param list
+     * @param list 原始数据
+     * @param permissionMap 权限数据
      */
     public void analyzeData(ArrayList<Map<String, String>> list,Map<String,String> permissionMap) {
         String lable = list.get(0).get("lable");
@@ -273,8 +274,8 @@ public class DishActivityViewControl {
     /**
      * 解析数据-----业务标示是“dishInfo”
      *
-     * @param list
-     * @param permissionMap
+     * @param list 原始数据
+     * @param permissionMap 权限数据
      */
     public void analyzeDishInfoData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         dishInfoMap = list.get(0);
@@ -304,7 +305,6 @@ public class DishActivityViewControl {
             }
             @Override
             public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayouts, View view_oneImages) {
-                callBack.getVideoPlayerController(mVideoPlayerController);
                 dishVidioLayout=dishVidioLayouts;
                 view_oneImage=view_oneImages;
                 setViewOneState();
@@ -629,6 +629,13 @@ public class DishActivityViewControl {
         if(dishHeaderView!=null)dishHeaderView.onPause();
     }
 
+    public void onDestroy() {
+        if(dishHeaderView!=null)dishHeaderView.onDestroy();
+    }
+
+    public boolean onBackPressed(){
+        return dishHeaderView.onBackPressed();
+    }
     /**
      * 外部设置view 高度
      * @param statusBarHeight
@@ -636,10 +643,9 @@ public class DishActivityViewControl {
     public void setStatusBarHeight( int statusBarHeight){
         this.statusBarHeight=statusBarHeight;
     }
-    public interface DishViewCallBack{
-        public void getVideoPlayerController(VideoPlayerController mVideoPlayerController);
-        public void gotoRequest();
 
+    public interface DishViewCallBack{
+        public void gotoRequest();
     }
 
     /**

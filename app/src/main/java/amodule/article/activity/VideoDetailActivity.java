@@ -1,7 +1,6 @@
 package amodule.article.activity;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -11,7 +10,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -37,7 +35,6 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -62,7 +59,6 @@ import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.share.BarShare;
 import third.share.UserHomeShare;
-import third.video.VideoPlayerController;
 import xh.windowview.XhDialog;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_VIDEO;
@@ -92,7 +88,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private VideoDetailAdapter detailAdapter;
     private VideoAdContorler mVideoAdContorler;
-    private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private ArrayList<Map<String, String>> allDataListMap = new ArrayList<>();//评论列表和推荐列表对数据集合
     private Map<String, String> commentMap = new HashMap<>();
     private Map<String, String> adDataMap;
@@ -137,7 +132,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(mVideoPlayerController != null && mVideoPlayerController.onBackPressed()){
+        if(mHaederLayout != null && mHaederLayout.onBackPressed()){
             return;
         }
         isBack = true;
@@ -162,23 +157,21 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         super.onResume();
         Rect outRect = new Rect();
         this.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onResume();
+        if (mHaederLayout != null) {
+            mHaederLayout.onResume();
         }
-        mHaederLayout.onResume();
         Glide.with(this).resumeRequests();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mVideoPlayerController != null) {
+        if (mHaederLayout != null) {
             if(isBack)
-                mVideoPlayerController.onDestroy();
+                mHaederLayout.onDestroy();
             else
-                mVideoPlayerController.onPause();
+                mHaederLayout.onPause();
         }
-        mHaederLayout.onPause();
         Glide.with(this).pauseRequests();
         ToolsDevice.keyboardControl(false,this,mCommentBar);
     }
@@ -190,9 +183,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             XHClick.saveStatictisFile("VideoDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onDestroy();
-        }
     }
 
     private void initBundle() {
@@ -303,17 +293,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         //initListView
         mHaederLayout = new VideoAllHeaderView(this);
         mHaederLayout.setType(TYPE_VIDEO);
-        mHaederLayout.setCallBack(new VideoAllHeaderView.VideoViewCallBack() {
-            @Override
-            public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
-                VideoDetailActivity.this.mVideoPlayerController = mVideoPlayerController;
-            }
-
-            @Override
-            public void gotoRequest() {
-
-            }
-        });
         listView.addHeaderView(mHaederLayout,null,false);
     }
 
@@ -488,8 +467,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private void requestVideoData(final boolean onlyUser) {
 //        loadManager.showProgressBar();
-        StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=RAW");
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params.toString(), new InternetCallback(this) {
+        String params = new StringBuilder().append("code=").append(code).append("&type=RAW").toString();
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
@@ -659,9 +638,9 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     /**
      * 处理styledata数据
-     * @param map
-     * @param styleDataList
-     * @return
+     * @param map map数据
+     * @param styleDataList 图片的styleData
+     * @return 返回处理后的map
      */
     private Map<String, String> handlerStyleData(Map<String, String> map, List<Map<String, String>> styleDataList) {
         for (int index = 0; index < styleDataList.size(); index++) {
@@ -698,7 +677,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     /**
      * 解析推荐数据
      *
-     * @param ArrayRelate
+     * @param ArrayRelate 相关推荐数据
      */
     private void analysRelateData(@NonNull ArrayList<Map<String, String>> ArrayRelate) {
         if (ArrayRelate.isEmpty()) return;

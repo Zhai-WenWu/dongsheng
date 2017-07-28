@@ -1,5 +1,6 @@
 package fm.jiecao.jcvideoplayer_lib;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -248,6 +248,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         } else if (i == R.id.quality) {
             LayoutInflater inflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            @SuppressLint("InflateParams")
             View layout = inflater.inflate(R.layout.video_quality_items, null);
             quality_normal = (TextView) layout.findViewById(R.id.quality_normal);
             quality_high = (TextView) layout.findViewById(R.id.quality_high);
@@ -349,6 +350,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     }
 
     public void setSystemTimeAndBattery() {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormater = new SimpleDateFormat("HH:mm");
         Date date = new Date();
         video_current_time.setText(dateFormater.format(date));
@@ -388,6 +390,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         }
     };
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public void onCLickUiToggleToClear() {
         if (currentState == CURRENT_STATE_PREPARING) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
@@ -496,11 +499,12 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         setAllControlsVisible(View.VISIBLE, View.INVISIBLE, View.INVISIBLE,
                 View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
         startDismissControlViewTimer();
-        if(currentScreen == SCREEN_LAYOUT_LIST){
-            closeVolume();
-        }else{
-            openVolume();
-        }
+        //TODO 需要修改
+//        if(currentScreen == SCREEN_LAYOUT_LIST){
+//            closeVolume();
+//        }else{
+//            openVolume();
+//        }
     }
 
     public void changeUiToPlayingShow() {
@@ -705,6 +709,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void showProgressDialog(float deltaX, String seekTime, int seekTimePosition, String totalTime, int totalTimeDuration) {
         super.showProgressDialog(deltaX, seekTime, seekTimePosition, totalTime, totalTimeDuration);
         if (mProgressDialog == null) {
+            @SuppressLint("InflateParams")
             View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_progress, null);
             mDialogProgressBar = ((ProgressBar) localView.findViewById(R.id.duration_progressbar));
             mDialogSeekTime = ((TextView) localView.findViewById(R.id.tv_current));
@@ -744,6 +749,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void showVolumeDialog(float deltaY, int volumePercent) {
         super.showVolumeDialog(deltaY, volumePercent);
         if (mVolumeDialog == null) {
+            @SuppressLint("InflateParams")
             View localView = LayoutInflater.from(getContext()).inflate(R.layout.jc_dialog_volume, null);
             mDialogVolumeImageView = ((ImageView) localView.findViewById(R.id.volume_image_tip));
             mDialogVolumeTextView = ((TextView) localView.findViewById(R.id.tv_volume));
