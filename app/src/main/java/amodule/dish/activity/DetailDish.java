@@ -153,7 +153,7 @@ public class DetailDish extends BaseActivity {
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadHistoryData();
+                 loadHistoryData();
             }
         });
     }
@@ -194,8 +194,10 @@ public class DetailDish extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //获取离线菜谱的 json 数据
-                dishJson = DataOperate.buyBurden(XHApplication.in(), code);
+                if(!ToolsDevice.getNetActiveState(DetailDish.this)) {
+                    //获取离线菜谱的 json 数据
+                    dishJson = DataOperate.buyBurden(XHApplication.in(), code);
+                }
                 //获取手机中的离线菜谱数量
                 AppCommon.buyBurdenNum = getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
                 mHandler.sendEmptyMessage(LOAD_DISH);

@@ -20,9 +20,11 @@ import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MenuDish;
+import amodule.dish.db.DishOffSqlite;
 import amodule.user.activity.MyFavorite;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterMyselfFavorite;
@@ -44,8 +46,12 @@ public class FavoriteDish {
 	private String userCode = "";
 	public boolean loadOver = false;
 	public boolean isOne = true;
+
+	private boolean isHasNet = true;
+
 	public FavoriteDish(BaseActivity mAct){
 		this.mAct = mAct;
+		isHasNet = ToolsDevice.getNetActiveState(mAct);
 	}
 	
 	public View onCreateView(){
@@ -84,13 +90,15 @@ public class FavoriteDish {
 		loadManager.setLoading(theListView, adapter, true, new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				load(false);
+				if(isHasNet)loadNetData(false);
+				else loadLocal(false);
 			}
 		}, new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				load(true);
+				if(isHasNet)loadNetData(true);
+				else loadLocal(true);
 			}
 		});
 		theListView.setOnItemClickListener(new OnItemClickListener() {
@@ -140,9 +148,68 @@ public class FavoriteDish {
 			}
 		});
 	}
+
+	public void loadLocal(boolean isForward){
+		if (!LoginManager.isLogin()) {
+			Intent intent = new Intent(mAct, LoginByAccout.class);
+			mAct.startActivity(intent);
+			return;
+		}
+		if (isForward) {
+			currentPage = 1;
+		} else
+			currentPage++;
+
+		DishOffSqlite sqlite = new DishOffSqlite(mAct);
+		setOffLine(isForward,UtilString.getListMapByJson(sqlite.LoadPage(currentPage)));
+	}
+
+	// 处理离线菜谱数据
+	protected void setOffLine(boolean isForward,ArrayList<Map<String, String>> listMapByJson) {
+		if(isForward) listDataMyFav.clear();
+		for(Map<String, String> mapReturn : listMapByJson){
+			mapReturn.put("code", mapReturn.get("code"));
+			mapReturn.put("name", mapReturn.get("name"));
+			mapReturn.put("img", mapReturn.get("img"));
+			if(!mapReturn.containsKey("hasVideo")){
+				mapReturn.put("hasVideo", "1");
+			}
+			try{
+				String nickName = UtilString.getListMapByJson(mapReturn.get("customer")).get(0).get("nickName");
+				mapReturn.put("nickName", nickName);
+			}catch(Exception e){
+				mapReturn.put("nickName", "hide");
+			}
+			mapReturn.put("isDel", "hide");
+			mapReturn.put("isToday", "hide");
+			mapReturn.put("allClick", mapReturn.get("allClick") + "浏览");
+			mapReturn.put("favorites", mapReturn.get("favorites") + "收藏");
+			mapReturn.put("isFine", "2".equals(mapReturn.get("isFine")) ? "精" : "hide");
+			mapReturn.put("isMakeImg", "2".equals(mapReturn.get("isMakeImg")) ? "步骤图" : "hide");
+			mapReturn.put("video", "2".equals(mapReturn.get("type")) ? "[视频]" : "hide");
+			mapReturn.put("hasVideo", mapReturn.get("type"));
+
+			listDataMyFav.add(mapReturn);
+		}
+		int loadCount = listMapByJson.size();
+		adapter.notifyDataSetChanged();
+		if (everyPage == 0) everyPage = 10;
+		currentPage = loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, everyPage, loadCount,currentPage,listDataMyFav.size() == 0);
+		loadManager.hideProgressBar();
+
+		// 如果总数据为空,显示没有菜谱
+		if (listDataMyFav.size() == 0) {
+			view.findViewById(R.id.myself_favorite_noData).setVisibility(View.VISIBLE);
+			theListView.setVisibility(View.GONE);
+		}else { // 否则显示结果
+			view.findViewById(R.id.myself_favorite_noData).setVisibility(View.GONE);
+			theListView.setVisibility(View.VISIBLE);
+		}
+		theListView.onRefreshComplete();
+	}
 	
 	 //加载数据
-	public void load(final boolean isForward) {
+	public void loadNetData(final boolean isForward) {
 		if (!LoginManager.isLogin()) {
 			Intent intent = new Intent(mAct, LoginByAccout.class);
 			mAct.startActivity(intent);
@@ -184,9 +251,11 @@ public class FavoriteDish {
 				} else{
 					toastFaildRes(flag,true,returnObj);
 				}
+
 				if (everyPage == 0)
 					everyPage = loadCount;
 				currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,listDataMyFav.size() == 0);
+
 				// 如果总数据为空,显示没有菜谱
 				if (flag >= UtilInternet.REQ_OK_STRING && listDataMyFav.size() == 0) {
 					view.findViewById(R.id.myself_favorite_noData).setVisibility(View.VISIBLE);

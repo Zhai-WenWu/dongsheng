@@ -72,35 +72,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/off_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:visibility="gone" >
-
-            <ImageView
-                android:id="@+id/img_off"
-                style="@style/rightBtn"
-                android:layout_width="@dimen/dp_43"
-                android:clickable="false"
-                android:visibility="visible"
-                android:src="@drawable/z_caipu_xiangqing_topbar_ico_offline" />
-
-            <TextView
-                android:id="@+id/tv_off"
-                style="@style/top_text_button_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/img_off"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="离线菜谱"
-                android:visibility="gone" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/fav_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -191,6 +162,35 @@
                 android:text="分享"
                 android:visibility="gone" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/more_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_10"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            >
+
+            <ImageView
+                android:id="@+id/img_more"
+                style="@style/rightBtn"
+                android:clickable="false"
+                android:visibility="visible"
+                android:src="@drawable/i_ad_more" />
+
+            <TextView
+                android:id="@+id/tv_more"
+                style="@style/top_text_button_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_more"
+                android:layout_centerHorizontal="true"
+                android:text="更多"
+                android:visibility="gone" />
+        </RelativeLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

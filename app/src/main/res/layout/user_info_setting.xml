@@ -139,6 +139,11 @@
                     android:visibility="gone"/>
 
                 <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_offDish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <amodule.user.view.LeftAndRightTextView
                     android:id="@+id/view_clear_cache"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

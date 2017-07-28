@@ -1,19 +1,13 @@
 package amodule.dish.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -31,9 +25,9 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PopWindowDialog;
-import amodule.dish.activity.OfflineDish;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.db.DataOperate;
+import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import third.share.BarShare;
@@ -42,12 +36,12 @@ import third.share.ShareTools;
 import third.video.VideoPlayerController;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
+import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
 import static com.xiangha.R.id.back;
 import static com.xiangha.R.id.fav_layout;
 import static com.xiangha.R.id.modify_layout;
-import static com.xiangha.R.id.off_layout;
 import static com.xiangha.R.id.share_layout;
 
 /**
@@ -56,8 +50,8 @@ import static com.xiangha.R.id.share_layout;
 public class DishTitleViewControlNew implements View.OnClickListener{
     private Context context;
     private DishWebView mDishWebView;
-    private ImageView offImg, favImg;
-    private TextView offText, favText,titleView;
+    private ImageView favImg;
+    private TextView favText,titleView;
     private Activity detailDish;
     private String state,dishState;
     private Map<String, String> dishInfoMap;//dishInfo数据
@@ -68,6 +62,8 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private boolean isHasVideo;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
+
+    private boolean isHasPower = true;
 
     private OnDishTitleControlListener mListener;
 
@@ -82,16 +78,12 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         //处理标题
         titleView = (TextView)detailDish.findViewById(R.id.title);
         detailDish.findViewById(back).setOnClickListener(this);
-        detailDish.findViewById(off_layout).setOnClickListener(this);
         detailDish.findViewById(fav_layout).setOnClickListener(this);
         detailDish.findViewById(share_layout).setOnClickListener(this);
-        detailDish.findViewById(off_layout).setVisibility(View.GONE);
+        detailDish.findViewById(R.id.more_layout).setOnClickListener(this);
         detailDish.findViewById(fav_layout).setVisibility(View.GONE);
         detailDish.findViewById(share_layout).setVisibility(View.INVISIBLE);
-        detailDish.findViewById(modify_layout).setVisibility(View.GONE);
-        detailDish.findViewById(modify_layout).setOnClickListener(this);
-        offImg = (ImageView) detailDish.findViewById(R.id.img_off);
-        offText = (TextView) detailDish.findViewById(R.id.tv_off);
+        detailDish.findViewById(R.id.more_layout).setVisibility(View.INVISIBLE);
         favText = (TextView) detailDish.findViewById(R.id.tv_fav);
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
     }
@@ -136,48 +128,34 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * 初始化当前状态
      */
     public void setViewState(){
-        //离线菜谱
-        if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() > 0) {
-            offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
-            offText.setText("已下载");
-        }
         //收藏
         if (dishInfoMap.get("isFav").equals("2")) {
             favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
             favText.setText("已收藏");
         }
-        detailDish.findViewById(off_layout).setVisibility(state != null ? View.GONE : View.VISIBLE);
         detailDish.findViewById(R.id.fav_layout).setVisibility(state != null ? View.GONE : View.VISIBLE);
-        //分享处理
-//        视频菜谱审核前不显示分享按钮，审核成功后显示分享按钮
-        if(state != null&&isHasVideo){
-            if("6".equals(dishState) || TextUtils.isEmpty(dishState)){//视频菜谱，并且审核通过了
-                detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
-            }else{
-                detailDish.findViewById(share_layout).setVisibility(View.GONE);
-            }
-        }else{
-            detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
-        }
+        //分享处理:视频菜谱审核前不显示分享按钮，审核成功后显示分享按钮
+//        if(state != null&&isHasVideo){
+//            if("6".equals(dishState) || TextUtils.isEmpty(dishState)){//视频菜谱，并且审核通过了
+//                detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
+//            }else{
+//                detailDish.findViewById(share_layout).setVisibility(View.GONE);
+//            }
+//        }else{
+//            detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
+//        }
 
         //编辑
         if(state != null){
             if(isHasVideo && ("6".equals(dishState) || TextUtils.isEmpty(dishState))){ //视频菜谱，并且审核通过了，则不允许编辑
-                detailDish.findViewById(modify_layout).setVisibility(View.GONE);
+                detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
+                detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
             }else{
-                detailDish.findViewById(modify_layout).setVisibility(View.VISIBLE);
-                if(detailDish.findViewById(share_layout).getVisibility()==View.GONE){
-                    RelativeLayout modify_layout= (RelativeLayout) detailDish.findViewById(R.id.modify_layout);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(Tools.getDimen(context,R.dimen.dp_34), ViewGroup.LayoutParams.MATCH_PARENT);
-                    layoutParams.setMargins(0,0,Tools.getDimen(context,R.dimen.dp_15),0);
-                    layoutParams.gravity= Gravity.CENTER_VERTICAL;
-                    layoutParams.weight=1;
-                    modify_layout.setLayoutParams(layoutParams);
-                }
+                detailDish.findViewById(R.id.more_layout).setVisibility(View.VISIBLE);
             }
         }else{
-            detailDish.findViewById(modify_layout).setVisibility(View.GONE);
-
+            detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
+            detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
         }
 
     }
@@ -188,28 +166,29 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                 XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "返回点击量");
                 detailDish.finish();
                 break;
-            case off_layout://离线菜谱
-                if (detailDish != null) {
-                    XHClick.track(detailDish, "下载菜谱");
-                    if (isHasVideo)
-                        XHClick.track(detailDish, "下载视频菜谱");
-                    else
-                        XHClick.track(detailDish, "下载图文菜谱");
-                }
-                doBuyBurden();
-                break;
             case fav_layout://收藏
                 if (detailDish != null)
                     XHClick.track(detailDish, "收藏菜谱");
                 doFavorite();
                 break;
             case share_layout:
-                if (detailDish != null)
-                    XHClick.track(detailDish, "分享菜谱");
-                XHClick.mapStat(detailDish, "a_share400", "菜谱", "菜谱详情页");
-                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "分享点击量");
-//                doshare();
                 openShare();
+                break;
+            case R.id.more_layout: //查看更多按钮
+                BottomDialog bottomDialog = new BottomDialog(context);
+                bottomDialog.setTopButton("分享", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openShare();
+                    }
+                }).setBottomButton("编辑", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(isHasVideo){
+                            Tools.showToast(context,"请用香哈（视频版）编辑");
+                        }else doModify();
+                    }
+                }).show();
                 break;
             case modify_layout://编辑
                 if(isHasVideo){
@@ -237,6 +216,11 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     }
 
     private void openShare() {
+        if (detailDish != null)
+            XHClick.track(detailDish, "分享菜谱");
+        XHClick.mapStat(detailDish, "a_share400", "菜谱", "菜谱详情页");
+        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "分享点击量");
+
         boolean isAuthor = false;
         String nickName = "",code = "";
         ArrayList<Map<String, String>> cusArray = UtilString.getListMapByJson(dishInfoMap.get("customer"));
@@ -304,72 +288,23 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     /**
      * 离线菜谱
      */
-    private void doBuyBurden() {
-        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
-        if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() == 0) {
-            //若已经下载的离线数量还没到达离线菜谱的上线
-            if (AppCommon.buyBurdenNum >= DataOperate.getDownDishLimit(detailDish.getApplicationContext())) {
-                // 到达极限值，提示再下载要删除一部分了。
-                if (AppCommon.buyBurdenNum == DataOperate.getDownDishLimit(detailDish.getApplicationContext()) && LoginManager.isLogin()) {
-                    new AlertDialog.Builder(detailDish)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle("等级不足")
-                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,您的等级提升后可下载更多")
-                            .setPositiveButton("查看等级", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (LoginManager.isLogin()) {
-                                        String url = StringManager.api_getCustomerRank + "?code=" + LoginManager.userInfo.get("code");
-                                        AppCommon.openUrl(detailDish, url, true);
-                                    } else {
-                                        detailDish.startActivity(new Intent(detailDish, LoginByAccout.class));
-                                    }
-                                }
-                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(detailDish, OfflineDish.class);
-                            detailDish.startActivity(intent);
-                            detailDish.finish();
-                        }
-                    }).create().show();
-                }
-                // 提示登录可以下载更多菜谱。
-                else {
-                    new AlertDialog.Builder(detailDish)
-                            .setIcon(android.R.drawable.ic_dialog_alert).setTitle("是否保存")
-                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,想要下载更多菜谱请登录")
-                            .setPositiveButton("登录", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(detailDish, LoginByAccout.class);
-                                    detailDish.startActivity(intent);
-                                }
-                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(detailDish, OfflineDish.class);
-                            detailDish.startActivity(intent);
-                            detailDish.finish();
-                        }
-                    }).create().show();
-                }
-            } else {
+    private void doBuyBurden(boolean state) {
+        if(!state){
+            if(DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() > 0)
+                DataOperate.deleteBuyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code"));
+        }else if(OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext())) {
+            XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
+            if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() == 0) {
                 String dishJson = mListener.getOffDishJson();
-                Log.i("DetailDish","dishJson:" + dishJson);
-                if(TextUtils.isEmpty(dishJson)){
+                Log.i("DetailDish", "dishJson:" + dishJson);
+                if (TextUtils.isEmpty(dishJson)) {
                     Tools.showToast(detailDish.getApplicationContext(), "离线失败");
-                }else {
+                } else {
                     DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
                     mDishWebView.saveDishData();
-                    offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
-                    offText.setText("已下载");
-                    Tools.showToast(detailDish.getApplicationContext(), "已成功下载到离线清单中");
+                    Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
                 }
             }
-        } else {
-            Intent intent = new Intent(detailDish, OfflineDish.class);
-            detailDish.startActivity(intent);
         }
     }
 
@@ -393,6 +328,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                             if (flag >= UtilInternet.REQ_OK_STRING) {
                                 Map<String, String> map = UtilString.getListMapByJson(returnObj).get(0);
                                 boolean nowFav = map.get("type").equals("2");
+                                doBuyBurden(nowFav);
                                 favText.setText(nowFav ? "已收藏" : "  收藏  ");
                                 favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 
@@ -441,10 +377,80 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     }
 
     public void setOfflineLayoutVisibility(boolean isShow){
-        detailDish.findViewById(off_layout).setVisibility(isShow ? (state != null ? View.GONE : View.VISIBLE) : View.GONE);
+        isHasPower = isShow ? (state != null ? false : true) : false;
     }
 
     public interface OnDishTitleControlListener{
         public String getOffDishJson();
     }
+
+//    /**
+//     * 离线菜谱
+//     */
+//    private void doBuyBurden() {
+//        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
+//        if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() == 0) {
+//            //若已经下载的离线数量还没到达离线菜谱的上线
+//            if (AppCommon.buyBurdenNum >= DataOperate.getDownDishLimit(detailDish.getApplicationContext())) {
+//                // 到达极限值，提示再下载要删除一部分了。
+//                if (AppCommon.buyBurdenNum == DataOperate.getDownDishLimit(detailDish.getApplicationContext()) && LoginManager.isLogin()) {
+//                    new AlertDialog.Builder(detailDish)
+//                            .setIcon(android.R.drawable.ic_dialog_alert)
+//                            .setTitle("等级不足")
+//                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,您的等级提升后可下载更多")
+//                            .setPositiveButton("查看等级", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    if (LoginManager.isLogin()) {
+//                                        String url = StringManager.api_getCustomerRank + "?code=" + LoginManager.userInfo.get("code");
+//                                        AppCommon.openUrl(detailDish, url, true);
+//                                    } else {
+//                                        detailDish.startActivity(new Intent(detailDish, LoginByAccout.class));
+//                                    }
+//                                }
+//                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            Intent intent = new Intent(detailDish, OfflineDish.class);
+//                            detailDish.startActivity(intent);
+//                            detailDish.finish();
+//                        }
+//                    }).create().show();
+//                }else {// 提示登录可以下载更多菜谱。
+//                    new AlertDialog.Builder(detailDish)
+//                            .setIcon(android.R.drawable.ic_dialog_alert).setTitle("是否保存")
+//                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,想要下载更多菜谱请登录")
+//                            .setPositiveButton("登录", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    Intent intent = new Intent(detailDish, LoginByAccout.class);
+//                                    detailDish.startActivity(intent);
+//                                }
+//                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            Intent intent = new Intent(detailDish, OfflineDish.class);
+//                            detailDish.startActivity(intent);
+//                            detailDish.finish();
+//                        }
+//                    }).create().show();
+//                }
+//            } else {
+//                String dishJson = mListener.getOffDishJson();
+//                Log.i("DetailDish","dishJson:" + dishJson);
+//                if(TextUtils.isEmpty(dishJson)){
+//                    Tools.showToast(detailDish.getApplicationContext(), "离线失败");
+//                }else {
+//                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
+//                    mDishWebView.saveDishData();
+//                    offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
+//                    offText.setText("已下载");
+//                    Tools.showToast(detailDish.getApplicationContext(), "已成功下载到离线清单中");
+//                }
+//            }
+//        } else {
+//            Intent intent = new Intent(detailDish, OfflineDish.class);
+//            detailDish.startActivity(intent);
+//        }
+//    }
 }
