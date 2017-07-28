@@ -715,13 +715,11 @@ public class HomeFragment extends BaseHomeFragment{
                         int width = ToolsDevice.getWindowPx(getContext()).widthPixels;
                         for (Map<String, String> map : maps) {
                             if (map != null) {
-                                if (width <= 480 && map.containsKey("D480p")) {
+                                videoD = map.get("defaultUrl");
+                                if (TextUtils.isEmpty(videoD)) {
                                     videoD = map.get("D480p");
-                                } else if (width > 720 && map.containsKey("D1080p")) {
-                                    videoD = map.get("D1080p");
-                                } else if (map.containsKey("D720p")) {
-                                    videoD = map.get("D720p");
-                                }
+                                } else
+                                    break;
                             }
                         }
                         mPlayerController.initVideoView2(videoD, dataMap.get("name"), null);

@@ -120,18 +120,13 @@ public class DetailDish extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(!hasPermission){
-            page = 1;
-            hasPermission = true;
-            isHasVideo = false;
-            detailPermissionMap.clear();
-            permissionMap.clear();
-            dishJson = "";
-            if (mHandler == null) {
-                initData();
-            }
-            mHandler.sendEmptyMessage(LOAD_DISH);
-        }
+        page = 1;
+        isHasVideo = false;
+        detailPermissionMap.clear();
+        permissionMap.clear();
+        if(dishActivityViewControl != null)
+            dishActivityViewControl.setLoginStatus();
+        setRequest(page);
     }
 
     /**
@@ -227,10 +222,9 @@ public class DetailDish extends BaseActivity {
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
                     }else{
-                        if(lastPermission.equals(obj.toString())){
-                            contiunRefresh = false;
-                            return;
-                        }
+                        contiunRefresh = !lastPermission.equals(obj.toString());
+                        if(contiunRefresh)
+                            lastPermission = obj.toString();
                     }
                     permissionMap = StringManager.getFirstMap(obj);
 //                    Log.i("tzy","permissionMap = " + permissionMap.toString());

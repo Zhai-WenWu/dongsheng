@@ -142,6 +142,7 @@ public abstract class AdOptionParent {
         }, (Activity) context, statisticKey,
                 "sp_list".equals(statisticKey)
                         || "other_threeMeals_list".equals(statisticKey)
+                        || "sc_list".equals(statisticKey)
                         || "jz_list".equals(statisticKey));
     }
     //*******************************请求广告end*****************************************

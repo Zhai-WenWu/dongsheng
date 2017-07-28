@@ -227,23 +227,23 @@ public class MallCommon {
 					if(num_shopcat>0){
 						Main.setNewMsgNum(1,MallCommon.num_shopcat);
 						if(num_shopcat>9){
-							view.setVisibility(View.GONE);
-							view_two.setVisibility(View.VISIBLE);
+							if(view!=null)view.setVisibility(View.GONE);
+							if(view_two!=null)view_two.setVisibility(View.VISIBLE);
 							if(num_shopcat>99)
-								view_two.setText("99+");
+								if(view_two!=null)view_two.setText("99+");
 							else
-								view_two.setText(num_shopcat+"");
+								if(view_two!=null)view_two.setText(num_shopcat+"");
 							
 						}else{
-							view.setVisibility(View.VISIBLE);
-							view_two.setVisibility(View.GONE);
-							view.setText(num_shopcat+"");
+							if(view!=null)view.setVisibility(View.VISIBLE);
+							if(view_two!=null)view_two.setVisibility(View.GONE);
+							if(view!=null)view.setText(num_shopcat+"");
 						}
 //						Main.setNewMsgNum(Integer.parseInt(CommonBottomView.BOTTOM_TWO),num_shopcat);
 					}else{
 						Main.setNewMsgNum(1,0);
-						view.setVisibility(View.GONE);
-						view_two.setVisibility(View.GONE);
+						if(view!=null)view.setVisibility(View.GONE);
+						if(view_two!=null)view_two.setVisibility(View.GONE);
 					}
 //					Main.setNewMsgNum(Integer.parseInt(CommonBottomView.BOTTOM_TWO),MallCommon.num_shopcat);
 				}
