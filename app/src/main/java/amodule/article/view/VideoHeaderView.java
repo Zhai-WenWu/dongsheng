@@ -125,12 +125,8 @@ public class VideoHeaderView extends RelativeLayout {
                 Toast.makeText(getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (videoUrlData.containsKey("D1080p") && !TextUtils.isEmpty(videoUrlData.get("D1080p"))) {
-                url = videoUrlData.get("D1080p");
-            } else if (videoUrlData.containsKey("D720p") && !TextUtils.isEmpty(videoUrlData.get("D720p"))) {
-                url = videoUrlData.get("D720p");
-            } else if (videoUrlData.containsKey("D480p") && !TextUtils.isEmpty(videoUrlData.get("D480p"))) {
-                url = videoUrlData.get("D480p");
+            if (videoUrlData.containsKey("defaultUrl") && !TextUtils.isEmpty(videoUrlData.get("defaultUrl"))) {
+                url = videoUrlData.get("defaultUrl");
             }
             videoData.put("url", url);
             setSelfVideo(videoData,detailPermissionMap);

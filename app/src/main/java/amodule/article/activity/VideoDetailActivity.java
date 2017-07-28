@@ -150,7 +150,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         if (loadManager != null)
             loadManager.hideProgressBar();
         page = 0;
-        hasPagePermission = true;
         detailPermissionMap.clear();
         permissionMap.clear();
         if(mHaederLayout != null)
@@ -503,10 +502,9 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
                     }else{
-                        if(lastPermission.equals(obj.toString())){
-                            contiunRefresh = false;
-                            return;
-                        }
+                        contiunRefresh = !lastPermission.equals(obj.toString());
+                        if(contiunRefresh)
+                            lastPermission = obj.toString();
                     }
                     permissionMap = StringManager.getFirstMap(obj);
 //                    Log.i("tzy","permissionMap = " + permissionMap.toString());
