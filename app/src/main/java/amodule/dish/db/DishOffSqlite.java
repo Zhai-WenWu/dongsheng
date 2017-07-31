@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import acore.logic.AppCommon;
 import acore.tools.ImgManager;
 
@@ -33,6 +35,32 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public ArrayList<String> getAllNedUpdataMoulderCodes(String moudleVersion){
+        ArrayList<String> codes = new ArrayList<>();
+        if(TextUtils.isEmpty(moudleVersion)) return codes;
+        Cursor cur=null;
+        SQLiteDatabase writableDatabase = null;
+        try {
+            writableDatabase = getWritableDatabase();
+//            cur = writableDatabase.query(TB_MAIN_ENAME, null, DishOffData.bd_moudleVersion+"!='" + moudleVersion + "'", null,
+//                    null, null, null);// 查询并获得游标
+            cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
+                    null, null, null);// 查询并获得游标
+            if(cur.moveToFirst()){
+                do{
+                    String code =cur.getString(cur.getColumnIndex(DishOffData.bd_code));
+                    String bd_moudleVersion =cur.getString(cur.getColumnIndex(DishOffData.bd_moudleVersion));
+                    codes.add(code);
+                }while(cur.moveToNext());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally{
+            close(cur, writableDatabase);
+        }
+        return codes;
     }
 
     /**
@@ -149,6 +177,7 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
         cv.put(DishOffData.bd_name, buyData.getName());
         cv.put(DishOffData.bd_addTime, buyData.getAddTime());
         cv.put(DishOffData.bd_json, buyData.getJson());
+        cv.put(DishOffData.bd_moudleVersion, buyData.getMoudleVersion());
         try {
             writableDatabase = getWritableDatabase();
             id = writableDatabase.insert(TB_MAIN_ENAME, null, cv);
@@ -266,6 +295,7 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
             + DishOffData.bd_code+" text,"
             + DishOffData.bd_name+" ntext,"
             + DishOffData.bd_addTime +" text,"
+            + DishOffData.bd_moudleVersion +" text,"
             + DishOffData.bd_json + " text)" ;
 
     /**

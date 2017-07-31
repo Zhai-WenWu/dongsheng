@@ -227,7 +227,7 @@ public class MainInitDataControl {
                 //修改所有上传中的普通菜谱状态
                 UploadDishControl.getInstance().updataAllUploadingDish(context.getApplicationContext());
 
-                //清楚上传中的数据库数据
+                //清除上传中的数据库数据
                 SubjectSqlite subjectSqlite = SubjectSqlite.getInstance(context);
                 ArrayList<SubjectData> array = subjectSqlite.selectByState(SubjectData.UPLOAD_ING);
                 for(SubjectData data : array){

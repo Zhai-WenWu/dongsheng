@@ -281,7 +281,7 @@ public class DetailDish extends BaseActivity {
      * 历史记录都是:dishInfo的数据
      */
     private void analyzeHistoryData() {
-        dishActivityViewControl.analyzeDishInfoData(dishJson, new HashMap<String, String>());
+        dishActivityViewControl.analyzeDishInfoData(dishJson, new HashMap<String, String>(),true);
         loadManager.loadOver(ReqInternet.REQ_OK_STRING, 1, true);
         mHandler.sendEmptyMessage(LOAD_DISH_OVER);
     }
@@ -300,7 +300,7 @@ public class DetailDish extends BaseActivity {
         }
         saveHistoryToDB(data);
         requestWeb(data);
-        dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
+        dishActivityViewControl.analyzeDishInfoData(data,permissionMap,false);
 
     }
     private boolean saveHistory = false;

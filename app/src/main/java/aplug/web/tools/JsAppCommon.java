@@ -38,6 +38,7 @@ import amodule.user.activity.login.LoginByAccout;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.imageselector.ImgWallActivity;
 import aplug.web.view.XHWebView;
@@ -816,5 +817,15 @@ public class JsAppCommon extends JsBase{
 //		Log.i(DishWebView.TAG,"onLoadFinishCallback()");
 //		Tools.showToast(mAct,"onLoadFinishCallback()");
 		((DishWebView)mWebView).onLoadFinishCallback(data);
+	}
+
+	@JavascriptInterface
+	public void getSign(){
+		ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
+			@Override
+			public void getSignEncyntParam(String encryptparam) {
+				mWebView.loadUrl("Javascript:signCallback(" + ",\"" + encryptparam + "\")");
+			}
+		});
 	}
 }

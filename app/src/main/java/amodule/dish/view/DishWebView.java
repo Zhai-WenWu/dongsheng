@@ -23,6 +23,7 @@ public class DishWebView extends XHWebView {
 
     private String dishCode;
     private String mHtmlData;
+    private String mMouldVersion;
 
     public DishWebView(Context context) {
         super(context);
@@ -48,23 +49,36 @@ public class DishWebView extends XHWebView {
     }
 
     public void loadDishData(String code){
+        loadDishData(code,false);
+    }
+
+    public void loadDishData(String code,boolean isReadLocal){
         if(TextUtils.isEmpty(code)){
             return;
         }
         dishCode = code;
-        String htmlPath = String.valueOf(FileManager.loadShared(getContext(),FileManager.file_dishMould,code));
-        Log.i(TAG,"loadDishData() htmlPath:" + htmlPath);
-        if(TextUtils.isEmpty(htmlPath)){
+        if(isReadLocal) {
+            String htmlPath = String.valueOf(FileManager.loadShared(getContext(), FileManager.file_dishMould, code));
+            mMouldVersion = String.valueOf(FileManager.loadShared(getContext(), FileManager.file_dishMouldVersion, code));
+            Log.i(TAG, "loadDishData() htmlPath:" + htmlPath);
+            if (TextUtils.isEmpty(htmlPath)) {
+                loadMould(code);
+                return;
+            }
+            String htmlStr = FileManager.readFile(htmlPath);
+            Log.i(TAG, "loadDishData() htmlStr:" + htmlStr);
+            if (TextUtils.isEmpty(htmlStr)) {
+                loadMould(code);
+                return;
+            }
+            loadDataWithBaseURL(null,htmlStr,"text/html","utf-8", null);
+        }else{
             loadMould(code);
-            return;
         }
-        String htmlStr = FileManager.readFile(htmlPath);
-        Log.i(TAG,"loadDishData() htmlStr:" + htmlStr);
-        if(TextUtils.isEmpty(htmlStr)){
-            loadMould(code);
-            return;
-        }
-        loadDataWithBaseURL(null,htmlStr,"text/html","utf-8", null);
+    }
+
+    public String getMouldVersion(){
+        return mMouldVersion;
     }
 
     public boolean saveDishData(){
@@ -77,21 +91,25 @@ public class DishWebView extends XHWebView {
         Log.d(TAG,"path:" + path);
         FileManager.saveFileToCompletePath(path,mHtmlData,false);
         FileManager.saveShared(getContext(),FileManager.file_dishMould,dishCode,path);
+        FileManager.saveShared(getContext(),FileManager.file_dishMouldVersion,dishCode,mMouldVersion);
         return true;
     }
 
     private void loadMould(final String code){
         DishMouldControl.getDishMould(new DishMouldControl.OnDishMouldListener() {
             @Override
-            public void loaded(boolean isSucess, String data) {
+            public void loaded(boolean isSucess, String data,String mouldVersion) {
+                mMouldVersion = mouldVersion;
                 Log.d(TAG,"getDishMould() isSucess:" + isSucess);
                 if(isSucess){
-//                    Log.d(TAG,"loadMould() data:" + data);
                     data = data.replace("<{code}>",code);
                     final String html = data;
                     DishWebView.this.post(new Runnable() {
                         @Override
                         public void run() {
+//                            Log.d(TAG,"loadMould() html:" + html);
+//                            String path = DishMouldControl.getOffDishPath() + dishCode;
+//                            FileManager.saveFileToCompletePath(path,html,false);
 //                            loadData(html,"text/html; charset=UTF-8", null);
                             loadDataWithBaseURL(null,html,"text/html","utf-8", null);
                         }

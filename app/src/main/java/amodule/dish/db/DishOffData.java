@@ -8,12 +8,23 @@ public class DishOffData {
 	public static final String bd_name="name";
 	public static final String bd_addTime="addTime";
 	public static final String bd_json="json";
-	
+	public static final String bd_moudleVersion="moudleVersion";
+
 	private String id="";
 	private String code="";
 	private String name="";
 	private String addTime="";
 	private String json="";
+	private String moudleVersion="";
+
+	public String getMoudleVersion() {
+		return moudleVersion;
+	}
+
+	public void setMoudleVersion(String moudleVersion) {
+		this.moudleVersion = moudleVersion;
+	}
+
 	public String getId() {
 		return id;
 	}

@@ -24,7 +24,7 @@ public class DishMouldControl {
     public static void setDishMould(final OnDishMouldListener listener){
         final String path = FileManager.getSDDir() + "long/" + FileManager.file_dishMould;
         String readStr = FileManager.readFile(path);
-        Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign");
+        final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign");
         LinkedHashMap<String,String> mapParams = new LinkedHashMap<>();
         mapParams.put("versionSign",versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishMould,mapParams, new InternetCallback(Main.allMain.getApplicationContext()) {
@@ -38,16 +38,17 @@ public class DishMouldControl {
                             if(arrayList.size() > 0) {
                                 Map<String,String> map = arrayList.get(0);
                                 String data = map.get("html");
+                                String versionSign = map.get("versionSign");
                                 File file = FileManager.saveFileToCompletePath(path, data, false);
-                                if(file != null) FileManager.saveShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign",map.get("versionSign"));
-                                if(listener != null) listener.loaded(true,data);
+                                if(file != null) FileManager.saveShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign",versionSign);
+                                if(listener != null) listener.loaded(true,data,String.valueOf(versionSign));
                                 return;
                             }
-                            if(listener != null) listener.loaded(false,"");
+                            if(listener != null) listener.loaded(false,"",String.valueOf(versionSign));
                         }
                     }).start();
                 }else{
-                    if(listener != null) listener.loaded(false,"");
+                    if(listener != null) listener.loaded(false,"",String.valueOf(versionSign));
                 }
             }
         });
@@ -71,7 +72,8 @@ public class DishMouldControl {
                 if (TextUtils.isEmpty(readStr)){
                     handler.sendEmptyMessage(0);
                 }else {
-                    listener.loaded(true, readStr);
+                    Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign");
+                    listener.loaded(true, readStr,String.valueOf(versionSign));
                 }
             }
         }).start();
@@ -82,6 +84,6 @@ public class DishMouldControl {
     }
 
     public interface OnDishMouldListener{
-        public void loaded(boolean isSucess,String data);
+        public void loaded(boolean isSucess,String data,String mouldVersion);
     }
 }

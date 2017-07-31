@@ -21,7 +21,7 @@ public class DataOperate {
 	//没登录时默认离线菜谱个数
 	public static final int MAX_DOWN_DISH=10;
 
-	public static void saveBuyBurden(final Context context,final String json) {
+	public static void saveBuyBurden(final Context context, final String json, final String mouldVersion) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -36,6 +36,7 @@ public class DataOperate {
 					buyData.setCode(dishInfoMap.get("code"));
 					buyData.setName(dishInfoMap.get("name"));
 					buyData.setAddTime(Tools.getAssignTime("yyyy-MM-dd HH:mm:ss",0));
+					buyData.setMoudleVersion(mouldVersion);
 					ImgManager.saveImg(dishInfoMap.get("img"),LoadImage.SAVE_LONG);
 					buyData.setJson(json);
 					int id = sqlite.insert(buyData);

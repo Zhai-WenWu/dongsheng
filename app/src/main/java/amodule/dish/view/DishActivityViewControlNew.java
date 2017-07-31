@@ -190,13 +190,13 @@ public class DishActivityViewControlNew {
      * @param dishInfo
      * @param permissionMap
      */
-    public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
+    public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap,boolean isReadLocal) {
         dishJson = dishInfo;
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
 
         dishInfoMap = list.get(0);
-        mXhWebView.loadDishData(dishInfoMap.get("code"));
+        mXhWebView.loadDishData(dishInfoMap.get("code"),isReadLocal);
 
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");

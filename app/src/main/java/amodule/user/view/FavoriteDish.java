@@ -3,6 +3,7 @@ package amodule.user.view;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -170,6 +171,7 @@ public class FavoriteDish {
 		for(Map<String, String> mapReturn : listMapByJson){
 			mapReturn.put("code", mapReturn.get("code"));
 			mapReturn.put("name", mapReturn.get("name"));
+			mapReturn.put("isLocal", "2");
 			mapReturn.put("img", mapReturn.get("img"));
 			if(!mapReturn.containsKey("hasVideo")){
 				mapReturn.put("hasVideo", "1");
@@ -231,8 +233,11 @@ public class FavoriteDish {
 					ArrayList<Map<String, String>> listMyDish = UtilString.getListMapByJson(returnObj);
 					ArrayList<Map<String, String>> objInfo = UtilString.getListMapByJson(listMyDish.get(0).get("obj"));
 					loadCount = objInfo.size();
+					DishOffSqlite dishOffSqlite = new DishOffSqlite(mAct);
 					for (int i = 0; i < objInfo.size(); i++) {
 						Map<String, String> map = objInfo.get(i);
+						String code = map.get("code");
+						map.put("isLocal", TextUtils.isEmpty(dishOffSqlite.selectByCode(code)) ? "1" : "2");
 						map.put("allClick", map.get("allClick") + "浏览");
 						map.put("favorites", map.get("favorites") + "收藏");
 						map.put("isMakeImg", map.get("isMakeImg").equals("2") ? "步骤图" : "hide");

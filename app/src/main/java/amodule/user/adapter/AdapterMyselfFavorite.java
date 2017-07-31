@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,7 +47,7 @@ public class AdapterMyselfFavorite extends AdapterSimple {
 			int[] viewId = new int[] { R.id.myself_favourite_img, R.id.myself_favourite_dishName, R.id.myself_favourite_make,
 					R.id.imyself_favourite_isFine, R.id.myself_favourite_burden, R.id.myself_favourite_allClick,
 					R.id.myself_favourite_favorites, R.id.myself_favourite_delete,R.id.myself_favourite_hasVideo,
-				R.id.tag_exclusive_layout};
+				R.id.tag_exclusive_layout,R.id.myself_favourite_catch};
 			viewCache.setView(convertView, viewId);
 			convertView.setTag(viewCache);
 		} else {
@@ -66,7 +67,7 @@ public class AdapterMyselfFavorite extends AdapterSimple {
 
 	class ViewCache {
 		final int viewDel = 4;// 删除操作;
-
+		ImageView localCatch;
 		ImageViewVideo iv_img;
 		RelativeLayout tag_exclusive_layout;
 		TextView tv_dishName, tv_make, tv_burdens, tv_delete, tv_isFine, tv_allClick, tv_favorites,tv_hasVideo;
@@ -82,6 +83,7 @@ public class AdapterMyselfFavorite extends AdapterSimple {
 			tv_delete = (TextView) view.findViewById(param[7]);
 			tv_hasVideo = (TextView) view.findViewById(param[8]);
 			tag_exclusive_layout= (RelativeLayout) view.findViewById(param[9]);
+			localCatch= (ImageView) view.findViewById(param[10]);
 			int textMaxWidth = ToolsDevice.getWindowPx(view.getContext()).widthPixels
 					- ToolsDevice.dp2px(view.getContext(), 2 * 15 + 120 + 4 + 15 + 15);
 			tv_dishName.setMaxWidth(textMaxWidth);
@@ -101,6 +103,7 @@ public class AdapterMyselfFavorite extends AdapterSimple {
 			AdapterMyselfFavorite.this.setViewText(tv_favorites, map.get("favorites"));
 
 			tag_exclusive_layout.setVisibility("2".equals(map.get("exclusive"))?View.VISIBLE:View.GONE);
+			localCatch.setVisibility("2".equals(map.get("isLocal"))?View.VISIBLE:View.GONE);
 //			AdapterMyselfFavorite.this.setViewText(tv_hasVideo, map.get("video"));
 //			tv_delete.setVisibility(View.GONE);
 //			setClickEvent(map, tv_delete, viewDel);

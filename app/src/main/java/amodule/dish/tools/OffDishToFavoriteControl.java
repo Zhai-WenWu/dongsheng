@@ -95,6 +95,43 @@ public class OffDishToFavoriteControl {
         }
     }
 
+    public static void updataAllNedUpdataMoulderDish(final Context context, final String moudleVersion){
+        try {
+            if (context == null) return;
+            RelativeLayout rootLayout = null;
+            if (context instanceof BaseActivity) {
+                rootLayout = ((BaseActivity) context).rl;
+            } else if (context instanceof MainBaseActivity) {
+                rootLayout = ((MainBaseActivity) context).rl;
+            } else if (context instanceof Main) {
+                rootLayout = ((Main) context).getRootLayout();
+            }
+            if (rootLayout == null) return;
+
+            final RelativeLayout mRootLayout = rootLayout;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DishOffSqlite dishOffSqlite = new DishOffSqlite(context);
+                    final ArrayList<String> codes = dishOffSqlite.getAllNedUpdataMoulderCodes(moudleVersion);
+                    if (codes.size() <= 0) return;
+                    mRootLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //同步cookie并获得webview
+                            final DishsWebView webView = new DishsWebView(context);
+                            mRootLayout.addView(webView, 0, 0);
+                            webView.loadDishData(codes);
+
+                        }
+                    });
+                }
+            }).start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private static void addCollection(Context context, ArrayList<String> codes) {
         StringBuffer params = new StringBuffer("codes=");
         for (String code : codes) {

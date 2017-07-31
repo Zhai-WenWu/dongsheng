@@ -300,7 +300,8 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                 if (TextUtils.isEmpty(dishJson)) {
                     Tools.showToast(detailDish.getApplicationContext(), "离线失败");
                 } else {
-                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
+                    String mouldVersion = mDishWebView.getMouldVersion();
+                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson,mouldVersion);
                     mDishWebView.saveDishData();
                     Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
                 }
