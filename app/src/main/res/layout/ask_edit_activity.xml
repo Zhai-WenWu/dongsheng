@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@android:color/white">
+
+    <include
+        android:id="@+id/title_rela"
+        layout="@layout/ask_answer_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"/>
+
+    <EditText
+        android:id="@+id/edittext"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_196"
+        android:layout_below="@+id/title_rela"
+        android:background="@null"
+        android:gravity="top|left"
+        android:padding="@dimen/dp_20"
+        android:textSize="@dimen/sp_16"
+        android:hint="1、答案发布后，若作者在72小时内没有回答，将以香豆形式全额退款至您的钱包。\n2、若您的提问被人偷听，偷听的分成金额将以香豆形式进入您的钱包。"
+        android:maxLength="100"
+        android:textColorHint="#c9c9c9"
+        android:lineSpacingExtra="@dimen/dp_8"/>
+
+    <RelativeLayout
+        android:id="@+id/imgs_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
+        android:layout_below="@+id/edittext"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_20">
+
+        <TextView
+            android:id="@+id/price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_16"
+            android:textColor="#ff533c"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/imgs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right|bottom"
+            android:layout_toRightOf="@+id/price_text"
+            android:layout_toLeftOf="@+id/img_select_btn"
+            android:layout_alignParentBottom="true">
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/img_select_btn"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:layout_toLeftOf="@+id/video_select_btn"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/answer_img_btn"
+            android:scaleType="fitXY"/>
+        <ImageView
+            android:id="@+id/video_select_btn"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            android:layout_toLeftOf="@+id/count_text"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/answer_video_btn"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:textSize="@dimen/sp_15"
+            android:textColor="#c3c3c3"
+            android:text="0/100"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_11"
+        android:layout_below="@+id/imgs_container"
+        android:background="#f7f7f7"/>
+
+    <RelativeLayout
+        android:id="@+id/anonymity_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:layout_below="@+id/line1"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="匿名"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_15"
+            android:layout_centerVertical="true"/>
+
+        <acore.widget.SwitchButton
+            android:id="@+id/ask_switchbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/anonymity_container"
+        android:background="#e5e5e5"/>
+
+    <RelativeLayout
+        android:id="@+id/ask_desc"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:layout_below="@+id/line2"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看问答细则及责任声明"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_15"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:layout_width="@dimen/dp_7"
+            android:layout_height="@dimen/dp_12"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ask_answer_right_arrows"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/ask_desc"
+        android:background="#e5e5e5"/>
+
+    <aplug.web.view.XHWebView
+        android:id="@+id/XHWebview"
+        style="@style/layout"
+        android:background="@android:color/transparent"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+    </aplug.web.view.XHWebView>
+
+</RelativeLayout>
