@@ -266,4 +266,19 @@ public class ReqEncyptInternet extends UtilInternet {
         return true;
     }
 
+    /**
+     * 获取当前加密值
+     * @return
+     */
+    public String getEncryptParam(){
+        long now_request_time=System.currentTimeMillis();
+        int time= (int) (now_request_time-now_login_time)/1000;
+        //处理当前sign，获取要传输的sign
+        String sign_no= ReqEncryptCommon.decrypt(ReqEncryptCommon.getInstance().getSign(),ReqEncryptCommon.password);
+        String sign_yes= ReqEncryptCommon.encrypt(sign_no+"_"+time,ReqEncryptCommon.password);
+        String now_parms="";
+
+        String encryptparams=ReqEncryptCommon.getInstance().getData(now_parms,sign_yes);
+        return encryptparams;
+    }
 }
