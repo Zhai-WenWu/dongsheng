@@ -171,11 +171,13 @@ public class ReqEncyptInternet extends UtilInternet {
                 return;
             }
             ++loginNum;
-            HashMap<String,Object> map= new HashMap<>();
-            map.put("url",actionUrl);
-            map.put("param",mapParam);
-            map.put("callback",actionCallback);
-            listInternet.add(map);
+            if(mapParam!=null&&actionCallback!=null) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("url", actionUrl);
+                map.put("param", mapParam);
+                map.put("callback", actionCallback);
+                listInternet.add(map);
+            }
             if(isLoginSign){//当前已经请求
                 return;//不处理
             }
@@ -204,6 +206,7 @@ public class ReqEncyptInternet extends UtilInternet {
                             }
                             ReqEncryptCommon.getInstance().setIsencrypt(true);
 
+                            handlerEncryptParam();
                             //加盟数据并处理数据
                             int size= listInternet.size();
                             Log.i("zhangyujian","size:::"+size);
@@ -266,11 +269,46 @@ public class ReqEncyptInternet extends UtilInternet {
         return true;
     }
 
+    public SignEncyptCallBck signEncyptCallBck;
+
+    public interface  SignEncyptCallBck{
+        public void getSignEncyntParam(String encryptparam);
+    }
+
+    /**
+     * 获取加密key
+     * @param signEncyptCallBck
+     */
+    public void getSignEncryptParam(SignEncyptCallBck signEncyptCallBck){
+        loginNum=0;
+        this.signEncyptCallBck=signEncyptCallBck;
+        //处理数据
+        long time= System.currentTimeMillis();
+        if(!isLoginSign && ReqEncryptCommon.getInstance().isencrypt()&&
+                (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=time){
+            handlerEncryptParam();
+        }else{
+            getLoginApp("",null,null);
+        }
+    }
+
+    /**
+     * 处理加密回调
+     */
+    private void handlerEncryptParam(){
+        if(signEncyptCallBck!=null){
+            String encryptparam=getEncryptParam();
+            if(signEncyptCallBck!=null&&!TextUtils.isEmpty(encryptparam)){
+                signEncyptCallBck.getSignEncyntParam(encryptparam);
+                signEncyptCallBck=null;
+            }
+        }
+    }
     /**
      * 获取当前加密值
      * @return
      */
-    public String getEncryptParam(){
+    private String getEncryptParam(){
         long now_request_time=System.currentTimeMillis();
         int time= (int) (now_request_time-now_login_time)/1000;
         //处理当前sign，获取要传输的sign
