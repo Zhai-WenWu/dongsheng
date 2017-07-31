@@ -14,8 +14,12 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+
+import static android.view.View.VISIBLE;
 
 /**
  * <p>统一管理MediaPlayer的地方,只有一个mediaPlayer实例，那么不会有多个视频同时播放，也节省资源。</p>
@@ -118,7 +122,6 @@ public class JCMediaManager implements TextureView.SurfaceTextureListener, Media
         mMediaHandler.sendMessage(msg);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
         Log.i(TAG, "onSurfaceTextureAvailable [" + this.hashCode() + "] ");
@@ -126,8 +129,40 @@ public class JCMediaManager implements TextureView.SurfaceTextureListener, Media
             savedSurfaceTexture = surfaceTexture;
             prepare();
         } else {
-            textureView.setSurfaceTexture(savedSurfaceTexture);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                textureView.setSurfaceTexture(savedSurfaceTexture);
+            }
+//            else{
+//                try {
+//                    Class cls = textureView.getClass();
+//                    if (savedSurfaceTexture != null) {
+//                        Method nDestroyNativeWindow = cls.getDeclaredMethod("nDestroyNativeWindow",new Class<()[]);
+//                        nDestroyNativeWindow.invoke(textureView);
+//                        savedSurfaceTexture.release();
+//                    }
+//                    Field field = cls.getDeclaredField("mSurface");
+//                    field.setAccessible(true);
+//                    field.set(textureView,savedSurfaceTexture);
+//                    Method nCreateNativeWindow = cls.getDeclaredMethod("nCreateNativeWindow",new Class<()[]);
+//                    nCreateNativeWindow.invoke(field.get(textureView));
+//
+//                    if (((mViewFlags & VISIBILITY_MASK) == VISIBLE) && mLayer != null) {
+//                        mSurface.setOnFrameAvailableListener(mUpdateListener, mAttachInfo.mHandler);
+//                    }
+//                    mUpdateSurface = true;
+//                    invalidateParentIfNeeded();
+//                } catch (NoSuchFieldException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                } catch (NoSuchMethodException e) {
+//                    e.printStackTrace();
+//                } catch (InvocationTargetException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
+
     }
 
     @Override

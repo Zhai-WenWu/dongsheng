@@ -20,6 +20,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
@@ -59,7 +60,7 @@ public class VideoImageView extends RelativeLayout{
 
     private void initView() {
         //直接播放
-       String temp= (String) UtilFile.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
+       String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
        if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
            setShowMedia(true);
         LayoutInflater.from(context).inflate(R.layout.view_video_image,this,true);
@@ -67,7 +68,7 @@ public class VideoImageView extends RelativeLayout{
         image_btn_play= (ImageView) findViewById(R.id.image_btn_play);
         load_progress= (ImageView) findViewById(R.id.load_progress);
         video_layout= (RelativeLayout) findViewById(R.id.video_layout);
-        TextView tipMessage= (TextView) findViewById(R.id.tipMessage);
+        final TextView tipMessage= (TextView) findViewById(R.id.tipMessage);
         tipMessage.setText("现在是非WIFI，看视频要花费流量了");
         tipLayout= (LinearLayout) findViewById(R.id.tip_root);
         int height = (ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_30)) * 3 / 4;
@@ -132,7 +133,7 @@ public class VideoImageView extends RelativeLayout{
             @Override
             public void onComplte() {
                 if (mIsCycle) {
-                    videoPlayerStandard.startVideo();
+                    videoPlayerStandard.startButton.performClick();
                 }
             }
         });
@@ -154,14 +155,7 @@ public class VideoImageView extends RelativeLayout{
                 newStart=false;
             }
         });
-        //TODO 未完成转换处
-//        vdVideoView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(videoClickCallBack!=null)
-//                    videoClickCallBack.setVideoClick();
-//            }
-//        });
+
         tipLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +164,7 @@ public class VideoImageView extends RelativeLayout{
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        UtilFile.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+                        FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
                     }
                 }).start();
 
@@ -184,7 +178,7 @@ public class VideoImageView extends RelativeLayout{
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        UtilFile.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+                        FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
                     }
                 }).start();
             }
@@ -215,8 +209,8 @@ public class VideoImageView extends RelativeLayout{
                     return;
                 }
             }else tipLayout.setVisibility(View.GONE);
-            //TODO notifyHideTip需要实现
-            videoPlayerStandard.startVideo();
+            //TODO notifyHideTip 需要实现
+            videoPlayerStandard.startButton.performClick();
             //不使用进度动画
 //                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.loading_anim);
 //                load_progress.startAnimation(animation);
@@ -254,7 +248,9 @@ public class VideoImageView extends RelativeLayout{
     }
 
     public void onDestroy() {
-        JCVideoPlayer.releaseAllVideos();
+        if(videoPlayerStandard != null){
+            videoPlayerStandard.release();
+        }
         JCVideoPlayer.clearSavedProgress(context, null);
     }
 

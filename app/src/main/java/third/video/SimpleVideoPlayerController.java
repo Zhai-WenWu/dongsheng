@@ -11,7 +11,13 @@ import com.xiangha.R;
 
 import acore.tools.FileManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
+import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
+import fm.jiecao.jcvideoplayer_lib.JCUtils;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
@@ -44,8 +50,38 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
     }
 
     public void initView() {
-
         videoPlayerStandard = new XHVideoPlayerStandard(mContext);
+        videoPlayerStandard.setIsHideReplay(true);
+        videoPlayerStandard.setIsShowThumbOnce(true);
+        videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
+            @Override
+            public void wifiConnected() {
+//                onPause();
+//                onResume();
+            }
+
+            @Override
+            public void mobileConnected() {
+//                onPause();
+//                onResume();
+            }
+
+            @Override
+            public void nothingConnected() {
+
+            }
+        });
+        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
+            @Override
+            public boolean onError() {
+                if(ToolsDevice.isNetworkAvailable(mContext)){
+                    JCUtils.saveProgress(mContext,mImgUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
+                    videoPlayerStandard.startVideo();
+                    return true;
+                }
+                return false;
+            }
+        });
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
@@ -71,8 +107,8 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
                 }
             });
         }
-        String temp= (String) UtilFile.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
-        if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
+        String temp= (String) FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
+        if(!TextUtils.isEmpty(temp) && "1".equals(temp))
             setShowMedia(true);
     }
 }

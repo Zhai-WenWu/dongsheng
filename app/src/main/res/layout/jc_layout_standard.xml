@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@android:color/transparent"
     android:descendantFocusability="blocksDescendants">
 
     <FrameLayout
@@ -209,7 +209,14 @@
             android:text="@string/replay"
             android:textColor="#ffffff"
             android:textSize="12sp"
-            android:visibility="invisible" />
+            android:visibility="gone" />
     </LinearLayout>
+
+    <include
+        android:id="@+id/play_error_layout"
+        layout="@layout/video_play_error_layout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

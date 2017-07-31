@@ -392,12 +392,12 @@ public class AppCommon {
 						bundle.putString(key, value);
 					} else {
 						String[] parameter = urls[1].split("&");
-						for (String p : parameter) {
-							String[] value = p.split("=");
-							if (value.length == 2) {
-								bundle.putString(URLDecoder.decode(value[0], "utf-8"), URLDecoder.decode(value[1], "utf-8"));
-							}
-						}
+                        for (String p : parameter) {
+                            String[] value = p.split("=");
+                            if (value.length == 2) {
+                                bundle.putString(URLDecoder.decode(value[0], "utf-8"), URLDecoder.decode(value[1], "utf-8"));
+                            }
+                        }
 					}
 				}
 				if(url.indexOf("MyDishNew.app")  > -1 || url.indexOf("MySubject.app") > -1){

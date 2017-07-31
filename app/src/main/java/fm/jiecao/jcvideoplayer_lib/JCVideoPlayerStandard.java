@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,11 +57,16 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public TextView quality_normal;
     public TextView quality_high;
     public TextView quality_super;
+    public RelativeLayout errorLayout;
+    public TextView tip_message,btn_replay;
 
     boolean isHideTopContainer = false;
+    boolean isHideReplay = false;
+    boolean isShowThumbOnce = false;
 
     protected DismissControlViewTimerTask mDismissControlViewTimerTask;
 
+    protected OnPlayErrorCallback onPlayErrorCallback;
 
     public JCVideoPlayerStandard(Context context) {
         super(context);
@@ -83,11 +90,15 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         battery_level = (ImageView) findViewById(R.id.battery_level);
         video_current_time = (TextView) findViewById(R.id.video_current_time);
         retryTextView = (TextView) findViewById(R.id.retry_text);
+        errorLayout = (RelativeLayout) findViewById(R.id.play_error_layout);
+        tip_message = (TextView) findViewById(R.id.tip_message);
+        btn_replay = (TextView) findViewById(R.id.btn_replay);
 
 
         thumbImageView.setOnClickListener(this);
         backButton.setOnClickListener(this);
         tinyBackImageView.setOnClickListener(this);
+        btn_replay.setOnClickListener(this);
 
     }
 
@@ -139,6 +150,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void onStateNormal() {
         super.onStateNormal();
         changeUiToNormal();
+        // 监听网络变化
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getContext().registerReceiver(broadcastReceiver, intentFilter);
     }
 
     @Override
@@ -222,7 +237,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void onClick(View v) {
         super.onClick(v);
         int i = v.getId();
-        if (i == R.id.thumb) {
+        if(i == R.id.btn_replay){
+            startButton.performClick();
+            errorLayout.setVisibility(GONE);
+        }else if (i == R.id.thumb) {
             if (TextUtils.isEmpty(url)) {
                 Toast.makeText(getContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
                 return;
@@ -499,12 +517,6 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         setAllControlsVisible(View.VISIBLE, View.INVISIBLE, View.INVISIBLE,
                 View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
         startDismissControlViewTimer();
-        //TODO 需要修改
-//        if(currentScreen == SCREEN_LAYOUT_LIST){
-//            closeVolume();
-//        }else{
-//            openVolume();
-//        }
     }
 
     public void changeUiToPlayingShow() {
@@ -619,13 +631,13 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         switch (currentScreen) {
             case SCREEN_LAYOUT_NORMAL:
             case SCREEN_LAYOUT_LIST:
-                setAllControlsVisible(View.VISIBLE, View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisible(View.VISIBLE, View.VISIBLE, isHideReplay?GONE:VISIBLE,
+                        View.INVISIBLE, isShowThumbOnce?GONE:VISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisible(View.VISIBLE, View.VISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisible(View.VISIBLE, View.VISIBLE, isHideReplay?GONE:VISIBLE,
+                        View.INVISIBLE, isShowThumbOnce?GONE:VISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -638,13 +650,13 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         switch (currentScreen) {
             case SCREEN_LAYOUT_NORMAL:
             case SCREEN_LAYOUT_LIST:
-                setAllControlsVisible(View.VISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisible(View.VISIBLE, View.INVISIBLE, isHideReplay?GONE:VISIBLE,
+                        View.INVISIBLE, isShowThumbOnce?GONE:VISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_FULLSCREEN:
-                setAllControlsVisible(View.VISIBLE, View.INVISIBLE, View.VISIBLE,
-                        View.INVISIBLE, View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
+                setAllControlsVisible(View.VISIBLE, View.INVISIBLE, isHideReplay?GONE:VISIBLE,
+                        View.INVISIBLE, isShowThumbOnce?GONE:VISIBLE, View.INVISIBLE, View.INVISIBLE);
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
@@ -686,15 +698,21 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void updateStartImage() {
         if (currentState == CURRENT_STATE_PLAYING) {
             startButton.setImageResource(R.drawable.jc_click_pause_selector);
+            retryTextView.setVisibility(GONE);
         } else if (currentState == CURRENT_STATE_ERROR) {
-            startButton.setImageResource(R.drawable.jc_click_error_selector);
-            retryTextView.setVisibility(INVISIBLE);
+//            startButton.setImageResource(R.drawable.jc_click_error_selector);
+//            retryTextView.setVisibility(GONE);
+            if(onPlayErrorCallback == null || !onPlayErrorCallback.onError()){
+                errorLayout.setVisibility(VISIBLE);
+            }
         } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
-            startButton.setImageResource(R.drawable.jc_click_replay_selector);
-            retryTextView.setVisibility(VISIBLE);
+            if(!isHideReplay){
+                startButton.setImageResource(R.drawable.jc_click_replay_selector);
+                retryTextView.setVisibility(VISIBLE);
+            }
         } else {
             startButton.setImageResource(R.drawable.jc_click_play_selector);
-            retryTextView.setVisibility(INVISIBLE);
+            retryTextView.setVisibility(GONE);
         }
     }
 
@@ -890,5 +908,25 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void setIsHideTopContainer(boolean isHide){
         this.isHideTopContainer = isHide;
         topContainer.setVisibility(GONE);
+    }
+
+    public void setIsHideReplay(boolean isHide){
+        this.isHideReplay = isHide;
+    }
+
+    public void setIsShowThumbOnce(boolean flag){
+        this.isShowThumbOnce = flag;
+    }
+
+    public OnPlayErrorCallback getOnPlayErrorCallback() {
+        return onPlayErrorCallback;
+    }
+
+    public void setOnPlayErrorCallback(OnPlayErrorCallback onPlayErrorCallback) {
+        this.onPlayErrorCallback = onPlayErrorCallback;
+    }
+
+    public interface OnPlayErrorCallback{
+        boolean onError();
     }
 }

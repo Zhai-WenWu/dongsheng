@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import acore.widget.ImageViewVideo;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerManager;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
 
@@ -73,14 +75,14 @@ public class VideoImagePlayerController {
                 }
             });
         }
-        String temp= (String) UtilFile.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
+        String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
         videoPlayerStandard.setOnPlayCompleteCallback(new XHVideoPlayerStandard.OnPlayCompleteCallback() {
             @Override
             public void onComplte() {
                 Log.i("zhangyujian2","setCompletionListener::::");
-                videoPlayerStandard.startVideo();
+                videoPlayerStandard.startButton.performClick();
             }
         });
     }
@@ -114,7 +116,7 @@ public class VideoImagePlayerController {
                         return;
                     }
                 }
-                videoPlayerStandard.startVideo();
+                videoPlayerStandard.startButton.performClick();
 
                 if(mImageView!=null)
                     mPraentViewGroup.removeView(mImageView);
@@ -190,7 +192,8 @@ public class VideoImagePlayerController {
     }
 
     public void onDestroy() {
-        JCVideoPlayer.releaseAllVideos();
+        if(null != videoPlayerStandard)
+        videoPlayerStandard.release();
         JCVideoPlayer.clearSavedProgress(mContext,videoUrl);
     }
 
@@ -250,8 +253,10 @@ public class VideoImagePlayerController {
         LayoutParams layoutParams= new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
         view_Tip= LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
         view_Tip.setLayoutParams(layoutParams);
-        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        final TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
         tipMessage.setText("现在是非WIFI，看视频要花费流量了");
+        final Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("继续播放");
         view_Tip.findViewById(R.id.tipLayout).setOnClickListener(onClickListener);
         view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(onClickListener);
     }
@@ -260,7 +265,7 @@ public class VideoImagePlayerController {
         public void onClick(View v) {
             setShowMedia(true);
             setOnClick();
-            UtilFile.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+            FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
         }
     };
 

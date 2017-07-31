@@ -59,7 +59,7 @@ public class PlayVideo extends BaseAppCompatActivity {
         myJCVideoPlayerStandard.setUp(url, JCVideoPlayer.SCREEN_LAYOUT_NORMAL);
         JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         JCVideoPlayer.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        myJCVideoPlayerStandard.startVideo();
+        myJCVideoPlayerStandard.startButton.performClick();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class PlayVideo extends BaseAppCompatActivity {
         super.onPause();
         if(isBack){
             Log.i("tzy","PlayVideo releaseAllVideos");
-            JCVideoPlayer.releaseAllVideos();
+            myJCVideoPlayerStandard.release();
             JCVideoPlayer.clearSavedProgress(this, null);
         }else{
             Log.i("tzy","PlayVideo mediaPlayer onPause");

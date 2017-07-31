@@ -1,16 +1,21 @@
 package fm.jiecao.jcvideoplayer_lib;
 
+import android.content.ComponentCallbacks;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -40,6 +45,8 @@ import java.util.TimerTask;
 public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, View.OnTouchListener {
 
     public static final String TAG = "JieCaoVideoPlayer";
+
+    protected JCNetworkBroadcastReceiver broadcastReceiver = null;
 
     public static boolean ACTION_BAR_EXIST = true;
     public static boolean TOOL_BAR_EXIST = true;
@@ -122,6 +129,8 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
     public abstract int getLayoutId();
 
     public void init(Context context) {
+        //实例化广播
+        registerReceiver();
         View.inflate(context, getLayoutId(), this);
         startButton = (ImageView) findViewById(R.id.start);
         fullscreenButton = (ImageView) findViewById(R.id.fullscreen);
@@ -147,6 +156,8 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
         mHandler = new Handler();
 
         NORMAL_ORIENTATION = context.getResources().getConfiguration().orientation;
+
+
     }
 
     public void setUp(String url, int screen, Object... objects) {
@@ -357,6 +368,8 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
             seekToInAdvance = 0;
         } else {
             int position = JCUtils.getSavedProgress(getContext(), url);
+            Log.i("tzy","url = " + url);
+            Log.i("tzy","position = " + position);
             if (position != 0) {
                 JCMediaManager.instance().mediaPlayer.seekTo(position);
             }
@@ -456,6 +469,26 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
         }
     }
 
+    public void registerReceiver(){
+        if(broadcastReceiver == null)
+            broadcastReceiver = new JCNetworkBroadcastReceiver(getContext());
+        // 监听网络变化
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getContext().registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    public void unregisterReceiver(){
+        if(broadcastReceiver != null && getContext() != null){
+            broadcastReceiver.destory();
+            try{
+                getContext().unregisterReceiver(broadcastReceiver);
+            }catch (Exception e){
+
+            }
+        }
+    }
+
     public void onError(int what, int extra) {
         Log.e(TAG, "onError " + what + " - " + extra + " [" + this.hashCode() + "] ");
         if (what != 38 && what != -38 && extra != -38) {
@@ -542,6 +575,7 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
             } else {
                 Log.d(TAG, "release [" + this.hashCode() + "]");
                 releaseAllVideos();
+                unregisterReceiver();
             }
         }
     }
@@ -1036,6 +1070,24 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
 
     }
 
+    public void addNetworkNotifyListener(JCNetworkBroadcastReceiver.NetworkNotifyListener listener){
+        if(null != broadcastReceiver && null != listener){
+            broadcastReceiver.addListener(listener);
+        }
+    }
+
+    public void removeNetworkNotifyListener(JCNetworkBroadcastReceiver.NetworkNotifyListener listener){
+        if(null != broadcastReceiver && null != listener){
+            broadcastReceiver.removeListener(listener);
+        }
+    }
+
+    public void clearNetworkNotifyListener(){
+        if(null != broadcastReceiver){
+            broadcastReceiver.destory();
+        }
+    }
+
     public void setOnProgressChangedCallback(OnProgressChangedCallback callback){
         this.onProgressChangedCallback = callback;
     }
@@ -1043,4 +1095,5 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
     public interface OnProgressChangedCallback{
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser);
     }
+
 }

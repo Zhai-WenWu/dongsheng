@@ -15,6 +15,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.network.connectionclass.ConnectionClassManager;
+import com.facebook.network.connectionclass.ConnectionQuality;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -29,6 +31,7 @@ import acore.widget.ImageViewVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
 import xh.basic.tool.UtilFile;
@@ -71,6 +74,42 @@ public class VideoPlayerController {
 
         videoPlayerStandard = new XHVideoPlayerStandard(context);
         JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        ConnectionClassManager.getInstance().register(new ConnectionClassManager.ConnectionClassStateChangeListener() {
+            @Override
+            public void onBandwidthStateChange(ConnectionQuality connectionQuality) {
+
+            }
+        });
+//        videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
+//            @Override
+//            public void wifiConnected() {
+//                isShowAd = false;
+////                onResume();
+//                JCMediaManager.instance().prepare();
+//                if(view_Tip != null){
+//                    view_Tip.findViewById(R.id.btnCloseTip).performClick();
+//                    mPraentViewGroup.removeView(view_Tip);
+//                    view_Tip = null;
+//                }
+//            }
+//
+//            @Override
+//            public void mobileConnected() {
+//                isShowAd = false;
+//                JCMediaManager.instance().prepare();
+//                onPause();
+//                if(view_Tip==null){
+//                    initView(mContext);
+//                    mPraentViewGroup.addView(view_Tip);
+//                }else{
+//                    view_Tip.setVisibility(View.VISIBLE);
+//                }
+//            }
+//            @Override
+//            public void nothingConnected() {
+//
+//            }
+//        });
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
@@ -96,7 +135,7 @@ public class VideoPlayerController {
                 }
             });
         }
-        String temp= (String) UtilFile.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
+        String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
     }
@@ -160,6 +199,7 @@ public class VideoPlayerController {
                     view_Tip=null;
                 }
                 videoPlayerStandard.startVideo();
+            videoPlayerStandard.startButton.performClick();
                 if (mStatisticsPlayCountCallback != null) {
                     mStatisticsPlayCountCallback.onStatistics();
                 }
@@ -407,7 +447,8 @@ public class VideoPlayerController {
     }
 
     public void onDestroy() {
-        JCVideoPlayer.releaseAllVideos();
+        if(null != videoPlayerStandard)
+        videoPlayerStandard.release();
         JCVideoPlayer.clearSavedProgress(mContext, null);
     }
 

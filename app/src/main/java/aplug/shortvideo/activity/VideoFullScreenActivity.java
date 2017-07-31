@@ -91,14 +91,14 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
         videoPlayerStandard = (XHVideoPlayerStandard) findViewById(R.id.jc_video_view);
         videoPlayerStandard.setUp(videoUrl, JCVideoPlayer.SCREEN_LAYOUT_NORMAL,"");
         videoPlayerStandard.fullscreenButton.setVisibility(View.GONE);
-        videoPlayerStandard.startVideo();
+        videoPlayerStandard.startButton.performClick();
         videoPlayerStandard.setOnClickListener(this);
         videoPlayerStandard.findViewById(R.id.surface_container).setOnClickListener(this);
         videoPlayerStandard.findViewById(R.id.surface_container).setOnTouchListener(null);
         videoPlayerStandard.setOnPlayCompleteCallback(new XHVideoPlayerStandard.OnPlayCompleteCallback() {
             @Override
             public void onComplte() {
-                videoPlayerStandard.startVideo();
+                videoPlayerStandard.startButton.performClick();
             }
         });
     }
@@ -119,7 +119,7 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
         //暂停
         if(isBack){
             Log.i("tzy","PlayVideo releaseAllVideos");
-            JCVideoPlayer.releaseAllVideos();
+            videoPlayerStandard.release();
             JCVideoPlayer.clearSavedProgress(this, null);
         }else{
             Log.i("tzy","PlayVideo mediaPlayer onPause");
