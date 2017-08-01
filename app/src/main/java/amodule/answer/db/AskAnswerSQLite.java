@@ -210,4 +210,41 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
             return model;
         }
     }
+
+    public AskAnswerModel queryData(String qaType) {
+        AskAnswerModel model = null;
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = getReadableDatabase();
+            cursor = database.query(mTabName, null, mColumnType + "=? ", new String[]{qaType}, null, null, mColumnId + " desc");
+            if (cursor.moveToFirst()) {
+                do {
+                    model = new AskAnswerModel();
+                    model.setmId(cursor.getInt(cursor.getColumnIndex(mColumnId)));
+                    model.setmType(cursor.getString(cursor.getColumnIndex(mColumnType)));
+                    model.setmAnswerCode(cursor.getString(cursor.getColumnIndex(mColumnAnswerCode)));
+                    model.setmQACode(cursor.getString(cursor.getColumnIndex(mColumnQACode)));
+                    model.setmDishCode(cursor.getString(cursor.getColumnIndex(mColumnDishCode)));
+                    model.setmImgs(cursor.getString(cursor.getColumnIndex(mColumnImgs)));
+                    model.setmText(cursor.getString(cursor.getColumnIndex(mColumnText)));
+                    model.setmAnonymity(cursor.getString(cursor.getColumnIndex(mColumnAnonymity)));
+                    model.setmAuthorCode(cursor.getString(cursor.getColumnIndex(mColumnAuthorCode)));
+                    model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
+                    model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
+                    model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                    break;
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor != null)
+                cursor.close();
+            if (database != null) {
+                database.close();
+            }
+            return model;
+        }
+    }
 }
