@@ -279,6 +279,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.main.activity.MainCircle"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -293,6 +294,7 @@
         <activity
             android:name="amodule.main.activity.MainHome"
             android:configChanges="orientation|keyboardHidden"
+            android:keepScreenOn="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentTheme"
@@ -339,6 +341,7 @@
             android:name="amodule.dish.activity.DetailDish"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="true"
+            android:keepScreenOn="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
@@ -396,13 +399,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-        <activity
+        <!--<activity
             android:name="amodule.dish.video.activity.MediaPreviewActivity"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"/>-->
         <activity
             android:name="amodule.dish.video.activity.MediaHandleActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -420,6 +423,7 @@
         <activity
             android:name="amodule.other.activity.PlayVideo"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:keepScreenOn="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
@@ -446,6 +450,7 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.article.activity.VideoDetailActivity"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -486,6 +491,7 @@
 
         <activity
             android:name="amodule.article.activity.VideoPreviewActivity"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -564,6 +570,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.quan.activity.CircleHome"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
@@ -572,6 +579,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.quan.activity.CircleRobSofa"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -621,6 +629,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.quan.activity.ShowSubject"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -972,6 +981,7 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="aplug.shortvideo.activity.VideoFullScreenActivity"
+            android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

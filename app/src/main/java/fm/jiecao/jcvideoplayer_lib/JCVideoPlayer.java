@@ -166,8 +166,8 @@ public abstract class JCVideoPlayer extends FrameLayout implements View.OnClickL
                 ) {
             return;
         }
-        if(url.startsWith("htps"))
-            url = url.replace("https://","https://");
+        if(url.startsWith("https"))
+            url = url.replace("https://","http://");
         this.url = url;
         this.objects = objects;
         this.currentScreen = screen;
