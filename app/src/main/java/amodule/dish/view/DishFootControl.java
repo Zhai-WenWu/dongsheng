@@ -3,7 +3,6 @@ package amodule.dish.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -108,7 +107,7 @@ public class DishFootControl implements View.OnClickListener{
                 view = inflater.inflate(R.layout.a_dish_detail_new_footer_item, null);
                 ImageView dishImg = (ImageView) view.findViewById(R.id.a_dish_detail_show_img);
                 ImageView userImg = (ImageView) view.findViewById(R.id.a_dish_detail_user_icon);
-                ImageView zanImg = (ImageView) view.findViewById(R.id.a_dish_detail_zan);
+                final ImageView zanImg = (ImageView) view.findViewById(R.id.a_dish_detail_zan);
                 TextView userName = (TextView) view.findViewById(R.id.a_dish_detail_user_name);
                 TextView dishTime = (TextView) view.findViewById(R.id.a_dish_detail_time);
                 final TextView zanNumber = (TextView) view.findViewById(R.id.a_dish_detail_zan_numer);
@@ -127,28 +126,36 @@ public class DishFootControl implements View.OnClickListener{
                 final String zanNumberStr = map.get("likeNum");
                 final String subjectCode = map.get("code");
                 setViewImage(dishImg, map.get("img"), 0);
-                zanImg.setImageResource(TextUtils.isEmpty(map.get("isLike")) ? R.drawable.z_quan_home_body_ico_good : R.drawable.z_quan_home_body_ico_good_active);
+                final boolean isLike = "2".equals(map.get("isLike"));
+                zanImg.setImageResource(isLike ? R.drawable.z_quan_home_body_ico_good_active : R.drawable.z_quan_home_body_ico_good);
                 dishTime.setText(map.get("timeShow"));
                 zanNumber.setText(zanNumberStr);
                 zanImg.setOnClickListener(new View.OnClickListener() {
+                    boolean newIsLike = isLike;
                     @Override
                     public void onClick(View v) {
-                        LinkedHashMap<String,String> map = new LinkedHashMap<>();
-                        map.put("subjectCode",subjectCode);
-                        map.put("type","likeList");
-                        ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback(mAct) {
-                            @Override
-                            public void loaded(int flag, String s, Object o) {
-                                if(flag >= ReqInternet.REQ_OK_STRING){
-                                    try {
-                                        int zanNum = Integer.parseInt(zanNumberStr);
-                                        zanNumber.setText(String.valueOf(++zanNum));
-                                    }catch (Exception e){
-                                        e.printStackTrace();
+                        if(newIsLike){
+                            Tools.showToast(mAct,"已点过攒");
+                        }else {
+                            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+                            map.put("subjectCode", subjectCode);
+                            map.put("type", "likeList");
+                            ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback(mAct) {
+                                @Override
+                                public void loaded(int flag, String s, Object o) {
+                                    if (flag >= ReqInternet.REQ_OK_STRING) {
+                                        try {
+                                            newIsLike = true;
+                                            zanImg.setImageResource(R.drawable.z_quan_home_body_ico_good_active);
+                                            int zanNum = Integer.parseInt(zanNumberStr);
+                                            zanNumber.setText(String.valueOf(++zanNum));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 });
                 view.setOnClickListener(new View.OnClickListener() {
@@ -249,7 +256,6 @@ public class DishFootControl implements View.OnClickListener{
                 Tools.showToast(mAct,"提问作者");
                 break;
              case R.id.a_dish_detail_new_footer_hover_good: //有用
-                Tools.showToast(mAct,"有用");
                  if(!dishLikeState){
                      dishLikeState = !dishLikeState;
                      mGoodImg.setImageResource(R.drawable.i_good_activity);
@@ -258,7 +264,6 @@ public class DishFootControl implements View.OnClickListener{
                  hindGoodLayout();
                 break;
              case R.id.a_dish_detail_new_footer_hover_trample: //没用
-                Tools.showToast(mAct,"没用");
                  if(dishLikeState){
                      dishLikeState = !dishLikeState;
                      mGoodImg.setImageResource(R.drawable.i_good);
