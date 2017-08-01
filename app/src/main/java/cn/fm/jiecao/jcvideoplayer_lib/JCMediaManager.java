@@ -127,37 +127,7 @@ public class JCMediaManager implements TextureView.SurfaceTextureListener, Media
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 textureView.setSurfaceTexture(savedSurfaceTexture);
             }
-//            else{
-//                try {
-//                    Class cls = textureView.getClass();
-//                    if (savedSurfaceTexture != null) {
-//                        Method nDestroyNativeWindow = cls.getDeclaredMethod("nDestroyNativeWindow",new Class<()[]);
-//                        nDestroyNativeWindow.invoke(textureView);
-//                        savedSurfaceTexture.release();
-//                    }
-//                    Field field = cls.getDeclaredField("mSurface");
-//                    field.setAccessible(true);
-//                    field.set(textureView,savedSurfaceTexture);
-//                    Method nCreateNativeWindow = cls.getDeclaredMethod("nCreateNativeWindow",new Class<()[]);
-//                    nCreateNativeWindow.invoke(field.get(textureView));
-//
-//                    if (((mViewFlags & VISIBILITY_MASK) == VISIBLE) && mLayer != null) {
-//                        mSurface.setOnFrameAvailableListener(mUpdateListener, mAttachInfo.mHandler);
-//                    }
-//                    mUpdateSurface = true;
-//                    invalidateParentIfNeeded();
-//                } catch (NoSuchFieldException e) {
-//                    e.printStackTrace();
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                } catch (NoSuchMethodException e) {
-//                    e.printStackTrace();
-//                } catch (InvocationTargetException e) {
-//                    e.printStackTrace();
-//                }
-//            }
         }
-
     }
 
     @Override

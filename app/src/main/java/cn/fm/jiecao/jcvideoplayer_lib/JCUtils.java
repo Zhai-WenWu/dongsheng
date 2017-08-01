@@ -78,6 +78,8 @@ public class JCUtils {
             return (AppCompatActivity) context;
         } else if (context instanceof ContextThemeWrapper) {
             return getAppCompActivity(((ContextThemeWrapper) context).getBaseContext());
+        }else if(context instanceof android.view.ContextThemeWrapper){
+            return getAppCompActivity(((android.view.ContextThemeWrapper)context).getBaseContext());
         }
         return null;
     }

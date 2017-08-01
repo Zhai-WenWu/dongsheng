@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -100,6 +101,9 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         tinyBackImageView.setOnClickListener(this);
         btn_replay.setOnClickListener(this);
 
+        //API低于16全屏无法正常使用，所以gone掉
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+            fullscreenButton.setVisibility(GONE);
     }
 
     @Override
