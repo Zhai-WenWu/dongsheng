@@ -816,15 +816,30 @@ public class JsAppCommon extends JsBase{
 	public void onLoadFinishCallback(String data){
 //		Log.i(DishWebView.TAG,"onLoadFinishCallback()");
 //		Tools.showToast(mAct,"onLoadFinishCallback()");
-		((DishWebView)mWebView).onLoadFinishCallback(data);
+		if(mWebView != null)((DishWebView)mWebView).onLoadFinishCallback(data);
+	}
+
+	@JavascriptInterface
+	public void setIngreStr(String ingreStr){
+//		Tools.showToast(mAct,"setIngreStr():" + ingreStr);
+		if(mWebView != null)((DishWebView)mWebView).setIngreStr(ingreStr);
 	}
 
 	@JavascriptInterface
 	public void getSign(){
+//		Tools.showToast(mAct,"getSign()");
 		ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
 			@Override
-			public void getSignEncyntParam(String encryptparam) {
-				mWebView.loadUrl("Javascript:signCallback(" + ",\"" + encryptparam + "\")");
+			public void getSignEncyntParam(final String encryptparam) {
+				mWebView.post(new Runnable() {
+					@Override
+					public void run() {
+//						Tools.showToast(mAct, "signCallback 111111");
+//						Log.i("FRJ","Javascript:signCallback(\"" + encryptparam + "\")");
+						mWebView.loadUrl("Javascript:signCallback(\"" + encryptparam + "\")");
+//						Tools.showToast(mAct, "signCallback22222");
+					}
+				});
 			}
 		});
 	}

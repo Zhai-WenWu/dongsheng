@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 
 import acore.tools.FileManager;
-import acore.tools.Tools;
 import amodule.dish.tools.DishMouldControl;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -83,7 +82,6 @@ public class DishWebView extends XHWebView {
 
     public boolean saveDishData(){
         Log.i(TAG,"saveDishData()");
-        Tools.showToast(getContext(),"saveDishData()");
         if(TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(mHtmlData)){
             return false;
         }
@@ -124,5 +122,17 @@ public class DishWebView extends XHWebView {
      */
     public void onLoadFinishCallback(String html){
         mHtmlData = html;
+    }
+
+    public void setIngreStr(String ingreStr){
+        if(mOnIngreListener != null) mOnIngreListener.setOnIngre(ingreStr);
+    }
+
+    public void setOnIngreListener(OnIngreListener listener){
+        mOnIngreListener = listener;
+    }
+    public OnIngreListener mOnIngreListener;
+    public interface OnIngreListener{
+        public void setOnIngre(String ingre);
     }
 }

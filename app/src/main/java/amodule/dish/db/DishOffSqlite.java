@@ -44,10 +44,10 @@ public class DishOffSqlite  extends SQLiteOpenHelper {
         SQLiteDatabase writableDatabase = null;
         try {
             writableDatabase = getWritableDatabase();
-//            cur = writableDatabase.query(TB_MAIN_ENAME, null, DishOffData.bd_moudleVersion+"!='" + moudleVersion + "'", null,
-//                    null, null, null);// 查询并获得游标
-            cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
+            cur = writableDatabase.query(TB_MAIN_ENAME, null, DishOffData.bd_moudleVersion+"!='" + moudleVersion + "'", null,
                     null, null, null);// 查询并获得游标
+//            cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
+//                    null, null, null);// 查询并获得游标
             if(cur.moveToFirst()){
                 do{
                     String code =cur.getString(cur.getColumnIndex(DishOffData.bd_code));

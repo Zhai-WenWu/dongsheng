@@ -11,19 +11,27 @@ import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
+import amodule.user.db.BrowseHistorySqlite;
+import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
+
+import static java.lang.System.currentTimeMillis;
+import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 菜谱界面的总控制类
@@ -114,6 +122,12 @@ public class DishActivityViewControlNew {
         layoutParams.height = statusBarHeight;
 
         mXhWebView = (DishWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
+        mXhWebView.setOnIngreListener(new DishWebView.OnIngreListener() {
+            @Override
+            public void setOnIngre(String ingre) {
+                saveHistoryToDB(ingre);
+            }
+        });
         //头部view处理
         dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
         videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
@@ -237,6 +251,46 @@ public class DishActivityViewControlNew {
         mFootControl.setDishInfo(dishInfoMap.get("name"));
         mScrollView.setVisibility(View.VISIBLE);
     }
+
+    private boolean saveHistory = false;
+    private void saveHistoryToDB(final String burden) {
+        if (!saveHistory) {
+            saveHistory = true;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject jsonObject = handlerJSONData(burden);
+                    HistoryData data = new HistoryData();
+                    data.setBrowseTime(currentTimeMillis());
+                    data.setCode(code);
+                    data.setDataJson(jsonObject.toString());
+                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
+                    sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
+                }
+            }).start();
+        }
+    }
+    private JSONObject handlerJSONData(String burdens) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            ArrayList<Map<String, String>> dishInfoArray = getListMapByJson(dishJson);
+            if (dishInfoArray.size() > 0) {
+                Map<String, String> dishInfo = dishInfoArray.get(0);
+                jsonObject.put("name", dishInfo.get("name"));
+                jsonObject.put("img", dishInfo.get("img"));
+                jsonObject.put("code", code);
+                jsonObject.put("isFine", dishInfo.get("isFine"));
+                jsonObject.put("favorites", dishInfo.get("favorites"));
+                jsonObject.put("allClick", dishInfo.get("allClick"));
+                jsonObject.put("exclusive", dishInfo.get("exclusive"));
+                jsonObject.put("hasVideo", dishInfo.get("type"));
+                jsonObject.put("isMakeImg", dishInfo.get("isMakeImg"));
+                jsonObject.put("burdens", burdens);
+            }
+        } catch (Exception e) { }
+        return jsonObject;
+    }
+
 
     public void analyzeUserShowDishInfoData(String dishJson){
         mFootControl.initUserDish(dishJson);

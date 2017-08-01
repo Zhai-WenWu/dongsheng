@@ -18,8 +18,6 @@ import android.view.WindowManager;
 
 import com.xiangha.R;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +34,6 @@ import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.DishActivityViewControlNew;
 import amodule.main.Main;
-import amodule.user.db.BrowseHistorySqlite;
-import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
@@ -45,7 +41,6 @@ import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 
 import static com.xiangha.R.id.share_layout;
-import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -298,61 +293,11 @@ public class DetailDish extends BaseActivity {
             DetailDish.this.finish();
             return;
         }
-        saveHistoryToDB(data);
         requestWeb(data);
         dishActivityViewControl.analyzeDishInfoData(data,permissionMap,false);
 
     }
-    private boolean saveHistory = false;
-    private void saveHistoryToDB(final String dishJson) {
-        if (!saveHistory) {
-            saveHistory = true;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject jsonObject = handlerJSONData(dishJson);
-                    HistoryData data = new HistoryData();
-                    data.setBrowseTime(currentTimeMillis());
-                    data.setCode(code);
-                    data.setDataJson(jsonObject.toString());
-                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
-                    sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
-                }
-            }).start();
-        }
-    }
 
-    private JSONObject handlerJSONData(String dishJson) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            ArrayList<Map<String, String>> dishInfoArray = getListMapByJson(dishJson);
-            if (dishInfoArray.size() > 0) {
-                Map<String, String> dishInfo = dishInfoArray.get(0);
-                jsonObject.put("name", dishInfo.get("name"));
-                jsonObject.put("img", dishInfo.get("img"));
-                jsonObject.put("code", code);
-                jsonObject.put("isFine", dishInfo.get("isFine"));
-                jsonObject.put("favorites", dishInfo.get("favorites"));
-                jsonObject.put("allClick", dishInfo.get("allClick"));
-                jsonObject.put("exclusive", dishInfo.get("exclusive"));
-
-                ArrayList<Map<String, String>> videos = getListMapByJson(dishInfo.get("video"));
-                jsonObject.put("hasVideo", videos.size() > 0 ? 2 : 1);
-                ArrayList<Map<String, String>> makes = getListMapByJson(dishInfo.get("makes"));
-                jsonObject.put("isMakeImg", makes.size() > 0 ? 2 : 1);
-                ArrayList<Map<String, String>> burden = getListMapByJson(dishInfo.get("burden"));
-                StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < burden.size(); i++) {
-                    ArrayList<Map<String, String>> data = getListMapByJson(burden.get(i).get("data"));
-                    for (int j = 0; j < data.size(); j++) {
-                        stringBuffer.append(data.get(j).get("name")).append(",");
-                    }
-                }
-                jsonObject.put("burdens", stringBuffer.toString().substring(0, stringBuffer.length() - 1));
-            }
-        } catch (Exception e) { }
-        return jsonObject;
-    }
 
     private void requestWeb(String dishJson) {
         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);

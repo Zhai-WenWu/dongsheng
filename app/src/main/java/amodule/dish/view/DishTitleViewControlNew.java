@@ -35,7 +35,6 @@ import third.share.ShareActivityDialog;
 import third.share.ShareTools;
 import third.video.VideoPlayerController;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
@@ -43,6 +42,7 @@ import static com.xiangha.R.id.back;
 import static com.xiangha.R.id.fav_layout;
 import static com.xiangha.R.id.modify_layout;
 import static com.xiangha.R.id.share_layout;
+import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * Created by Administrator on 2016/9/21.
@@ -223,9 +223,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
 
         boolean isAuthor = false;
         String nickName = "",code = "";
-        ArrayList<Map<String, String>> cusArray = UtilString.getListMapByJson(dishInfoMap.get("customer"));
+        ArrayList<Map<String, String>> cusArray = getListMapByJson(dishInfoMap.get("customer"));
         if(cusArray.size()>0) {
-            Map<String, String> cusMap = UtilString.getListMapByJson(dishInfoMap.get("customer")).get(0);
+            Map<String, String> cusMap = getListMapByJson(dishInfoMap.get("customer")).get(0);
             code = cusMap.get("code");
             nickName = cusMap.get("nickName");
             //登录并是自己的菜谱贴
@@ -301,9 +301,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                     Tools.showToast(detailDish.getApplicationContext(), "离线失败");
                 } else {
                     String mouldVersion = mDishWebView.getMouldVersion();
-                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson,mouldVersion);
+                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson, mouldVersion);
                     mDishWebView.saveDishData();
-                    Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
+//                    Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
                 }
             }
         }
@@ -327,7 +327,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                             loading = false;
                             loadManager.dismissProgress();
                             if (flag >= UtilInternet.REQ_OK_STRING) {
-                                Map<String, String> map = UtilString.getListMapByJson(returnObj).get(0);
+                                Map<String, String> map = getListMapByJson(returnObj).get(0);
                                 boolean nowFav = map.get("type").equals("2");
                                 doBuyBurden(nowFav);
                                 favText.setText(nowFav ? "已收藏" : "  收藏  ");
