@@ -33,6 +33,7 @@ import acore.widget.TagTextView;
 import amodule.dish.activity.OfflineDish;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
+import amodule.main.view.HintMyselfDialog;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
@@ -226,6 +227,16 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         } else {
             right_myself.setVisibility(View.GONE);
             myself_please_login.setVisibility(View.VISIBLE);
+        }
+        showHintMyself();
+    }
+
+    private void showHintMyself(){
+        Object myselftHint = FileManager.loadShared(this,"myselftHint","myselftHint");
+        if(myselftHint == null || TextUtils.isEmpty(String.valueOf(myselftHint))) {
+            Intent intent = new Intent(this, HintMyselfDialog.class);
+            startActivity(intent);
+            FileManager.saveShared(this,"myselftHint","myselftHint","2");
         }
     }
 

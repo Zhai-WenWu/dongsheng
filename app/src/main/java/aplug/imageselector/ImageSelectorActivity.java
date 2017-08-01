@@ -181,7 +181,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	// 初始化数据
 	private void initData() {
 		Intent intent = getIntent();
-		isCanBackOnNoChoose = intent.getBooleanExtra("isCanBackOnNoChoose",true);
+		isCanBackOnNoChoose = intent.getBooleanExtra(ImageSelectorConstant.IS_CAN_BACK_ON_NO_CHOOSE,true);
 		// 选择图片数量
 		mDefaultCount = intent.getIntExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT , 1);
 		// 图片选择模式
@@ -621,11 +621,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			break;
 		// 提交按钮
 		case R.id.commit:
-			if (resultList != null && resultList.size() > 0) {
-				commit();
-			}else{
-				finish();
-			}
+			commit();
 			break;
 		}
 	}
@@ -650,7 +646,11 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
 			mFolderAdapter.setSelectIndex(0);
 		} else {
-			super.onBackPressed();
+			Intent data = new Intent();
+			resultList.clear();
+			data.putStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT, resultList);
+			setResult(RESULT_OK, data);
+			finish();
 		}
 	}
 	

@@ -75,6 +75,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	private final String defaultChooseCid = "-1";
 	private String mChooseCid = "-1",cName = "";
 	private String mDishCode;
+	private boolean isCanBackOnNoChoose = true,isFirsh;
 
 	public static final String mTongjiId = "a_post";
 	private RelativeLayout activityLayout;
@@ -124,7 +125,12 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			switch (requestCode){
 				case UP_SUBJECT_CHOOSE_IMG:
 					ArrayList<String> array = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);//ArrayList<String>
-					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新贴图片", array.size());
+					int size = array.size();
+					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新贴图片", size);
+					if(isFirsh && size == 0 && !isCanBackOnNoChoose ){
+						UploadSubjectNew.this.finish();
+					}
+					isFirsh = false;
 					upSubContent.insertImgs(array);
 					break;
 				case UP_SUBJECT_CHOOSE_CIRCLE:
@@ -282,13 +288,14 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	}
 
 	private void imageSelector(boolean isCanBack){
+		isCanBackOnNoChoose = isCanBack;
 		int num = upSubContent.getBitmapNum();
 		int selectNum = imgMax - num;
 		if(selectNum > 0){
 			Intent intentAddImg = new Intent();
 			intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
 			intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, selectNum);
-			if(isCanBack) intentAddImg.putExtra(ImageSelectorConstant.IS_CAN_BACK_ON_NO_CHOOSE, false);
+//			if(isCanBack) intentAddImg.putExtra(ImageSelectorConstant.IS_CAN_BACK_ON_NO_CHOOSE, false);
 			intentAddImg.setClass(UploadSubjectNew.this, ImageSelectorActivity.class);
 			startActivityForResult(intentAddImg, UP_SUBJECT_CHOOSE_IMG);
 		}else{
