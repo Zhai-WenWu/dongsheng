@@ -814,7 +814,7 @@ public class JsAppCommon extends JsBase{
 
 	@JavascriptInterface
 	public void onLoadFinishCallback(String data){
-//		Log.i(DishWebView.TAG,"onLoadFinishCallback()");
+		Log.i(DishWebView.TAG,"onLoadFinishCallback() data:" + data);
 //		Tools.showToast(mAct,"onLoadFinishCallback()");
 		if(mWebView != null)((DishWebView)mWebView).onLoadFinishCallback(data);
 	}

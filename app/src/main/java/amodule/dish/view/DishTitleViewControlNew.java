@@ -291,11 +291,12 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      */
     private void doBuyBurden(boolean state) {
         if(!state){
-            if(DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() > 0)
-                DataOperate.deleteBuyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code"));
+            if(DataOperate.buyBurden(detailDish.getApplicationContext(), code).length() > 0)
+                DataOperate.deleteBuyBurden(detailDish.getApplicationContext(), code);
+            mDishWebView.deleteDishData();
         }else if(getIsAutoOffDish(detailDish.getApplicationContext())) {
             XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
-            if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() == 0) {
+            if (DataOperate.buyBurden(detailDish.getApplicationContext(), code).length() == 0) {
                 String dishJson = mListener.getOffDishJson();
                 Log.i("DetailDish", "dishJson:" + dishJson);
                 if (TextUtils.isEmpty(dishJson)) {

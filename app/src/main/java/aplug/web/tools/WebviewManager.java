@@ -39,7 +39,7 @@ import xh.basic.tool.UtilString;
 
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
 public class WebviewManager {
-    private final String ERROR_HTML_URL = "file:///android_asset/error.html";
+    public static final String ERROR_HTML_URL = "file:///android_asset/error.html";
     private Activity act;
     private LoadManager loadManager;
     private List<XHWebView> mWwebArray;

@@ -55,7 +55,7 @@ public class DishActivityViewControlNew {
 
     private String state;
     private LoadManager loadManager;
-    private String code;
+    private String mDishCode;
     private boolean isHasVideoOnClick = false;
     private boolean isShowTitleColor=false;
     private boolean isHasVideo = false;
@@ -80,7 +80,7 @@ public class DishActivityViewControlNew {
     public void init(String state, LoadManager loadManager, String code, DishViewCallBack callBack) {
         this.state = state;
         this.loadManager = loadManager;
-        this.code = code;
+        mDishCode = code;
         this.callBack = callBack;
 
         initView();
@@ -94,7 +94,7 @@ public class DishActivityViewControlNew {
         });
         dishTitleViewControl.initView(mAct,mXhWebView);
         dishTitleViewControl.setstate(state);
-        mFootControl = new DishFootControl(mAct,code);
+        mFootControl = new DishFootControl(mAct,mDishCode);
     }
 
     private void initView(){
@@ -210,12 +210,12 @@ public class DishActivityViewControlNew {
         if(list.size() == 0) return;
 
         dishInfoMap = list.get(0);
-        mXhWebView.loadDishData(dishInfoMap.get("code"),isReadLocal);
+        mXhWebView.loadDishData(mDishCode,isReadLocal);
 
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
 
-        dishTitleViewControl.setData(dishInfoMap,code,isHasVideo,dishInfoMap.get("dishState"),loadManager);
+        dishTitleViewControl.setData(dishInfoMap,mDishCode,isHasVideo,dishInfoMap.get("dishState"),loadManager);
 
         Map<String, String> customer = StringManager.getFirstMap(dishInfoMap.get("customer"));
         if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
@@ -262,7 +262,7 @@ public class DishActivityViewControlNew {
                     JSONObject jsonObject = handlerJSONData(burden);
                     HistoryData data = new HistoryData();
                     data.setBrowseTime(currentTimeMillis());
-                    data.setCode(code);
+                    data.setCode(mDishCode);
                     data.setDataJson(jsonObject.toString());
                     BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
                     sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
@@ -278,7 +278,7 @@ public class DishActivityViewControlNew {
                 Map<String, String> dishInfo = dishInfoArray.get(0);
                 jsonObject.put("name", dishInfo.get("name"));
                 jsonObject.put("img", dishInfo.get("img"));
-                jsonObject.put("code", code);
+                jsonObject.put("code", mDishCode);
                 jsonObject.put("isFine", dishInfo.get("isFine"));
                 jsonObject.put("favorites", dishInfo.get("favorites"));
                 jsonObject.put("allClick", dishInfo.get("allClick"));
