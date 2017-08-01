@@ -141,7 +141,6 @@ public class  ShowWeb extends WebActivity {
 	private void initTitleView(){
 		title = (TextView)findViewById(R.id.title);
  		rightBtn = (Button) findViewById(R.id.rightBtn1);
-		rightBtn.setVisibility(View.VISIBLE);
 		shareLayout = (RelativeLayout) findViewById(R.id.shar_layout);
 		favLayout = (RelativeLayout) findViewById(R.id.fav_layout);
 		homeLayout = (RelativeLayout) findViewById(R.id.home_layout);
