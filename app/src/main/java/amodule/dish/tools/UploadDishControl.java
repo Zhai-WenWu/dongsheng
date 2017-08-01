@@ -61,7 +61,7 @@ public class UploadDishControl extends UploadHelper{
 				uploadDishData.setCode(String.valueOf(msg));
 				boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataUpDish, FileManager.xmlKey_shareShowPopNumUpDish);
 				if(isShow){
-					BaseActivity.mUpDishPopWindowDialog = new PopWindowDialog(XHApplication.in(), "菜谱发布成功", "分享给你的朋友们，让他们也看看吧：");
+					BaseActivity.mUpDishPopWindowDialog = new PopWindowDialog(XHApplication.in(), "菜谱发布成功", "分享给你的朋友们，让他们也看看吧：",null);
 					String clickUrl = StringManager.wwwUrl + "caipu/" + uploadDishData.getCode() + ".html";
 					BaseActivity.mUpDishPopWindowDialog.show(BarShare.IMG_TYPE_LOC, "我做了[" + uploadDishData.getName() + "]，超好吃哦~", clickUrl, "独门秘籍都在这里，你也试试吧！", uploadDishData.getCover(), "菜谱发布成功后", "强化分享");
 				}

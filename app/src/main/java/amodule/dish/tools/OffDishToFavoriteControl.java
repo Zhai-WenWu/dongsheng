@@ -2,6 +2,9 @@ package amodule.dish.tools;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -16,8 +19,11 @@ import amodule.dish.db.DishOffSqlite;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.view.DishsWebView;
 import amodule.main.Main;
+import amodule.user.activity.MyFavorite;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
+import aplug.basic.ReqInternet;
+import xh.windowview.XhDialog;
 
 /**
  * Created by Fang Ruijiao on 2017/7/25.
@@ -132,7 +138,7 @@ public class OffDishToFavoriteControl {
         }
     }
 
-    private static void addCollection(Context context, ArrayList<String> codes) {
+    private static void addCollection(Context context, final ArrayList<String> codes) {
         StringBuffer params = new StringBuffer("codes=");
         for (String code : codes) {
             params.append(code);
@@ -140,8 +146,23 @@ public class OffDishToFavoriteControl {
         }
         ReqEncyptInternet.in().doEncypt(StringManager.api_addCollection, params.toString(), new InternetCallback(context) {
             @Override
-            public void loaded(int i, String s, Object o) {
-
+            public void loaded(int flag, String s, Object o) {
+                if(flag >= ReqInternet.REQ_OK_STRING){
+                    Object offToFavHint = FileManager.loadShared(context,"offToFavHint","offToFavHint");
+                    if(offToFavHint == null || TextUtils.isEmpty(String.valueOf(offToFavHint))) {
+                        final XhDialog xhDialog = new XhDialog(context);
+                        xhDialog.setTitle("离线菜谱已全部放入“我的收藏”中，点击查看~")
+                                .setSureButton("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        xhDialog.cancel();
+                                        Intent intent = new Intent(context, MyFavorite.class);
+                                        context.startActivity(intent);
+                                    }
+                                }).show();
+                        FileManager.saveShared(context,"offToFavHint","offToFavHint","2");
+                    }
+                }
             }
         });
     }

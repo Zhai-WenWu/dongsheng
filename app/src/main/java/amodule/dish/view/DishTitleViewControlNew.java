@@ -38,6 +38,7 @@ import xh.basic.internet.UtilInternet;
 import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.tools.OffDishToFavoriteControl.getIsAutoOffDish;
 import static com.xiangha.R.id.back;
 import static com.xiangha.R.id.fav_layout;
 import static com.xiangha.R.id.modify_layout;
@@ -63,7 +64,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
 
-    private boolean isHasPower = true;
+    private boolean isHasOffPower = true;
 
     private OnDishTitleControlListener mListener;
 
@@ -292,7 +293,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         if(!state){
             if(DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() > 0)
                 DataOperate.deleteBuyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code"));
-        }else if(OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext())) {
+        }else if(getIsAutoOffDish(detailDish.getApplicationContext())) {
             XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
             if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() == 0) {
                 String dishJson = mListener.getOffDishJson();
@@ -329,7 +330,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                             if (flag >= UtilInternet.REQ_OK_STRING) {
                                 Map<String, String> map = getListMapByJson(returnObj).get(0);
                                 boolean nowFav = map.get("type").equals("2");
-                                doBuyBurden(nowFav);
+                                if(isHasOffPower) doBuyBurden(nowFav);
                                 favText.setText(nowFav ? "已收藏" : "  收藏  ");
                                 favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 
@@ -340,7 +341,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                 if (nowFav) {
                                     boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataFavDish, FileManager.xmlKey_shareShowPopNumFavDish);
                                     if (isShow) {
-                                        mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？");
+                                        boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
+                                        mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
+                                                isAutoOff ? "菜谱已离线到本地，可以在设置-收藏菜谱关闭。" : null);
                                         if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
                                             String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
                                             String clickUrl = StringManager.wwwUrl + "video/caipu/" + dishInfoMap.get("code");
@@ -378,7 +381,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     }
 
     public void setOfflineLayoutVisibility(boolean isShow){
-        isHasPower = isShow ? (state != null ? false : true) : false;
+        isHasOffPower = isShow ? (state != null ? false : true) : false;
     }
 
     public interface OnDishTitleControlListener{

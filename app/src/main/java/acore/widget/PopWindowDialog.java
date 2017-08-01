@@ -31,14 +31,16 @@ public class PopWindowDialog {
 	private WindowManager mWindowManager;
 	private WindowManager.LayoutParams mLayoutParams;
 	private View mView;
-	private ArrayList<Map<String,String>> mData = new ArrayList<Map<String,String>>();
+	private ArrayList<Map<String,String>> mData = new ArrayList<>();
 	private String[] mSharePlatforms;
 	private String mType,mTitle,mClickUrl,mContent,mImgUrl,mFrom,mParent;
-	private String mHintTitle;
+	private String mHintTitle,mShareHint,mMessage;
 	
-	public PopWindowDialog(Context context,String hintTitle,String shareHint){
+	public PopWindowDialog(Context context,String hintTitle,String shareHint,String message){
 		mContext = context;
 		mHintTitle = hintTitle;
+		mShareHint= shareHint;
+		mMessage = message;
 		initData();
 		init();
 	}
@@ -50,9 +52,18 @@ public class PopWindowDialog {
 		mView = inflater.inflate(R.layout.d_popwindow, null);
 		initShareView();
 		TextView hintTitle = (TextView)mView.findViewById(R.id.d_popwindow_title);
-		hintTitle.setText(mHintTitle);
+		TextView message = (TextView)mView.findViewById(R.id.d_popwindow_message);
 //		TextView shareHint = (TextView)mView.findViewById(R.id.d_popwindow_share_hint);
+
+		hintTitle.setText(mHintTitle);
+		if(TextUtils.isEmpty(mMessage)){
+			message.setVisibility(View.GONE);
+		}else{
+			message.setText(mMessage);
+			message.setVisibility(View.VISIBLE);
+		}
 //		shareHint.setText(mShareHint);
+
 		mView.setOnClickListener(onCloseListener);
 		mView.findViewById(R.id.d_popwindow_close).setOnClickListener(onCloseListener);
 		mLayoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
