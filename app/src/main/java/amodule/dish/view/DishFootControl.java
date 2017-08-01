@@ -111,7 +111,7 @@ public class DishFootControl implements View.OnClickListener{
                 ImageView zanImg = (ImageView) view.findViewById(R.id.a_dish_detail_zan);
                 TextView userName = (TextView) view.findViewById(R.id.a_dish_detail_user_name);
                 TextView dishTime = (TextView) view.findViewById(R.id.a_dish_detail_time);
-                TextView zanNumber = (TextView) view.findViewById(R.id.a_dish_detail_zan_numer);
+                final TextView zanNumber = (TextView) view.findViewById(R.id.a_dish_detail_zan_numer);
 
                 String customer = map.get("customer");
                 ArrayList<Map<String, String>> customerArray = StringManager.getListMapByJson(customer);
@@ -119,13 +119,13 @@ public class DishFootControl implements View.OnClickListener{
                     Map<String, String> customerMap = customerArray.get(0);
                     userName.setText(customerMap.get("nickName"));
                     setViewImage(userImg, customerMap.get("img"), 500);
-                    String userCode = map.get("userCode");
+                    String userCode = customerMap.get("code");
                     setGotoFriendHome(userImg, userCode);
                     setGotoFriendHome(userName, userCode);
                 }
 
                 final String zanNumberStr = map.get("likeNum");
-                final String subjectCode = map.get("subjectCode");
+                final String subjectCode = map.get("code");
                 setViewImage(dishImg, map.get("img"), 0);
                 zanImg.setImageResource(TextUtils.isEmpty(map.get("isLike")) ? R.drawable.z_quan_home_body_ico_good : R.drawable.z_quan_home_body_ico_good_active);
                 dishTime.setText(map.get("timeShow"));
@@ -133,7 +133,22 @@ public class DishFootControl implements View.OnClickListener{
                 zanImg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Tools.showToast(mAct, zanNumberStr);
+                        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+                        map.put("subjectCode",subjectCode);
+                        map.put("type","likeList");
+                        ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback(mAct) {
+                            @Override
+                            public void loaded(int flag, String s, Object o) {
+                                if(flag >= ReqInternet.REQ_OK_STRING){
+                                    try {
+                                        int zanNum = Integer.parseInt(zanNumberStr);
+                                        zanNumber.setText(String.valueOf(++zanNum));
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
                 view.setOnClickListener(new View.OnClickListener() {

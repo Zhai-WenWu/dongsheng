@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -75,7 +76,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	private final String defaultChooseCid = "-1";
 	private String mChooseCid = "-1",cName = "";
 	private String mDishCode;
-	private boolean isCanBackOnNoChoose = true,isFirsh;
+	private boolean isCanBackOnNoChoose = true, isFirst = true;
 
 	public static final String mTongjiId = "a_post";
 	private RelativeLayout activityLayout;
@@ -124,13 +125,14 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		if(resultCode == RESULT_OK && data != null){
 			switch (requestCode){
 				case UP_SUBJECT_CHOOSE_IMG:
+					Log.i("FRJ","isFirst:" + isFirst + "   isCanBackOnNoChoose:" + isCanBackOnNoChoose);
 					ArrayList<String> array = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);//ArrayList<String>
 					int size = array.size();
 					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新贴图片", size);
-					if(isFirsh && size == 0 && !isCanBackOnNoChoose ){
+					if(isFirst && size == 0 && !isCanBackOnNoChoose ){
 						UploadSubjectNew.this.finish();
 					}
-					isFirsh = false;
+					isFirst = false;
 					upSubContent.insertImgs(array);
 					break;
 				case UP_SUBJECT_CHOOSE_CIRCLE:
@@ -283,7 +285,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		upSubContent.init(upData, upSubContentView,bar,isHaveTitle,isNewSubject,isDraft);
 		setCircleRule();
 		if(isSkip){
-			imageSelector(!TextUtils.isEmpty(mDishCode));
+			imageSelector(TextUtils.isEmpty(mDishCode));
 		}
 	}
 
@@ -295,7 +297,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			Intent intentAddImg = new Intent();
 			intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
 			intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, selectNum);
-//			if(isCanBack) intentAddImg.putExtra(ImageSelectorConstant.IS_CAN_BACK_ON_NO_CHOOSE, false);
+//			intentAddImg.putExtra(ImageSelectorConstant.IS_CAN_BACK_ON_NO_CHOOSE, isCanBack);
 			intentAddImg.setClass(UploadSubjectNew.this, ImageSelectorActivity.class);
 			startActivityForResult(intentAddImg, UP_SUBJECT_CHOOSE_IMG);
 		}else{
