@@ -195,6 +195,7 @@ public class BaseEditActivity extends BaseActivity {
                         if (!TextUtils.isEmpty(mQADetailUrl))
                             intent.putExtra("qaDetailUrl", mQADetailUrl);
                         startActivity(intent);
+                        XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
                         break;
                     case R.id.back:
                         XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击返回按钮", "");

@@ -116,6 +116,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mListPool.allStartOrStop(isAllStart ? UploadListPool.TYPE_START : UploadListPool.TYPE_PAUSE);
         mAllStart.setVisibility(isAllStart ? View.GONE : View.VISIBLE);
         mAllStop.setVisibility(isAllStart ? View.VISIBLE : View.GONE);
+        XHClick.mapStat(this, "a_answer_upload", isAllStart ? "全部开始" : "全部暂停", "");
     }
 
     private void hintNetWork(){
@@ -303,6 +304,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                         mAllStart.setVisibility(View.VISIBLE);
                         mAllStop.setVisibility(View.GONE);
                         mIsStopUpload = true;
+                        XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "取消上传", "");
                         AskAnswerUploadListActivity.this.finish();
                     }
                 });
@@ -332,6 +334,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                 if (UploadItemData.STATE_FAILD == Integer.valueOf(itemMap.get("state"))) {
                     mListPool.oneStartOrStop(Integer.valueOf(itemMap.get("pos")),
                             Integer.valueOf(itemMap.get("index")), UploadListPool.TYPE_START);
+                    XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "点击重试", "");
                 }
             }
         });
