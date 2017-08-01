@@ -415,7 +415,7 @@ public class Main extends Activity implements OnClickListener {
         }
         isForeground = true;
         //设置未读消息数
-        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage);
+        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
         //去我的页面
         if (MallPayActivity.pay_state) {
             onClick(tabViews[4].findViewById(R.id.tab_linearLayout));

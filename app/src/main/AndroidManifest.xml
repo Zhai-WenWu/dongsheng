@@ -476,12 +476,6 @@
         <!--article end-->
 
         <!--answer start-->
-        <activity android:name="amodule.answer.activity.AskAnswerFullWebActivity"
-            android:configChanges="orientation|keyboardHidden|screenLayout"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-
         <activity android:name="amodule.answer.activity.AskEditActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
@@ -504,7 +498,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name="amodule.answer.activity.AskAnswerDetailActivity"
+        <activity android:name="amodule.answer.activity.QAMsgListActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"

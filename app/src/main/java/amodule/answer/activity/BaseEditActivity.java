@@ -17,9 +17,6 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +24,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
@@ -35,7 +33,6 @@ import amodule.answer.model.AskAnswerModel;
 import amodule.answer.view.AskAnswerImgController;
 import amodule.answer.view.AskAnswerImgItemView;
 import amodule.article.activity.ArticleVideoSelectorActivity;
-import amodule.user.activity.ModifyPassword;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.recordervideo.db.RecorderVideoData;
@@ -49,6 +46,8 @@ import aplug.web.view.XHWebView;
  */
 
 public class BaseEditActivity extends BaseActivity {
+
+    public static final String TAG = "BaseEditActivity";
 
     private Timer mTimer;
     private TimerTask mTimerTask;
@@ -67,6 +66,7 @@ public class BaseEditActivity extends BaseActivity {
     protected String mAnonymity;//是否匿名 "1":否 "2":是
     protected String mType = "5";//类型：5-菜谱问答
     protected String mQATitle = "";//问答相关问题的标题
+    protected String mQADetailUrl;//问答详情页的url
 
     private TextView mTitle;
     private TextView mUpload;
@@ -100,6 +100,7 @@ public class BaseEditActivity extends BaseActivity {
             mQATitle = bundle.getString("qaTitle", "");
             mIsAskMore = bundle.getBoolean("isAskMore", false);
             mIsAnswerMore = bundle.getBoolean("mIsAnswerMore", false);
+            mQADetailUrl = bundle.getString("qaDetailUrl");
         }
         mModel = new AskAnswerModel();
         mSQLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
@@ -155,6 +156,11 @@ public class BaseEditActivity extends BaseActivity {
                             }
                             Intent intent = new Intent(BaseEditActivity.this, ArticleVideoSelectorActivity.class);
                             intent.putStringArrayListExtra(ArticleVideoSelectorActivity.EXTRA_UNSELECT_VIDEO, videos);
+                            String tjId = getTjId();
+                            if (!TextUtils.isEmpty(tjId)) {
+                                intent.putExtra("tjId", tjId);
+                                intent.putExtra("tag", TAG);
+                            }
                             startActivityForResult(intent, REQUEST_SELECT_VIDEO);
                         }
                         break;
@@ -170,19 +176,28 @@ public class BaseEditActivity extends BaseActivity {
                             int maxImageCount = mImgController.getImgFixedSize() - mImgController.getDatas().size();
                             intent1.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, maxImageCount > 10 ? 10 : maxImageCount);
                             intent1.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imgs);
+                            String tjId = getTjId();
+                            if (!TextUtils.isEmpty(tjId)) {
+                                intent1.putExtra("tjId", tjId);
+                                intent1.putExtra("tag", TAG);
+                            }
                             startActivityForResult(intent1, REQUEST_SELECT_IMAGE);
                         }
                         break;
                     case R.id.upload:
                         saveDraft();
-                        if (handleUpload()) {
+                        if (handleUpload()) {//单独处理提问的上传
                             break;
                         }
+                        //处理回答的上传
                         Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
                         intent.putExtra("draftId", (int)mModel.getmId());
+                        if (!TextUtils.isEmpty(mQADetailUrl))
+                            intent.putExtra("qaDetailUrl", mQADetailUrl);
                         startActivity(intent);
                         break;
                     case R.id.back:
+                        XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击返回按钮", "");
                         handleBackClick();
                         finish();
                         break;
@@ -231,12 +246,18 @@ public class BaseEditActivity extends BaseActivity {
 
             }
         });
-//        mJsAppCommon.setOnPayFinishListener(new JsAppCommon.OnPayFinishListener() {
-//            @Override
-//            public void onPayFinish(boolean succ, Object data) {
-//                onPayFinish(succ, data);
-//            }
-//        });
+        mImgController.setOnDelListener(new AskAnswerImgController.OnDelListener() {
+            @Override
+            public void onDel(Map<String, String> dataMap) {
+                XHClick.mapStat(BaseEditActivity.this, getTjId(), "删除图片", "");
+            }
+        });
+        mJsAppCommon.setOnPayFinishListener(new JsAppCommon.OnPayFinishListener() {
+            @Override
+            public void onPayFinish(boolean succ, Object data) {
+                onPayFin(succ, data);
+            }
+        });
     }
 
     protected void onPayFin(boolean succ, Object data){};
@@ -306,23 +327,10 @@ public class BaseEditActivity extends BaseActivity {
         }
     }
 
-    private String combineContent() {
-        JSONObject contentObj = new JSONObject();
-        try {
-            Editable text = mEditText.getText();
-            contentObj.put("text", text == null ? "" : text.toString());
-            contentObj.put("imgs", Tools.list2JsonArray(mImgController.getImgsArray()).toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return contentObj.toString();
-    }
-
     protected long saveDraft() {
         if (mModel == null)
             return -1;
         long rowId = -1;
-        ArrayList<Map<String, String>> imgs = mImgController.getImgsArray();
         Editable editable = mEditText.getText();
         mModel.setmText(editable == null ? "" : editable.toString());
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
@@ -394,5 +402,24 @@ public class BaseEditActivity extends BaseActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    protected String getTjId() {
+        String tjId = null;
+        if (TextUtils.isEmpty(mQAType))
+            return tjId;
+        switch (mQAType) {
+            case AskAnswerModel.TYPE_ANSWER:
+            case AskAnswerModel.TYPE_ANSWER_AGAIN:
+                tjId = "a_answer";
+                break;
+            case AskAnswerModel.TYPE_ASK:
+                tjId = "a_ask_publish";
+                break;
+            case AskAnswerModel.TYPE_ASK_AGAIN:
+                tjId = "a_ask_publish2";
+                break;
+        }
+        return tjId;
     }
 }

@@ -17,6 +17,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -144,15 +145,19 @@ public class QAReportActivity extends BaseActivity {
                                     dialog.cancel();
                                     if (mBlackListSwitchBtn != null && mBlackListSwitchBtn.mSwitchOn)
                                         mBlackListSwitchBtn.onClick(mBlackListSwitchBtn);
+                                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【否】");
                                 }
                             })
                             .setSureButton("是", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     dialog.cancel();
+                                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【是】（拉黑）");
                                 }
                             })
                             .show();
+                } else {
+                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "关闭拉黑按钮", "");
                 }
             }
         });

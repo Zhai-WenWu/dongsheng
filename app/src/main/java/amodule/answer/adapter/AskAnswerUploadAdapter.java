@@ -1,4 +1,4 @@
-package amodule.answer.model;
+package amodule.answer.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;

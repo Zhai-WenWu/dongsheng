@@ -22,11 +22,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
+import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
-import amodule.answer.model.AskAnswerUploadAdapter;
+import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.dish.view.CommonDialog;
 import amodule.upload.UploadListControl;
@@ -62,6 +66,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     private String mTimesStamp;
     private String mCoverPath;
     private String mFinalVideoPath;
+    private String mQADetailUrl;
 
     private int mHeaderViewCount;
     private boolean mIsStopUpload;
@@ -83,6 +88,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mTimesStamp = intent.getStringExtra("time");
         mCoverPath = intent.getStringExtra("coverPath");
         mFinalVideoPath = intent.getStringExtra("finalVideoPath");
+        mQADetailUrl = intent.getStringExtra("qaDetailUrl");
     }
 
     private void registnetworkListener() {
@@ -141,6 +147,18 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mListPool = UploadListControl.getUploadListControlInstance()
                 .add(AskAnswerUploadListPool.class,
                         mDraftId,mCoverPath,mFinalVideoPath,mTimesStamp, generateUiCallback());
+        ((AskAnswerUploadListPool)mListPool).setUploadOverListener(new AskAnswerUploadListPool.UploadOverListener() {
+            @Override
+            public void onUploadOver(boolean flag, String response) {
+                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "上传状态", flag ? "成功" : "上传失败");
+                AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+                sqLite.deleteData(mUploadPoolData.getDraftId());
+                if (Tools.isAppOnForeground()) {
+                    AppCommon.openUrl(AskAnswerUploadListActivity.this, mQADetailUrl, false);
+                    AskAnswerUploadListActivity.this.finish();
+                }
+            }
+        });
         mUploadPoolData = mListPool.getUploadPoolData();
 
         AskAnswerModel model = mUploadPoolData.getUploadAskAnswerData();

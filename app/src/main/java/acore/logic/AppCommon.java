@@ -96,9 +96,12 @@ public class AppCommon {
                     if (alertArr != null && alertArr.length > 2) {
                         quanMessage = Integer.parseInt(alertArr[1]);
                         feekbackMessage = Integer.parseInt(alertArr[2]);
+                        if (alertArr.length >= 5) {
+                            myQAMessage = Integer.parseInt(alertArr[3]) + Integer.parseInt(alertArr[4]);
+                        }
                         try {
                             // 所有消息数
-                            notifyMsgNumChange();
+                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage);
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;
@@ -116,10 +119,6 @@ public class AppCommon {
                 }
             }
         });
-    }
-
-    public static void notifyMsgNumChange() {
-        Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage);
     }
 
     /**

@@ -97,7 +97,9 @@ public class AskAnswerImgController {
         itemView.setOnDelClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               remove(dataMap, itemView);
+                remove(dataMap, itemView);
+                if (mOnDelListener != null)
+                    mOnDelListener.onDel(dataMap);
             }
         });
         itemView.setOnLoadExceptionListener(new AskAnswerImgItemView.OnLoadExceptionListener() {
@@ -107,6 +109,15 @@ public class AskAnswerImgController {
             }
         });
         mParentView.addView(itemView);
+    }
+
+    public interface OnDelListener {
+        void onDel(Map<String, String> dataMap);
+    }
+
+    private OnDelListener mOnDelListener;
+    public void setOnDelListener(OnDelListener delListener) {
+        mOnDelListener = delListener;
     }
 
     private void remove(Map<String, String> dataMap, View itemView) {

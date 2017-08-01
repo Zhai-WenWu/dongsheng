@@ -3,10 +3,7 @@ package amodule.user.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +14,6 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -27,12 +23,11 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
-import amodule.answer.activity.AskAnswerFullWebActivity;
+import amodule.answer.activity.QAMsgListActivity;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterMainMsg;
 import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
 import xh.basic.internet.UtilInternet;
@@ -69,33 +64,24 @@ public class MyMessage extends MainBaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mIsOnResuming = true;
 		if(LoginManager.isLogin()&&isShowData){
 			onRefresh();
 		}
-		startPollingQANum();
 	}
-	/*
-	 * 设置消息当从消息返回时
-	 */
+
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mIsOnResuming = false;
-//		pausePollingQANum();
 	}
 
 	@Override
 	public void finish() {
 		super.finish();
-		mIsOnResuming = false;
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mIsOnResuming = false;
-		endPollingQANum();
 	}
 
 	/**
@@ -167,17 +153,13 @@ public class MyMessage extends MainBaseActivity {
 						break;
 					case R.id.my_qa:
 						if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
+							AppCommon.myQAMessage = 0;
+							Main.setNewMsgNum(3, AppCommon.myQAMessage);
 							mMyQANum.setText("");
 							mMyQANum.setVisibility(View.GONE);
-							AppCommon.myQAMessage = 0;
-							AppCommon.notifyMsgNumChange();
 						}
-						Intent intent = new Intent(MyMessage.this, AskAnswerFullWebActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putString("url", "");
-						bundle.putString("tab", "");
-						intent.putExtras(bundle);
-						startActivity(intent);
+						startActivity(new Intent(MyMessage.this, QAMsgListActivity.class));
+						XHClick.mapStat(MyMessage.this, "a_message", "点击我问我答", "");
 						break;
 				}
 			}
@@ -233,6 +215,7 @@ public class MyMessage extends MainBaseActivity {
 		listMessage.onRefreshStart();
 	}
 	private void startFeekback(){
+		XHClick.mapStat(this, "a_message", "点击香哈小秘书", "");
 		Intent intent = new Intent(MyMessage.this, Feedback.class);
 		startActivity(intent);
 	}
@@ -243,6 +226,14 @@ public class MyMessage extends MainBaseActivity {
 			} else {
 				feekback_msg_num.setVisibility(View.VISIBLE);
 				feekback_msg_num.setText("" + AppCommon.feekbackMessage);
+			}
+		}
+		if (mMyQANum != null) {
+			if (AppCommon.myQAMessage == 0) {
+				mMyQANum.setVisibility(View.GONE);
+			} else {
+				mMyQANum.setVisibility(View.VISIBLE);
+				mMyQANum.setText(String.valueOf(AppCommon.myQAMessage));
 			}
 		}
 	}
@@ -399,6 +390,10 @@ public class MyMessage extends MainBaseActivity {
 
 		@Override
 		public void onClick(View v) {
+
+			if (v.getId() == R.id.msg_title_sort) {
+				XHClick.mapStat(MyMessage.this, "a_message", "点击未读按钮", "");
+			}
 			//7.29新添加统计
 			XHClick.mapStat(MyMessage.this, "a_switch_message", "消息中心", "");
 			clickFlag=!clickFlag;
@@ -410,92 +405,5 @@ public class MyMessage extends MainBaseActivity {
 			load(true);
 		}
 	};
-
-	private final String mAskFlag = "ask";
-	private final String mAnswerFlag = "answer";
-	private Map<String, String> mFlagMap = new HashMap<String, String>();
-	private boolean mIsLoadingQANum;
-	private boolean mIsOnResuming;
-	//轮询我的问答消息数字
-	private void pollingQANum() {
-		if (mIsLoadingQANum)
-			return;
-		mIsLoadingQANum = true;
-		ReqEncyptInternet.in().doEncypt(StringManager.API_QA_NEWS_NUM, "", new InternetCallback(this) {
-			@Override
-			public void loaded(int i, String s, Object o) {
-				mIsLoadingQANum = false;
-				if (i >= UtilInternet.REQ_OK_STRING) {
-					Map<String, String> map = StringManager.getFirstMap(o);
-					if (map != null) {
-						String askNum = map.get(mAskFlag);
-						String answerNum = map.get(mAnswerFlag);
-						int totalNum = 0;
-						if (mMyQANum != null) {
-							if (!TextUtils.isEmpty(askNum))  {
-								try {
-									totalNum = Integer.parseInt(askNum);
-									if (!mFlagMap.containsKey(mAskFlag))
-										mFlagMap.put(mAskFlag, "");
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-							if (!TextUtils.isEmpty(answerNum)) {
-								try {
-									totalNum += Integer.parseInt(answerNum);
-									if (!mFlagMap.containsKey(mAnswerFlag))
-										mFlagMap.put(mAnswerFlag, "");
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-							AppCommon.myQAMessage = totalNum;
-							AppCommon.notifyMsgNumChange();
-							if (!mIsOnResuming)
-								return;
-							if (totalNum > 0) {
-								mMyQANum.setText(String.valueOf(totalNum));
-								if (mMyQANum.getVisibility() != View.VISIBLE)
-									mMyQANum.setVisibility(View.VISIBLE);
-							} else {
-								mMyQANum.setVisibility(View.GONE);
-							}
-						}
-					}
-				} else {
-
-				}
-			}
-		});
-	}
-
-	private static final int POLLINT_INTERVAL = 5 * 1000;
-	private Runnable pollingQANumRun = new Runnable() {
-		@Override
-		public void run() {
-			pollingQANum();
-			if (mMainHandler != null)
-				mMainHandler.postDelayed(pollingQANumRun, POLLINT_INTERVAL);
-		}
-	};
-
-	private Handler mMainHandler = new Handler(Looper.getMainLooper());
-	private void startPollingQANum() {
-		pausePollingQANum();
-		if (mMainHandler != null)
-			mMainHandler.post(pollingQANumRun);
-	}
-
-	private void pausePollingQANum() {
-		if (mMainHandler != null)
-			mMainHandler.removeCallbacks(pollingQANumRun);
-	}
-
-	private void endPollingQANum() {
-		if (mMainHandler != null)
-			mMainHandler.removeCallbacks(pollingQANumRun);
-		mMainHandler = null;
-	}
 
 }

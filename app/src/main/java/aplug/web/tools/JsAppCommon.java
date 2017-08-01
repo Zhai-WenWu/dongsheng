@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.dialogManager.PushManager;
 import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -831,29 +832,32 @@ public class JsAppCommon extends JsBase{
 		mOnPayFinishListener = payFinishListener;
 	}
 
-	public void goAnswer(String dishId, String authorId, String qaId, boolean isAnswerMore) {
+	@JavascriptInterface
+	public void goAnswer(String dishId, String authorId, String qaId, String isAnswerMore) {
 		Bundle bundle = new Bundle();
 		bundle.putString("code", dishId);
 		bundle.putString("authorCode", authorId);
 		bundle.putString("qaCode", qaId);
-		bundle.putBoolean("mIsAnswerMore", isAnswerMore);
+		bundle.putString("mIsAnswerMore", isAnswerMore);
 		Intent intent = new Intent(mAct, AnswerEditActivity.class);
 		intent.putExtras(bundle);
 		mAct.startActivity(intent);
 	}
 
-	public void goAsk(String dishId, String authorId, String qaId, String qaTitle, boolean isAskMore) {
+	@JavascriptInterface
+	public void goAsk(String dishId, String authorId, String qaId, String qaTitle, String isAskMore) {
 		Bundle bundle = new Bundle();
 		bundle.putString("code", dishId);
 		bundle.putString("authorCode", authorId);
 		bundle.putString("qaCode", qaId);
 		bundle.putString("qaTitle", qaTitle);
-		bundle.putBoolean("isAskMore", isAskMore);
+		bundle.putString("isAskMore", isAskMore);
 		Intent intent = new Intent(mAct, AskEditActivity.class);
 		intent.putExtras(bundle);
 		mAct.startActivity(intent);
 	}
 
+	@JavascriptInterface
 	public void report(String nickName, String userCode, String qaCode, String qaType, String reportType) {
 		Bundle bundle = new Bundle();
 		bundle.putString("reportName", nickName);
@@ -866,7 +870,8 @@ public class JsAppCommon extends JsBase{
 		mAct.startActivity(intent);
 	}
 
-	public void closeWeb() {
+	@JavascriptInterface
+	public void closePayWeb() {
 		if (mAct instanceof AskEditActivity) {
 			((AskEditActivity)mAct).closePayWindow();
 		}
@@ -882,9 +887,17 @@ public class JsAppCommon extends JsBase{
 		mOnGetDataListener = getDataListener;
 	}
 
+	@JavascriptInterface
 	public void getTitleBarInfo(Object jsonStr) {
 		if (mOnGetDataListener != null)
 			mOnGetDataListener.getData(jsonStr);
 	}
+
+	@JavascriptInterface
+	public void openSysSetting() {
+		PushManager.requestPermission();
+	}
+
+
 
 }

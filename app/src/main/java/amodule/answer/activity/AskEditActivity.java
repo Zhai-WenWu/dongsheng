@@ -6,10 +6,10 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -35,8 +36,6 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.tools.WebviewManager;
-import third.mall.aplug.MallReqInternet;
-import third.mall.aplug.MallStringManager;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -48,6 +47,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
 
     private TextView mPriceText;
     private SwitchButton mSwitchBtn;
+    private RelativeLayout mAskDesc;
 
     private String mAskPrice;//提问价格
     private String mWebUrl;//打开Web支付页面
@@ -56,7 +56,6 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private UploadListPool mListPool;
     private UploadPoolData mUploadPoolData;
     private boolean mIsStopUpload;
-    private String mQADetailUrl;
 
     private String mQAID;
 
@@ -71,6 +70,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             @Override
             public void onChange(SwitchButton sb, boolean state) {
                 mAnonymity = state ? "2" : "1";
+                XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击匿名按钮", state ? "点击打开" : "点击关闭");
             }
         });
         mWebViewManager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
@@ -82,8 +82,16 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     public void run() {
                         mWebView.setVisibility(View.VISIBLE);
                         mWebView.loadUrl("javascript:goAppPay()");
+                        XHClick.mapStat(AskEditActivity.this, getTjId(), "点击发布按钮", "吊起支付弹窗");
                     }
                 });
+            }
+        });
+        mAskDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击【查看问答细则及责任声明】", "");
+                //TODO 点击责任声明
             }
         });
     }
@@ -99,6 +107,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         super.initView(title, contentResId);
         mPriceText = (TextView) findViewById(R.id.price_text);
         mSwitchBtn = (SwitchButton) findViewById(R.id.ask_switchbtn);
+        mAskDesc = (RelativeLayout) findViewById(R.id.ask_desc);
         mSwitchBtn.mSwitchOn = false;
         setListener();
         registnetworkListener();
@@ -185,8 +194,9 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void cancelUpload() {
-        if (mListPool == null)
+        if (mListPool == null || mIsStopUpload)
             return;
+        XHClick.mapStat(this, getTjId(), "点击发布按钮", mIsAskMore ? "取消上传" : "点返回或X取消上传");
         mListPool.cancelUpload();
     }
 
@@ -308,6 +318,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     public boolean closePayWindow() {
         if (mWebView.getVisibility() == View.VISIBLE) {
             mWebView.setVisibility(View.GONE);
+            if (!mPayFinish && mIsAskMore) {
+                XHClick.mapStat(this, getTjId(), "点击发布按钮", "未发布成功");
+            }
+            mPayFinish = false;
             return true;
         }
         return false;
@@ -350,11 +364,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 dialog.cancel();
             }
         });
+        XHClick.mapStat(this, getTjId(), "点击发布按钮", "价格变动通知");
     }
 
     @Override
     public void onUploadOver(boolean flag, String response) {
-
+        mIsStopUpload = true;
         cancelUploadingDialog();
         Map<String, String> map = StringManager.getFirstMap(response);
         String type = map.get("type");
@@ -374,14 +389,23 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 e.printStackTrace();
             }
         }
+        if (!flag) {
+            XHClick.mapStat(this, getTjId(), "点击发布按钮", "因网络原因发布失败");
+        }
     }
 
+
+    private boolean mPayFinish;
     @Override
     protected void onPayFin(boolean succ, Object data) {
+        mPayFinish = true;
         if (succ) {
             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
             AppCommon.openUrl(this, mQADetailUrl, false);
             this.finish();
+        } else {
+            if (mIsAskMore)
+                XHClick.mapStat(this, getTjId(), "点击发布按钮", "未发布成功");
         }
     }
 

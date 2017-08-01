@@ -1,29 +1,21 @@
 package amodule.answer.upload;
-
-import android.app.Activity;
-import android.net.Uri;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.override.XHApplication;
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
-import amodule.article.activity.ArticleUploadListActivity;
 import amodule.main.Main;
 import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
@@ -57,13 +49,11 @@ public class AskAnswerUploadListPool extends UploadListPool {
      */
     public AskAnswerModel modifyUploadListPoolData() {
         AskAnswerModel model = mSQLite.queryData(uploadPoolData.getDraftId());
-        Log.e("SLL","修改上传池数据 draftId:" + uploadPoolData.getDraftId());
         if (model != null) {
 
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
             int bodyIndex = 0;
             String imgsDataStr = model.getmImgs();
-            Log.e("SLL","修改上传池数据 imgsDataStr:" + imgsDataStr);
             if (!TextUtils.isEmpty(imgsDataStr)) {
                 UploadItemData bodyItemData;
                 ArrayList<Map<String, String>> makesList = StringManager.getListMapByJson(imgsDataStr);
@@ -72,9 +62,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
                         Map<String, String> map = makesList.get(i);
                         String imgPath = map.get("img");
                         String imgUrl = map.get("url");
-
-                        Log.e("SLL", "文章上传 imgPath: " + imgPath + ",imgUrl:" + imgUrl);
-                        Log.e("SLL", "文章上传 imgPath.indexOf(\"http\"): " + imgPath.indexOf("http"));
                         if (imgPath.indexOf("http") != 0 && !Tools.isFileExists(imgPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章图片路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
@@ -182,7 +169,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
                     if (itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG) {
                         for (int i = 0; i < makesList.size(); i++) {
                             Map<String, String> map = makesList.get(i);
-                            Log.e("SLL","视频图片信息 map.path:" + map.get("image") + "  url:" + itemData.getRecMsg());
                             if (map.get("thumImg").equals(itemData.getPath())) {
                                 map.put("imageUrl",isReset ? "" : itemData.getRecMsg());
                                 break;
@@ -204,7 +190,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
                     if (itemData.getType() == UploadItemData.TYPE_VIDEO) {
                         for (int i = 0; i < makesList.size(); i++) {
                             Map<String, String> map = makesList.get(i);
-                            Log.e("SLL","视频信息 map.path:" + map.get("video") + "  url:" + itemData.getRecMsg());
                             if (map.get("video").equals(itemData.getPath())) {
                                 map.put("videoUrl",isReset ? "" : itemData.getRecMsg());
                                 break;
@@ -223,10 +208,8 @@ public class AskAnswerUploadListPool extends UploadListPool {
                 @Override
                 public boolean onLoop(UploadItemData itemData) {
                     if (itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG) {
-                        Log.e("SLL","图片信息 path:" + itemData.getPath() + "  type:" + itemData.getType() + "  size:" + makesList.size());
                         for (int i = 0; i < makesList.size(); i++) {
                             Map<String, String> map = makesList.get(i);
-                            Log.e("SLL","图片信息 map.path:" + map.get("path") + "  url:" + itemData.getRecMsg());
                             if (map.get("img").equals(itemData.getPath())) {
                                 map.put("url",isReset ? "" : itemData.getRecMsg());
                                 break;
@@ -245,6 +228,8 @@ public class AskAnswerUploadListPool extends UploadListPool {
      * 将上传池中的线上路径存入草稿数据库
      */
     private void saveDataToSqlit(AskAnswerModel model) {
+        if (model == null)
+            return;
         mSQLite.updateData((int) model.getmId(),model);
     }
 
@@ -253,10 +238,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         Log.i("articleUpload","uploadOver flag:" + flag + "   response:" + response);
         if (isPause)
             return;
-        if (mUploadOverListener != null) {
-            mUploadOverListener.onUploadOver(flag, response);
-            return;
-        }
         uploadPoolData.loopPoolData(uploadPoolData.getTailDataList(),
                 new UploadPoolData.LoopCallback() {
                     @Override
@@ -265,7 +246,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
                             itemData.setRecMsg(response);
                             if (flag) {
                                 itemData.setState(UploadItemData.STATE_SUCCESS);
-                                deleteData();
                                 uploadPoolData.setUploadAskAnswerData(null);
                             } else {
                                 mHasDoUploadLastInfo.set(false);
@@ -280,9 +260,8 @@ public class AskAnswerUploadListPool extends UploadListPool {
                 });
 
         super.uploadOver(flag, response);
-        Activity act = XHActivityManager.getInstance().getCurrentActivity();
-        if (Tools.isForward(XHApplication.in())) {
-            //TODO 跳转到问答详情页
+        if (mUploadOverListener != null) {
+            mUploadOverListener.onUploadOver(flag, response);
         }
     }
 
@@ -299,13 +278,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         return mUploadOverListener;
     }
 
-    /**
-     * 删除草稿箱数据库，上传成功后调用
-     */
-    private void deleteData() {
-        mSQLite.deleteData(uploadPoolData.getDraftId());
-    }
-
     @Override
     public void uploadLast() {
         Log.i("articleUpload","uploadLast()");
@@ -313,7 +285,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         //排除物料上传成功后，重复回调物料上传成功，触发上传最后一步
         if(mHasDoUploadLastInfo.get())
             return;
-        Log.e("SLL","uploadLast() checkStuffUploadOver:" + checkStuffUploadOver());
         if (checkStuffUploadOver()) {
             mHasDoUploadLastInfo.set(true);
             final LinkedHashMap<String, String> params = combineParameter();
@@ -364,9 +335,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         uploadTextData.put("ansCode", model.getmAnswerCode());
         uploadTextData.put("authorCode", model.getmAuthorCode());
         uploadTextData.put("price", model.getmPrice());
-
-        Log.e("SLL", "combineParaeter uploadTextData = " + uploadTextData.toString());
-
         return uploadTextData;
     }
 
@@ -430,7 +398,7 @@ public class AskAnswerUploadListPool extends UploadListPool {
      */
     @Override
     protected void uploadThingOver(final boolean flag, final String uniquId, final String responseStr, final JSONObject jsonObject) {
-        Log.i("articleUpload","uploadThingOver() isPause:" + isPause);
+        Log.i("articleUpload","uploadThingOver() flag:" + flag + "  uniquId: " + uniquId + "  responseStr: " + responseStr + "  json: " + jsonObject.toString());
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(),
