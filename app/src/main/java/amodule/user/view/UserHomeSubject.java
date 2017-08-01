@@ -177,7 +177,6 @@ public class UserHomeSubject extends TabContentView {
 				}
 			}
 		});
-//		if(!isBlankSpace)mAct.loadManager.hideProgressBar();
 		adapter.setVideoClickCallBack(new NormarlContentItemImageVideoView.VideoClickCallBack() {
 			@Override
 			public void videoImageOnClick(int position) {
@@ -198,7 +197,7 @@ public class UserHomeSubject extends TabContentView {
 		if(listDataMySb.get(position).containsKey("selfVideo") && !TextUtils.isEmpty(listDataMySb.get(position).get("selfVideo"))) {
 			Map<String, String> videoData = StringManager.getFirstMap(listDataMySb.get(position).get("selfVideo"));
 			if(videoImageView==null)
-				videoImageView = new VideoImageView(mAct,false);
+				videoImageView = new VideoImageView(mAct);
 			videoImageView.setImageBg(videoData.get("sImgUrl"));
 			videoImageView.setVideoData(videoData.get("videoUrl"));
 			videoImageView.setVisibility(View.VISIBLE);

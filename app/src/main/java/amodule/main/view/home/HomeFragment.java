@@ -50,7 +50,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import third.ad.control.AdControlHomeDish;
 import third.ad.control.AdControlNormalDish;
 import third.ad.control.AdControlParent;

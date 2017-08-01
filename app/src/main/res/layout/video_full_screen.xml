@@ -13,7 +13,7 @@
         android:visibility="gone"
         android:layout_height="wrap_content"/>
 
-    <fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard
+    <cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard
         android:id="@+id/jc_video_view"
         android:layout_width="match_parent"
         android:layout_centerInParent="true"

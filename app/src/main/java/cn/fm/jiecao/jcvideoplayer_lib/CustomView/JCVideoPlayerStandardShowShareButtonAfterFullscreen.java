@@ -1,4 +1,4 @@
-package fm.jiecao.jiecaovideoplayer.CustomView;
+package cn.fm.jiecao.jcvideoplayer_lib.CustomView;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.xiangha.R;
 
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 /**
  * Created by Nathen

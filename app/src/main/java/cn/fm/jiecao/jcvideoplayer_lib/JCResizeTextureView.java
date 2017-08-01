@@ -1,4 +1,4 @@
-package fm.jiecao.jcvideoplayer_lib;
+package cn.fm.jiecao.jcvideoplayer_lib;
 
 import android.content.Context;
 import android.graphics.Point;

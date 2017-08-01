@@ -11,9 +11,9 @@ import com.xiangha.R;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.Tools;
-import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard;
 
 public class PlayVideo extends BaseAppCompatActivity {
 

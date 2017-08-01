@@ -1,4 +1,4 @@
-package fm.jiecao.jiecaovideoplayer.CustomView;
+package cn.fm.jiecao.jcvideoplayer_lib.CustomView;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.xiangha.R;
 
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 /**
  * 这里可以监听到视频播放的生命周期和播放状态

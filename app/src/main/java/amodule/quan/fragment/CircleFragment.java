@@ -321,7 +321,7 @@ public class CircleFragment extends Fragment {
         if(mListData.get(position).containsKey("selfVideo") && !TextUtils.isEmpty(mListData.get(position).get("selfVideo"))) {
             Map<String, String> videoData = StringManager.getFirstMap(mListData.get(position).get("selfVideo"));
             if(videoImageView==null)
-                videoImageView = new VideoImageView(mActivity,false);
+                videoImageView = new VideoImageView(mActivity);
             videoImageView.setImageBg(videoData.get("sImgUrl"));
             videoImageView.setVideoData(videoData.get("videoUrl"));
             videoImageView.setVisibility(View.VISIBLE);

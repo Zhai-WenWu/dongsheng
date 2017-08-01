@@ -1,6 +1,5 @@
-package fm.jiecao.jcvideoplayer_lib;
+package cn.fm.jiecao.jcvideoplayer_lib;
 
-import android.annotation.TargetApi;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
@@ -14,12 +13,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
-
-import static android.view.View.VISIBLE;
 
 /**
  * <p>统一管理MediaPlayer的地方,只有一个mediaPlayer实例，那么不会有多个视频同时播放，也节省资源。</p>
@@ -30,7 +25,7 @@ import static android.view.View.VISIBLE;
 public class JCMediaManager implements TextureView.SurfaceTextureListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, MediaPlayer.OnVideoSizeChangedListener {
     public static String TAG = "JieCaoVideoPlayer";
 
-    private static fm.jiecao.jcvideoplayer_lib.JCMediaManager JCMediaManager;
+    private static cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager JCMediaManager;
     public static JCResizeTextureView textureView;
     public static SurfaceTexture savedSurfaceTexture;
     public MediaPlayer mediaPlayer = new MediaPlayer();
@@ -46,7 +41,7 @@ public class JCMediaManager implements TextureView.SurfaceTextureListener, Media
     MediaHandler mMediaHandler;
     Handler mainThreadHandler;
 
-    public static fm.jiecao.jcvideoplayer_lib.JCMediaManager instance() {
+    public static cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager instance() {
         if (JCMediaManager == null) {
             JCMediaManager = new JCMediaManager();
         }
@@ -88,14 +83,14 @@ public class JCMediaManager implements TextureView.SurfaceTextureListener, Media
                         Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
                         method.invoke(mediaPlayer, CURRENT_PLAYING_URL, MAP_HEADER_DATA);
                         mediaPlayer.setLooping(CURRENT_PLING_LOOP);
-                        mediaPlayer.setOnPreparedListener(fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
-                        mediaPlayer.setOnCompletionListener(fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
-                        mediaPlayer.setOnBufferingUpdateListener(fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
+                        mediaPlayer.setOnPreparedListener(cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
+                        mediaPlayer.setOnCompletionListener(cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
+                        mediaPlayer.setOnBufferingUpdateListener(cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
                         mediaPlayer.setScreenOnWhilePlaying(true);
-                        mediaPlayer.setOnSeekCompleteListener(fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
-                        mediaPlayer.setOnErrorListener(fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
-                        mediaPlayer.setOnInfoListener(fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
-                        mediaPlayer.setOnVideoSizeChangedListener(fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
+                        mediaPlayer.setOnSeekCompleteListener(cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
+                        mediaPlayer.setOnErrorListener(cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
+                        mediaPlayer.setOnInfoListener(cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
+                        mediaPlayer.setOnVideoSizeChangedListener(cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager.this);
                         mediaPlayer.prepareAsync();
                         mediaPlayer.setSurface(new Surface(savedSurfaceTexture));
                     } catch (Exception e) {

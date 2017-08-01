@@ -15,8 +15,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.network.connectionclass.ConnectionClassManager;
-import com.facebook.network.connectionclass.ConnectionQuality;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -30,14 +28,14 @@ import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
-import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
-import fm.jiecao.jcvideoplayer_lib.JCUtils;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
-import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import cn.fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
+import cn.fm.jiecao.jcvideoplayer_lib.JCUtils;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard;
 
-import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
+import static cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
 
 public class VideoPlayerController {
     protected Context mContext = null;

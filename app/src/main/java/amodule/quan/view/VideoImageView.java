@@ -18,13 +18,12 @@ import com.xiangha.R;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
-import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
-import fm.jiecao.jcvideoplayer_lib.JCUtils;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
-import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
-import xh.basic.tool.UtilFile;
+import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import cn.fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
+import cn.fm.jiecao.jcvideoplayer_lib.JCUtils;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard;
 
 /**
  * 视频播放业务层封装
@@ -35,7 +34,6 @@ public class VideoImageView extends RelativeLayout{
     private RelativeLayout video_layout;
     private boolean isVoice=true;
     private XHVideoPlayerStandard videoPlayerStandard;
-    private boolean isbottomView=true;
     private boolean newStart=true;
     private boolean mIsCycle = true;
     private String videoUrl="";
@@ -43,10 +41,9 @@ public class VideoImageView extends RelativeLayout{
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
 
-    public VideoImageView(Activity context,boolean isbottomView) {
+    public VideoImageView(Activity context) {
         super(context);
         this.context = context;
-        this.isbottomView= isbottomView;
         initView();
     }
 
@@ -123,7 +120,7 @@ public class VideoImageView extends RelativeLayout{
 
     /**
      * 背景
-     * @param imgUrl
+     * @param imgUrl 图片链接
      */
     public void setImageBg(String imgUrl){
         int height = (ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_30)) * 3 / 4;
@@ -136,7 +133,7 @@ public class VideoImageView extends RelativeLayout{
 
     /**
      *设置视频数据
-     * @param videoUrl
+     * @param videoUrl 视频链接
      */
     public void setVideoData(String videoUrl){
         newStart=true;
@@ -248,21 +245,11 @@ public class VideoImageView extends RelativeLayout{
                     return;
                 }
             }else tipLayout.setVisibility(View.GONE);
-            //TODO notifyHideTip 需要实现
             videoPlayerStandard.startButton.performClick();
-            //不使用进度动画
-//                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.loading_anim);
-//                load_progress.startAnimation(animation);
-//                load_progress.setVisibility(View.GONE);
-//                image_bg.setVisibility(View.GONE);
-//                image_btn_play.setVisibility(View.GONE);
-//                tipLayout.setVisibility(View.GONE);
         }
     }
 
-    /**
-     * 暂停
-     */
+    /** 暂停 */
     public void onVideoPause(){
         if (videoPlayerStandard != null) {
             load_progress.clearAnimation();
@@ -297,11 +284,9 @@ public class VideoImageView extends RelativeLayout{
     public void setVideoClickCallBack(VideoClickCallBack videoClickCallBack){
         this.videoClickCallBack= videoClickCallBack;
     }
-    /**
-     * 视频点击事件
-     */
+    /** 视频点击事件 */
     public interface  VideoClickCallBack{
-        public void setVideoClick();
+        void setVideoClick();
     }
     public boolean getIsPlaying(){
         if (JCMediaManager.instance().mediaPlayer != null) {
@@ -327,13 +312,6 @@ public class VideoImageView extends RelativeLayout{
         isShowMedia = showMedia;
     }
 
-    public interface OnPlayingCompletionListener {
-        void onPlayingCompletion();
-    }
-    private OnPlayingCompletionListener mOnPlayingCompletionListener;
-    public void setOnPlayingCompletionListener(OnPlayingCompletionListener playingCompletionListener) {
-        mOnPlayingCompletionListener = playingCompletionListener;
-    }
     public void setVideoCycle(boolean cycle) {
         mIsCycle = cycle;
     }

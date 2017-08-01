@@ -1,10 +1,8 @@
-package fm.jiecao.jcvideoplayer_lib;
+package cn.fm.jiecao.jcvideoplayer_lib;
 
-import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,7 +13,6 @@ import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;

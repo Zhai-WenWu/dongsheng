@@ -19,12 +19,12 @@ import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
-import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
-import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
-import fm.jiecao.jcvideoplayer_lib.JCUtils;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
-import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import cn.fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
+import cn.fm.jiecao.jcvideoplayer_lib.JCUtils;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard;
 
 /**
  * 1、对象唯一的问题，
