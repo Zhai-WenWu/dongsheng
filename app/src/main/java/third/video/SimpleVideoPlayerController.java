@@ -26,6 +26,8 @@ import xh.basic.tool.UtilFile;
  */
 
 public class SimpleVideoPlayerController extends VideoPlayerController {
+
+
     /**
      * 初始化操作：
      *
@@ -50,32 +52,43 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
     }
 
     public void initView() {
+        //初始化网络断开链接
+        isNetworkDisconnect = false;
         videoPlayerStandard = new XHVideoPlayerStandard(mContext);
         videoPlayerStandard.setIsHideReplay(true);
         videoPlayerStandard.setIsShowThumbOnce(true);
         videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
             @Override
             public void wifiConnected() {
-//                onPause();
-//                onResume();
+                if(null != view_Tip){
+                    view_Tip.performClick();
+                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
+                }
+                onResume();
             }
 
             @Override
             public void mobileConnected() {
-//                onPause();
-//                onResume();
+                if(view_Tip==null){
+                    initView(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
             }
 
             @Override
             public void nothingConnected() {
-
+                isNetworkDisconnect = true;
             }
         });
         videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
             @Override
             public boolean onError() {
-                if(ToolsDevice.isNetworkAvailable(mContext)){
-                    JCUtils.saveProgress(mContext,mImgUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
+                if(ToolsDevice.isNetworkAvailable(mContext)
+                        && isNetworkDisconnect
+                        && autoRetryCount < 3){
+                    autoRetryCount++;
+                    JCUtils.saveProgress(mContext,mVideoUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
                     videoPlayerStandard.startVideo();
                     return true;
                 }

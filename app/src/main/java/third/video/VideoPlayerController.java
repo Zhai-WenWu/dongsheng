@@ -32,9 +32,10 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
+import fm.jiecao.jcvideoplayer_lib.JCUtils;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
-import xh.basic.tool.UtilFile;
 
 import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
 
@@ -52,10 +53,13 @@ public class VideoPlayerController {
     private StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
     private OnPlayingCompletionListener onPlayingCompletionListener = null;
     protected String mImgUrl = "";
+    protected String mVideoUrl = "";
     protected View view_dish;
     protected View view_Tip;
     private boolean isAutoPaly = false;//是否是wifi状态
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
+    public boolean isNetworkDisconnect = false;
+    public int autoRetryCount = 0;
 
     public VideoPlayerController(Context context) {
         this.mContext = context;
@@ -74,42 +78,44 @@ public class VideoPlayerController {
 
         videoPlayerStandard = new XHVideoPlayerStandard(context);
         JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        ConnectionClassManager.getInstance().register(new ConnectionClassManager.ConnectionClassStateChangeListener() {
+        videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
             @Override
-            public void onBandwidthStateChange(ConnectionQuality connectionQuality) {
+            public void wifiConnected() {
+                if(null != view_Tip){
+                    view_Tip.performClick();
+                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
+                }
+                onResume();
+            }
 
+            @Override
+            public void mobileConnected() {
+                if(view_Tip==null){
+                    initView(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
+            }
+
+            @Override
+            public void nothingConnected() {
+                isNetworkDisconnect = true;
             }
         });
-//        videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
-//            @Override
-//            public void wifiConnected() {
-//                isShowAd = false;
-////                onResume();
-//                JCMediaManager.instance().prepare();
-//                if(view_Tip != null){
-//                    view_Tip.findViewById(R.id.btnCloseTip).performClick();
-//                    mPraentViewGroup.removeView(view_Tip);
-//                    view_Tip = null;
-//                }
-//            }
-//
-//            @Override
-//            public void mobileConnected() {
-//                isShowAd = false;
-//                JCMediaManager.instance().prepare();
-//                onPause();
-//                if(view_Tip==null){
-//                    initView(mContext);
-//                    mPraentViewGroup.addView(view_Tip);
-//                }else{
-//                    view_Tip.setVisibility(View.VISIBLE);
-//                }
-//            }
-//            @Override
-//            public void nothingConnected() {
-//
-//            }
-//        });
+        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
+            @Override
+            public boolean onError() {
+                if(ToolsDevice.isNetworkAvailable(mContext)
+                        && isNetworkDisconnect
+                        && autoRetryCount < 3){
+                    autoRetryCount++;
+                    JCUtils.saveProgress(mContext,mImgUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
+                    videoPlayerStandard.startVideo();
+                    return true;
+                }
+                return false;
+            }
+        });
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
@@ -231,8 +237,8 @@ public class VideoPlayerController {
                         String main_url = getData(list, "main_url");
                         if (!TextUtils.isEmpty(main_url)) {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
-                            String vedioUrl = new String(bytes);
-                            videoPlayerStandard.setUp(vedioUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
+                            mVideoUrl = new String(bytes);
+                            videoPlayerStandard.setUp(mVideoUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
                                 mPraentViewGroup.removeView(view_dish);
@@ -281,8 +287,8 @@ public class VideoPlayerController {
                         String main_url = getData(list, "main_url");
                         if (!TextUtils.isEmpty(main_url)) {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
-                            String vedioUrl = new String(bytes);
-                            videoPlayerStandard.setUp(vedioUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
+                            mVideoUrl = new String(bytes);
+                            videoPlayerStandard.setUp(mVideoUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
 
@@ -316,6 +322,7 @@ public class VideoPlayerController {
      * @param view view
      */
     public void initVideoView2(final String url,String title, final View view) {
+        this.mVideoUrl = url;
         videoPlayerStandard.setUp(url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "");
         mHasVideoInfo = true;
     }

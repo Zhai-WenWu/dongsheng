@@ -1,7 +1,6 @@
 package third.video;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,18 +15,16 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import acore.logic.XHClick;
-import acore.tools.CPUTool;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
+import fm.jiecao.jcvideoplayer_lib.JCUtils;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
-import xh.basic.tool.UtilFile;
 
 /**
  * 1、对象唯一的问题，
@@ -41,8 +38,9 @@ public class VideoImagePlayerController {
     private int mVideoInfoRequestNumber = 0;
     private ViewGroup mPraentViewGroup = null;
     private StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
-    public boolean isError = false;
     private String videoUrl="";
+    public boolean isNetworkDisconnect = false;
+    public int autoRetryCount = 0;
 
     public VideoImagePlayerController(Context context, ViewGroup viewGroup, String imgUrl) {
         this.mContext = context;
@@ -50,7 +48,44 @@ public class VideoImagePlayerController {
         videoPlayerStandard = new XHVideoPlayerStandard(mContext);
         videoPlayerStandard.setIsHideTopContainer(true);
         videoPlayerStandard.fullscreenButton.setVisibility(View.VISIBLE);
+        videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
+            @Override
+            public void wifiConnected() {
+                if(null != view_Tip){
+                    view_Tip.performClick();
+                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
+                }
+                onResume();
+            }
 
+            @Override
+            public void mobileConnected() {
+                if(view_Tip==null){
+                    initView(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
+            }
+
+            @Override
+            public void nothingConnected() {
+                isNetworkDisconnect = true;
+            }
+        });
+        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
+            @Override
+            public boolean onError() {
+                if(ToolsDevice.isNetworkAvailable(mContext)
+                        && isNetworkDisconnect
+                        && autoRetryCount < 3){
+                    autoRetryCount++;
+                    JCUtils.saveProgress(mContext,videoUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
+                    videoPlayerStandard.startVideo();
+                    return true;
+                }
+                return false;
+            }
+        });
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
@@ -162,7 +197,7 @@ public class VideoImagePlayerController {
     /**
      * 是否正在播放
      *
-     * @return
+     * @return true：正在播放 ，false反之
      */
     public boolean isPlaying() {
         if (JCMediaManager.instance().mediaPlayer != null) {
@@ -203,24 +238,16 @@ public class VideoImagePlayerController {
      * @author Administrator
      */
     public interface StatisticsPlayCountCallback {
-        public void onStatistics();
+        void onStatistics();
     }
 
     /**
      * 设置播放统计监听
      *
-     * @param callback
+     * @param callback 回调
      */
     public void setStatisticsPlayCountCallback(StatisticsPlayCountCallback callback) {
         this.mStatisticsPlayCountCallback = callback;
-    }
-
-    //统计视频初始化错误
-    private void statisticsInitVideoError(Context context) {
-        isError = true;
-//		Tools.showToast(context, "您的手机暂时不支持播放视频");
-        XHClick.mapStat(context, "init_video_error", "CPU型号", "" + CPUTool.getCpuName());
-        XHClick.mapStat(context, "init_video_error", "手机型号", android.os.Build.BRAND + "_" + android.os.Build.MODEL);
     }
 
     //是否显示广告

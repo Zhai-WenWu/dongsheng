@@ -716,9 +716,7 @@ public class HomeFragment extends BaseHomeFragment{
                                     break;
                             }
                         }
-//                        mPlayerController.initVideoView2(videoD, dataMap.get("name"), null);
-//                        mPlayerController.initVideoView2("http://video.jiecao.fm/8/17/bGQS3BQQWUYrlzP1K4Tg4Q__.mp4", dataMap.get("name"), null);
-                        mPlayerController.initVideoView2("http://v1.cdn.xiangha.com/video/caipu/201707/1900/s/596e355481d1d.mp4", dataMap.get("name"), null);
+                        mPlayerController.initVideoView2(videoD, dataMap.get("name"), null);
                     }
                 }
             }

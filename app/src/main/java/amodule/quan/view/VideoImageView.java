@@ -19,6 +19,8 @@ import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
+import fm.jiecao.jcvideoplayer_lib.JCUtils;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import fm.jiecao.jiecaovideoplayer.CustomView.XHVideoPlayerStandard;
@@ -38,6 +40,8 @@ public class VideoImageView extends RelativeLayout{
     private boolean mIsCycle = true;
     private String videoUrl="";
     private LinearLayout tipLayout;
+    public boolean isNetworkDisconnect = false;
+    public int autoRetryCount = 0;
 
     public VideoImageView(Activity context,boolean isbottomView) {
         super(context);
@@ -78,6 +82,41 @@ public class VideoImageView extends RelativeLayout{
         if (videoPlayerStandard == null) {
             videoPlayerStandard = new XHVideoPlayerStandard(context);
             videoPlayerStandard.setIsHideTopContainer(true);
+            videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
+                @Override
+                public void wifiConnected() {
+                    if(null != tipLayout){
+                        tipLayout.performClick();
+                        FileManager.saveShared(getContext(),FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
+                    }
+                    onResume();
+                }
+
+                @Override
+                public void mobileConnected() {
+                    onPause();
+                    tipLayout.setVisibility(VISIBLE);
+                }
+
+                @Override
+                public void nothingConnected() {
+                    isNetworkDisconnect = true;
+                }
+            });
+            videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
+                @Override
+                public boolean onError() {
+                    if(ToolsDevice.isNetworkAvailable(getContext())
+                            && isNetworkDisconnect
+                            && autoRetryCount < 3){
+                        autoRetryCount++;
+                        JCUtils.saveProgress(getContext(),videoUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
+                        videoPlayerStandard.startVideo();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             handlerView();
         }
     }
