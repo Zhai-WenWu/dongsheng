@@ -307,26 +307,7 @@
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
     </style>
     
-    <!-- 乐视视频 -->
-        <style name="MediaController_SeekBar" parent="android:Widget.SeekBar">
-        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
-        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
-        <item name="android:minHeight">3dip</item>
-        <item name="android:maxHeight">3dip</item>
-        <item name="android:thumb">@drawable/scrubber_control_selector_holo</item>
-        <item name="android:thumbOffset">6dip</item>
-        <item name="android:paddingLeft">6dip</item>
-        <item name="android:paddingRight">6dip</item>
-    </style>
-
-    <style name="MediaController_Text">
-        <item name="android:textColor">#ffffffff</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-    <!-- 乐视视频 end-->
-    
-    <style name="PopupAnimation" parent="android:Animation" mce_bogus="1">         
+    <style name="PopupAnimation" parent="android:Animation" mce_bogus="1">
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>
         <item name="android:windowExitAnimation">@anim/popup_exit</item>    
     </style>

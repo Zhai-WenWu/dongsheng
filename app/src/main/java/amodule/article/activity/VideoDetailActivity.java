@@ -759,7 +759,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             shareMap.put("imgType", BarShare.IMG_TYPE_WEB);
 
         } else {
-            shareMap.put("img", String.valueOf(R.drawable.umen_share_launch));
+            shareMap.put("img", String.valueOf(R.drawable.share_launcher));
             shareMap.put("imgType", BarShare.IMG_TYPE_RES);
         }
     }
