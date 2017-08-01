@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
+import acore.dialogManager.PushManager;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.answer.db.AskAnswerSQLite;
@@ -38,6 +40,8 @@ import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
 import amodule.upload.callback.UploadListUICallBack;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
 
@@ -154,7 +158,10 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                 XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "上传状态", flag ? "成功" : "上传失败");
                 AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
                 sqLite.deleteData(mUploadPoolData.getDraftId());
-                if (Tools.isAppOnForeground()) {
+                if (Tools.isAppOnForeground() && flag) {
+                    if (!PushManager.isNotificationEnabled()) {
+                        getQANum();
+                    }
                     AppCommon.openUrl(AskAnswerUploadListActivity.this, mQADetailUrl, false);
                     AskAnswerUploadListActivity.this.finish();
                 }
@@ -351,5 +358,42 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     public void onBackPressed() {
         goBack();
         super.onBackPressed();
+    }
+
+    private void getQANum() {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_NUM, "type=2", new InternetCallback(this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                Map<String, String> map = StringManager.getFirstMap(o);
+                if (map != null && !map.isEmpty()) {
+                    String numStr = map.get("num");
+                    if (!TextUtils.isEmpty(numStr)) {
+                        try {
+                            final int num = Integer.parseInt(numStr);
+                            if (num == 1 || num == 5) {
+                                final XhDialog dialog = new XhDialog(AskAnswerUploadListActivity.this);
+                                dialog.setTitle("开启推送通知，用户的追问或评价结果将在第一时间通知你，是否开启？")
+                                        .setCanselButton("否", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.cancel();
+                                                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_ask_push", "作者第" + num + "次推送", "否");
+                                            }
+                                        })
+                                        .setSureButton("是", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_ask_push", "作者第" + num + "次推送", "是");
+                                                PushManager.requestPermission();
+                                            }
+                                        }).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
     }
 }

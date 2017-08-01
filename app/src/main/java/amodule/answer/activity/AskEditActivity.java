@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
+import acore.dialogManager.PushManager;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.LogManager;
@@ -402,11 +403,51 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         if (succ) {
             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
             AppCommon.openUrl(this, mQADetailUrl, false);
+            if (!PushManager.isNotificationEnabled()) {
+                getQANum();
+            }
             this.finish();
         } else {
             if (mIsAskMore)
                 XHClick.mapStat(this, getTjId(), "点击发布按钮", "未发布成功");
         }
+    }
+
+    private void getQANum() {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_NUM, "type=1", new InternetCallback(this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                Map<String, String> map = StringManager.getFirstMap(o);
+                if (map != null && !map.isEmpty()) {
+                    String numStr = map.get("num");
+                    if (!TextUtils.isEmpty(numStr)) {
+                        try {
+                            final int num = Integer.parseInt(numStr);
+                            if (num == 1 || num == 5) {
+                                final XhDialog dialog = new XhDialog(AskEditActivity.this);
+                                dialog.setTitle("开启推送通知，作者回答后将在第一时间通知你，是否开启？")
+                                        .setCanselButton("否", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialog.cancel();
+                                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人第" + num + "次推送", "否");
+                                            }
+                                        })
+                                        .setSureButton("是", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人第" + num + "次推送", "是");
+                                                PushManager.requestPermission();
+                                            }
+                                        }).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
