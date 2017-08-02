@@ -75,8 +75,6 @@ public class DetailDish extends BaseAppCompatActivity {
     private boolean contiunRefresh = true;
     private String lastPermission = "";
 
-    private boolean isBack = false;
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
@@ -363,7 +361,6 @@ public class DetailDish extends BaseAppCompatActivity {
         if(dishActivityViewControl != null && dishActivityViewControl.onBackPressed()){
             return;
         }
-        isBack = true;
         super.onBackPressed();
     }
 

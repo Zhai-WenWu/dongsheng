@@ -169,7 +169,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
         adLayout.setLayoutParams(params);
 //        initAdView();
         //必须使用avtivity的context
-        mVideoPlayerController = new VideoPlayerController(getContext(), dishVidio, imgValue);
+        mVideoPlayerController = new VideoPlayerController(mAct, dishVidio, imgValue);
         handlerADData();
         mVideoPlayerController.initVideoView(vu, uu);
         mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {

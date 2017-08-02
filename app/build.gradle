@@ -14,7 +14,7 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libsAdBaidu')
     compile fileTree(include: '*.jar', dir: 'libs')
     //百度市场要求加的自动更新sdk
-//        compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
+    //        compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     compile(name: 'AndFix-master-debug', ext: 'aar')
     //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     //    compile(name: 'PhotoView-release', ext: 'aar')
@@ -38,6 +38,8 @@ dependencies {
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-fragment:25.3.1'
+    compile project(':gsyVideoPlayer-armv7a')
+    compile project(':gsyVideoPlayer-java')
 }
 
 android {

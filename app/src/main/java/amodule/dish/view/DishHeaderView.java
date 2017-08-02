@@ -25,6 +25,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ import acore.widget.ImageViewVideo;
 import amodule.dish.activity.MoreImageShow;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
@@ -383,11 +383,11 @@ public class DishHeaderView extends LinearLayout {
                 }
             });
             dredgeVipLayout.setPadding(0, distance, 0, 0);
-            mVideoPlayerController.setOnProgressChangedCallback(new JCVideoPlayer.OnProgressChangedCallback() {
+            mVideoPlayerController.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
                 @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    int currentS = Math.round(mVideoPlayerController.getCurrentPositionWhenPlaying() / 1000f);
-                    int durationS = Math.round(mVideoPlayerController.getDuration() / 1000f);
+                public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+                    int currentS = Math.round(currentTime / 1000f);
+                    int durationS = Math.round(totalTime / 1000f);
                     Log.i("tzy","currentS = " + currentS + " ; durationS = " + durationS);
                     Log.i("tzy","limitTime = " + limitTime);
                     Log.i("tzy","progress = " + progress);
@@ -400,7 +400,7 @@ public class DishHeaderView extends LinearLayout {
                         }
                         if ((currentS > limitTime
 //                            || limitTime > durationS
-                                ) && !isContinue) {
+                        ) && !isContinue) {
                             dredgeVipLayout.setVisibility(VISIBLE);
                             mVideoPlayerController.onPause();
 //                            mVideoPlayerController.onResume();

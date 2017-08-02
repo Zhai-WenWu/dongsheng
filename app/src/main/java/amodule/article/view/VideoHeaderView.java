@@ -23,6 +23,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ import amodule.dish.view.DishVideoImageView;
 import amodule.dish.view.VideoDredgeVipView;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
@@ -142,7 +142,6 @@ public class VideoHeaderView extends RelativeLayout {
             public void callBack(Map<String, String> maps) {
                 String temp = maps.get(AdPlayIdConfig.ARTICLE_TIEPIAN);
                 mapAd = StringManager.getFirstMap(temp);
-//                Log.i("tzy", "needVideoControl time = " + System.currentTimeMillis());
                 if (mapAd != null && mapAd.size() > 0
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
@@ -341,11 +340,11 @@ public class VideoHeaderView extends RelativeLayout {
                 }
             }
         });
-        mVideoPlayerController.setOnProgressChangedCallback(new JCVideoPlayer.OnProgressChangedCallback() {
+        mVideoPlayerController.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int currentS = Math.round(mVideoPlayerController.getCurrentPositionWhenPlaying() / 1000f);
-                int durationS = Math.round(mVideoPlayerController.getDuration() / 1000f);
+            public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+                int currentS = Math.round(currentTime / 1000f);
+                int durationS = Math.round(totalTime / 1000f);
                 if (currentS >= 0 && durationS >= 0) {
                     if (isHaspause) {
                         mVideoPlayerController.onPause();
@@ -388,7 +387,7 @@ public class VideoHeaderView extends RelativeLayout {
 
     public boolean onBackPressed() {
         if(mVideoPlayerController != null){
-            mVideoPlayerController.onBackPressed();
+            return mVideoPlayerController.onBackPressed();
         }
         return false;
     }

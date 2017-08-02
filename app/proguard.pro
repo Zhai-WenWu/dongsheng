@@ -317,3 +317,8 @@ public static ** valueOf(java.lang.String);
 }
 -keep class com.baidu.mobads.*.** { *; }
 #baidu ad
+
+-keep class tv.danmaku.ijk.** { *; }
+-dontwarn tv.danmaku.ijk.**
+-keep class com.shuyu.gsyvideoplayer.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.**

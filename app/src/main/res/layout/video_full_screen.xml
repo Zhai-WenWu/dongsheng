@@ -13,8 +13,8 @@
         android:visibility="gone"
         android:layout_height="wrap_content"/>
 
-    <cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard
-        android:id="@+id/jc_video_view"
+    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+        android:id="@+id/video_player"
         android:layout_width="match_parent"
         android:layout_centerInParent="true"
         android:layout_height="wrap_content"/>

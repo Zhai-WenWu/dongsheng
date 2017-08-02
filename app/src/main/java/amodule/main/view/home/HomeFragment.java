@@ -50,7 +50,6 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import third.ad.control.AdControlHomeDish;
 import third.ad.control.AdControlNormalDish;
 import third.ad.control.AdControlParent;
@@ -755,7 +754,7 @@ public class HomeFragment extends BaseHomeFragment{
      * 重播
      */
     private void restartVideo() {
-        JCMediaManager.instance().mediaPlayer.start();
+        mPlayerController.onStart();
     }
 
     /**
@@ -798,8 +797,8 @@ public class HomeFragment extends BaseHomeFragment{
             mVideoLayout.addView(mReplayAndShareView);
         }
         mReplayAndShareView.setVisibility(View.VISIBLE);
-        mVideoLayout.requestLayout();
-        mVideoLayout.invalidate();
+//        mVideoLayout.requestLayout();
+//        mVideoLayout.invalidate();
     }
 
     private void hideReplayShareView() {

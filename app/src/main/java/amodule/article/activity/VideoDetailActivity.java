@@ -110,7 +110,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
 
-    private boolean isBack = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +134,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         if(mHaederLayout != null && mHaederLayout.onBackPressed()){
             return;
         }
-        isBack = true;
         super.onBackPressed();
     }
 
@@ -166,12 +164,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mHaederLayout != null) {
-            if(isBack)
-                mHaederLayout.onDestroy();
-            else
-                mHaederLayout.onPause();
-        }
+        if (mHaederLayout != null)
+            mHaederLayout.onPause();
         Glide.with(this).pauseRequests();
         ToolsDevice.keyboardControl(false,this,mCommentBar);
     }
@@ -182,6 +176,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("VideoDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
+        if (mHaederLayout != null)
+            mHaederLayout.onDestroy();
         super.onDestroy();
     }
 

@@ -1,6 +1,7 @@
 package amodule.quan.view;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -13,17 +14,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.xiangha.R;
 
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
-import cn.fm.jiecao.jcvideoplayer_lib.JCNetworkBroadcastReceiver;
-import cn.fm.jiecao.jcvideoplayer_lib.JCUtils;
-import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
-import cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard;
+import acore.broadcast.NetworkBroadcastReceiver;
+
+import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
 
 /**
  * 视频播放业务层封装
@@ -33,7 +34,8 @@ public class VideoImageView extends RelativeLayout{
     private ImageView image_bg,load_progress,image_btn_play;
     private RelativeLayout video_layout;
     private boolean isVoice=true;
-    private XHVideoPlayerStandard videoPlayerStandard;
+    private StandardGSYVideoPlayer videoPlayer;
+    protected OrientationUtils orientationUtils;
     private boolean newStart=true;
     private boolean mIsCycle = true;
     private String videoUrl="";
@@ -76,46 +78,73 @@ public class VideoImageView extends RelativeLayout{
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
         tipLayout.setLayoutParams(layoutParams);
         //创建视频播放器
-        if (videoPlayerStandard == null) {
-            videoPlayerStandard = new XHVideoPlayerStandard(context);
-            videoPlayerStandard.setIsHideTopContainer(true);
-            videoPlayerStandard.addNetworkNotifyListener(new JCNetworkBroadcastReceiver.NetworkNotifyListener() {
+        if (videoPlayer == null) {
+            videoPlayer = new StandardGSYVideoPlayer(context);
+            videoPlayer.getFullscreenButton().setVisibility(GONE);
+            orientationUtils = new OrientationUtils(context,videoPlayer);
+            videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
                 @Override
-                public void wifiConnected() {
-                    if(null != tipLayout){
-                        tipLayout.performClick();
-                        FileManager.saveShared(getContext(),FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
+                public void onAutoComplete(String url, Object... objects) {
+                    super.onAutoComplete(url, objects);
+                    if (mIsCycle) {
+                        videoPlayer.startPlayLogic();
                     }
-                    onResume();
                 }
 
                 @Override
-                public void mobileConnected() {
-                    onPause();
-                    tipLayout.setVisibility(VISIBLE);
+                public void onPrepared(String url, Object... objects) {
+                    super.onPrepared(url, objects);
+                    setNetworkCallback();
                 }
 
                 @Override
-                public void nothingConnected() {
-                    isNetworkDisconnect = true;
+                public void onEnterFullscreen(String url, Object... objects) {
+                    super.onEnterFullscreen(url, objects);
+                    orientationUtils.resolveByClick();
                 }
-            });
-            videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
+
                 @Override
-                public boolean onError() {
-                    if(ToolsDevice.isNetworkAvailable(getContext())
-                            && isNetworkDisconnect
-                            && autoRetryCount < 3){
-                        autoRetryCount++;
-                        JCUtils.saveProgress(getContext(),videoUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
-                        videoPlayerStandard.startVideo();
-                        return true;
-                    }
-                    return false;
+                public void onQuitFullscreen(String url, Object... objects) {
+                    super.onQuitFullscreen(url, objects);
+                    orientationUtils.resolveByClick();
                 }
             });
+
+            Resources resources = context.getResources();
+            videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
+            videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
+            videoPlayer.setDialogProgressBar(resources.getDrawable(R.drawable.video_new_progress));
+            videoPlayer.setBottomShowProgressBarDrawable(resources.getDrawable(R.drawable.video_new_seekbar_progress),
+                    resources.getDrawable(R.drawable.video_new_seekbar_thumb));
+
+            //是否可以滑动调整
+            videoPlayer.setIsTouchWiget(true);
             handlerView();
         }
+    }
+
+    private void setNetworkCallback(){
+        videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
+            @Override
+            public void wifiConnected() {
+                if(null != tipLayout){
+                    tipLayout.performClick();
+                    FileManager.saveShared(getContext(),FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
+                }
+                onResume();
+            }
+
+            @Override
+            public void mobileConnected() {
+                onPause();
+                tipLayout.setVisibility(VISIBLE);
+            }
+
+            @Override
+            public void nothingConnected() {
+                isNetworkDisconnect = true;
+            }
+        });
     }
 
     /**
@@ -139,9 +168,7 @@ public class VideoImageView extends RelativeLayout{
         newStart=true;
         this.videoUrl=videoUrl;
         //视频播放信息info
-        videoPlayerStandard.setUp(videoUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST);
-//        JCVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-//        JCVideoPlayer.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        videoPlayer.setUp(videoUrl, true,"");
 
         handlerListener();
     }
@@ -152,12 +179,12 @@ public class VideoImageView extends RelativeLayout{
     private void handlerView(){
         int height = (ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_30)) * 3 / 4;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-        videoPlayerStandard.setLayoutParams(layoutParams);
-        ViewGroup viewParent = (ViewGroup) videoPlayerStandard.getParent();
+        videoPlayer.setLayoutParams(layoutParams);
+        ViewGroup viewParent = (ViewGroup) videoPlayer.getParent();
         if (viewParent != null)
             viewParent.removeAllViews();
         //处理数据
-        video_layout.addView(videoPlayerStandard);
+        video_layout.addView(videoPlayer);
     }
 
     /**
@@ -165,25 +192,7 @@ public class VideoImageView extends RelativeLayout{
      */
     private void handlerListener(){
 
-        videoPlayerStandard.setOnPlayCompleteCallback(new XHVideoPlayerStandard.OnPlayCompleteCallback() {
-            @Override
-            public void onComplte() {
-                if (mIsCycle) {
-                    videoPlayerStandard.startButton.performClick();
-                }
-            }
-        });
-        videoPlayerStandard.fullscreenButton.setVisibility(GONE);
         //测试该事件不是每次都会被调用
-        videoPlayerStandard.setOnPlayPreparedCallback(new XHVideoPlayerStandard.OnPlayPreparedCallback() {
-            @Override
-            public void onPrepared() {
-                load_progress.clearAnimation();
-                load_progress.setVisibility(View.GONE);
-                image_bg.setVisibility(View.GONE);
-                image_btn_play.setVisibility(View.GONE);
-            }
-        });
         image_bg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,8 +239,8 @@ public class VideoImageView extends RelativeLayout{
             return;
         }
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(context));
-        if (videoPlayerStandard != null) {
-            videoPlayerStandard.setUp(videoUrl,JCVideoPlayer.SCREEN_LAYOUT_LIST);
+        if (videoPlayer != null) {
+            videoPlayer.setUp(videoUrl,true,"");
             load_progress.setVisibility(View.GONE);
             image_bg.setVisibility(View.GONE);
             image_btn_play.setVisibility(View.GONE);
@@ -245,13 +254,13 @@ public class VideoImageView extends RelativeLayout{
                     return;
                 }
             }else tipLayout.setVisibility(View.GONE);
-            videoPlayerStandard.startButton.performClick();
+            videoPlayer.startPlayLogic();
         }
     }
 
     /** 暂停 */
     public void onVideoPause(){
-        if (videoPlayerStandard != null) {
+        if (videoPlayer!= null) {
             load_progress.clearAnimation();
             load_progress.setVisibility(View.GONE);
             image_bg.setVisibility(View.VISIBLE);
@@ -260,24 +269,21 @@ public class VideoImageView extends RelativeLayout{
         }
     }
     public void onResume(){
-        if (videoPlayerStandard != null){
-            JCMediaManager.instance().mediaPlayer.start();
-            videoPlayerStandard.onStatePlaying();
+        if (videoPlayer != null){
+            videoPlayer.onVideoResume();
         }
     }
 
     public void onPause() {
-        if (videoPlayerStandard != null){
-            JCMediaManager.instance().mediaPlayer.pause();
-            videoPlayerStandard.onStatePause();
+        if (videoPlayer != null){
+            videoPlayer.onVideoPause();
         }
     }
 
     public void onDestroy() {
-        if(videoPlayerStandard != null){
-            videoPlayerStandard.release();
+        if (videoPlayer != null){
+            videoPlayer.release();
         }
-        JCVideoPlayer.clearSavedProgress(context, null);
     }
 
     private VideoClickCallBack videoClickCallBack;
@@ -289,14 +295,7 @@ public class VideoImageView extends RelativeLayout{
         void setVideoClick();
     }
     public boolean getIsPlaying(){
-        if (JCMediaManager.instance().mediaPlayer != null) {
-            try{
-                return JCMediaManager.instance().mediaPlayer.isPlaying();
-            }catch (IllegalStateException e){
-                return false;
-            }
-        }
-       return false;
+        return null != videoPlayer && CURRENT_STATE_PLAYING==videoPlayer.getCurrentState();
     }
 
     //是否显示广告

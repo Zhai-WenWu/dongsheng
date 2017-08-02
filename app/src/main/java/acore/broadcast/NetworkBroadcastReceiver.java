@@ -1,4 +1,4 @@
-package cn.fm.jiecao.jcvideoplayer_lib;
+package acore.broadcast;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -21,7 +21,7 @@ import acore.tools.ToolsDevice;
  * @author sunxiao
  * 
  */
-public class JCNetworkBroadcastReceiver extends BroadcastReceiver {
+public class NetworkBroadcastReceiver extends BroadcastReceiver {
     public final static String TYPE_WIFI = "wifi";
     public final static String TYPE_MOBILE = "mobile";
     public final static String TYPE_NOTHING = "null";
@@ -30,7 +30,7 @@ public class JCNetworkBroadcastReceiver extends BroadcastReceiver {
     private List<NetworkNotifyListener> mNotifyListeners = new ArrayList<NetworkNotifyListener>();
     private String currentType = "";
 
-    public JCNetworkBroadcastReceiver(Context context) {
+    public NetworkBroadcastReceiver(Context context) {
         currentType = getNetWorkState(context);
     }
 
@@ -54,6 +54,10 @@ public class JCNetworkBroadcastReceiver extends BroadcastReceiver {
     @SuppressLint("LongLogTag")
     @Override
     public void onReceive(Context context, Intent intent) {
+        handlerNetWorkState(context);
+    }
+
+    public void handlerNetWorkState(Context context){
         State wifiState = null;
         State mobileState = null;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -99,25 +103,21 @@ public class JCNetworkBroadcastReceiver extends BroadcastReceiver {
                 wifiNotify();
             currentType = TYPE_WIFI;
         }
-
     }
 
     public void wifiNotify() {
-        Log.d("tzy", "wifiNotify : hashCode = " + this.hashCode());
         for (NetworkNotifyListener listener : mNotifyListeners) {
             listener.wifiConnected();
         }
     }
 
     public void mobileNotify() {
-        Log.d("tzy", "mobileNotify : hashCode = " + this.hashCode());
         for (NetworkNotifyListener listener : mNotifyListeners) {
             listener.mobileConnected();
         }
     }
 
     public void nothingNotify() {
-        Log.d("tzy", "nothingNotify : hashCode = " + this.hashCode());
         for (NetworkNotifyListener listener : mNotifyListeners) {
             listener.nothingConnected();
         }

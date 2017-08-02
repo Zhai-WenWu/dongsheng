@@ -7,13 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.VideoView;
 
+import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.xiangha.R;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.Tools;
-import cn.fm.jiecao.jcvideoplayer_lib.JCMediaManager;
-import cn.fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard;
 
 /**
  * PackageName : aplug.shortvideo.activity
@@ -27,14 +26,11 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
     public static final String LOCAL_VIDEO = "local";
     public static final String NET_VIDEO = "net";
     /**视频播放器*/
-    XHVideoPlayerStandard videoPlayerStandard;
+    StandardGSYVideoPlayer videoPlayer;
     /**视频地址*/
     private String videoUrl = "";
     private String videoType = "";
     private VideoView mVideoView;
-
-    boolean isBack = false;
-    boolean isOnceStart = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,17 +84,17 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
     /**初始化video UI*/
     private void initVideoView() {
         Log.i("tzy",this.getClass().getSimpleName() + " : videoUrl = " + videoUrl);
-        videoPlayerStandard = (XHVideoPlayerStandard) findViewById(R.id.jc_video_view);
-        videoPlayerStandard.setUp(videoUrl, JCVideoPlayer.SCREEN_LAYOUT_NORMAL,"");
-        videoPlayerStandard.fullscreenButton.setVisibility(View.GONE);
-        videoPlayerStandard.startButton.performClick();
-        videoPlayerStandard.setOnClickListener(this);
-        videoPlayerStandard.findViewById(R.id.surface_container).setOnClickListener(this);
-        videoPlayerStandard.findViewById(R.id.surface_container).setOnTouchListener(null);
-        videoPlayerStandard.setOnPlayCompleteCallback(new XHVideoPlayerStandard.OnPlayCompleteCallback() {
+        videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.video_player);
+        videoPlayer.setUp(videoUrl, true,"");
+        videoPlayer.getFullscreenButton().setVisibility(View.GONE);
+        videoPlayer.startPlayLogic();
+        videoPlayer.setOnClickListener(this);
+        videoPlayer.findViewById(R.id.surface_container).setOnClickListener(this);
+        videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
             @Override
-            public void onComplte() {
-                videoPlayerStandard.startButton.performClick();
+            public void onAutoComplete(String url, Object... objects) {
+                super.onAutoComplete(url, objects);
+                videoPlayer.startPlayLogic();
             }
         });
     }
@@ -106,34 +102,30 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
     @Override
     protected void onResume() {
         super.onResume();
-        if(!isOnceStart){
-            JCMediaManager.instance().mediaPlayer.start();
-            videoPlayerStandard.onStatePlaying();
+        if(videoPlayer != null){
+            videoPlayer.onVideoResume();
         }
-        isOnceStart = false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         //暂停
-        if(isBack){
-            Log.i("tzy","PlayVideo releaseAllVideos");
-            videoPlayerStandard.release();
-            JCVideoPlayer.clearSavedProgress(this, null);
-        }else{
-            Log.i("tzy","PlayVideo mediaPlayer onPause");
-            JCMediaManager.instance().mediaPlayer.pause();
-            videoPlayerStandard.onStatePause();
+        if(videoPlayer != null){
+            videoPlayer.onVideoPause();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(videoPlayer != null){
+            videoPlayer.release();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if(JCVideoPlayer.backPress()){
-            return;
-        }
-        isBack = true;
         super.onBackPressed();
     }
 
@@ -142,7 +134,6 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
         final int id = v.getId();
         switch (id) {
             case R.id.activityLayout:
-            case R.id.jc_video_view:
             case R.id.surface_container:
                 onBackPressed();
                 break;
