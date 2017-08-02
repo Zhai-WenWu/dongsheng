@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -55,6 +56,7 @@ import xh.windowview.XhDialog;
 
 public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
+    private RelativeLayout mQASetting;
     private RelativeLayout back;
     private ScrollView my_setting_scrollview;
     private RelativeLayout rl_user_info;
@@ -106,6 +108,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         TextView title = (TextView) findViewById(R.id.title);
         title.setText("设置");
 
+        mQASetting = (RelativeLayout) findViewById(R.id.qa_setting);
         back = (RelativeLayout) findViewById(R.id.back);
         my_setting_scrollview = (ScrollView) findViewById(R.id.my_setting_scrollview);
         iv_user_icon = (ImageView) findViewById(R.id.iv_user_icon);
@@ -136,10 +139,13 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         tv_version = (TextView) findViewById(R.id.tv_version);
         tv_version.setText("版本号:" + ToolsDevice.getVerName(this));
 
+        mQASetting.setOnClickListener(this);
         back.setOnClickListener(this);
         rl_user_info.setOnClickListener(this);
         ll_sign_out.setOnClickListener(this);
         ll_accout.setOnClickListener(this);
+
+        mQASetting.setVisibility(LoginManager.isLogin() ? View.VISIBLE : View.GONE);
 
         showItemGrop();
         initSettingItem();
@@ -394,6 +400,10 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 break;
             case R.id.back:
                 finish();
+            case R.id.qa_setting:
+                //TODO 跳转到问答设置界面
+                Toast.makeText(Setting.this, "跳转到问答设置界面", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }

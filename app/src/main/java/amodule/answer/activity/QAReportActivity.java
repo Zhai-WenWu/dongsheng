@@ -108,7 +108,8 @@ public class QAReportActivity extends BaseActivity {
         mCommitBtn = (Button) findViewById(R.id.report_commit);
         mName = (TextView) findViewById(R.id.title);
         mBlackText = (TextView) findViewById(R.id.blacklist_text);
-        mName.setText("举报 " + mReportName);
+        if (!TextUtils.isEmpty(mReportName))
+            mName.setText("举报 " + mReportName);
         mBlackListContainer = (RelativeLayout) findViewById(R.id.blacklist_container);
         mBlackListSwitchBtn = (SwitchButton) findViewById(R.id.blacklist_switchBtn);
         mBlackListSwitchBtn.mSwitchOn = false;

@@ -105,7 +105,8 @@ public class ReportActivity extends BaseActivity {
         mReportInfo = (ImageView) findViewById(R.id.icon_report);
         mCommitBtn = (Button) findViewById(R.id.report_commit);
         mName = (TextView) findViewById(R.id.title);
-        mName.setText("举报 " + mReportName);
+        if (!TextUtils.isEmpty(mReportName))
+            mName.setText("举报 " + mReportName);
     }
 
     private void addListener() {

@@ -5,32 +5,33 @@
     android:layout_height="@dimen/dp_45"
     android:background="@color/common_top_bg" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_centerInParent="true">
 
         <TextView
             android:id="@+id/title"
             style="@style/top_title_singleText"
             android:layout_width="wrap_content"
             android:layout_marginLeft="@dimen/dp_55"
-            android:gravity="center"
+            android:layout_centerInParent="true"
             android:clickable="true"/>
 
         <ImageView
             android:id="@+id/icon_report"
-            android:layout_width="@dimen/dp_26"
-            android:layout_height="@dimen/dp_26"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:layout_toRightOf="@+id/title"
+            android:layout_marginLeft="@dimen/dp_1"
             android:layout_marginRight="@dimen/dp_55"
+            android:layout_centerVertical="true"
             android:padding="@dimen/dp_5"
             android:src="@drawable/icon_report_intro"
             android:scaleType="fitXY"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <include
         android:id="@+id/ll_back"

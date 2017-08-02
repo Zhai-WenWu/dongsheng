@@ -126,7 +126,7 @@ public class QuanReport extends BaseActivity{
 		}
 		TextView title = (TextView) findViewById(R.id.title);
 		if (nickName != "") {
-			title.setText(nickName);
+			title.setText("举报 " + nickName);
 		}
 	}
 	

@@ -16,19 +16,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_42"
-                android:paddingLeft="@dimen/dp_20">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="选择理由"
-                    android:textSize="@dimen/sp_15"
-                    android:textColor="#999999"/>
-            </LinearLayout>
+            <TextView
+                style="@style/report_desc"
+                android:text="选择理由"/>
 
             <LinearLayout
                 android:id="@+id/user_report_collection"
@@ -39,7 +29,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/img_1"
@@ -52,26 +42,17 @@
 
                     <TextView
                         android:id="@+id/tv_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="@dimen/dp_20"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/img_1"
-                        android:text="广告骚扰"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="广告骚扰"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/img_2"
@@ -84,26 +65,17 @@
 
                     <TextView
                         android:id="@+id/tv_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/img_2"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:text="与美食无关"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="与美食无关"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/img_3"
@@ -116,26 +88,17 @@
 
                     <TextView
                         android:id="@+id/tv_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/img_3"
-                        android:text="政治敏感"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="政治敏感"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/img_4"
@@ -148,26 +111,17 @@
 
                     <TextView
                         android:id="@+id/tv_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/img_4"
-                        android:text="色情低俗"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="色情低俗"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/img_5"
@@ -180,26 +134,17 @@
 
                     <TextView
                         android:id="@+id/tv_5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="@dimen/dp_20"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/img_5"
-                        android:text="人身攻击/谩骂/诽谤"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="人身攻击/谩骂/诽谤"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/img_6"
@@ -212,15 +157,9 @@
 
                     <TextView
                         android:id="@+id/tv_6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/img_6"
-                        android:text="冒用/侵权"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="冒用/侵权"/>
 
                 </RelativeLayout>
             </LinearLayout>
@@ -228,19 +167,13 @@
             <RelativeLayout
                 android:id="@+id/quan_report_blacklist_relativelayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_45"
+                android:layout_height="@dimen/dp_43"
                 android:layout_marginTop="@dimen/dp_20"
                 android:background="#FFFFFF">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp_20"
-                    android:text="加入黑名单"
-                    android:textSize="@dimen/sp_17"
-                    android:textStyle="bold"
-                    />
+                    style="@style/report_item_desc"
+                    android:text="加入黑名单"/>
 
                 <acore.widget.SwitchButton
                     android:id="@+id/quan_report_blacklist"
@@ -253,13 +186,8 @@
 
             <TextView
                 android:id="@+id/admin_report_tv_item"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_42"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/dp_20"
-                android:text="特别权限"
-                android:textColor="#999999"
-                android:textSize="@dimen/sp_15"/>
+                style="@style/report_desc"
+                android:text="特别权限"/>
 
             <LinearLayout
                 android:id="@+id/admin_report_conlection"
@@ -270,7 +198,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/admin_iv_1"
@@ -283,26 +211,17 @@
 
                     <TextView
                         android:id="@+id/admin_tv_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/admin_iv_1"
-                        android:text="禁言3天"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="禁言3天"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/admin_iv_2"
@@ -315,26 +234,17 @@
 
                     <TextView
                         android:id="@+id/admin_tv_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/admin_iv_2"
-                        android:layout_alignParentLeft="true"
-                        android:text="封账号"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="封账号"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/admin_iv_3"
@@ -347,15 +257,9 @@
 
                     <TextView
                         android:id="@+id/admin_tv_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/admin_iv_3"
-                        android:text="封设备"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="封设备"/>
 
                 </RelativeLayout>
             </LinearLayout>
@@ -369,7 +273,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/quanadmin_iv_1"
@@ -382,27 +286,17 @@
 
                     <TextView
                         android:id="@+id/quanadmin_tv_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/quanadmin_iv_1"
-                        android:text="不更新"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="不更新"/>
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_0.5"
-                        android:layout_alignLeft="@+id/quanadmin_tv_1"
-                        android:layout_alignParentBottom="true"
-                        android:background="#DDDDDD"/>
+                        style="@style/report_line_bottom"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_45">
+                    android:layout_height="@dimen/dp_43">
 
                     <ImageView
                         android:id="@+id/quanadmin_iv_3"
@@ -415,31 +309,17 @@
 
                     <TextView
                         android:id="@+id/quanadmin_tv_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_20"
-                        android:layout_alignParentLeft="true"
+                        style="@style/report_item_desc"
                         android:layout_toLeftOf="@+id/quanadmin_iv_3"
-                        android:text="删贴"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/sp_15"/>
+                        android:text="删贴" />
 
                 </RelativeLayout>
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_quan_report_commit"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_47"
-                android:layout_marginBottom="@dimen/dp_15"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
-                android:layout_marginTop="@dimen/dp_20"
-                android:background="@drawable/bg_btn_report_quan"
-                android:gravity="center"
-                android:text="提交"
-                android:textColor="#FFFFFF"/>
+                style="@style/report_commit"
+                android:text="提交"/>
         </LinearLayout>
     </acore.widget.MsgScrollView>
 </RelativeLayout>
