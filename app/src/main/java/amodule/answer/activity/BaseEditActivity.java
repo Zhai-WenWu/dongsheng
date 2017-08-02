@@ -135,15 +135,15 @@ public class BaseEditActivity extends BaseActivity {
         int delIconWH = 0;
         int playIconWH = -1;
         if (this instanceof AnswerEditActivity) {
-            rightPadding = getResources().getDimensionPixelSize(R.dimen.dp_6);
+            rightPadding = getResources().getDimensionPixelSize(R.dimen.dp_5);
             width = rightPadding + getResources().getDimensionPixelSize(R.dimen.dp_45);
             height = getResources().getDimensionPixelSize(R.dimen.dp_45);
             delIconWH = getResources().getDimensionPixelSize(R.dimen.dp_17);
             playIconWH = getResources().getDimensionPixelSize(R.dimen.dp_16);
         } else if (this instanceof AskEditActivity) {
-            rightPadding = getResources().getDimensionPixelSize(R.dimen.dp_8);
-            width = rightPadding + getResources().getDimensionPixelSize(R.dimen.dp_39);
-            height = getResources().getDimensionPixelSize(R.dimen.dp_39);
+            rightPadding = getResources().getDimensionPixelSize(R.dimen.dp_5);
+            width = rightPadding + getResources().getDimensionPixelSize(R.dimen.dp_37);
+            height = getResources().getDimensionPixelSize(R.dimen.dp_37);
             delIconWH = getResources().getDimensionPixelSize(R.dimen.dp_16);
             playIconWH = getResources().getDimensionPixelSize(R.dimen.dp_16);
         }

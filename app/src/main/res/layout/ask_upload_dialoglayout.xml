@@ -10,11 +10,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="@dimen/dp_20"
-        android:paddingBottom="@dimen/dp_20"
-        android:paddingLeft="@dimen/dp_30"
-        android:paddingRight="@dimen/dp_40"
-        android:background="@color/c_white_text">
+        android:paddingTop="@dimen/dp_15"
+        android:paddingBottom="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:background="@drawable/bg_round3_white">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"
-            android:textSize="@dimen/sp_17"
+            android:textSize="@dimen/sp_16"
             android:text="正在提交......"/>
     </LinearLayout>
 
