@@ -84,15 +84,31 @@ public class AskAnswerImgItemView extends RelativeLayout {
         mDelImg.setOnClickListener(listener);
     }
 
-    public void setData(Map<String, String> dataMap, int position, int itemWidth, int itemHeight) {
+    public void initViewParams(int itemWidth, int itemHeight, int itemRightPadding, int delIconWH, int playIconWH) {
+        if (mDelImg != null) {
+            LayoutParams delParams = (LayoutParams) mDelImg.getLayoutParams();
+            delParams.width = delIconWH;
+            delParams.height = delIconWH;
+            mDelImg.setLayoutParams(delParams);
+        }
+        if (mVideoBtn != null) {
+            LayoutParams playParams = (LayoutParams) mVideoBtn.getLayoutParams();
+            playParams.width = playIconWH;
+            playParams.height = playIconWH;
+            mVideoBtn.setLayoutParams(playParams);
+        }
+        this.setLayoutParams(new LayoutParams(itemWidth, itemHeight));
+        this.setPadding(0, 0, itemRightPadding, 0);
+        this.invalidate();
+    }
+
+    public void setData(Map<String, String> dataMap, int position) {
         if (dataMap == null || dataMap.isEmpty())
             return;
         mDataMap = dataMap;
         mPosition = position;
         mVideoBtn.setVisibility(!TextUtils.isEmpty(dataMap.get("video")) ? View.VISIBLE : View.GONE);
         loadSource(TextUtils.isEmpty(dataMap.get("video")) ? dataMap.get("img") : dataMap.get("thumImg"));
-        this.setLayoutParams(new LayoutParams(itemWidth, itemHeight));
-        this.invalidate();
     }
 
     private void loadSource(String imageUrl) {

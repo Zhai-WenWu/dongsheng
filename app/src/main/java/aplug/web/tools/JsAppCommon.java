@@ -890,7 +890,7 @@ public class JsAppCommon extends JsBase{
 	@JavascriptInterface
 	public void getTitleBarInfo(String jsonStr) {
 		if (mOnGetDataListener != null)
-			mOnGetDataListener.getData("");
+			mOnGetDataListener.getData(jsonStr);
 	}
 
 	@JavascriptInterface

@@ -24,12 +24,18 @@ public class AskAnswerImgController {
 
     private int mItemWidth;
     private int mItemHeight;
+    private int mItemRightPadding;
+    private int mItemDelIconWH = -1;
+    private int mItemPlayIconWH = -1;
 
-    public AskAnswerImgController(Context context, ViewGroup parentView, int itemWidth, int itemHeight) {
+    public AskAnswerImgController(Context context, ViewGroup parentView, int itemWidth, int itemHeight, int itemRightPadding, int delIconWH, int playIconWH) {
         this.mContext = context;
         this.mParentView = parentView;
         this.mItemWidth = itemWidth;
         this.mItemHeight = itemHeight;
+        this.mItemRightPadding = itemRightPadding;
+        this.mItemDelIconWH = delIconWH;
+        this.mItemPlayIconWH = playIconWH;
     }
 
     private View.OnClickListener mOnVideoClickListener;
@@ -81,7 +87,8 @@ public class AskAnswerImgController {
         int childCount = mParentView.getChildCount();
         mDatas.add(childCount, dataMap);
         final AskAnswerImgItemView itemView = new AskAnswerImgItemView(mContext);
-        itemView.setData(dataMap, childCount, mItemWidth, mItemHeight);
+        itemView.initViewParams(mItemWidth, mItemHeight, mItemRightPadding, mItemDelIconWH, mItemPlayIconWH);
+        itemView.setData(dataMap, childCount);
         itemView.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

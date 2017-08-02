@@ -18,12 +18,15 @@
         android:layout_below="@+id/title_rela"
         android:background="@null"
         android:gravity="top|left"
-        android:padding="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_16"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_20"
         android:textSize="@dimen/sp_16"
         android:hint="1、答案发布后，若作者在72小时内没有回答，将以香豆形式全额退款至您的钱包。\n2、若您的提问被人偷听，偷听的分成金额将以香豆形式进入您的钱包。"
         android:maxLength="100"
-        android:textColorHint="#c9c9c9"
-        android:lineSpacingExtra="@dimen/dp_8"/>
+        android:textColorHint="#d4d4d4"
+        android:lineSpacingExtra="@dimen/dp_6"/>
 
     <RelativeLayout
         android:id="@+id/imgs_container"
@@ -38,7 +41,7 @@
             android:id="@+id/price_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_17"
             android:textColor="#ff533c"
             android:layout_alignParentBottom="true"
             android:visibility="gone"/>
@@ -55,20 +58,20 @@
         </LinearLayout>
         <ImageView
             android:id="@+id/img_select_btn"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
+            android:layout_width="@dimen/dp_21"
+            android:layout_height="@dimen/dp_16"
             android:layout_toLeftOf="@+id/video_select_btn"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/answer_img_btn"
+            android:src="@drawable/ask_img_icon"
             android:scaleType="fitXY"/>
         <ImageView
             android:id="@+id/video_select_btn"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_16"
             android:layout_toLeftOf="@+id/count_text"
-            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginLeft="@dimen/dp_21"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/answer_video_btn"
+            android:src="@drawable/ask_video_icon"
             android:scaleType="fitXY"/>
 
         <TextView
@@ -76,8 +79,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_20"
-            android:textSize="@dimen/sp_15"
-            android:textColor="#c3c3c3"
+            android:textSize="@dimen/sp_16"
+            android:textColor="#d4d4d4"
             android:text="0/100"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"/>
@@ -93,7 +96,7 @@
     <RelativeLayout
         android:id="@+id/anonymity_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
+        android:layout_height="@dimen/dp_46"
         android:layout_below="@+id/line1"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20">
@@ -105,12 +108,13 @@
             android:textSize="@dimen/sp_15"
             android:layout_centerVertical="true"/>
 
-        <acore.widget.SwitchButton
-            android:id="@+id/ask_switchbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/black_btn"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_30"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerInParent="true"
+            android:src="@drawable/i_switch_off"/>
     </RelativeLayout>
 
     <View
@@ -123,8 +127,9 @@
     <RelativeLayout
         android:id="@+id/ask_desc"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
+        android:layout_height="@dimen/dp_46"
         android:layout_below="@+id/line2"
+        android:paddingRight="@dimen/dp_20"
         android:layout_alignLeft="@+id/anonymity_container"
         android:layout_alignStart="@+id/anonymity_container">
 

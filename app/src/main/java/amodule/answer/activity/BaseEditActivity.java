@@ -131,14 +131,23 @@ public class BaseEditActivity extends BaseActivity {
 
         int width = 0;
         int height = 0;
+        int rightPadding = 0;
+        int delIconWH = 0;
+        int playIconWH = -1;
         if (this instanceof AnswerEditActivity) {
-            width = getResources().getDimensionPixelSize(R.dimen.dp_50);
-            height = getResources().getDimensionPixelSize(R.dimen.dp_50);
+            rightPadding = getResources().getDimensionPixelSize(R.dimen.dp_6);
+            width = rightPadding + getResources().getDimensionPixelSize(R.dimen.dp_45);
+            height = getResources().getDimensionPixelSize(R.dimen.dp_45);
+            delIconWH = getResources().getDimensionPixelSize(R.dimen.dp_17);
+            playIconWH = getResources().getDimensionPixelSize(R.dimen.dp_16);
         } else if (this instanceof AskEditActivity) {
-            width = getResources().getDimensionPixelSize(R.dimen.dp_36);
-            height = getResources().getDimensionPixelSize(R.dimen.dp_36);
+            rightPadding = getResources().getDimensionPixelSize(R.dimen.dp_8);
+            width = rightPadding + getResources().getDimensionPixelSize(R.dimen.dp_39);
+            height = getResources().getDimensionPixelSize(R.dimen.dp_39);
+            delIconWH = getResources().getDimensionPixelSize(R.dimen.dp_16);
+            playIconWH = getResources().getDimensionPixelSize(R.dimen.dp_16);
         }
-        mImgController = new AskAnswerImgController(this, mImgsContainer, width, height);
+        mImgController = new AskAnswerImgController(this, mImgsContainer, width, height, rightPadding, delIconWH, playIconWH);
         addListener();
     }
 

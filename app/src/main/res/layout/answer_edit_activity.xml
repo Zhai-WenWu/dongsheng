@@ -19,21 +19,24 @@
         android:layout_above="@+id/imgs_container"
         android:background="@null"
         android:gravity="top|left"
-        android:padding="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_16"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_20"
         android:textSize="@dimen/sp_16"
-        android:textColorHint="#c9c9c9"
+        android:textColorHint="#d4d4d4"
         android:hint="答案发布后，若提问者在72小时内满意您的回答，提问金额将在24小时内，以香豆形式进入您的钱包。"
         android:maxLength="2000"
-        android:lineSpacingExtra="@dimen/dp_8"/>
+        android:lineSpacingExtra="@dimen/dp_6"/>
 
     <RelativeLayout
         android:id="@+id/imgs_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_68"
+        android:layout_height="@dimen/dp_71"
         android:layout_above="@+id/answer_container"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
-        android:paddingBottom="@dimen/dp_20">
+        android:paddingBottom="@dimen/dp_23">
 
         <LinearLayout
             android:id="@+id/imgs"
@@ -44,18 +47,18 @@
         </LinearLayout>
         <ImageView
             android:id="@+id/img_select_btn"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
             android:layout_toRightOf="@+id/imgs"
             android:layout_alignParentBottom="true"
             android:src="@drawable/answer_img_btn"
             android:scaleType="fitXY"/>
         <ImageView
             android:id="@+id/video_select_btn"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
             android:layout_toRightOf="@+id/img_select_btn"
-            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_9"
             android:layout_alignParentBottom="true"
             android:src="@drawable/answer_video_btn"
             android:scaleType="fitXY"/>
@@ -64,8 +67,8 @@
             android:id="@+id/count_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_15"
-            android:textColor="#c9c9c9"
+            android:textSize="@dimen/sp_16"
+            android:textColor="#d4d4d4"
             android:text="0/2000"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"/>
@@ -74,7 +77,7 @@
     <LinearLayout
         android:id="@+id/answer_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_52"
+        android:layout_height="@dimen/dp_49"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:paddingLeft="@dimen/dp_20"

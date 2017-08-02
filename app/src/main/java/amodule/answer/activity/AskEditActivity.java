@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import acore.logic.XHClick;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import acore.widget.SwitchButton;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.upload.UploadListControl;
@@ -47,7 +47,7 @@ import xh.windowview.XhDialog;
 public class AskEditActivity extends BaseEditActivity implements AskAnswerUploadListPool.UploadOverListener {
 
     private TextView mPriceText;
-    private SwitchButton mSwitchBtn;
+    private ImageView mBlackBtn;
     private RelativeLayout mAskDesc;
 
     private String mAskPrice;//提问价格
@@ -57,6 +57,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private UploadListPool mListPool;
     private UploadPoolData mUploadPoolData;
     private boolean mIsStopUpload;
+    private boolean mIsAno;
 
     private String mQAID;
 
@@ -67,11 +68,13 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void setListener() {
-        mSwitchBtn.setOnChangeListener(new SwitchButton.OnChangeListener() {
+        mBlackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChange(SwitchButton sb, boolean state) {
-                mAnonymity = state ? "2" : "1";
-                XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击匿名按钮", state ? "点击打开" : "点击关闭");
+            public void onClick(View v) {
+                mIsAno = !mIsAno;
+                mAnonymity = mIsAno ? "2" : "1";
+                mBlackBtn.setImageResource(mIsAno ? R.drawable.i_switch_on : R.drawable.i_switch_off);
+                XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击匿名按钮", mIsAno ? "点击打开" : "点击关闭");
             }
         });
         mWebViewManager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
@@ -107,9 +110,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     protected void initView(String title, int contentResId) {
         super.initView(title, contentResId);
         mPriceText = (TextView) findViewById(R.id.price_text);
-        mSwitchBtn = (SwitchButton) findViewById(R.id.ask_switchbtn);
+        mBlackBtn = (ImageView) findViewById(R.id.black_btn);
         mAskDesc = (RelativeLayout) findViewById(R.id.ask_desc);
-        mSwitchBtn.mSwitchOn = false;
         setListener();
         registnetworkListener();
         getLocalData();
@@ -156,7 +158,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 if (model != null) {
                     mModel = model;
                     mEditText.setText(model.getmText());
-                    mSwitchBtn.mSwitchOn = "2".equals(model.getmAnonymity());
+                    mIsAno = "2".equals(model.getmAnonymity());
                     String imgs = model.getmImgs();
                     if (!TextUtils.isEmpty(imgs)) {
                         ArrayList<Map<String, String>> imgsArr = StringManager.getListMapByJson(imgs);
@@ -189,7 +191,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         loadManager.hideProgressBar();
         if (succ && map != null && !map.isEmpty()) {
             mAskPrice = map.get("price");
-            mPriceText.setText(mAskPrice);
+            mPriceText.setText(mAskPrice + "元");
             mPriceText.setVisibility(View.VISIBLE);
         }
     }
