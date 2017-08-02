@@ -25,6 +25,7 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter {
         if (datas == null)
             return;
         mDatas = datas;
+        notifyDataSetChanged();
     }
 
     @Override

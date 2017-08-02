@@ -878,7 +878,7 @@ public class JsAppCommon extends JsBase{
 	}
 
 	public interface OnGetDataListener {
-		void getData(Object data);
+		void getData(String data);
 	}
 
 	private OnGetDataListener mOnGetDataListener;
@@ -888,9 +888,9 @@ public class JsAppCommon extends JsBase{
 	}
 
 	@JavascriptInterface
-	public void getTitleBarInfo(Object jsonStr) {
+	public void getTitleBarInfo(String jsonStr) {
 		if (mOnGetDataListener != null)
-			mOnGetDataListener.getData(jsonStr);
+			mOnGetDataListener.getData("");
 	}
 
 	@JavascriptInterface

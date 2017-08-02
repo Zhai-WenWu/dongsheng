@@ -77,7 +77,7 @@ public class QAMsgListActivity extends BaseFragmentActivity {
 
         mJsCommon.setOnGetDataListener(new JsAppCommon.OnGetDataListener() {
             @Override
-            public void getData(Object data) {
+            public void getData(String data) {
                 if (data == null) {
                     finish();
                 } else {
