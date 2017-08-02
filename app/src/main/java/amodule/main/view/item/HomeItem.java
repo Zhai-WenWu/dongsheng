@@ -236,7 +236,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 intent.putExtra("code",map.get("code"));
             }
             if (c != null) {
-                intent.putExtra("data_type", map.get("data_type"));
+                intent.putExtra("data_type", mDataMap.get("type"));
                 intent.putExtra("module_type", isTopTypeView() ? "top_info" : "info");
                 intent.setClass(getContext(), c);
                 XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
