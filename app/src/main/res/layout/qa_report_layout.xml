@@ -33,8 +33,7 @@
 
             <RelativeLayout
                 android:id="@+id/blacklist_container"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_43"
+                style="@style/report_item_wh"
                 android:layout_marginTop="@dimen/dp_11"
                 android:background="#FFFFFF"
                 android:visibility="gone">

@@ -28,8 +28,7 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/img_1"
@@ -51,8 +50,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/img_2"
@@ -74,8 +72,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/img_3"
@@ -97,8 +94,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/img_4"
@@ -120,8 +116,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/img_5"
@@ -143,8 +138,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/img_6"
@@ -166,8 +160,7 @@
 
             <RelativeLayout
                 android:id="@+id/quan_report_blacklist_relativelayout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_43"
+                style="@style/report_item_wh"
                 android:layout_marginTop="@dimen/dp_11"
                 android:background="#FFFFFF">
 
@@ -193,8 +186,7 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/admin_iv_1"
@@ -216,8 +208,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/admin_iv_2"
@@ -239,8 +230,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/admin_iv_3"
@@ -268,8 +258,7 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/quanadmin_iv_1"
@@ -291,8 +280,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43">
+                    style="@style/report_item_wh">
 
                     <ImageView
                         android:id="@+id/quanadmin_iv_3"
