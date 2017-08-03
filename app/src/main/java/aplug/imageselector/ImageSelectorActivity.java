@@ -631,17 +631,12 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			break;
 		// 提交按钮
 		case R.id.commit:
-
-//TODO
-			commit();
 			if (resultList != null && resultList.size() > 0) {
 				if (BaseEditActivity.TAG.equals(mTag)) {
 					XHClick.mapStat(this, mTjId, "点击图片按钮", (resultList.size() < 3 ? "只" : "") + "选择" + resultList.size() + "张图（点击完成）");
 				}
-				commit();
-			}else{
-				finish();
 			}
+			commit();
 			break;
 		}
 	}
