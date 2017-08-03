@@ -47,6 +47,12 @@ public class FollowSubject extends BaseActivity {
     }
 
     private void init(){
+        findViewById(R.id.ll_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         TextView titleTv = (TextView) findViewById(R.id.title);
         titleTv.setText("跟帖列表");
         findViewById(R.id.circle_share).setVisibility(View.GONE);

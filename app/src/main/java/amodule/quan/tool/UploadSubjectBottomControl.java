@@ -34,6 +34,7 @@ public class UploadSubjectBottomControl implements View.OnClickListener{
     private int scoreNum = 0;
 
     private boolean isFollowDish = true;
+    private boolean mIsClear = true;
 
     public UploadSubjectBottomControl(UploadSubjectNew act, final String atreementUrl){
         mAct = act;
@@ -99,13 +100,17 @@ public class UploadSubjectBottomControl implements View.OnClickListener{
         return dishCode;
     }
 
+    public void setIsClear(boolean isClear){
+        mIsClear = isClear;
+    }
+
     public void setDishInfo(String dishCode,String dishName) {
         this.dishCode = dishCode;
         this.dishName = dishName;
         followDishTv.setText(dishName);
         mAct.findViewById(R.id.score_dish_parentlayout).setVisibility(View.VISIBLE);
         imgGo.setVisibility(View.GONE);
-        imgClear.setVisibility(View.VISIBLE);
+        if(mIsClear)imgClear.setVisibility(View.VISIBLE);
     }
 
     public int getScoreNum(){

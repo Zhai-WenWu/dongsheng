@@ -53,10 +53,11 @@
 			android:id="@+id/d_popwindow_message"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="菜谱已离线到本地，可以在设置-收藏菜谱关闭。"
+			android:layout_marginLeft="@dimen/dp_21"
+			android:layout_marginRight="@dimen/dp_21"
 			android:layout_marginTop="@dimen/dp_10"
 			android:textColor="#666"
-			android:textSize="@dimen/sp_13"
+			android:textSize="@dimen/sp_12"
 			android:gravity="center"
 			android:visibility="gone"
 			/>

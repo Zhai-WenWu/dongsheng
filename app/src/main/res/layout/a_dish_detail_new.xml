@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activityLayout"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <amodule.dish.view.XhScrollView
@@ -10,21 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/dp_89"
             android:orientation="vertical"
-            >
+            android:paddingBottom="@dimen/dp_89">
 
             <amodule.dish.view.DishHeaderViewNew
                 android:id="@+id/a_dish_detail_new_headview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <amodule.dish.view.DishWebView
                 android:id="@+id/a_dish_detail_new_web"
@@ -35,8 +32,7 @@
                 android:id="@+id/a_dish_detail_new_footer"
                 layout="@layout/a_dish_detail_new_footer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -44,16 +40,15 @@
 
     <include
         android:id="@+id/a_dish_detail_new_title"
-        layout="@layout/a_dish_detail_bar_title_new"
-        />
+        layout="@layout/a_dish_detail_bar_title_new" />
 
     <include
         android:id="@+id/a_dish_detail_new_footer_hover"
         layout="@layout/a_dish_detail_new_footer_hover"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
+        android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>

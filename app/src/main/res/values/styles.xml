@@ -264,7 +264,7 @@
     <style name="lineView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dp_0.5</item>
-        <item name="android:background">#CCCCCC</item>
+        <item name="android:background">#ececec</item>
     </style>
 
     <style name="rightBtn">
