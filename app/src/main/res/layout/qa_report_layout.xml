@@ -34,8 +34,8 @@
             <RelativeLayout
                 android:id="@+id/blacklist_container"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_45"
-                android:layout_marginTop="@dimen/dp_20"
+                android:layout_height="@dimen/dp_43"
+                android:layout_marginTop="@dimen/dp_11"
                 android:background="#FFFFFF"
                 android:visibility="gone">
 
@@ -44,13 +44,15 @@
                     style="@style/report_item_desc"
                     android:text="加入黑名单"/>
 
-                <acore.widget.SwitchButton
-                    android:id="@+id/blacklist_switchBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/black_switch_btn"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dp_30"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp_20"/>
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:src="@drawable/i_switch_off"/>
+
             </RelativeLayout>
 
             <TextView

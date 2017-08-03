@@ -2,6 +2,7 @@ package amodule.answer.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import amodule.article.view.ReportItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
+import xh.windowview.OnXhDialogListener;
 import xh.windowview.XhDialog;
 
 /**
@@ -44,7 +46,7 @@ public class QAReportActivity extends BaseActivity {
     private TextView mBlackText;
     private Button mCommitBtn;
     private RelativeLayout mBlackListContainer;
-    private SwitchButton mBlackListSwitchBtn;
+    private ImageView mBlackListSwitchBtn;
 
     private String mUserCode = "";//被举报的用户code
     private String mReportName = "";//被举报的用户名
@@ -56,6 +58,7 @@ public class QAReportActivity extends BaseActivity {
     private ReportItem mLastSelectedAdminChild;
 
     private boolean mLoaded;
+    private boolean mIsBlack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +114,7 @@ public class QAReportActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mReportName))
             mName.setText("举报 " + mReportName);
         mBlackListContainer = (RelativeLayout) findViewById(R.id.blacklist_container);
-        mBlackListSwitchBtn = (SwitchButton) findViewById(R.id.blacklist_switchBtn);
-        mBlackListSwitchBtn.mSwitchOn = false;
+        mBlackListSwitchBtn = (ImageView) findViewById(R.id.black_switch_btn);
     }
 
     private void addListener() {
@@ -126,42 +128,40 @@ public class QAReportActivity extends BaseActivity {
                     case R.id.report_commit:
                         onCommitClick();
                         break;
-                    case R.id.blacklist_switchBtn:
-
+                    case R.id.black_switch_btn:
+                        if (!mIsBlack) {
+                            final XhDialog dialog = new XhDialog(QAReportActivity.this);
+                            dialog.setCancelable(true)
+                                    .setTitle("进入黑名单的用户将永远不能向你的菜谱进行付费提问，是否拉黑？")
+                                    .setCanselButton("否", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.cancel();
+                                            XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【否】");
+                                        }
+                                    })
+                                    .setSureButton("是", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.cancel();
+                                            mIsBlack = true;
+                                            mBlackListSwitchBtn.setImageResource(R.drawable.i_switch_on);
+                                            XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【是】（拉黑）");
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            mIsBlack = false;
+                            mBlackListSwitchBtn.setImageResource(R.drawable.i_switch_off);
+                            XHClick.mapStat(QAReportActivity.this, "a_ask_report", "关闭拉黑按钮", "");
+                        }
                         break;
                 }
             }
         };
         mReportInfo.setOnClickListener(clickListener);
         mCommitBtn.setOnClickListener(clickListener);
-        mBlackListSwitchBtn.setOnChangeListener(new SwitchButton.OnChangeListener() {
-            @Override
-            public void onChange(SwitchButton sb, boolean state) {
-                if (state) {
-                    final XhDialog dialog = new XhDialog(QAReportActivity.this);
-                    dialog.setTitle("进入黑名单的用户将永远不能向你的菜谱进行付费提问，是否拉黑？")
-                            .setCanselButton("否", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.cancel();
-                                    if (mBlackListSwitchBtn != null && mBlackListSwitchBtn.mSwitchOn)
-                                        mBlackListSwitchBtn.onClick(mBlackListSwitchBtn);
-                                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【否】");
-                                }
-                            })
-                            .setSureButton("是", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.cancel();
-                                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【是】（拉黑）");
-                                }
-                            })
-                            .show();
-                } else {
-                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "关闭拉黑按钮", "");
-                }
-            }
-        });
+        mBlackListSwitchBtn.setOnClickListener(clickListener);
     }
 
     /**
@@ -178,7 +178,7 @@ public class QAReportActivity extends BaseActivity {
             keys.add(mLastSelectedReportChild.getKey());
         if (mLastSelectedAdminChild != null && !TextUtils.isEmpty(mLastSelectedAdminChild.getKey()))
             keys.add(mLastSelectedAdminChild.getKey());
-        if (mBlackListSwitchBtn != null && mBlackListSwitchBtn.mSwitchOn)
+        if (mBlackListSwitchBtn != null && mIsBlack)
             keys.add(mBlackListSwitchBtn.getTag().toString());
         String params = "";
         if (keys.size() > 0) {
@@ -201,6 +201,9 @@ public class QAReportActivity extends BaseActivity {
      * 获取举报数据
      */
     private void getReportData() {
+
+        mQACode = "222";
+
         loadManager.showProgressBar();
         if (TextUtils.isEmpty(mQACode)) {
             onDataReady(0, null);
