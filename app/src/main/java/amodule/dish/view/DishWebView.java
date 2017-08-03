@@ -28,8 +28,6 @@ import xh.basic.tool.UtilString;
 
 import static amodule.main.Main.timer;
 import static aplug.web.tools.WebviewManager.ERROR_HTML_URL;
-import static aplug.web.tools.WebviewManager.OPEN_NEW;
-import static aplug.web.tools.WebviewManager.OPEN_SELF;
 
 /**
  * Created by Fang Ruijiao on 2017/7/17.
@@ -42,6 +40,9 @@ public class DishWebView extends XHWebView {
     private String dishCode;
     private String mHtmlData;
     private String mMouldVersion;
+
+    public static final String OPEN_NEW = "OPEN_NEW";
+    public static final String OPEN_SELF = "OPEN_SELF";
 
     private String mOpenFlag = OPEN_NEW;
 

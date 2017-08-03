@@ -40,7 +40,6 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 
-import static com.xiangha.R.id.share_layout;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -112,14 +111,14 @@ public class DetailDish extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        page = 1;
         isHasVideo = false;
         detailPermissionMap.clear();
         permissionMap.clear();
-        if(dishActivityViewControl != null)
-            dishActivityViewControl.setLoginStatus();
-        setRequest(page);
+        dishActivityViewControl.setLoginStatus();
+        if (mHandler == null) {
+            initData();
+        }
+        mHandler.sendEmptyMessage(LOAD_DISH);
     }
 
     /**
@@ -171,7 +170,7 @@ public class DetailDish extends BaseActivity {
                         }
                         break;
                     case LOAD_DISH_OVER://数据读取成功
-                        findViewById(share_layout).setVisibility(View.VISIBLE);
+                        findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
                         break;
                 }
                 return false;

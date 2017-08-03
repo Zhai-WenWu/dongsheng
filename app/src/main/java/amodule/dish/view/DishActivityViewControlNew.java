@@ -375,9 +375,13 @@ public class DishActivityViewControlNew {
     public void reset(){
         dishTitleViewControl.reset();
         dishHeaderView.reset();
+        setLoginStatus();
+        xhWebView.setVisibility(View.GONE);
+    }
+
+    public void setLoginStatus(){
         if (dishHeaderView != null)
             dishHeaderView.setLoginStatus();
-        xhWebView.setVisibility(View.GONE);
     }
 
     /**

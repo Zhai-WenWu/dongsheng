@@ -111,8 +111,6 @@ public class FollowSubject extends BaseActivity {
                         }
                     }
 
-                } else {
-                    toastFaildRes(flag, true, msg);
                 }
                 if (mEveryPageNum == 0) {
                     mEveryPageNum = loadCount;
