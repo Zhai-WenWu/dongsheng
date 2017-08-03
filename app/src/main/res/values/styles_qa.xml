@@ -44,4 +44,8 @@
         <item name="android:layout_marginRight">@dimen/dp_20</item>
         <item name="android:src">@drawable/switch_btn_bgselector</item>
     </style>
+    <style name="report_item_wh">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dp_46</item>
+    </style>
 </resources>
