@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
+import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
@@ -45,6 +46,7 @@ public class XHApplication extends MobApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+        Debuger.enable();
     }
 
     @Override

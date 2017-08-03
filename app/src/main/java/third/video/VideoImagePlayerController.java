@@ -2,8 +2,10 @@ package third.video;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -131,11 +133,7 @@ public class VideoImagePlayerController {
         videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
             @Override
             public void wifiConnected() {
-                if(null != view_Tip){
-                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
-                    mPraentViewGroup.removeView(view_Tip);
-                    view_Tip = null;
-                }
+                removeTipView();
                 onResume();
             }
 
@@ -150,6 +148,11 @@ public class VideoImagePlayerController {
 
             @Override
             public void nothingConnected() {
+                if(view_Tip == null){
+                    initNoNetwork(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
                 isNetworkDisconnect = true;
             }
         });
@@ -172,26 +175,16 @@ public class VideoImagePlayerController {
                 if(!isShowMedia){
                     Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
                     if(isAutoPaly){//当前wifi
-                        if(view_Tip!=null){
-                            mPraentViewGroup.removeView(view_Tip);
-                            view_Tip=null;
-                        }
+                        removeTipView();
                     }else{
-                        if(mImageView!=null){
-                            mPraentViewGroup.removeView(mImageView);
-                            mImageView=null;
-                        }
+                        removeImaegView();
                         return;
                     }
                 }
                 videoPlayer.startPlayLogic();
 
-                if(mImageView!=null)
-                    mPraentViewGroup.removeView(mImageView);
-                if(view_Tip!=null){
-                    mPraentViewGroup.removeView(view_Tip);
-                    view_Tip=null;
-                }
+                removeImaegView();
+                removeTipView();
                 if (mStatisticsPlayCountCallback != null) {
                     mStatisticsPlayCountCallback.onStatistics();
                 }
@@ -199,6 +192,20 @@ public class VideoImagePlayerController {
             Tools.showToast(mContext, "努力获取视频信息中...");
         }
 
+    }
+
+    protected void removeTipView(){
+        if(view_Tip!=null){
+            mPraentViewGroup.removeView(view_Tip);
+            view_Tip=null;
+        }
+    }
+
+    protected void removeImaegView(){
+        if(mImageView!=null){
+            mPraentViewGroup.removeView(mImageView);
+            mImageView=null;
+        }
     }
 
     /**
@@ -215,7 +222,7 @@ public class VideoImagePlayerController {
      */
     public void initVideoView2( String url,String title) {
         this.videoUrl = url;
-        videoPlayer.setUp(url,true,"");
+        videoPlayer.setUp(url,false,"");
         mHasVideoInfo = true;
     }
 
@@ -319,6 +326,25 @@ public class VideoImagePlayerController {
             setShowMedia(true);
             setOnClick();
             FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+        }
+    };
+
+    protected void initNoNetwork(Context context){
+        LayoutParams layoutParams= new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+        view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
+        view_Tip.setLayoutParams(layoutParams);
+        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        tipMessage.setText("网络未连接，请检查网络设置");
+        Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("去设置");
+        view_Tip.findViewById(R.id.tipLayout).setOnClickListener(disconnectClick);
+        view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(disconnectClick);
+    }
+
+    private OnClickListener disconnectClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mContext.startActivity(new Intent(Settings.ACTION_SETTINGS));
         }
     };
 

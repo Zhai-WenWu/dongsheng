@@ -1,13 +1,16 @@
 package amodule.quan.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -71,8 +74,7 @@ public class VideoImageView extends RelativeLayout{
         image_btn_play= (ImageView) findViewById(R.id.image_btn_play);
         load_progress= (ImageView) findViewById(R.id.load_progress);
         video_layout= (RelativeLayout) findViewById(R.id.video_layout);
-        final TextView tipMessage= (TextView) findViewById(R.id.tipMessage);
-        tipMessage.setText("现在是非WIFI，看视频要花费流量了");
+        initNormalTipLayout();
         tipLayout= (LinearLayout) findViewById(R.id.tip_root);
         int height = (ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_30)) * 3 / 4;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
@@ -123,25 +125,62 @@ public class VideoImageView extends RelativeLayout{
         }
     }
 
+    private void initNormalTipLayout(){
+        final TextView tipMessage= (TextView) findViewById(R.id.tipMessage);
+        tipMessage.setText("现在是非WIFI，看视频要花费流量了");
+        Button btnCloseTip = (Button) findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("继续播放");
+        tipLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setShowMedia(true);
+                onBegin();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+                    }
+                }).start();
+
+            }
+        });
+    }
+
+    private void initNoNetwork(){
+        final TextView tipMessage= (TextView) findViewById(R.id.tipMessage);
+        tipMessage.setText("网络未连接，请检查网络设置");
+        Button btnCloseTip = (Button) findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("去设置");
+        tipLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getContext().startActivity(new Intent(Settings.ACTION_SETTINGS));
+            }
+        });
+    }
+
     private void setNetworkCallback(){
         videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
             @Override
             public void wifiConnected() {
                 if(null != tipLayout){
-                    tipLayout.performClick();
-                    FileManager.saveShared(getContext(),FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
+                    tipLayout.setVisibility(GONE);
                 }
                 onResume();
             }
 
             @Override
             public void mobileConnected() {
-                onPause();
+                initNormalTipLayout();
                 tipLayout.setVisibility(VISIBLE);
+                onPause();
             }
 
             @Override
             public void nothingConnected() {
+                initNoNetwork();
+                tipLayout.setVisibility(VISIBLE);
+                onPause();
                 isNetworkDisconnect = true;
             }
         });
@@ -168,7 +207,7 @@ public class VideoImageView extends RelativeLayout{
         newStart=true;
         this.videoUrl=videoUrl;
         //视频播放信息info
-        videoPlayer.setUp(videoUrl, true,"");
+        videoPlayer.setUp(videoUrl, false,"");
 
         handlerListener();
     }
@@ -201,20 +240,7 @@ public class VideoImageView extends RelativeLayout{
             }
         });
 
-        tipLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setShowMedia(true);
-                onBegin();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
-                    }
-                }).start();
 
-            }
-        });
         findViewById(R.id.btnCloseTip).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,7 +266,7 @@ public class VideoImageView extends RelativeLayout{
         }
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(context));
         if (videoPlayer != null) {
-            videoPlayer.setUp(videoUrl,true,"");
+            videoPlayer.setUp(videoUrl,false,"");
             load_progress.setVisibility(View.GONE);
             image_bg.setVisibility(View.GONE);
             image_btn_play.setVisibility(View.GONE);

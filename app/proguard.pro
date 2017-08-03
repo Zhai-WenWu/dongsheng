@@ -322,3 +322,7 @@ public static ** valueOf(java.lang.String);
 -dontwarn tv.danmaku.ijk.**
 -keep class com.shuyu.gsyvideoplayer.** { *; }
 -dontwarn com.shuyu.gsyvideoplayer.**
+-keep class com.example.gsyvideoplayer.** { *; }
+-dontwarn com.example.gsyvideoplayer.**
+-keep class moe.codeest.enviews.** { *; }
+-dontwarn moe.codeest.enviews.**

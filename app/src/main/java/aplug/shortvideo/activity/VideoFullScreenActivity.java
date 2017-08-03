@@ -85,7 +85,7 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
     private void initVideoView() {
         Log.i("tzy",this.getClass().getSimpleName() + " : videoUrl = " + videoUrl);
         videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.video_player);
-        videoPlayer.setUp(videoUrl, true,"");
+        videoPlayer.setUp(videoUrl, false,"");
         videoPlayer.getFullscreenButton().setVisibility(View.GONE);
         videoPlayer.startPlayLogic();
         videoPlayer.setOnClickListener(this);

@@ -94,7 +94,6 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
             }
         });
 
-
         Resources resources = mContext.getResources();
         videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
         videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
@@ -154,12 +153,12 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
             @Override
             public void wifiConnected() {
                 Log.i("tzy","wifiConnected");
-                if(null != view_Tip){
-                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
-                    mPraentViewGroup.removeView(view_Tip);
-                    view_Tip = null;
+                removeTipView();
+                if(view_dish != null){
+                    view_dish.performClick();
+                }else{
+                    onResume();
                 }
-                onResume();
             }
 
             @Override
@@ -180,6 +179,7 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
                     initNoNetwork(mContext);
                     mPraentViewGroup.addView(view_Tip);
                 }
+                onPause();
             }
         });
     }

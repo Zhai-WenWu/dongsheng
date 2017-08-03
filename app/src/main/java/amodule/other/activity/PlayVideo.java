@@ -56,7 +56,7 @@ public class PlayVideo extends BaseAppCompatActivity {
 
     private void intiVideoView() {
         videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.video_player);
-        videoPlayer.setUp(url,true,"");
+        videoPlayer.setUp(url,false,"");
         //设置返回键
         videoPlayer.getBackButton().setVisibility(View.VISIBLE);
 

@@ -175,11 +175,7 @@ public class VideoPlayerController {
         videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
             @Override
             public void wifiConnected() {
-                if(null != view_Tip){
-                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
-                    mPraentViewGroup.removeView(view_Tip);
-                    view_Tip = null;
-                }
+                removeTipView();
                 onResume();
             }
 
@@ -194,6 +190,11 @@ public class VideoPlayerController {
 
             @Override
             public void nothingConnected() {
+                if(view_Tip == null){
+                    initNoNetwork(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
                 isNetworkDisconnect = true;
             }
         });
@@ -238,24 +239,14 @@ public class VideoPlayerController {
                 if(!isShowMedia){
                     Log.i("tzy","isAutoPaly:::"+isAutoPaly);
                     if(isAutoPaly){//当前wifi
-                        mPraentViewGroup.removeView(view_Tip);
-                        view_Tip=null;
+                        removeTipView();
                     }else{
-                        if(view_dish!=null){
-                            mPraentViewGroup.removeView(view_dish);
-                            view_dish=null;
-                        }
+                        removeDishView();
                         return;
                     }
                 }
-                if(view_dish!=null){
-                    mPraentViewGroup.removeView(view_dish);
-                    view_dish=null;
-                }
-                if(view_Tip!=null){
-                    mPraentViewGroup.removeView(view_Tip);
-                    view_Tip=null;
-                }
+                removeDishView();
+                removeTipView();
                 videoPlayer.startPlayLogic();
                 if (mStatisticsPlayCountCallback != null) {
                     mStatisticsPlayCountCallback.onStatistics();
@@ -265,6 +256,21 @@ public class VideoPlayerController {
             initVideoView(mVideoUnique, mUserUnique);
         }
     }
+
+    protected void removeDishView(){
+        if(view_dish!=null){
+            mPraentViewGroup.removeView(view_dish);
+            view_dish=null;
+        }
+    }
+
+    protected void removeTipView(){
+        if(view_Tip!=null){
+            mPraentViewGroup.removeView(view_Tip);
+            view_Tip=null;
+        }
+    }
+
 
     /**
      * 初始化视频播放数据
@@ -289,7 +295,7 @@ public class VideoPlayerController {
                         if (!TextUtils.isEmpty(main_url)) {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
                             mVideoUrl = new String(bytes);
-                            videoPlayer.setUp(mVideoUrl,true,"");
+                            videoPlayer.setUp(mVideoUrl,false,"");
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
                                 mPraentViewGroup.removeView(view_dish);
@@ -339,7 +345,7 @@ public class VideoPlayerController {
                         if (!TextUtils.isEmpty(main_url)) {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
                             mVideoUrl = new String(bytes);
-                            videoPlayer.setUp(mVideoUrl,true,"");
+                            videoPlayer.setUp(mVideoUrl,false,"");
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
 
@@ -374,7 +380,7 @@ public class VideoPlayerController {
      */
     public void initVideoView2(final String url,String title, final View view) {
         this.mVideoUrl = url;
-        videoPlayer.setUp(mVideoUrl,true,"");
+        videoPlayer.setUp(mVideoUrl,false,"");
         mHasVideoInfo = true;
     }
 
@@ -562,6 +568,8 @@ public class VideoPlayerController {
         view_Tip.setLayoutParams(layoutParams);
         TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
         tipMessage.setText("现在是非WIFI，看视频要花费流量了");
+        Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("继续播放");
         view_Tip.findViewById(R.id.tipLayout).setOnClickListener(onClickListener);
         view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(onClickListener);
     }
