@@ -43,7 +43,9 @@ public class AdapterFollowSubject extends AdapterSimple {
         this.mData = (List<Map<String, String>>) data;
         this.mContext = context;
     }
-
+    public void setStiaticData(String stiaticId){
+        this.stiaticKey=stiaticId;
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Map<String, String> map = mData.get(position);
@@ -63,7 +65,7 @@ public class AdapterFollowSubject extends AdapterSimple {
                     }
                 });
                 recommendFriendView.initView(map);
-                recommendFriendView.setStaticID(stiaticKey);
+                if(!TextUtils.isEmpty(stiaticKey))recommendFriendView.setStaticID(stiaticKey);
                 if (mRecCutomerArray != null) {
                     recommendFriendView.setRecCutomerArray(mRecCutomerArray);
                 }

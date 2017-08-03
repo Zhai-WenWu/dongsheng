@@ -216,7 +216,7 @@ public class DishActivityViewControlNew {
 
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
-
+        if(isHasVideo)tongjiId="a_menu_detail_video";
         dishTitleViewControl.setData(dishInfoMap,mDishCode,isHasVideo,dishInfoMap.get("dishState"),loadManager);
 
         Map<String, String> customer = StringManager.getFirstMap(dishInfoMap.get("customer"));

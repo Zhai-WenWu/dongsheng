@@ -164,12 +164,13 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case back:
-                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "返回点击量");
+                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "返回点击量");
                 detailDish.finish();
                 break;
             case fav_layout://收藏
                 if (detailDish != null)
                     XHClick.track(detailDish, "收藏菜谱");
+                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
                 doFavorite();
                 break;
             case share_layout:
@@ -180,11 +181,13 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                 bottomDialog.setTopButton("分享", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "分享点击量");
                         openShare();
                     }
                 }).setBottomButton("编辑", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "二次编辑点击量");
                         if(isHasVideo){
                             Tools.showToast(context,"请用香哈（视频版）编辑");
                         }else doModify();
@@ -236,7 +239,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         }
         Map<String, String> mapData = getShareData(isAuthor);
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
-        intent.putExtra("tongjiId", isAuthor ? "a_my" : "a_user");
+        intent.putExtra("tongjiId", tongjiId);
         intent.putExtra("isHasReport", !isAuthor);
         intent.putExtra("nickName", nickName);
         intent.putExtra("code", code);

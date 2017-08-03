@@ -52,6 +52,7 @@ public class FollowSubject extends BaseActivity {
         findViewById(R.id.circle_share).setVisibility(View.GONE);
         circle_list = (DownRefreshList) findViewById(R.id.circle_list);
         mAdapter = new AdapterFollowSubject(this, circle_list, mListData);
+        mAdapter.setStiaticData("a_learndish_tie");
         if (!mLoadOver) {
             loadManager.setLoading(circle_list, mAdapter, true, new View.OnClickListener() {
                 @Override
