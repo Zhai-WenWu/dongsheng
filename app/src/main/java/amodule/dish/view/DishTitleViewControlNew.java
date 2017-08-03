@@ -356,7 +356,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                             String imgUrl = dishInfoMap.get("img");
                                             if (imgUrl == null) {
                                                 type = ShareTools.IMG_TYPE_RES;
-                                                imgUrl = "" + R.drawable.umen_share_launch;
+                                                imgUrl = "" + R.drawable.share_launcher;
                                             }
                                             mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
                                         } else {

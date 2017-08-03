@@ -35,7 +35,6 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.view.DishHeaderView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishVideoImageView;
 import amodule.dish.view.VideoDredgeVipView;
@@ -105,7 +104,7 @@ public class VideoHeaderView extends RelativeLayout {
 
     public void setData(Map<String, String> data, DishHeaderViewNew.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
         if (callBack == null) {
-            this.callBack = new DishHeaderView.DishHeaderVideoCallBack() {
+            this.callBack = new DishHeaderViewNew.DishHeaderVideoCallBack() {
                 @Override public void videoImageOnClick() { }
                 @Override public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) { }
             };

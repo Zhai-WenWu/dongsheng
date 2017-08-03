@@ -36,6 +36,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
+import amodule.dish.tools.ADDishContorl;
 import amodule.dish.view.DishActivityViewControlNew;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
@@ -45,6 +46,7 @@ import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
+import static com.xiangha.R.id.share_layout;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -56,29 +58,19 @@ public class DetailDish extends BaseAppCompatActivity {
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
 
-    private ADDishContorl adDishContorl;
-    private DishActivityViewControl dishActivityViewControl;//view处理控制
+    private DishActivityViewControlNew dishActivityViewControl;//view处理控制
 
     private Handler mHandler;
     private Map<String,String> permissionMap = new HashMap<>();
     private Map<String,String> detailPermissionMap = new HashMap<>();
-    public static int showNumLookImage=0;//点击展示次数
     private int statusBarHeight = 0;//广告所用bar高度
-    private int page = 1;
+    private String dishJson;
     public String code, dishTitle, state;//页面开启状态所必须的数据。
-    public String dishJson;//历史记录中dishInfo的数据
     private String imgLevel = FileManager.save_cache;//图片缓存机制---是离线菜谱改变其缓存机制
     public boolean isHasVideo = false;//是否显示视频数据
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
     private String lastPermission = "";
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-        adDishContorl= new ADDishContorl();
-        adDishContorl.getAdData(DetailDish.this);
-    }
 
     private long startTime= 0;
     private String data_type="";
@@ -117,14 +109,12 @@ public class DetailDish extends BaseAppCompatActivity {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        dishActivityViewControl.setAdDishControl(adDishContorl);
         startTime= System.currentTimeMillis();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        page = 1;
         isHasVideo = false;
         detailPermissionMap.clear();
         permissionMap.clear();
@@ -152,7 +142,6 @@ public class DetailDish extends BaseAppCompatActivity {
         dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControlNew.DishViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
-                DetailDish.this.mVideoPlayerController=mVideoPlayerController;
             }
         });
         initData();
@@ -171,14 +160,18 @@ public class DetailDish extends BaseAppCompatActivity {
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case LOAD_DISH://读取历史记录回来
-                        if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
+                        Log.i("detailDish","load_dish dishJson:" + dishJson);
+                        if (!TextUtils.isEmpty(dishJson) && dishJson.length() > 10) {
                             imgLevel = LoadImage.SAVE_LONG;
+                            loadOtherData();
                             analyzeHistoryData();
-                        } else
-                            setRequest(page);
+                        } else {
+                            loadDishInfo();
+                            loadOtherData();
+                        }
                         break;
                     case LOAD_DISH_OVER://数据读取成功
-                        findViewById(share_layout).setVisibility(View.VISIBLE);
+                        findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
                         break;
                 }
                 return false;
@@ -187,18 +180,19 @@ public class DetailDish extends BaseAppCompatActivity {
     }
 
     /**
-     * 读取是否有事
+     * 读取是否有离线菜谱
      */
     private void loadHistoryData() {
         //处理延迟操作
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //获取离线菜谱的 json 数据
-                dishJson = DataOperate.buyBurden(XHApplication.in(), code);
-                dishActivityViewControl.setDishJson(dishJson);
+                if(!ToolsDevice.getNetActiveState(DetailDish.this)) {
+                    //获取离线菜谱的 json 数据
+                    dishJson = DataOperate.buyBurden(XHApplication.in(), code);
+                }
                 //获取手机中的离线菜谱数量
-                AppCommon.buyBurdenNum = UtilString.getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
+                AppCommon.buyBurdenNum = getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
                 mHandler.sendEmptyMessage(LOAD_DISH);
             }
         }).start();
@@ -326,7 +320,6 @@ public class DetailDish extends BaseAppCompatActivity {
         Rect outRect = new Rect();
         this.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         statusBarHeight = outRect.top;
-        dishActivityViewControl.setStatusBarHeight(statusBarHeight);
         dishActivityViewControl.onResume();
     }
 

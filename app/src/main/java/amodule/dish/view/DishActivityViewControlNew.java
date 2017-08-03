@@ -364,6 +364,14 @@ public class DishActivityViewControlNew {
         if(dishHeaderView!=null)dishHeaderView.onPause();
     }
 
+    public void onDestroy() {
+        if(dishHeaderView!=null)dishHeaderView.onDestroy();
+    }
+
+    public boolean onBackPressed(){
+        return dishHeaderView.onBackPressed();
+    }
+
     /**
      * 外部设置是否是视频
      * @param isHasVideo

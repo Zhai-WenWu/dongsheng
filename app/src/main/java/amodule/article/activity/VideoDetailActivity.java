@@ -58,9 +58,7 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.share.BarShare;
-import third.share.UserHomeShare;
 import third.share.ShareActivityDialog;
-import third.video.VideoPlayerController;
 import xh.windowview.XhDialog;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_VIDEO;
