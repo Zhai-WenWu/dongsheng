@@ -148,9 +148,6 @@ public class VersionOp extends DialogManagerParent{
 							}
 						} else {
 							callback.onFail();
-							if (mShowPro) {
-								toastFaildRes(flag, true, returnObj);
-							}
 						}
 					}
 				});

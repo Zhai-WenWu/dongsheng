@@ -162,8 +162,6 @@ public class ActivityList extends BaseActivity {
 					if (isForward){
 						list_acticity.setSelection(1);
 					}
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 
 				if (everyPage == 0)

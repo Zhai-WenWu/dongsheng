@@ -1,6 +1,8 @@
 package amodule.search.view;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -181,8 +183,13 @@ public class CaipuSearchResultView extends LinearLayout {
     public void onClearcSearchWord() {
 
         clearSearchResult();
-        adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
-        adNum = 0;
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                adNum = 0;
+            }
+        });
     }
 
 
@@ -254,7 +261,12 @@ public class CaipuSearchResultView extends LinearLayout {
                             if (adapterCaipuSearch == null) {
                                 adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
                             }
-                            adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                                }
+                            });
                             currentCaipuPage = loadManager.changeMoreBtn(list_search_result, flag, LoadManager.FOOTTIME_PAGE, loadCount, currentCaipuPage, isFirstPage);
                         }
                     } else {
@@ -386,7 +398,12 @@ public class CaipuSearchResultView extends LinearLayout {
 
         adapterCaipuSearch.clearAdList();
         adNum = 0;
-        adNum = adapterCaipuSearch.refresh(true, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                adNum = adapterCaipuSearch.refresh(true, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+            }
+        });
         currentCaipuPage = loadManager.changeMoreBtn(list_search_result, firstCaipuLoadFlag, LoadManager.FOOTTIME_PAGE,
                 mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum, currentCaipuPage, true);
         if (mListCaipuData.size() < 1)

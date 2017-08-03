@@ -244,8 +244,6 @@ public class Feedback extends BaseActivity implements OnClickListener {
                         feekback_list.setSelection(adapter.getCount() - 1);
                     else
                         feekback_list.setSelection(1);
-                } else {
-                    toastFaildRes(flag, false, returnObj);
                 }
                 feekback_list.onRefreshComplete();
                 loadManager.hideProgressBar();
@@ -351,8 +349,6 @@ public class Feedback extends BaseActivity implements OnClickListener {
                     if (flag >= UtilInternet.REQ_OK_STRING) {
 //						Tools.showToast(Feedback.this, returnObj.toString());
                         notifySendMsg(MSG_TEXT_UPLOAD);
-                    } else {
-                        toastFaildRes(flag, true, returnObj);
                     }
                 }
             });

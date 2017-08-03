@@ -262,7 +262,6 @@ public class BarSubjectReply2 extends RelativeLayout implements OnClickListener{
 						progressBar.setVisibility(View.GONE);
 						btn_reply.setText("发送");
 					} else {
-						toastFaildRes(flag,true,returnObj);
 						btn_reply.setEnabled(true);
 						progressBar.setVisibility(View.GONE);
 						btn_reply.setText("发送");

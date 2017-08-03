@@ -137,7 +137,6 @@ public class DishVideoDownloaderManager {
                     }
                 } else {
                     isRunning = false;
-                    toastFaildRes(flag, true, returnObj);
                 }
             }
         });

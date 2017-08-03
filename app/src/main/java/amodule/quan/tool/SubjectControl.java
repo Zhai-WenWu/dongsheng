@@ -49,8 +49,6 @@ public class SubjectControl {
                                     public void loaded(int flag, String url, Object returnObj) {
                                         if (flag >= UtilInternet.REQ_OK_STRING) {
                                             callback.onDeleteSuccess(flag,url,returnObj);
-                                        } else {
-                                            toastFaildRes(flag, true, returnObj);
                                         }
                                     }
                                 });

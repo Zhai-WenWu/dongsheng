@@ -294,8 +294,6 @@ public class InviteFriend extends BaseActivity {
 							}
 						}
 					}
-				} else {
-					toastFaildRes(flag,true,returnObj);
 				}
 			}
 		});
@@ -323,8 +321,6 @@ public class InviteFriend extends BaseActivity {
 						msg.obj=nickname;
 						handler.sendMessage(msg);
 					}
-				} else {
-					toastFaildRes(flag,true,returnObj);
 				}
 			}
 		});

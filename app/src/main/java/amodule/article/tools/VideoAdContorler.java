@@ -1,10 +1,18 @@
 package amodule.article.tools;
 
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.xiangha.R;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import acore.override.helper.XHActivityManager;
+import acore.tools.Tools;
 import third.ad.scrollerAd.XHAllAdControl;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
@@ -18,7 +26,7 @@ import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_1;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class VideoAdContorler extends ArticleAdContrler{
+public class VideoAdContorler extends ArticleAdContrler {
     //广告跟随相关推荐的数据位置
     public final int ARTICLE_BOTTOM = 101;
     public final int ARTICLE_RECOMMEND = 0;
@@ -78,15 +86,32 @@ public class VideoAdContorler extends ArticleAdContrler{
                     }
                 }
             }
-            if(!allDataListMap.isEmpty()){
-                for(int index = 0;index < allDataListMap.size();index++){
-                    if(index == 0){
-                        allDataListMap.get(index).put("showheader","1");
-                    }else{
+            if (!allDataListMap.isEmpty()) {
+                for (int index = 0; index < allDataListMap.size(); index++) {
+                    if (index == 0) {
+                        allDataListMap.get(index).put("showheader", "1");
+                    } else {
                         allDataListMap.get(index).remove("showheader");
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public View getBigAdView(Map<String, String> dataMap) {
+        View adView = super.getBigAdView(dataMap);
+        if (adView != null) {
+            TextView browseTextView = (TextView) adView.findViewById(R.id.rec_browse);
+            if (browseTextView != null) {
+                browseTextView.setVisibility(View.VISIBLE);
+                ViewGroup.MarginLayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+                int dp_15 = Tools.getDimen(adView.getContext(), R.dimen.dp_15);
+                int dp_20 = Tools.getDimen(adView.getContext(), R.dimen.dp_20);
+                layoutParams.setMargins(dp_20, dp_15, dp_20, 0);
+                adView.setLayoutParams(layoutParams);
+            }
+        }
+        return adView;
     }
 }

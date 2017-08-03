@@ -11,9 +11,10 @@ repositories {
 dependencies {
     //添加广点通广告
     compile fileTree(include: '*.jar', dir: 'libsAddGd')
+    compile fileTree(include: '*.jar', dir: 'libsAdBaidu')
     compile fileTree(include: '*.jar', dir: 'libs')
     //百度市场要求加的自动更新sdk
-    //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
+//        compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     compile(name: 'AndFix-master-debug', ext: 'aar')
     //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     //    compile(name: 'PhotoView-release', ext: 'aar')
@@ -50,8 +51,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 181
-        versionName "5.4.0.1"
+        versionCode 191
+        versionName "5.5.0"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -69,9 +70,9 @@ android {
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
 //            yulekwok
-//            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
+            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
-            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }
@@ -122,12 +123,12 @@ android {
 //            res.srcDirs = ['src\\main\\res', 'src\\main\\res_normal']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_360']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_anzhuoapk']
-//            res.srcDirs = ['src\\main\\res','src\\main\\res_baidu']
-//            res.srcDirs = ['src\\main\\res','src\\main\\res_huawei']
+//            res.srcDirs = ['src/main/res','src/main/res_baidu']
+//            res.srcDirs = ['src/main/res','src/main/res_huawei']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_samsung']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_lenovo']
 //            res.srcDirs = ['src\\main\\res','src\\main\\res_letv']
-//            res.srcDirs = ['src\\main\\res','src\\main\\res_xiaomi']
+//            res.srcDirs = ['src/main/res','src/main/res_xiaomi']
             jniLibs.srcDirs = ['libs']
 
         }

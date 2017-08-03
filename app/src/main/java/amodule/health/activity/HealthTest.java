@@ -433,8 +433,6 @@ public class HealthTest extends BaseActivity {
 							intent.putExtra("params", returnObj.toString());
 							startActivity(intent);
 							finish();
-						}else{
-							toastFaildRes(flag,true,returnObj);
 						}
 					}
 				});

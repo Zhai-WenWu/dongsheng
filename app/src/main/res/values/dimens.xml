@@ -22,6 +22,8 @@
     <!-- 大小 *1 -->
     <dimen name="dp__100">-100dp</dimen>
     <dimen name="dp__30">-30dp</dimen>
+    <dimen name="dp__20">-20dp</dimen>
+    <dimen name="dp__18">-18dp</dimen>
     <dimen name="dp__15">-15dp</dimen>
     <dimen name="dp__10">-10dp</dimen>
     <dimen name="dp__9.5">-9.5dp</dimen>

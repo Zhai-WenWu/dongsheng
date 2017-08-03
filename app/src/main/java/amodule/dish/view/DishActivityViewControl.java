@@ -190,6 +190,10 @@ public class DishActivityViewControl {
         adapter.notifyDataSetChanged();
         xhWebView.setVisibility(View.GONE);
         dregdeVipLayout.setVisibility(View.GONE);
+        setLoginStatus();
+    }
+
+    public void setLoginStatus(){
         if (dishHeaderView != null)
             dishHeaderView.setLoginStatus();
     }

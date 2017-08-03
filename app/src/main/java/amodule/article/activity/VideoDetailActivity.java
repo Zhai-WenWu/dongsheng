@@ -159,7 +159,6 @@ public class VideoDetailActivity extends BaseActivity {
         if (loadManager != null)
             loadManager.hideProgressBar();
         page = 0;
-        hasPagePermission = true;
         detailPermissionMap.clear();
         permissionMap.clear();
         if(mHaederLayout != null)
@@ -341,6 +340,8 @@ public class VideoDetailActivity extends BaseActivity {
                             int commentCount = Integer.parseInt(commentNum);
                             commentMap.put("commentNum", "" + ++commentCount);
                             commentNum = String.valueOf(commentCount);
+                            //刷新头部评论
+                            mHaederLayout.setupCommentNum(commentNum);
                             Map<String, String> dataMap = StringManager.getFirstMap(commentMap.get("data"));
                             ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get("list"));
                             list.add(0, newData);
@@ -432,7 +433,7 @@ public class VideoDetailActivity extends BaseActivity {
             }
         });
         View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_34));
         listView.addFooterView(view);
         //请求文章数据
         requestVideoData(false);
@@ -500,7 +501,6 @@ public class VideoDetailActivity extends BaseActivity {
             public void getPower(int flag, String url, Object obj) {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
-//                Log.i("tzy","obj = " + obj);
                 //权限检测
                 if(permissionMap.isEmpty()
                         && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
@@ -508,10 +508,9 @@ public class VideoDetailActivity extends BaseActivity {
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
                     }else{
-                        if(lastPermission.equals(obj.toString())){
-                            contiunRefresh = false;
-                            return;
-                        }
+                        contiunRefresh = !lastPermission.equals(obj.toString());
+                        if(contiunRefresh)
+                            lastPermission = obj.toString();
                     }
                     permissionMap = StringManager.getFirstMap(obj);
 //                    Log.i("tzy","permissionMap = " + permissionMap.toString());
@@ -545,8 +544,7 @@ public class VideoDetailActivity extends BaseActivity {
                     resetData();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysVideoData(onlyUser, StringManager.getFirstMap(object),detailPermissionMap);
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 if (!onlyUser)
                     requestRelateData(false);//请求
 
@@ -643,8 +641,7 @@ public class VideoDetailActivity extends BaseActivity {
                     detailAdapter.notifyDataSetChanged();
 //                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
 //                    listView.removeFooterView(loadManager.getSingleLoadMore(listView));
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 Map<String,String> commonPermission = StringManager.getFirstMap(detailPermissionMap.get("video"));
                 commonPermission = StringManager.getFirstMap(commonPermission.get("common"));
                 if((commonPermission.isEmpty() || StringManager.getBooleanByEqualsValue(commonPermission,"isShow"))
@@ -732,11 +729,9 @@ public class VideoDetailActivity extends BaseActivity {
         ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
-
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysForumData(isRefresh, object);
-                } else
-                    toastFaildRes(flag, true, object);
+                }
             }
         });
     }
@@ -852,8 +847,6 @@ public class VideoDetailActivity extends BaseActivity {
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
                                 Main.allMain.sendBroadcast(broadIntent);
                             }
-                        } else {
-                            toastFaildRes(flag, true, obj);
                         }
                     }
                 });

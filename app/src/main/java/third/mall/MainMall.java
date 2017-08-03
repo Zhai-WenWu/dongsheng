@@ -136,6 +136,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 	protected void onResume() {
 		super.onResume();
 		if(MallCommon.num_shopcat>0){
+			Main.setNewMsgNum(1,MallCommon.num_shopcat);
 			if(MallCommon.num_shopcat>9){
 				mall_news_num.setVisibility(View.GONE);
 				mall_news_num_two.setVisibility(View.VISIBLE);
@@ -149,6 +150,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 				mall_news_num.setText(""+MallCommon.num_shopcat);
 			}
 		}else{
+			Main.setNewMsgNum(1,0);
 			mall_news_num.setVisibility(View.GONE);
 			mall_news_num_two.setVisibility(View.GONE);
 		}

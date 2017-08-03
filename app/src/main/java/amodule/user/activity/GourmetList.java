@@ -256,8 +256,6 @@ public class GourmetList extends BaseActivity {
 						if (currentPage == 1) 
 							handler.sendEmptyMessage(NO_DATA);
 					}
-				} else {
-					toastFaildRes(flag,true,returnObj);
 				}
 				if (everyPage == 0)	
 					everyPage = loadCount;

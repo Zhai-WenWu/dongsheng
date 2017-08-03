@@ -181,8 +181,6 @@ public class FavoriteDish {
 					// 如果是重新加载的,选中第一个tab.
 					if (isForward)
 						theListView.setSelection(1);
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;

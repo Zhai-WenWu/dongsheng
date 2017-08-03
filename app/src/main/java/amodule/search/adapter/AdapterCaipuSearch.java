@@ -84,6 +84,15 @@ public class AdapterCaipuSearch extends BaseAdapter {
         listPosUsed = new InsertPosList();
     }
 
+    /**
+     * 绝对保证此方法在主线程中执行
+     * @param isRefresh
+     * @param listCaipuData
+     * @param listShicaiData
+     * @param listCaidanData
+     * @param listZhishiData
+     * @return
+     */
     public synchronized int refresh(boolean isRefresh, CopyOnWriteArrayList<Map<String, String>> listCaipuData,
                                     CopyOnWriteArrayList<Map<String, String>> listShicaiData,
                                     CopyOnWriteArrayList<Map<String, String>> listCaidanData,
@@ -106,14 +115,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
         }
 
         computeInsertPos();
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChanged();
-            }
-        });
-
+        notifyDataSetChanged();
         return adCanInsert;
     }
 
@@ -576,8 +578,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
             if (adIndex > -1 && adDdata != null && adIndex < adDdata.size()) {
                 if (adDdata.get(adIndex) != null) {
                     final Map<String, String> dataMap = adDdata.get(adIndex);
-                    Log.i("tzy", "searchAD adIndex = " + adIndex);
-                    Log.i("tzy", "searchAD adDdata = " + adDdata.get(adIndex).toString());
                     view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
                     if (listPosUsed.contains(pos + 1)) {
                         view.findViewById(R.id.v_ad_item_tail).setVisibility(View.VISIBLE);

@@ -52,6 +52,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
     private String type = TYPE_ARTICLE;
     private String praiseAPI = "";
     private int praiseNum = 0;
+    private int commentNum = 0;
     private boolean needPlus = true;
     private boolean isSofa = false;
 
@@ -116,15 +117,17 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
         }
 
 
-        String commentNum = map.get("commentNumber");
-        isSofa = "0".equals(commentNum);
-        hintComment.setText(isSofa ? "抢沙发" : "写评论");
+        String commentNumStr = map.get("commentNumber");
+        if(!TextUtils.isEmpty(commentNumStr))
+            commentNum = Integer.parseInt(commentNumStr);
+        isSofa = "0".equals(commentNumStr);
+        hintComment.setText(isSofa ? "抢沙发" : getTextHint());
 
     }
 
     public void resetHintComment() {
         isSofa = false;
-        hintComment.setText(isSofa ? "抢沙发" : "写评论");
+        hintComment.setText(isSofa ? "抢沙发" : getTextHint());
     }
 
     @Override
@@ -218,13 +221,15 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                            commentNum++;
                             resetHintComment();
-                            if (onCommentSuccessCallback != null) {
-                                onCommentSuccessCallback.onCommentSuccess(isSofa, obj);
-                            }
                             if (isSofa) {
                                 isSofa = !isSofa;
                                 editText.setHint(getTextHint());
+                            }
+                            //回调
+                            if (onCommentSuccessCallback != null) {
+                                onCommentSuccessCallback.onCommentSuccess(isSofa, obj);
                             }
                         } else {
                             Tools.showToast(context, "评论失败，请重试");
@@ -239,7 +244,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
     }
 
     private String getTextHint() {
-        return "写评论";
+        return commentNum + "评论...";
     }
 
     public String getContent() {

@@ -368,8 +368,6 @@ public class PulishVideo extends BaseActivity implements View.OnClickListener {
 //                        videoUrl = msg.toString();
 //                        mData.setVideo(videoUrl);
 //                    }
-//                } else {
-//                    toastFaildRes(flag, true, msg);
 //                }
 //            }
 //        });
