@@ -57,7 +57,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
-import third.share.UserHomeShare;
+import third.share.ShareActivityDialog;
 import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
@@ -736,7 +736,7 @@ public class ArticleDetailActivity extends BaseActivity {
             Tools.showToast(this, "数据处理中，请稍候");
             return;
         }
-        Intent intent = new Intent(this, UserHomeShare.class);
+        Intent intent = new Intent(this, ShareActivityDialog.class);
         intent.putExtra("tongjiId", isAuthor ? "a_my" : "a_user");
         intent.putExtra("nickName", customerData.get("nickName"));
         intent.putExtra("imgUrl", shareMap.get("img"));

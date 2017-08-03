@@ -11,7 +11,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        layout="@layout/a_bar_item_back" />
+        layout="@layout/a_bar_item_back"
+        />
 
     <TextView
         android:id="@+id/title"
@@ -32,6 +33,7 @@
         android:layout_marginRight="@dimen/dp_10"
         android:layout_centerVertical="true"
         android:visibility="visible"
-        android:src="@drawable/z_z_topbar_ico_share" />
+        android:src="@drawable/z_z_topbar_ico_share"
+        />
 
 </RelativeLayout>

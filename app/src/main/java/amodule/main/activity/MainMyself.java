@@ -28,11 +28,13 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
 import amodule.dish.activity.OfflineDish;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
+import amodule.main.view.HintMyselfDialog;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
@@ -62,13 +64,17 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
     private RelativeLayout right_myself, userPage;
     private LinearLayout gourp1, gourp2,gourp3;
     private String[] name1 = {"我的订单"},
-            name2 = {"我的会员","我的收藏","缓存下载","浏览历史"},
+            name2 = {"我的会员","我的问答", "我的收藏","缓存下载","浏览历史"},
             name3 = {"反馈帮助","设置"};
     private String[] clickTag1 = {"order"},
-            clickTag2 = {"vip","favor","download","hitstory"},
+            clickTag2 = {"vip", "qa", "favor","download","hitstory"},
             clickTag3 = {"helpe","setting"};
 
     private final String tongjiId = "a_mine";
+
+    //我的问答
+    private View mQAItemView;
+    private String mQAType = "1";//问答类型，我问：1（默认）  我答：2
 
     //头部控件
     private TextView goManagerInfo,name,myself_please_login;
@@ -78,8 +84,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
     private TextView moneyNum,scoreNum, couponNum;
     private TagTextView my_renzheng,my_vip;
 
-    private TextView vipInfo,vipNewHint;
-    private ImageView vipIcon;
+    private TextView vipInfo,vipNewHint, qaInfo, qaNewHint;
+    private ImageView vipIcon, qaIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         Main.mainActivity = this;
         super.onResume();
         if (LoginManager.isLogin()) {
+            if (mQAItemView != null)
+                mQAItemView.setVisibility(View.VISIBLE);
             // 设置加载
             loadManager.setLoading(new OnClickListener() {
                 @Override
@@ -135,15 +143,13 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         right_myself.setVisibility(View.GONE);
         iv_userType.setVisibility(View.INVISIBLE);
         myself_iv.setImageResource(R.drawable.z_me_head);
+        if (mQAItemView != null) {
+            mQAItemView.setVisibility(LoginManager.isLogin() ? View.VISIBLE : View.GONE);
+        }
         loadManager.hideProgressBar();
     }
 
     private void initUI() {
-//		if(Tools.isShowTitle()) {
-//			View bar_title = findViewById(R.id.my_title_bar);
-//			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getStatusBarHeight(this));
-//			bar_title.setLayoutParams(layout);
-//		}
         goManagerInfo = (TextView) findViewById(R.id.goManagerInfo);
         goManagerInfo.setText("马甲");
         goManagerInfo.setTextColor(0xffffff);
@@ -178,9 +184,17 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         Object isShowVip = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowVip");
         Object isShowMoney = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowMoney");
         Object isShowOpinion = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowOpinion");
+        Object isShowQA = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "isShowQA");
 
         if(isShowMoney == null || TextUtils.isEmpty(String.valueOf(isShowMoney))){
             findViewById(R.id.my_money_hint).setVisibility(View.VISIBLE);
+        }
+
+        qaInfo = (TextView) gourp2.getChildAt(1).findViewById(R.id.text_right_myself);
+        qaNewHint = (TextView) gourp2.getChildAt(1).findViewById(R.id.my_new_info);
+        qaIcon = (ImageView) gourp2.getChildAt(1).findViewById(R.id.ico_right_myself);
+        if (isShowQA == null || TextUtils.isEmpty(String.valueOf(isShowQA))) {
+            notifyQAItemChanged(0, true, false);
         }
 
         vipInfo = (TextView) gourp2.getChildAt(0).findViewById(R.id.text_right_myself);
@@ -226,6 +240,16 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         } else {
             right_myself.setVisibility(View.GONE);
             myself_please_login.setVisibility(View.VISIBLE);
+        }
+        showHintMyself();
+    }
+
+    private void showHintMyself(){
+        Object myselftHint = FileManager.loadShared(this,"myselftHint","myselftHint");
+        if(myselftHint == null || TextUtils.isEmpty(String.valueOf(myselftHint))) {
+            Intent intent = new Intent(this, HintMyselfDialog.class);
+            startActivity(intent);
+            FileManager.saveShared(this,"myselftHint","myselftHint","2");
         }
     }
 
@@ -336,14 +360,18 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
     private void itemInfalter(LayoutInflater layoutInfater,LinearLayout parent, String[] groupNames,String[] clickTags) {
         for (int i = 0; i < groupNames.length; i++) {
             View itemView =  layoutInfater.inflate(R.layout.a_common_myself_item, null);
+            String tag = clickTags[i];
             itemView.setClickable(true);
-            itemView.setTag(clickTags[i]);
+            itemView.setTag(tag);
             itemView.setOnClickListener(this);
 
             TextView text = (TextView) itemView.findViewById(R.id.text_myself);
             text.setText(groupNames[i]);
             parent.addView(itemView);
-
+            if ("qa".equals(tag)) {
+                mQAItemView = itemView;
+                mQAItemView.setVisibility(View.GONE);
+            }
             if (i == groupNames.length - 1) {
                 itemView.findViewById(R.id.my_item_line).setVisibility(View.GONE);
             }
@@ -467,6 +495,12 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 
         if(!isOption){
             switch (clickTag) {
+                case "qa"://我的问答
+                    FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowQA","2");
+                    notifyQAItemChanged (0, false, true);
+                    Tools.showToast(this, "我问我答");
+                    AppCommon.openUrl(this, mQAType, false);
+                    break;
                 case "favor"://收藏
                     XHClick.track(getApplicationContext(), "点击我的页面的收藏");
                     XHClick.mapStat(this, tongjiId,"列表","收藏");
@@ -525,5 +559,13 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 .build();
         if(bitmapRequest != null)
             bitmapRequest.into(v);
+    }
+
+    private void notifyQAItemChanged (int numInfo, boolean showNewHint, boolean showIcon) {
+        if (qaInfo == null || qaNewHint == null || qaIcon == null)
+            return;
+        qaInfo.setVisibility(numInfo > 0 ? View.VISIBLE : View.GONE);
+        qaNewHint.setVisibility(showNewHint ? View.VISIBLE : View.GONE);
+        qaIcon.setVisibility(showIcon ? View.VISIBLE : View.GONE);
     }
 }

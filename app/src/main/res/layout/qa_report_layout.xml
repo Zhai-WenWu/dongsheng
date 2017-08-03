@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:clickable="false">
+
+    <acore.widget.MsgScrollView
+        android:id="@+id/report_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/barTitle"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/report_desc"
+                android:text="选择原因"/>
+
+            <LinearLayout
+                android:id="@+id/report_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/c_white_text"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/blacklist_container"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_43"
+                android:layout_marginTop="@dimen/dp_11"
+                android:background="#FFFFFF"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/blacklist_text"
+                    style="@style/report_item_desc"
+                    android:text="加入黑名单"/>
+
+                <ImageView
+                    android:id="@+id/black_switch_btn"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dp_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:src="@drawable/i_switch_off"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/admin_report_desc"
+                style="@style/report_desc"
+                android:text="特别权限"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/admin_report_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/report_commit"
+                style="@style/report_commit"
+                android:text="提交"/>
+        </LinearLayout>
+    </acore.widget.MsgScrollView>
+</RelativeLayout>

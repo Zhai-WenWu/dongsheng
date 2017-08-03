@@ -43,7 +43,7 @@ public class AdapterCircle extends AdapterSimple {
     private String showIndex="quan";
     private int currentPlayPosition = -1;
     private QuanAdvertControl quanAdvertControl;
-    public AdapterCircle(Activity context, View parent, List<? extends Map<String, ?>> data, String Cid) {
+    public AdapterCircle(Activity context, View parent, List<? extends Map<String, ?>> data) {
         super(parent, data, 0, null, null);
         this.mData = (List<Map<String, String>>) data;
         this.mContext = context;
@@ -250,7 +250,7 @@ public class AdapterCircle extends AdapterSimple {
                 });
                 //先写回调在执行展示代码
                 view.setModuleName(moduleName);
-                view.initView(map, Cid,position);
+                view.initView(map,position);
                 view.setCircleName(circleName);
                 if (!TextUtils.isEmpty(stiaticKey))
                     view.setStiaticKey(stiaticKey);

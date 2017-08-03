@@ -48,12 +48,24 @@
 	        android:textSize="@dimen/sp_19"
 	        android:textColor="#00c847"
 	        android:text="操作成功"/>
-	    
+
+		<TextView
+			android:id="@+id/d_popwindow_message"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="菜谱已离线到本地，可以在设置-收藏菜谱关闭。"
+			android:layout_marginTop="@dimen/dp_10"
+			android:textColor="#666"
+			android:textSize="@dimen/sp_13"
+			android:gravity="center"
+			android:visibility="gone"
+			/>
+
 	    <TextView 
 	        android:id="@+id/d_popwindow_share_hint" 
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="@dimen/dp_29"
+	        android:layout_marginTop="@dimen/dp_20"
 	        android:layout_marginLeft="@dimen/dp_17"
 	        android:textSize="@dimen/sp_15"
 	        android:textColor="#333333"

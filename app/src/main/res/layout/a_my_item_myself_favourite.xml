@@ -19,6 +19,16 @@
         android:scaleType="fitXY"
         android:src="@drawable/i_nopic" />
 
+    <ImageView
+        android:id="@+id/myself_favourite_catch"
+        android:layout_width="@dimen/dp_39"
+        android:layout_height="@dimen/dp_18"
+        android:layout_marginTop="@dimen/dp_14"
+        android:layout_marginLeft="@dimen/dp_3"
+        android:src="@drawable/i_local_catch"
+        android:visibility="gone"
+        />
+
     <RelativeLayout
         android:id="@+id/tag_exclusive_layout"
         android:layout_width="wrap_content"

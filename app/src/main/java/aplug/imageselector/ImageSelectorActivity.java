@@ -41,16 +41,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.FileManager;
 import acore.tools.Tools;
+import amodule.answer.activity.BaseEditActivity;
 import aplug.imageselector.adapter.FolderAdapter;
 import aplug.imageselector.adapter.ImageGridAdapter;
 import aplug.imageselector.bean.Folder;
 import aplug.imageselector.bean.Image;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import xh.basic.tool.UtilLog;
-import xh.windowview.XhDialog;
 
 /**
  * @author Eva
@@ -104,6 +105,13 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	private int mode;
 	private int loaderId = 0;
 
+	/**
+	 * 当没有选择图片的时候是否可以退出这个界面
+	 */
+	private boolean isCanBackOnNoChoose = true;
+	private String mTjId;
+	private String mTag;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -136,6 +144,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		}
 	}
 	private void initView() {
+		if(!isCanBackOnNoChoose) findViewById(R.id.btn_back).setVisibility(View.GONE);
+
 		// 初始化，先隐藏当前timeline
 		mTimeLineText = (TextView) findViewById(R.id.timeline_area);
 		mTimeLineText.setVisibility(View.GONE);
@@ -175,6 +185,10 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	// 初始化数据
 	private void initData() {
 		Intent intent = getIntent();
+		isCanBackOnNoChoose = intent.getBooleanExtra(ImageSelectorConstant.IS_CAN_BACK_ON_NO_CHOOSE,true);
+		mTjId = intent.getStringExtra("tjId");
+		mTag = intent.getStringExtra("tag");
+
 		// 选择图片数量
 		mDefaultCount = intent.getIntExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT , 1);
 		// 图片选择模式
@@ -609,12 +623,21 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			break;
 		// 退出
 		case R.id.btn_back:
+			if (BaseEditActivity.TAG.equals(mTag)) {
+				XHClick.mapStat(this, mTjId, "点击图片按钮", "点击返回按钮");
+			}
 			setResult(RESULT_CANCELED);
 			onBackPressed();
 			break;
 		// 提交按钮
 		case R.id.commit:
+
+//TODO
+			commit();
 			if (resultList != null && resultList.size() > 0) {
+				if (BaseEditActivity.TAG.equals(mTag)) {
+					XHClick.mapStat(this, mTjId, "点击图片按钮", (resultList.size() < 3 ? "只" : "") + "选择" + resultList.size() + "张图（点击完成）");
+				}
 				commit();
 			}else{
 				finish();
@@ -633,6 +656,9 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 
 	@Override
 	public void onBackPressed() {
+		if(!isCanBackOnNoChoose)
+			return;
+
 		if (loaderId != 0) {
 			loaderId = 0;
 			mTitle.setText("全部图片");
@@ -640,7 +666,11 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
 			mFolderAdapter.setSelectIndex(0);
 		} else {
-			super.onBackPressed();
+			Intent data = new Intent();
+			resultList.clear();
+			data.putStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT, resultList);
+			setResult(RESULT_OK, data);
+			finish();
 		}
 	}
 	

@@ -626,5 +626,9 @@ public class VideoPlayerController {
     public interface OnPlayingCompletionListener {
         void onPlayingCompletion();
     }
+    protected OnPlayingCompletionListener mOnPlayingCompletionListener;
+    public void setOnPlayingCompletionListener(OnPlayingCompletionListener playingCompletionListener) {
+        mOnPlayingCompletionListener = playingCompletionListener;
+    }
 
 }

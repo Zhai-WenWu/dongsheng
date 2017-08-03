@@ -119,9 +119,8 @@ public class NormalContentView extends CircleItemBaseRelativeLayout {
      * 初始化view
      *
      * @param maps
-     * @param Cid
      */
-    public void initView(Map<String, String> maps, final String Cid,int nowPosition) {
+    public void initView(Map<String, String> maps,int nowPosition) {
         this.map = maps;
         this.position_now = nowPosition;
         //标准user

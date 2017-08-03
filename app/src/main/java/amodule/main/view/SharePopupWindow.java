@@ -1,8 +1,6 @@
 package amodule.main.view;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.tools.ToolsDevice;
-import third.share.ShareActivity;
 import third.share.ShareTools;
 
 /**

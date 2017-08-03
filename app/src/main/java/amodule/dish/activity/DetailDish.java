@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 
 import com.xiangha.R;
@@ -35,23 +36,20 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
-import amodule.dish.tools.ADDishContorl;
-import amodule.dish.view.DishActivityViewControl;
-import amodule.user.db.BrowseHistorySqlite;
-import amodule.user.db.HistoryData;
+import amodule.dish.view.DishActivityViewControlNew;
+import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
-import static com.xiangha.R.id.share_layout;
-import static java.lang.System.currentTimeMillis;
+import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
- * 新的菜谱详情页
- * -----离线菜谱处理
- * 页面加载原则：头部跟随view一起初始化，底部有数据再进行加载
+ * 菜谱详情页：头部大图、视频，底部广告以下是原生，中间是h5
+ * Created by Fang Ruijiao on 2017/7/11.
  */
 public class DetailDish extends BaseAppCompatActivity {
     public static String tongjiId = "a_menu_detail_normal430";//统计标示
@@ -101,6 +99,12 @@ public class DetailDish extends BaseAppCompatActivity {
             //保存历史记录
             DataOperate.saveHistoryCode(code);
         }
+        if(TextUtils.isEmpty(code)){
+            Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
+            DetailDish.this.finish();
+            return;
+        }
+
         //保持高亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         new Handler().postDelayed(new Runnable() {
@@ -124,27 +128,31 @@ public class DetailDish extends BaseAppCompatActivity {
         isHasVideo = false;
         detailPermissionMap.clear();
         permissionMap.clear();
-        if(dishActivityViewControl != null)
-            dishActivityViewControl.setLoginStatus();
-        setRequest(page);
+        dishActivityViewControl.setLoginStatus();
+        if (mHandler == null) {
+            initData();
+        }
+        mHandler.sendEmptyMessage(LOAD_DISH);
     }
 
     /**
      * 数据的初始化
      */
     private void init() {
-        initActivity(dishTitle, 2, 0, 0, R.layout.a_dish_detail_new);
-        dishActivityViewControl= new DishActivityViewControl(this);
-        dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControl.DishViewCallBack() {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.a_dish_detail_new);
+        level = 2;
+        if(Tools.isShowTitle()){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            String colors = Tools.getColorStr(this, R.color.transparent);
+//            Tools.setStatusBarColor(this, Color.parseColor(colors));
+        }
+        setCommonStyle();
+        dishActivityViewControl= new DishActivityViewControlNew(this);
+        dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControlNew.DishViewCallBack() {
             @Override
-            public void gotoRequest() {
-                loadManager.setLoading(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(page >= 3)
-                            setRequest(++page);
-                    }
-                },false);
+            public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
+                DetailDish.this.mVideoPlayerController=mVideoPlayerController;
             }
         });
         initData();
@@ -199,21 +207,14 @@ public class DetailDish extends BaseAppCompatActivity {
     /**
      * 请求网络
      */
-    private void setRequest(final int pages) {
-        String params = "?code=" + code + "&pg=" + pages;
-        if (!TextUtils.isEmpty(state)) {//是当前用户的菜谱。
-            params += "&isNew=1";
-        }
-
-        ReqInternet.in().doGet(StringManager.api_getDishInfoNew + params, new InternetCallback(this) {
+    private void loadDishInfo() {
+        String params = "code=" + code;
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-//                Log.i("tzy","obj = " + obj);
                 //权限检测
-                if(permissionMap.isEmpty()
-                        && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
-                        && pages == 1){
+                if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)){
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
                     }else{
@@ -238,19 +239,13 @@ public class DetailDish extends BaseAppCompatActivity {
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     if(!hasPermission || !contiunRefresh) return;
-                    if(pages == 1){
-                        dishActivityViewControl.reset();
-                    }
+                    dishActivityViewControl.reset();
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
-                        analyzeData(StringManager.getListMapByJson(o),detailPermissionMap);
-                        if(page < 3)
-                            setRequest(++page);
+                        analyzeData(String.valueOf(o),detailPermissionMap);
                     } else {
-                        dishActivityViewControl.setIsGoLoading(false);
                         loadManager.loadOver(flag, 1, true);
                     }
-                } else
-                    dishActivityViewControl.setIsGoLoading(false);
+                }
                 if(ToolsDevice.isNetworkAvailable(context)|| !LoadImage.SAVE_LONG.equals(imgLevel)){
                     loadManager.loadOver(flag, 1, true);
                 }else loadManager.hideProgressBar();
@@ -258,97 +253,56 @@ public class DetailDish extends BaseAppCompatActivity {
         });
     }
 
+    private void loadOtherData(){
+        String params = "code=" + code;
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDish.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if(i >= ReqInternet.REQ_OK_STRING){
+                    dishActivityViewControl.analyzeUserShowDishInfoData(String.valueOf(o));
+                }
+            }
+        });
+
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDish.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING){
+                    dishActivityViewControl.analyzeDishLikeNumberInfoData(String.valueOf(o));
+                }
+            }
+        });
+    }
+
     /**
-     * 处理历史记录：
+     * 处理离线菜谱数据：
      * 历史记录都是:dishInfo的数据
      */
     private void analyzeHistoryData() {
-        ArrayList<Map<String, String>> listmaps = UtilString.getListMapByJson(dishJson);
-        if (listmaps.size() > 0)
-            dishActivityViewControl.setIsGoLoading(true);
-        else {
-            dishActivityViewControl.setIsGoLoading(false);
-            return;
-        }
-        dishActivityViewControl.analyzeDishInfoData(listmaps, new HashMap<String, String>());
+        dishActivityViewControl.analyzeDishInfoData(dishJson, new HashMap<String, String>(),true);
         loadManager.loadOver(ReqInternet.REQ_OK_STRING, 1, true);
         mHandler.sendEmptyMessage(LOAD_DISH_OVER);
     }
 
     /**
      * 处理业务数据
-     *
-     * @param list 数据
-     * @param permissionMap 权限数据
+     * @param data
      */
-    private void analyzeData(ArrayList<Map<String, String>> list,Map<String,String> permissionMap) {
-        String lable = list.get(0).get("lable");
-        ArrayList<Map<String, String>> listmaps = StringManager.getListMapByJson(list.get(0).get("data"));
+    private void analyzeData(String data,Map<String,String> permissionMap) {
+        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
         //第一页未请求到数据，直接关闭改页面
-        if (listmaps.size() == 0 && lable.equals("dishInfo")) {
+        if (list.size() < 1) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
             DetailDish.this.finish();
             return;
         }
-        if (lable.equals("dishInfo")) {//第一页整体业务标示
-            dishJson = list.get(0).get("data");//第一页数据保留下来
-            saveHistoryToDB(dishJson);
-            requestWeb();
-        }
-        dishActivityViewControl.analyzeData(list,permissionMap);
-    }
-    private boolean saveHistory = false;
-    private void saveHistoryToDB(final String dishJson) {
-        if (!saveHistory) {
-            saveHistory = true;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject jsonObject = handlerJSONData(dishJson);
-                    HistoryData data = new HistoryData();
-                    data.setBrowseTime(currentTimeMillis());
-                    data.setCode(code);
-                    data.setDataJson(jsonObject.toString());
-                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
-                    sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
-                }
-            }).start();
-        }
+        requestWeb(data);
+        dishActivityViewControl.analyzeDishInfoData(data,permissionMap,false);
+
     }
 
-    private JSONObject handlerJSONData(String dishJson) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            ArrayList<Map<String, String>> dishInfoArray = StringManager.getListMapByJson(dishJson);
-            if (dishInfoArray.size() > 0) {
-                Map<String, String> dishInfo = dishInfoArray.get(0);
-                jsonObject.put("name", dishInfo.get("name"));
-                jsonObject.put("img", dishInfo.get("img"));
-                jsonObject.put("code", code);
-                jsonObject.put("isFine", dishInfo.get("rank"));
-                jsonObject.put("favorites", dishInfo.get("favorites"));
-                jsonObject.put("allClick", dishInfo.get("allClick"));
-                jsonObject.put("exclusive", dishInfo.get("exclusive"));
 
-                ArrayList<Map<String, String>> videos = StringManager.getListMapByJson(dishInfo.get("video"));
-                jsonObject.put("hasVideo", videos.size() > 0 ? 2 : 1);
-                ArrayList<Map<String, String>> makes = StringManager.getListMapByJson(dishInfo.get("makes"));
-                jsonObject.put("isMakeImg", makes.size() > 0 ? 2 : 1);
-                ArrayList<Map<String, String>> burden = StringManager.getListMapByJson(dishInfo.get("burden"));
-                StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < burden.size(); i++) {
-                    ArrayList<Map<String, String>> data = StringManager.getListMapByJson(burden.get(i).get("data"));
-                    for (int j = 0; j < data.size(); j++) {
-                        stringBuffer.append(data.get(j).get("name")).append(",");
-                    }
-                }
-                jsonObject.put("burdens", stringBuffer.toString().substring(0, stringBuffer.length() - 1));
-            }
-        } catch (Exception e) { }
-        return jsonObject;
-    }
-
-    private void requestWeb() {
+    private void requestWeb(String dishJson) {
         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
         if(dishInfo != null){
             SpecialWebControl.initSpecialWeb(this,"dishInfo",dishInfo.get("name"),code);
@@ -366,6 +320,7 @@ public class DetailDish extends BaseAppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.i("DetailDishActivity","onResume() colse_level:" + Main.colse_level);
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
         Rect outRect = new Rect();
@@ -377,6 +332,7 @@ public class DetailDish extends BaseAppCompatActivity {
 
     @Override
     protected void onPause() {
+        Log.i("DetailDishActivity","onPause()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
         dishActivityViewControl.onPause();
@@ -391,8 +347,10 @@ public class DetailDish extends BaseAppCompatActivity {
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
         }
         //释放资源。
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler=null;
+        if(mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
     }
 
     @Override
@@ -405,9 +363,7 @@ public class DetailDish extends BaseAppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (dishActivityViewControl == null)
             return;
-        if (requestCode == 1000 && data != null) {
-            dishActivityViewControl.getDishHeaderView().getdDshAboutView().setNewFollowState(String.valueOf(data.getExtras().get("folState")));
-        }else if(requestCode==10000&& resultCode== Activity.RESULT_OK){
+        if(requestCode==10000&& resultCode== Activity.RESULT_OK){
             Map<String, String> dishInfoMap = dishActivityViewControl.getDishInfoMap();
             if (dishInfoMap == null)
                 return;

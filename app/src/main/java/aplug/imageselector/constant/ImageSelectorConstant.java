@@ -28,5 +28,7 @@ public class ImageSelectorConstant {
     public static final int DEFAULTCOUNT = 8;
     /** 是否是提交操作 */
     public static final String EXTRA_IS_COMMIT = "is_commit";
+    public static final String IS_CAN_BACK_ON_NO_CHOOSE = "isCanBackOnNoChoose";
+
 
 }

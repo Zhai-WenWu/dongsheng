@@ -36,6 +36,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishHeaderView;
+import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishVideoImageView;
 import amodule.dish.view.VideoDredgeVipView;
 import aplug.basic.LoadImage;
@@ -62,7 +63,7 @@ public class VideoHeaderView extends RelativeLayout {
     private FrameLayout adLayout;
 
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
-    private DishHeaderView.DishHeaderVideoCallBack callBack;
+    private DishHeaderViewNew.DishHeaderVideoCallBack callBack;
 
     private Map<String, String> mapAd;//广告数据
     private boolean isAutoPaly = false;//默认自动播放
@@ -102,7 +103,7 @@ public class VideoHeaderView extends RelativeLayout {
         dredgeVipLayout = (RelativeLayout) findViewById(R.id.video_dredge_vip_layout);
     }
 
-    public void setData(Map<String, String> data, DishHeaderView.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
+    public void setData(Map<String, String> data, DishHeaderViewNew.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
         if (callBack == null) {
             this.callBack = new DishHeaderView.DishHeaderVideoCallBack() {
                 @Override public void videoImageOnClick() { }

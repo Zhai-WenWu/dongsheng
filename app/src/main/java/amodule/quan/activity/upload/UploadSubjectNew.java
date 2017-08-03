@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -24,7 +25,6 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.AgreementManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -36,8 +36,8 @@ import amodule.quan.db.CircleSqlite;
 import amodule.quan.db.CircleSqlite.CircleDB;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
+import amodule.quan.tool.UploadSubjectBottomControl;
 import amodule.quan.tool.UploadSubjectControl;
-import amodule.quan.tool.UploadSubjectLocationControl;
 import amodule.quan.view.BarUploadSubjectNew;
 import amodule.quan.view.BarUploadSubjectNew.BarUploadSubInterface;
 import amodule.quan.view.ImgTextCombineLayout;
@@ -45,7 +45,6 @@ import amodule.quan.view.UploadSubjectContent;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
-import third.location.LocationSys;
 
 import static amodule.quan.activity.FriendQuan.REQUEST_CODE_QUAN_FRIEND;
 
@@ -58,15 +57,11 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 
 	// 用于记录失败的数据;
 	private SubjectSqlite sqlHelp;
-	//----------定位------------
-	private UploadSubjectLocationControl mLocationControl;
-	public LocationSys mLocationSys;
-	//--------- 协议 ------------
-	private AgreementManager mAgreementManager;
 
 	//-----------内容控制----------
 	private UploadSubjectContent upSubContent;
 	private BarUploadSubjectNew bar;
+	private UploadSubjectBottomControl uploadSubjectBottomControl;
 	private View upSubContentView;
 	public int titleMax = -1;
 	public int titleMin = -1;
@@ -78,9 +73,10 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	/** 发布类型：贴子，回复  */
 	private String uploadType = SubjectData.TYPE_UPLOAD;
 	//默认发布的圈子为秀美食cid=1,选择的默认cid=“-1”
-	private final String  defaultCid = "1",defaultChooseCid = "-1";
+	private final String defaultChooseCid = "-1";
 	private String mChooseCid = "-1",cName = "";
 	private String mDishCode;
+	private boolean isCanBackOnNoChoose = true, isFirst = true;
 
 	public static final String mTongjiId = "a_post";
 	private RelativeLayout activityLayout;
@@ -129,8 +125,14 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		if(resultCode == RESULT_OK && data != null){
 			switch (requestCode){
 				case UP_SUBJECT_CHOOSE_IMG:
+					Log.i("FRJ","isFirst:" + isFirst + "   isCanBackOnNoChoose:" + isCanBackOnNoChoose);
 					ArrayList<String> array = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);//ArrayList<String>
-					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新贴图片", array.size());
+					int size = array.size();
+					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新贴图片", size);
+					if(isFirst && size == 0 && !isCanBackOnNoChoose ){
+						UploadSubjectNew.this.finish();
+					}
+					isFirst = false;
 					upSubContent.insertImgs(array);
 					break;
 				case UP_SUBJECT_CHOOSE_CIRCLE:
@@ -141,6 +143,9 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 				case REQUEST_CODE_QUAN_FRIEND:
 					upSubContent.editAdd(data.getStringExtra(FriendQuan.FRIENDS_LIST_RESULT));
 					break;
+				case CHOOSE_DISH:
+					uploadSubjectBottomControl.onActivityResult(data);
+					break;
 			}
 		}
 	}
@@ -148,9 +153,9 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	private void initView(){
 		DisplayMetrics metrics = ToolsDevice.getWindowPx(this);
 		//屏幕高-标题高-发布的的高-定位高-状态栏高-协议高度
-		int wH = metrics.heightPixels - Tools.getDimen(this, R.dimen.dp_45) - Tools.getDimen(this, R.dimen.dp_35)
-				- Tools.getDimen(this, R.dimen.dp_101) - Tools.getDimen(this, R.dimen.dp_20);
-		wH = metrics.heightPixels - Tools.getDimen(this,R.dimen.dp_45) - Tools.getDimen(this,R.dimen.dp_50) *2 - Tools.getStatusBarHeight(this);
+//		int wH = metrics.heightPixels - Tools.getDimen(this, R.dimen.dp_45) - Tools.getDimen(this, R.dimen.dp_35)
+//				- Tools.getDimen(this, R.dimen.dp_101) - Tools.getDimen(this, R.dimen.dp_20);
+		int wH = metrics.heightPixels - Tools.getDimen(this,R.dimen.dp_45) - Tools.getDimen(this,R.dimen.dp_50) *2 - Tools.getStatusBarHeight(this);
 		LinearLayout parentRl = (LinearLayout)findViewById(R.id.post_content);
 		parentRl.setMinimumHeight(wH);
 		//-----------内容控制----------
@@ -166,12 +171,26 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		int dp_8= (int) this.getResources().getDimension(R.dimen.dp_8);
 		leftImgBtn.setPadding(dp_2, dp_8, dp_2, dp_8);
 		leftImgBtn.setOnClickListener(this);
-		mLocationSys = new LocationSys(this);
-		mLocationControl = new UploadSubjectLocationControl(this);
-		mAgreementManager = new AgreementManager(this, StringManager.api_agreementOriginal);
+		uploadSubjectBottomControl = new UploadSubjectBottomControl(this, StringManager.api_agreementOriginal);
+		uploadSubjectBottomControl.setOnBottomListener(new UploadSubjectBottomControl.OnBottomListener() {
+			@Override
+			public void onChoseFollowDish() {
+				findViewById(R.id.nextStep).setVisibility(View.GONE);
+				findViewById(R.id.upload).setVisibility(View.VISIBLE);
+				mChooseCid = "1";
+			}
+
+			@Override
+			public void onClearFollowDish() {
+				findViewById(R.id.nextStep).setVisibility(View.VISIBLE);
+				findViewById(R.id.upload).setVisibility(View.GONE);
+				mChooseCid = defaultChooseCid;
+			}
+		});
 		findViewById(R.id.back).setOnClickListener(this);
 		findViewById(R.id.nextStep).setOnClickListener(this);
 		findViewById(R.id.upload).setOnClickListener(this);
+
 	}
 
 	private void initData(boolean isSkip){
@@ -215,6 +234,11 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 				upData.setTitle(title);
 				XHClick.onEventValue(this, "uploadQuanTitle", "uploadQuanTitle", "自带标题", title.length());
 				isHaveTitle = true;
+
+				if(!TextUtils.isEmpty(mDishCode)){
+					uploadSubjectBottomControl.setDishInfo(mDishCode,title);
+					uploadSubjectBottomControl.setIsFollowDish(false);
+				}
 			}
 			upData.setType(uploadType);
 			// 如果是回复贴则
@@ -223,17 +247,18 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 				//设置subjectData对象title不可修改
 				upData.setTitleCanModify(false);
 				findViewById(R.id.ll_location).setVisibility(View.GONE);
-				mLocationSys.mLocationClient.stop();
+				uploadSubjectBottomControl.stopLocation();
 
 				TextView titleV = (TextView) findViewById(R.id.title);
 				titleV.setText("跟贴");
+				uploadSubjectBottomControl.setScoreLayoutVisible(false);
 			}else{
-				mLocationControl.onLocationClick();
+				uploadSubjectBottomControl.onLocationClick();
 				upData.setTitleCanModify(true);
 				String[] localIsShow = FileManager.getSharedPreference(this, FileManager.xmlKey_locationIsShow);
 				if(localIsShow != null && localIsShow.length > 1){
 					if("1".equals(localIsShow[1])){
-						mLocationControl.onLocationClick();
+						uploadSubjectBottomControl.onLocationClick();
 					}
 				}
 			}
@@ -248,7 +273,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 
 			@Override
 			public void onAddImgClick() {
-				imageSelector();
+				imageSelector(false);
 			}
 
 			@Override
@@ -260,17 +285,19 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		upSubContent.init(upData, upSubContentView,bar,isHaveTitle,isNewSubject,isDraft);
 		setCircleRule();
 		if(isSkip){
-			imageSelector();
+			imageSelector(TextUtils.isEmpty(mDishCode));
 		}
 	}
 
-	private void imageSelector(){
+	private void imageSelector(boolean isCanBack){
+		isCanBackOnNoChoose = isCanBack;
 		int num = upSubContent.getBitmapNum();
 		int selectNum = imgMax - num;
 		if(selectNum > 0){
 			Intent intentAddImg = new Intent();
 			intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
 			intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, selectNum);
+//			intentAddImg.putExtra(ImageSelectorConstant.IS_CAN_BACK_ON_NO_CHOOSE, isCanBack);
 			intentAddImg.setClass(UploadSubjectNew.this, ImageSelectorActivity.class);
 			startActivityForResult(intentAddImg, UP_SUBJECT_CHOOSE_IMG);
 		}else{
@@ -371,8 +398,8 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 				break;
 			case R.id.ll_location: //地理位置
 				XHClick.mapStat(this, mTongjiId, "地址点击", "");
-				mLocationControl.onLocationClick();
-				FileManager.setSharedPreference(this, FileManager.xmlKey_locationIsShow, mLocationControl.getIsLocation() ? "2" : "1");
+				uploadSubjectBottomControl.onLocationClick();
+				FileManager.setSharedPreference(this, FileManager.xmlKey_locationIsShow, uploadSubjectBottomControl.getIsLocation() ? "2" : "1");
 				break;
 			case R.id.back:
 				this.onBackPressed();
@@ -386,7 +413,10 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	private void chooseNextStep(boolean isHasCid){
 		//获取数据
 		SubjectData subjectData = upSubContent.getData();
+		if(TextUtils.isEmpty(mDishCode))
+			mDishCode = uploadSubjectBottomControl.getDishCode();
 		subjectData.setDishCode(mDishCode);
+		subjectData.setScoreNum(uploadSubjectBottomControl.getScoreNum());
 		//只有发贴才存草稿
 		if(SubjectData.TYPE_UPLOAD.equals(uploadType)){
 			subjectData.setType(uploadType);
@@ -463,7 +493,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		}else if(contentMax >= 0 && contentNum > contentMax){
 			XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", "内容至多" + contentMax + "个字符", contentNum);
 			return "内容至多" + contentMax + "个字符";
-		}else if(!mAgreementManager.getIsChecked()){
+		}else if(!uploadSubjectBottomControl.getIsChecked()){
 			XHClick.onEventValue(this, "uploadQuanClick", "uploadQuanClick", "没有确认香哈协议", 0);
 			return "同意原创内容发布协议后才能提交哦";
 		}
@@ -483,7 +513,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 			super.onBackPressed();
 			SubjectData subjectData = upSubContent.getData();
 			saveInDb(subjectData);
-			mLocationSys.stopLocation();
+			uploadSubjectBottomControl.stopLocation();
 		}
 	}
 
@@ -507,8 +537,8 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 					subjectData.setCid(mChooseCid);
 				}
 				//添加位置信息
-				subjectData.setLocation(mLocationControl.getLocationJson());
-				subjectData.setIsLocation(mLocationControl.getIsLocation() ? "2" : "1");
+				subjectData.setLocation(uploadSubjectBottomControl.getLocationJson());
+				subjectData.setIsLocation(uploadSubjectBottomControl.getIsLocation() ? "2" : "1");
 			}
 			sqlHelp.inser(subjectData);
 		}
@@ -520,4 +550,5 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	public final static int MSG_SEND_SUBJECT_OK = 14;
 	public static final int UP_SUBJECT_CHOOSE_IMG = 12200;
 	public static final int UP_SUBJECT_CHOOSE_CIRCLE = 12202;
+	public static final int CHOOSE_DISH = 12204;
 }

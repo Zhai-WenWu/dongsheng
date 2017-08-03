@@ -58,7 +58,7 @@ public class ComposeSearchAdapter extends AdapterSimple {
 
         public void setData(final Map<String, String> map,int position) {
             if (view != null) {
-                view.initView(map, "",position);
+                view.initView(map, position);
             }
         }
 

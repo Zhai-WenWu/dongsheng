@@ -42,7 +42,7 @@ public class QuanReport extends BaseActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initActivity("举报", 2, 0, R.layout.c_view_bar_title, R.layout.a_quan_report_new);
+		initActivity("举报", 2, 0, R.layout.report_view_bar_title, R.layout.a_quan_report_new);
 		loadManager.hideProgressBar();
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -126,7 +126,7 @@ public class QuanReport extends BaseActivity{
 		}
 		TextView title = (TextView) findViewById(R.id.title);
 		if (nickName != "") {
-			title.setText(nickName);
+			title.setText("举报 " + nickName);
 		}
 	}
 	
@@ -155,13 +155,6 @@ public class QuanReport extends BaseActivity{
 							Tools.showToast(QuanReport.this, "请选择理由");
 							return;
 						}
-//						if (isAdmin && !(isBlackChange^isBlack) && userSelect == 0) {
-//							Tools.showToast(QuanReport.this, "请选择理由");
-//							return;
-//						}else if (!isAdmin && !(isBlackChange^isBlack) && operation == 0 && userSelect == 0) {
-//							Tools.showToast(QuanReport.this, "请选择理由");
-//							return;
-//						}
 						if (isBlackChange^isBlack) {
 							String param = isBlack ?  "type=ignore&cusCode=" + code: "type=restore&cusCode=" + code;
 							ReqInternet.in().doPost(StringManager.api_setUserData, param, new InternetCallback(QuanReport.this) {
@@ -185,13 +178,6 @@ public class QuanReport extends BaseActivity{
 							Tools.showToast(QuanReport.this, "请选择理由");
 							return;
 						}
-//						if (isAdmin && userSelect == 0) {
-//							Tools.showToast(QuanReport.this, "请选择理由");
-//							return;
-//						}else if (!isAdmin  && operation == 0 && userSelect == 0) {
-//							Tools.showToast(QuanReport.this, "请选择理由");
-//							return;
-//						}
 					}
 				}else {
 					Tools.showToast(QuanReport.this, "信息错误,请返回重新选择");
@@ -203,9 +189,6 @@ public class QuanReport extends BaseActivity{
 				}else if (userSelect > 0 ) {
 					infoString = userReportInfos[userSelect-1];
 				}
-//				else if(userSelect == 0 && operation != 0){
-//					infoString = userReportInfos[1];
-//				}
 				btn_quan_report_commit.setClickable(false);
 				String param="type=report&subjectCode="+subjectCode
 						+"&repType="+repType+"&repTypeCode=" + code
@@ -234,7 +217,7 @@ public class QuanReport extends BaseActivity{
 				isBlack = state;
 			}
 		});
-		findViewById(R.id.quan_report_info).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.icon_report).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -250,22 +233,18 @@ public class QuanReport extends BaseActivity{
 				for (int i = 0; i < admin_report_conlection_quan.getChildCount(); i++) {
 					RelativeLayout child = (RelativeLayout) admin_report_conlection_quan.getChildAt(i);
 					ImageView imageView = (ImageView) child.getChildAt(0);
-//					TextView textView = (TextView) child.getChildAt(1);
 					if (item == i) {
 						if (adminSelectItem == item && isAdminSelect) {
-//							textView.setTextColor(getResources().getColor(R.color.text_color_696969));
 							imageView.setImageResource(R.drawable.j_select);
 							operation = 0;
 							isAdminSelect = false;
 						} else {
 							adminSelectItem = item;
 							isAdminSelect = true;
-//							textView.setTextColor(getResources().getColor(R.color.c_black_text));
 							imageView.setImageResource(R.drawable.j_select_active);
 							operation = i + 4;
 						}
 					} else {
-//						textView.setTextColor(getResources().getColor(R.color.text_color_696969));
 						imageView.setImageResource(R.drawable.j_select);
 					}
 				}
@@ -279,22 +258,18 @@ public class QuanReport extends BaseActivity{
 				for (int i = 0; i < admin_report_conlection.getChildCount(); i++) {
 					RelativeLayout child = (RelativeLayout) admin_report_conlection.getChildAt(i);
 					ImageView imageView = (ImageView) child.getChildAt(0);
-//					TextView textView = (TextView) child.getChildAt(1);
 					if (item == i) {
 						if (adminSelectItem == item && isAdminSelect) {
-//							textView.setTextColor(getResources().getColor(R.color.text_color_696969));
 							imageView.setImageResource(R.drawable.j_select);
 							operation = 0;
 							isAdminSelect = false;
 						}else {
 							adminSelectItem = item;
 							isAdminSelect = true;
-//							textView.setTextColor(getResources().getColor(R.color.c_black_text));
 							imageView.setImageResource(R.drawable.j_select_active);
 							operation = i + 1;
 						}
 					} else {
-//						textView.setTextColor(getResources().getColor(R.color.text_color_696969));
 						imageView.setImageResource(R.drawable.j_select);
 					}
 				}
@@ -309,22 +284,18 @@ public class QuanReport extends BaseActivity{
 				for (int i = 0; i < user_report_collection.getChildCount(); i++) {
 					RelativeLayout child = (RelativeLayout) user_report_collection.getChildAt(i);
 					ImageView imageView = (ImageView) child.getChildAt(0);
-//					TextView textView = (TextView) child.getChildAt(1);
 					if (item == i) {
 						if (userSelectItem == item && isUserSelect) {
-//							textView.setTextColor(getResources().getColor(R.color.text_color_696969));
 							imageView.setImageResource(R.drawable.j_select);
 							userSelect = 0;
 							isUserSelect = false;
 						} else {
 							userSelectItem = item;
-//							textView.setTextColor(getResources().getColor(R.color.c_black_text));
 							imageView.setImageResource(R.drawable.j_select_active);
 							userSelect = i + 1;
 							isUserSelect = true;
 						}
 					} else {
-//						textView.setTextColor(getResources().getColor(R.color.text_color_696969));
 						imageView.setImageResource(R.drawable.j_select);
 					}
 				}

@@ -27,7 +27,6 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.Tools;
-import amodule.dish.activity.DetailDish;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 
@@ -82,7 +81,7 @@ public class ImageMoreCommenView extends ImageMoreView implements View.OnClickLi
         imageTouchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                XHClick.mapStat(mAct, DetailDish.tongjiId, "菜谱区域的点击", "步骤图大图-单击");
+                XHClick.mapStat(mAct, tongjiId, "菜谱区域的点击", "步骤图大图-单击");
                 changeContentVisibility();
             }
         });
@@ -241,7 +240,7 @@ public class ImageMoreCommenView extends ImageMoreView implements View.OnClickLi
             case R.id.a_dish_more_img_item_content_parent_rl:
             case R.id.a_dish_more_img_item_num_hint:
                 if(TextUtils.isEmpty(tongjiId))
-                XHClick.mapStat(mAct, DetailDish.tongjiId, "菜谱区域的点击", "步骤图大图-单击");
+                XHClick.mapStat(mAct, tongjiId, "菜谱区域的点击", "步骤图大图-单击");
                 changeContentVisibility();
                 break;
         }

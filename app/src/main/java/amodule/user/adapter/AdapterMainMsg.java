@@ -170,6 +170,7 @@ public class AdapterMainMsg extends AdapterSimple {
 						break;
 					case viewOther:
 						XHClick.track(view.getContext(), "点击消息列表页");
+						XHClick.mapStat(view.getContext(), "a_message", "点击其他用户消息", "");
 						String url=null;
 						if(map.get("state").equals("1"))
 							url = map.get("url")+ "&newsId=" + map.get("id");
@@ -197,6 +198,7 @@ public class AdapterMainMsg extends AdapterSimple {
 							notifyDataSetChanged();
 						}
 					}, 1000);
+
 				}
 			});
 		}

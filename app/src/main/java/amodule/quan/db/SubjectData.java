@@ -77,6 +77,8 @@ public class SubjectData extends UploadData {
 	 * 2.显示
 	 */
 	private String isLocation = "2";
+
+	private int scoreNum = 0;
 	
 	public SubjectData(){
 		this.uploadTimeCode = System.currentTimeMillis();
@@ -239,5 +241,13 @@ public class SubjectData extends UploadData {
 
 	public void setVideoSImgLocal(String videoSImgLocal) {
 		this.videoSImgLocal = videoSImgLocal;
+	}
+
+	public void setScoreNum(int scoreNum) {
+		this.scoreNum = scoreNum;
+	}
+
+	public int getScoreNum() {
+		return scoreNum;
 	}
 }

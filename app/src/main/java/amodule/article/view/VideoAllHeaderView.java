@@ -13,7 +13,7 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.view.DishHeaderView;
+import amodule.dish.view.DishHeaderViewNew;
 import third.video.VideoPlayerController;
 
 /**

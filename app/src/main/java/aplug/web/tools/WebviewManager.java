@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
@@ -42,7 +41,7 @@ import xh.basic.tool.UtilString;
 
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
 public class WebviewManager {
-    private final String ERROR_HTML_URL = "file:///android_asset/error.html";
+    public static final String ERROR_HTML_URL = "file:///android_asset/error.html";
     private Activity act;
     private LoadManager loadManager;
     private List<XHWebView> mWwebArray;
@@ -93,7 +92,7 @@ public class WebviewManager {
         //设置WebViewClient
         setWebViewClient(webview);
         //设置WebChromeClient
-        setWebChromeClient(webview);
+        setWebChromeClient(webview,loadManager);
         mWwebArray.add(webview);
         return webview;
     }
@@ -114,8 +113,7 @@ public class WebviewManager {
      *
      * @param webview
      */
-    @SuppressWarnings("deprecation")
-    private void initWebSetting(XHWebView webview) {
+    public static void initWebSetting(XHWebView webview) {
         WebSettings settings = webview.getSettings();
         settings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -261,13 +259,13 @@ public class WebviewManager {
      *
      * @param webview
      */
-    private void setWebChromeClient(final XHWebView webview) {
+    public static void setWebChromeClient(final XHWebView webview, final LoadManager loadManager) {
         webview.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 Tools.showToast(view.getContext(), message);
                 result.cancel();
-                loadManager.hideProgressBar();
+                if(loadManager != null)loadManager.hideProgressBar();
                 return true;
             }
 
@@ -284,7 +282,7 @@ public class WebviewManager {
 
             //弹出提示
             private void showTip(String message, final JsResult result) {
-                Builder builder = new Builder(act);
+                Builder builder = new Builder(webview.getContext());
                 builder.setTitle("提示");
                 builder.setMessage(message);
                 builder.setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {

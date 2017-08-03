@@ -1,45 +1,72 @@
 package amodule.dish.db;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import xh.basic.tool.UtilFile;
-import xh.basic.tool.UtilString;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.ImgManager;
 import acore.tools.Tools;
-import android.content.Context;
 import aplug.basic.LoadImage;
+import xh.basic.tool.UtilFile;
+import xh.basic.tool.UtilString;
 
 public class DataOperate {
 	//没登录时默认离线菜谱个数
 	public static final int MAX_DOWN_DISH=10;
-	
+
+	public static void saveBuyBurden(final Context context, final String json, final String mouldVersion) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				//统计
+				XHClick.onEventValue(context, "dishDownload315", "dishDownload", "下载" , 1);
+				//加入到数据库中
+				DishOffSqlite sqlite = new DishOffSqlite(context);
+				DishOffData buyData = new DishOffData();
+				ArrayList<Map<String,String>> arrayList = UtilString.getListMapByJson(json);
+				if(arrayList.size() > 0){
+					Map<String,String> dishInfoMap = arrayList.get(0);
+					buyData.setCode(dishInfoMap.get("code"));
+					buyData.setName(dishInfoMap.get("name"));
+					buyData.setAddTime(Tools.getAssignTime("yyyy-MM-dd HH:mm:ss",0));
+					buyData.setMoudleVersion(mouldVersion);
+					ImgManager.saveImg(dishInfoMap.get("img"),LoadImage.SAVE_LONG);
+					buyData.setJson(json);
+					int id = sqlite.insert(buyData);
+					if(id != -1)AppCommon.buyBurdenNum++;
+					sqlite.close();
+				}
+			}
+		}).start();
+	}
 	/**
 	 *  保存购物单
 	 * @param context
 	 * @param json 要保存的json码
 	 */
-	public static void saveBuyBurden(final Context context,final String json) {
+	public static void saveBuyBurden2(final Context context,final String json) {
 		new Thread(new Runnable(){ 
 			@Override
 			public void run() {
 				//统计
 				XHClick.onEventValue(context, "dishDownload315", "dishDownload", "下载" , 1);
 				//加入到数据库中
-				ShowBuySqlite sqlite = new ShowBuySqlite(context);
-				ShowBuyData buyData = new ShowBuyData();
+				DishOffSqlite sqlite = new DishOffSqlite(context);
+				DishOffData buyData = new DishOffData();
 				ArrayList<Map<String,String>> arrayList = UtilString.getListMapByJson(json);
 				for(int i=0;i<arrayList.size();i++){			
 					buyData.setCode(arrayList.get(i).get("code"));
 					buyData.setName(arrayList.get(i).get("name"));
 					buyData.setAddTime(Tools.getAssignTime("yyyy-MM-dd HH:mm:ss",0));
 					buyData.setJson(json);
-					int id = sqlite.insert(context,buyData);
+					int id = sqlite.insert(buyData);
 					if(id != -1)AppCommon.buyBurdenNum++;
 				}
 				if(arrayList.size() > 0){
@@ -56,6 +83,8 @@ public class DataOperate {
 			}
 		}).start();
 	}
+
+
 	
 	/**
 	 *  删除购物单
@@ -67,7 +96,7 @@ public class DataOperate {
 			@Override
 			public void run() {
 				try {
-					ShowBuySqlite sqlite = new ShowBuySqlite(context);
+					DishOffSqlite sqlite = new DishOffSqlite(context);
 					//删除缓存图片
 					sqlite.deleteImg(code);	
 					if(code.length()==0){
@@ -120,7 +149,6 @@ public class DataOperate {
 	
 	/**
 	 * 保存历史记录Code 
-	 * @param historyCode
 	 */
 	public static void saveHistoryCode(String searchWord) {
 		if (searchWord != null && searchWord.trim().length() > 0){
@@ -158,12 +186,13 @@ public class DataOperate {
 	 * @return
 	 */
 	public static String buyBurden(Context context, String code) {
-		ShowBuySqlite sqlite = new ShowBuySqlite(context);
+		DishOffSqlite sqlite = new DishOffSqlite(context);
 		try{
-			if (code.length()==0) return sqlite.getAllDataFromDB();
+			if (TextUtils.isEmpty(code)) return sqlite.getAllDataFromDB();
 			else if (code.equals("x")) return sqlite.selectCount() + "";
 			else return sqlite.selectByCode(code);
 		}catch(Exception e){
+			e.printStackTrace();
 //			if(code.equals("x")) return "0";
 //			else return "";
 			return "0";
@@ -176,7 +205,7 @@ public class DataOperate {
 	 * @return
 	 */
 	public static String loadPageBuyBurden(Context context, int page){
-		ShowBuySqlite sqlite = new ShowBuySqlite(context);
+		DishOffSqlite sqlite = new DishOffSqlite(context);
 		try{
 			return sqlite.LoadPage(page);
 		}catch(Exception e){

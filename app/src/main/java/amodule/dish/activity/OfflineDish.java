@@ -26,11 +26,14 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.adapter.AdapterListDish;
 import amodule.dish.db.DataOperate;
+import amodule.dish.db.ShowBuySqlite;
+import amodule.dish.tools.DishMouldControl;
 import amodule.user.activity.login.LoginByAccout;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -46,8 +49,7 @@ public class OfflineDish extends BaseActivity {
 	private ArrayList<Map<String, String>> arrayList = null;
 
 	private int currentPage = 0,everyPage = 0,loadPage = 0;
-	public boolean moreFlag = true, offLineOver = false, infoVoer = false;
-	
+
 	public boolean isBlankSpace = true,isAddHeadView = false;
 
 	@Override
@@ -71,7 +73,6 @@ public class OfflineDish extends BaseActivity {
 	}
 	
 	private OnClickListener onLookLevel = new OnClickListener() {
-		
 		@Override
 		public void onClick(View v) {
 			if (LoginManager.isLogin()) {
@@ -86,7 +87,7 @@ public class OfflineDish extends BaseActivity {
 
 	private void initData() {
 		rightBtn.setText("清空");
-		arrayList = new ArrayList<Map<String, String>>();
+		arrayList = new ArrayList<>();
 		// 绑定列表数据
 		adapter = new AdapterListDish(this , listView , arrayList,
 				R.layout.a_dish_item_menu,
@@ -123,6 +124,8 @@ public class OfflineDish extends BaseActivity {
 								XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "清空" , -x);
 								DataOperate.deleteBuyBurden(OfflineDish.this, "");
 								Tools.showToast(getApplicationContext(), "清除成功");
+								String path = DishMouldControl.getOffDishPath();
+								FileManager.delDirectoryOrFile(path);
 								arrayList.clear();
 								adapter.notifyDataSetChanged();
 								loadManager.hideProgressBar();
@@ -178,6 +181,8 @@ public class OfflineDish extends BaseActivity {
 								//统计
 								XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "删除" , -1);
 								DataOperate.deleteBuyBurden(OfflineDish.this,map.get("code"));
+								String path = DishMouldControl.getOffDishPath() + map.get("code");
+								FileManager.delDirectoryOrFile(path);
 								arrayList.remove(newPositon);
 								adapter.notifyDataSetChanged();
 								if(arrayList.size()==0)
@@ -204,7 +209,10 @@ public class OfflineDish extends BaseActivity {
 	// 设置离线列表
 	private void loadOffLine() {
 		currentPage++;
-		setOffLine(UtilString.getListMapByJson(DataOperate.loadPageBuyBurden(OfflineDish.this, currentPage)));
+//		setOffLine(UtilString.getListMapByJson(DataOperate.loadPageBuyBurden(OfflineDish.this, currentPage)));
+
+		ShowBuySqlite sqlite = new ShowBuySqlite(OfflineDish.this);
+		setOffLine(UtilString.getListMapByJson(sqlite.LoadPage(currentPage)));
 		isBlankSpace = false;
 	}
 

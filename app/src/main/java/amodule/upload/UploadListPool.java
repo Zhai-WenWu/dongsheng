@@ -279,22 +279,12 @@ public class UploadListPool {
 
             @Override
             public void onSuccess(String responseStr, String uniquId, JSONObject jsonObject) {
-                Log.i("articleUpload","getUploadListNetCallBack() onSuccess() responseStr:" + responseStr + "  uniquId:" + uniquId + "   jsonObject:" + jsonObject);
-//                UploadItemData speciaItem = uploadPoolData.getSpeciaItem(uniquId);
-//                if (speciaItem != null) {
-//                    speciaItem.setState(UploadItemData.STATE_SUCCESS);
-//                }
                 uploadThingOver(true, uniquId, responseStr, jsonObject);
             }
 
 
             @Override
             public void onFaild(String faild, String uniqueId) {
-//                Log.i("articleUpload","getUploadListNetCallBack() onFaild()");
-//                UploadItemData speciaItem = uploadPoolData.getSpeciaItem(uniqueId);
-//                if (speciaItem != null) {
-//                    speciaItem.setState(UploadItemData.STATE_FAILD);
-//                }
                 uploadThingOver(false, uniqueId, faild, null);
             }
 

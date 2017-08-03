@@ -36,6 +36,8 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 	private List<HistoryView> viewList = new ArrayList<>();
 	private String[] titles = new String[]{"菜谱", "美食贴", "头条"};
 
+	private boolean isChoose = false;//进此页面是否是为了选择菜谱
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,6 +48,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 			if(!TextUtils.isEmpty(position)){
 				 defaultIndex = Integer.parseInt(position);
 			}
+			isChoose = bundle.getBoolean("isChoose",false);
 		}
 		initView();
 //		initTitle();
@@ -55,9 +58,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText("浏览历史");
 
-		rightText = (TextView) findViewById(R.id.rightText);
-		rightText.setText("清空");
-		rightText.setVisibility(View.VISIBLE);
+
 		findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -68,7 +69,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 		barTitle = (RelativeLayout) findViewById(R.id.bar_title);
 		mTab = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		mViewPager = (ViewPager) findViewById(R.id.viewpager);
-		viewList.add(new HistoryDishView(this).onCreateView());
+		viewList.add(new HistoryDishView(this,isChoose).onCreateView());
 		viewList.add(new HistorySubjectView(this).onCreateView());
 		viewList.add(new HistoryNousView(this).onCreateView());
 		BrowsePagerAdapter adapter = new BrowsePagerAdapter(viewList, titles);
@@ -76,21 +77,26 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 
 		mTab.setViewPager(mViewPager);
 		mTab.setListener();
-		mTab.setmDelegatePageListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-			}
+		if(!isChoose) {
+			rightText = (TextView) findViewById(R.id.rightText);
+			rightText.setText("清空");
+			rightText.setVisibility(View.VISIBLE);
+			mTab.setmDelegatePageListener(new ViewPager.OnPageChangeListener() {
+				@Override
+				public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				}
 
-			@Override
-			public void onPageSelected(int position) {
-				rightText.setVisibility(hasData() ? View.VISIBLE : View.GONE);
-			}
+				@Override
+				public void onPageSelected(int position) {
+					rightText.setVisibility(hasData() ? View.VISIBLE : View.GONE);
+				}
 
-			@Override
-			public void onPageScrollStateChanged(int state) {
-			}
-		});
-		rightText.setOnClickListener(this);
+				@Override
+				public void onPageScrollStateChanged(int state) {
+				}
+			});
+			rightText.setOnClickListener(this);
+		}
 
 		mViewPager.setCurrentItem(defaultIndex);
 	}
@@ -109,7 +115,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		rightText.setVisibility(hasData() ? View.VISIBLE : View.GONE);
+		if(!isChoose) rightText.setVisibility(hasData() ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

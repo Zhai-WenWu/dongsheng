@@ -63,7 +63,7 @@ public class BarShare {
 	}
 	
 	public void openShare(){
-		Intent intent = new Intent(mContext,ShareActivity.class);
+		Intent intent = new Intent(mContext,ShareActivityBottom.class);
 		intent.putExtra("type", mType);
 		intent.putExtra("title", mTitle);
 		intent.putExtra("clickUrl", mClickUrl);
