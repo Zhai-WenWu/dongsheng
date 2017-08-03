@@ -95,8 +95,6 @@ public class XHApplication extends MobApplication {
         AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
         AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
 
-        AndFixTools.getAndFix().initPatchManager(this);
-
         //GrowingIO初始化
         new GrowingIOController().init(this);
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
