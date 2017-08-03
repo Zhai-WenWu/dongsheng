@@ -1,1 +1,1 @@
-include ':app', ':gsyVideoPlayer-armv7a', ':gsyVideoPlayer-java'
+include ':app','gsyVideoPlayer-java'

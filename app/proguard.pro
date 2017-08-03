@@ -213,13 +213,6 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 # 腾讯bugly end
-# AndFix start
--keep class * extends java.lang.annotation.Annotation
--keepclasseswithmembernames class * {
-    native <methods>;
-}
--keep class com.alipay.** { *; }
-# AndFix end
 
 # 讯飞 start
 -keep class com.iflytek.**{*;}
@@ -319,6 +312,7 @@
 #防止inline
 -dontoptimize
 #hotfix end
+
 #baidu ad
 -keepclassmembers class * extends android.app.Activity {
 public void *(android.view.View);
