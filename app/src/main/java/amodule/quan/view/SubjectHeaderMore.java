@@ -53,17 +53,17 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
         this.title = title;
         //设置类型
         setType(type);
-        //设置text
-        String des_title = handlerTitle(title);
-        if (!TextUtils.isEmpty(des_title))
-            moreText.setText("查看" + des_title + "的做法>>");
-        else
-            setVisibility(View.GONE);
     }
 
     public void setDishInfo(String code,String name){
         this.dishCode =code;
         this.dishName = name;
+        //设置text
+        String des_title = handlerTitle(dishName);
+        if (!TextUtils.isEmpty(des_title))
+            moreText.setText("查看" + des_title + "的做法>>");
+        else
+            setVisibility(View.GONE);
     }
 
     /**

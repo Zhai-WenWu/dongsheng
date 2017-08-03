@@ -3,32 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    android:orientation="horizontal" >
-    
-		<ImageView 
-	        android:id="@+id/a_agreement_check_img"
-		    android:layout_width="@dimen/dp_20"
-		    android:layout_height="@dimen/dp_20"
-		    android:padding="@dimen/dp_3"
-		    android:src="@drawable/i_agreement_check"/>
-          
-       <TextView 
-	       android:id="@+id/a_agreement_text1"
-           style="@style/singleText"
-           android:paddingLeft="@dimen/dp_2"
-           android:paddingTop="@dimen/dp_5"
-           android:paddingBottom="@dimen/dp_5"
-           android:text="同意"
-           android:textColor="#999999"
-           android:textSize="@dimen/sp_13"
-           android:clickable="true"/>
-       <TextView 
-	       android:id="@+id/a_agreement_text"
-           style="@style/singleText"
-           android:paddingTop="@dimen/dp_5"
-           android:paddingBottom="@dimen/dp_5"
-           android:text="@string/quan_upload_subject"
-           android:textColor="#999999"
-           android:textSize="@dimen/sp_13"
-           android:clickable="true"/>
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/a_agreement_check_img"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:padding="@dimen/dp_3"
+        android:src="@drawable/i_agreement_check" />
+
+    <TextView
+        android:id="@+id/a_agreement_text1"
+        style="@style/singleText"
+        android:clickable="true"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_2"
+        android:paddingTop="@dimen/dp_5"
+        android:text="同意"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_13" />
+
+    <TextView
+        android:id="@+id/a_agreement_text"
+        style="@style/singleText"
+        android:clickable="true"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingTop="@dimen/dp_5"
+        android:text="@string/quan_upload_subject"
+        android:textColor="#999999"
+        android:textSize="@dimen/sp_13" />
 </LinearLayout>

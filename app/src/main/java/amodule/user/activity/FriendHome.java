@@ -251,7 +251,6 @@ public class FriendHome extends BaseActivity {
 		if (callback == null || !mShowErrorMsg)
 			return;
 		mShowErrorMsg = false;
-		callback.toastFaildRes(flag, true, returnObj);
 		callback.finish();
 	}
 

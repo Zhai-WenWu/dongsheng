@@ -288,8 +288,6 @@ public class BaseLoginActivity extends BaseActivity {
                         callback.onFalse(flag);
                         Log.e("checkRegisted", map.get("reason"));
                     }
-                } else {
-                    toastFaildRes(flag, true, msg);
                 }
             }
         });
@@ -327,7 +325,6 @@ public class BaseLoginActivity extends BaseActivity {
                 } else {
                     //请求失败
                     callback.onFalse(flag);
-                    toastFaildRes(flag, true, msg);
                 }
             }
         });

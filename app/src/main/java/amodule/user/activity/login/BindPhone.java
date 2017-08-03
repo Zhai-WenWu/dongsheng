@@ -11,6 +11,7 @@ import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
@@ -235,5 +236,11 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
         } else if (EMAIL_LOGIN_TYPE.equals(loginType)) {
             XHClick.mapStat(BindPhone.this, PHONE_TAG, "邮箱登录", threeLevel);
         }
+    }
+
+    @Override
+    public void finish() {
+        Main.colse_level = 4;
+        super.finish();
     }
 }

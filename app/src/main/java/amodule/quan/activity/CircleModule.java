@@ -1,19 +1,5 @@
 package amodule.quan.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import third.share.BarShare;
-import acore.logic.AppCommon;
-import acore.override.activity.base.BaseActivity;
-import acore.tools.StringManager;
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import acore.widget.DownRefreshList;
-import amodule.quan.adapter.AdapterCircle;
-import amodule.quan.view.CircleHeaderView;
-import amodule.quan.view.CircleHeaderView.ItemCallback;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,10 +12,25 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqInternet;
 
 import com.xiangha.R;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import acore.logic.AppCommon;
+import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.widget.DownRefreshList;
+import amodule.quan.adapter.AdapterCircle;
+import amodule.quan.view.CircleHeaderView;
+import amodule.quan.view.CircleHeaderView.ItemCallback;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqInternet;
+import third.share.BarShare;
 
 /**
  * 圈子模块页面
@@ -84,7 +85,7 @@ public class CircleModule extends BaseActivity implements OnClickListener {
 	}
 
 	private void initData() {
-		mAdapter = new AdapterCircle(this, circle_list, mListData, cid);
+		mAdapter = new AdapterCircle(this, circle_list, mListData);
 		mCircleHeaderView = new CircleHeaderView(this);
 		circle_list.addHeaderView(mCircleHeaderView);
 		if (!mLoadOver) {
@@ -168,7 +169,6 @@ public class CircleModule extends BaseActivity implements OnClickListener {
 					mCircleHeaderView.initMiddleView(mRobRoNoticeData);
 					
 				} else {
-					toastFaildRes(flag, true, msg);
 					mRefreshIcon.clearAnimation();
 				}
 				if (mEveryPageNum == 0) {

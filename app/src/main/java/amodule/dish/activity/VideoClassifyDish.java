@@ -95,8 +95,6 @@ public class VideoClassifyDish extends BaseActivity {
 					if(isForward) listDataMySuro.clear();
 					loadCount = parseInfo(returnObj);
 					adapter.notifyDataSetChanged();
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;

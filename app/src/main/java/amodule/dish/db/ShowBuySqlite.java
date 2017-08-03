@@ -1,16 +1,19 @@
 package amodule.dish.db;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import acore.logic.AppCommon;
-import acore.tools.ImgManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import acore.logic.AppCommon;
+import acore.tools.ImgManager;
 
 public class ShowBuySqlite extends SQLiteOpenHelper{
 	public static final int PageSize = 10;// 分页时，每页的数据总数
@@ -28,30 +31,55 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		
 	}
-	
-	/**
-	 * 查询数据库,得到所有的数据
-	 */
-	public String getAllDataFromDB(){
+
+	public ArrayList<String> getAllCodes(){
+		ArrayList<String> codes = new ArrayList<>();
 		Cursor cur=null;
 		SQLiteDatabase writableDatabase = null;
 		try {
 			writableDatabase = getWritableDatabase();
 			cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
-					null, null, ShowBuyData.bd_addTime + " desc");// 查询并获得游标
-			String json="";
+					null, null, DishOffData.bd_addTime + " desc");// 查询并获得游标
 			if(cur.moveToFirst()){
-				do{			
-					String statedb=cur.getString(cur.getColumnIndex(ShowBuyData.bd_json));
-					if(json==""){
-						json="[" + statedb;
-					}else{
-						json +="," + statedb;
-					}
+				do{
+					String code =cur.getString(cur.getColumnIndex(DishOffData.bd_code));
+					codes.add(code);
 				}while(cur.moveToNext());
-				json = json + "]";
 			}
-			return json;
+			return codes;
+		}finally{
+			close(cur, writableDatabase);
+		}
+	}
+	
+	/**
+	 * 查询数据库,得到所有的数据
+	 */
+	public ArrayList<DishOffData> getAllDataFromDB(){
+		Cursor cur=null;
+		SQLiteDatabase writableDatabase = null;
+		try {
+			writableDatabase = getWritableDatabase();
+			cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
+					null, null, DishOffData.bd_addTime + " desc");// 查询并获得游标
+			ArrayList<DishOffData> arrayList = new ArrayList<>();
+			DishOffData dishOffData;
+			if(cur.moveToFirst()){
+				do{
+					dishOffData = new DishOffData();
+					String statedb = cur.getString(cur.getColumnIndex(DishOffData.bd_json));
+					String code = cur.getString(cur.getColumnIndex(DishOffData.bd_code));
+					String name = cur.getString(cur.getColumnIndex(DishOffData.bd_name));
+					String addTime = cur.getString(cur.getColumnIndex(DishOffData.bd_addTime));
+					dishOffData.setJson(statedb);
+					dishOffData.setCode(code);
+					dishOffData.setName(name);
+					dishOffData.setAddTime(addTime);
+					arrayList.add(dishOffData);
+
+				}while(cur.moveToNext());
+			}
+			return arrayList;
 		}finally{
 			close(cur, writableDatabase);
 		}
@@ -67,14 +95,14 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 		SQLiteDatabase writableDatabase = null;
 		try {
 			writableDatabase = getWritableDatabase();
-			String sql = "select * from " + ShowBuySqlite.TB_MAIN_ENAME + " Order By ID Desc Limit " + String.valueOf(PageSize) + " Offset "
+			String sql = "select * from " + TB_MAIN_ENAME + " Order By ID Desc Limit " + String.valueOf(PageSize) + " Offset "
 					+ String.valueOf((pageID-1) * PageSize);
 			cur = writableDatabase.rawQuery(sql, null);
 			
 			String json="";
 			if(cur.moveToFirst()){
 				do{			
-					String statedb=cur.getString(cur.getColumnIndex(ShowBuyData.bd_json));
+					String statedb=cur.getString(cur.getColumnIndex(DishOffData.bd_json));
 					if(json==""){
 						json="[" + statedb;
 					}else{
@@ -91,7 +119,7 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 	
 	/**
 	 * 查询数据库
-	 * @param id
+	 * @param code
 	 * @return
 	 */
 	public String selectByCode(String code) {
@@ -100,13 +128,14 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 		try {
 			writableDatabase = getWritableDatabase();
 			cur = writableDatabase.query(TB_MAIN_ENAME, null,
-					ShowBuyData.bd_code+"=" +  code , null, null, null, null);// 查询并获得游标
+					DishOffData.bd_code+"=" + code , null, null, null, null);// 查询并获得游标
 			String json="";
 			if (cur.moveToFirst()) {// 判断游标是否为空
-				json = cur.getString(cur.getColumnIndex(ShowBuyData.bd_json));
+				json = cur.getString(cur.getColumnIndex(DishOffData.bd_json));
 			}
 			return json;
-		}finally{
+		}
+		finally{
 			close(cur, writableDatabase);
 		}
 	}
@@ -133,14 +162,14 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 	/**
 	 * 插入一条数据;
 	 */
-	public int insert(final Context context,ShowBuyData buyData) {
+	public int insert(final Context context,DishOffData buyData) {
 		SQLiteDatabase writableDatabase = null;
 		ContentValues cv = new ContentValues();
 		long id = -1;
-		cv.put(ShowBuyData.bd_code, buyData.getCode());
-		cv.put(ShowBuyData.bd_name, buyData.getName());
-		cv.put(ShowBuyData.bd_addTime, buyData.getAddTime());
-		cv.put(ShowBuyData.bd_json, buyData.getJson());	
+		cv.put(DishOffData.bd_code, buyData.getCode());
+		cv.put(DishOffData.bd_name, buyData.getName());
+		cv.put(DishOffData.bd_addTime, buyData.getAddTime());
+		cv.put(DishOffData.bd_json, buyData.getJson());
 		try {
 			writableDatabase = getWritableDatabase();
 			id = writableDatabase.insert(TB_MAIN_ENAME, null, cv);
@@ -155,9 +184,9 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 	public int updateIsFav(String code,String dishJson) {
 		int row = -1;
 		ContentValues cv = new ContentValues();
-		cv.put(ShowBuyData.bd_json, dishJson);
+		cv.put(DishOffData.bd_json, dishJson);
 		try{
-			row= this.getWritableDatabase().update(TB_MAIN_ENAME, cv,ShowBuyData.bd_code+"=?",new String[]{code});
+			row= this.getWritableDatabase().update(TB_MAIN_ENAME, cv, DishOffData.bd_code+"=?",new String[]{code});
 			this.getWritableDatabase().close();
 		}catch(Exception e){
 			
@@ -178,7 +207,7 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 						null);
 				return i>0;
 			}
-			int i = writableDatabase.delete(TB_MAIN_ENAME, ShowBuyData.bd_code+"=" +  code,
+			int i = writableDatabase.delete(TB_MAIN_ENAME, DishOffData.bd_code+"=" +  code,
 					null);
 			return i > 0;
 		} finally{
@@ -192,12 +221,12 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 		try {
 			writableDatabase = getWritableDatabase();
 			cur = writableDatabase.query(TB_MAIN_ENAME, null, null, null,
-					null, null, ShowBuyData.bd_addTime + " asc");// 查询并获得游标
+					null, null, DishOffData.bd_addTime + " asc");// 查询并获得游标
 			int num = 0;
 			if (cur.moveToFirst()){
 				do{
 					if(num < count){
-						String code = cur.getString(cur.getColumnIndex(ShowBuyData.bd_code));
+						String code = cur.getString(cur.getColumnIndex(DishOffData.bd_code));
 						deleteByCode(code);
 						num ++;
 					}
@@ -239,7 +268,7 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 						null, null, null);// 查询并获得游标
 				if(cur.moveToFirst()){
 					do{
-						String newCode = cur.getString(cur.getColumnIndex(ShowBuyData.bd_code));
+						String newCode = cur.getString(cur.getColumnIndex(DishOffData.bd_code));
 						deleteImgByCode(newCode);
 					}while(cur.moveToNext());
 				}
@@ -254,11 +283,11 @@ public class ShowBuySqlite extends SQLiteOpenHelper{
 	public static final String TB_MAIN_ENAME ="tb_showBuy";
 
 	private final String CREATE_MAIN_TABLE_SQL = "create table "+TB_MAIN_ENAME+"("
-			+ ShowBuyData.bd_id+" integer primary key autoincrement,"
-			+ ShowBuyData.bd_code+" text,"
-			+ShowBuyData.bd_name+" ntext,"
-			+ShowBuyData.bd_addTime +" text,"
-			+ShowBuyData.bd_json + " text)" ;
+			+ DishOffData.bd_id+" integer primary key autoincrement,"
+			+ DishOffData.bd_code+" text,"
+			+ DishOffData.bd_name+" ntext,"
+			+ DishOffData.bd_addTime +" text,"
+			+ DishOffData.bd_json + " text)" ;
 	
 	/**
 	 * 关闭数据库游标

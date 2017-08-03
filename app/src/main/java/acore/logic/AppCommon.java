@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -48,7 +47,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
-import amodule.dish.db.ShowBuySqlite;
+import amodule.dish.db.DishOffSqlite;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.main.Main;
@@ -69,11 +68,13 @@ import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
 
+import static xh.basic.tool.UtilFile.readFile;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 public class AppCommon {
     public static int quanMessage = 0; // 美食圈新消息条数
     public static int feekbackMessage = 0; // 系统新消息条数
+    public static int myQAMessage = 0;//我的问答新消息条数
     public static int buyBurdenNum = 0; // 离线清单条数
     public static int follwersNum = -1; // 关注人数
 
@@ -95,9 +96,12 @@ public class AppCommon {
                     if (alertArr != null && alertArr.length > 2) {
                         quanMessage = Integer.parseInt(alertArr[1]);
                         feekbackMessage = Integer.parseInt(alertArr[2]);
+                        if (alertArr.length >= 5) {
+                            myQAMessage = Integer.parseInt(alertArr[3]) + Integer.parseInt(alertArr[4]);
+                        }
                         try {
                             // 所有消息数
-                            Main.setNewMsgNum(3, quanMessage + feekbackMessage);
+                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage);
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;
@@ -125,7 +129,7 @@ public class AppCommon {
      */
     // 获取应用初始信息
     public static void getIndexData(final Context act, final InternetCallback callback) {
-        final String indexJson = FileManager.readFile(FileManager.getDataDir() + FileManager.file_indexData);
+        final String indexJson = readFile(FileManager.getDataDir() + FileManager.file_indexData);
 
         // 是否在n分钟内修改过，且一定包含hotUser项，才可加载局部
         final boolean isPart = FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_indexData, 15) != null;
@@ -485,7 +489,7 @@ public class AppCommon {
     public static String getAppData(Context context, String key) {
         String jsonStr = "";
         final String appDataPath = FileManager.getDataDir() + FileManager.file_appData;
-        String appDataStr = FileManager.readFile(appDataPath);
+        String appDataStr = readFile(appDataPath);
         List<Map<String, String>> dataArray = getListMapByJson(appDataStr);
         if (dataArray == null || dataArray.size() == 0) {
             appDataStr = FileManager.getFromAssets(context, FileManager.file_appData);
@@ -533,7 +537,6 @@ public class AppCommon {
 
     /**
      * @param code 菜谱code
-     *
      * @return 收藏状态
      */
     public static void onFavoriteClick(final Context context, String type, final String code,
@@ -549,7 +552,7 @@ public class AppCommon {
                         if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
                             // 修改splite数据
                             dishJson = dishJson.replace(nowFav ? "\"isFav\":1" : "\"isFav\":2", nowFav ? "\"isFav\":2" : "\"isFav\":1");
-                            ShowBuySqlite sqlite = new ShowBuySqlite(context);
+                            DishOffSqlite sqlite = new DishOffSqlite(context);
                             sqlite.updateIsFav(code, dishJson);
                         }
                         Tools.showToast(context, nowFav ? "收藏成功" : "取消收藏");
@@ -716,7 +719,7 @@ public class AppCommon {
                 return LoginManager.userInfo.get("crowd");
         } else {
             if (UtilFile.ifFileModifyByCompletePath(UtilFile.getDataDir() + FileManager.file_healthResult, -1) != null) {// 本地是否有测试结果
-                return UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_healthResult).trim();
+                return readFile(UtilFile.getDataDir() + FileManager.file_healthResult).trim();
             }
         }
         return "";
@@ -731,7 +734,7 @@ public class AppCommon {
 //		}
 //		if(FileManager.ifFileModifyByCompletePath(urlRulePath, 6 * 60) == null){
         String uptime = "";
-        String urlRuleJson = FileManager.readFile(urlRulePath);
+        String urlRuleJson = readFile(urlRulePath);
         if (!TextUtils.isEmpty(urlRuleJson)) {
             List<Map<String, String>> data = getListMapByJson(urlRuleJson);
             if (data.size() > 0) {
@@ -769,7 +772,7 @@ public class AppCommon {
     private static Map<String, String> geturlRule(Context context) {
         if (urlRuleMap == null) {
             final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
-            String urlRuleJson = FileManager.readFile(urlRulePath);
+            String urlRuleJson = readFile(urlRulePath);
             if (TextUtils.isEmpty(urlRuleJson)) {
                 urlRuleJson = FileManager.getFromAssets(context, FileManager.file_urlRule);
             }
@@ -791,7 +794,7 @@ public class AppCommon {
      */
     public static void saveCircleStaticData(final Context context) {
         final String allCircleJsonPath = FileManager.getDataDir() + FileManager.file_allCircle;
-        final String allCircleJson = FileManager.readFile(allCircleJsonPath);
+        final String allCircleJson = readFile(allCircleJsonPath);
         if (TextUtils.isEmpty(allCircleJson)) {
             CircleSqlite circleSqlite = new CircleSqlite(context);
             String allCircleJsonByAssets = FileManager.getFromAssets(context, FileManager.file_allCircle);
@@ -874,7 +877,7 @@ public class AppCommon {
      */
     public static String getConfigByLocal(String key) {
         String data = "";
-        String configData = FileManager.readFile(FileManager.getDataDir() + FileManager.file_config);
+        String configData = readFile(FileManager.getDataDir() + FileManager.file_config);
         if (TextUtils.isEmpty(key)) {
             return configData;
         }
@@ -1023,6 +1026,5 @@ public class AppCommon {
             }
         }).setBottomButtonColor("#59bdff").show();
     }
-
 
 }

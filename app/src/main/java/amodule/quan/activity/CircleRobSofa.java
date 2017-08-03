@@ -70,7 +70,7 @@ public class CircleRobSofa extends BaseActivity implements OnClickListener{
 	private void initData() {
 		Intent intent = getIntent();
 		mCid = intent.getStringExtra("cid");
-		mAdapter = new AdapterCircle(this, mListView, mData,"0");
+		mAdapter = new AdapterCircle(this, mListView, mData);
 	}
 	
 	/**初始化加载*/
@@ -145,7 +145,6 @@ public class CircleRobSofa extends BaseActivity implements OnClickListener{
 					//添加置顶和公告data
 					mCircleHeaderView.initMiddleView(mRobRoNoticeData);
 				}else{
-					toastFaildRes(flag,true,msg);
 					mRefreshIcon.clearAnimation();
 				}
 				if(mEveryPageNum == 0){

@@ -18,6 +18,7 @@ import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
 import acore.tools.Tools;
+import amodule.main.Main;
 import aplug.basic.ReqInternet;
 import third.mall.MainMall;
 import third.mall.alipay.MallAlipay;
@@ -224,23 +225,25 @@ public class MallCommon {
 					//保存到sp中
 					num_shopcat= Integer.parseInt(num);
 					if(num_shopcat>0){
+						Main.setNewMsgNum(1,MallCommon.num_shopcat);
 						if(num_shopcat>9){
-							view.setVisibility(View.GONE);
-							view_two.setVisibility(View.VISIBLE);
+							if(view!=null)view.setVisibility(View.GONE);
+							if(view_two!=null)view_two.setVisibility(View.VISIBLE);
 							if(num_shopcat>99)
-								view_two.setText("99+");
+								if(view_two!=null)view_two.setText("99+");
 							else
-								view_two.setText(num_shopcat+"");
+								if(view_two!=null)view_two.setText(num_shopcat+"");
 							
 						}else{
-							view.setVisibility(View.VISIBLE);
-							view_two.setVisibility(View.GONE);
-							view.setText(num_shopcat+"");
+							if(view!=null)view.setVisibility(View.VISIBLE);
+							if(view_two!=null)view_two.setVisibility(View.GONE);
+							if(view!=null)view.setText(num_shopcat+"");
 						}
 //						Main.setNewMsgNum(Integer.parseInt(CommonBottomView.BOTTOM_TWO),num_shopcat);
 					}else{
-						view.setVisibility(View.GONE);
-						view_two.setVisibility(View.GONE);
+						Main.setNewMsgNum(1,0);
+						if(view!=null)view.setVisibility(View.GONE);
+						if(view_two!=null)view_two.setVisibility(View.GONE);
 					}
 //					Main.setNewMsgNum(Integer.parseInt(CommonBottomView.BOTTOM_TWO),MallCommon.num_shopcat);
 				}

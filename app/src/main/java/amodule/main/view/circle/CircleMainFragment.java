@@ -29,7 +29,6 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
-import acore.logic.LoginManager;
 import acore.logic.load.AutoLoadMore;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
@@ -51,7 +50,6 @@ import third.ad.AdsShow;
 
 import static amodule.main.Main.allMain;
 import static com.xiangha.R.id.return_top;
-import static third.ad.control.AdControlHomeDish.tag_yu;
 
 /**
  * PackageName : amodule.main.view.circle
@@ -272,7 +270,7 @@ public class CircleMainFragment extends Fragment {
 
     private void init() {
         //更新ListView的空header的高度
-        mAdapter = new AdapterCircle(mActivity, mListview, mListData, mPlateData.getCid());
+        mAdapter = new AdapterCircle(mActivity, mListview, mListData);
         mAdapter.setStiaticKey(mPlateData.getStiaticID());
         mAdapter.setModuleName(mPlateData.getName());
         mAdapter.setCircleName(mCircleName);
@@ -530,9 +528,6 @@ public class CircleMainFragment extends Fragment {
                             }
                         }
                     }
-                } else {
-                    //请求失败处理
-                    toastFaildRes(flag, true, msg);
                 }
                 int size= mListData.size();
                 mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);

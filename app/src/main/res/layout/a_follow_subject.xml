@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout">
+
+    <include
+        android:id="@+id/a_follow_subject_title"
+        layout="@layout/c_view_bar_title_circle_home"
+        />
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/circle_list"
+        style="@style/listNoDivider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/a_follow_subject_title"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:scrollbars="none"
+        android:background="@android:color/transparent"
+        android:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/a_follow_subject_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="没有数据"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>

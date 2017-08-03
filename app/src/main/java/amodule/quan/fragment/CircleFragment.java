@@ -221,7 +221,7 @@ public class CircleFragment extends Fragment {
 
     private void init() {
         //更新ListView的空header的高度
-        mAdapter = new AdapterCircle(mActivity, mListview, mListData, (mPlateData!=null&&!TextUtils.isEmpty(mPlateData.getCid()))?mPlateData.getCid():"");
+        mAdapter = new AdapterCircle(mActivity, mListview, mListData);
         mAdapter.setModuleName((mPlateData!=null&&!TextUtils.isEmpty(mPlateData.getName()))?mPlateData.getName():"");
         mAdapter.setCircleName(mCircleName);
         if (!LoadOver) {
@@ -452,9 +452,6 @@ public class CircleFragment extends Fragment {
                             }
                         }
                     }
-                } else {
-                    //请求失败处理
-                    toastFaildRes(flag, true, msg);
                 }
                 int size= mListData.size();
                 mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);

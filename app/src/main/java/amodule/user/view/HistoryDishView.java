@@ -25,12 +25,17 @@ import amodule.user.db.BrowseHistorySqlite;
 import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * PackageName : amodule.user.view
  * Created by MrTrying on 2016/8/17 11:13.
  * E_mail : ztanzeyu@gmail.com
  */
 public class HistoryDishView extends HistoryView {
+
+    private BaseActivity mAct;
+
     private final int LOAD_OVER = 2;
     private final int REFRESH_OVER = 3;
     private Handler mHandler;
@@ -38,8 +43,12 @@ public class HistoryDishView extends HistoryView {
     private List<Map<String, String>> mData = new ArrayList<>();
     private int currentPage = 0;
 
-    public HistoryDishView(BaseActivity activity) {
+    private boolean mIsChoose;
+
+    public HistoryDishView(BaseActivity activity, boolean isChoose) {
         super(activity);
+        mAct = activity;
+        mIsChoose = isChoose;
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
@@ -75,46 +84,55 @@ public class HistoryDishView extends HistoryView {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mContext, DetailDish.class);
-                intent.putExtra("code", mData.get(position).get("code"));
-                mContext.startActivity(intent);
+                if(mIsChoose){
+                    Intent it = new Intent();
+                    it.putExtra("dishCode",mData.get(position).get("code"));
+                    it.putExtra("dishName",mData.get(position).get("name"));
+                    mAct.setResult(RESULT_OK,it);
+                    mAct.finish();
+                }else {
+                    Intent intent = new Intent(mContext, DetailDish.class);
+                    intent.putExtra("code", mData.get(position).get("code"));
+                    mContext.startActivity(intent);
+                }
             }
         });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                final XhDialog dialog = new XhDialog(mContext);
-                dialog.setTitle("确定删除该条浏览记录?")
-                        .setCanselButton("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Map<String, String> map = mData.get(position);
-                                BrowseHistorySqlite sqlite = new BrowseHistorySqlite(mContext);
-                                sqlite.deleteByCode(BrowseHistorySqlite.TB_DISH_NAME, map.get("code"));
-                                mData.remove(map);
-                                mAdapter.notifyDataSetChanged();
-                                dialog.cancel();
-                            }
-                        })
-                        .setSureButtonTextColor("#333333")
-                        .setSureButton("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.cancel();
-                            }
-                        });
-                dialog.show();
-                return true;
-            }
-        });
+        if (!mIsChoose)
+            mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                    final XhDialog dialog = new XhDialog(mContext);
+                    dialog.setTitle("确定删除该条浏览记录?")
+                            .setCanselButton("确定", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Map<String, String> map = mData.get(position);
+                                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(mContext);
+                                    sqlite.deleteByCode(BrowseHistorySqlite.TB_DISH_NAME, map.get("code"));
+                                    mData.remove(map);
+                                    mAdapter.notifyDataSetChanged();
+                                    dialog.cancel();
+                                }
+                            })
+                            .setSureButtonTextColor("#333333")
+                            .setSureButton("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.cancel();
+                                }
+                            });
+                    dialog.show();
+                    return true;
+                }
+            });
     }
 
     @Override
     protected AdapterSimple getAdapter() {
         mAdapter = new AdapterSimple(mListView, mData,
                 R.layout.a_history_dish_item_list,
-                new String[]{"name", "burdens", "isFine", /*"isMakeImg",*/ "allClick","exclusive"},
-                new int[]{R.id.tv_itemDishName, R.id.tv_itemBurden, R.id.iv_itemIsFine, /*R.id.tv_item_make,*/ R.id.allclick,R.id.tag_exclusive});
+                new String[]{"name", "burdens", "isFine", /*"isMakeImg",*/ "allClick", "exclusive"},
+                new int[]{R.id.tv_itemDishName, R.id.tv_itemBurden, R.id.iv_itemIsFine, /*R.id.tv_item_make,*/ R.id.allclick, R.id.tag_exclusive});
         mAdapter.urlKey = "imgShow";
         mAdapter.videoImgId = R.id.itemImg1;
         mAdapter.playImgWH = Tools.getDimen(mContext, R.dimen.dp_34);

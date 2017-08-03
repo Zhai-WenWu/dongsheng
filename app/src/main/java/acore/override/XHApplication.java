@@ -3,19 +3,23 @@ package acore.override;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
+import com.xiangha.R;
 
 import acore.dialogManager.VersionOp;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
@@ -84,6 +88,15 @@ public class XHApplication extends MobApplication {
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
 
+        // 百度AD-设置'广告着陆页'动作栏的颜色主题
+        AppActivity.getActionBarColorTheme().setBackgroundColor(Color.parseColor(getString(R.color.common_top_bg)));
+        int commonTopTextColor = Color.parseColor(getString(R.color.common_top_text));
+        AppActivity.getActionBarColorTheme().setTitleColor(commonTopTextColor);
+        AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
+        AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
+
+        AndFixTools.getAndFix().initPatchManager(this);
+
         //GrowingIO初始化
         new GrowingIOController().init(this);
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
@@ -149,15 +162,10 @@ public class XHApplication extends MobApplication {
                 strategy.setAppChannel(ChannelUtil.getChannel(context));
                 strategy.setAppReportDelay(5 * 1000);
                 //		测试阶段建议设置成true，发布时设置为false
-                String versoinName = VersionOp.getVerName(context);
-                Log.i("tzy","versoinName = " + versoinName);
-                String[] temp = versoinName.split("\\.");
-                Log.i("tzy","temp = " + temp.toString());
-                String testAppID = "4146e8557a";//测试APP id
-                String AppID = "1150004142";//正式APP id
-                boolean isTest = temp.length != 3;
-                Log.i("tzy","isTest = " + isTest);
-                CrashReport.initCrashReport(context, isTest ? testAppID:AppID , isTest, strategy);
+                //测试APP id = "4146e8557a";
+                //正式APP id = "1150004142";
+                String appId = Tools.isDebug(context) ?  "4146e8557a" : "1150004142";
+                CrashReport.initCrashReport(context, appId , Tools.isDebug(context), strategy);
                 CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
             }
         }).start();

@@ -2,7 +2,6 @@ package acore.dialogManager;
 
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 
 import acore.override.XHApplication;
 import acore.tools.FileManager;
@@ -76,10 +75,12 @@ public class DialogControler {
             @Override
             public void onShow() {
                 //什么都不用做，只是回调
+//                Tools.showToast(XHApplication.in(),"toADPopwindowData onShow()");
             }
 
             @Override
             public void onGone() {
+//                Tools.showToast(XHApplication.in(),"toADPopwindowData onShow()");
                 toGetGoodData();
             }
         });

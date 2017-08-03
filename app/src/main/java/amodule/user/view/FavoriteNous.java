@@ -229,12 +229,7 @@ public class FavoriteNous  {
 						everyPage = loadCount;
 					currentPage = loadManager.changeMoreBtn(listNous,flag, everyPage, loadCount, currentPage,listDataNous.size() == 0);
 					notifyDataChange();
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
-
-
-
 			}
 		});
 	}

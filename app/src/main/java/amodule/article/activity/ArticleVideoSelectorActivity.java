@@ -31,8 +31,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
+import amodule.answer.activity.BaseEditActivity;
 import amodule.article.adapter.ArticleVideoFolderAdapter;
 import amodule.article.adapter.ArticleVideoSelectorAdapter;
 import aplug.recordervideo.tools.FileToolsCammer;
@@ -59,6 +61,9 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private ArticleVideoFolderAdapter mCategoryAdapter;
     private ArrayList<String> hadSelectedVideos = new ArrayList<>();
 
+    private String mTjId;
+    private String mTag;
+
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
     private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
 
@@ -83,6 +88,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
             if(bundle.getStringArrayList(EXTRA_UNSELECT_VIDEO) != null)
                 hadSelectedVideos.addAll(bundle.getStringArrayList(EXTRA_UNSELECT_VIDEO));
         }
+        mTjId = getIntent().getStringExtra("tjId");
+        mTag = getIntent().getStringExtra("tag");
     }
 
     private void addListener() {
@@ -146,7 +153,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     }
 
     private void initView() {
-        initTitle();
         mCategoryText = (TextView) findViewById(R.id.category_btn);
         mCancelBtn = (Button) findViewById(R.id.btn_cancel);
         mTitle = (TextView) findViewById(R.id.title);
@@ -160,20 +166,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mGridViewLayout = (RelativeLayout) findViewById(R.id.grid_layout);
         mVideoEmptyView = (RelativeLayout) findViewById(R.id.video_emptyview);
 
-    }
-
-    private void initTitle() {
-//        if(Tools.isShowTitle()) {
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        }
-//        if(Tools.isShowTitle()) {
-//            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-//            int height = dp_45 + Tools.getStatusBarHeight(this);
-//            RelativeLayout bar_title = (RelativeLayout)findViewById(R.id.title_rela_all);
-//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-//            bar_title.setLayoutParams(layout);
-//            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-//        }
     }
 
     @Override
@@ -269,10 +261,20 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
     private String conditionsByTime(long millis) {
         String ret = null;
-        if (millis < 1*1000)
-            ret = "不能短于1秒";
-        else if (millis > 1*1000*60*60)
-            ret = "不能长于1小时";
+        if (BaseEditActivity.TAG.equals(mTag)) {
+            if (millis < 3*1000) {
+                ret = "不能短于3秒";
+                XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频小于3s");
+            } else if (millis > 1000*60) {
+                ret = "不能长于60s";
+                XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频超过60s");
+            }
+        } else {
+            if (millis < 1*1000)
+                ret = "不能短于1秒";
+            else if (millis > 1*1000*60*60)
+                ret = "不能长于1小时";
+        }
         return ret;
     }
 
@@ -280,6 +282,9 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cancel:
+                if ("a_ask_publish".equals(mTjId)) {
+                    XHClick.mapStat(this, mTjId, "点击视频按钮", "点击返回按钮");
+                }
                 onBackPressed();
                 break;
             case R.id.btn_back:

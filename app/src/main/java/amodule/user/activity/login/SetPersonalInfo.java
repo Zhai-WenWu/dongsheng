@@ -30,6 +30,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.main.Main;
 import amodule.user.view.NextStepView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -315,9 +316,6 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
                             showCover(img);
                         }
                     }
-
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
             }
         });
@@ -437,5 +435,11 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
         } else if (ORIGIN_REGISTER.equals(loginType)) {
             XHClick.mapStat(this, PHONE_TAG, "注册", threeLevel);
         }
+    }
+
+    @Override
+    public void finish() {
+        Main.colse_level = 4;
+        super.finish();
     }
 }

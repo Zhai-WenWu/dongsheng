@@ -1,7 +1,6 @@
 package amodule.user.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,9 +21,9 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
+import amodule.answer.activity.QAMsgListActivity;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterMainMsg;
@@ -51,26 +50,15 @@ public class MyMessage extends MainBaseActivity {
 	private boolean clickFlag = true , isCreated=false;
 	private boolean isShowData=true;
 
+	private TextView mMyQANum;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_common_message);
 		Main.allMain.allTab.put("MyMessage", this);
 		init();
-//		initTitle();
 		XHClick.track(this, "浏览消息列表页");
-	}
-
-	private void initTitle() {
-		if(Tools.isShowTitle()) {
-			int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-			int height = dp_45 + Tools.getStatusBarHeight(this);
-
-			RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.msg_title_bar_rela);
-			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-			bar_title.setLayoutParams(layout);
-			bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-		}
 	}
 
 	@Override
@@ -80,13 +68,22 @@ public class MyMessage extends MainBaseActivity {
 			onRefresh();
 		}
 	}
-	/* 
-	 * 设置消息当从消息返回时
-	 */
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 	}
+
+	@Override
+	public void finish() {
+		super.finish();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
 	/**
 	 * 外面调用的刷新
 	 */
@@ -117,7 +114,6 @@ public class MyMessage extends MainBaseActivity {
 	private void init() {
 		// title初始化
 		TextView title = (TextView) findViewById(R.id.msg_title_tv);
-		// title.setPadding(Tools.dp2px(this, 30), 0, 0, 0);
 		title.setText("消息");
 		msg_title_sort = (TextView) findViewById(R.id.msg_title_sort);
 		msg_title_sort.setText("未读");
@@ -128,8 +124,6 @@ public class MyMessage extends MainBaseActivity {
 		TextView tv_back = (TextView) findViewById(R.id.leftText);
 		tv_back.setClickable(true);
 		img_back.setClickable(true);
-//		tv_back.setOnClickListener(backClick);
-//		img_back.setOnClickListener(backClick);
 		tv_back.setVisibility(View.GONE);
 		img_back.setVisibility(View.GONE);
 		findViewById(R.id.no_admin_linear).setOnClickListener(new OnClickListener() {
@@ -145,18 +139,36 @@ public class MyMessage extends MainBaseActivity {
 		listMessage.bigDownText = "下拉刷新";
 		listMessage.bigReleaseText = "松开刷新";
 		RelativeLayout headerView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.a_common_message_header, null);
+		RelativeLayout headerSecretary = (RelativeLayout) headerView.findViewById(R.id.secretary);
+		RelativeLayout headerMyQA = (RelativeLayout) headerView.findViewById(R.id.my_qa);
+		mMyQANum = (TextView) headerMyQA.findViewById(R.id.qa_msg_num);
 		feekback_msg_num = (TextView) headerView.findViewById(R.id.feekback_msg_num);
 		listMessage.addHeaderView(headerView, null, false);
-		headerView.setOnClickListener(new OnClickListener() {
+		OnClickListener clickListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startFeekback();
+				switch (v.getId()) {
+					case R.id.secretary:
+						startFeekback();
+						break;
+					case R.id.my_qa:
+						if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
+							AppCommon.myQAMessage = 0;
+							Main.setNewMsgNum(3, AppCommon.myQAMessage);
+							mMyQANum.setText("");
+							mMyQANum.setVisibility(View.GONE);
+						}
+						startActivity(new Intent(MyMessage.this, QAMsgListActivity.class));
+						XHClick.mapStat(MyMessage.this, "a_message", "点击我问我答", "");
+						break;
+				}
 			}
-		});
+		};
+		headerSecretary.setOnClickListener(clickListener);
+		headerMyQA.setOnClickListener(clickListener);
 		setFeekbackMsg();
 		listDataMessage = new ArrayList<Map<String, String>>();
 		adapter = new AdapterMainMsg(this, listMessage, listDataMessage, 0, null, null);
-//		adapter.imgResource = R.drawable.bg_round_zannum;
 		loadManager.setLoading(listMessage, adapter, true, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -203,6 +215,7 @@ public class MyMessage extends MainBaseActivity {
 		listMessage.onRefreshStart();
 	}
 	private void startFeekback(){
+		XHClick.mapStat(this, "a_message", "点击香哈小秘书", "");
 		Intent intent = new Intent(MyMessage.this, Feedback.class);
 		startActivity(intent);
 	}
@@ -213,6 +226,14 @@ public class MyMessage extends MainBaseActivity {
 			} else {
 				feekback_msg_num.setVisibility(View.VISIBLE);
 				feekback_msg_num.setText("" + AppCommon.feekbackMessage);
+			}
+		}
+		if (mMyQANum != null) {
+			if (AppCommon.myQAMessage == 0) {
+				mMyQANum.setVisibility(View.GONE);
+			} else {
+				mMyQANum.setVisibility(View.VISIBLE);
+				mMyQANum.setText(String.valueOf(AppCommon.myQAMessage));
 			}
 		}
 	}
@@ -318,8 +339,6 @@ public class MyMessage extends MainBaseActivity {
 						findViewById(R.id.tv_noData).setVisibility(View.GONE);
 						isShowData=true;
 					}
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 				listMessage.setVisibility(View.VISIBLE);
 				if (everyPage == 0)
@@ -369,6 +388,10 @@ public class MyMessage extends MainBaseActivity {
 
 		@Override
 		public void onClick(View v) {
+
+			if (v.getId() == R.id.msg_title_sort) {
+				XHClick.mapStat(MyMessage.this, "a_message", "点击未读按钮", "");
+			}
 			//7.29新添加统计
 			XHClick.mapStat(MyMessage.this, "a_switch_message", "消息中心", "");
 			clickFlag=!clickFlag;
@@ -380,4 +403,5 @@ public class MyMessage extends MainBaseActivity {
 			load(true);
 		}
 	};
+
 }

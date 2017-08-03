@@ -29,10 +29,12 @@ import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.activity.upload.UploadDishListActivity;
-import amodule.dish.db.ShowBuyData;
+import amodule.dish.db.DishOffData;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishSqlite;
+import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
+import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
@@ -94,8 +96,9 @@ public class MainInitDataControl {
 
 
                 //待处理问题。
-//                HomeToutiaoAdControl.getInstance().getAdData(activity);
+                HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
+                OffDishToFavoriteControl.offDishToFavorite(activity);
             }
         }.start();
         AdConfigTools.getInstance().setRequest(XHApplication.in());
@@ -223,7 +226,7 @@ public class MainInitDataControl {
                 //修改所有上传中的普通菜谱状态
                 UploadDishControl.getInstance().updataAllUploadingDish(context.getApplicationContext());
 
-                //清楚上传中的数据库数据
+                //清除上传中的数据库数据
                 SubjectSqlite subjectSqlite = SubjectSqlite.getInstance(context);
                 ArrayList<SubjectData> array = subjectSqlite.selectByState(SubjectData.UPLOAD_ING);
                 for(SubjectData data : array){
@@ -285,7 +288,7 @@ public class MainInitDataControl {
      * @param json
      */
     private void saveDataInDB(String json,Context context) {
-        ShowBuyData buyData = new ShowBuyData();
+        DishOffData buyData = new DishOffData();
         ShowBuySqlite sqlite = new ShowBuySqlite(context);
         ArrayList<Map<String, String>> arrayList = getListMapByJson(json);
         for (int i = 0; i < arrayList.size(); i++) {

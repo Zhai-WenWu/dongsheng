@@ -215,7 +215,6 @@ public class ScoreStore extends BaseActivity implements OnClickListener {
 				} else {
 					lv_sur.setVisibility(View.VISIBLE);
 					lv_sur.onRefreshComplete();
-					toastFaildRes(flag, true, returnObj);
 				}
 				handler.sendEmptyMessage(MSG_MYSUBJECT_OK);
 				if (everyPage == 0)
@@ -248,8 +247,6 @@ public class ScoreStore extends BaseActivity implements OnClickListener {
 //					map.put("appImg", "http://static.xiangha.com/store/201507/1000_1000/241118473665.jpg/300x300");
 //					sliderList.add(map);
 					setGallery(sliderList);
-				} else {
-					toastFaildRes(flag, true, returnObj);
 				}
 			}
 		});

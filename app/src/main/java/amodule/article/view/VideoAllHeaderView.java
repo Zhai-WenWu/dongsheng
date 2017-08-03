@@ -13,7 +13,7 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.view.DishHeaderView;
+import amodule.dish.view.DishHeaderViewNew;
 import third.video.VideoPlayerController;
 
 /**
@@ -73,7 +73,7 @@ public class VideoAllHeaderView extends LinearLayout {
         videoInfoView.setType(mCurrType);
         setVisibility(VISIBLE);
         if(!isOnlyUser){
-            videoHeaderView.setData(mapVideo, new DishHeaderView.DishHeaderVideoCallBack() {
+            videoHeaderView.setData(mapVideo, new DishHeaderViewNew.DishHeaderVideoCallBack() {
                 @Override
                 public void videoImageOnClick() {
                 }
@@ -88,6 +88,12 @@ public class VideoAllHeaderView extends LinearLayout {
             setUserData(mapVideo);
         }
 
+    }
+
+    public void setupCommentNum(String commentNumStr){
+        if(videoInfoView != null && !TextUtils.isEmpty(commentNumStr)){
+            videoInfoView.setupConmentNum(commentNumStr);
+        }
     }
 
     public void setUserData(Map<String, String> mapVideo){

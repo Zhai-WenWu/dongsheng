@@ -56,6 +56,9 @@ public class FileManager extends UtilFile{
 	public static final String file_config = "config";
 	//搜索默认页，热搜词
 	public static final String file_hotwords = "hotWords";
+	//菜谱模板
+	public static final String file_dishMould = "dishMould";
+	public static final String file_dishMouldVersion = "dishMouldVersion";
 
 	public static final String xmlFile_userInfo = "common";
 	public static final String xmlFile_wake = "wake2";
@@ -69,6 +72,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_domain = "domain";
 	public static final String xmlKey_growingioopen = "growingioopen";
 	public static final String xmlKey_mall_domain = "mall_domain";
+	public static final String xmlKey_request_tip = "requesttip";
 	public static final String xmlKey_isIndexData = "isIndexData";
 	public static final String xmlKey_device = "device";
 	public static final String xmlKey_device_statictis = "device_statictis";

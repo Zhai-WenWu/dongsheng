@@ -35,7 +35,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.LayoutScroll;
-import amodule.dish.activity.DetailDish;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
@@ -298,8 +297,6 @@ public class ListHealthTime extends BaseActivity {
 						listData.add(map);
 					}
 					load();
-				} else{
-					toastFaildRes(flag,false,returnObj);
 				}
 				loadManager.hideProgressBar();
 				timeAdapter.notifyDataSetChanged();

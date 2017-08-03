@@ -112,7 +112,7 @@ public class PushPraser {
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 								} else {
 									AppCommon.feekbackMessage++;
-									Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage);
+									Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
 									new NotificationManager().notificationActivity(mContext, data);
 								}
 							} else {
@@ -126,14 +126,14 @@ public class PushPraser {
 								new NotificationManager().notificationActivity(mContext, data);
 							} else {
 								AppCommon.quanMessage++;
-								Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage);
+								Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
 								new NotificationManager().notificationActivity(mContext, data);
 							}
 							break;
 						// 显示通知，存在消息列表中，使用app不通知
 						case XHClick.NOTIFY_C:
 							AppCommon.quanMessage++;
-							Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage);
+							Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
 							if (mContext != null && ToolsDevice.isAppInPhone(mContext, mContext.getPackageName()) < 2) {
 								if (data.url.indexOf("subjectInfo.app?") > -1) {
 									// 叠加消息数量

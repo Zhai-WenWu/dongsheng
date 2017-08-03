@@ -2,7 +2,6 @@ package third.video;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.TimedText;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -16,10 +15,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoExtListeners.OnVDVideoCompletionListener;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
@@ -73,6 +70,7 @@ public class VideoPlayerController {
 
     /**
      * 初始化操作：
+     *
      * @param context
      * @param viewGroup---布局容器
      * @param imgUrl---图片路径
@@ -101,7 +99,7 @@ public class VideoPlayerController {
             public void onVDVideoCompletion(VDVideoInfo info, int status) {
             }
         });
-setControlLayerVisibility(false);
+        setControlLayerVisibility(false);
         VDVideoViewController controller = VDVideoViewController.getInstance(context);
         controller.pause();
         if (controller != null) {
@@ -125,12 +123,14 @@ setControlLayerVisibility(false);
             controller.addOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
                 @Override
                 public void onProgressUpdate(long current, long duration) {
-                    if(onProgressUpdateListener != null) onProgressUpdateListener.onProgressUpdate(current, duration);
+                    if (onProgressUpdateListener != null)
+                        onProgressUpdateListener.onProgressUpdate(current, duration);
                 }
 
                 @Override
                 public void onDragProgess(long current, long duration) {
-                    if(onProgressUpdateListener != null) onProgressUpdateListener.onDragProgess(current, duration);
+                    if (onProgressUpdateListener != null)
+                        onProgressUpdateListener.onDragProgess(current, duration);
                 }
             });
         }
@@ -142,7 +142,7 @@ setControlLayerVisibility(false);
         mPraentViewGroup.addView(mVDVideoView);
         mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
         if (!TextUtils.isEmpty(imgUrl)) {
-            if(view_Tip==null){
+            if (view_Tip == null) {
                 initView(mContext);
                 mPraentViewGroup.addView(view_Tip);
             }
@@ -152,7 +152,7 @@ setControlLayerVisibility(false);
             mImageView.parseItemImg(ScaleType.CENTER_CROP, imgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
             mImageView.setLayoutParams(params);
             mPraentViewGroup.addView(mImageView);
-            this.view_dish=mImageView;
+            this.view_dish = mImageView;
             mImageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -160,13 +160,14 @@ setControlLayerVisibility(false);
                 }
             });
         }
-        String temp= (String) UtilFile.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
-        if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
+        String temp = (String) UtilFile.loadShared(context, FileManager.SHOW_NO_WIFI, FileManager.SHOW_NO_WIFI);
+        if (!TextUtils.isEmpty(temp) && "1".equals(temp))
             setShowMedia(true);
     }
 
     /**
      * 重新设置布局样式
+     *
      * @param view:视频浮动的view
      */
     public void setNewView(View view) {
@@ -178,7 +179,7 @@ setControlLayerVisibility(false);
         }
         mPraentViewGroup.removeAllViews();
         mPraentViewGroup.addView(mVDVideoView);
-        if(view_Tip!=null)mPraentViewGroup.addView(view_Tip);
+        if (view_Tip != null) mPraentViewGroup.addView(view_Tip);
         mPraentViewGroup.addView(view_dish);
         view_dish.setOnClickListener(new OnClickListener() {
             @Override
@@ -189,45 +190,44 @@ setControlLayerVisibility(false);
     }
 
 
-
     /**
      * 广告点击事件
      */
     public void setOnClick() {
-        Log.i("zhangyujian","广告点:::"+mHasVideoInfo);
+        Log.i("zhangyujian", "广告点:::" + mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
             if (VideoApplication.initSuccess) {
-                if(isShowAd){
-                    if(mediaViewCallBack!=null)mediaViewCallBack.onclick();
+                if (isShowAd) {
+                    if (mediaViewCallBack != null) mediaViewCallBack.onclick();
                     return;
                 }
-                Log.i("zhangyujian","isShowMedia:::"+isShowMedia);
-                if(!isShowMedia){
-                    Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
-                    if(isAutoPaly){//当前wifi
+                Log.i("zhangyujian", "isShowMedia:::" + isShowMedia);
+                if (!isShowMedia) {
+                    Log.i("zhangyujian", "isAutoPaly:::" + isAutoPaly);
+                    if (isAutoPaly) {//当前wifi
                         mPraentViewGroup.removeView(view_Tip);
-                        view_Tip=null;
-                    }else{
-                        if(view_dish!=null){
+                        view_Tip = null;
+                    } else {
+                        if (view_dish != null) {
                             mPraentViewGroup.removeView(view_dish);
-                            view_dish=null;
+                            view_dish = null;
                         }
                         return;
                     }
                 }
-                if(view_dish!=null){
+                if (view_dish != null) {
                     mPraentViewGroup.removeView(view_dish);
-                    view_dish=null;
+                    view_dish = null;
                 }
-                if(view_Tip!=null){
+                if (view_Tip != null) {
                     mPraentViewGroup.removeView(view_Tip);
-                    view_Tip=null;
+                    view_Tip = null;
                 }
                 try {
-                    Log.i("zhangyujian","开始播放:::");
+                    Log.i("zhangyujian", "开始播放:::");
                     VDVideoViewController controller1 = VDVideoViewController.getInstance(mContext);
-                    if(controller1!=null)controller1.notifyHideTip();
+                    if (controller1 != null) controller1.notifyHideTip();
                     mVDVideoView.play(0);
                 } catch (Exception e) {
                     isError = true;
@@ -394,10 +394,10 @@ setControlLayerVisibility(false);
     /**
      * 初始化视频播放数据,直接使用url
      */
-    public void initVideoView2(final String url,String title, final View view) {
+    public void initVideoView2(final String url, String title, final View view) {
 
         mHasVideoInfo = true;
-        if (ToolsDevice.isNetworkAvailable(XHApplication.in())){
+        if (ToolsDevice.isNetworkAvailable(XHApplication.in())) {
             VideoApplication.getInstence().initialize(XHApplication.in());
         }
         VDVideoInfo videoInfo = new VDVideoInfo(url);
@@ -405,9 +405,9 @@ setControlLayerVisibility(false);
         mVDVideoView.open(mContext, videoInfo);
     }
 
-    public void setControlLayerVisibility(boolean isShow){
-        if(mVDVideoView != null)
-            mVDVideoView.findViewById(R.id.controlLayout1).setVisibility(isShow?View.VISIBLE:View.GONE);
+    public void setControlLayerVisibility(boolean isShow) {
+        if (mVDVideoView != null)
+            mVDVideoView.findViewById(R.id.controlLayout1).setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     private String getData(List<Map<String, String>> list, String key) {
@@ -502,8 +502,8 @@ setControlLayerVisibility(false);
         return false;
     }
 
-    public void onStart(){
-        if(mVDVideoView != null){
+    public void onStart() {
+        if (mVDVideoView != null) {
             mVDVideoView.onStart();
         }
     }
@@ -576,8 +576,8 @@ setControlLayerVisibility(false);
     /**
      * 隐藏全屏按钮
      */
-    public void hideFullScreen(){
-        if(mVDVideoView!=null) {
+    public void hideFullScreen() {
+        if (mVDVideoView != null) {
             //去掉全屏按钮
             VDVideoFullScreenButton fullscreen1 = (VDVideoFullScreenButton) mVDVideoView.findViewById(R.id.fullscreen1);
             fullscreen1.setVisibility(View.GONE);
@@ -594,23 +594,26 @@ setControlLayerVisibility(false);
     }
 
     //是否显示广告
-    private boolean isShowAd=false;
+    private boolean isShowAd = false;
 
     /**
      * 处理视频被点击回调
      */
-    public interface MediaViewCallBack{
+    public interface MediaViewCallBack {
         public void onclick();
     }
+
     private MediaViewCallBack mediaViewCallBack;
 
     /**
      * 设置广告点击回调
+     *
      * @param mediaViewCallBack
      */
-    public void setMediaViewCallBack(MediaViewCallBack mediaViewCallBack){
-        this.mediaViewCallBack= mediaViewCallBack;
+    public void setMediaViewCallBack(MediaViewCallBack mediaViewCallBack) {
+        this.mediaViewCallBack = mediaViewCallBack;
     }
+
     public boolean isShowAd() {
         return isShowAd;
     }
@@ -621,18 +624,20 @@ setControlLayerVisibility(false);
 
     /**
      * 初始化
+     *
      * @param context
      */
-    protected void initView(Context context){
-        LayoutParams layoutParams= new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-        view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
+    protected void initView(Context context) {
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        view_Tip = LayoutInflater.from(context).inflate(R.layout.tip_layout, null);
         view_Tip.setLayoutParams(layoutParams);
-        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        TextView tipMessage = (TextView) view_Tip.findViewById(R.id.tipMessage);
         tipMessage.setText("现在是非WIFI，看视频要花费流量了");
         view_Tip.findViewById(R.id.tipLayout).setOnClickListener(onClickListener);
         view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(onClickListener);
     }
-    private OnClickListener onClickListener= new OnClickListener() {
+
+    private OnClickListener onClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             setShowMedia(true);
@@ -640,7 +645,7 @@ setControlLayerVisibility(false);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    UtilFile.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+                    UtilFile.saveShared(mContext, FileManager.SHOW_NO_WIFI, FileManager.SHOW_NO_WIFI, "1");
                 }
             }).start();
         }
@@ -658,7 +663,9 @@ setControlLayerVisibility(false);
     public interface OnPlayingCompletionListener {
         void onPlayingCompletion();
     }
+
     protected OnPlayingCompletionListener mOnPlayingCompletionListener;
+
     public void setOnPlayingCompletionListener(OnPlayingCompletionListener playingCompletionListener) {
         mOnPlayingCompletionListener = playingCompletionListener;
     }

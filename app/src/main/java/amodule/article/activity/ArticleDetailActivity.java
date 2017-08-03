@@ -57,7 +57,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
-import third.share.UserHomeShare;
+import third.share.ShareActivityDialog;
 import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
@@ -369,7 +369,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                 });
         View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_43));
         listView.addFooterView(view);
         //请求文章数据
         requestArticleData(false);
@@ -588,8 +588,7 @@ public class ArticleDetailActivity extends BaseActivity {
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysForumData(isRefresh, object);
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 if (page < 1)
                     requestRelateData();
             }
@@ -632,8 +631,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     detailAdapter.notifyDataSetChanged();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                     listView.removeFooterView(loadManager.getSingleLoadMore(listView));
-                } else
-                    toastFaildRes(flag, true, object);
+                }
             }
         });
     }
@@ -738,7 +736,7 @@ public class ArticleDetailActivity extends BaseActivity {
             Tools.showToast(this, "数据处理中，请稍候");
             return;
         }
-        Intent intent = new Intent(this, UserHomeShare.class);
+        Intent intent = new Intent(this, ShareActivityDialog.class);
         intent.putExtra("tongjiId", isAuthor ? "a_my" : "a_user");
         intent.putExtra("nickName", customerData.get("nickName"));
         intent.putExtra("imgUrl", shareMap.get("img"));
@@ -788,8 +786,6 @@ public class ArticleDetailActivity extends BaseActivity {
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
                                 Main.allMain.sendBroadcast(broadIntent);
                             }
-                        } else {
-                            toastFaildRes(flag, true, obj);
                         }
                     }
                 });

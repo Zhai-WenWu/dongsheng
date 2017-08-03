@@ -33,7 +33,7 @@ import amodule.user.activity.login.UserSetting;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import aplug.imageselector.ShowImageActivity;
-import third.share.UserHomeShare;
+import third.share.ShareActivityDialog;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
@@ -70,7 +70,7 @@ public class UserHomeTitle {
         friend_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mAct, UserHomeShare.class);
+                Intent intent = new Intent(mAct, ShareActivityDialog.class);
                 intent.putExtra("tongjiId", isMyself ? "a_my":"a_user");
                 intent.putExtra("nickName", userinfo_map.get("nickName"));
                 intent.putExtra("imgUrl", userinfo_map.get("img"));
@@ -147,9 +147,15 @@ public class UserHomeTitle {
             TextView clickInfo = (TextView) mParentTitleView.findViewById(R.id.a_user_home_title_click);
             TextView addTime = (TextView) mParentTitleView.findViewById(R.id.a_user_home_title_addTime);
 
-            AppCommon.setLvImage(Integer.valueOf(userinfo_map.get("lv")), friend_lv);
-            AppCommon.setVip(mAct,friend_vip,userinfo_map.get("vip"),tongjiId,"个人信息");
-
+            boolean hasLv = AppCommon.setLvImage(Integer.valueOf(userinfo_map.get("lv")), friend_lv);
+            boolean isVip = AppCommon.setVip(mAct,friend_vip,userinfo_map.get("vip"),tongjiId,"个人信息");
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) friend_name.getLayoutParams();
+            if(hasLv && isVip){
+                layoutParams.setMargins(0,0,Tools.getDimen(mAct,R.dimen.dp_50),0);
+            }else if(hasLv || isVip){
+                layoutParams.setMargins(0,0,Tools.getDimen(mAct,R.dimen.dp_25),0);
+            }
+            friend_name.setLayoutParams(layoutParams);
 
             if (userinfo_map.get("customerTagoName") != null) {
                 int gourmet = Integer.valueOf(userinfo_map.get("isGourmet"));
