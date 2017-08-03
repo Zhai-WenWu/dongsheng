@@ -1,7 +1,9 @@
 package aplug.basic;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.xiangha.BuildConfig;
@@ -9,6 +11,9 @@ import com.xiangha.R;
 
 import org.apache.http.protocol.HTTP;
 
+import java.util.Map;
+
+import acore.logic.AppCommon;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -71,6 +76,16 @@ public class XHConf extends BasicConf {
 //			String jsonStr = OnlineConfigAgent.getInstance().getConfigParams(context, "domain2ip");
 //			if(jsonStr.length()>1) net_domain2ipJson=jsonStr;
 //		}
+		String httpData= AppCommon.getConfigByLocal("netProtocol");
+		Log.i("wyj","httpData:::"+httpData);
+		if(!TextUtils.isEmpty(httpData)){
+			Map<String,String> map=StringManager.getFirstMap(httpData);
+			if(map!=null&&map.containsKey("text")&&!TextUtils.isEmpty(map.get("text"))) {
+				StringManager.httpState=map.get("text").equals("http");
+				StringManager.changeUrl(StringManager.httpState?"http://":"","");
+				Log.i("wyj","MallStringManager.httpData:::"+MallStringManager.httpData);
+			}
+		}
 
 		
 		//设置图片配置

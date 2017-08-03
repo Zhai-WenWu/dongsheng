@@ -112,8 +112,6 @@ public class MyPhysique extends BaseActivity {
 						Tools.showToast(MyPhysique.this, "获取体质信息失败，请重试....");
 						MyPhysique.this.finish();
 					}
-				}else{
-					toastFaildRes(flag,true,returnObj);
 				}
 			}
 		});

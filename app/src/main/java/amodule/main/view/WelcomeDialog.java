@@ -212,6 +212,50 @@ public class WelcomeDialog extends Dialog {
                         return textSkip;
                     }
                 });
+        //百度开屏
+        WelcomeAdTools.getInstance().setBaiduCallback(new WelcomeAdTools.BaiduCallback() {
+            @Override
+            public void onAdPresent() {
+                mADLayout.setVisibility(View.GONE);
+                Log.i("tzy","BDCallback");
+                if(mAdTime>5){
+                    endCountDown();
+                    mAdTime=5;
+                    startCountDown(false);
+                }else if(mAdTime<3){
+                    closeDialog();
+                    return;
+                }
+                showSkipContainer();
+                isAdLoadOk = true;
+                AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "baidu", "", "show", "开屏广告位");
+                XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_baidu");
+            }
+
+            @Override
+            public void onAdDismissed() {
+                Log.i("tzy","onAdDismissed");
+                closeDialog();
+            }
+
+            @Override
+            public void onAdFailed(String s) {
+
+            }
+
+            @Override
+            public void onAdClick() {
+                Log.i("tzy","onAdClick");
+                closeDialog();
+                AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "baidu", "", "click", "开屏广告位");
+                XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_baidu");
+            }
+
+            @Override
+            public ViewGroup getADLayout() {
+                return mADLayout;
+            }
+        });
         //设置XHBanner回调
         WelcomeAdTools.getInstance().setmXHBannerCallback(
                 new WelcomeAdTools.XHBannerCallback() {
@@ -270,6 +314,7 @@ public class WelcomeDialog extends Dialog {
                         });
                     }
                 });
+
     }
     private void showSkipContainer(){
         textLead.setVisibility(View.VISIBLE);

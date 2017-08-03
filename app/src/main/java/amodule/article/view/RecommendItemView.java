@@ -81,7 +81,7 @@ public class RecommendItemView extends ItemBaseView {
             recImage.setVisibility(GONE);
             findViewById(R.id.imgs).setVisibility(GONE);
         }
-        recTitle.setMaxLines(Integer.MAX_VALUE);
+        recTitle.setMaxLines(2);
         setViewText(recTitle, map, "title", View.INVISIBLE);
         setViewText(recBrowse, map, "clickAll");
         setViewText(recComment, map, "commentNumber");

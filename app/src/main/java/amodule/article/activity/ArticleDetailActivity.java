@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -135,6 +134,7 @@ public class ArticleDetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         Glide.with(this).pauseRequests();
+        ToolsDevice.keyboardControl(false,this,mArticleCommentBar);
     }
 
     @Override
@@ -251,7 +251,6 @@ public class ArticleDetailActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
-                                    Log.i("tzy", "position = " + position);
                                     AppCommon.scorllToIndex(listView, position);
                                 }
                             }, 200);
@@ -370,7 +369,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     }
                 });
         View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_40));
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_43));
         listView.addFooterView(view);
         //请求文章数据
         requestArticleData(false);
@@ -385,7 +384,7 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleAdContrler.setOnBigAdCallback(new ArticleAdContrler.OnBigAdCallback() {
             @Override
             public void onBigAdData(Map<String, String> adDataMap) {
-                Log.i("tzy","adDataMap = " + adDataMap);
+//                Log.i("tzy","adDataMap = " + adDataMap);
                 if (adDataMap != null) {
                     ArticleDetailActivity.this.adDataMap.putAll(adDataMap);
                     showAd(adDataMap);
@@ -404,10 +403,6 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     public void showAd(Map<String, String> adDataMap) {
-        Log.i("tzy","showAd");
-        Log.i("tzy","adDataMap = " + adDataMap.toString());
-        Log.i("tzy","articleContentBottomView = " + articleContentBottomView);
-        Log.i("tzy","adView = "+ adView);
         if (articleContentBottomView == null
                 || isFinishing()
                 || adView != null
@@ -468,7 +463,6 @@ public class ArticleDetailActivity extends BaseActivity {
      * @param mapArticle
      */
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
-        Log.i("tzy","mapArticle = " + mapArticle.toString());
         if (mapArticle.isEmpty()) return;
 
         if (headerView == null)
@@ -573,7 +567,6 @@ public class ArticleDetailActivity extends BaseActivity {
         });
 
         commentNum = mapArticle.get("commentNumber");
-        Log.i("tzy", "commentNum = " + commentNum);
         mArticleCommentBar.setPraiseAPI(StringManager.api_likeArticle);
         mArticleCommentBar.setData(mapArticle);
         detailAdapter.notifyDataSetChanged();
@@ -595,8 +588,7 @@ public class ArticleDetailActivity extends BaseActivity {
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysForumData(isRefresh, object);
-                } else
-                    toastFaildRes(flag, true, object);
+                }
                 if (page < 1)
                     requestRelateData();
             }
@@ -615,7 +607,6 @@ public class ArticleDetailActivity extends BaseActivity {
         }
         if (commentMap != null && allDataListMap.indexOf(commentMap) < 0)
             allDataListMap.add(commentMap);
-        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
         detailAdapter.notifyDataSetChanged();
     }
 
@@ -640,8 +631,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     detailAdapter.notifyDataSetChanged();
                     loadManager.changeMoreBtn(flag, 10, 0, 3, false);
                     listView.removeFooterView(loadManager.getSingleLoadMore(listView));
-                } else
-                    toastFaildRes(flag, true, object);
+                }
             }
         });
     }
@@ -796,8 +786,6 @@ public class ArticleDetailActivity extends BaseActivity {
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
                                 Main.allMain.sendBroadcast(broadIntent);
                             }
-                        } else {
-                            toastFaildRes(flag, true, obj);
                         }
                     }
                 });

@@ -17,6 +17,7 @@ import third.ad.tools.AdConfigTools;
  */
 public abstract class XHScrollerAdParent {
     public static final String ADKEY_GDT = "sdk_gdt";
+    public static final String ADKEY_BAIDU = "sdk_baidu";
 //    public static final String ADKEY_INMOBI = "sdk_inmobi";
     public static final String ADKEY_API = "api_tfp";
     public static final String ADKEY_BANNER = "xh";
@@ -25,6 +26,7 @@ public abstract class XHScrollerAdParent {
 //    public static final String TAG_INMOBI = "inmobi";
     public static final String TAG_API = "api";
     public static final String TAG_BANNER = "personal";
+    public static final String TAG_BAIDU = "baidu";
 
     public int num;//当前存在的位置--针对的是一个广告位
     public String mAdPlayId="";//广告位置id
@@ -150,7 +152,7 @@ public abstract class XHScrollerAdParent {
      */
     public static boolean supportType(String type){
         if(!TextUtils.isEmpty(type)&&(XHScrollerAdParent.TAG_GDT.equals(type)||XHScrollerAdParent.TAG_BANNER.equals(type)
-        || XHScrollerAdParent.TAG_API.equals(type))){
+        || XHScrollerAdParent.TAG_API.equals(type) || XHScrollerAdParent.TAG_BAIDU.equals(type))){
             return true;
         }
         return false;

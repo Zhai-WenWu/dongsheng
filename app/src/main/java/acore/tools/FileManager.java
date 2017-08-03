@@ -72,6 +72,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_domain = "domain";
 	public static final String xmlKey_growingioopen = "growingioopen";
 	public static final String xmlKey_mall_domain = "mall_domain";
+	public static final String xmlKey_request_tip = "requesttip";
 	public static final String xmlKey_isIndexData = "isIndexData";
 	public static final String xmlKey_device = "device";
 	public static final String xmlKey_device_statictis = "device_statictis";

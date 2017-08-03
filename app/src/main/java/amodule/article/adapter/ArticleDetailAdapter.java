@@ -160,7 +160,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
             int spanStart = builder.getSpanStart(span);
             int spanEnd = builder.getSpanEnd(span);
             builder.removeSpan(span);
-            Log.i("tzy", "url = " + span.getURL());
+//            Log.i("tzy", "url = " + span.getURL());
             builder.setSpan(new RichURLSpan(span.getURL(), Color.parseColor("#5c809c"), false) {
                 @Override
                 public void onClick(View widget) {
@@ -224,11 +224,11 @@ public class ArticleDetailAdapter extends BaseAdapter {
                         && view != null
                         && mOnADCallback != null) {
                     final int index = Integer.parseInt(map.get("adPosition"));
-                    mOnADCallback.onBind(index, view, "");
+                    mOnADCallback.onBind(index, view, "" +  (index + 1));
                     view.setOnAdClickCallback(new RecommendItemView.OnAdClickCallback() {
                         @Override
                         public void onAdClick(View view) {
-                            mOnADCallback.onClick(view, index, "");
+                            mOnADCallback.onClick(view, index, "" + (index + 1));
                         }
                     });
                 }
@@ -243,11 +243,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
             view = mOnGetBigAdView.getBigAdView(map);
         if (view == null)
             return layout;
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        int dp_17 = Tools.getDimen(context, R.dimen.dp_17);
-        int dp_20 = Tools.getDimen(context, R.dimen.dp_20);
-        layoutParams.setMargins(dp_20, dp_17, dp_20, dp_17);
-        layout.addView(view, layoutParams);
+        layout.addView(view);
         return layout;
     }
 

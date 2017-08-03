@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:textColor="@color/my_text"
+            android:layout_centerVertical="true"
             android:textSize="@dimen/sp_15" />
 
         <LinearLayout

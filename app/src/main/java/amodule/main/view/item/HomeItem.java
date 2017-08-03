@@ -206,8 +206,6 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                         if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
                         else mTransferUrl+="?data_type="+mDataMap.get("type");
                         mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
-                    } else {
-                        mTransferUrl += "&data_type="+mDataMap.get("type") + "&module_type="+(isTopTypeView()?"top_info":"info");
                     }
                 }
                 Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);

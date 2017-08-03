@@ -2,6 +2,7 @@ package aplug.web.tools;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.dialogManager.PushManager;
 import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -27,6 +29,9 @@ import acore.logic.load.LoadManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.answer.activity.AnswerEditActivity;
+import amodule.answer.activity.AskEditActivity;
+import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.db.DataOperate;
 import amodule.dish.db.DishOffSqlite;
@@ -754,10 +759,13 @@ public class JsAppCommon extends JsBase{
 		});
 		params += "&userCode=" + LoginManager.userInfo.get("code");
 		url = StringManager.apiUrl + url;
-//		Log.i("FRJ","goPay() url: " + url + "  params:" + params + "  tpye:" + type);
-		ReqInternet.in().doPost(url,params,new InternetCallback(mAct) {
+		Log.i("FRJ","goPay() url: " + url + "  params:" + params + "  tpye:" + type);
+		ReqEncyptInternet.in().doEncypt(url,params,new InternetCallback(mAct) {
 			@Override
 			public void loaded(int i, String s, Object data) {
+
+				Log.i("FRJ", "string = " + s + "  data = " + data);
+
 				if(i>=ReqInternet.REQ_OK_STRING){
 					if("1".equals(type)){ //支付宝支付
 						ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(data);
@@ -801,12 +809,16 @@ public class JsAppCommon extends JsBase{
 			mWebView.post(new Runnable() {
 				@Override
 				public void run() {
-//					Log.i("FRJ","onPayCallback() isOk:" + isOk + "  data: " + data);
+					Log.i("FRJ","onPayCallback() isOk:" + isOk + "  data: " + data);
 //					StringManager.getListMapByJson(data);
 					String newData = String.valueOf(data);
-//					String mm = "Javascript:onPayCallback(" + isOk + ",\"" + newData + "\")";
-//					Log.i("FRJ","onPayCallback() mm:" + mm);
+
+					String mm = "Javascript:onPayCallback(" + isOk + ",\"" + newData + "\")";
+					Log.i("FRJ","onPayCallback() mm:" + mm);
 					mWebView.loadUrl("Javascript:onPayCallback(" + isOk + ",\"" + newData + "\")");
+					if (mOnPayFinishListener != null) {
+						mOnPayFinishListener.onPayFinish(isOk, data);
+					}
 				}
 			});
 		}
@@ -843,4 +855,81 @@ public class JsAppCommon extends JsBase{
 			}
 		});
 	}
+	public interface OnPayFinishListener {
+		void onPayFinish(boolean succ, Object data);
+	}
+
+	private OnPayFinishListener mOnPayFinishListener;
+	public void setOnPayFinishListener(OnPayFinishListener payFinishListener) {
+		mOnPayFinishListener = payFinishListener;
+	}
+
+	@JavascriptInterface
+	public void goAnswer(String dishId, String authorId, String qaId, String isAnswerMore) {
+		Bundle bundle = new Bundle();
+		bundle.putString("code", dishId);
+		bundle.putString("authorCode", authorId);
+		bundle.putString("qaCode", qaId);
+		bundle.putString("mIsAnswerMore", isAnswerMore);
+		Intent intent = new Intent(mAct, AnswerEditActivity.class);
+		intent.putExtras(bundle);
+		mAct.startActivity(intent);
+	}
+
+	@JavascriptInterface
+	public void goAsk(String dishId, String authorId, String qaId, String qaTitle, String isAskMore) {
+		Bundle bundle = new Bundle();
+		bundle.putString("code", dishId);
+		bundle.putString("authorCode", authorId);
+		bundle.putString("qaCode", qaId);
+		bundle.putString("qaTitle", qaTitle);
+		bundle.putString("isAskMore", isAskMore);
+		Intent intent = new Intent(mAct, AskEditActivity.class);
+		intent.putExtras(bundle);
+		mAct.startActivity(intent);
+	}
+
+	@JavascriptInterface
+	public void report(String nickName, String userCode, String qaCode, String qaType, String reportType) {
+		Bundle bundle = new Bundle();
+		bundle.putString("reportName", nickName);
+		bundle.putString("qaCode", qaCode);
+		bundle.putString("userCode", userCode);
+		bundle.putString("qaType", qaType);
+		bundle.putString("reportType", reportType);
+		Intent intent = new Intent(mAct, QAReportActivity.class);
+		intent.putExtras(bundle);
+		mAct.startActivity(intent);
+	}
+
+	@JavascriptInterface
+	public void closePayWeb() {
+		if (mAct instanceof AskEditActivity) {
+			((AskEditActivity)mAct).closePayWindow();
+		}
+	}
+
+	public interface OnGetDataListener {
+		void getData(String data);
+	}
+
+	private OnGetDataListener mOnGetDataListener;
+
+	public void setOnGetDataListener(OnGetDataListener getDataListener) {
+		mOnGetDataListener = getDataListener;
+	}
+
+	@JavascriptInterface
+	public void getTitleBarInfo(String jsonStr) {
+		if (mOnGetDataListener != null)
+			mOnGetDataListener.getData(jsonStr);
+	}
+
+	@JavascriptInterface
+	public void openSysSetting() {
+		PushManager.requestPermission();
+	}
+
+
+
 }

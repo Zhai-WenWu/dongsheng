@@ -297,8 +297,6 @@ public class ListHealthTime extends BaseActivity {
 						listData.add(map);
 					}
 					load();
-				} else{
-					toastFaildRes(flag,false,returnObj);
 				}
 				loadManager.hideProgressBar();
 				timeAdapter.notifyDataSetChanged();

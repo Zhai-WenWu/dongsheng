@@ -170,8 +170,6 @@ public class FriendQuan extends BaseActivity {
 //					handler.sendEmptyMessage(MSG_FRIEND_OK);
 					// 如果是重新加载的,选中第一个tab.
 					listFriend.setSelection(1);
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 				currentPageFriend = loadManager.changeMoreBtn(flag, everyPageFriend, loadCount, currentPageFriend,dataFriend.size() == 0);
 				listFriend.onRefreshComplete();

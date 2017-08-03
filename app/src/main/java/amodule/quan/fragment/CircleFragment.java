@@ -452,9 +452,6 @@ public class CircleFragment extends Fragment {
                             }
                         }
                     }
-                } else {
-                    //请求失败处理
-                    toastFaildRes(flag, true, msg);
                 }
                 int size= mListData.size();
                 mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);

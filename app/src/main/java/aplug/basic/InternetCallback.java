@@ -100,19 +100,23 @@ public abstract class InternetCallback extends InterCallback {
 						XHClick.mapStat(context, "a_apiError", msg, theUrl);
 						AppCommon.getCommonData(null);
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
-					} else
+                        toastFaildRes(msg);
+					} else {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
-					/** 测试代码 */
+                        toastFaildRes(msg);
+                    }
 				} catch (Exception e) {
 					e.printStackTrace();
 					msg = "数据展示异常，请反馈给我们";
 					loaded(ReqInternet.REQ_STRING_ERROR, url, msg);
+                    toastFaildRes(msg);
 					XHClick.mapStat(context, "a_apiError", msg, theUrl);
 					XHApiMonitor.monitoringAPI(context, "数据展示异常", url, cookie, method, params, "", str);
 				}
 			} else {
 				msg = "解析错误，请重试或反馈给我们";
 				loaded(ReqInternet.REQ_STRING_ERROR, url, msg);
+                toastFaildRes(msg);
 				XHClick.mapStat(context, "a_apiError", msg, theUrl);
 				XHApiMonitor.monitoringAPI(context, "解析错误", url, cookie, method, params, "", str);
 			}
@@ -242,10 +246,6 @@ public abstract class InternetCallback extends InterCallback {
 		if (!header.containsKey("Charset"))
 			header.put("Charset", XHConf.net_encode);
 
-		//webp格式
-//		if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-//			header.put("Accept", "image/webp");
-//		}
 		return super.getReqHeader(header, url, params);
 	}
 
@@ -258,22 +258,15 @@ public abstract class InternetCallback extends InterCallback {
 	/**
 	 * toast请求失败的返回值
 	 * 
-	 * @param flag
-	 * @param showNetError
-	 *            是否toast网络错误
 	 * @param returnObj
 	 * @return
 	 */
-	public String toastFaildRes(int flag, boolean showNetError, Object returnObj) {
+	private void toastFaildRes(Object returnObj) {
 		String returnRes = returnObj.toString();
 		if (returnRes.length() > 0) {
-			if (showNetError)
+			if (Tools.isDebug(context) || Tools.isOpenRequestTip(context))
 				Tools.showToast(context, returnRes);
-			else if (flag > ReqInternet.REQ_STATE_ERROR) {
-				Tools.showToast(context, returnRes);
-			}
 		}
-		return returnRes;
 	}
 
 	public String statTime(String url) {

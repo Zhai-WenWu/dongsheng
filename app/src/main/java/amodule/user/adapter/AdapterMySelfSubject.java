@@ -324,8 +324,6 @@ public class AdapterMySelfSubject extends AdapterSimple {
 												if (map.get("type").equals("2")) {
 													map.put("hide", "yes");// 隐藏该条目;
 												}
-											} else {
-												toastFaildRes(flag, true, returnObj);
 											}
 										}
 									});

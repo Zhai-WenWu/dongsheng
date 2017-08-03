@@ -1,5 +1,7 @@
 package third.ad.option;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +32,7 @@ public class AdOptionHomeDish extends AdOptionList {
      */
     @Override
     public Map<String, String> getAdListItemData(final String title, final String desc, final String iconUrl,
-                                                 String imageUrl, String adTag) {
+                                                 String imageUrl, String adTag,String isBigPic) {
         Map<String, String> map = new HashMap<>();
         map.put("name", title );
         map.put("img", imageUrl);
@@ -38,6 +40,8 @@ public class AdOptionHomeDish extends AdOptionList {
         map.put("allClick", String.valueOf(Tools.getRandom(6000, 20000)));
         map.put("commentNum", String.valueOf(Tools.getRandom(5, 20)));
         map.put("adClass", adTag);
+        if(!TextUtils.isEmpty(isBigPic))
+            map.put("isBigPic", isBigPic);
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         try {

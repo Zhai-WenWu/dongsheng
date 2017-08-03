@@ -165,8 +165,6 @@ public class VideoDishItemView {
 						listDataMySuro.add(map);
 					}
 					adapter.notifyDataSetChanged();
-				} else{
-					toastFaildRes(flag,true,returnObj);
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;

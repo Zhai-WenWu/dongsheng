@@ -69,17 +69,17 @@
             <LinearLayout
                 android:id="@+id/ll_accout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_11"
                 android:background="@color/backgroup_color"
                 android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/dp_20"
-                android:paddingRight="@dimen/dp_20">
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -111,6 +111,36 @@
                         android:id="@+id/iv_bind_phone"
                         android:layout_width="@dimen/dp_9"
                         android:layout_height="@dimen/dp_13"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/a_login_setting_button_enter2"
+                        android:visibility="visible" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/qa_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_0.5"
+                        android:background="#ededed" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="问答设置"
+                        android:textColor="@color/my_text"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_9"
+                        android:layout_height="@dimen/dp_13"
+                        android:layout_marginRight="@dimen/dp_20"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/a_login_setting_button_enter2"

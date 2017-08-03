@@ -3,6 +3,7 @@ package third.ad.tools;
 public class AdPlayIdConfig {
 
     public static final String ADTYPE_GDT = "sdk_gdt";
+    public static final String ADTYPE_BAIDU = "sdk_baidu";
 //    public static final String ADTYPE_INMOBI = "sdk_inmobi";
     public static final String ADTYPE_API = "api_tfp";
     public static final String ADTYPE_BANNER = "xh";

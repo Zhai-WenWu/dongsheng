@@ -145,8 +145,6 @@ public class HaYouSearchResultView extends RelativeLayout {
                         customerAdapter.notifyDataSetChanged();
                     }
                     hideProgresBar();
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 if (everyPage == 0)
                     everyPage = loadPage;

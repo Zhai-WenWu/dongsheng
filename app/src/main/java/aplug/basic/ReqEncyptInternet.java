@@ -16,7 +16,6 @@ import acore.tools.Tools;
 import xh.basic.internet.InterCallback;
 import xh.basic.internet.UtilInternet;
 
-import static amodule.user.activity.ChangeUrl.isChangeUrlState;
 
 /**
  * 加密强求接口.-----不支持跨页面并发请求（未正确发起的请求，在切换页面会全部清除）。

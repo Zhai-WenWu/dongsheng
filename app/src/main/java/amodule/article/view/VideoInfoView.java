@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public class VideoInfoView extends ItemBaseView {
     private ImageView arrow;
 
     private String contentText = "";
+    private Map<String, String> dataMap = new HashMap<>();
 
     public VideoInfoView(Context context) {
         super(context, R.layout.v_video_info_view_layout);
@@ -61,11 +63,11 @@ public class VideoInfoView extends ItemBaseView {
                 if (arrow.isSelected()) {
                     content.setVisibility(GONE);
                     arrow.setSelected(false);
-                    arrow.setImageResource(R.drawable.arrow_down);
+                    arrow.setImageResource(R.drawable.arrow_down2);
                 } else {
                     content.setVisibility(VISIBLE);
                     arrow.setSelected(true);
-                    arrow.setImageResource(R.drawable.arrow_up);
+                    arrow.setImageResource(R.drawable.arrow_up2);
                 }
             }
         });
@@ -76,6 +78,7 @@ public class VideoInfoView extends ItemBaseView {
             setVisibility(GONE);
             return;
         }
+        this.dataMap = videoMap;
 
         setVisibility(VISIBLE);
 
@@ -126,6 +129,13 @@ public class VideoInfoView extends ItemBaseView {
                 }
             }
         });
+    }
+
+    public void setupConmentNum(String commentNumStr){
+        if(!TextUtils.isEmpty(commentNumStr)){
+            dataMap.put("commentNumber",String.valueOf(commentNumStr));
+            setViewTextWithSuffix(commetnCount, dataMap, "commentNumber", "评论");
+        }
     }
 
     private String mCurrType = "";

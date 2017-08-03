@@ -52,6 +52,10 @@ import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.XiangHaTabHost;
+import amodule.answer.activity.AnswerEditActivity;
+import amodule.answer.activity.AskEditActivity;
+import amodule.answer.db.AskAnswerSQLite;
+import amodule.answer.model.AskAnswerModel;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
@@ -76,6 +80,7 @@ import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
+import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
@@ -190,16 +195,58 @@ public class Main extends Activity implements OnClickListener {
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
 
-                boolean isShow = showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？");
-                if (!isShow)
-                    showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？");
-                DishMouldControl.setDishMould(new DishMouldControl.OnDishMouldListener() {
-                    @Override
-                    public void loaded(boolean isSucess, String data, String mouldVersion) {
-                        OffDishToFavoriteControl.updataAllNedUpdataMoulderDish(Main.this,mouldVersion);
-                    }
-                });
+                if (showQAUploading(AskAnswerModel.TYPE_ANSWER)) {
+
+                } else if (showQAUploading(AskAnswerModel.TYPE_ASK)) {
+
+                } else if (showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？")) {
+
+                } else if (showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？")) {
+
+                }
             }
+        }
+
+        private boolean showQAUploading(String qaModelType) {
+            boolean show = false;
+            AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+            AskAnswerModel model = sqLite.queryData(qaModelType);
+            String msg = "";
+            Class tempC = null;
+            if (model != null) {
+                switch (qaModelType) {
+                    case AskAnswerModel.TYPE_ASK:
+                        msg = "你有一个问题尚未发布，是否继续？";
+                        tempC = AskEditActivity.class;
+                        break;
+                    case AskAnswerModel.TYPE_ANSWER:
+                        msg = "你有一个回答尚未发布，是否继续？";
+                        tempC = AnswerEditActivity.class;
+                        break;
+                }
+                if (tempC == null)
+                    return show;
+                show = true;
+                final Class c = tempC;
+                final XhDialog dialog = new XhDialog(Main.this);
+                dialog.setTitle(msg)
+                        .setCancelable(true)
+                        .setCanselButton("否", new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setSureButton("是", new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Main.this.startActivity(new Intent(Main.this, c));
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
+            }
+            return show;
         }
 
         private boolean showUploading(final UploadParentSQLite sqLite, final int dataType, String title) {
@@ -250,6 +297,7 @@ public class Main extends Activity implements OnClickListener {
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
+            if(LoginManager.isLogin())MallCommon.getShoppingNum(Main.this,null,null);
 
         }
 
@@ -365,6 +413,7 @@ public class Main extends Activity implements OnClickListener {
         }
         setTabItemMargins(linear_item, 0, 0, margin);
         setTabItemMargins(linear_item, length - 1, margin, 0);
+
     }
 
     public void setTabItemMargins(ViewGroup viewGroup, int index, int leftMargin, int rightMargin) {
@@ -423,7 +472,7 @@ public class Main extends Activity implements OnClickListener {
         }
         isForeground = true;
         //设置未读消息数
-        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage);
+        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
         //去我的页面
         if (MallPayActivity.pay_state) {
             onClick(tabViews[4].findViewById(R.id.tab_linearLayout));

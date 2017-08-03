@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -115,8 +118,12 @@ public class ListDish extends BaseActivity {
                         Map<String, String> tempMap = StringManager.getFirstMap(object);
                         //进行数据拼装
                         tempMap.put("adStyle", "1");
-                        tempMap.put("info", tempMap.get("desc"));
-                        tempMap.put("name", tempMap.get("title"));
+                        tempMap.put("name", tempMap.get("desc"));
+                        try {
+                            tempMap.put("customer", new JSONObject().put("nickName",tempMap.get("title")).toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         tempMap.put("img", tempMap.get("imgUrl"));
                         tempMap.put("adPosition", tempMap.get("index"));
                         adData.add(tempMap);
@@ -132,7 +139,7 @@ public class ListDish extends BaseActivity {
                     }
                 });
             }
-        }, statisticKey);
+        }, statisticKey,true);
         adapter.setXHAllControl(xhAllAdControl);
     }
 
@@ -229,7 +236,7 @@ public class ListDish extends BaseActivity {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-                Log.i("tzy","obj = " + obj);
+//                Log.i("tzy","obj = " + obj);
                 //权限检测
                 if(permissionMap.isEmpty()
                         && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
@@ -243,7 +250,7 @@ public class ListDish extends BaseActivity {
                         }
                     }
                     permissionMap = StringManager.getFirstMap(obj);
-                    Log.i("tzy","permissionMap = " + permissionMap.toString());
+//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPermission = analyzePagePermissionData(pagePermission);
@@ -333,8 +340,6 @@ public class ListDish extends BaseActivity {
                         arrayList.add(map);
                     }
                     adapter.notifyDataSetChanged();
-                } else {
-                    toastFaildRes(flag, true, returnObj);
                 }
                 if (everyPage == 0) everyPage = loadPage;
                 currentPage = loadManager.changeMoreBtn(flag, everyPage, loadPage, currentPage, arrayList.size() == 0);

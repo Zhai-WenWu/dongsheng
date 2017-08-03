@@ -16,9 +16,10 @@ import java.util.Map;
 import xh.basic.tool.UtilString;
 
 public class StringManager extends UtilString {
+    public static boolean httpState=false;//false为https，true为http；
     //固定URL基础配置
     public final static String defaultDomain = ".xiangha.com";
-    public final static String defaultProtocol = "https://";
+    public static String defaultProtocol = "https://";
     public final static String apiTitle = "api";
     public final static String appWebTitle = "appweb";
     public final static String wwwTitle = "www";
@@ -332,6 +333,13 @@ public class StringManager extends UtilString {
     public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
     public final static String api_article = mUrl + "article/";//文章详情页m
     public final static String api_Video = mUrl + "videoInfo/";//视频详情页m
+
+    /*付费问答*/
+    public final static String API_QA_NUM = apiUrl + "main7/qa/getQaNum";//获取问答次数
+    public final static String API_QA_GETREPORT = apiUrl + "main7/qa/getReport";//获取问答问答举报信息
+    public final static String API_QA_COMMITREPORT = apiUrl + "main7/qa/addReport";//提交问答举报
+    public final static String API_QA_GETPRICE = apiUrl + "main7/qa/getQaPrice";//获取提问金额
+    public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//获取提问金额
 
     //替换url
     public final static String replaceUrl(String url) {

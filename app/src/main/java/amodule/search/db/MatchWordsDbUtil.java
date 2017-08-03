@@ -53,7 +53,7 @@ public class MatchWordsDbUtil {
                             final String matchWordsUrl = stringMap.get("url");
                             String isUpdate = stringMap.get("isUpdate");
 
-                            if (Integer.valueOf(isUpdate) == 2) {
+                            if ("2".equals(isUpdate)) {
                                 if (!TextUtils.isEmpty(matchWordsUrl)) {
                                     Handler handler = new Handler(Looper.getMainLooper());
                                     handler.post(new Runnable() {

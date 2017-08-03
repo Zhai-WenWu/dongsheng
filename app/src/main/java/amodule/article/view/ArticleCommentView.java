@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -85,7 +84,6 @@ public class ArticleCommentView extends ItemBaseView {
             for (int index = 0; index < length; index++) {
                 final Map<String, String> dataMap = data.get(index);
                 final ViewCommentItem commentItem = new ViewCommentItem(getContext());
-                Log.i("tzy", "comment dataMap = " + dataMap.toString());
                 if ("0".equals(dataMap.get("fabulous_num")))
                     dataMap.put("fabulous_num", "");
                 commentItem.isHaveLongClickRight = false;

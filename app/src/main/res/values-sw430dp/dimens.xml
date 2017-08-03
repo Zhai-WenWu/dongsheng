@@ -5,6 +5,8 @@
     <!-- 控件大小 *1.2 -->
     <dimen name="dp__100">-120dp</dimen>
     <dimen name="dp__30">-36dp</dimen>
+    <dimen name="dp__20">-24dp</dimen>\
+    <dimen name="dp__18">-21.6dp</dimen>
     <dimen name="dp__15">-18dp</dimen>
     <dimen name="dp__10">-12dp</dimen>
     <dimen name="dp__9.5">-11.4dp</dimen>

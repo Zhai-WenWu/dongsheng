@@ -151,8 +151,6 @@ public class TieZiSearchResultView extends RelativeLayout {
                             }
                         }
                     }
-                } else {
-                    toastFaildRes(flag, true, msg);
                 }
 
                 //如果没有数据显示提示

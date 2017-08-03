@@ -39,18 +39,19 @@ public class XHOneAdControl {
             if(listAdParent.get(index) instanceof XHScrollerGdt){
                 ((XHScrollerGdt)listAdParent.get(index)).setGdtData(xhAdControlCallBack.onGdtNativeData());
             }
+            if(listAdParent.get(index) instanceof XHScrollerBaidu){
+                ((XHScrollerBaidu)listAdParent.get(index)).setNativeResponse(xhAdControlCallBack.onBaiduNativeData());
+            }
             listAdParent.get(index).setIndexControl(index_controls);
             listAdParent.get(index).getAdDataWithBackAdId(new XHScrollerAdParent.XHAdDataCallBack() {
                 @Override
                 public void onSuccees(String type, Map<String, String> map) {
-//                    Log.i("tzy", "GDT NactiveAD XHAdDataCallBack onSuccees");
                     index_ad=index;
                     xhAdControlCallBack.onSuccess(type,map,index_controls);
                 }
 
                 @Override
                 public void onFail(String type) {
-//                    Log.i("tzy", "GDT NactiveAD XHAdDataCallBack onFail");
                     if(index==listAdParent.size()-1){
                         xhAdControlCallBack.onFail(type,index_controls);
                     }else{

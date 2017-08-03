@@ -1,173 +1,282 @@
 package amodule.user.activity;
 
-import third.mall.aplug.MallStringManager;
-import xh.basic.tool.UtilFile;
-import acore.override.activity.base.BaseActivity;
-import acore.tools.FileManager;
-import acore.tools.StringManager;
-
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xiangha.R;
 
+import acore.override.activity.base.BaseActivity;
+import acore.tools.FileManager;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import third.mall.aplug.MallStringManager;
+import xh.basic.tool.UtilFile;
+
 public class ChangeUrl extends BaseActivity {
-    TextView tv_nowDomain, tv_nowProtocol;
-    EditText et_port;
-    String protocol = StringManager.protocol, domain = StringManager.domain, port = "";
-    private TextView mall_tv_now_domain;
-    private String mall_domain = "", mall_port = "";
-    private EditText mall_et_input1;
-    private boolean state_xiangha = false;
-    private boolean state_mall = false;
-    public static boolean isChangeUrlState = false;
+
+    private String mInitXHData, mInitMallData,
+            mProtocol = StringManager.defaultProtocol,
+            mXHDomain = StringManager.defaultDomain, mXHPort,
+            mMallDefDomain = ".ds.xiangha.com",
+            mMallDomain = mMallDefDomain, mMallPort,
+            mXHTestDomain = ".ixiangha.com", mMallTestDomain = ".ds.mamaweiyang.net";
+
+    private TextView mFinishTV;
+    private RadioGroup mProtocolGroup;
+    private RadioButton mProtocolBtn1;
+    private RadioButton mProtocolBtn2;
+
+    private EditText mXHPortEt;
+    private Switch mXHSwitchBtn;
+
+    private EditText mMallPortEt;
+    private Switch mMallSwitchBtn;
+
+    private Switch mRequsetFailTipSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("切换url", 2, 0, R.layout.c_view_bar_title, R.layout.a_core_change_url);
-        init();
+        initView();
         initData();
-        initMallData();
+        addListener();
         loadManager.hideProgressBar();
     }
 
-    private void init() {
-        tv_nowDomain = (TextView) findViewById(R.id.tv_now_domain);
-        tv_nowProtocol = (TextView) findViewById(R.id.tv_now_protocol);
-        et_port = (EditText) findViewById(R.id.et_input1);
-        TextView rightText = (TextView) findViewById(R.id.rightText);
-        rightText.setVisibility(View.VISIBLE);
-        rightText.setText("完成");
+    private void addListener() {
 
-        RadioGroup groupDomain = (RadioGroup) findViewById(R.id.rg_domain);
-        groupDomain.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup rg, int radioButtonId) {
-                RadioButton rb = (RadioButton) ChangeUrl.this.findViewById(radioButtonId);
-                state_xiangha = true;
-                domain = rb.getText().toString();
-                setUrl();
-                isChangeUrlState = true;
-            }
-        });
-        RadioGroup groupProtocol = (RadioGroup) findViewById(R.id.rg_protocol);
-        groupProtocol.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup rg, int radioButtonId) {
-                RadioButton rb = (RadioButton) ChangeUrl.this.findViewById(radioButtonId);
-                state_xiangha = true;
-                protocol = rb.getText().toString();
-                tv_nowProtocol.setText("当前选择协议：" + protocol);
-                setUrl();
-                isChangeUrlState = true;
-            }
-        });
-        et_port.setOnKeyListener(new OnKeyListener() {
-
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                port = et_port.getText().toString();
-                state_xiangha = true;
-                if (port.length() > 0) port = ":" + port;
-                setUrl();
-                return false;
-            }
-        });
-
-        rightText.setOnClickListener(new OnClickListener() {
+        mFinishTV.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (state_xiangha) {//香哈
-                    if (domain.length() < 5) {
-                        Toast.makeText(getApplicationContext(), "请选择域", Toast.LENGTH_SHORT).show();
+                String tempXHData = mProtocol + mXHDomain + mXHPort;
+                if (!tempXHData.equals(mInitXHData)) {//香哈
+                    if (!TextUtils.isEmpty(mXHDomain) && mXHTestDomain.equals(mXHDomain) && TextUtils.isEmpty(mXHPort)) {
+                        Tools.showToast(ChangeUrl.this, "请填写香哈测试端口号");
                         return;
                     }
-                    port = et_port.getText().toString();
-                    if (port.length() > 0) port = ":" + port;
-                    StringManager.changeUrl(protocol,domain + port);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain, domain + port);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, protocol);
-                    if (!state_mall)
-                        ChangeUrl.this.finish();
+                    String tempPort = "";
+                    if (!TextUtils.isEmpty(mXHPort)) {
+                        tempPort = ":" + mXHPort;
+                    }
+                    String newDomain = mXHDomain + tempPort;
+                    StringManager.changeUrl(mProtocol, newDomain);
+                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain, newDomain);
+                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, mProtocol);
                 }
-                if (state_mall) {//电商
-                    if (mall_domain.length() < 5) {
-                        Toast.makeText(getApplicationContext(), "请选择域", Toast.LENGTH_SHORT).show();
+                String tempMallData = mMallDomain + mMallPort;
+                if (!tempMallData.equals(mInitMallData)) {//电商
+                    if (!TextUtils.isEmpty(mMallDomain) && mMallTestDomain.equals(mMallDomain) && TextUtils.isEmpty(mMallPort)) {
+                        Tools.showToast(ChangeUrl.this, "请填写电商测试端口号");
                         return;
                     }
-                    mall_port = mall_et_input1.getText().toString();
-                    if (mall_port.length() > 0) mall_port = ":" + mall_port;
-                    MallStringManager.changeUrl(mall_domain + mall_port);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, mall_domain + mall_port);
-                    ChangeUrl.this.finish();
+                    String tempPort = "";
+                    if (!TextUtils.isEmpty(mMallPort)) {
+                        tempPort = ":" + mMallPort;
+                    }
+                    String newDomain = mMallDomain + tempPort;
+                    MallStringManager.changeUrl(newDomain);
+                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, newDomain);
+                }
+                ChangeUrl.this.finish();
+            }
+        });
 
+        mProtocolGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup rg, int radioButtonId) {
+                switch (radioButtonId) {
+                    case R.id.protocol1:
+                        mProtocol = "https://";
+                        mXHPortEt.setText("");
+                        if (mXHPortEt.isFocused()) {
+                            mXHPortEt.clearFocus();
+                        }
+                        if (mXHSwitchBtn.isChecked()) {
+                            mXHSwitchBtn.setChecked(false);
+                        }
+
+                        mMallPortEt.setText("");
+                        if (mMallPortEt.isFocused()) {
+                            mMallPortEt.clearFocus();
+                        }
+                        if (mMallSwitchBtn.isChecked())
+                            mMallSwitchBtn.setChecked(false);
+                        break;
+                    case R.id.protocol2:
+                        mProtocol = "http://";
+                        if (!mXHSwitchBtn.isChecked())
+                            mXHSwitchBtn.setChecked(true);
+                        if (!mMallSwitchBtn.isChecked())
+                            mMallSwitchBtn.setChecked(true);
+                        break;
                 }
             }
         });
-        initViewMall();
+
+        CompoundButton.OnCheckedChangeListener changeListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                switch (buttonView.getId()) {
+                    case R.id.xh_switch:
+                        if (isChecked) {
+                            mXHDomain = mXHTestDomain;
+                            mXHPort = mXHPortEt.getText().toString().trim();
+                            if (!mProtocolBtn2.isChecked())
+                                mProtocolBtn2.setChecked(true);
+                        } else {
+                            mXHDomain = StringManager.defaultDomain;
+                            mXHPort = "";
+                        }
+                        break;
+                    case R.id.mall_switch:
+                        if (isChecked) {
+                            mMallDomain = mMallTestDomain;
+                            mMallPort = mMallPortEt.getText().toString().trim();
+                            if (!mProtocolBtn2.isChecked())
+                                mProtocolBtn2.setChecked(true);
+                        } else {
+                            mMallDomain = mMallDefDomain;
+                            mMallPort = "";
+                        }
+                        break;
+                }
+            }
+        };
+
+        mXHSwitchBtn.setOnCheckedChangeListener(changeListener);
+        mMallSwitchBtn.setOnCheckedChangeListener(changeListener);
+
+        mXHPortEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mXHPort = s.toString();
+                if (!mXHSwitchBtn.isChecked() && !TextUtils.isEmpty(mXHPort)) {
+                    mXHSwitchBtn.setChecked(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mMallPortEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mMallPort = s.toString();
+                if (!mMallSwitchBtn.isChecked() && !TextUtils.isEmpty(mMallPort)) {
+                    mMallSwitchBtn.setChecked(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mRequsetFailTipSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_request_tip, isChecked ? "2" : "1");
+            }
+        });
+    }
+
+    private void initView() {
+        mFinishTV = (TextView) findViewById(R.id.rightText);
+        mFinishTV.setVisibility(View.VISIBLE);
+        mFinishTV.setText("完成");
+        mProtocolGroup = (RadioGroup) findViewById(R.id.rg_protocol);
+        mProtocolBtn1 = (RadioButton) findViewById(R.id.protocol1);
+        mProtocolBtn2 = (RadioButton) findViewById(R.id.protocol2);
+        mXHPortEt = (EditText) findViewById(R.id.xh_et);
+        mMallPortEt = (EditText) findViewById(R.id.mall_et);
+        mXHSwitchBtn = (Switch) findViewById(R.id.xh_switch);
+        mMallSwitchBtn = (Switch) findViewById(R.id.mall_switch);
+        mRequsetFailTipSwitch = (Switch) findViewById(R.id.request_fail_tip_switch);
     }
 
     private void initData() {
-        tv_nowDomain.setText("当前选择域：" + StringManager.apiUrl.replace(StringManager.protocol + "api", "").replace("/", ""));
-        tv_nowProtocol.setText("当前选择协议：" + StringManager.protocol);
-    }
-
-    private void setUrl() {
-        tv_nowDomain.setText("当前选择：" + domain + port);
-    }
-
-    /**
-     * 初始化电商数据
-     */
-    private void initViewMall() {
-        mall_tv_now_domain = (TextView) findViewById(R.id.mall_tv_now_domain);
-
-        RadioGroup group = (RadioGroup) findViewById(R.id.mall_rg_domain);
-        group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                state_mall = true;
-                RadioButton rb = (RadioButton) ChangeUrl.this.findViewById(checkedId);
-                mall_domain = rb.getText().toString();
-                setMallUrl();
+        String protocol = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol);
+        if (!TextUtils.isEmpty(protocol)) {
+            mProtocol = protocol;
+            if (protocol.contains("http://"))
+                mProtocolBtn2.setChecked(true);
+            else
+                mProtocolBtn1.setChecked(true);
+        } else
+            mProtocolBtn1.setChecked(true);
+        String xhDomain = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain);
+        if (!TextUtils.isEmpty(xhDomain)) {
+            if (xhDomain.contains(mXHTestDomain + ":")) {
+                String str[] = xhDomain.split(":");
+                String domain = str[0];
+                if (!TextUtils.isEmpty(domain))
+                    mXHDomain = domain;
+                String port = str[1];
+                if (!TextUtils.isEmpty(port)) {
+                    mXHPort = port;
+                    mXHPortEt.setText(port);
+                    mXHSwitchBtn.setChecked(true);
+                }
+            } else {
+                mXHSwitchBtn.setChecked(false);
             }
-        });
-        mall_et_input1 = (EditText) findViewById(R.id.mall_et_input1);
-        mall_et_input1.setOnKeyListener(new OnKeyListener() {
 
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                state_mall = true;
-                mall_port = mall_et_input1.getText().toString();
-                if (mall_port.length() > 0) mall_port = ":" + mall_port;
-                setMallUrl();
-                return false;
+        } else {
+            mXHSwitchBtn.setChecked(false);
+        }
+        mInitXHData = mProtocol + mXHDomain + mXHPort;
+        String mallDomain = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain);
+        if (!TextUtils.isEmpty(mallDomain)) {
+            if (mallDomain.contains(mMallTestDomain + ":")) {
+                String str[] = mallDomain.split(":");
+                String domain = str[0];
+                if (!TextUtils.isEmpty(domain))
+                    mMallDomain = domain;
+                String port = str[1];
+                if (!TextUtils.isEmpty(port)) {
+                    mMallPort = port;
+                    mMallPortEt.setText(port);
+                    mMallSwitchBtn.setChecked(true);
+                }
+            } else {
+                mMallSwitchBtn.setChecked(false);
             }
-        });
-    }
 
-    private void initMallData() {
-        mall_tv_now_domain.setText("当前选择域：" + MallStringManager.mall_apiUrl.replace("http://api", "").replace("/", ""));
-    }
+        } else {
+            mMallSwitchBtn.setChecked(false);
+        }
+        mInitMallData = mMallDomain + mMallPort;
 
-    /**
-     * 设置当前显示url
-     */
-    private void setMallUrl() {
-        mall_tv_now_domain.setText("当前选择域：" + mall_domain + mall_port);
+        //初始化是否开启请求返回值提示开关
+        mRequsetFailTipSwitch.setChecked(Tools.isOpenRequestTip(this));
+
     }
 }

@@ -54,6 +54,7 @@ public class ReqInternet extends UtilInternet {
 
     @Override
     public void doGet(String url, InterCallback callback) {
+
         url = StringManager.replaceUrl(url);
         super.doGet(url, callback);
     }

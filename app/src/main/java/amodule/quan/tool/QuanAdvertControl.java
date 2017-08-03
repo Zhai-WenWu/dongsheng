@@ -259,7 +259,9 @@ public class QuanAdvertControl {
                     }
                 }
             }
-        }, (Activity) context, "community_list");
+        }, (Activity) context, "community_list",true);
+        //需要判断百度图片大小
+        xhAllAdControl.setJudgePicSize(true);
         mapAd.put(controlTag,xhAllAdControl);
     }
     private void logtzy(String tag, String info) {

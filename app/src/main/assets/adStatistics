@@ -139,6 +139,11 @@
 "click":"ad_click_jz",
 "twoData":"佳作列表"
 },
+"sc_list":{
+"show":"ad_show_sc",
+"click":"ad_click_sc",
+"twoData":"三餐推荐"
+},
 "wz_wz":{
 "show":"ad_show_wz",
 "click":"ad_click_wz",

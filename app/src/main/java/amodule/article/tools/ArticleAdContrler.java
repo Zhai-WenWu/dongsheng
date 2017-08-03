@@ -9,6 +9,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -130,7 +131,7 @@ public class ArticleAdContrler {
 
     public void onBigAdBind(View adView) {
         if (xhAllAdControlBootom != null && adView != null)
-            xhAllAdControlBootom.onAdBind(0, adView, "0");
+            xhAllAdControlBootom.onAdBind(0, adView, "");
     }
 
     public void onListAdClick(View view, int index, String s) {
@@ -144,58 +145,112 @@ public class ArticleAdContrler {
     public View getBigAdView(Map<String, String> dataMap) {
         if (dataMap == null || dataMap.isEmpty())
             return null;
-        final View adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad, null);
-        TextView titleTv = (TextView) adView.findViewById(R.id.title);
-        TextView nameTv = (TextView) adView.findViewById(R.id.user_name);
-        RelativeLayout container = (RelativeLayout) adView.findViewById(R.id.container);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
-        String title = dataMap.get("title");
-        params.topMargin = adView.getResources().getDimensionPixelSize(TextUtils.isEmpty(title) ? R.dimen.dp_15 : R.dimen.dp_6);
-        //加载图片
-        final ImageView imageView = (ImageView) adView.findViewById(R.id.img);
-        final int width = ToolsDevice.getWindowPx(XHActivityManager.getInstance().getCurrentActivity()).widthPixels - Tools.getDimen(XHActivityManager.getInstance().getCurrentActivity(), R.dimen.dp_20) * 2;
-        Glide.with(XHActivityManager.getInstance().getCurrentActivity())
-                .load(dataMap.get("imgUrl"))
-                .asBitmap()
-                .listener(new RequestListener<String, Bitmap>() {
-                    @Override
-                    public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
-                        return false;
-                    }
+        Log.i("tzy", "dataMap = " + dataMap.toString());
+        View adView = null;
+        if ("1".equals(dataMap.get("isBigPic"))) {
+            adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad_small, null);
+            RelativeLayout txtContainer = (RelativeLayout) adView.findViewById(R.id.txt_container);
+            TextView titleTextView = (TextView) adView.findViewById(R.id.rec_title);
+            TextView nameTextView = (TextView) adView.findViewById(R.id.rec_customer_name);
+            TextView browseTextView = (TextView) adView.findViewById(R.id.rec_browse);
+            browseTextView.setVisibility(View.GONE);
+            ImageView imageView = (ImageView) adView.findViewById(R.id.rec_image);
 
-                    @Override
-                    public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
-                        int height = width * bitmap.getHeight() / bitmap.getWidth();
-                        imageView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
-                        return false;
-                    }
-                }).into(imageView);
-        //加载title
-        if (TextUtils.isEmpty(title)) {
-            titleTv.setVisibility(View.GONE);
-            nameTv.setVisibility(View.GONE);
+            String desc = dataMap.get("desc");
+            if (titleTextView != null && !TextUtils.isEmpty(desc)) {
+                titleTextView.setText(desc);
+                titleTextView.setMaxLines(Integer.MAX_VALUE);
+                txtContainer.setMinimumHeight(adView.getContext().getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+                titleTextView.setLines(2);
+            }
+            String title = dataMap.get("title");
+            if (nameTextView != null && !TextUtils.isEmpty(title)) {
+                nameTextView.setText(title);
+            }
+            if (browseTextView != null) {
+                browseTextView.setText(String.valueOf(Tools.getRandom(200,6000)));
+            }
+            String imageUrl = dataMap.get("imgUrl");
+            if (imageView != null && !TextUtils.isEmpty(imageUrl)) {
+                Glide.with(XHActivityManager.getInstance().getCurrentActivity())
+                        .load(dataMap.get("imgUrl"))
+                        .asBitmap()
+                        .centerCrop()
+                        .into(imageView);
+            }
+            ViewGroup.MarginLayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+            int dp_5 = Tools.getDimen(adView.getContext(), R.dimen.dp_5);
+            int dp_20 = Tools.getDimen(adView.getContext(), R.dimen.dp_20);
+            layoutParams.setMargins(dp_20, dp_5, dp_20, 0);
+            adView.setLayoutParams(layoutParams);
         } else {
-            if (!TextUtils.isEmpty(dataMap.get("desc")))
-                titleTv.setText(dataMap.get("desc"));
-            titleTv.setVisibility(View.VISIBLE);
-            nameTv.setText(title);
-            nameTv.setVisibility(View.VISIBLE);
-        }
+            adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad, null);
+            TextView titleTv = (TextView) adView.findViewById(R.id.title);
+            TextView nameTv = (TextView) adView.findViewById(R.id.user_name);
+            RelativeLayout container = (RelativeLayout) adView.findViewById(R.id.container);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
+            String title = dataMap.get("title");
+            params.topMargin = adView.getResources().getDimensionPixelSize(TextUtils.isEmpty(title) ? R.dimen.dp_15 : R.dimen.dp_6);
+            //加载图片
+            final ImageView imageView = (ImageView) adView.findViewById(R.id.img);
+            final int width = ToolsDevice.getWindowPx(XHActivityManager.getInstance().getCurrentActivity()).widthPixels - Tools.getDimen(XHActivityManager.getInstance().getCurrentActivity(), R.dimen.dp_20) * 2;
+            Glide.with(XHActivityManager.getInstance().getCurrentActivity())
+                    .load(dataMap.get("imgUrl"))
+                    .asBitmap()
+                    .listener(new RequestListener<String, Bitmap>() {
+                        @Override
+                        public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
+                            return false;
+                        }
 
+                        @Override
+                        public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
+                            int height = width * bitmap.getHeight() / bitmap.getWidth();
+                            imageView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+                            return false;
+                        }
+                    }).into(imageView);
+            //加载title
+            if (TextUtils.isEmpty(title)) {
+                titleTv.setVisibility(View.GONE);
+                nameTv.setVisibility(View.GONE);
+            } else {
+                if (!TextUtils.isEmpty(dataMap.get("desc")))
+                    titleTv.setText(dataMap.get("desc"));
+                titleTv.setVisibility(View.VISIBLE);
+                nameTv.setText(title);
+                nameTv.setVisibility(View.VISIBLE);
+            }
+            ViewGroup.MarginLayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+            int dp_17 = Tools.getDimen(adView.getContext(), R.dimen.dp_17);
+            int dp_20 = Tools.getDimen(adView.getContext(), R.dimen.dp_20);
+            layoutParams.setMargins(dp_20, dp_17, dp_20, dp_17);
+            adView.setLayoutParams(layoutParams);
+        }
         //设置ad点击
+        if(adView != null){
+            setAdClick(adView);
+        }
+        return adView;
+    }
+
+    public void setAdClick(final View adView){
         adView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 xhAllAdControlBootom.onAdClick(adView, 0, "0");
             }
         });
-        adView.findViewById(R.id.ad_tag).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), adView.findViewById(R.id.ad_tag), xhAllAdControlBootom, 0, "0");
-            }
-        });
-        return adView;
+        final View adTag = adView.findViewById(R.id.ad_tag);
+        if(adTag != null){
+            adTag.setVisibility(View.VISIBLE);
+            adTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), adTag, xhAllAdControlBootom, 0, "0");
+                }
+            });
+        }
     }
 
     /**

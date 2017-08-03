@@ -70,6 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_all_rela"
         android:layout_above="@+id/shopping_bottom"
+        android:listSelector="@android:color/transparent"
         android:overScrollMode="never" />
 
     <RelativeLayout

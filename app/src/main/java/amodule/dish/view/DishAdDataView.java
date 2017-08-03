@@ -67,7 +67,7 @@ public class DishAdDataView extends ItemBaseView {
             public void callBack(Map<String, String> map) {
                 //对数据进行处理
                 String data = map.get(AdPlayIdConfig.DISH_TIESHI);
-                Log.i("tzy", AdPlayIdConfig.DISH_TIESHI + " : " + data);
+//                Log.i("tzy", AdPlayIdConfig.DISH_TIESHI + " : " + data);
                 adDataMap = StringManager.getFirstMap(data);
                 if (adDataMap.containsKey("type")) {
                     switch (adDataMap.get("type")) {
@@ -75,6 +75,7 @@ public class DishAdDataView extends ItemBaseView {
                             setApiADData(adDataMap, parentView);
                             break;
                         case AdPlayIdConfig.ADTYPE_GDT:
+                        case AdPlayIdConfig.ADTYPE_BAIDU:
                         case AdPlayIdConfig.ADTYPE_BANNER:
                             setBigPicADData(adDataMap, parentView);
                             break;
