@@ -485,12 +485,6 @@ public class VideoPlayerController {
     public void onResume() {
         if(null != videoPlayer)
             videoPlayer.onVideoResume();
-        //TODO 逻辑有待参考
-//        if (mHasVideoInfo) {
-//            onStart();
-//        } else if (!isPlaying()) {
-//            initVideoView(mVideoUnique, mUserUnique);
-//        }
     }
 
     public void onPause() {

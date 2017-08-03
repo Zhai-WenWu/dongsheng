@@ -124,7 +124,7 @@ public class NetInfoModule {
      */
     private class ConnectivityBroadcastReceiver extends BroadcastReceiver {
 
-        //TODO: Remove registered check when source of crash is found. t9846865
+        //Remove registered check when source of crash is found. t9846865
         private boolean isRegistered = false;
 
         public void setRegistered(boolean registered) {

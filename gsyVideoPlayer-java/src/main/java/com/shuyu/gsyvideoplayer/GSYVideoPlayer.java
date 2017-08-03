@@ -111,7 +111,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     protected int mThreshold = 80; //手势偏差值
 
-    protected int mSeekToInAdvance = -1; //// TODO: 2016/11/13 跳过广告
+    protected int mSeekToInAdvance = -1; ////2016/11/13 跳过广告
 
     protected int mBuffterPoint;//缓存进度
 
