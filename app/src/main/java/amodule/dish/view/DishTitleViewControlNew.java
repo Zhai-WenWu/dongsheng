@@ -220,7 +220,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         if (detailDish != null)
             XHClick.track(detailDish, "分享菜谱");
         XHClick.mapStat(detailDish, "a_share400", "菜谱", "菜谱详情页");
-        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "分享点击量");
+        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "分享点击量");
 
         boolean isAuthor = false;
         String nickName = "",code = "";
@@ -295,7 +295,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                 DataOperate.deleteBuyBurden(detailDish.getApplicationContext(), code);
             mDishWebView.deleteDishData();
         }else if(getIsAutoOffDish(detailDish.getApplicationContext())) {
-            XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
+            XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "下载点击量");
             if (DataOperate.buyBurden(detailDish.getApplicationContext(), code).length() == 0) {
                 String dishJson = mListener.getOffDishJson();
                 Log.i("DetailDish", "dishJson:" + dishJson);
@@ -337,7 +337,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
 
                                 //统计
                                 XHClick.onEvent(detailDish.getApplicationContext(), "dishFav", nowFav ? "收藏" : "取消");
-                                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "收藏点击量");
+                                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
                                 dishInfoMap.put("favNum", nowFav ? "2" : "1");
                                 if (nowFav) {
                                     boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataFavDish, FileManager.xmlKey_shareShowPopNumFavDish);

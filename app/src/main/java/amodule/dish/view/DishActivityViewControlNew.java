@@ -30,6 +30,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 
+import static amodule.dish.activity.DetailDish.tongjiId;
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
@@ -103,6 +104,7 @@ public class DishActivityViewControlNew {
         leftClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(mAct, tongjiId, "顶部导航栏", "关闭点击量");
                 Main.colse_level = 1;
                 mAct.finish();
             }

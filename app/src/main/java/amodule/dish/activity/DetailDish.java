@@ -49,7 +49,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  */
 public class DetailDish extends BaseActivity {
 
-    public static String tongjiId = "a_menu_detail_normal430";//统计标示
+    public static String tongjiId = "a_menu_detail_normal";//统计标示
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
 
@@ -341,6 +341,9 @@ public class DetailDish extends BaseActivity {
         }
         dishActivityViewControl.onResume();
     }
+
+
+
 
     @Override
     protected void onPause() {

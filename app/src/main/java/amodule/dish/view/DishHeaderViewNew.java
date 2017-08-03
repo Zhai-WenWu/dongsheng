@@ -293,7 +293,7 @@ public class DishHeaderViewNew extends LinearLayout {
     private boolean setSelfVideo(final String title, final String selfVideoJson, final String img, Map<String, String> permissionMap) {
         initVideoAd();
         boolean isUrlVaild = false;
-        tongjiId = "a_menu_detail_video430";
+        tongjiId = "a_menu_detail_video";
         Map<String, String> selfVideoMap = UtilString.getListMapByJson(selfVideoJson).get(0);
         String videoUrl = selfVideoMap.get("url");
         if (!TextUtils.isEmpty(videoUrl) && videoUrl.startsWith("http")) {
