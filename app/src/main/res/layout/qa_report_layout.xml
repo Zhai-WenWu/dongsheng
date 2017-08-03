@@ -46,12 +46,7 @@
 
                 <ImageView
                     android:id="@+id/black_switch_btn"
-                    android:layout_width="@dimen/dp_40"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp_20"
-                    android:src="@drawable/i_switch_off"/>
+                    style="@style/switch_btn_style"/>
 
             </RelativeLayout>
 

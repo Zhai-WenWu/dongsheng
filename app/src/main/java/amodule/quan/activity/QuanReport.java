@@ -18,8 +18,6 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.widget.SwitchButton;
-import acore.widget.SwitchButton.OnChangeListener;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -29,7 +27,7 @@ public class QuanReport extends BaseActivity{
 	private LinearLayout user_report_collection;//用户举报的条目集合
 	private LinearLayout admin_report_conlection;//管理员举报的条目集合
 	private LinearLayout admin_report_conlection_quan;//美食圈管理员权限
-	private SwitchButton quan_report_blacklist;//黑名单开关
+	private ImageView quan_report_blacklist;//黑名单开关
 	private TextView admin_report_tv_item;//管理员的标志栏
 	private Button btn_quan_report_commit;//提交按钮
 	private RelativeLayout quan_report_blacklist_relativelayout;//黑名单条目
@@ -79,16 +77,16 @@ public class QuanReport extends BaseActivity{
 					if (returnObj.equals("2")) {
 						isBlack = true;
 						isBlackChange = true;
-						quan_report_blacklist.mSwitchOn = true;
+						quan_report_blacklist.setSelected(true);
 					}else {
 						isBlack = false;
 						isBlackChange = false;
-						quan_report_blacklist.mSwitchOn = false;
+						quan_report_blacklist.setSelected(false);
 					}
 				}else {
 					isBlack = false;
 					isBlackChange = false;
-					quan_report_blacklist.mSwitchOn = false;
+					quan_report_blacklist.setSelected(false);
 				}
 				quan_report_blacklist.setVisibility(View.VISIBLE);
 			}
@@ -114,7 +112,7 @@ public class QuanReport extends BaseActivity{
 
 	private void initView() {
 		user_report_collection = (LinearLayout) findViewById(R.id.user_report_collection);
-		quan_report_blacklist = (SwitchButton) findViewById(R.id.quan_report_blacklist);
+		quan_report_blacklist = (ImageView) findViewById(R.id.black_switch_btn);
 		quan_report_blacklist_relativelayout = (RelativeLayout) findViewById(R.id.quan_report_blacklist_relativelayout);
 		admin_report_tv_item = (TextView) findViewById(R.id.admin_report_tv_item);
 		admin_report_conlection = (LinearLayout) findViewById(R.id.admin_report_conlection);
@@ -126,7 +124,7 @@ public class QuanReport extends BaseActivity{
 		}
 		TextView title = (TextView) findViewById(R.id.title);
 		if (nickName != "") {
-			title.setText("举报 " + nickName);
+			title.setText(" " + nickName);
 		}
 	}
 	
@@ -208,13 +206,11 @@ public class QuanReport extends BaseActivity{
 				});
 			}
 		});
-		quan_report_blacklist.setOnChangeListener(new OnChangeListener() {
-			
+		quan_report_blacklist.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onChange(SwitchButton sb, boolean state) {
-				//打开
-//关闭
-				isBlack = state;
+			public void onClick(View v) {
+				quan_report_blacklist.setSelected(!quan_report_blacklist.isSelected());
+				isBlack = quan_report_blacklist.isSelected();
 			}
 		});
 		findViewById(R.id.icon_report).setOnClickListener(new OnClickListener() {

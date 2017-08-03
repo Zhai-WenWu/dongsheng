@@ -58,7 +58,6 @@ public class QAReportActivity extends BaseActivity {
     private ReportItem mLastSelectedAdminChild;
 
     private boolean mLoaded;
-    private boolean mIsBlack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +128,7 @@ public class QAReportActivity extends BaseActivity {
                         onCommitClick();
                         break;
                     case R.id.black_switch_btn:
-                        if (!mIsBlack) {
+                        if (!mBlackListSwitchBtn.isSelected()) {
                             final XhDialog dialog = new XhDialog(QAReportActivity.this);
                             dialog.setCancelable(true)
                                     .setTitle("进入黑名单的用户将永远不能向你的菜谱进行付费提问，是否拉黑？")
@@ -144,15 +143,13 @@ public class QAReportActivity extends BaseActivity {
                                         @Override
                                         public void onClick(View v) {
                                             dialog.cancel();
-                                            mIsBlack = true;
-                                            mBlackListSwitchBtn.setImageResource(R.drawable.i_switch_on);
+                                            mBlackListSwitchBtn.setSelected(true);
                                             XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【是】（拉黑）");
                                         }
                                     })
                                     .show();
                         } else {
-                            mIsBlack = false;
-                            mBlackListSwitchBtn.setImageResource(R.drawable.i_switch_off);
+                            mBlackListSwitchBtn.setSelected(false);
                             XHClick.mapStat(QAReportActivity.this, "a_ask_report", "关闭拉黑按钮", "");
                         }
                         break;
@@ -178,7 +175,7 @@ public class QAReportActivity extends BaseActivity {
             keys.add(mLastSelectedReportChild.getKey());
         if (mLastSelectedAdminChild != null && !TextUtils.isEmpty(mLastSelectedAdminChild.getKey()))
             keys.add(mLastSelectedAdminChild.getKey());
-        if (mBlackListSwitchBtn != null && mIsBlack)
+        if (mBlackListSwitchBtn != null && mBlackListSwitchBtn.isSelected())
             keys.add(mBlackListSwitchBtn.getTag().toString());
         String params = "";
         if (keys.size() > 0) {
@@ -201,9 +198,6 @@ public class QAReportActivity extends BaseActivity {
      * 获取举报数据
      */
     private void getReportData() {
-
-        mQACode = "222";
-
         loadManager.showProgressBar();
         if (TextUtils.isEmpty(mQACode)) {
             onDataReady(0, null);

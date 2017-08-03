@@ -168,20 +168,16 @@
                 android:id="@+id/quan_report_blacklist_relativelayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_43"
-                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_11"
                 android:background="#FFFFFF">
 
                 <TextView
                     style="@style/report_item_desc"
                     android:text="加入黑名单"/>
 
-                <acore.widget.SwitchButton
-                    android:id="@+id/quan_report_blacklist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp_20"/>
+                <ImageView
+                    android:id="@+id/black_switch_btn"
+                    style="@style/switch_btn_style"/>
             </RelativeLayout>
 
             <TextView

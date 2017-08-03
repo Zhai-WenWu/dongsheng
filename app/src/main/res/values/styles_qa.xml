@@ -36,4 +36,12 @@
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:background">#edeaea</item>
     </style>
+    <style name="switch_btn_style">
+        <item name="android:layout_width">@dimen/dp_40</item>
+        <item name="android:layout_height">@dimen/dp_30</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">@dimen/dp_20</item>
+        <item name="android:src">@drawable/switch_btn_bgselector</item>
+    </style>
 </resources>
