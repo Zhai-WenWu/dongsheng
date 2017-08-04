@@ -44,12 +44,14 @@ public class VideoImagePlayerController {
     private ViewGroup mPraentViewGroup = null;
     private StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
     private String videoUrl="";
+    private String imgUrl="";
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
 
     public VideoImagePlayerController(Activity context, ViewGroup viewGroup, String imgUrl) {
         this.mContext = context;
         this.mPraentViewGroup = viewGroup;
+        this.imgUrl = imgUrl;
         videoPlayer = new StandardGSYVideoPlayer(mContext);
         //设置旋转
         orientationUtils = new OrientationUtils(context, videoPlayer);
@@ -111,22 +113,26 @@ public class VideoImagePlayerController {
                 initView(mContext);
                 mPraentViewGroup.addView(view_Tip);
             }
-            mImageView = new ImageViewVideo(context);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
-            mImageView.parseItemImg(ScaleType.CENTER_CROP, imgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
-            mImageView.setLayoutParams(params);
+            initImageView(context);
             mPraentViewGroup.addView(mImageView);
-            mImageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setOnClick();
-                }
-            });
         }
         String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
+    }
+
+    private void initImageView(Context context){
+        mImageView = new ImageViewVideo(context);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
+        mImageView.parseItemImg(ScaleType.CENTER_CROP, imgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
+        mImageView.setLayoutParams(params);
+        mImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setOnClick();
+            }
+        });
     }
 
     private void setNetworkCallback(){
@@ -204,7 +210,7 @@ public class VideoImagePlayerController {
     protected void removeImaegView(){
         if(mImageView!=null){
             mPraentViewGroup.removeView(mImageView);
-            mImageView=null;
+//            mImageView=null;
         }
     }
 
@@ -213,6 +219,9 @@ public class VideoImagePlayerController {
      */
     public void setOnStop(){
         onDestroy();
+        if(mImageView == null){
+            initImageView(mContext);
+        }
         mPraentViewGroup.removeView(mImageView);
         mPraentViewGroup.addView(mImageView);
     }

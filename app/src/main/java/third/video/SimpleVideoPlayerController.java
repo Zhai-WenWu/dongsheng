@@ -17,12 +17,10 @@ import com.xiangha.R;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.widget.ImageViewVideo;
-import acore.broadcast.NetworkBroadcastReceiver;
 
 /**
  * Created by sll on 2017/6/12.
  */
-
 public class SimpleVideoPlayerController extends VideoPlayerController {
     private Activity activity;
 
