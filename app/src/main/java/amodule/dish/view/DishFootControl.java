@@ -23,6 +23,7 @@ import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
@@ -334,5 +335,23 @@ public class DishFootControl implements View.OnClickListener{
                 }
             }
         });
+    }
+
+    /**
+     * scrollview滚动监听
+     */
+    public void onSrollView(){
+        //判断当前view是否在
+        for (int i = 0; i < mAdLayout.getChildCount(); i++) {
+            View dishAdDataView = mAdLayout.getChildAt(i);
+            if (dishAdDataView != null && dishAdDataView instanceof DishAdDataViewNew) {
+                int[] viewLocation = new int[2];
+                dishAdDataView.getLocationOnScreen(viewLocation);
+                if ((viewLocation[1] > Tools.getStatusBarHeight(mAct)
+                        && viewLocation[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                    ((DishAdDataViewNew) dishAdDataView).onListScroll();
+                }
+            }
+        }
     }
 }

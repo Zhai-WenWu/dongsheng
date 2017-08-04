@@ -38,7 +38,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  * 菜谱界面的总控制类
  * Created by Fang Ruijiao on 2017/7/12.
  */
-public class DishActivityViewControlNew {
+public class  DishActivityViewControlNew {
 
     private Activity mAct;
     private RelativeLayout bar_title_1;
@@ -153,6 +153,9 @@ public class DishActivityViewControlNew {
                     firstItemIndex = 0;
                 }else{
                     firstItemIndex = 1;
+                }
+                if(mFootControl!=null){
+                    mFootControl.onSrollView();
                 }
             }
         });
