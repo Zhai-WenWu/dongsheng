@@ -24,6 +24,7 @@ import acore.broadcast.NetworkBroadcastReceiver;
  */
 
 public class SimpleVideoPlayerController extends VideoPlayerController {
+    private Activity activity;
 
 
     /**
@@ -39,8 +40,8 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
 
     public SimpleVideoPlayerController(Activity context) {
         super(context);
-        //设置旋转
-        orientationUtils = new OrientationUtils(context, videoPlayer);
+        this.activity = context;
+
     }
 
     public void setViewGroup(ViewGroup parent) {
@@ -55,7 +56,13 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
         //初始化网络断开链接
         isNetworkDisconnect = false;
 
-        videoPlayer = new StandardGSYVideoPlayer(mContext);
+        if(videoPlayer == null){
+            videoPlayer = new StandardGSYVideoPlayer(mContext);
+        }else{
+            onDestroy();
+        }
+        //设置旋转
+        orientationUtils = new OrientationUtils(activity, videoPlayer);
         videoPlayer.setShowFullAnimation(true);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override

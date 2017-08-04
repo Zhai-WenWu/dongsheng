@@ -1,6 +1,7 @@
 package aplug.shortvideo.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -85,6 +86,15 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
     private void initVideoView() {
         Log.i("tzy",this.getClass().getSimpleName() + " : videoUrl = " + videoUrl);
         videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.video_player);
+        Resources resources = getResources();
+        videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
+        videoPlayer.setDialogProgressBar(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setBottomShowProgressBarDrawable(resources.getDrawable(R.drawable.video_new_seekbar_progress),
+                resources.getDrawable(R.drawable.video_new_seekbar_thumb));
+
+        //是否可以滑动调整
+        videoPlayer.setIsTouchWiget(true);
         videoPlayer.setUp(videoUrl, false,"");
         videoPlayer.getFullscreenButton().setVisibility(View.GONE);
         videoPlayer.startPlayLogic();

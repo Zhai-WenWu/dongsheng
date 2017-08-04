@@ -743,10 +743,11 @@ public class HomeFragment extends BaseHomeFragment{
                 if (resumeView != null && resumeView.getVisibility() != View.GONE)
                     resumeView.setVisibility(View.GONE);
             }
-            mPlayerController.onPause();
             mPlayParentView = null;
             if (mVideoLayout != null)
                 mVideoLayout.removeAllViews();
+            mPlayerController.onPause();
+            mPlayerController.onDestroy();
         }
     }
 
