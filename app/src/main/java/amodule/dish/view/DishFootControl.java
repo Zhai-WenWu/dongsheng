@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
@@ -33,6 +35,7 @@ import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
+import static amodule.dish.activity.DetailDish.tongjiId;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -58,6 +61,7 @@ public class DishFootControl implements View.OnClickListener{
     }
 
     private void init(){
+        XhScrollView mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan);
 
@@ -73,14 +77,27 @@ public class DishFootControl implements View.OnClickListener{
         mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
         mGoodShow = (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
 
-        DishAdDataViewNew dishAdDataView = new DishAdDataViewNew(mAct);
+        final DishAdDataViewNew dishAdDataView = new DishAdDataViewNew(mAct);
         dishAdDataView.getRequest(mAct, mAdLayout);
+//        mScrollView.setOnScrollListener(new XhScrollView.OnScrollListener() {
+//            @Override
+//            public void onScroll(int scrollY) {
+//                int[] location = new int[2];
+//                dishAdDataView.getLocationOnScreen(location);
+//                Log.i("detailDishAd","onScroll() location[1]:" + location[1]);
+//                if(location[1] > 0 && location[1] > dishAdDataView.getHeight() / 2){
+//                    Log.i("detailDishAd","ad show....");
+//                    dishAdDataView.onListScroll();
+//                }
+//            }
+//        });
         mRecomentLayout.setOnClickListener(this);
         goodLayout.setOnClickListener(this);
         trampleLayout.setOnClickListener(this);
         mRelevantTv.setOnClickListener(this);
         mQuizTv.setOnClickListener(this);
         mGoodShow.setOnClickListener(this);
+        mRecommentNum.setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
     }
 
@@ -103,6 +120,7 @@ public class DishFootControl implements View.OnClickListener{
                 return;
             }
             View view;
+            int index = 0, size = arrayList.size() - 1;
             for (final Map<String, String> map : arrayList) {
                 view = inflater.inflate(R.layout.a_dish_detail_new_footer_item, null);
                 ImageView dishImg = (ImageView) view.findViewById(R.id.a_dish_detail_show_img);
@@ -137,6 +155,7 @@ public class DishFootControl implements View.OnClickListener{
                         if(newIsLike){
                             Tools.showToast(mAct,"已点过攒");
                         }else {
+                            XHClick.mapStat(mAct, tongjiId, "哈友相关作品", "点赞按钮点击量");
                             LinkedHashMap<String, String> map = new LinkedHashMap<>();
                             map.put("subjectCode", subjectCode);
                             map.put("type", "likeList");
@@ -161,11 +180,22 @@ public class DishFootControl implements View.OnClickListener{
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        XHClick.mapStat(mAct, tongjiId, "哈友相关作品", "相关作品帖子点击量");
                         Intent it = new Intent(mAct, ShowSubject.class);
                         it.putExtra("code", subjectCode);
                         mAct.startActivity(it);
                     }
                 });
+                View itemParent = view.findViewById(R.id.dish_footer_item);
+                if (index == 0) {
+                    int dp20 = Tools.getDimen(mAct, R.dimen.dp_20);
+                    itemParent.setPadding(dp20, 0, 0, 0);
+                } else if (index == size) {
+                    int dp20 = Tools.getDimen(mAct, R.dimen.dp_20);
+                    int dp8 = Tools.getDimen(mAct, R.dimen.dp_8);
+                    itemParent.setPadding(dp8, 0, dp20, 0);
+                }
+                index++;
                 userDishLayout.addView(view);
             }
         }else{
@@ -192,6 +222,7 @@ public class DishFootControl implements View.OnClickListener{
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(mAct, tongjiId, "哈友相关作品", "相关作品帖子用户头像点击量");
                 Intent intent = new Intent(mAct, FriendHome.class);
                 intent.putExtra("code",userCode);
                 mAct.startActivity(intent);
@@ -251,11 +282,14 @@ public class DishFootControl implements View.OnClickListener{
                 showIntent.putExtra("dishCode",code);
                 showIntent.putExtra("skip", true);
                 mAct.startActivity(showIntent);
+                XHClick.mapStat(mAct, tongjiId, "晒我做的这道菜", "晒我做的这道菜点击量");
                 break;
             case R.id.a_dish_detail_new_footer_hover_tv: //提问作者
+                XHClick.mapStat(mAct, tongjiId, "底部浮动", "向作者提问点击量");
                 Tools.showToast(mAct,"提问作者");
                 break;
              case R.id.a_dish_detail_new_footer_hover_good: //有用
+                 XHClick.mapStat(mAct, tongjiId, "底部浮动", "点赞按钮点击量");
                  if(!dishLikeState){
                      dishLikeState = !dishLikeState;
                      mGoodImg.setImageResource(R.drawable.i_good_activity);
@@ -264,15 +298,19 @@ public class DishFootControl implements View.OnClickListener{
                  hindGoodLayout();
                 break;
              case R.id.a_dish_detail_new_footer_hover_trample: //没用
+                 XHClick.mapStat(mAct, tongjiId, "底部浮动", "点踩按钮点击量");
                  if(dishLikeState){
                      dishLikeState = !dishLikeState;
-                     mGoodImg.setImageResource(R.drawable.i_good);
+                     mGoodImg.setImageResource(R.drawable.i_good_black);
                      onChangeLikeState(dishLikeState);
                  }
                  hindGoodLayout();
                 break;
             case R.id.a_dish_detail_new_footer_hover_good_show: //展现点赞
                 goodLayoutParent.setVisibility(View.VISIBLE);
+                break;
+            case R.id.a_dish_detail_new_tv_num:
+                XHClick.mapStat(mAct, tongjiId, "哈友相关作品", "更多作品点击量");
                 break;
 
         }
@@ -297,5 +335,23 @@ public class DishFootControl implements View.OnClickListener{
                 }
             }
         });
+    }
+
+    /**
+     * scrollview滚动监听
+     */
+    public void onSrollView(){
+        //判断当前view是否在
+        for (int i = 0; i < mAdLayout.getChildCount(); i++) {
+            View dishAdDataView = mAdLayout.getChildAt(i);
+            if (dishAdDataView != null && dishAdDataView instanceof DishAdDataViewNew) {
+                int[] viewLocation = new int[2];
+                dishAdDataView.getLocationOnScreen(viewLocation);
+                if ((viewLocation[1] > Tools.getStatusBarHeight(mAct)
+                        && viewLocation[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                    ((DishAdDataViewNew) dishAdDataView).onListScroll();
+                }
+            }
+        }
     }
 }

@@ -311,9 +311,11 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 if (OffDishToFavoriteControl.getIsAutoOffDish(Setting.this)) {
                     OffDishToFavoriteControl.setIsAutoOffDish(Setting.this, false);
                     view_offDish.switchState(false);
+                    XHClick.mapStat(Setting.this,"a_isdownload","收藏同时离线菜谱","关闭离线点击量");
                 } else {
                     OffDishToFavoriteControl.setIsAutoOffDish(Setting.this, true);
                     view_offDish.switchState(true);
+                    XHClick.mapStat(Setting.this,"a_isdownload","收藏同时离线菜谱","打开离线点击量");
                 }
             }
         });

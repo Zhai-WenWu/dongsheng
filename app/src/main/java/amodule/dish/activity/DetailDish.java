@@ -115,10 +115,7 @@ public class DetailDish extends BaseActivity {
         detailPermissionMap.clear();
         permissionMap.clear();
         dishActivityViewControl.setLoginStatus();
-        if (mHandler == null) {
-            initData();
-        }
-        mHandler.sendEmptyMessage(LOAD_DISH);
+        loadDishInfo();
     }
 
     /**

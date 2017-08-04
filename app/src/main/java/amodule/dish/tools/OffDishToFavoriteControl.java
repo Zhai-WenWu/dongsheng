@@ -101,6 +101,11 @@ public class OffDishToFavoriteControl {
         }
     }
 
+    /**
+     * 更新菜谱模板
+     * @param context
+     * @param moudleVersion ： 最新模板版本号
+     */
     public static void updataAllNedUpdataMoulderDish(final Context context, final String moudleVersion){
         try {
             if (context == null) return;

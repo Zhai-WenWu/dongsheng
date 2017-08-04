@@ -43,6 +43,7 @@
                 android:id="@+id/dialog_check_img"
                 android:layout_width="@dimen/dp_12.5"
                 android:layout_height="@dimen/dp_12.5"
+                android:layout_marginTop="@dimen/dp_1"
                 android:src="@drawable/i_check_on"
                 />
             <TextView

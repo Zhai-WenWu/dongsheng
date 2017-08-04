@@ -236,6 +236,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 				isHaveTitle = true;
 
 				if(!TextUtils.isEmpty(mDishCode)){
+					uploadSubjectBottomControl.setIsClear(false);
 					uploadSubjectBottomControl.setDishInfo(mDishCode,title);
 					uploadSubjectBottomControl.setIsFollowDish(false);
 				}

@@ -38,7 +38,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  * 菜谱界面的总控制类
  * Created by Fang Ruijiao on 2017/7/12.
  */
-public class DishActivityViewControlNew {
+public class  DishActivityViewControlNew {
 
     private Activity mAct;
     private RelativeLayout bar_title_1;
@@ -154,6 +154,9 @@ public class DishActivityViewControlNew {
                 }else{
                     firstItemIndex = 1;
                 }
+                if(mFootControl!=null){
+                    mFootControl.onSrollView();
+                }
             }
         });
         mScrollView.setOnTouchListener(new View.OnTouchListener() {
@@ -216,7 +219,7 @@ public class DishActivityViewControlNew {
 
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
-
+        if(isHasVideo)tongjiId="a_menu_detail_video";
         dishTitleViewControl.setData(dishInfoMap,mDishCode,isHasVideo,dishInfoMap.get("dishState"),loadManager);
 
         Map<String, String> customer = StringManager.getFirstMap(dishInfoMap.get("customer"));

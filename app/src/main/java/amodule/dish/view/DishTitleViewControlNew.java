@@ -46,7 +46,7 @@ import static com.xiangha.R.id.share_layout;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
- * Created by Administrator on 2016/9/21.
+ * 顶部view控制
  */
 public class DishTitleViewControlNew implements View.OnClickListener{
     private Context context;
@@ -164,12 +164,13 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case back:
-                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "返回点击量");
+                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "返回点击量");
                 detailDish.finish();
                 break;
             case fav_layout://收藏
                 if (detailDish != null)
                     XHClick.track(detailDish, "收藏菜谱");
+                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
                 doFavorite();
                 break;
             case share_layout:
@@ -180,21 +181,18 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                 bottomDialog.setTopButton("分享", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "分享点击量");
                         openShare();
                     }
                 }).setBottomButton("编辑", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "二次编辑点击量");
                         if(isHasVideo){
                             Tools.showToast(context,"请用香哈（视频版）编辑");
                         }else doModify();
                     }
                 }).show();
-                break;
-            case modify_layout://编辑
-                if(isHasVideo){
-                    Tools.showToast(context,"请用香哈（视频版）编辑");
-                }else doModify();
                 break;
         }
     }
@@ -236,7 +234,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         }
         Map<String, String> mapData = getShareData(isAuthor);
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
-        intent.putExtra("tongjiId", isAuthor ? "a_my" : "a_user");
+        intent.putExtra("tongjiId", tongjiId);
         intent.putExtra("isHasReport", !isAuthor);
         intent.putExtra("nickName", nickName);
         intent.putExtra("code", code);
@@ -344,7 +342,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                     if (isShow) {
                                         boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
                                         mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
-                                                isAutoOff ? "菜谱已离线到本地，可以在设置-收藏菜谱关闭。" : null);
+                                                isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null);
                                         if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
                                             String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
                                             String clickUrl = StringManager.wwwUrl + "video/caipu/" + dishInfoMap.get("code");
