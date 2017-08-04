@@ -27,6 +27,7 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.upload.AskAnswerUploadListPool;
+import amodule.dish.view.CommonDialog;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
@@ -360,13 +361,14 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void showPriceChangeDialog(String msg) {
-        final XhDialog dialog = new XhDialog(this);
-        dialog.setMessage(msg).setCancelable(true).setCanselButton("我知道了", new View.OnClickListener() {
+        final CommonDialog dialog = new CommonDialog(this, R.layout.c_common_dialog);
+        dialog.setCancelable(true);
+        dialog.setMessage(msg).setSureButton("我知道了", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.cancel();
             }
-        });
+        }).show();
         XHClick.mapStat(this, getTjId(), "点击发布按钮", "价格变动通知");
     }
 

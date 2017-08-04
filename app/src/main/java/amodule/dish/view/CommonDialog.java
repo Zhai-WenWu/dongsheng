@@ -27,6 +27,13 @@ public class CommonDialog {
         window = dialog.getWindow();
     }
 
+    public CommonDialog(Context c, int contentResId) {
+        mCon = c;
+        dialog = new Dialog(c, R.style.dialog);
+        dialog.setContentView(contentResId);
+        window = dialog.getWindow();
+    }
+
     public void show() {
         dialog.show();
     }
@@ -47,8 +54,10 @@ public class CommonDialog {
      */
     public CommonDialog setTitle(String text) {
         TextView tv = (TextView) window.findViewById(R.id.dialog_title);
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(text);
+        if (tv != null) {
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(text);
+        }
         return this;
     }
 
@@ -60,8 +69,10 @@ public class CommonDialog {
      */
     public CommonDialog setMessage(String text) {
         TextView tv = (TextView) window.findViewById(R.id.dialog_message);
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(text);
+        if (tv != null) {
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(text);
+        }
         return this;
     }
 
@@ -74,9 +85,10 @@ public class CommonDialog {
      */
     public CommonDialog setSureButton(String text, View.OnClickListener listener) {
         TextView tv = (TextView) window.findViewById(R.id.dialog_sure);
-//		tv.setVisibility(View.VISIBLE);
-        tv.setText(text);
-        tv.setOnClickListener(listener);
+        if (tv != null) {
+            tv.setText(text);
+            tv.setOnClickListener(listener);
+        }
         return this;
     }
 
@@ -88,7 +100,8 @@ public class CommonDialog {
      */
     public CommonDialog setSureButtonTextColor(String color) {
         TextView tv = (TextView) window.findViewById(R.id.dialog_sure);
-        tv.setTextColor(Color.parseColor(color));
+        if (tv != null)
+            tv.setTextColor(Color.parseColor(color));
         return this;
     }
 
@@ -102,9 +115,11 @@ public class CommonDialog {
     public CommonDialog setNegativeButton(String text, View.OnClickListener listener) {
         window.findViewById(R.id.dialog_negative_line).setVisibility(View.VISIBLE);
         TextView tv = (TextView) window.findViewById(R.id.dialog_negative);
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(text);
-        tv.setOnClickListener(listener);
+        if (tv != null) {
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(text);
+            tv.setOnClickListener(listener);
+        }
         return this;
     }
 
@@ -118,17 +133,20 @@ public class CommonDialog {
     public CommonDialog setCanselButton(String text, View.OnClickListener listener) {
         window.findViewById(R.id.dialog_sure_line).setVisibility(View.VISIBLE);
         TextView tv = (TextView) window.findViewById(R.id.dialog_cancel);
-        tv.setVisibility(View.VISIBLE);
-        tv.setText(text);
-        tv.setOnClickListener(listener);
+        if (tv != null) {
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(text);
+            tv.setOnClickListener(listener);
+        }
         return this;
     }
 
     public CommonDialog setProgress(int progress){
         ProgressBar progressBar = (ProgressBar) window.findViewById(R.id.load_progress);
-        progressBar.setVisibility(View.VISIBLE);
-        progressBar.setProgress(progress);
-
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(progress);
+        }
         return  this;
     }
 }

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#66000000"  >
+
+    <RelativeLayout
+        android:layout_width="@dimen/dp_300"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:paddingTop="@dimen/dp_7"
+        android:background="@drawable/mall_dialog_backgroup">
+
+        <TextView
+            android:id="@+id/dialog_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dialog_title"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="message"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:visibility="visible"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/dialog_message">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentTop="true"
+                android:background="#dbdbdb"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dialog_cancel"
+                    style="@style/singleText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="cancel"
+                    android:textColor="#333333"
+                    android:textSize="17sp"
+                    android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/dialog_negative_line"
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="#dbdbdb"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/dialog_negative"
+                    style="@style/singleText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="negative"
+                    android:textColor="#333333"
+                    android:textSize="17sp"
+                    android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/dialog_sure_line"
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="#dbdbdb"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/dialog_sure"
+                    style="@style/singleText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="sure"
+                    android:textColor="#333333"
+                    android:textSize="17sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
