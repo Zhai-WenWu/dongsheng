@@ -93,7 +93,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 		findViewById(R.id.shopping_layout).setVisibility(View.VISIBLE);
 		//处理webView
 		webViewManager = new WebviewManager(this,loadManager,false);
-		webview = webViewManager.createWebView(R.id.XHWebview);
+		webview = webViewManager.createWebView(R.id.XHWebview,false);
 		webViewManager.setJSObj(webview, new JsAppCommon(this, webview,loadManager,null));
 		// 设置加载
 		loadManager.setLoading(new OnClickListener() {

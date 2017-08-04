@@ -46,7 +46,7 @@ import static com.xiangha.R.id.share_layout;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
- * Created by Administrator on 2016/9/21.
+ * 顶部view控制
  */
 public class DishTitleViewControlNew implements View.OnClickListener{
     private Context context;
