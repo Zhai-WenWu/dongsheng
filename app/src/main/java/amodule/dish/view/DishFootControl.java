@@ -60,6 +60,7 @@ public class DishFootControl implements View.OnClickListener{
     }
 
     private void init(){
+        XhScrollView mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan);
 
@@ -75,8 +76,20 @@ public class DishFootControl implements View.OnClickListener{
         mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
         mGoodShow = (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
 
-        DishAdDataViewNew dishAdDataView = new DishAdDataViewNew(mAct);
+        final DishAdDataViewNew dishAdDataView = new DishAdDataViewNew(mAct);
         dishAdDataView.getRequest(mAct, mAdLayout);
+//        mScrollView.setOnScrollListener(new XhScrollView.OnScrollListener() {
+//            @Override
+//            public void onScroll(int scrollY) {
+//                int[] location = new int[2];
+//                dishAdDataView.getLocationOnScreen(location);
+//                Log.i("detailDishAd","onScroll() location[1]:" + location[1]);
+//                if(location[1] > 0 && location[1] > dishAdDataView.getHeight() / 2){
+//                    Log.i("detailDishAd","ad show....");
+//                    dishAdDataView.onListScroll();
+//                }
+//            }
+//        });
         mRecomentLayout.setOnClickListener(this);
         goodLayout.setOnClickListener(this);
         trampleLayout.setOnClickListener(this);
@@ -106,6 +119,7 @@ public class DishFootControl implements View.OnClickListener{
                 return;
             }
             View view;
+            int index = 0, size = arrayList.size() - 1;
             for (final Map<String, String> map : arrayList) {
                 view = inflater.inflate(R.layout.a_dish_detail_new_footer_item, null);
                 ImageView dishImg = (ImageView) view.findViewById(R.id.a_dish_detail_show_img);
@@ -171,6 +185,16 @@ public class DishFootControl implements View.OnClickListener{
                         mAct.startActivity(it);
                     }
                 });
+                View itemParent = view.findViewById(R.id.dish_footer_item);
+                if (index == 0) {
+                    int dp20 = Tools.getDimen(mAct, R.dimen.dp_20);
+                    itemParent.setPadding(dp20, 0, 0, 0);
+                } else if (index == size) {
+                    int dp20 = Tools.getDimen(mAct, R.dimen.dp_20);
+                    int dp8 = Tools.getDimen(mAct, R.dimen.dp_8);
+                    itemParent.setPadding(dp8, 0, dp20, 0);
+                }
+                index++;
                 userDishLayout.addView(view);
             }
         }else{
@@ -276,7 +300,7 @@ public class DishFootControl implements View.OnClickListener{
                  XHClick.mapStat(mAct, tongjiId, "底部浮动", "点踩按钮点击量");
                  if(dishLikeState){
                      dishLikeState = !dishLikeState;
-                     mGoodImg.setImageResource(R.drawable.i_good);
+                     mGoodImg.setImageResource(R.drawable.i_good_black);
                      onChangeLikeState(dishLikeState);
                  }
                  hindGoodLayout();

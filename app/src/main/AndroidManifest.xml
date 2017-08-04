@@ -342,7 +342,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/common_trans_parent_theme"
+            android:theme="@style/myself_hint_off"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity

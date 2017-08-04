@@ -74,6 +74,7 @@ public class DishAdDataViewNew extends ItemBaseView {
                             setApiADData(adDataMap, parentView);
                             break;
                         case AdPlayIdConfig.ADTYPE_GDT:
+                        case AdPlayIdConfig.ADTYPE_BAIDU:
                         case AdPlayIdConfig.ADTYPE_BANNER:
                             setBigPicADData(adDataMap, parentView);
                             break;
@@ -251,7 +252,7 @@ public class DishAdDataViewNew extends ItemBaseView {
     }
 
     /**
-     * 曝光数据
+     * 设置广告点击事件
      */
     private void exposureAdData() {
         DishAdDataViewNew.this.setOnClickListener(new OnClickListener() {
@@ -283,8 +284,7 @@ public class DishAdDataViewNew extends ItemBaseView {
     }
 
     public void onListScroll() {
-        if (adDataMap != null
-                && !"2".equals(adDataMap.get("isShow"))) {
+        if (adDataMap != null && !"2".equals(adDataMap.get("isShow"))) {
             xhAllAdControl.onAdBind(0, root_layout, "");
             adDataMap.put("isShow", "2");
         }

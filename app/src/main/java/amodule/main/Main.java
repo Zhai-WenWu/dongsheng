@@ -204,6 +204,13 @@ public class Main extends Activity implements OnClickListener {
                 } else if (showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？")) {
 
                 }
+
+                DishMouldControl.setDishMould(new DishMouldControl.OnDishMouldListener() {
+                    @Override
+                    public void loaded(boolean isSucess, String data, String mouldVersion) {
+                        OffDishToFavoriteControl.updataAllNedUpdataMoulderDish(Main.this,mouldVersion);
+                    }
+                });
             }
         }
 
