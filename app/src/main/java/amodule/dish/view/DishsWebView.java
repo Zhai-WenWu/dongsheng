@@ -39,6 +39,10 @@ public class DishsWebView extends DishWebView{
         if(mCallBack != null) mCallBack.onLoadFinish();
     }
 
+    /**
+     * 加载多个信息，加载完一个，加载下一个
+     * @param data
+     */
     public void loadDishData(ArrayList<String> data){
         mData = data;
         if(mData.size() > 0){

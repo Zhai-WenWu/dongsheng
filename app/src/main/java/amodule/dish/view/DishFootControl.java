@@ -49,6 +49,8 @@ public class DishFootControl implements View.OnClickListener{
     private TextView mRecommentNum,mRelevantTv,mHoverNum,mQuizTv;
     private ImageView mGoodShow,mGoodImg;
 
+    private DishAdDataViewNew dishAdDataView;
+
     private String code,mDishName;
 
     private boolean dishLikeState = false;
@@ -60,7 +62,6 @@ public class DishFootControl implements View.OnClickListener{
     }
 
     private void init(){
-        XhScrollView mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan);
 
@@ -76,20 +77,8 @@ public class DishFootControl implements View.OnClickListener{
         mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
         mGoodShow = (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
 
-        final DishAdDataViewNew dishAdDataView = new DishAdDataViewNew(mAct);
+        dishAdDataView = new DishAdDataViewNew(mAct);
         dishAdDataView.getRequest(mAct, mAdLayout);
-//        mScrollView.setOnScrollListener(new XhScrollView.OnScrollListener() {
-//            @Override
-//            public void onScroll(int scrollY) {
-//                int[] location = new int[2];
-//                dishAdDataView.getLocationOnScreen(location);
-//                Log.i("detailDishAd","onScroll() location[1]:" + location[1]);
-//                if(location[1] > 0 && location[1] > dishAdDataView.getHeight() / 2){
-//                    Log.i("detailDishAd","ad show....");
-//                    dishAdDataView.onListScroll();
-//                }
-//            }
-//        });
         mRecomentLayout.setOnClickListener(this);
         goodLayout.setOnClickListener(this);
         trampleLayout.setOnClickListener(this);

@@ -32,7 +32,6 @@ import amodule.dish.activity.upload.UploadDishListActivity;
 import amodule.dish.db.DishOffData;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishSqlite;
-import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
@@ -82,7 +81,7 @@ public class MainInitDataControl {
 
     }
     /**
-     * welcome之后初始化
+     * welcome布局完成之后之后初始化
      */
     public void initWelcomeAfter(final Activity activity){
         Log.i("zhangyujian","initWelcomeAfter");
@@ -99,7 +98,6 @@ public class MainInitDataControl {
                 //待处理问题。
                 HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
-                OffDishToFavoriteControl.offDishToFavorite(activity);
             }
         }.start();
         AdConfigTools.getInstance().setRequest(XHApplication.in());

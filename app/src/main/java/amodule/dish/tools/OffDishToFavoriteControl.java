@@ -30,15 +30,29 @@ import xh.windowview.XhDialog;
  */
 public class OffDishToFavoriteControl {
 
+    /**
+     * 设置收藏时是否自动离线
+     * @param context
+     * @param isAutoOffDish
+     */
     public static void setIsAutoOffDish(Context context,boolean isAutoOffDish){
         FileManager.saveShared(context,FileManager.xmlFile_appInfo,"isAutoOffDish",isAutoOffDish ? "2" : "1");
     }
 
+    /**
+     * 获取是否收藏时是否自动离线
+     * @param context
+     * @return
+     */
     public static boolean getIsAutoOffDish(Context context){
         Object isAutoOffDish = FileManager.loadShared(context,FileManager.xmlFile_appInfo,"isAutoOffDish");
         return "2".equals(String.valueOf(isAutoOffDish));
     }
 
+    /**
+     * 处理老版离线菜谱添加到收藏列表，并且修改成最新的离线样式：头部存数据库，中间h5存本地，以菜谱code命名
+     * @param context
+     */
     public static synchronized void offDishToFavorite(final Activity context) {
         try {
             if(context == null) return;
@@ -143,6 +157,11 @@ public class OffDishToFavoriteControl {
         }
     }
 
+    /**
+     * 添加code集合到收藏列表
+     * @param context
+     * @param codes
+     */
     private static void addCollection(Context context, final ArrayList<String> codes) {
         StringBuffer params = new StringBuffer("codes=");
         for (String code : codes) {

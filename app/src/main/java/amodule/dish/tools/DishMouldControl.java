@@ -22,7 +22,7 @@ import aplug.basic.ReqInternet;
  */
 public class DishMouldControl {
 
-    public static void setDishMould(final OnDishMouldListener listener){
+    public static void reqDishMould(final OnDishMouldListener listener){
         final String path = FileManager.getSDDir() + "long/" + FileManager.file_dishMould;
         String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign");
@@ -60,7 +60,7 @@ public class DishMouldControl {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                setDishMould(listener);
+                reqDishMould(listener);
             }
         };
         new Thread(new Runnable() {

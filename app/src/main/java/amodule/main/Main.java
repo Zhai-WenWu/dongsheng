@@ -205,12 +205,13 @@ public class Main extends Activity implements OnClickListener {
 
                 }
 
-                DishMouldControl.setDishMould(new DishMouldControl.OnDishMouldListener() {
+                DishMouldControl.reqDishMould(new DishMouldControl.OnDishMouldListener() {
                     @Override
                     public void loaded(boolean isSucess, String data, String mouldVersion) {
                         OffDishToFavoriteControl.updataAllNedUpdataMoulderDish(Main.this,mouldVersion);
                     }
                 });
+                OffDishToFavoriteControl.offDishToFavorite(Main.this);
             }
         }
 

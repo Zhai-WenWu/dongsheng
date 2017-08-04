@@ -166,6 +166,10 @@ public class DishWebView extends XHWebView {
         return mMouldVersion;
     }
 
+    /**
+     * 保存h5到本地，以菜谱code命名
+     * @return
+     */
     public boolean saveDishData(){
         Log.i(TAG,"saveDishData()");
         if(TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(mHtmlData)){
@@ -179,6 +183,10 @@ public class DishWebView extends XHWebView {
         return true;
     }
 
+    /**
+     * 删除h5
+     * @return
+     */
     public void deleteDishData(){
         if(TextUtils.isEmpty(dishCode)){
             return;
@@ -187,6 +195,10 @@ public class DishWebView extends XHWebView {
         FileManager.delDirectoryOrFile(path);
     }
 
+    /**
+     * 根据code，加载模板
+     * @param code
+     */
     private void loadMould(final String code){
         DishMouldControl.getDishMould(new DishMouldControl.OnDishMouldListener() {
             @Override
@@ -213,15 +225,24 @@ public class DishWebView extends XHWebView {
 
     /**
      * 当h5所有加载完毕后回调，包括请求网络数据
+     * @param html ：要保存的内容
      */
     public void onLoadFinishCallback(String html){
         mHtmlData = html;
     }
 
+    /**
+     * 设置用料信息
+     * @param ingreStr
+     */
     public void setIngreStr(String ingreStr){
         if(mOnIngreListener != null) mOnIngreListener.setOnIngre(ingreStr);
     }
 
+    /**
+     * 设置拥有用料信息后，回调回去
+     * @param listener
+     */
     public void setOnIngreListener(OnIngreListener listener){
         mOnIngreListener = listener;
     }
