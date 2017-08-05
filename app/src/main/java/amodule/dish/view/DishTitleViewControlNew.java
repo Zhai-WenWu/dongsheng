@@ -194,11 +194,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                     }
                 }).show();
                 break;
-            case modify_layout://编辑
-                if(isHasVideo){
-                    Tools.showToast(context,"请用香哈（视频版）编辑");
-                }else doModify();
-                break;
         }
     }
     /**
