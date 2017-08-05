@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 
 /**
- * Created by Fang Ruijiao on 2017/7/25.
  */
 public class DishsWebView extends DishWebView{
 

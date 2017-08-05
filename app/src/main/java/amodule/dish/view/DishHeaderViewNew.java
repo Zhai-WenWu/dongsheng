@@ -51,9 +51,8 @@ import xh.basic.tool.UtilString;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
- * Created by Administrator on 2016/9/21.
+ * 菜单详情页顶部原生view处理
  */
-
 public class DishHeaderViewNew extends LinearLayout {
     private Context context;
     private Activity activity;

@@ -132,6 +132,7 @@ public class DishAdDataViewNew extends ItemBaseView {
                         setViewImage(bigImage, map.get("imgUrl"));
                     }
                 });
+        Log.i("zyj","展示广告");
         //设置文字
         TextView title = (TextView) findViewById(R.id.ad_name);
         title.setText(map.get("title"));

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -30,7 +32,7 @@ import static amodule.main.Main.timer;
 import static aplug.web.tools.WebviewManager.ERROR_HTML_URL;
 
 /**
- * Created by Fang Ruijiao on 2017/7/17.
+ *菜谱详情页webview
  */
 public class DishWebView extends XHWebView {
 
@@ -70,11 +72,13 @@ public class DishWebView extends XHWebView {
                 if (!ERROR_HTML_URL.equals(url)) {
                     DishWebView.this.setUrl(url);
                 }
+                Log.i("zyj","onPageFinished");
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                Log.i("zyj","onPageFinished");
                 super.onPageFinished(view, url);
                 if (JSAction.loadAction.length() > 0) {
                     view.loadUrl("javascript:" + JSAction.loadAction + ";");
@@ -90,7 +94,8 @@ public class DishWebView extends XHWebView {
                 }
                 // 获取焦点已让webview能打开键盘，评论页输入框不在webview，所以不获取焦点
                 if (url.indexOf("subjectComment.php") == -1) {
-                    view.requestFocus();
+//                    view.requestFocus();
+
                 }
                 // 读取cookie的sessionId
                 CookieManager cookieManager = CookieManager.getInstance();
@@ -99,6 +104,14 @@ public class DishWebView extends XHWebView {
                 if (map.get("USERID") != null && !map.get("USERID").equals(sessionId == null ? "" : sessionId)) {
                     UtilInternet.cookieMap.put("USERID", map.get("USERID"));
                 }
+                new Handler(Looper.getMainLooper()).postAtTime(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(dishWebViewCallBack != null) dishWebViewCallBack.onLoadFinish();
+                    }
+                },1*1000);
+
+                view.setFocusable(false);
                 /**有问题客户端关闭该功能	*/
                 //获取网页高度，重新设置webview高度
 //				webview.loadUrl("javascript:appCommon.resize(document.body.getBoundingClientRect().height)");
@@ -111,6 +124,7 @@ public class DishWebView extends XHWebView {
                     view.loadUrl(url);
                     return false;
                 }
+//                view.setFocusable(false);
                 AppCommon.openUrl(mAct, url, true);
                 return true;
             }
@@ -172,6 +186,7 @@ public class DishWebView extends XHWebView {
      */
     public boolean saveDishData(){
         Log.i(TAG,"saveDishData()");
+        Log.i("zyj","mHtmlData::11:"+mHtmlData);
         if(TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(mHtmlData)){
             return false;
         }
@@ -229,6 +244,9 @@ public class DishWebView extends XHWebView {
      */
     public void onLoadFinishCallback(String html){
         mHtmlData = html;
+        Log.i("zyj","onLoadFinishCallback::");
+        Log.i("zyj","mHtmlData::11:"+mHtmlData);
+        if(dishWebViewCallBack != null) dishWebViewCallBack.onLoadFinish();
     }
 
     /**
@@ -236,18 +254,24 @@ public class DishWebView extends XHWebView {
      * @param ingreStr
      */
     public void setIngreStr(String ingreStr){
-        if(mOnIngreListener != null) mOnIngreListener.setOnIngre(ingreStr);
+        if(dishWebViewCallBack != null) dishWebViewCallBack.setOnIngre(ingreStr);
     }
 
     /**
      * 设置拥有用料信息后，回调回去
      * @param listener
      */
-    public void setOnIngreListener(OnIngreListener listener){
-        mOnIngreListener = listener;
+    public void setWebViewCallBack(DishWebViewCallBack listener){
+        dishWebViewCallBack = listener;
     }
-    public OnIngreListener mOnIngreListener;
-    public interface OnIngreListener{
+    public DishWebViewCallBack dishWebViewCallBack;
+
+    /**
+     * webView 监听
+     */
+    public interface DishWebViewCallBack{
+        //设置页面加载的数据
         public void setOnIngre(String ingre);
+        public void onLoadFinish();
     }
 }

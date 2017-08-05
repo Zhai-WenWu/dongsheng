@@ -26,7 +26,6 @@ import aplug.basic.ReqInternet;
 import xh.windowview.XhDialog;
 
 /**
- * Created by Fang Ruijiao on 2017/7/25.
  */
 public class OffDishToFavoriteControl {
 

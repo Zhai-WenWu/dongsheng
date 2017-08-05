@@ -44,7 +44,6 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 菜谱详情页：头部大图、视频，底部广告以下是原生，中间是h5
- * Created by Fang Ruijiao on 2017/7/11.
  */
 public class DetailDish extends BaseActivity {
 
@@ -127,8 +126,6 @@ public class DetailDish extends BaseActivity {
         level = 2;
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            String colors = Tools.getColorStr(this, R.color.transparent);
-//            Tools.setStatusBarColor(this, Color.parseColor(colors));
         }
         setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);

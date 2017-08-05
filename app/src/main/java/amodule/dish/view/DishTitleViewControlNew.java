@@ -288,6 +288,8 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * 离线菜谱
      */
     private void doBuyBurden(boolean state) {
+        Log.i("zyj",""+state);
+//        mXhWebView.loadUrl("Javascript:offLineSave()");
         if(!state){
             if(DataOperate.buyBurden(detailDish.getApplicationContext(), code).length() > 0)
                 DataOperate.deleteBuyBurden(detailDish.getApplicationContext(), code);
@@ -302,8 +304,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                 } else {
                     String mouldVersion = mDishWebView.getMouldVersion();
                     DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson, mouldVersion);
+                    mDishWebView.loadUrl("Javascript:offLineSave()");
                     mDishWebView.saveDishData();
-//                    Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
+                    Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
                 }
             }
         }
@@ -329,7 +332,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                             if (flag >= UtilInternet.REQ_OK_STRING) {
                                 Map<String, String> map = getListMapByJson(returnObj).get(0);
                                 boolean nowFav = map.get("type").equals("2");
-                                if(isHasOffPower) doBuyBurden(nowFav);
+                                if(isHasOffPower) {
+//                                    mXhWebView.loadUrl("Javascript:offLineSave()");
+                                    doBuyBurden(nowFav);
+                                }
                                 favText.setText(nowFav ? "已收藏" : "  收藏  ");
                                 favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 

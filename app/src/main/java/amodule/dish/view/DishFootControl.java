@@ -39,16 +39,16 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
+ * 菜谱详情页底部view的控制器
  * 菜谱底部原生所有内容：相关美食帖、广告、发帖入口、点赞点踩、提问入口
  * Created by Fang Ruijiao on 2017/7/13.
  */
 public class DishFootControl implements View.OnClickListener{
 
     private Activity mAct;
-    private LinearLayout mAdLayout,goodLayoutParent,goodLayout,trampleLayout,userDishLayout;
+    private LinearLayout mAdLayout,userDishLayout;
     private RelativeLayout mRecomentLayout;
-    private TextView mRecommentNum,mRelevantTv,mHoverNum,mQuizTv;
-    private ImageView mGoodShow,mGoodImg;
+    private TextView mRecommentNum,mRelevantTv;
 
     private DishAdDataViewNew dishAdDataView;
 
@@ -56,40 +56,49 @@ public class DishFootControl implements View.OnClickListener{
 
     private boolean dishLikeState = false;
 
+    //处理底部浮动view
+    private LinearLayout goodLayoutParent,hoverLayout;
+    private ImageView mGoodImg;
+    private TextView mHoverNum;
+
     public DishFootControl(Activity act,String code){
         mAct = act;
         this.code = code;
         init();
     }
-
     private void init(){
+        mAct.findViewById(R.id.a_dish_detail_new_footer).setVisibility(View.GONE);
         mAdLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan);
-
-        goodLayoutParent = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_layout);
-        goodLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good);
-        trampleLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_trample);
         userDishLayout = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll_linear);
 
         mRecommentNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_tv_num);
         mRelevantTv = (TextView) mAct.findViewById(R.id.a_dish_detail_new_relevantTv);
-        mHoverNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_number);
-        mQuizTv = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_tv);
-        mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
-        mGoodShow = (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
 
         dishAdDataView = new DishAdDataViewNew(mAct);
         dishAdDataView.getRequest(mAct, mAdLayout);
         mRecomentLayout.setOnClickListener(this);
-        goodLayout.setOnClickListener(this);
-        trampleLayout.setOnClickListener(this);
         mRelevantTv.setOnClickListener(this);
-        mQuizTv.setOnClickListener(this);
-        mGoodShow.setOnClickListener(this);
         mRecommentNum.setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+        initFudongView();
     }
 
+    /**
+     * 处理底部浮动的view
+     */
+    private void initFudongView(){
+        goodLayoutParent = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_layout);
+        hoverLayout= (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_layout);
+        mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good).setOnClickListener(this);
+        mAct.findViewById(R.id.a_dish_detail_new_footer_hover_trample).setOnClickListener(this);
+        mAct.findViewById(R.id.a_dish_detail_new_footer_hover_tv).setOnClickListener(this);
+        mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_linear).setOnClickListener(this);
+        mHoverNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_number);
+        mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
+        mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show).setOnClickListener(this);
+
+    }
     public void setDishInfo(String dishName) {
         mDishName = dishName;
     }
@@ -127,7 +136,6 @@ public class DishFootControl implements View.OnClickListener{
                     setViewImage(userImg, customerMap.get("img"), 500);
                     String userCode = customerMap.get("code");
                     setGotoFriendHome(userImg, userCode);
-                    setGotoFriendHome(userName, userCode);
                 }
 
                 final String zanNumberStr = map.get("likeNum");
@@ -295,7 +303,9 @@ public class DishFootControl implements View.OnClickListener{
                  }
                  hindGoodLayout();
                 break;
+            case R.id.a_dish_detail_new_footer_hover_good_linear:
             case R.id.a_dish_detail_new_footer_hover_good_show: //展现点赞
+                hoverLayout.setVisibility(View.GONE);
                 goodLayoutParent.setVisibility(View.VISIBLE);
                 break;
             case R.id.a_dish_detail_new_tv_num:
@@ -307,6 +317,7 @@ public class DishFootControl implements View.OnClickListener{
 
     public void hindGoodLayout(){
         goodLayoutParent.setVisibility(View.GONE);
+        hoverLayout.setVisibility(View.VISIBLE);
     }
 
     private void onChangeLikeState(boolean isLike){
@@ -342,5 +353,19 @@ public class DishFootControl implements View.OnClickListener{
                 }
             }
         }
+    }
+
+    /**
+     * 隐藏底部view
+     */
+    public void hideFootView(){
+        mAct.findViewById(R.id.a_dish_detail_new_footer).setVisibility(View.GONE);
+    }
+
+    /**
+     * 展示底部view
+     */
+    public void showFootView(){
+        mAct.findViewById(R.id.a_dish_detail_new_footer).setVisibility(View.VISIBLE);
     }
 }

@@ -17,9 +17,8 @@ import acore.logic.AppCommon;
 import acore.tools.ImgManager;
 
 /**
- * Created by Fang Ruijiao on 2017/7/25.
+ * 菜谱详情页离线菜谱数据库
  */
-
 public class DishOffSqlite  extends SQLiteOpenHelper {
     public static final int pageSize = 10;// 分页时，每页的数据总数
 

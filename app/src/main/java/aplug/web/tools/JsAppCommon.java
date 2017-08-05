@@ -655,8 +655,6 @@ public class JsAppCommon extends JsBase{
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
-				Log.i("tzy","imageUrls = " + imageUrls);
-				Log.i("tzy","index = " + index);
 				if(imageUrls == null){
 					return;
 				}
@@ -828,13 +826,14 @@ public class JsAppCommon extends JsBase{
 	public void onLoadFinishCallback(String data){
 		Log.i(DishWebView.TAG,"onLoadFinishCallback() data:" + data);
 //		Tools.showToast(mAct,"onLoadFinishCallback()");
-		if(mWebView != null)((DishWebView)mWebView).onLoadFinishCallback(data);
+		if(mWebView != null&&mWebView instanceof DishWebView)((DishWebView)mWebView).onLoadFinishCallback(data);
 	}
 
 	@JavascriptInterface
 	public void setIngreStr(String ingreStr){
 //		Tools.showToast(mAct,"setIngreStr():" + ingreStr);
-		if(mWebView != null)((DishWebView)mWebView).setIngreStr(ingreStr);
+		if(mWebView != null&&mWebView instanceof DishWebView)
+			((DishWebView)mWebView).setIngreStr(ingreStr);
 	}
 
 	@JavascriptInterface

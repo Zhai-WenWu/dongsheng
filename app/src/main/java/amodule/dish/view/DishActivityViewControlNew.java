@@ -3,6 +3,7 @@ package amodule.dish.view;
 import android.app.Activity;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -36,10 +37,8 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 菜谱界面的总控制类
- * Created by Fang Ruijiao on 2017/7/12.
  */
 public class  DishActivityViewControlNew {
-
     private Activity mAct;
     private RelativeLayout bar_title_1;
     private DishWebView mXhWebView;
@@ -69,9 +68,9 @@ public class  DishActivityViewControlNew {
     private DishHeaderViewNew dishHeaderView;
     private DishFootControl mFootControl;
 
-
     private DishViewCallBack callBack;
     private String dishJson = "";
+    private int titleHeight;//标题高度
 
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
@@ -83,22 +82,16 @@ public class  DishActivityViewControlNew {
         this.loadManager = loadManager;
         mDishCode = code;
         this.callBack = callBack;
-
         initView();
-
-        //处理标题
-        dishTitleViewControl= new DishTitleViewControlNew(mAct, new DishTitleViewControlNew.OnDishTitleControlListener() {
-            @Override
-            public String getOffDishJson() {
-                return dishJson;
-            }
-        });
-        dishTitleViewControl.initView(mAct,mXhWebView);
-        dishTitleViewControl.setstate(state);
-        mFootControl = new DishFootControl(mAct,mDishCode);
     }
 
+    /**
+     * view的初始化
+     */
     private void initView(){
+        titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
+        initTitle();
+
         View leftClose = mAct.findViewById(R.id.leftClose);
         leftClose.setVisibility(View.VISIBLE);
         leftClose.setOnClickListener(new View.OnClickListener() {
@@ -109,12 +102,45 @@ public class  DishActivityViewControlNew {
                 mAct.finish();
             }
         });
-
+        //xhwebView
         WebviewManager manager = new WebviewManager(mAct,loadManager,true);
         xhWebView = manager.createWebView(R.id.XHWebview);
+        mXhWebView = (DishWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
+        mXhWebView.setWebViewCallBack(new DishWebView.DishWebViewCallBack() {
+            @Override
+            public void setOnIngre(String ingre) {
+                saveHistoryToDB(ingre);
+            }
+            @Override
+            public void onLoadFinish() {
+                if(mFootControl!=null)mFootControl.showFootView();
+            }
+        });
+        //头部view处理
+        dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
+        videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
+        dishHeaderView.initView(mAct,videoLayoutHeight);
 
-        int titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
+        mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
+        setGlideViewListener();
 
+        //处理标题导航栏
+        dishTitleViewControl= new DishTitleViewControlNew(mAct, new DishTitleViewControlNew.OnDishTitleControlListener() {
+            @Override
+            public String getOffDishJson() {
+                return dishJson;
+            }
+        });
+        dishTitleViewControl.initView(mAct,mXhWebView);
+        dishTitleViewControl.setstate(state);
+        //底部view
+        mFootControl = new DishFootControl(mAct,mDishCode);
+    }
+
+    /**
+     * 处理标题
+     */
+    private void initTitle(){
         bar_title_1 = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_title);
         statusBarHeight = Tools.getStatusBarHeight(mAct);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_1.getLayoutParams();
@@ -122,22 +148,11 @@ public class  DishActivityViewControlNew {
         View title_state_bar = mAct.findViewById(R.id.title_state_bar);
         layoutParams = (RelativeLayout.LayoutParams) title_state_bar.getLayoutParams();
         layoutParams.height = statusBarHeight;
-
-        mXhWebView = (DishWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
-        mXhWebView.setOnIngreListener(new DishWebView.OnIngreListener() {
-            @Override
-            public void setOnIngre(String ingre) {
-                saveHistoryToDB(ingre);
-            }
-        });
-        //头部view处理
-        dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
-        videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
-        dishHeaderView.initView(mAct,videoLayoutHeight);
-        mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
-        setGlideViewListener();
     }
 
+    /**
+     * 设置监听。
+     */
     private void setGlideViewListener(){
         mScrollView.setOnScrollListener(new XhScrollView.OnScrollListener() {
             @Override
@@ -162,6 +177,7 @@ public class  DishActivityViewControlNew {
         mScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                Log.i("zyj","onTouch::");
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (firstItemIndex == 0 && !isHasVideo) {
