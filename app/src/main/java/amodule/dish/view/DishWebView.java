@@ -72,7 +72,7 @@ public class DishWebView extends XHWebView {
                 if (!ERROR_HTML_URL.equals(url)) {
                     DishWebView.this.setUrl(url);
                 }
-                Log.i("zyj","onPageFinished");
+                Log.i("zyj","onPageStarted");
                 super.onPageStarted(view, url, favicon);
             }
 
@@ -104,7 +104,7 @@ public class DishWebView extends XHWebView {
                 if (map.get("USERID") != null && !map.get("USERID").equals(sessionId == null ? "" : sessionId)) {
                     UtilInternet.cookieMap.put("USERID", map.get("USERID"));
                 }
-                new Handler(Looper.getMainLooper()).postAtTime(new Runnable() {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if(dishWebViewCallBack != null) dishWebViewCallBack.onLoadFinish();
@@ -246,7 +246,7 @@ public class DishWebView extends XHWebView {
         mHtmlData = html;
         Log.i("zyj","onLoadFinishCallback::");
         Log.i("zyj","mHtmlData::11:"+mHtmlData);
-        if(dishWebViewCallBack != null) dishWebViewCallBack.onLoadFinish();
+//        if(dishWebViewCallBack != null) dishWebViewCallBack.onLoadFinish();
     }
 
     /**
