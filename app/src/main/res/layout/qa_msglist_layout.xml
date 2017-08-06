@@ -21,15 +21,18 @@
             android:scaleType="centerInside"
             android:src="@drawable/calssify_health_back" />
 
-        <LinearLayout
-            android:id="@+id/tab_container"
+        <acore.widget.PagerSlidingTabStrip
+            android:id="@+id/tab"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_45"
-            android:orientation="horizontal"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true">
-
-        </LinearLayout>
+            android:layout_alignParentBottom="true"
+            app:pstsIndicatorColor="#FFFFFE"
+            app:pstsIndicatorWidthFollowText="false"
+            app:pstsTabBackground="@color/common_top_bg"
+            app:pstsTabPaddingLeftRight="@dimen/dp_12.5"
+            app:pstsTabTextColor="@color/circle_tab_text_color"
+            app:pstsTabTextSize="@dimen/sp_16" />
 
     </RelativeLayout>
 

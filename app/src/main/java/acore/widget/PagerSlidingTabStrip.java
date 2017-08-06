@@ -246,6 +246,9 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public void notifyDataSetChanged() {
 		mTabsContainer.removeAllViews();
+		if (isCustomTabs) {
+			((CustomTabProvider)mPager.getAdapter()).onRemoveAllTabView();
+		}
 		mTabCount = mPager.getAdapter().getCount();
 		View tabView;
 		for (int i = 0; i < mTabCount; i++) {
@@ -843,6 +846,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	}
 
 	public interface CustomTabProvider {
+		void onRemoveAllTabView();
+
 		View getCustomTabView(ViewGroup parent, int position);
 
 		void tabSelected(View tab);

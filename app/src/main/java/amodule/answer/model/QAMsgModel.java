@@ -8,9 +8,27 @@ import java.io.Serializable;
 
 public class QAMsgModel implements Serializable {
 
+    private String mType;
     private String mTitle;
     private String mMsgNum;
     private boolean mIsSelect;
+    private int mPosition;
+
+    public int getmPosition() {
+        return mPosition;
+    }
+
+    public void setmPosition(int mPosition) {
+        this.mPosition = mPosition;
+    }
+
+    public String getmType() {
+        return mType;
+    }
+
+    public void setmType(String mType) {
+        this.mType = mType;
+    }
 
     public String getmTitle() {
         return mTitle;
