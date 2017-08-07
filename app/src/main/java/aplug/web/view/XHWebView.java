@@ -7,6 +7,7 @@ import android.webkit.WebView;
 public class XHWebView extends WebView {
 	private String mUrl = "";
 	private int webViewNum = 0;
+	private OnWebNumChangeCallback onWebNumChangeCallback;
 
 	public XHWebView(Context context) {
 		super(context);
@@ -38,12 +39,25 @@ public class XHWebView extends WebView {
 	
 	public void upWebViewNum(){
 		webViewNum++;
+		if(onWebNumChangeCallback != null)
+			onWebNumChangeCallback.onChange(webViewNum);
 	}
 	
 	public void downWebViewNum(){
 		webViewNum--;
+		if(onWebNumChangeCallback != null)
+			onWebNumChangeCallback.onChange(webViewNum);
 	}
 
-	
+	public interface OnWebNumChangeCallback{
+		void onChange(int num);
+	}
 
+	public OnWebNumChangeCallback getOnWebNumChangeCallback() {
+		return onWebNumChangeCallback;
+	}
+
+	public void setOnWebNumChangeCallback(OnWebNumChangeCallback onWebNumChangeCallback) {
+		this.onWebNumChangeCallback = onWebNumChangeCallback;
+	}
 }

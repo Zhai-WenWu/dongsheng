@@ -85,6 +85,7 @@ public class WebActivity extends BaseActivity{
 			}
 			else if (webview.canGoBack()) {
 				loadManager.showProgressBar();
+				webview.downWebViewNum();
 				webview.goBack();
 			} else {
 				this.finish();
