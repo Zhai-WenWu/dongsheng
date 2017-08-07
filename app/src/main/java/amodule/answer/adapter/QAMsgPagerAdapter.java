@@ -103,7 +103,9 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
                 String numStr = mDatas.get(position).getmMsgNum();
                 try {
                     int num = Integer.parseInt(numStr);
-                    if (num > 0) {
+                    if (num > 99) {
+                        mNumTextView.setText(numStr + "+");
+                    } else if (num > 0) {
                         mNumTextView.setText(numStr);
                     }
                     if (mDatas.get(position).ismIsSelect())
