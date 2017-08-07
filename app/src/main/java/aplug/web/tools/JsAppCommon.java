@@ -338,6 +338,7 @@ public class JsAppCommon extends JsBase{
 				//购物车
 				RelativeLayout shoppingLayout = (RelativeLayout) mAct.findViewById(R.id.shopping_layout_mall);
 				shoppingLayout.setVisibility(View.VISIBLE);
+				ImageView shopCartImage = (ImageView) mAct.findViewById(R.id.image_cart);
 				TextView mall_news_num=(TextView) mAct.findViewById(R.id.mall_news_num_mall);
 				TextView mall_news_num_two=(TextView) mAct.findViewById(R.id.mall_news_num_two_mall);
 				if(MallCommon.num_shopcat>0){
@@ -360,7 +361,7 @@ public class JsAppCommon extends JsBase{
 				if(LoginManager.isLogin()){
 					MallCommon.getShoppingNum(mAct,mall_news_num,mall_news_num_two);
 				}
-				shoppingLayout.setOnClickListener(new OnClickListener() {
+				shopCartImage.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {

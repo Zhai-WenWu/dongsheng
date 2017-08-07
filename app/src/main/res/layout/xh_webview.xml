@@ -85,9 +85,10 @@
             android:layout_marginRight="@dimen/dp_10"
             android:background="@android:color/transparent"
             android:clickable="true"
-            android:visibility="gone" >
+            android:visibility="visible" >
 
             <ImageView
+                android:id="@+id/image_cart"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_40"
                 android:layout_alignParentRight="true"
