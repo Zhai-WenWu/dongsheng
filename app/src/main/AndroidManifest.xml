@@ -958,11 +958,19 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
+            android:name="aplug.web.NativeShowWeb"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name="aplug.web.FullScreenWeb"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+
+
 
         <!-- X5浏览器 -->
         <activity
