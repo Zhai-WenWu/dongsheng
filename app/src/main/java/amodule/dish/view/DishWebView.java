@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,10 +22,13 @@ import acore.logic.AppCommon;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import amodule.dish.tools.DishMouldControl;
+import aplug.basic.ReqInternet;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import third.mall.aplug.MallReqInternet;
+import third.mall.aplug.MallStringManager;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -37,7 +41,7 @@ import static aplug.web.tools.WebviewManager.ERROR_HTML_URL;
 public class DishWebView extends XHWebView {
 
     private Activity mAct;
-    public static final String TAG = "dishMould";
+    public static final String TAG = "zyj";
 
     private String dishCode;
     private String mHtmlData;
@@ -66,6 +70,15 @@ public class DishWebView extends XHWebView {
     protected void init(Context context){
         mAct = (Activity) context;
         WebviewManager.initWebSetting(this);
+        Map<String,String> header = ReqInternet.in().getHeader(mAct);
+        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+        String[] cookie = cookieStr.split(";");
+        CookieManager cookieManager = CookieManager.getInstance();
+        for (int i = 0; i < cookie.length; i++) {
+            cookieManager.setCookie(StringManager.domain, cookie[i]);
+        }
+        CookieSyncManager.getInstance().sync();
+
         setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(final WebView view, String url, Bitmap favicon) {
@@ -95,7 +108,6 @@ public class DishWebView extends XHWebView {
                 // 获取焦点已让webview能打开键盘，评论页输入框不在webview，所以不获取焦点
                 if (url.indexOf("subjectComment.php") == -1) {
 //                    view.requestFocus();
-
                 }
                 // 读取cookie的sessionId
                 CookieManager cookieManager = CookieManager.getInstance();
@@ -219,20 +231,31 @@ public class DishWebView extends XHWebView {
             @Override
             public void loaded(boolean isSucess, String data,String mouldVersion) {
                 mMouldVersion = mouldVersion;
-                Log.d(TAG,"getDishMould() isSucess:" + isSucess);
                 if(isSucess){
                     data = data.replace("<{code}>",code);
                     final String html = data;
-                    DishWebView.this.post(new Runnable() {
-                        @Override
-                        public void run() {
+//                    DishWebView.this.post(new Runnable() {
+//                        @Override
+//                        public void run() {
 //                            Log.d(TAG,"loadMould() html:" + html);
 //                            String path = DishMouldControl.getOffDishPath() + dishCode;
 //                            FileManager.saveFileToCompletePath(path,html,false);
-//                            loadData(html,"text/html; charset=UTF-8", null);
+////                            loadData(html,"text/html; charset=UTF-8", null);
+////                            loadDataWithBaseURL(null,html,"text/html","utf-8", null);
+//                        }
+//                    });
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG,"loadMould() html:" + html);
+                            String path = DishMouldControl.getOffDishPath() + dishCode;
+                            FileManager.saveFileToCompletePath(path,html,false);
                             loadDataWithBaseURL(null,html,"text/html","utf-8", null);
+//                            loadData(html,"text/html; charset=UTF-8", null);
                         }
                     });
+
+//                    loadDataWithBaseURL(null,html,"text/html","utf-8", null);
                 }
             }
         });
@@ -245,7 +268,6 @@ public class DishWebView extends XHWebView {
     public void onLoadFinishCallback(String html){
         mHtmlData = html;
         Log.i("zyj","onLoadFinishCallback::");
-        Log.i("zyj","mHtmlData::11:"+mHtmlData);
 //        if(dishWebViewCallBack != null) dishWebViewCallBack.onLoadFinish();
     }
 

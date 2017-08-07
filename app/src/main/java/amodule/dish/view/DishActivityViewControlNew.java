@@ -45,7 +45,7 @@ public class  DishActivityViewControlNew {
     private XhScrollView mScrollView;
     private View view_oneImage;
     private RelativeLayout dishVidioLayout;
-    private XHWebView xhWebView;
+    private XHWebView xhWebView;//干什么用的？
 
     private int wm_height;//屏幕高度
     private int adBarHeight = 0;//广告所用bar高度

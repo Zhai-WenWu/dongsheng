@@ -304,7 +304,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                 } else {
                     String mouldVersion = mDishWebView.getMouldVersion();
                     DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson, mouldVersion);
-                    mDishWebView.loadUrl("Javascript:offLineSave()");
                     mDishWebView.saveDishData();
                     Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
                 }
