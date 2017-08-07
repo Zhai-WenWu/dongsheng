@@ -83,6 +83,7 @@ public class MallCommon {
 	 */
 	public static void setDsToken(final Context context){
 		if(state_token){
+			//失败
 			onRegisterSuccessCallback = null;
 			return;
 		}
@@ -119,6 +120,7 @@ public class MallCommon {
 	 */
 	public static void setRegister(final Context context) {
 		if(state_token){
+			//失败
 			if(interfaceMall!=null)
 				interfaceMall.setState(UtilInternet.REQ_CODE_ERROR);
 			onRegisterSuccessCallback = null;
@@ -139,7 +141,7 @@ public class MallCommon {
 					setSaveMall(context);
 					if(interfaceMall!=null)
 						interfaceMall.setState(flag);
-					//TODO 成功
+					//成功
 					if(onRegisterSuccessCallback != null){
 						onRegisterSuccessCallback.onRegisterSuccess();
 						onRegisterSuccessCallback = null;
