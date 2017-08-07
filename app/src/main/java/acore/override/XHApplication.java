@@ -47,6 +47,7 @@ public class XHApplication extends MobApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
         initHotfix();
+        Debuger.enable();
     }
 
     @Override

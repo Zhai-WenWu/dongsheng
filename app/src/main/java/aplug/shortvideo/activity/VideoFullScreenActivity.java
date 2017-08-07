@@ -94,7 +94,8 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
                 resources.getDrawable(R.drawable.video_new_seekbar_thumb));
 
         //是否可以滑动调整
-        videoPlayer.setIsTouchWiget(true);
+        videoPlayer.setIsTouchWiget(false);
+        videoPlayer.setIsTouchWigetFull(true);
         videoPlayer.setUp(videoUrl, false,"");
         videoPlayer.getFullscreenButton().setVisibility(View.GONE);
         videoPlayer.startPlayLogic();

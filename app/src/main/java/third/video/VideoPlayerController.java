@@ -125,7 +125,8 @@ public class VideoPlayerController {
                 resources.getDrawable(R.drawable.video_new_seekbar_thumb));
 
         //是否可以滑动调整
-        videoPlayer.setIsTouchWiget(true);
+        videoPlayer.setIsTouchWiget(false);
+        videoPlayer.setIsTouchWigetFull(true);
 
 //        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
 //            @Override

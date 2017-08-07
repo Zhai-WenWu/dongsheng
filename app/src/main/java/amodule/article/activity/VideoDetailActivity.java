@@ -271,6 +271,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private void initListView() {
         //初始化刷新layout
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
+        refreshLayout.setHorizontalFadingEdgeEnabled(true);
         listView = (ListView) findViewById(R.id.listview);
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
