@@ -103,11 +103,17 @@ public class LoginManager {
 
         //设置用户其他
         setUserOther(mAct, returnObj);
-        if (JsAppCommon.isReloadWebView) {
-            JsAppCommon.isReloadWebView = false;
-            WebActivity.reloadWebView();
-        }
         //电商
+        MallCommon.onRegisterSuccessCallback = new MallCommon.OnRegisterSuccessCallback() {
+            @Override
+            public void onRegisterSuccess() {
+                //刷新webview，确保有电商cookie
+                if (JsAppCommon.isReloadWebView) {
+                    JsAppCommon.isReloadWebView = false;
+                    WebActivity.reloadWebView();
+                }
+            }
+        };
         MallCommon.setDsToken(mAct);
 
         //设置关闭层级，返回

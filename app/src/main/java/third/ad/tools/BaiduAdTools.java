@@ -76,12 +76,14 @@ public class BaiduAdTools {
         BaiduNative baiduNative = new BaiduNative(context, adid, new BaiduNative.BaiduNativeNetworkListener() {
             @Override
             public void onNativeLoad(List<NativeResponse> list) {
+                Log.i("tzy","baidu onNativeLoad");
                 if(null != callback)
                     callback.onNativeLoad(list);
             }
 
             @Override
             public void onNativeFail(NativeErrorCode nativeErrorCode) {
+                Log.i("tzy","baidu onNativeFail::nativeErrorCode = " + nativeErrorCode.name() );
                 if(null != callback)
                     callback.onNativeFail(nativeErrorCode);
             }

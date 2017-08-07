@@ -144,7 +144,6 @@ public class ShowWeb extends WebActivity {
     protected void onRestart() {
         super.onRestart();
         loadManager.hideProgressBar();
-        webview.upWebViewNum();
     }
 
     @Override
@@ -247,8 +246,9 @@ public class ShowWeb extends WebActivity {
     @Override
     public boolean selfLoadUrl(String theUrl, boolean openThis) {
         boolean isSameUrl = !TextUtils.isEmpty(theUrl)
-                && !TextUtils.isEmpty(webview.getUrl())
+                && !TextUtils.isEmpty(webview.getmUrl())
                 && !theUrl.equals(webview.getUrl());
+        Log.i("tzy", "selfLoadUrl :: webview.getUrl() = " + webview.getUrl());
         boolean flag = super.selfLoadUrl(theUrl, openThis);
         Log.i("tzy", "selfLoadUrl :: theUrl = " + theUrl + " ; openThis = " + openThis);
         if (flag && isSameUrl) {

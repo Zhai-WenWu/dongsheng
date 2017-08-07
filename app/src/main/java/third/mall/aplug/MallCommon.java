@@ -48,6 +48,7 @@ public class MallCommon {
 	private Context context;
 	public static int num_shopcat=0;
 	public static InterfaceMallReqIntert interfaceMall;//接口回调
+	public static OnRegisterSuccessCallback onRegisterSuccessCallback;
 	public static int new_product = 0;//新的商品数量
 	public static String ds_home_url="";//首页加载url
 	public static String payment_order_id="";//支付id
@@ -74,14 +75,17 @@ public class MallCommon {
 			setRegister(context);
 		}
 	}
+
 	/**
 	 * 获取token
 	 * 
 	 * @param context
 	 */
-	public static void setDsToken(final Context context) {
-		if(state_token)
+	public static void setDsToken(final Context context){
+		if(state_token){
+			onRegisterSuccessCallback = null;
 			return;
+		}
 		String acticonUrl = MallStringManager.mall_getDsToken;
 		MallReqInternet.in().doGet(acticonUrl, new MallInternetCallback(context) {
 
@@ -103,7 +107,7 @@ public class MallCommon {
 					}
 					setDsToken(context);
 				}
-							
+
 			}
 		});
 	}
@@ -117,6 +121,7 @@ public class MallCommon {
 		if(state_token){
 			if(interfaceMall!=null)
 				interfaceMall.setState(UtilInternet.REQ_CODE_ERROR);
+			onRegisterSuccessCallback = null;
 			return;
 		}
 		String url = MallStringManager.mall_api_register;
@@ -134,7 +139,11 @@ public class MallCommon {
 					setSaveMall(context);
 					if(interfaceMall!=null)
 						interfaceMall.setState(flag);
-					
+					//TODO 成功
+					if(onRegisterSuccessCallback != null){
+						onRegisterSuccessCallback.onRegisterSuccess();
+						onRegisterSuccessCallback = null;
+					}
 				}else{
 					deg++;
 					if(deg>=request_num){
@@ -576,5 +585,9 @@ public class MallCommon {
 		}
 
 		return url;
+	}
+
+	public interface OnRegisterSuccessCallback{
+		void onRegisterSuccess();
 	}
 }

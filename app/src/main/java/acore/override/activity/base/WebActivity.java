@@ -142,7 +142,7 @@ public class WebActivity extends BaseActivity{
 
 	private static void setCookie(String theUrl){
 //		String cookieKey = StringManager.apiUrl.replace(StringManager.apiTitle, "").replace("/", "");
-		Log.i("zhangyujian","StringManager.domain::"+StringManager.domain+":::"+theUrl);
+		Log.i("tzy","StringManager.domain::"+StringManager.domain+":::"+theUrl);
 		if(theUrl.indexOf(MallStringManager.domain)>-1){//电商 ds.xiangha.com
 			Map<String,String> header=MallReqInternet.in().getHeader(mShowWeb);
 			String cookieKey_mall=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
@@ -155,6 +155,7 @@ public class WebActivity extends BaseActivity{
 			}
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+			Log.i("tzy","设置webview的cookie："+cookieStr);
 		}else if (theUrl.indexOf(StringManager.domain) > -1) {//菜谱  .xiangha.com
 			Map<String,String> header = ReqInternet.in().getHeader(mShowWeb);
 			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";

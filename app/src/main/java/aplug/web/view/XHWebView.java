@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
+import java.util.Map;
+
 public class XHWebView extends WebView {
 	private String mUrl = "";
 	private int webViewNum = 0;
@@ -47,6 +49,25 @@ public class XHWebView extends WebView {
 		webViewNum--;
 		if(onWebNumChangeCallback != null)
 			onWebNumChangeCallback.onChange(webViewNum);
+	}
+
+	@Override
+	public String getUrl() {
+		return mUrl;
+	}
+
+	@Override
+	public void loadUrl(String url) {
+		super.loadUrl(url);
+		if(url.startsWith("http"))
+			this.mUrl = url;
+	}
+
+	@Override
+	public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
+		super.loadUrl(url, additionalHttpHeaders);
+		if(url.startsWith("http"))
+			this.mUrl = url;
 	}
 
 	public interface OnWebNumChangeCallback{
