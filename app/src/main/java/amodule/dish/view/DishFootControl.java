@@ -27,6 +27,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.activity.QAMsgListActivity;
 import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
@@ -63,7 +64,8 @@ public class DishFootControl implements View.OnClickListener{
     //处理底部浮动view
     private LinearLayout goodLayoutParent,hoverLayout;
     private ImageView mGoodImg,mNoLikeImg,hoverGoodImg;
-    private TextView mHoverNum;
+    private TextView mHoverNum,mHoverTv;
+    private String askStatus="";
 
     public DishFootControl(Activity act,String code){
         mAct = act;
@@ -84,7 +86,7 @@ public class DishFootControl implements View.OnClickListener{
         mRecomentLayout.setOnClickListener(this);
         mRelevantTv.setOnClickListener(this);
         mRecommentNum.setOnClickListener(this);
-        mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+
         initFudongView();
     }
 
@@ -92,23 +94,34 @@ public class DishFootControl implements View.OnClickListener{
      * 处理底部浮动的view
      */
     private void initFudongView(){
+        mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
         goodLayoutParent = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_layout);
         hoverLayout= (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_layout);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good).setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_trample).setOnClickListener(this);
-        mAct.findViewById(R.id.a_dish_detail_new_footer_hover_tv).setOnClickListener(this);
+        mHoverTv= (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_tv);
+        mHoverTv.setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_linear).setOnClickListener(this);
         mHoverNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_number);
         mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
         mNoLikeImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_img);
         hoverGoodImg= (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
         hoverGoodImg.setOnClickListener(this);
-
+        setRequestAskButtonStatus();
     }
+
+    /**
+     * 设置菜谱名称
+     * @param dishName
+     */
     public void setDishInfo(String dishName) {
         mDishName = dishName;
     }
 
+    /**
+     * 处理用户相关推荐数据
+     * @param dishJson
+     */
     public void initUserDish(String dishJson){
         ArrayList<Map<String, String>> arrayList = getListMapByJson(dishJson);
         if(arrayList.size() > 0) {
@@ -296,8 +309,13 @@ public class DishFootControl implements View.OnClickListener{
                 XHClick.mapStat(mAct, tongjiId, "晒我做的这道菜", "晒我做的这道菜点击量");
                 break;
             case R.id.a_dish_detail_new_footer_hover_tv: //提问作者
-                XHClick.mapStat(mAct, tongjiId, "底部浮动", "向作者提问点击量");
-                Tools.showToast(mAct,"提问作者");
+                if("2".equals(askStatus)){
+                    mAct.startActivity(new Intent(mAct, QAMsgListActivity.class));
+                }else if("4".equals(askStatus)){
+                    XHClick.mapStat(mAct, tongjiId, "底部浮动", "向作者提问点击量");
+                    Tools.showToast(mAct,"已提醒作者");
+                }
+
                 break;
              case R.id.a_dish_detail_new_footer_hover_good: //有用
                  XHClick.mapStat(mAct, tongjiId, "底部浮动", "点赞按钮点击量");
@@ -438,5 +456,36 @@ public class DishFootControl implements View.OnClickListener{
      */
     public void showFootView(){
         mAct.findViewById(R.id.a_dish_detail_new_footer).setVisibility(View.VISIBLE);
+    }
+
+    private void setRequestAskButtonStatus(){
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        map.put("code",code);
+        ReqEncyptInternet.in().doEncypt(StringManager.api_askButtonStatus,map, new InternetCallback(mAct) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if(i >= ReqInternet.REQ_OK_STRING){
+                    Map<String,String> map= StringManager.getFirstMap(o);
+
+                    if(map.containsKey("status")&&TextUtils.isEmpty(map.get("status"))) {
+                        handlrAskStatus(map.get("status"));
+                    }
+                }
+            }
+        });
+    }
+    private void handlrAskStatus(String status){
+        askStatus=status;
+        switch (status){
+            case "2":
+                mHoverTv.setText("向作者提问");
+                break;
+            case "4":
+                mHoverTv.setText("提醒作者开通问答");
+                break;
+        }
+        if("2".equals(status)||"4".equals(status)){
+            mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+        }else mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
     }
 }

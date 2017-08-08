@@ -252,6 +252,7 @@ public class StringManager extends UtilString {
     public final static String api_getDishLikeNumStatus = apiUrl + "main7/dish/likeNumStatus";
     public final static String api_getDishLikeHate = apiUrl + "main7/dish/likeHate";
     public final static String api_addCollection = apiUrl + "main7/dish/addCollection";
+    public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶

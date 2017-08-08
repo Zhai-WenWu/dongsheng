@@ -48,7 +48,6 @@ import aplug.imageselector.constant.ImageSelectorConstant;
 
 import static amodule.quan.activity.FriendQuan.REQUEST_CODE_QUAN_FRIEND;
 
-//import android.util.Log;
 
 /**
  * 发美食贴

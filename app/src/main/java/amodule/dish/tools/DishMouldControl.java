@@ -22,9 +22,13 @@ import aplug.basic.ReqInternet;
  */
 public class DishMouldControl {
 
+    /**
+     * 请求模版数据，并进行校验。
+     * @param listener
+     */
     public static void reqDishMould(final OnDishMouldListener listener){
         final String path = FileManager.getSDDir() + "long/" + FileManager.file_dishMould;
-        String readStr = FileManager.readFile(path);
+        final String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign");
         LinkedHashMap<String,String> mapParams = new LinkedHashMap<>();
         mapParams.put("versionSign",versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
@@ -40,10 +44,20 @@ public class DishMouldControl {
                                 Map<String,String> map = arrayList.get(0);
                                 String data = map.get("html");
                                 String versionSign = map.get("versionSign");
-                                File file = FileManager.saveFileToCompletePath(path, data, false);
-                                if(file != null) FileManager.saveShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign",versionSign);
-                                if(listener != null) listener.loaded(true,data,String.valueOf(versionSign));
-                                return;
+                                if(!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
+                                    File file = FileManager.saveFileToCompletePath(path, data, false);
+                                    if (file != null)
+                                        FileManager.saveShared(Main.allMain.getApplicationContext(), FileManager.file_dishMould, "versionSign", versionSign);
+                                    if (listener != null)
+                                        listener.loaded(true, data, String.valueOf(versionSign));
+                                    return;
+                                }else{//无数据标示已经是最新版本。
+                                    if (listener != null&&!TextUtils.isEmpty(readStr))
+                                        listener.loaded(true, readStr, String.valueOf(versionSign));
+                                }
+                            }else{
+                                if (listener != null&&!TextUtils.isEmpty(readStr))
+                                    listener.loaded(true, readStr, String.valueOf(versionSign));
                             }
                             if(listener != null) listener.loaded(false,"",String.valueOf(versionSign));
                         }
@@ -56,28 +70,7 @@ public class DishMouldControl {
     }
 
     public static void getDishMould(final OnDishMouldListener listener){
-        final Handler handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                reqDishMould(listener);
-            }
-        };
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String path = FileManager.getSDDir() + "long/" + FileManager.file_dishMould;
-                String readStr = FileManager.readFile(path);
-//                Log.i("detailDish","getDishMould() path:" + path);
-//                Log.i("detailDish","getDishMould() readStr:" + readStr);
-                if (TextUtils.isEmpty(readStr)){
-                    handler.sendEmptyMessage(0);
-                }else {
-                    Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign");
-                    listener.loaded(true, readStr,String.valueOf(versionSign));
-                }
-            }
-        }).start();
+        reqDishMould(listener);
     }
 
     public static String getOffDishPath(){

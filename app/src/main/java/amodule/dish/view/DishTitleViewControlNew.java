@@ -63,7 +63,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
 
-    private boolean isHasOffPower = true;
 
     private OnDishTitleControlListener mListener;
 
@@ -283,32 +282,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         return map;
     }
 
-    /**
-     * 离线菜谱
-     */
-    private void doBuyBurden(boolean state) {
-        Log.i("zyj",""+state);
-//        mXhWebView.loadUrl("Javascript:offLineSave()");
-        if(!state){
-            if(DataOperate.buyBurden(detailDish.getApplicationContext(), code).length() > 0)
-                DataOperate.deleteBuyBurden(detailDish.getApplicationContext(), code);
-            mDishWebView.deleteDishData();
-        }else if(getIsAutoOffDish(detailDish.getApplicationContext())) {
-            XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "下载点击量");
-            if (DataOperate.buyBurden(detailDish.getApplicationContext(), code).length() == 0) {
-                String dishJson = mListener.getOffDishJson();
-                Log.i("DetailDish", "dishJson:" + dishJson);
-                if (TextUtils.isEmpty(dishJson)) {
-                    Tools.showToast(detailDish.getApplicationContext(), "离线失败");
-                } else {
-                    String mouldVersion = mDishWebView.getMouldVersion();
-                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson, mouldVersion);
-                    mDishWebView.saveDishData();
-                    Tools.showToast(detailDish.getApplicationContext(), "已成功离线");
-                }
-            }
-        }
-    }
 
     /**
      * 收藏
@@ -330,10 +303,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                             if (flag >= UtilInternet.REQ_OK_STRING) {
                                 Map<String, String> map = getListMapByJson(returnObj).get(0);
                                 boolean nowFav = map.get("type").equals("2");
-                                if(isHasOffPower) {
-//                                    mXhWebView.loadUrl("Javascript:offLineSave()");
-                                    doBuyBurden(nowFav);
-                                }
                                 favText.setText(nowFav ? "已收藏" : "  收藏  ");
                                 favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 
@@ -381,9 +350,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         }
     }
 
-    public void setOfflineLayoutVisibility(boolean isShow){
-        isHasOffPower = isShow ? (state != null ? false : true) : false;
-    }
 
     public interface OnDishTitleControlListener{
         public String getOffDishJson();
