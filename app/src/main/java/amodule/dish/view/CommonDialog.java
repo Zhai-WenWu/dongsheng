@@ -87,6 +87,7 @@ public class CommonDialog {
         TextView tv = (TextView) window.findViewById(R.id.dialog_sure);
         if (tv != null) {
             tv.setText(text);
+            tv.setVisibility(View.VISIBLE);
             tv.setOnClickListener(listener);
         }
         return this;

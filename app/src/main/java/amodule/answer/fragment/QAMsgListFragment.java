@@ -13,6 +13,7 @@ import com.xianghatest.R;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseFragmentActivity;
+import acore.tools.StringManager;
 import amodule.answer.model.QAMsgModel;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -85,9 +86,8 @@ public class QAMsgListFragment extends Fragment {
         loadUrl();
     }
 
-    //TODO 测试的url，注意后期删除
     private void loadUrl() {
-        mWebView.loadUrl("http://appweb.ixiangha.com:9812/qa/myQa");
+        mWebView.loadUrl(StringManager.API_QA_QAMSGLIST + "&type=" + mModelData.getmType());
     }
 
     @Override
