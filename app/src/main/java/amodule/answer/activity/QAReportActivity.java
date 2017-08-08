@@ -196,9 +196,6 @@ public class QAReportActivity extends BaseActivity {
      */
     private void getReportData() {
         loadManager.showProgressBar();
-//TODO 测试使用
-//        mAuthorCode = "2222";
-
         if (TextUtils.isEmpty(mAuthorCode)) {
             onDataReady(0, null);
             return;

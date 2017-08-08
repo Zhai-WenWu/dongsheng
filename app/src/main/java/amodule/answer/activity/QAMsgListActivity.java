@@ -3,6 +3,7 @@ package amodule.answer.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,7 +12,6 @@ import com.xianghatest.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.dialogManager.PushManager;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.StringManager;
 import acore.widget.PagerSlidingTabStrip;
@@ -94,11 +94,7 @@ public class QAMsgListActivity extends BaseFragmentActivity {
                 QAMsgListActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (data == null) {
-                            finish();
-                        } else {
-                            onTabDataReady(data);
-                        }
+                        onTabDataReady(data);
                     }
                 });
             }
@@ -107,10 +103,16 @@ public class QAMsgListActivity extends BaseFragmentActivity {
     }
 
     private void getTabData() {
-        mWebView.loadUrl(StringManager.API_QA_QAMSGLIST);
+        loadManager.showProgressBar();
+        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST));
     }
 
     private void onTabDataReady(Object data) {
+        loadManager.hideProgressBar();
+        if (data == null || TextUtils.isEmpty(data.toString())) {
+            finish();
+            return;
+        }
         if (mModels == null)
             mModels = new ArrayList<QAMsgModel>();
         if (!mModels.isEmpty())

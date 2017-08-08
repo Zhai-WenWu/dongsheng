@@ -82,12 +82,12 @@ public class QAMsgListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mLoadManager.showProgressBar();
         loadUrl();
     }
 
     private void loadUrl() {
-        mWebView.loadUrl(StringManager.API_QA_QAMSGLIST + "&type=" + mModelData.getmType());
+        mLoadManager.showProgressBar();
+        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "&type=" + mModelData.getmType()));
     }
 
     @Override
