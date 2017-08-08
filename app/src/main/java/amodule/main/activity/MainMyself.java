@@ -28,9 +28,9 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
+import amodule.answer.activity.QAMsgListActivity;
 import amodule.dish.activity.OfflineDish;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
@@ -498,8 +498,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case "qa"://我的问答
                     FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowQA","2");
                     notifyQAItemChanged (0, false, true);
-                    Tools.showToast(this, "我问我答");
-                    AppCommon.openUrl(this, mQAType, false);
+                    startActivity(new Intent(MainMyself.this, QAMsgListActivity.class));
                     break;
                 case "favor"://收藏
                     XHClick.track(getApplicationContext(), "点击我的页面的收藏");

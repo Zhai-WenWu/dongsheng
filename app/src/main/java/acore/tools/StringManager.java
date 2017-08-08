@@ -340,8 +340,8 @@ public class StringManager extends UtilString {
     public final static String API_QA_GETREPORT = apiUrl + "main7/qa/getReport";//获取问答问答举报信息
     public final static String API_QA_COMMITREPORT = apiUrl + "main7/qa/addReport";//提交问答举报
     public final static String API_QA_GETPRICE = apiUrl + "main7/qa/getQaPrice";//获取提问金额
-    public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//获取提问金额
-    public final static String API_QA_QAMSGLIST = apiUrl + "qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//获取问答消息列表顶部tab信息
+    public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//添加问答
+    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//获取问答消息列表顶部tab信息
 
     //替换url
     public final static String replaceUrl(String url) {
