@@ -55,7 +55,7 @@ public class MallAddressChangeActivity extends BaseActivity implements OnClickLi
 		common= new MallCommon(this);
 		initView();
 		initData();
-		initTitle();
+//		initTitle();
 	}
 
 	private void initTitle() {
