@@ -173,6 +173,16 @@ public class  DishActivityViewControlNew {
                     mFootControl.onSrollView();
                 }
             }
+
+            @Override
+            public void scrollOritention(int scrollState) {
+                if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
+
+                    bar_title_1.setVisibility(View.GONE);
+                }else if(scrollState==XhScrollView.SCROLL_UP){//向上滑动
+                    bar_title_1.setVisibility(View.VISIBLE);
+                }
+            }
         });
         mScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override

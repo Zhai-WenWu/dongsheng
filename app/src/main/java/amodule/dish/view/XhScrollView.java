@@ -3,6 +3,7 @@ package amodule.dish.view;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
@@ -12,6 +13,20 @@ import android.widget.ScrollView;
 
 public class XhScrollView extends ScrollView {
     private OnScrollListener onScrollListener;
+    /**
+     * ScrollView正在向上滑动
+     */
+    public static final int SCROLL_UP = 0x01;
+
+    /**
+     * ScrollView正在向下滑动
+     */
+    public static final int SCROLL_DOWN = 0x10;
+
+    /**
+     * 最小的滑动距离
+     */
+    private static final int SCROLLLIMIT = 40;
     /**
      * 主要是用在用户手指离开MyScrollView，MyScrollView还在继续滑动，我们用来保存Y的距离，然后做比较
      */
@@ -79,6 +94,18 @@ public class XhScrollView extends ScrollView {
     }
 
 
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        if (oldt < t && ((t - oldt) > 15)) {// 向下
+            if (onScrollListener != null)
+                onScrollListener.scrollOritention(SCROLL_DOWN);
+        } else if (oldt > t && (oldt - t) > 15) {// 向上
+            if (onScrollListener != null)
+                onScrollListener.scrollOritention(SCROLL_UP);
+        }
+    }
+
     /**
      *
      * 滚动的回调接口
@@ -93,5 +120,6 @@ public class XhScrollView extends ScrollView {
          *              、
          */
         public void onScroll(int scrollY);
+        public void scrollOritention(int scrollState);
     }
 }
