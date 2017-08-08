@@ -173,26 +173,27 @@
     <uses-permission android:name="com.xiaomi.permission.AUTH_SERVICE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
-    <!--mta统计 start-->
+    <!-- mta统计 start -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <!--mta统计 start-->
+    <!-- mta统计 start -->
 
-    <!--百度 AD start-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 百度 AD start -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 以下为可选权限 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--百度 AD end-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+    <!-- 百度 AD end -->
     <application
         android:name="acore.override.XHApplication"
         android:allowBackup="false"
@@ -247,12 +248,11 @@
         <!-- <activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" /> -->
         <!-- main start -->
         <activity
-            android:name="com.xiangha.Welcome"
+            android:name=".Welcome"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan">
-
         </activity>
 
         <meta-data
@@ -344,7 +344,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/myself_hint_off"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.dish.activity.ListDish"
             android:configChanges="orientation|keyboardHidden"
@@ -478,14 +477,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
-
         <activity
             android:name="amodule.article.activity.ReportActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.article.activity.VideoPreviewActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -494,37 +491,42 @@
             android:theme="@style/Video_Preview_Theme"
             android:windowSoftInputMode="adjustPan"/>
 
-        <!--article end-->
+        <!-- article end -->
 
-        <!--answer start-->
-        <activity android:name="amodule.answer.activity.AskEditActivity"
-            android:configChanges="orientation|keyboardHidden|screenLayout"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name="amodule.answer.activity.AnswerEditActivity"
+        <!-- answer start -->
+        <activity
+            android:name="amodule.answer.activity.AskEditActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.answer.activity.AnswerEditActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.answer.activity.QAReportActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.answer.activity.AskAnswerUploadListActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.answer.activity.QAMsgListActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <!-- answer end -->
 
-        <activity android:name="amodule.answer.activity.QAReportActivity"
-            android:configChanges="orientation|keyboardHidden|screenLayout"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name="amodule.answer.activity.AskAnswerUploadListActivity"
-            android:configChanges="orientation|keyboardHidden|screenLayout"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name="amodule.answer.activity.QAMsgListActivity"
-            android:configChanges="orientation|keyboardHidden|screenLayout"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <!--answer end-->
 
         <!-- health start -->
         <activity
@@ -582,8 +584,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan"/>
         <!-- nous end -->
 
 
@@ -620,7 +621,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.quan.activity.CircleFind"
             android:configChanges="orientation|keyboardHidden"
@@ -729,7 +729,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
-        <!--android:launchMode="singleTask"-->
+        <!-- android:launchMode="singleTask" -->
         <activity
             android:name="amodule.user.activity.GourmetList"
             android:configChanges="orientation|keyboardHidden"
@@ -970,8 +970,6 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-
-
         <!-- X5浏览器 -->
         <activity
             android:name="aplug.web.VideoShowWeb"
@@ -1140,6 +1138,29 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="third.mall.activity.PublishEvalutionSingleActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name="third.mall.activity.PublishEvalutionMultiActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"
+            />
+        <activity
+            android:name="third.mall.activity.EvalutionListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"
+            />
         <!-- mall end -->
         <!-- ad start -->
         <activity
@@ -1430,37 +1451,43 @@
             android:name="xh.basic.internet.img.module.DiskCacheModule"
             android:value="GlideModule"/>
 
-
         <activity android:name="amodule.comment.activity.PublishCommentActivity">
         </activity>
-        <!--腾讯统计mta start-->
-        <!--<provider-->
-        <!--android:name="com.tencent.mid.api.MidProvider"-->
-        <!--android:authorities="com.xiangha"-->
-        <!--android:exported="true" >-->
-        <!--</provider>-->
-        <!--appkey-->
-        <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
+        <!-- 腾讯统计mta start -->
+        <!-- <provider -->
+        <!-- android:name="com.tencent.mid.api.MidProvider" -->
+        <!-- android:authorities="com.xiangha" -->
+        <!-- android:exported="true" > -->
+        <!-- </provider> -->
+        <!-- appkey -->
+        <!-- Android	APP ID：3101208014	APP KEY：Aqc1150004142 -->
         <meta-data
             android:name="TA_APPKEY"
             android:value="Aqc1150004142"/>
-        <!--Channel-->
+        <!-- Channel -->
         <meta-data
             android:name="InstallChannel"
             android:value="xiangha"/>
-        <!--腾讯统计mta start-->
+        <!-- 腾讯统计mta start -->
 
-        <!--mobssms start-->
+
+        <!-- mobssms start -->
         <!-- 通过AndroidManifest配置AppKey和AppSecret，如果你选择通过代码配置，则不需要配置以下meta-data -->
-        <meta-data android:name="Mob-AppKey" android:value="10e22f093f255"/>
-        <meta-data android:name="Mob-AppSecret" android:value="bb71787a9ec63116377a83c3ecac048a"/>
-        <!--mobssms end-->
+        <meta-data
+            android:name="Mob-AppKey"
+            android:value="10e22f093f255"/>
+        <meta-data
+            android:name="Mob-AppSecret"
+            android:value="bb71787a9ec63116377a83c3ecac048a"/>
+        <!-- mobssms end -->
 
-        <!--Baidu AD-->
+
+        <!-- Baidu AD -->
         <meta-data
             android:name="BaiduMobAd_APP_ID"
-            android:value="db905294" />
-        <!--funny id f1ee3b45-->
+            android:value="db905294"/>
+        <!-- funny id f1ee3b45 -->
+
 
         <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现效率 -->
         <provider
@@ -1470,7 +1497,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/bd_file_paths" />
+                android:resource="@xml/bd_file_paths"/>
         </provider>
 
         <!-- for baidu xadsdk internal web-browser -->
@@ -1478,8 +1505,9 @@
         <activity
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--Baidu AD end-->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!-- Baidu AD end -->
+
 
     </application>
 
