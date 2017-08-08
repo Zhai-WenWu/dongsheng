@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -25,6 +26,7 @@ import aplug.service.alarm.PushAlarm;
 @SuppressLint("SimpleDateFormat")
 public class XGLocalPushServer {
     private Context mContext;
+    private Map<String,String> dataMap;
 
     public XGLocalPushServer(Context context) {
         this.mContext = context;
@@ -34,6 +36,15 @@ public class XGLocalPushServer {
      * 初始化本地推送
      */
     public void initLocalPush() {
+        //获取config
+        String apppushtimerangeStr = AppCommon.getConfigByLocal("apppushtimerange");
+        dataMap = StringManager.getFirstMap(apppushtimerangeStr);
+        if("1".equals(dataMap.get("open"))){
+            //取消本地推送
+            XGPushManager.clearLocalNotifications(mContext);
+            return;
+        }
+
         int firstday = 3;
         FileManager.saveShared(mContext, FileManager.xmlFile_localPushTag, FileManager.xmlKey_localZhishi, String.valueOf(0));
         String localPushData = FileManager.readFile(FileManager.getDataDir() + FileManager.file_nousLocalPushData);
@@ -131,10 +142,31 @@ public class XGLocalPushServer {
         cal.add(Calendar.DATE, day);
         String date = formatter.format(cal.getTime());
         local_msg.setDate(date);
+
+        //默认数据
+        int hour = 19;
+        int length = 180;
+        //获取数据
+        if(dataMap != null){
+            if(dataMap.containsKey("location") && !TextUtils.isEmpty(dataMap.get("location")))
+                hour = Integer.parseInt(dataMap.get("location"));
+            if(dataMap.containsKey("length") && !TextUtils.isEmpty(dataMap.get("length")))
+                length = Integer.parseInt(dataMap.get("length"));
+        }
+        cal.set(Calendar.HOUR_OF_DAY,hour);
+        cal.set(Calendar.MINUTE,00);
+        int randomMin = Tools.getRandom(0,length);
+        cal.add(Calendar.MINUTE,randomMin);
+
+        formatter = new java.text.SimpleDateFormat("HH");
+        String hourStr = formatter.format(cal.getTime());
         // 设置消息触发的小时(24小时制)，例如：22代表晚上10点
-        local_msg.setHour("17");
+        local_msg.setHour(hourStr);
+
+        formatter = new java.text.SimpleDateFormat("mm");
+        String minStr = formatter.format(cal.getTime());
 //		 获取消息触发的分钟，例如：05代表05分
-        local_msg.setMin("00");
+        local_msg.setMin(minStr);
         //设置map
         local_msg.setCustomContent(map);
         XGPushManager.addLocalNotification(context, local_msg);
