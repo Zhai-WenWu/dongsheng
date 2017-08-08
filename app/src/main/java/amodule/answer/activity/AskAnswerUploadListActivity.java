@@ -34,6 +34,7 @@ import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.upload.AskAnswerUploadListPool;
+import amodule.answer.window.FloatingWindow;
 import amodule.dish.view.CommonDialog;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
@@ -43,6 +44,7 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
 /**
@@ -79,7 +81,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        initActivity("上传列表", 4, 0, R.layout.c_view_bar_title_uploadlist,R.layout.a_dish_upload_list);
+        initActivity("上传列表", 4, 0, R.layout.c_view_bar_title_uploadlist, R.layout.a_dish_upload_list);
         initView();
         initData();
         getData();
@@ -98,21 +100,23 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     private void registnetworkListener() {
         mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
-            public void disconnect() {}
+            public void disconnect() {
+            }
 
             @Override
-            public void wifi() {}
+            public void wifi() {
+            }
 
             @Override
             public void mobile() {
-                if(!mIsStopUpload) {
+                if (!mIsStopUpload) {
                     allStartOrPause(false);
                     hintNetWork();
                 }
             }
         });
-        IntentFilter filter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(mConnectionChangeReceiver,filter);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mConnectionChangeReceiver, filter);
     }
 
     private void allStartOrPause(boolean isAllStart) {
@@ -123,7 +127,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         XHClick.mapStat(this, "a_answer_upload", isAllStart ? "全部开始" : "全部暂停", "");
     }
 
-    private void hintNetWork(){
+    private void hintNetWork() {
         final XhDialog xhDialog = new XhDialog(AskAnswerUploadListActivity.this);
         xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
                 .setCanselButton("取消", new View.OnClickListener() {
@@ -151,8 +155,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
 
         mListPool = UploadListControl.getUploadListControlInstance()
                 .add(AskAnswerUploadListPool.class,
-                        mDraftId,mCoverPath,mFinalVideoPath,mTimesStamp, generateUiCallback());
-        ((AskAnswerUploadListPool)mListPool).setUploadOverListener(new AskAnswerUploadListPool.UploadOverListener() {
+                        mDraftId, mCoverPath, mFinalVideoPath, mTimesStamp, generateUiCallback());
+        ((AskAnswerUploadListPool) mListPool).setUploadOverListener(new AskAnswerUploadListPool.UploadOverListener() {
             @Override
             public void onUploadOver(boolean flag, String response) {
                 XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "上传状态", flag ? "成功" : "上传失败");
@@ -160,7 +164,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                 sqLite.deleteData(mUploadPoolData.getDraftId());
                 if (Tools.isAppOnForeground() && flag) {
                     if (!PushManager.isNotificationEnabled()) {
-                        getQANum();
+                        getIsTip();
                     }
                     AppCommon.openUrl(AskAnswerUploadListActivity.this, mQADetailUrl, false);
                     AskAnswerUploadListActivity.this.finish();
@@ -170,7 +174,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mUploadPoolData = mListPool.getUploadPoolData();
 
         AskAnswerModel model = mUploadPoolData.getUploadAskAnswerData();
-        if(model == null){
+        if (model == null) {
             finish();
             return;
         }
@@ -178,19 +182,19 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mTitleText = mUploadPoolData.getTitle();
         mArrayList = mUploadPoolData.getListData();
         mAdapter = new AskAnswerUploadAdapter(this);
-        if(!TextUtils.isEmpty(mTitleText)) {
-            mTitle.setText(mTitleText.length() > 7 ? mTitleText.substring(0,6) + "..." : mTitleText);
+        if (!TextUtils.isEmpty(mTitleText)) {
+            mTitle.setText(mTitleText.length() > 7 ? mTitleText.substring(0, 6) + "..." : mTitleText);
         }
 
-        boolean isAutoUpload = getIntent().getBooleanExtra("isAutoUpload",false);
-        if(isAutoUpload) {
+        boolean isAutoUpload = getIntent().getBooleanExtra("isAutoUpload", false);
+        if (isAutoUpload) {
             if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
                 allStartOrPause(true);
             } else {
                 allStartOrPause(false);
                 hintNetWork();
             }
-        }else{
+        } else {
             allStartOrPause(false);
         }
 
@@ -214,6 +218,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             @Override
             public void changeState(int pos, int index, UploadItemData data) {
             }
+
             @Override
             public void uploadOver(boolean flag, String responseStr) {
                 refreshUploadView();
@@ -261,7 +266,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mBack = (ImageView) findViewById(R.id.iv_back);
         mListView = (ListView) findViewById(R.id.list_upload);
         mListView.addHeaderView(getHeaderView());
-        mHeaderViewCount ++;
+        mHeaderViewCount++;
         mListView.addFooterView(getFooterView());
         addListener();
     }
@@ -360,36 +365,42 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    private void getQANum() {
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_NUM, "type=2", new InternetCallback(this) {
+    private void getIsTip() {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_ISTIP, "type=2", new InternetCallback(this) {
             @Override
-            public void loaded(int i, String s, Object o) {
-                Map<String, String> map = StringManager.getFirstMap(o);
-                if (map != null && !map.isEmpty()) {
-                    String numStr = map.get("num");
-                    if (!TextUtils.isEmpty(numStr)) {
-                        try {
-                            final int num = Integer.parseInt(numStr);
-                            if (num == 1 || num == 5) {
-                                final XhDialog dialog = new XhDialog(AskAnswerUploadListActivity.this);
-                                dialog.setTitle("开启推送通知，用户的追问或评价结果将在第一时间通知你，是否开启？")
-                                        .setCanselButton("否", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                dialog.cancel();
-                                                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_ask_push", "作者第" + num + "次推送", "否");
-                                            }
-                                        })
-                                        .setSureButton("是", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_ask_push", "作者第" + num + "次推送", "是");
-                                                PushManager.requestPermission();
-                                            }
-                                        }).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            public void loaded(int i, String s, Object obj) {
+                {
+                    final FloatingWindow window = FloatingWindow.getInstance();
+                    if (i >= UtilInternet.REQ_OK_STRING) {
+                        Map<String, String> map = StringManager.getFirstMap(obj);
+                        if (map != null && !map.isEmpty() && "2".equals(map.get("isTip"))) {
+                            View view = LayoutInflater.from(XHApplication.in().getApplicationContext()).inflate(R.layout.c_common_dialog, null, false);
+                            ((TextView) view.findViewById(R.id.dialog_message)).setText("开启推送通知，用户的追问或评价结果将在第一时间通知你，是否开启？");
+                            TextView tvCancel = (TextView) view.findViewById(R.id.dialog_cancel);
+                            tvCancel.setText("否");
+                            tvCancel.setVisibility(View.VISIBLE);
+                            tvCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    window.cancelFloatingWindow();
+                                    XHClick.mapStat(AskAnswerUploadListActivity.this, "a_ask_push", "作者推送", "否");
+                                }
+                            });
+                            view.findViewById(R.id.dialog_negative_line).setVisibility(View.VISIBLE);
+                            TextView tvSure = (TextView) view.findViewById(R.id.dialog_sure);
+                            tvSure.setText("是");
+                            tvSure.setVisibility(View.VISIBLE);
+                            tvSure.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    window.cancelFloatingWindow();
+                                    PushManager.requestPermission();
+                                    XHClick.mapStat(AskAnswerUploadListActivity.this, "a_ask_push", "作者推送", "是");
+                                }
+                            });
+                            window.setContentView(view);
+                            window.setCancelable(true);
+                            window.showFloatingWindow();
                         }
                     }
                 }

@@ -106,9 +106,8 @@ public class QAMsgListActivity extends BaseFragmentActivity {
 
     }
 
-    //TODO 测试的url，注意后期删除
     private void getTabData() {
-        mWebView.loadUrl("http://appweb.ixiangha.com:9812/qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1"));
+        mWebView.loadUrl(StringManager.API_QA_QAMSGLIST);
     }
 
     private void onTabDataReady(Object data) {
