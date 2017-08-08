@@ -3,7 +3,6 @@ package amodule.dish.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -31,6 +31,7 @@ import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
@@ -148,7 +149,7 @@ public class DishFootControl implements View.OnClickListener{
                 final String subjectCode = map.get("code");
                 setViewImage(dishImg, map.get("img"), 0);
                 final boolean isLike = "2".equals(map.get("isLike"));
-                zanImg.setImageResource(isLike ? R.drawable.z_quan_home_body_ico_good_active : R.drawable.z_quan_home_body_ico_good);
+                zanImg.setImageResource(isLike ? R.drawable.z_menu_praiseselected : R.drawable.z_menu_praisenomal);
                 dishTime.setText(map.get("timeShow"));
                 zanNumber.setText(zanNumberStr);
                 zanImg.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +160,11 @@ public class DishFootControl implements View.OnClickListener{
                             Tools.showToast(mAct,"已点过赞");
                         }else {
                             XHClick.mapStat(mAct, tongjiId, "哈友相关作品", "点赞按钮点击量");
+                            if(!LoginManager.isLogin()){//未登陆，直接去登陆
+                                Intent intent = new Intent(mAct, LoginByAccout.class);
+                                mAct.startActivity(intent);
+                                return;
+                            }
                             LinkedHashMap<String, String> map = new LinkedHashMap<>();
                             map.put("subjectCode", subjectCode);
                             map.put("type", "likeList");
@@ -168,7 +174,7 @@ public class DishFootControl implements View.OnClickListener{
                                     if (flag >= ReqInternet.REQ_OK_STRING) {
                                         try {
                                             newIsLike = true;
-                                            zanImg.setImageResource(R.drawable.z_quan_home_body_ico_good_active);
+                                            zanImg.setImageResource(R.drawable.i_good_activity);
                                             int zanNum = Integer.parseInt(zanNumberStr);
                                             zanNumber.setText(String.valueOf(++zanNum));
                                         } catch (Exception e) {
@@ -279,6 +285,9 @@ public class DishFootControl implements View.OnClickListener{
                 mAct.startActivity(intent);
                 break;
             case R.id.a_dish_detail_new_relevantTv: //晒我做的这道菜
+                if(!LoginManager.isLogin()){
+                    mAct.startActivity(new Intent(mAct,LoginByAccout.class));
+                }
                 Intent showIntent = new Intent(mAct, UploadSubjectNew.class);
                 showIntent.putExtra("dishCode",code);
                 showIntent.putExtra("skip", true);
