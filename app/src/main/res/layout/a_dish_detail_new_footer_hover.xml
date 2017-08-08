@@ -88,6 +88,7 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/a_dish_hover_img"
                 android:layout_width="@dimen/dp_16"
                 android:layout_height="@dimen/dp_17.5"
                 android:src="@drawable/i_not_good" />

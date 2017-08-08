@@ -34,11 +34,13 @@ public class FollowSubject extends BaseActivity {
     private boolean mLoadOver = false;
 
     private String dishCode;
+    private String title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("", 2, 0, 0, R.layout.a_follow_subject);
         dishCode = getIntent().getStringExtra("dishCode");
+        title = getIntent().getStringExtra("title");
         if(TextUtils.isEmpty(dishCode)){
             Tools.showToast(this,"菜谱code为空");
             this.finish();
@@ -47,14 +49,14 @@ public class FollowSubject extends BaseActivity {
     }
 
     private void init(){
-        findViewById(R.id.ll_back).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
         TextView titleTv = (TextView) findViewById(R.id.title);
-        titleTv.setText("跟帖列表");
+        titleTv.setText(TextUtils.isEmpty(title)?"跟帖列表":title);
         findViewById(R.id.circle_share).setVisibility(View.GONE);
         circle_list = (DownRefreshList) findViewById(R.id.circle_list);
         mAdapter = new AdapterFollowSubject(this, circle_list, mListData);

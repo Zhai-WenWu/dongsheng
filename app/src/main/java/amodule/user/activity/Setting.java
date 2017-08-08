@@ -437,6 +437,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 break;
             case R.id.back:
                 finish();
+                break;
             case R.id.qa_setting:
                 //TODO 跳转到问答设置界面
                 Toast.makeText(Setting.this, "跳转到问答设置界面", Toast.LENGTH_SHORT).show();
