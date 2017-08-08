@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.xiangha"
+          package="com.xianghatest"
           android:versionCode="127"
           android:versionName="4.2.8.1">
 
@@ -205,14 +205,14 @@
         android:theme="@style/AppBaseTheme"
         tools:replace="android:name,android:icon,android:label,android:theme,android:allowBackup">
         <activity
-            android:name=".LoadResActivity"
+            android:name="com.xianghatest.LoadResActivity"
             android:alwaysRetainTaskState="false"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:process=":mini"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".WelcomeStart"
+            android:name="com.xianghatest.WelcomeStart"
             android:label="@string/conf_appName"
             android:screenOrientation="portrait"
             android:theme="@style/AppWelcomeTheme"
@@ -247,7 +247,7 @@
         <!-- <activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" /> -->
         <!-- main start -->
         <activity
-            android:name="com.xiangha.Welcome"
+            android:name="com.xianghatest.Welcome"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
@@ -1226,13 +1226,13 @@
         </activity>
         <!-- 微信分享回调 -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.xianghatest.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-            android:name=".wxapi.WXPayEntryActivity"
+            android:name="com.xianghatest.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -1330,7 +1330,7 @@
             <intent-filter>
 
                 <!-- 【必须】 请修改为当前APP包名 .PUSH_ACTION, 如demo的包名为：com.qq.xgdemo -->
-                <action android:name="com.xiangha.PUSH_ACTION"/>
+                <action android:name="com.xianghatest.PUSH_ACTION"/>
             </intent-filter>
         </service>
         <service
@@ -1340,17 +1340,17 @@
         <!-- 【必须】 【注意】authorities修改为 包名.AUTH_XGPUSH, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.android.tpush.XGPushProvider"
-            android:authorities="com.xiangha.AUTH_XGPUSH"
+            android:authorities="com.xianghatest.AUTH_XGPUSH"
             android:exported="true"/>
         <!-- 【必须】 【注意】authorities修改为 包名.TPUSH_PROVIDER, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.android.tpush.SettingsContentProvider"
-            android:authorities="com.xiangha.TPUSH_PROVIDER"
+            android:authorities="com.xianghatest.TPUSH_PROVIDER"
             android:exported="false"/>
         <!-- 【必须】 【注意】authorities修改为 包名.TENCENT.MID.V3, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.mid.api.MidProvider"
-            android:authorities="com.xiangha.TENCENT.MID.V3"
+            android:authorities="com.xianghatest.TENCENT.MID.V3"
             android:exported="true"/>
 
         <!-- 【可选】APP实现的Receiver，用于接收消息透传和操作结果的回调，请根据需要添加 -->
@@ -1436,7 +1436,7 @@
         <!--腾讯统计mta start-->
         <!--<provider-->
         <!--android:name="com.tencent.mid.api.MidProvider"-->
-        <!--android:authorities="com.xiangha"-->
+        <!--android:authorities="com.xianghatest"-->
         <!--android:exported="true" >-->
         <!--</provider>-->
         <!--appkey-->

@@ -10,7 +10,7 @@ import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;

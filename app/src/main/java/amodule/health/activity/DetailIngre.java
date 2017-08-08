@@ -28,7 +28,7 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.apache.http.protocol.HTTP;
 
@@ -64,7 +64,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilLog;
 import xh.basic.tool.UtilString;
 
-import static com.xiangha.R.id.ingre_taboo_noData;
+import static com.xianghatest.R.id.ingre_taboo_noData;
 
 /**
  * Title:DetailIngre.java Copyright: Copyright (c) 2014~2017

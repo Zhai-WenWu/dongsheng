@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
@@ -132,7 +132,7 @@ public class PlayVideo extends BaseActivity {
                 mVDVideoView.play(0);
             } catch (Exception e) {
                 Tools.showToast(this, "视频解码库加载失败，请重试");
-                FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/libs/");
+                FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xianghatest/libs/");
                 VideoApplication.getInstence().initialize(this);
                 return;
             }

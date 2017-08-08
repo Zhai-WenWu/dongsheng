@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +32,7 @@ import amodule.quan.view.ImgTextCombineLayout.ImgTextCallBack;
 import core.xiangha.emj.view.EditTextShow;
 import xh.basic.tool.UtilString;
 
-import static com.xiangha.R.id.activityLayout;
-import static com.xiangha.R.id.editText;
+import static com.xianghatest.R.id.activityLayout;
 
 /**
  * 发美食贴内容

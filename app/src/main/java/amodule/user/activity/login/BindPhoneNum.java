@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;

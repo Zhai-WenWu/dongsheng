@@ -27,7 +27,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView.ScaleType;
 import aplug.basic.ReqInternet;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * 电商横向广告模块

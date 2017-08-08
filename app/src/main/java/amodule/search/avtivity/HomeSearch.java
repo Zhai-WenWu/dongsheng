@@ -5,19 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.main.Main;
 import amodule.search.data.SearchConstant;
 import amodule.search.view.GlobalSearchView;
 import amodule.search.view.SearchResultAdDataProvider;

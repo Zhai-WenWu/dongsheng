@@ -2,7 +2,6 @@ package amodule.answer.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -23,12 +22,10 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.MsgScrollView;
-import acore.widget.SwitchButton;
 import amodule.article.view.ReportItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
-import xh.windowview.OnXhDialogListener;
 import xh.windowview.XhDialog;
 
 /**

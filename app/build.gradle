@@ -48,7 +48,7 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId "com.xiangha"
+        applicationId "com.xianghatest"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 191

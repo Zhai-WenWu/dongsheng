@@ -1,41 +1,27 @@
 package amodule.main.activity;
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
-import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
-import acore.tools.StringManager;
-import acore.widget.XHADView;
 import amodule.main.Main;
 import amodule.main.view.ChangeSendDialog;
 import amodule.main.view.home.HomeContentControl;
 import amodule.main.view.home.HomeDish;
 import amodule.main.view.home.HomeHeaderAndListControl;
 import aplug.basic.InternetCallback;
-import aplug.basic.LoadImage;
-import aplug.basic.SubBitmapTarget;
-import third.ad.AdParent;
 import third.ad.AdsShow;
-import third.ad.tools.AdConfigTools;
-import third.ad.tools.AdPlayIdConfig;
 import xh.basic.internet.UtilInternet;
 
 /**

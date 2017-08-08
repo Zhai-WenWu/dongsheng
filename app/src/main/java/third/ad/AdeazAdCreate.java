@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -21,8 +21,6 @@ import acore.override.XHApplication;
 import acore.widget.ScrollLinearListLayout;
 import aplug.basic.LoadImage;
 import third.ad.tools.AdeazAdTools;
-
-import static third.share.ShareTools.mFrom;
 
 /**
  * Created by Fang Ruijiao on 2016/8/29.

@@ -5,9 +5,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.umeng.onlineconfig.OnlineConfigAgent;
-import com.xiangha.BuildConfig;
-import com.xiangha.R;
+import com.xianghatest.BuildConfig;
+import com.xianghatest.R;
 
 import org.apache.http.protocol.HTTP;
 

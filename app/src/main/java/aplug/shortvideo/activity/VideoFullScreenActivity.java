@@ -14,7 +14,7 @@ import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.LogManager;

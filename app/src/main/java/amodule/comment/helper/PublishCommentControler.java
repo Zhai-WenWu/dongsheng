@@ -3,7 +3,6 @@ package amodule.comment.helper;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -13,20 +12,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.UploadImg;
 import amodule.article.upload.CommentUpload;
 import amodule.comment.activity.PublishCommentActivity;
 import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;

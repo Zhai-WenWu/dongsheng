@@ -6,7 +6,7 @@
  * Copyright (c) 2013年 mob.com. All rights reserved.
  */
 
-package com.xiangha.wxapi;
+package com.xianghatest.wxapi;
 
 import android.content.Intent;
 import android.widget.Toast;

@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONObject;
 

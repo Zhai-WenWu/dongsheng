@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.Timer;
 import java.util.TimerTask;

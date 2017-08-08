@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * PackageName : amodule.article.view

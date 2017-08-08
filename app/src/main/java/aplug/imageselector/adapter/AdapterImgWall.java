@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import aplug.imageselector.ImgWallActivity;
 
 import com.bumptech.glide.Glide;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * Title:AdapterImgWall.java Copyright: Copyright (c) 2014~2017

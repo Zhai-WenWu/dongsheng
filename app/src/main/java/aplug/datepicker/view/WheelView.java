@@ -29,7 +29,7 @@ import aplug.datepicker.adapter.WheelAdapter;
 import aplug.datepicker.listener.OnWheelChangedListener;
 import aplug.datepicker.listener.OnWheelScrollListener;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * 自定义的滚轮view

@@ -12,9 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xiangha.R;
-
-import org.w3c.dom.Text;
+import com.xianghatest.R;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

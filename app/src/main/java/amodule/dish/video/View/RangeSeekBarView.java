@@ -18,7 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.text.DecimalFormat;
 

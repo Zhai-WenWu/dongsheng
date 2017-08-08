@@ -15,7 +15,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,14 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.xiangha.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
@@ -60,7 +54,6 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.ad.control.AdControlHomeDish;
 import third.ad.control.AdControlNormalDish;
 import third.ad.control.AdControlParent;
-import third.ad.option.AdOptionList;
 import third.ad.option.AdOptionParent;
 import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
@@ -68,7 +61,7 @@ import third.video.SimpleVideoPlayerController;
 import third.video.VideoPlayerController;
 
 import static amodule.main.activity.MainHome.tag;
-import static com.xiangha.R.id.return_top;
+import static com.xianghatest.R.id.return_top;
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
 public class HomeFragment extends BaseHomeFragment{

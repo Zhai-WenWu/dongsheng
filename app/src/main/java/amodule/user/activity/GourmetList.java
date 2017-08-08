@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.apache.http.protocol.HTTP;
 

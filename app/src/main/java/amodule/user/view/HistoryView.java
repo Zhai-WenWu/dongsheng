@@ -1,14 +1,12 @@
 package amodule.user.view;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;

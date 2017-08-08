@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.lang.ref.WeakReference;
 

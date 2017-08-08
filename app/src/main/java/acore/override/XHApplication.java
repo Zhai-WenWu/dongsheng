@@ -1,7 +1,6 @@
 package acore.override;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,9 +11,8 @@ import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
-import com.xiangha.R;
+import com.xianghatest.R;
 
-import acore.dialogManager.VersionOp;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.Tools;
@@ -32,7 +30,7 @@ import static com.sina.sinavideo.coreplayer.util.AndroidUtil.getProcessName;
 
 public class XHApplication extends MobApplication {
     /**包名*/
-    private static final String PACKAGE_NAME = "com.xiangha";
+    private static final String PACKAGE_NAME = "com.xianghatest";
     private static XHApplication mAppApplication;
 
     //仿造单例，获取application对象

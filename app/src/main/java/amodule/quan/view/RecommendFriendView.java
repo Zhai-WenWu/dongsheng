@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,11 +32,10 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.Tools;
-import amodule.quan.adapter.AdapterCircle;
 import amodule.user.activity.FriendHome;
 import xh.basic.tool.UtilString;
 
-import static com.xiangha.R.id.follow_rela;
+import static com.xianghatest.R.id.follow_rela;
 
 /**
  * 推荐好友

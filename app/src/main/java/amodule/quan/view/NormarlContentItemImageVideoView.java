@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;

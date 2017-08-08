@@ -20,7 +20,7 @@
 //import com.qq.e.ads.nativ.MediaView;
 //import com.qq.e.ads.nativ.NativeMediaAD;
 //import com.qq.e.ads.nativ.NativeMediaADData;
-//import com.xiangha.R;
+//import R;
 //
 //import java.util.List;
 //

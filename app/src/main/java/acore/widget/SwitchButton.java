@@ -13,7 +13,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class SwitchButton extends View implements android.view.View.OnClickListener{
 	private Bitmap mSwitchBottom, mSwitchThumb, mSwitchFrame, mSwitchMask;

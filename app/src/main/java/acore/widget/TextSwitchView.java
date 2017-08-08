@@ -18,7 +18,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  *

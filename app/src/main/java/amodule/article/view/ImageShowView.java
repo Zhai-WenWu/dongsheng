@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.GifRequestBuilder;
@@ -20,7 +19,7 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

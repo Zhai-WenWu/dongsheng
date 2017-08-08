@@ -28,7 +28,7 @@ import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.widgets.VDVideoFullScreenButton;
 import com.sina.sinavideo.sdk.widgets.VDVideoPlaySeekBar;
 import com.sina.sinavideo.sdk.widgets.VDVideoTimeTextView;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -47,7 +47,6 @@ import amodule.dish.activity.upload.UploadDishListActivity;
 import amodule.dish.business.StepVideoPosCompute;
 import amodule.dish.db.UploadDishData;
 import amodule.dish.db.UploadDishSqlite;
-import amodule.dish.video.control.MediaHandleControl;
 import amodule.dish.view.DishVideoImageView;
 import third.video.VideoApplication;
 
@@ -247,7 +246,7 @@ public class MediaPreviewActivity extends BaseActivity implements View.OnClickLi
                 mVDVideoView.play(0);
             } catch (Exception e) {
                 Tools.showToast(this, "视频解码库加载失败，请重试");
-                FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/libs/");
+                FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xianghatest/libs/");
                 VideoApplication.getInstence().initialize(this);
                 return;
             }

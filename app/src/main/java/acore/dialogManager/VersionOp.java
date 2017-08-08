@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.download.down.VersionUpload;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.io.File;
 import java.util.ArrayList;

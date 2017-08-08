@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,7 +22,6 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.DeviceUtilDialog;
-import amodule.dish.video.control.MediaHandleControl;
 
 /**
  *合成页面

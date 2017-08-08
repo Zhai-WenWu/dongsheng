@@ -1,11 +1,8 @@
 package amodule.main.view.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -23,18 +20,16 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
 import acore.logic.AppCommon;
 import acore.logic.SetDataView;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.GalleryViewPager;
@@ -48,19 +43,15 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.AdParent;
 import third.ad.AdParent.AdIsShowListener;
-import third.ad.AdParent.AdListener;
 import third.ad.AdsShow;
 import third.ad.BannerAd;
 import third.ad.BannerAd.OnBannerListener;
-import third.ad.UnifiedTypeAd;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 import third.mall.MainMall;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
-
-import static android.R.attr.right;
 
 /**
  * @author FangRuijiao

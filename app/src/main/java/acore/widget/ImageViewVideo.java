@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.io.InputStream;
 
@@ -24,8 +24,6 @@ import acore.tools.Tools;
 import aplug.basic.SubBitmapTarget;
 import aplug.basic.LoadImage;
 import xh.basic.tool.UtilImage;
-
-import static android.R.attr.value;
 
 public class ImageViewVideo extends ImageView {
 

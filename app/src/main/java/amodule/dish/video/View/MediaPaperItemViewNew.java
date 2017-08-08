@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,7 +19,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.video.bean.MediaPaperBean;
 
-import static com.xiangha.R.id.item_surfaceVideoView;
+import static com.xianghatest.R.id.item_surfaceVideoView;
 
 /**
  * 视频裁剪itemview

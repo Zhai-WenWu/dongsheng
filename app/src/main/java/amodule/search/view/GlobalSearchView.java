@@ -13,17 +13,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
-import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;

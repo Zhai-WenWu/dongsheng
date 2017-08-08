@@ -19,7 +19,7 @@ import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.VDVideoViewListeners;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.tools.FileManager;
 import acore.tools.LogManager;
@@ -267,7 +267,7 @@ public class VideoImageView extends RelativeLayout{
                     vdVideoView.play(0);
                 } catch (Exception e) {
                     Tools.showToast(getContext(), "视频解码库加载失败，请重试");
-                    FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/libs/");
+                    FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xianghatest/libs/");
                     return;
                 }
                 VDVideoViewController controller = VDVideoViewController.getInstance(getContext());

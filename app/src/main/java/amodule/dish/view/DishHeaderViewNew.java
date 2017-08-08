@@ -26,7 +26,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.VDVideoViewListeners;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

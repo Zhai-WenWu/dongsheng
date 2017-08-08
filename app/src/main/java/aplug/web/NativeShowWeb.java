@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.webkit.WebView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.override.activity.base.BaseActivity;
 

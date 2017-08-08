@@ -24,7 +24,7 @@ import android.widget.RelativeLayout;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.apache.http.protocol.HTTP;
 

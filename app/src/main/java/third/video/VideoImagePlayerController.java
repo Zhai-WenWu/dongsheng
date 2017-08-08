@@ -21,7 +21,7 @@ import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.utils.VDPlayerSoundManager;
 import com.sina.sinavideo.sdk.widgets.VDVideoFullScreenButton;
 import com.sina.sinavideo.sdk.widgets.VDVideoPlaySeekBar;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -160,7 +160,7 @@ public class VideoImagePlayerController {
                 } catch (Exception e) {
                     isError = true;
                     Tools.showToast(mContext, "视频解码库加载失败，请重试");
-                    FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/libs/");
+                    FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xianghatest/libs/");
                     return;
                 }
                 VDVideoViewController controller = VDVideoViewController.getInstance(mContext);

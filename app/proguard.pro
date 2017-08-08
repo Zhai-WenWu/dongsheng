@@ -69,7 +69,7 @@
    public protected *; 
 }
 
--keep public class com.xiangha.R$* {
+-keep public class com.xianghatest.R$* {
     public static final int *;
 }
 
@@ -113,7 +113,7 @@
 -keep class im.yixin.sdk.api.YXMessage {*;}
 -keep class im.yixin.sdk.api.** implements im.yixin.sdk.api.YXMessage$YXMessageData{*;}
 
--keep public class [com.xiangha].R$*{
+-keep public class [com.xianghatest].R$*{
     public static final int *;
 }
 #Umen 社会化 end

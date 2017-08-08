@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +39,9 @@ import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
 import static amodule.dish.tools.OffDishToFavoriteControl.getIsAutoOffDish;
-import static com.xiangha.R.id.back;
-import static com.xiangha.R.id.fav_layout;
-import static com.xiangha.R.id.modify_layout;
-import static com.xiangha.R.id.share_layout;
+import static com.xianghatest.R.id.back;
+import static com.xianghatest.R.id.fav_layout;
+import static com.xianghatest.R.id.share_layout;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
