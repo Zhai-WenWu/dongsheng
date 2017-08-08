@@ -889,14 +889,22 @@ public class JsAppCommon extends JsBase{
 		mAct.startActivity(intent);
 	}
 
+	/**
+	 * 问答举报
+	 * @param nickName 被举报人的昵称
+	 * @param authorCode 菜谱作者的code
+	 * @param qaCode 问答code
+	 * @param askAuthorCode 提问人的code
+	 * @param dishCode 菜谱code
+	 */
 	@JavascriptInterface
-	public void report(String nickName, String userCode, String qaCode, String qaType, String reportType) {
+	public void report(String nickName, String authorCode, String qaCode, String askAuthorCode, String dishCode) {
 		Bundle bundle = new Bundle();
 		bundle.putString("reportName", nickName);
 		bundle.putString("qaCode", qaCode);
-		bundle.putString("userCode", userCode);
-		bundle.putString("qaType", qaType);
-		bundle.putString("reportType", reportType);
+		bundle.putString("authorCode", authorCode);
+		bundle.putString("askAuthorCode", askAuthorCode);
+		bundle.putString("dishCode", dishCode);
 		Intent intent = new Intent(mAct, QAReportActivity.class);
 		intent.putExtras(bundle);
 		mAct.startActivity(intent);
