@@ -923,11 +923,12 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAnswer(String dishId, String authorId, String qaId, String isAnswerMore) {
+    public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String isAnswerMore) {
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);
         bundle.putString("qaCode", qaId);
+        bundle.putString("answerCode", answerCode);
         bundle.putString("mIsAnswerMore", isAnswerMore);
         Intent intent = new Intent(mAct, AnswerEditActivity.class);
         intent.putExtras(bundle);

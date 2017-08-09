@@ -99,8 +99,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         mAskDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AppCommon.openUrl(AskEditActivity.this, StringManager.API_QA_QASTATEMENT, false);
                 XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击【查看问答细则及责任声明】", "");
-                //TODO 点击责任声明
             }
         });
     }

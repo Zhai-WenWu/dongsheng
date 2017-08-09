@@ -34,8 +34,6 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.tools.DishMouldControl;
-import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.main.Main;
 import amodule.other.activity.Comment;
 import amodule.other.activity.InviteFriend;
@@ -47,7 +45,6 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.web.ApiShowWeb;
 import third.push.xg.XGPushServer;
-import third.share.CheckDialog;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -402,7 +399,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.qa_setting:
-                //TODO 跳转到问答设置界面
+                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING, false);
                 Toast.makeText(Setting.this, "跳转到问答设置界面", Toast.LENGTH_SHORT).show();
                 break;
             default:

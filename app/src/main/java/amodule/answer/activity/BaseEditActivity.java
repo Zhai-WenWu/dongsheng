@@ -98,17 +98,13 @@ public class BaseEditActivity extends BaseActivity {
             mAuthorCode = bundle.getString("authorCode");
             mType = bundle.getString("type", "5");
             mQATitle = bundle.getString("qaTitle", "");
+            mAnswerCode = bundle.getString("answerCode");
             mIsAskMore = bundle.getBoolean("isAskMore", false);
             mIsAnswerMore = bundle.getBoolean("mIsAnswerMore", false);
             mQADetailUrl = bundle.getString("qaDetailUrl");
         }
         mModel = new AskAnswerModel();
         mSQLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
-        //TODO Test
-        mQATitle = "红烧肉";
-        mDishCode = "123456";
-        mQACode = "222";
-        mAuthorCode = "88888";
     }
 
     protected void initView(String title, int contentResId) {
