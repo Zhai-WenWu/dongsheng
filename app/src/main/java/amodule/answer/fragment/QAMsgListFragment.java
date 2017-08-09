@@ -35,6 +35,8 @@ public class QAMsgListFragment extends Fragment {
 
     private RelativeLayout mWebContainer;
 
+    private boolean mIsCreateView;
+
     public static QAMsgListFragment newInstance(QAMsgModel arguments) {
         QAMsgListFragment fragment = new QAMsgListFragment();
         fragment.setModelData(arguments);
@@ -60,6 +62,9 @@ public class QAMsgListFragment extends Fragment {
             }
         });
         mWebContainer.addView(mWebView);
+        mIsCreateView = true;
+        if (getUserVisibleHint())
+            loadUrl();
         return view;
     }
 
@@ -80,9 +85,15 @@ public class QAMsgListFragment extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mIsCreateView)
+            loadUrl();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        loadUrl();
     }
 
     private void loadUrl() {
@@ -98,6 +109,7 @@ public class QAMsgListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mIsCreateView = false;
     }
 
     @Override
