@@ -198,29 +198,14 @@ public class DishWebView extends XHWebView {
                 if(isSucess){
                     data = data.replace("<{code}>",code);
                     final String html = data;
-//                    DishWebView.this.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.d(TAG,"loadMould() html:" + html);
-//                            String path = DishMouldControl.getOffDishPath() + dishCode;
-//                            FileManager.saveFileToCompletePath(path,html,false);
-////                            loadData(html,"text/html; charset=UTF-8", null);
-////                            loadDataWithBaseURL(null,html,"text/html","utf-8", null);
-//                        }
-//                    });
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d(TAG,"loadMould() html:" + html);
-                            String path = DishMouldControl.getOffDishPath() + dishCode;
-                            FileManager.saveFileToCompletePath(path,html,false);
                             loadDataWithBaseURL(null,html,"text/html","utf-8", null);
 //                            loadData(html,"text/html; charset=UTF-8", null);
 //                            loadUrl("http://www.ixiangha.com:9813/test/main7/caipuInfo?code=89006552");
                         }
                     });
-
-//                    loadDataWithBaseURL(null,html,"text/html","utf-8", null);
                 }
             }
         });
