@@ -6,9 +6,92 @@
     android:background="@color/common_bg"
     android:orientation="vertical">
 
+    <!--顶部view-->
+    <RelativeLayout
+        android:id="@+id/title_all_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_top_bg">
+
+        <RelativeLayout
+            android:id="@+id/commod_title"
+            android:layout_width="match_parent"
+            android:background="@color/common_top_bg"
+            android:layout_height="@dimen/dp_45"
+            android:layout_alignParentTop="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
+            <TextView
+                android:id="@+id/title"
+                style="@style/top_title_singleText"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/dp_10"
+                android:textSize="@dimen/dp_17"
+                android:text="商品"
+                android:visibility="visible" />
+            <TextView
+                android:id="@+id/title_detail"
+                style="@style/top_title_singleText"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:textSize="@dimen/dp_17"
+                android:padding="@dimen/dp_10"
+                android:text="详情"
+                android:visibility="visible" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_6"
+                android:background="@drawable/mall_product_detail_back"
+                android:padding="@dimen/dp_2">
+
+                <ImageView
+                    android:id="@+id/leftImgBtn"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/dp_8"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/z_z_topbar_ico_back_white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/share_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_6"
+                android:background="@drawable/mall_product_detail_back"
+                android:clickable="true"
+                android:padding="@dimen/dp_2"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/img_share"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:clickable="false"
+                    android:padding="@dimen/dp_6"
+                    android:src="@drawable/z_z_topbar_ico_share"
+                    android:visibility="visible" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+    <!--中间部分数据-->
     <third.mall.widget.ScrollViewContainer
         android:id="@+id/mall_ScrollViewContainer"
         android:layout_width="match_parent"
+        android:layout_below="@+id/title_all_rela"
         android:scrollbars="none"
         android:layout_height="wrap_content">
 
@@ -16,7 +99,6 @@
             android:id="@+id/mall_commod_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/title_all_rela"
             android:scrollbars="none"
             android:visibility="gone">
 
@@ -155,205 +237,32 @@
                             android:layout_marginTop="@dimen/dp_15"
                             android:background="#e1e2e4" />
 
-                        <TextView
-                            android:id="@+id/title_commod_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/title_commod_line"
-                            android:layout_marginBottom="@dimen/dp_15"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:paddingRight="@dimen/dp_15"
-                            android:textColor="#999999"
-                            android:textSize="@dimen/sp_13" />
-
-                        <View
-                            android:id="@+id/view_promotion_line"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp_0.5"
-                            android:layout_below="@+id/title_commod_tv"
-                            android:background="#e1e2e4" />
-
-                        <third.mall.view.ViewPromotion
-                            android:id="@+id/view_promotion"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/view_promotion_line" />
-
                         <RelativeLayout
                             android:id="@+id/view_getfavorable"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/view_promotion" />
-                    </RelativeLayout>
-                    <!-- 值得买 -->
-
-                    <RelativeLayout
-                        android:id="@+id/product_deserve"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/title_commod_rela"
-                        android:layout_marginTop="@dimen/dp_20"
-                        android:background="#FEFEFE"
-                        android:padding="@dimen/dp_15">
-
-                        <ImageView
-                            android:id="@+id/product_deserve_iv"
-                            android:layout_width="@dimen/dp_45"
-                            android:layout_height="@dimen/dp_45"
-                            android:layout_alignParentTop="true" />
-
-                        <TextView
-                            android:id="@+id/product_deserve_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_15"
-                            android:layout_toRightOf="@+id/product_deserve_iv"
-                            android:ellipsize="end"
-                            android:lineSpacingExtra="@dimen/dp_3"
-                            android:textColor="#333333"
-                            android:textSize="@dimen/sp_14" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/product_explain_rela"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/product_deserve"
-                        android:layout_marginTop="@dimen/dp_20"
-                        android:background="#FEFEFE">
-
-                        <RelativeLayout
-                            android:id="@+id/product_explain_re_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp_45"
-                            android:paddingLeft="@dimen/dp_15"
-                            android:paddingRight="@dimen/dp_15">
+                            android:background="@drawable/bg_round2_999999"
+                            android:layout_below="@+id/title_commod_line" >
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:paddingTop="@dimen/dp_5"
-                                android:text="商品信息"
-                                android:textColor="#333333"
-                                android:textSize="@dimen/sp_15" />
-
-                            <View
+                                android:id="@+id/favor_title"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp_0.5"
-                                android:layout_alignParentBottom="true"
-                                android:background="#e1e2e4" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/product_explain_content_rela"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/product_explain_re_tv"
-                            android:layout_marginTop="@dimen/dp_10">
-
-                            <TableLayout
-                                android:id="@+id/product_explain"
-                                style="@style/tableLayout"
-                                android:background="@android:color/transparent"
-                                android:paddingLeft="@dimen/dp_15"
-                                android:paddingRight="@dimen/dp_15" />
-
-                            <TextView
-                                android:id="@+id/explain_tv_content"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_12"
-                                android:lineSpacingExtra="@dimen/dp_6"
-                                android:paddingLeft="@dimen/dp_15"
-                                android:paddingRight="@dimen/dp_15"
-                                android:textColor="#545454"
-                                android:textSize="@dimen/dp_13"
-                                android:visibility="gone" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/product_explain_content_rela"
-                            android:layout_centerHorizontal="true"
-                            android:paddingBottom="@dimen/dp_20">
-
-                            <acore.widget.TagTextView
-                                xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
-                                tagTextView:radius="@dimen/dp_2"
-                                tagTextView:backgroundColor="#FFFFFF"
-                                tagTextView:sideWidth="@dimen/dp_0.5"
-                                tagTextView:sideColor="#999999"
-                                android:id="@+id/product_goto"
-                                android:layout_width="@dimen/dp_100"
-                                android:layout_height="@dimen/dp_29"
-                                android:layout_marginTop="@dimen/dp_10"
+                                android:layout_height="@dimen/dp_46"
                                 android:gravity="center"
-                                android:text="进入店铺"
-                                android:textColor="#999999"
-                                android:textSize="@dimen/sp_14" />
-                        </RelativeLayout>
+                                android:layout_centerInParent="true"
+                                android:textSize="@dimen/dp_16"
+                                android:textColor="@color/comment_color"
+                                />
+                            </RelativeLayout>
                     </RelativeLayout>
-                    <!-- 说明 -->
 
 
-                    <!-- 详细介绍 -->
 
-                    <RelativeLayout
-                        android:id="@+id/product_recommed_rela"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/product_explain_rela"
-                        android:layout_marginTop="@dimen/dp_20"
-                        android:background="#FEFEFE"
-                        android:paddingBottom="@dimen/dp_15"
-                        android:paddingLeft="@dimen/dp_15"
-                        android:paddingRight="@dimen/dp_15"
-                        android:visibility="gone">
-
-                        <RelativeLayout
-                            android:id="@+id/product_recommed_rela_tv"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp_45">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:paddingTop="@dimen/dp_5"
-                                android:text="猜你喜欢"
-                                android:textColor="#333333"
-                                android:textSize="@dimen/sp_16" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/dp_0.5"
-                                android:layout_alignParentBottom="true"
-                                android:background="#e1e2e4" />
-                        </RelativeLayout>
-
-                        <HorizontalScrollView
-                            android:id="@+id/product_recommed_hsv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/product_recommed_rela_tv"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:overScrollMode="never"
-                            android:scrollbars="none">
-
-                            <LinearLayout
-                                android:id="@+id/product_recommed_ll"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"></LinearLayout>
-                        </HorizontalScrollView>
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/product_recommed_rela">
+                        android:layout_below="@+id/title_commod_rela">
 
                         <LinearLayout
                             android:id="@+id/explain_detail_but_linear"
@@ -427,71 +336,7 @@
         </ScrollView>
     </third.mall.widget.ScrollViewContainer>
 
-    <RelativeLayout
-        android:id="@+id/title_all_rela"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/common_top_bg">
 
-        <RelativeLayout
-            android:id="@+id/commod_title"
-            android:layout_width="match_parent"
-            android:background="@color/common_top_bg"
-            android:layout_height="@dimen/dp_45"
-            android:layout_alignParentTop="true">
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/top_title_singleText"
-                android:layout_centerInParent="true"
-                android:gravity="center_horizontal"
-                android:paddingLeft="@dimen/dp_50"
-                android:paddingRight="@dimen/dp_50"
-                android:visibility="visible" />
-
-            <RelativeLayout
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_6"
-                android:background="@drawable/mall_product_detail_back"
-                android:padding="@dimen/dp_2">
-
-                <ImageView
-                    android:id="@+id/leftImgBtn"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_centerVertical="true"
-                    android:padding="@dimen/dp_8"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/z_z_topbar_ico_back_white" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/share_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_6"
-                android:background="@drawable/mall_product_detail_back"
-                android:clickable="true"
-                android:padding="@dimen/dp_2"
-                android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/img_share"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:clickable="false"
-                    android:padding="@dimen/dp_6"
-                    android:src="@drawable/z_z_topbar_ico_share"
-                    android:visibility="visible" />
-            </RelativeLayout>
-        </RelativeLayout>
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/product_lose_rela"
