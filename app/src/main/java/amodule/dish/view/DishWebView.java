@@ -152,15 +152,6 @@ public class DishWebView extends XHWebView {
         JsAppCommon jsObj = new JsAppCommon((Activity) this.getContext(),this,null,null);
         addJavascriptInterface(jsObj, jsObj.TAG);
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        Map<String,String> header = ReqInternet.in().getHeader(mAct);
-        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-        String[] cookie = cookieStr.split(";");
-        CookieManager cookieManager = CookieManager.getInstance();
-        for (int i = 0; i < cookie.length; i++) {
-            Log.i("zyj","cookie[i]::"+cookie[i]);
-            cookieManager.setCookie(".ixiangha.com", cookie[i]);
-        }
-        CookieSyncManager.getInstance().sync();
     }
 
     public void loadDishData(String code){
