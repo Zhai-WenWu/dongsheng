@@ -251,6 +251,8 @@ public class  DishActivityViewControlNew {
             state = "";
             dishTitleViewControl.setstate(state);
         }
+        if(customer != null&& !TextUtils.isEmpty(customer.get("code")) ){
+        mFootControl.setAuthorCode(customer.get("code"));}
         dishTitleViewControl.setViewState();
 
 

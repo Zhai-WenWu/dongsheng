@@ -27,6 +27,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.activity.AskEditActivity;
 import amodule.answer.activity.QAMsgListActivity;
 import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
@@ -57,9 +58,10 @@ public class DishFootControl implements View.OnClickListener{
 
     private DishAdDataViewNew dishAdDataView;
 
-    private String code,mDishName;
+    private String code,mDishName,authorCode;
 
     private String dishLikeStatus = "1";//当前点击状态。0-无操作，1-反对，2-赞同
+
 
     //处理底部浮动view
     private LinearLayout goodLayoutParent,hoverLayout;
@@ -310,7 +312,10 @@ public class DishFootControl implements View.OnClickListener{
                 break;
             case R.id.a_dish_detail_new_footer_hover_tv: //提问作者
                 if("2".equals(askStatus)){
-                    mAct.startActivity(new Intent(mAct, QAMsgListActivity.class));
+                    Intent intentAsk= new Intent(mAct, AskEditActivity.class);
+                    intentAsk.putExtra("code",code);
+                    intentAsk.putExtra("authorCode",authorCode);
+                    mAct.startActivity(intentAsk);
                 }else if("4".equals(askStatus)){
                     XHClick.mapStat(mAct, tongjiId, "底部浮动", "向作者提问点击量");
                     Tools.showToast(mAct,"已提醒作者");
@@ -487,5 +492,8 @@ public class DishFootControl implements View.OnClickListener{
         if("2".equals(status)||"4".equals(status)){
             mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
         }else mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
+    }
+    public void setAuthorCode(String authorCode){
+        this.authorCode= authorCode;
     }
 }
