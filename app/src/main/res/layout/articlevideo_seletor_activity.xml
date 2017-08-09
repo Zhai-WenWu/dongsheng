@@ -69,7 +69,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/footer_bar"
-        android:layout_below="@+id/title_rela_all">
+        android:layout_below="@+id/title_rela_all"
+        android:background="@color/common_bg">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/video_recyclerview"
