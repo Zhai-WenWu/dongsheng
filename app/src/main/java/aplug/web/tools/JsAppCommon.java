@@ -912,9 +912,21 @@ public class JsAppCommon extends JsBase {
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                Map<String,String> header = ReqInternet.in().getHeader(mAct);
-                String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-                mWebView.loadUrl("Javascript:cookieCallback(\"" + cookieStr + "\")");
+                try {
+                    //cookie结构json
+                    Map<String, String> header = ReqInternet.in().getHeader(mAct);
+                    String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
+                    Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
+                    JSONObject jsonObject = new JSONObject();
+                    for (Map.Entry<String, String> entry : mapdata.entrySet()) {
+                        jsonObject.put(entry.getKey(), entry.getValue());
+                    }
+                    String data= jsonObject.toString();
+                    data=data.replace("\"","\\\"");
+                    mWebView.loadUrl("Javascript:cookieCallback(\"" + data + "\")");
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }
