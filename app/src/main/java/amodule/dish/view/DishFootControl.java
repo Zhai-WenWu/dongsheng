@@ -472,7 +472,7 @@ public class DishFootControl implements View.OnClickListener{
                 if(i >= ReqInternet.REQ_OK_STRING){
                     Map<String,String> map= StringManager.getFirstMap(o);
 
-                    if(map.containsKey("status")&&TextUtils.isEmpty(map.get("status"))) {
+                    if(map.containsKey("status")&&!TextUtils.isEmpty(map.get("status"))) {
                         handlrAskStatus(map.get("status"));
                     }
                 }
@@ -480,6 +480,7 @@ public class DishFootControl implements View.OnClickListener{
         });
     }
     private void handlrAskStatus(String status){
+        Log.i("zyj","status:::"+status);
         askStatus=status;
         switch (status){
             case "2":
