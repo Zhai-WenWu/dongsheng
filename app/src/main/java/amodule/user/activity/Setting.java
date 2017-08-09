@@ -400,7 +400,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 break;
             case R.id.qa_setting:
                 AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING, false);
-                Toast.makeText(Setting.this, "跳转到问答设置界面", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
