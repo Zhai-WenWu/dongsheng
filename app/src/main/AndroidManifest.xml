@@ -1457,10 +1457,6 @@
         <!--mobssms end-->
 
         <!--Baidu AD-->
-        <meta-data
-            android:name="BaiduMobAd_APP_ID"
-            android:value="db905294" />
-        <!--funny id f1ee3b45-->
 
         <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现效率 -->
         <provider

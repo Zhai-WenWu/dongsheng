@@ -5,16 +5,22 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xianghatest.R;
 
+import java.util.Map;
+
+import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
@@ -83,6 +89,13 @@ public class XHApplication extends MobApplication {
         ReqInternet.init(getApplicationContext());
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
+
+        //设置百度appid
+        Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));
+        if(map.containsKey("appid") && !TextUtils.isEmpty(map.get("appid"))){
+            AdView.setAppSid(this, map.get("appid"));
+        }else
+            AdView.setAppSid(this, "db905294");
 
         // 百度AD-设置'广告着陆页'动作栏的颜色主题
         AppActivity.getActionBarColorTheme().setBackgroundColor(Color.parseColor(getString(R.color.common_top_bg)));
