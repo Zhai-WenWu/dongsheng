@@ -185,6 +185,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 //        findViewById(R.id.home_mercat).setOnClickListener(this);
         findViewById(R.id.commod_shop_linear).setOnClickListener(this);
         findViewById(R.id.service_mercat).setOnClickListener(this);
+        findViewById(R.id.commod_buy).setOnClickListener(this);
 
         mall_commod_scroll = (MyScrollView) findViewById(R.id.mall_commod_scroll);
         commod_shop = (TextView) findViewById(R.id.commod_shop);
@@ -648,6 +649,9 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 Intent intentmark= new Intent(this, Feedback.class);
                 intentmark.putExtra("feekUrl","");
                 this.startActivity(intentmark);
+                break;
+            case R.id.commod_buy:
+                //
                 break;
 //            case R.id.home_mercat://回到主页
 //                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "首页");
