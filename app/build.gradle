@@ -30,8 +30,6 @@ dependencies {
     //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     //    compile 'com.android.support:support-v4:23.4.0'
     //    compile 'com.github.chrisbanes:photoview:latest.release'
-    //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
-    //    compile 'com.google.code.gson:gson:2.7'
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.android.support:support-v4:24.0.0'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
@@ -64,8 +62,8 @@ android {
         MainXiangha {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
-//            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-//            storeFile file('D:/android_workspace/xiangha.keystore')
+            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
+            storeFile file('D:/android_workspace/xiangha.keystore')
 //            storeFile file('E:/keystore/xiangha.keystore')
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
@@ -73,7 +71,6 @@ android {
 //            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
 //            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
-            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }
