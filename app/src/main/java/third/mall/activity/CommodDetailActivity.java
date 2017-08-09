@@ -70,6 +70,7 @@ import acore.tools.ToolsDevice;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.SubBitmapTarget;
 import aplug.basic.LoadImage;
+import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
 import third.mall.adapter.AdapterRecommed;
 import third.mall.aplug.MallClickContorl;
@@ -180,9 +181,10 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             explain_detail_webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        findViewById(R.id.commod_mercat).setOnClickListener(this);
-        findViewById(R.id.home_mercat).setOnClickListener(this);
+//        findViewById(R.id.commod_mercat).setOnClickListener(this);
+//        findViewById(R.id.home_mercat).setOnClickListener(this);
         findViewById(R.id.commod_shop_linear).setOnClickListener(this);
+        findViewById(R.id.service_mercat).setOnClickListener(this);
 
         mall_commod_scroll = (MyScrollView) findViewById(R.id.mall_commod_scroll);
         commod_shop = (TextView) findViewById(R.id.commod_shop);
@@ -459,13 +461,13 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 
             commod_shop.setEnabled(false);
             commod_shop.setTextColor(Color.parseColor("#70ffffff"));
-            commod_shop.setBackgroundColor(this.getResources().getColor(R.color.comment_color));
+            commod_shop.setBackgroundColor(Color.parseColor("#febf14"));
             findViewById(R.id.product_lose_rela).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.product_lose_rela).setVisibility(View.GONE);
             commod_shop.setEnabled(true);
             commod_shop.setTextColor(Color.parseColor("#ffffff"));
-            commod_shop.setBackgroundColor(this.getResources().getColor(R.color.comment_color));
+            commod_shop.setBackgroundColor(Color.parseColor("#febf14"));
             commod_shop.setAlpha(255);
         }
     }
@@ -507,14 +509,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         // 邮费
         TextView title_commod_price_postage = (TextView) findViewById(R.id.title_commod_price_postage);
         title_commod_price_postage.setText(map.get("product_postage_desc"));
-        // 邮费说明
-        TextView title_saled_num = (TextView) findViewById(R.id.title_saled_num);
-        title_saled_num.setText("已售" + map.get("saled_num"));
     }
-
-
-
-
 
     /**
      * 初始化viewpager
@@ -649,18 +644,23 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.home_mercat://回到主页
-                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "首页");
-                AppCommon.openUrl(CommodDetailActivity.this, "xhds.home.app", true);
-                CommodDetailActivity.this.finish();
+            case R.id.service_mercat:
+                Intent intentmark= new Intent(this, Feedback.class);
+                intentmark.putExtra("feekUrl","");
+                this.startActivity(intentmark);
                 break;
-            case R.id.commod_mercat:// 商家店铺
-                MallClickContorl.getInstance().setStatisticUrl(actionUrl, null, mall_stat_statistic, this);
-                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "店铺");
-                String mall_stat = (String) UtilFile.loadShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT);
-                String url = MallStringManager.replaceUrl(MallStringManager.mall_web_shop_home) + "?shop_code=" + map.get("shop_code") + "&" + mall_stat;
-                AppCommon.openUrl(this, url, true);
-                break;
+//            case R.id.home_mercat://回到主页
+//                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "首页");
+//                AppCommon.openUrl(CommodDetailActivity.this, "xhds.home.app", true);
+//                CommodDetailActivity.this.finish();
+//                break;
+//            case R.id.commod_mercat:// 商家店铺
+//                MallClickContorl.getInstance().setStatisticUrl(actionUrl, null, mall_stat_statistic, this);
+//                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "店铺");
+//                String mall_stat = (String) UtilFile.loadShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT);
+//                String url = MallStringManager.replaceUrl(MallStringManager.mall_web_shop_home) + "?shop_code=" + map.get("shop_code") + "&" + mall_stat;
+//                AppCommon.openUrl(this, url, true);
+//                break;
             case R.id.commod_shop_linear:// 购物车
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "购物车");
                 if (LoginManager.isLogin()) {
