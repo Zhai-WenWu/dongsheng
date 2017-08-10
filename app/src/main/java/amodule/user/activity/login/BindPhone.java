@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;

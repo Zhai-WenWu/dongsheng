@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ import third.mall.aplug.MallStringManager;
 import third.mall.bean.ProductBean;
 import xh.basic.internet.UtilInternet;
 
-import static com.xiangha.R.id.shopping_item_commod_rela;
+import static com.xianghatest.R.id.shopping_item_commod_rela;
 
 public class MallShopProductView extends ViewItemBase{
 

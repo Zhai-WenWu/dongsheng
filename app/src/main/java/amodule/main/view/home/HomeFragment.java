@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -60,7 +60,7 @@ import third.video.SimpleVideoPlayerController;
 import third.video.VideoPlayerController;
 
 import static amodule.main.activity.MainHome.tag;
-import static com.xiangha.R.id.return_top;
+import static com.xianghatest.R.id.return_top;
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
 public class HomeFragment extends BaseHomeFragment{

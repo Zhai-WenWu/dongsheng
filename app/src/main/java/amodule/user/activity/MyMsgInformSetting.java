@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,8 +20,6 @@ import acore.dialogManager.PushManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.widget.SwitchButton;
-import acore.widget.SwitchButton.OnChangeListener;
 import acore.widget.switchView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;

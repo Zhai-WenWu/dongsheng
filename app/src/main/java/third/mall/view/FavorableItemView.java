@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import aplug.basic.ReqInternet;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class FavorableItemView extends ViewItemBase{
 

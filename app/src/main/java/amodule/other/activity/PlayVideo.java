@@ -10,11 +10,11 @@ import android.transition.Transition;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.xianghatest.R;
 import com.example.gsyvideoplayer.listener.OnTransitionListener;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
-import com.xiangha.R;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.Tools;

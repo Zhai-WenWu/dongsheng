@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class SearchFavorite {
 	

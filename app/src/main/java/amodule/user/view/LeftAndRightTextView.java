@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * Created by ：fei_teng on 2017/2/21 18:40.

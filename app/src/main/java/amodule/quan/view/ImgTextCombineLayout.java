@@ -36,7 +36,7 @@ import aplug.basic.LoadImage;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import core.xiangha.emj.tools.EmjParseMsgUtil;
 import core.xiangha.emj.view.EditTextShow;

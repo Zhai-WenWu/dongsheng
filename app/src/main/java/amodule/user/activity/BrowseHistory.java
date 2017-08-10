@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +23,7 @@ import amodule.user.view.HistoryView;
 import xh.windowview.XhDialog;
 
 /**
- * PackageName : amodule.user.activity
- * Created by MrTrying on 2016/8/17 10:40.
- * E_mail : ztanzeyu@gmail.com
+ * 浏览历史
  */
 public class BrowseHistory extends BaseActivity implements View.OnClickListener {
 	private PagerSlidingTabStrip mTab;

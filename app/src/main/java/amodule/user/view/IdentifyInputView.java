@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * Created by dao on 2017/2/19.

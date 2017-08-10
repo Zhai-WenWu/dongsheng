@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
-import com.xiangha.R;
-import com.xiangha.Welcome;
+import com.xianghatest.R;
+import com.xianghatest.Welcome;
 
 import java.util.Map;
 

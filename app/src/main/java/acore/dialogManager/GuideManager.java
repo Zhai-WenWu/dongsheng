@@ -9,7 +9,7 @@ import android.view.View;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.List;
 import java.util.Map;

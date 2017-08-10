@@ -24,7 +24,7 @@ import android.widget.TextView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * 管理员推荐

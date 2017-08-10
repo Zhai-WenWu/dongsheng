@@ -1,13 +1,14 @@
 package acore.override;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
@@ -15,11 +16,15 @@ import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
-import com.xiangha.R;
+import com.xianghatest.R;
+
+import java.util.Map;
 
 import acore.dialogManager.VersionOp;
+import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
@@ -32,7 +37,7 @@ import third.push.umeng.UMPushServer;
 
 public class XHApplication extends MobApplication {
     /**包名*/
-    private static final String PACKAGE_NAME = "com.xiangha";
+    private static final String PACKAGE_NAME = "com.xianghatest";
     private static XHApplication mAppApplication;
 
     //仿造单例，获取application对象
@@ -87,6 +92,13 @@ public class XHApplication extends MobApplication {
         ReqInternet.init(getApplicationContext());
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
+
+        //设置百度appid
+        Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));
+        if(map.containsKey("appid") && !TextUtils.isEmpty(map.get("appid"))){
+            AdView.setAppSid(this, map.get("appid"));
+        }else
+            AdView.setAppSid(this, "db905294");
 
         // 百度AD-设置'广告着陆页'动作栏的颜色主题
         AppActivity.getActionBarColorTheme().setBackgroundColor(Color.parseColor(getString(R.color.common_top_bg)));

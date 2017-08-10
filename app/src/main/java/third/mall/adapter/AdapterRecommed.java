@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import aplug.basic.InternetCallback;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class AdapterRecommed extends MallAdapterSimple{
 	private List<? extends Map<String, ?>> data;

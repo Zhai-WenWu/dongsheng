@@ -21,8 +21,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.Layout;
@@ -44,7 +42,7 @@ import android.view.ContextMenu;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

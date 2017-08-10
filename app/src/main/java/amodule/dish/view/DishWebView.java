@@ -70,14 +70,7 @@ public class DishWebView extends XHWebView {
     protected void init(Context context){
         mAct = (Activity) context;
         WebviewManager.initWebSetting(this);
-        Map<String,String> header = ReqInternet.in().getHeader(mAct);
-        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-        String[] cookie = cookieStr.split(";");
-        CookieManager cookieManager = CookieManager.getInstance();
-        for (int i = 0; i < cookie.length; i++) {
-            cookieManager.setCookie(StringManager.domain, cookie[i]);
-        }
-        CookieSyncManager.getInstance().sync();
+
 
         setWebViewClient(new WebViewClient() {
             @Override
@@ -154,6 +147,8 @@ public class DishWebView extends XHWebView {
             }
         });
         WebviewManager.setWebChromeClient(this,null);
+        setHorizontalScrollBarEnabled(false);
+        setVerticalScrollBarEnabled(false);
         JsAppCommon jsObj = new JsAppCommon((Activity) this.getContext(),this,null,null);
         addJavascriptInterface(jsObj, jsObj.TAG);
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -191,37 +186,6 @@ public class DishWebView extends XHWebView {
     public String getMouldVersion(){
         return mMouldVersion;
     }
-
-    /**
-     * 保存h5到本地，以菜谱code命名
-     * @return
-     */
-    public boolean saveDishData(){
-        Log.i(TAG,"saveDishData()");
-        Log.i("zyj","mHtmlData::11:"+mHtmlData);
-        if(TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(mHtmlData)){
-            return false;
-        }
-        String path = DishMouldControl.getOffDishPath() + dishCode;
-        Log.d(TAG,"path:" + path);
-        FileManager.saveFileToCompletePath(path,mHtmlData,false);
-        FileManager.saveShared(getContext(),FileManager.file_dishMould,dishCode,path);
-        FileManager.saveShared(getContext(),FileManager.file_dishMouldVersion,dishCode,mMouldVersion);
-        return true;
-    }
-
-    /**
-     * 删除h5
-     * @return
-     */
-    public void deleteDishData(){
-        if(TextUtils.isEmpty(dishCode)){
-            return;
-        }
-        String path = DishMouldControl.getOffDishPath() + dishCode;
-        FileManager.delDirectoryOrFile(path);
-    }
-
     /**
      * 根据code，加载模板
      * @param code
@@ -234,28 +198,14 @@ public class DishWebView extends XHWebView {
                 if(isSucess){
                     data = data.replace("<{code}>",code);
                     final String html = data;
-//                    DishWebView.this.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.d(TAG,"loadMould() html:" + html);
-//                            String path = DishMouldControl.getOffDishPath() + dishCode;
-//                            FileManager.saveFileToCompletePath(path,html,false);
-////                            loadData(html,"text/html; charset=UTF-8", null);
-////                            loadDataWithBaseURL(null,html,"text/html","utf-8", null);
-//                        }
-//                    });
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d(TAG,"loadMould() html:" + html);
-                            String path = DishMouldControl.getOffDishPath() + dishCode;
-                            FileManager.saveFileToCompletePath(path,html,false);
                             loadDataWithBaseURL(null,html,"text/html","utf-8", null);
 //                            loadData(html,"text/html; charset=UTF-8", null);
+//                            loadUrl("http://www.ixiangha.com:9813/test/main7/caipuInfo?code=89006552");
                         }
                     });
-
-//                    loadDataWithBaseURL(null,html,"text/html","utf-8", null);
                 }
             }
         });
@@ -268,7 +218,6 @@ public class DishWebView extends XHWebView {
     public void onLoadFinishCallback(String html){
         mHtmlData = html;
         Log.i("zyj","onLoadFinishCallback::");
-//        if(dishWebViewCallBack != null) dishWebViewCallBack.onLoadFinish();
     }
 
     /**

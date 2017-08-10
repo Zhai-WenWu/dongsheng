@@ -2,7 +2,6 @@ package amodule.main.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.List;

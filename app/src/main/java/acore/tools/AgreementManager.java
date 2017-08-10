@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class AgreementManager {
 	private BaseActivity mAct;

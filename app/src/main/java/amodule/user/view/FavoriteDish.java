@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;

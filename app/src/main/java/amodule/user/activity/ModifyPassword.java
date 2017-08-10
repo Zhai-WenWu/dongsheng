@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;

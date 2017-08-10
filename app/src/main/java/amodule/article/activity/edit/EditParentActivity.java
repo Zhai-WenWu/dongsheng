@@ -29,7 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,6 @@ import xh.windowview.XhDialog;
 
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
 import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
-import static amodule.article.view.richtext.RichText.FORMAT_LINK;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
 
 /**

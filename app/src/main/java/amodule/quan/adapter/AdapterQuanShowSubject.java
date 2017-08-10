@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,9 +60,6 @@ import aplug.imageselector.ImgWallActivity;
 import core.xiangha.emj.view.EditTextShow;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
-
-import static acore.logic.AppCommon.setLvImage;
-import static com.xiangha.R.id.sb_header_iv_user;
 
 @SuppressLint("InflateParams")
 public class AdapterQuanShowSubject extends AdapterSimple {

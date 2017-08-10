@@ -1,6 +1,5 @@
 package amodule.main.view.item;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -8,15 +7,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.logic.XHClick;
 import acore.tools.StringManager;
-import amodule.main.activity.MainHome;
 
 /**
  * 蒙版--样式

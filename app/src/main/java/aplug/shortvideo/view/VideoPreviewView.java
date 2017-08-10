@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.Map;
 

@@ -8,7 +8,7 @@ import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class VideoShowWeb extends WebActivity {
 	private String url = "";

@@ -6,10 +6,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * Created by sll on 2017/4/28.

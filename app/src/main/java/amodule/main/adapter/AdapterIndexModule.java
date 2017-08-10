@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.List;
 import java.util.Map;

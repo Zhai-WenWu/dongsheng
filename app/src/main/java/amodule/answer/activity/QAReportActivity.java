@@ -2,7 +2,6 @@ package amodule.answer.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -23,12 +22,10 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.MsgScrollView;
-import acore.widget.SwitchButton;
 import amodule.article.view.ReportItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
-import xh.windowview.OnXhDialogListener;
 import xh.windowview.XhDialog;
 
 /**
@@ -48,11 +45,11 @@ public class QAReportActivity extends BaseActivity {
     private RelativeLayout mBlackListContainer;
     private ImageView mBlackListSwitchBtn;
 
-    private String mUserCode = "";//被举报的用户code
+    private String mDishCode = "";//菜谱code
+    private String mAskAuthorCode = "";//提问者的code （被举报的用户code）
+    private String mAuthorCode = "";//菜谱作者的code
     private String mReportName = "";//被举报的用户名
     private String mQACode = "";//被举报的问答code
-    private String mQAType = "5";//类型：5-菜谱问答
-    private String mReportType = "2";//举报类型：1-主题，2-问答
 
     private ReportItem mLastSelectedReportChild;
     private ReportItem mLastSelectedAdminChild;
@@ -93,11 +90,11 @@ public class QAReportActivity extends BaseActivity {
     private void initData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            mUserCode = bundle.getString("userCode");
+            mDishCode = bundle.getString("dishCode");
+            mAskAuthorCode = bundle.getString("askAuthorCode");
+            mAuthorCode = bundle.getString("authorCode");
             mReportName = bundle.getString("reportName", "");
             mQACode = bundle.getString("qaCode");
-            mQAType = bundle.getString("qaType", "5");
-            mReportType = bundle.getString("reportType", "2");
         }
     }
 
@@ -185,7 +182,7 @@ public class QAReportActivity extends BaseActivity {
                     params += "&";
             }
         }
-        params += "code=" + mQACode + "&type=" + mQAType + "&reportType=" + mReportType + "&userCode=" + mUserCode;
+        params += "code=" + mDishCode + "&askAuthorCode=" + mAskAuthorCode + "&qaCode" + mQACode;
         ReqEncyptInternet.in().doEncypt(StringManager.API_QA_COMMITREPORT, params, new InternetCallback(QAReportActivity.this) {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -199,11 +196,11 @@ public class QAReportActivity extends BaseActivity {
      */
     private void getReportData() {
         loadManager.showProgressBar();
-        if (TextUtils.isEmpty(mQACode)) {
+        if (TextUtils.isEmpty(mAuthorCode)) {
             onDataReady(0, null);
             return;
         }
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETREPORT, "code=" + mQACode, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETREPORT, "authorCode=" + mAuthorCode, new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {

@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ta.utdid2.android.utils.StringUtils;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -44,7 +44,6 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.video.control.MediaHandleControl;
 import amodule.dish.video.tools.MediaVideoEditor;
 import aplug.recordervideo.cammer.MediaRecorderSystem;
 import aplug.shortvideo.ShortVideoInit;
@@ -801,7 +800,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
     public static boolean checkPermission(Context context,String permission){
         PackageManager pm = context.getPackageManager();
         boolean permission_state = (PackageManager.PERMISSION_GRANTED ==
-                pm.checkPermission(permission, "com.xiangha"));
+                pm.checkPermission(permission, "com.xianghatest"));
         return permission_state;
     }
 

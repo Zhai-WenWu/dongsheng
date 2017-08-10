@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;

@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;

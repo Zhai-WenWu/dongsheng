@@ -9,15 +9,13 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

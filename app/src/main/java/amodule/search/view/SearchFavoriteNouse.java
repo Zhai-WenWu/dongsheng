@@ -18,7 +18,7 @@ import android.view.View;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class SearchFavoriteNouse extends SearchFavorite{
 	

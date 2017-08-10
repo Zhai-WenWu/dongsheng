@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,8 +34,6 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.tools.DishMouldControl;
-import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.main.Main;
 import amodule.other.activity.Comment;
 import amodule.other.activity.InviteFriend;
@@ -47,7 +45,6 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.web.ApiShowWeb;
 import third.push.xg.XGPushServer;
-import third.share.CheckDialog;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -69,7 +66,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     private LinearLayout ll_common_setting;
     private LeftAndRightTextView view_notify;
     private LeftAndRightTextView view_vip;
-    private LeftAndRightTextView view_offDish;
     private LeftAndRightTextView view_advise;
     private LeftAndRightTextView view_about;
     private LeftAndRightTextView view_change_sever;
@@ -131,7 +127,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         if (AppCommon.isVip(LoginManager.userInfo.get("vip"))) {
             view_vip.setVisibility(View.VISIBLE);
         }
-        view_offDish = (LeftAndRightTextView) findViewById(R.id.view_offDish);
         view_clear_cace = (LeftAndRightTextView) findViewById(R.id.view_clear_cache);
         view_check_update = (LeftAndRightTextView) findViewById(R.id.view_check_update);
         view_invite = (LeftAndRightTextView) findViewById(R.id.view_invite);
@@ -157,8 +152,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     }
 
     private void initViewData() {
-        view_offDish.switchState(OffDishToFavoriteControl.getIsAutoOffDish(Setting.this));
-
         if (AppCommon.isVip(LoginManager.userInfo.get("vip"))) {
             getIsAuto();
         }
@@ -304,45 +297,12 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
         });
 
-        view_offDish.init("收藏菜谱，同时离线下载到本地", "", true, false, null);
-        view_offDish.setSwitch(true, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (OffDishToFavoriteControl.getIsAutoOffDish(Setting.this)) {
-                    OffDishToFavoriteControl.setIsAutoOffDish(Setting.this, false);
-                    view_offDish.switchState(false);
-                    XHClick.mapStat(Setting.this,"a_isdownload","收藏同时离线菜谱","关闭离线点击量");
-                } else {
-                    OffDishToFavoriteControl.setIsAutoOffDish(Setting.this, true);
-                    view_offDish.switchState(true);
-                    XHClick.mapStat(Setting.this,"a_isdownload","收藏同时离线菜谱","打开离线点击量");
-                }
-            }
-        });
-
         view_clear_cace.init("清理缓存", getCacheSize(), true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
-                final CheckDialog xhDialog1 = new CheckDialog(Setting.this);
-                xhDialog1.setTitle("确定要清理缓存吗？")
-                        .setCanselButton("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                xhDialog1.cancel();
-                            }
-                        }).setSureButton("确定", new CheckDialog.OnCheckDialogListener() {
-                            @Override
-                            public void onCheckChange(boolean isChoose) {
-                                XHClick.mapStat(Setting.this, tongjiId, "清理缓存", "");
-                                clearCache();
-                                if(isChoose)FileManager.delDirectoryOrFile(DishMouldControl.getOffDishPath());
-                                xhDialog1.cancel();
-                            }
-                        }).setCheck("同时清除离线菜谱", false)
-                        .show();
-            }
-
-        });
+                XHClick.mapStat(Setting.this, tongjiId, "清理缓存", "");
+                clearCache();
+            }});
         view_check_update.init("检查新版本", ToolsDevice.getVerName(this), true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
@@ -439,8 +399,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.qa_setting:
-                //TODO 跳转到问答设置界面
-                Toast.makeText(Setting.this, "跳转到问答设置界面", Toast.LENGTH_SHORT).show();
+                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING, false);
                 break;
             default:
                 break;

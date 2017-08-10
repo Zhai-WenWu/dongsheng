@@ -36,7 +36,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

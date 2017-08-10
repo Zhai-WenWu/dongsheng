@@ -25,9 +25,10 @@
 
     <TextView
         android:id="@+id/item_user_setting_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/item_user_setting_title"
+        android:layout_toLeftOf="@+id/item_user_setting_bind"
         android:gravity="center_vertical"
         android:text="设置"
         android:textSize="@dimen/sp_13"

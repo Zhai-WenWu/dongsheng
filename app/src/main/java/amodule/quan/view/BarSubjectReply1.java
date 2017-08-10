@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -45,6 +45,14 @@ public class BarSubjectReply1 extends LinearLayout{
 		subject_zan = (TextView) view.findViewById(R.id.subject_zan);
 		pinglun = (TextViewShow) view.findViewById(R.id.subject_pinglun);
 		pinglun.setHaveCopyFunction(false);
+
+		//防止点击透过
+		setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 	}
 	/**
 	 * 初始化

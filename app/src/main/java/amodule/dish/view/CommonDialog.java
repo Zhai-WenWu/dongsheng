@@ -8,7 +8,7 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * Created by ：airfly on 2016/10/25 14:42.
@@ -87,6 +87,7 @@ public class CommonDialog {
         TextView tv = (TextView) window.findViewById(R.id.dialog_sure);
         if (tv != null) {
             tv.setText(text);
+            tv.setVisibility(View.VISIBLE);
             tv.setOnClickListener(listener);
         }
         return this;

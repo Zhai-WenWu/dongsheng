@@ -345,20 +345,20 @@
     </style> 
     
     <style name="view_ad">
-        <item name="com.xiangha:backgroundColor">#aac9c9c9</item>
+        <item name="com.xianghatest:backgroundColor">#aac9c9c9</item>
     </style>
 
     <style name="btn_white_hot_top">
-        <item name="com.xiangha:backgroundColor">#FFFFFF</item>
-        <item name="com.xiangha:radius">@dimen/dp_2</item>
-        <item name="com.xiangha:sideWidth">@dimen/dp_0.5</item>
-        <item name="com.xiangha:sideColor">@color/comment_color</item>
+        <item name="com.xianghatest:backgroundColor">#FFFFFF</item>
+        <item name="com.xianghatest:radius">@dimen/dp_2</item>
+        <item name="com.xianghatest:sideWidth">@dimen/dp_0.5</item>
+        <item name="com.xianghatest:sideColor">@color/comment_color</item>
     </style>
     <style name="shoppingcat_go">
-        <item name="com.xiangha:backgroundColor">#FFFFFF</item>
-        <item name="com.xiangha:radius">@dimen/dp_5</item>
-        <item name="com.xiangha:sideWidth">@dimen/dp_0.5</item>
-        <item name="com.xiangha:sideColor">#696969</item>
+        <item name="com.xianghatest:backgroundColor">#FFFFFF</item>
+        <item name="com.xianghatest:radius">@dimen/dp_5</item>
+        <item name="com.xianghatest:sideWidth">@dimen/dp_0.5</item>
+        <item name="com.xianghatest:sideColor">#696969</item>
     </style>
 
     <style name="nous_recommend_tag">
@@ -368,9 +368,9 @@
         <item name="android:text">推荐</item>
         <item name="android:textSize">@dimen/sp_11</item>
         <item name="android:gravity">center</item>
-        <item name="com.xiangha:radius">@dimen/dp_1</item>
-        <item name="com.xiangha:sideWidth">@dimen/dp_0.5</item>
-        <item name="com.xiangha:sideColor">@color/comment_color</item>
+        <item name="com.xianghatest:radius">@dimen/dp_1</item>
+        <item name="com.xianghatest:sideWidth">@dimen/dp_0.5</item>
+        <item name="com.xianghatest:sideColor">@color/comment_color</item>
     </style>
 
     <style name="StyleProgressBarMini" parent="@android:style/Widget.ProgressBar.Horizontal">
@@ -389,7 +389,7 @@
         <item name="android:text">推荐</item>
         <item name="android:textSize">@dimen/sp_11</item>
         <item name="android:gravity">center</item>
-        <item name="com.xiangha:radius">@dimen/dp_1</item>
+        <item name="com.xianghatest:radius">@dimen/dp_1</item>
     </style>
 
     <style name="adHintImg" >

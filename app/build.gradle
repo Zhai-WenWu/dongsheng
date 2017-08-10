@@ -45,11 +45,11 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId "com.xiangha"
+        applicationId "com.xianghatest"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 191
-        versionName "5.5.0.1"
+        versionName "5.5.0.6"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -76,6 +76,7 @@ android {
 //            mac
 //            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
 //            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
+            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }

@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +40,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
-import static com.xiangha.R.id.mall_buycommod_scrollview;
+import static com.xianghatest.R.id.mall_buycommod_scrollview;
 
 /**
  * 购物页面

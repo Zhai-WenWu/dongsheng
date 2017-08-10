@@ -1,6 +1,5 @@
 package amodule.answer.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,15 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
+
+import java.util.Map;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseFragmentActivity;
+import acore.tools.LogManager;
+import acore.tools.StringManager;
 import amodule.answer.model.QAMsgModel;
+import aplug.basic.ReqInternet;
+import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
@@ -36,6 +41,8 @@ public class QAMsgListFragment extends Fragment {
     private WebviewManager mWebViewManager;
 
     private RelativeLayout mWebContainer;
+
+    private boolean mIsCreateView;
 
     public static QAMsgListFragment newInstance(QAMsgModel arguments) {
         QAMsgListFragment fragment = new QAMsgListFragment();
@@ -62,6 +69,21 @@ public class QAMsgListFragment extends Fragment {
             }
         });
         mWebContainer.addView(mWebView);
+        Map<String,String> header= ReqInternet.in().getHeader(mActivity);
+        String cookieKey= StringManager.appWebUrl.replace(StringManager.appWebTitle, "");
+        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+        String[] cookie = cookieStr.split(";");
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        for (int i = 0; i < cookie.length; i++) {
+            if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
+            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
+            cookieManager.setCookie(cookieKey, cookie[i]);
+        }
+        CookieSyncManager.getInstance().sync();
+        mIsCreateView = true;
+        if (getUserVisibleHint())
+            loadUrl();
         return view;
     }
 
@@ -82,15 +104,20 @@ public class QAMsgListFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mLoadManager.showProgressBar();
-        loadUrl();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mIsCreateView)
+            loadUrl();
     }
 
-    //TODO 测试的url，注意后期删除
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void loadUrl() {
-        mWebView.loadUrl("http://appweb.ixiangha.com:9812/qa/myQa");
+        mLoadManager.showProgressBar();
+        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "&type=" + mModelData.getmType()));
     }
 
     @Override
@@ -101,6 +128,7 @@ public class QAMsgListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mIsCreateView = false;
     }
 
     @Override

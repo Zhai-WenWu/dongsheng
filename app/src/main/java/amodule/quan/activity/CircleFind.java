@@ -9,7 +9,7 @@ import xh.basic.tool.UtilString;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.widget.DownRefreshList;
-import amodule.quan.adapter.AdapterCircleFind;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 /**
  * 发现圈子
  * @author FangRuijiao

@@ -7,8 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.tencent.android.tpush.horse.Tools;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.widget.CusTableLayout;
 import amodule.quan.activity.CircleFind;
-import amodule.quan.activity.CircleHome;
 
 /**
  * PackageName : amodule.main.view.circle

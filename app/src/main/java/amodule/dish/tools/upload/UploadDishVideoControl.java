@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +50,6 @@ import amodule.dish.tools.UploadDishSpeechTools;
 import amodule.dish.video.View.MediaListViewSurfaceVideoView;
 import amodule.dish.video.activity.MediaHandleActivity;
 import amodule.dish.video.activity.MediaPaperActivity;
-import amodule.dish.video.control.MediaHandleControl;
 import amodule.dish.view.UploadDish.DishIngredientView;
 import amodule.dish.view.UploadDish.DishOtherControl;
 import amodule.user.activity.login.LoginByAccout;

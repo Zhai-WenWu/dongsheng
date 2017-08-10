@@ -13,7 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -249,7 +249,7 @@ public class CircleModule extends BaseActivity implements OnClickListener {
 	private void startShare() {
 		String imgType = BarShare.IMG_TYPE_RES;
 		String title = "香哈菜谱，让“吃饭”花样多多";
-		String clickUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xiangha";// 此地址为应用商地址，运营要求！
+		String clickUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xianghatest";// 此地址为应用商地址，运营要求！
 		String content = "自从有了香哈，每天都有不同吃法，真是又好用又省心，家人都称赞我是一级大厨！一起来玩吧。";
 		String imgUrl = "" + R.drawable.share_launcher;
 
