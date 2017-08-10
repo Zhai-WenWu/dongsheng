@@ -8,7 +8,7 @@ import android.util.Log;
 import com.xianghatest.BuildConfig;
 import com.xianghatest.R;
 
-import org.apache.http.protocol.HTTP;
+
 
 import java.util.Map;
 
@@ -44,7 +44,7 @@ public class XHConf extends BasicConf {
 		file_sdCardDir="/xiangha";
 		//此路径必须用应用包名做文件夹
 		file_dataDir= "/" + context.getPackageName() +  "/file";
-		file_encoding=HTTP.UTF_8;
+		file_encoding="utf-8";
 				
 		//日志配置
 		log_isDebug = BuildConfig.LOG_DEBUG;
@@ -58,7 +58,7 @@ public class XHConf extends BasicConf {
 		net_timeout=20;
 		net_imgRefererUrl="www.xiangha.com";
 		net_imgUploadJpg=true;
-		net_encode=HTTP.UTF_8;
+		net_encode="utf-8";
 		net_imgUploadHeight=net_imgUploadWidth=900;
 		net_imgUploadKb=300;
 //		if(!log_isDebug) net_domain2ipJson="{'api.xiangha.com':[{'ip':'101.201.172.223','weight':100}],'api.huher.com':[{'ip':'182.92.245.125','weight':100}]}";

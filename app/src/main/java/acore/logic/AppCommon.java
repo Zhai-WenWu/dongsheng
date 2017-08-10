@@ -26,7 +26,7 @@ import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
 import com.xianghatest.R;
 
-import org.apache.http.protocol.HTTP;
+//
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -218,7 +218,7 @@ public class AppCommon {
                 if (urls.length > 0) {
                     url = StringManager.wwwUrl;
                     try {
-                        url = URLDecoder.decode(urls[0], HTTP.UTF_8);
+                        url = URLDecoder.decode(urls[0], "utf-8");
                         if (url.contains("url=")) {
                             url = url.substring(url.indexOf("url=") + 4);
                         }
@@ -396,12 +396,12 @@ public class AppCommon {
 						bundle.putString(key, value);
 					} else {
 						String[] parameter = urls[1].split("&");
-						for (String p : parameter) {
-							String[] value = p.split("=");
-							if (value.length == 2) {
-								bundle.putString(URLDecoder.decode(value[0], HTTP.UTF_8), URLDecoder.decode(value[1], HTTP.UTF_8));
-							}
-						}
+                        for (String p : parameter) {
+                            String[] value = p.split("=");
+                            if (value.length == 2) {
+                                bundle.putString(URLDecoder.decode(value[0], "utf-8"), URLDecoder.decode(value[1], "utf-8"));
+                            }
+                        }
 					}
 				}
 				if(url.indexOf("MyDishNew.app")  > -1 || url.indexOf("MySubject.app") > -1){

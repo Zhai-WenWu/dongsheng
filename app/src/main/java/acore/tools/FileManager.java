@@ -52,7 +52,6 @@ public class FileManager extends UtilFile{
 	public static final String file_indexModuleAndRecCircle = "indexModuleAndRecCircle";
 	public static final String file_location = "location";
 	public static final String file_ad = "ad";
-	public static final String file_andfix = "andFix";
 	public static final String file_config = "config";
 	//搜索默认页，热搜词
 	public static final String file_hotwords = "hotWords";

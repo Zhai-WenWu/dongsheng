@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.ValueCallback;
 import android.widget.RelativeLayout;
 
 import java.util.Map;
@@ -138,7 +139,6 @@ public class BaseHomeFragment extends Fragment {
                 LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
                 cookieManager.setCookie(cookieKey, cookie[i]);
             }
-            CookieSyncManager.getInstance().sync();
         }
         mWebview.loadUrl(webUrl);
         LoadOver = true;

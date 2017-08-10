@@ -66,10 +66,10 @@ public class UploadDishActivity extends BaseActivity implements View.OnClickList
         String dishType = getIntent().getStringExtra(DISH_TYPE_KEY);
         if(TextUtils.isEmpty(dishType) || dishType.equals(DISH_TYPE_NORMAL)){
             uploadDishParrentControl = new UploadDishNormalControl(this);
-        }else if(dishType.equals(DISH_TYPE_VIDEO)){
-            STATISTICS_ID = "a_write_dishvideo";
-            STATISTICS_MODIFY_MAKE_ID = "a_write_dishvideo";
-            uploadDishParrentControl = new UploadDishVideoControl(this);
+//        }else if(dishType.equals(DISH_TYPE_VIDEO)){
+//            STATISTICS_ID = "a_write_dishvideo";
+//            STATISTICS_MODIFY_MAKE_ID = "a_write_dishvideo";
+//            uploadDishParrentControl = new UploadDishVideoControl(this);
         }
         uploaDishWeakRef = new WeakReference<Activity>(this);
     }

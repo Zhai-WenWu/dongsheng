@@ -362,7 +362,7 @@ public class InviteFriend extends BaseActivity {
 		String title = "香哈菜谱，让“吃饭”花样多多";
 		String clickUrl = StringManager.api_inviteCustomer_new+"?code="+LoginManager.userInfo.get("code");// 此地址为应用商地址，运营要求！
 		String content = "自从有了香哈，每天都有不同吃法，真是又好用又省心，家人都称赞我是一级大厨！一起来玩吧。";
-		String imgUrl = "" + R.drawable.umen_share_launch;
+		String imgUrl = "" + R.drawable.share_launcher;
 		Resources res = getResources();
 		Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.share_launcher);
 		BarShare barShare = new BarShare(this, "邀请好友","");

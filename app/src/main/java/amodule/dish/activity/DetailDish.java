@@ -1,6 +1,7 @@
 package amodule.dish.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
@@ -18,6 +19,8 @@ import android.view.WindowManager;
 
 import com.xianghatest.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,11 +30,13 @@ import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
+import amodule.dish.tools.ADDishContorl;
 import amodule.dish.view.DishActivityViewControlNew;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
@@ -39,19 +44,19 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
+import xh.basic.tool.UtilString;
 
+import static com.xianghatest.R.id.share_layout;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 菜谱详情页：头部大图、视频，底部广告以下是原生，中间是h5
  */
-public class DetailDish extends BaseActivity {
-
-    public static String tongjiId = "a_menu_detail_normal";//统计标示
+public class DetailDish extends BaseAppCompatActivity {
+    public static String tongjiId = "a_menu_detail_normal430";//统计标示
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
 
-    private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private DishActivityViewControlNew dishActivityViewControl;//view处理控制
 
     private Map<String,String> permissionMap = new HashMap<>();
@@ -68,7 +73,6 @@ public class DetailDish extends BaseActivity {
     private long startTime= 0;
     private String data_type="";
     private String module_type="";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +135,6 @@ public class DetailDish extends BaseActivity {
         dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControlNew.DishViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
-                DetailDish.this.mVideoPlayerController=mVideoPlayerController;
             }
         });
         loadManager.setLoading(new View.OnClickListener() {
@@ -139,6 +142,7 @@ public class DetailDish extends BaseActivity {
             public void onClick(View v) {
                 loadDishInfo();
                 loadOtherData();
+
             }
         });
     }
@@ -244,24 +248,12 @@ public class DetailDish extends BaseActivity {
     }
     //**********************************************Activity生命周期方法**************************************************
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mVideoPlayerController != null && !mVideoPlayerController.isError) {
-            return mVideoPlayerController.onVDKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
-        } else {
-            return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+        mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
+        if(dishActivityViewControl != null && dishActivityViewControl.onBackPressed()){
+            return;
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (mVideoPlayerController != null) {
-            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                mVideoPlayerController.setIsFullScreen(true);
-            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                mVideoPlayerController.setIsFullScreen(false);
-            }
-        }
+        super.onBackPressed();
     }
 
     @Override
@@ -272,47 +264,25 @@ public class DetailDish extends BaseActivity {
         Rect outRect = new Rect();
         this.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         statusBarHeight = outRect.top;
-        dishActivityViewControl.setAdBarHeight(statusBarHeight);
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onResume();
-        }
         dishActivityViewControl.onResume();
     }
-
-
-
 
     @Override
     protected void onPause() {
         Log.i("DetailDishActivity","onPause()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onPause();
-        }
         dishActivityViewControl.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("DetailDishActivity","onDestroy()");
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.onDestroy();
-        }
+        dishActivityViewControl.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
         }
-    }
-
-
-
-    @Override
-    public void onBackPressed() {
-        Log.i("DetailDishActivity","onBackPressed()");
-        mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
-        super.onBackPressed();
     }
 
     @Override

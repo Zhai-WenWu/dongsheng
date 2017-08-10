@@ -29,7 +29,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
-import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -48,7 +48,7 @@ import third.video.VideoPlayerController;
  */
 
 public class SubjectHeaderVideoLayout extends RelativeLayout {
-    private BaseActivity mAct;
+    private BaseAppCompatActivity mAct;
     private int num = 4;
     private Thread mThread;
     private XHAllAdControl xhAllAdControl;
@@ -169,7 +169,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
         adLayout.setLayoutParams(params);
 //        initAdView();
         //必须使用avtivity的context
-        mVideoPlayerController = new VideoPlayerController(getContext(), dishVidio, imgValue);
+        mVideoPlayerController = new VideoPlayerController(mAct, dishVidio, imgValue);
         handlerADData();
         mVideoPlayerController.initVideoView(vu, uu);
         mVideoPlayerController.setStatisticsPlayCountCallback(new VideoPlayerController.StatisticsPlayCountCallback() {
@@ -179,7 +179,6 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
             }
         });
         mVideoPlayerController.hideFullScreen();
-        mVideoPlayerController.setMute(true, false);
         //点击回调
         mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
             @Override
@@ -217,11 +216,14 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
         }
     }
 
-    public void onConfigurationChanged(int requestedOrientation){
-        View view = getChildAt(0);
-        if (view != null && videoPlayerController != null) {
-            videoPlayerController.setIsFullScreen(requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    public boolean onBackPressed(){
+        if (videoPlayerController != null) {
+            return videoPlayerController.onBackPressed();
         }
+        if (mVideoPlayerController != null) {
+            return mVideoPlayerController.onBackPressed();
+        }
+        return false;
     }
 
     public VideoImagePlayerController getVideoPlayerController(){
@@ -248,10 +250,6 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
                     }
                 }
                 //wifi自动播放
-//                if(isAutoPaly&&videoPlayerController!=null){
-//                    Looper.prepare();
-//                    videoPlayerController.setOnClick();
-//                }
                 Log.i("zhangyujian","isAutoPaly::"+isAutoPaly);
                 if(isAutoPaly&&mVideoPlayerController!=null){
                     mVideoPlayerController.setOnClick();
@@ -265,7 +263,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
      * 设置广告所需的activity
      * @param mAct
      */
-    public void setmAct(BaseActivity mAct){
+    public void setmAct(BaseAppCompatActivity mAct){
         this.mAct=mAct;
     }
     /**

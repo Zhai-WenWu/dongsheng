@@ -100,7 +100,6 @@ public abstract class InternetCallback extends InterCallback {
 						XHClick.mapStat(context, "a_apiError", msg, theUrl);
 						AppCommon.getCommonData(null);
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
-                        toastFaildRes(msg);
 					} else {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
                         toastFaildRes(msg);
@@ -109,14 +108,12 @@ public abstract class InternetCallback extends InterCallback {
 					e.printStackTrace();
 					msg = "数据展示异常，请反馈给我们";
 					loaded(ReqInternet.REQ_STRING_ERROR, url, msg);
-                    toastFaildRes(msg);
 					XHClick.mapStat(context, "a_apiError", msg, theUrl);
 					XHApiMonitor.monitoringAPI(context, "数据展示异常", url, cookie, method, params, "", str);
 				}
 			} else {
 				msg = "解析错误，请重试或反馈给我们";
 				loaded(ReqInternet.REQ_STRING_ERROR, url, msg);
-                toastFaildRes(msg);
 				XHClick.mapStat(context, "a_apiError", msg, theUrl);
 				XHApiMonitor.monitoringAPI(context, "解析错误", url, cookie, method, params, "", str);
 			}

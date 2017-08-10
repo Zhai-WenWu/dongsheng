@@ -1,25 +1,18 @@
 package aplug.shortvideo.activity;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
-import com.sina.sinavideo.sdk.VDVideoExtListeners;
-import com.sina.sinavideo.sdk.VDVideoView;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.xianghatest.R;
-
-import acore.override.activity.base.BaseActivity;
-import acore.tools.LogManager;
+import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.Tools;
-import third.video.VideoApplication;
 
 /**
  * PackageName : aplug.shortvideo.activity
@@ -27,13 +20,13 @@ import third.video.VideoApplication;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class VideoFullScreenActivity extends BaseActivity implements View.OnClickListener {
+public class VideoFullScreenActivity extends BaseAppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_VIDEO_URL = "video_url";
     public static final String EXTRA_VIDEO_TYPE = "video_type";
     public static final String LOCAL_VIDEO = "local";
     public static final String NET_VIDEO = "net";
     /**视频播放器*/
-    VDVideoView mVDVideoView = null;
+    StandardGSYVideoPlayer videoPlayer;
     /**视频地址*/
     private String videoUrl = "";
     private String videoType = "";
@@ -66,38 +59,23 @@ public class VideoFullScreenActivity extends BaseActivity implements View.OnClic
             return;
         }
 
-        if(LOCAL_VIDEO.equals(videoType)){
-            mVideoView = (VideoView) findViewById(R.id.video_view);
-            mVideoView.setVideoPath(videoUrl);
-            mVideoView.start();
-            //静音
-            mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mVideoView.resume();
-                    mVideoView.start();
-                }
-            });
-
-        }else if(NET_VIDEO.equals(videoType)){
-            //视频解码库初始化
-            try {
-                VideoApplication.getInstence().initialize(this);
-            } catch (Exception e) {
-                Tools.showToast(this, "视频初始化异常");
-                LogManager.reportError("视频软解包初始化异常", e);
-                finish();
-                return;
-            } catch (Error e) {
-                Tools.showToast(this, "视频初始化异常");
-                finish();
-                return;
-            }
-            //初始化view
+//        if(LOCAL_VIDEO.equals(videoType)){
+//            mVideoView = (VideoView) findViewById(R.id.video_view);
+//            mVideoView.setVideoPath(videoUrl);
+//            mVideoView.start();
+//            //静音
+//            mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    mVideoView.resume();
+//                    mVideoView.start();
+//                }
+//            });
+//
+//        }else if(NET_VIDEO.equals(videoType)){
+//            初始化view，并开始播放
             initVideoView();
-            //设置video数据
-            setVideInfo();
-        }
+//        }
 
         //设置click
         rl.setOnClickListener(this);
@@ -105,52 +83,37 @@ public class VideoFullScreenActivity extends BaseActivity implements View.OnClic
 
     /**初始化video UI*/
     private void initVideoView() {
-        mVDVideoView = new VDVideoView(this);
-        mVDVideoView.setLayers(R.array.video_layer);
-        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+        Log.i("tzy",this.getClass().getSimpleName() + " : videoUrl = " + videoUrl);
+        videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.video_player);
+        Resources resources = getResources();
+        videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
+        videoPlayer.setDialogProgressBar(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setBottomShowProgressBarDrawable(resources.getDrawable(R.drawable.video_new_seekbar_progress),
+                resources.getDrawable(R.drawable.video_new_seekbar_thumb));
+
+        //是否可以滑动调整
+        videoPlayer.setIsTouchWiget(false);
+        videoPlayer.setIsTouchWigetFull(true);
+        videoPlayer.setUp(videoUrl, false,"");
+        videoPlayer.getFullscreenButton().setVisibility(View.GONE);
+        videoPlayer.startPlayLogic();
+        videoPlayer.setOnClickListener(this);
+        videoPlayer.findViewById(R.id.surface_container).setOnClickListener(this);
+        videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
             @Override
-            public void onVDVideoCompletion(VDVideoInfo info, int status) {
-                VDVideoViewController controller = VDVideoViewController.getInstance(VideoFullScreenActivity.this);
-                if (controller != null) {
-                    controller.resume();
-                    controller.start();
-                }
+            public void onAutoComplete(String url, Object... objects) {
+                super.onAutoComplete(url, objects);
+                videoPlayer.startPlayLogic();
             }
         });
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-        rl.addView(mVDVideoView, layoutParams);
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
-    }
-
-    /**设置video数据*/
-    private void setVideInfo() {
-        VDVideoInfo videoInfo = new VDVideoInfo(videoUrl);
-        videoInfo.mTitle = "";
-        mVDVideoView.open(this, videoInfo);
-        mVDVideoView.play(0);
-        //播放
-        final VDVideoViewController controller = VDVideoViewController.getInstance(this);
-        if (controller != null) {
-            controller.resume();
-            controller.start();
-            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
-                @Override
-                public void onCompletion() {
-                    controller.start();
-                }
-            });
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //还原
-        VDVideoViewController controller = VDVideoViewController.getInstance(this);
-        if (controller != null) {
-            controller.resume();
+        if(videoPlayer != null){
+            videoPlayer.onVideoResume();
         }
     }
 
@@ -158,10 +121,22 @@ public class VideoFullScreenActivity extends BaseActivity implements View.OnClic
     protected void onPause() {
         super.onPause();
         //暂停
-        VDVideoViewController controller = VDVideoViewController.getInstance(this);
-        if (controller != null) {
-            controller.onPause();
+        if(videoPlayer != null){
+            videoPlayer.onVideoPause();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(videoPlayer != null){
+            videoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -169,6 +144,7 @@ public class VideoFullScreenActivity extends BaseActivity implements View.OnClic
         final int id = v.getId();
         switch (id) {
             case R.id.activityLayout:
+            case R.id.surface_container:
                 onBackPressed();
                 break;
         }

@@ -289,7 +289,7 @@ public class DetailHealth extends BaseActivity {
 		String clickUrl = StringManager.wwwUrl + "jiankang/" + code;
 		// 我在香哈菜谱发现可以按照时辰养生，#标题#，懂得呵护自己，时刻关注养生。
 		String content = "我在看香哈菜谱【" + name + "饮食宜忌】，看起来超级实用，推荐你也试试~";
-		String imgUrl = ico_id == 0 ? "" + R.drawable.umen_share_launch : "" + ico_id;
+		String imgUrl = ico_id == 0 ? "" + R.drawable.share_launcher : "" + ico_id;
 		barShare.setShare(type, title, content, imgUrl, clickUrl);
 		barShare.openShare();
 	}

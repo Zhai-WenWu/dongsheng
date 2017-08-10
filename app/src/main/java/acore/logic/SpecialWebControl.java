@@ -7,7 +7,6 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
 
-import org.apache.http.protocol.HTTP;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -190,7 +189,7 @@ public class SpecialWebControl {
             if (TextUtils.isEmpty(name)) {
                 name = DEFAULT_NAME.replace(REPLACE_RANDOM, String.valueOf(Tools.getRandom(1, PROBABILITY_MAX + 1)));
             } else {
-                name = URLEncoder.encode(name, HTTP.UTF_8);
+                name = URLEncoder.encode(name, "utf-8");
             }
             String refererStr = referersArray_1[randomIndex].replace(REPLACE_NAME, name);
             refererMap.put("Referer", refererStr);

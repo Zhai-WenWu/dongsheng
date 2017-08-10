@@ -42,127 +42,111 @@ import xh.basic.tool.UtilString;
  *
  * @author Jerry
  */
-public class ShowWeb extends WebActivity {
-    protected String url = "", htmlData = "";
-    protected Button rightBtn;
-    protected ImageView favoriteNousImageView;
-    protected String nousCodeString = "";
-    protected RelativeLayout shareLayout;
-    protected RelativeLayout favLayout, homeLayout;
-    protected TextView favoriteNousTextView, title;
-    private RelativeLayout shopping_layout;
-    private TextView mall_news_num, mall_news_num_two;
-    private JsAppCommon jsAppCommon;
-    private long startTime = 0;
-    private String data_type = "";
-    private String code = "";//code--首页使用功能
-    private String module_type = "";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = this.getIntent().getExtras();
-        // 正常调用
-        if (bundle != null) {
-            url = bundle.getString("url");
-            startTime = System.currentTimeMillis();
-            data_type = bundle.getString("data_type");
-            code = bundle.getString("code");
-            module_type = bundle.getString("module_type");
-            JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
-        }
-
-        initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_webview);
-        webViewManager = new WebviewManager(this, loadManager, true);
-        webview = webViewManager.createWebView(R.id.XHWebview);
-        webview.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
-            @Override
-            public void onChange(int num) {
-                ImageView close = (ImageView) findViewById(R.id.leftClose);
-                close.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ShowWeb.this.finish();
-                    }
-                });
-                boolean isShow = num > 1
-                        && (findViewById(R.id.leftText) != null && findViewById(R.id.leftText).getVisibility() != View.VISIBLE);
-                close.setVisibility(isShow ? View.VISIBLE : View.GONE);
-            }
-        });
-        webViewManager.setJSObj(webview, jsAppCommon = new JsAppCommon(this, webview, loadManager, barShare));
-        jsAppCommon.setUrl(url);
-        htmlData = "";
-        initTitleView();
-        if (mCommonBottomView != null) {
-            if (setShowCommonBottomView())
-                mCommonBottomView.setVisibility(View.VISIBLE);
-            else
-                mCommonBottomView.setVisibility(View.GONE);
-        }
-        setTitle();
-        // 设置加载
-        loadManager.setLoading(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadData();
-            }
-        });
-        MallCommon common = new MallCommon(this);
-        common.setStatisticStat(url);
-        webview.upWebViewNum();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (shopping_layout.getVisibility() == View.VISIBLE) {
-            if (MallCommon.num_shopcat > 0) {
-                if (MallCommon.num_shopcat > 9) {
-                    mall_news_num.setVisibility(View.GONE);
-                    mall_news_num_two.setVisibility(View.VISIBLE);
-                    if (MallCommon.num_shopcat > 99)
-                        mall_news_num_two.setText("99+");
-                    else
-                        mall_news_num_two.setText("" + MallCommon.num_shopcat);
-                } else {
-                    mall_news_num.setVisibility(View.VISIBLE);
-                    mall_news_num_two.setVisibility(View.GONE);
-                    mall_news_num.setText("" + MallCommon.num_shopcat);
-                }
-            } else {
-                mall_news_num.setVisibility(View.GONE);
-                mall_news_num_two.setVisibility(View.GONE);
-            }
-            if (LoginManager.isLogin()) {
-                MallCommon.getShoppingNum(this, mall_news_num, mall_news_num_two);
-            }
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        loadManager.hideProgressBar();
-    }
-
-    @Override
-    public OnClickListener getBackBtnAction() {
-        return new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                ShowWeb.this.onBackPressed();
-            }
-        };
-    }
-
-    private void initTitleView() {
-        title = (TextView) findViewById(R.id.title);
-        rightBtn = (Button) findViewById(R.id.rightBtn1);
-        shareLayout = (RelativeLayout) findViewById(R.id.shar_layout);
-        favLayout = (RelativeLayout) findViewById(R.id.fav_layout);
-        homeLayout = (RelativeLayout) findViewById(R.id.home_layout);
+public class  ShowWeb extends WebActivity {
+	protected String url = "", htmlData = "";
+	protected Button rightBtn;
+	protected ImageView favoriteNousImageView;
+	protected String nousCodeString = "";
+	protected RelativeLayout shareLayout;
+	protected RelativeLayout favLayout,homeLayout;
+	protected TextView favoriteNousTextView,title;
+	private RelativeLayout shopping_layout;
+	private TextView mall_news_num,mall_news_num_two;
+	private JsAppCommon jsAppCommon;
+	private long startTime=0;
+	private String data_type="";
+	private String code="";//code--首页使用功能
+	private String module_type="";
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Bundle bundle = this.getIntent().getExtras();
+		// 正常调用
+		if (bundle != null) {
+			url = bundle.getString("url");
+			startTime=System.currentTimeMillis();
+			data_type = bundle.getString("data_type");
+			code= bundle.getString("code");
+			module_type= bundle.getString("module_type");
+			JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
+		}
+		
+		initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_webview);
+		webViewManager = new WebviewManager(this,loadManager,true);
+		webview = webViewManager.createWebView(R.id.XHWebview);
+		webViewManager.setJSObj(webview, jsAppCommon=new JsAppCommon(this, webview,loadManager,barShare));
+		jsAppCommon.setUrl(url);
+		htmlData = "";
+		initTitleView();
+		if(mCommonBottomView!=null){
+			if(setShowCommonBottomView())
+				mCommonBottomView.setVisibility(View.VISIBLE);
+			else
+				mCommonBottomView.setVisibility(View.GONE);
+		}
+		setTitle();
+		// 设置加载
+		loadManager.setLoading(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				loadData();
+			}
+		});
+		MallCommon common= new MallCommon(this);
+		common.setStatisticStat(url);
+		webview.upWebViewNum();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(shopping_layout.getVisibility()==View.VISIBLE){
+			if(MallCommon.num_shopcat>0){
+				if(MallCommon.num_shopcat>9){
+					mall_news_num.setVisibility(View.GONE);
+					mall_news_num_two.setVisibility(View.VISIBLE);
+					if(MallCommon.num_shopcat>99)
+						mall_news_num_two.setText("99+");
+					else
+						mall_news_num_two.setText(""+MallCommon.num_shopcat);
+				}else{
+					mall_news_num.setVisibility(View.VISIBLE);
+					mall_news_num_two.setVisibility(View.GONE);
+					mall_news_num.setText(""+MallCommon.num_shopcat);
+				}
+			}else{
+				mall_news_num.setVisibility(View.GONE);
+				mall_news_num_two.setVisibility(View.GONE);
+			}
+			if(LoginManager.isLogin()){
+				MallCommon.getShoppingNum(this,mall_news_num,mall_news_num_two);
+			}
+		}
+	}
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		loadManager.hideProgressBar();
+		webview.upWebViewNum();
+	}
+	
+	@Override
+	public OnClickListener getBackBtnAction() {
+		return new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ShowWeb.this.finish();
+			}
+		};
+	}
+	
+	private void initTitleView(){
+		title = (TextView)findViewById(R.id.title);
+ 		rightBtn = (Button) findViewById(R.id.rightBtn1);
+		shareLayout = (RelativeLayout) findViewById(R.id.shar_layout);
+		favLayout = (RelativeLayout) findViewById(R.id.fav_layout);
+		homeLayout = (RelativeLayout) findViewById(R.id.home_layout);
 //		收藏按钮图片
         favoriteNousImageView = (ImageView) findViewById(R.id.img_fav);
         favoriteNousTextView = (TextView) findViewById(R.id.tv_fav);

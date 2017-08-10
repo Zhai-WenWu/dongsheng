@@ -58,7 +58,7 @@ public class BarShare {
 		mImgUrl = ShareTools.getBarShare(mContext).saveDrawable(bitmap,FileManager.save_cache + "/share_" + System.currentTimeMillis() + ".png");
 		if(mImgUrl == null){
 			mType = ShareTools.IMG_TYPE_RES;
-			mImgUrl = "" + R.drawable.umen_share_launch;
+			mImgUrl = "" + R.drawable.share_launcher;
 		}
 	}
 	

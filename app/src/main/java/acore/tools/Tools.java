@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -863,5 +864,30 @@ public class Tools {
             timeShow="很久前";
         }
         return timeShow;
+    }
+
+    public static void setMute(Context context){
+        AudioManager audioManager = (AudioManager)context.getSystemService("audio");
+        int mCurrSoundNum = audioManager.getStreamVolume(3);
+        audioManager.setStreamVolume(3, 0, 0);
+    }
+
+    /**
+     * 获取Context所在进程的名称
+     *
+     * @param context
+     * @return
+     */
+    public static String getProcessName(Context context) {
+        int pid = android.os.Process.myPid();
+        ActivityManager mActivityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager
+                .getRunningAppProcesses()) {
+            if (appProcess.pid == pid) {
+                return appProcess.processName;
+            }
+        }
+        return null;
     }
 }

@@ -193,9 +193,7 @@
 -keep class com.alipay.sdk.app.PayTask{ public *;}
 -keep class com.alipay.sdk.app.AuthTask{ public *;}
 #支付宝混淆end
-#sina播放器 start
--keep class com.sina.sinavideo.**{ *;}
-#sina播放器end
+
 #广点通光 start
 -keep class com.qq.e.** { 
     public protected *; 
@@ -215,13 +213,6 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 # 腾讯bugly end
-# AndFix start
--keep class * extends java.lang.annotation.Annotation
--keepclasseswithmembernames class * {
-    native <methods>;
-}
--keep class com.alipay.** { *; }
-# AndFix end
 
 # 讯飞 start
 -keep class com.iflytek.**{*;}
@@ -309,6 +300,19 @@
 -keep class com.tencent.mid.**  {* ;}
 #mta end
 
+#hotfix
+#基线包使用，生成mapping.txt
+-printmapping mapping.txt
+#生成的mapping.txt在app/buidl/outputs/mapping/release路径下，移动到/app路径下
+#修复后的项目使用，保证混淆结果一致
+#-applymapping mapping.txt
+#hotfix
+-keep class com.taobao.sophix.**{*;}
+-keep class com.ta.utdid2.device.**{*;}
+#防止inline
+-dontoptimize
+#hotfix end
+
 #baidu ad
 -keepclassmembers class * extends android.app.Activity {
 public void *(android.view.View);
@@ -319,3 +323,12 @@ public static ** valueOf(java.lang.String);
 }
 -keep class com.baidu.mobads.*.** { *; }
 #baidu ad
+
+-keep class tv.danmaku.ijk.** { *; }
+-dontwarn tv.danmaku.ijk.**
+-keep class com.shuyu.gsyvideoplayer.** { *; }
+-dontwarn com.shuyu.gsyvideoplayer.**
+-keep class com.example.gsyvideoplayer.** { *; }
+-dontwarn com.example.gsyvideoplayer.**
+-keep class moe.codeest.enviews.** { *; }
+-dontwarn moe.codeest.enviews.**

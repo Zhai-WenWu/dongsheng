@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.xianghatest.R;
 
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
     private RelativeLayout root_layout;
     private boolean needRefresh = false;
     private RelativeLayout video_rela;
-    private VDVideoInfo videoInfo;
 
     public NormarlContentItemImageVideoView(Activity context, View view) {
         super(context);

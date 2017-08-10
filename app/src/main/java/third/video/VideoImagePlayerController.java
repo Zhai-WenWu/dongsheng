@@ -1,37 +1,33 @@
 package third.video;
 
+import android.app.Activity;
 import android.content.Context;
-import android.os.Environment;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sina.sinavideo.sdk.VDVideoExtListeners;
-import com.sina.sinavideo.sdk.VDVideoView;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
-import com.sina.sinavideo.sdk.utils.VDPlayerSoundManager;
-import com.sina.sinavideo.sdk.widgets.VDVideoFullScreenButton;
-import com.sina.sinavideo.sdk.widgets.VDVideoPlaySeekBar;
 import com.xianghatest.R;
-
-import acore.logic.XHClick;
-import acore.override.XHApplication;
-import acore.tools.CPUTool;
+import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import acore.tools.FileManager;
-import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
-import xh.basic.tool.UtilFile;
+
+import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
 
 /**
  * 1、对象唯一的问题，
@@ -39,86 +35,131 @@ import xh.basic.tool.UtilFile;
  */
 public class VideoImagePlayerController {
     private Context mContext = null;
-    private VDVideoView mVDVideoView = null;
+    private StandardGSYVideoPlayer videoPlayer;
+    private OrientationUtils orientationUtils;
     private ImageViewVideo mImageView = null;
     private boolean mHasVideoInfo = false;
     private int mVideoInfoRequestNumber = 0;
     private ViewGroup mPraentViewGroup = null;
     private StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
-    public boolean isError = false;
     private String videoUrl="";
+    private String imgUrl="";
+    public boolean isNetworkDisconnect = false;
+    public int autoRetryCount = 0;
 
-    public VideoImagePlayerController(Context context, ViewGroup viewGroup, String imgUrl) {
+    public VideoImagePlayerController(Activity context, ViewGroup viewGroup, String imgUrl) {
         this.mContext = context;
         this.mPraentViewGroup = viewGroup;
-        try {
-            //视频解码库初始化
-            VideoApplication.getInstence().initialize(context);
-        } catch (Exception e) {
-            statisticsInitVideoError(context);
-            LogManager.reportError("视频软解包初始化异常", e);
-            return;
-        } catch (Error e) {
-            statisticsInitVideoError(context);
-            return;
-        }
+        this.imgUrl = imgUrl;
+        videoPlayer = new StandardGSYVideoPlayer(mContext);
+        //设置旋转
+        orientationUtils = new OrientationUtils(context, videoPlayer);
+        videoPlayer.setShowFullAnimation(true);
+        videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                videoPlayer.startWindowFullscreen(mContext, true, true);
+            }
+        });
+        videoPlayer.setNeedShowWifiTip(true);
+        videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
 
-        mVDVideoView = new VDVideoView(mContext);
-        mVDVideoView.setLayers(R.array.my_videoview_layers);
-        //去掉全屏按钮
-        VDVideoFullScreenButton fullscreen1 = (VDVideoFullScreenButton) mVDVideoView.findViewById(R.id.fullscreen1);
-        fullscreen1.setVisibility(View.GONE);
+            @Override
+            public void onAutoComplete(String url, Object... objects) {
+                super.onAutoComplete(url, objects);
+                videoPlayer.startPlayLogic();
+            }
 
-        VDVideoPlaySeekBar playerseek2 = (VDVideoPlaySeekBar) mVDVideoView.findViewById(R.id.playerseek2);
-        //设置滑动条位置
-        RelativeLayout.LayoutParams playerseekParam = (RelativeLayout.LayoutParams) playerseek2.getLayoutParams();
-        playerseekParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        VDPlayerSoundManager.setMute(context, true, false);
+            @Override
+            public void onPrepared(String url, Object... objects) {
+                super.onPrepared(url, objects);
+                setNetworkCallback();
+            }
+
+            @Override
+            public void onEnterFullscreen(String url, Object... objects) {
+                super.onEnterFullscreen(url, objects);
+                orientationUtils.resolveByClick();
+            }
+
+            @Override
+            public void onQuitFullscreen(String url, Object... objects) {
+                super.onQuitFullscreen(url, objects);
+                orientationUtils.resolveByClick();
+            }
+        });
+
+
+        Resources resources = mContext.getResources();
+        videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
+        videoPlayer.setDialogProgressBar(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setBottomShowProgressBarDrawable(resources.getDrawable(R.drawable.video_new_seekbar_progress),
+                resources.getDrawable(R.drawable.video_new_seekbar_thumb));
+
+        //是否可以滑动调整
+        videoPlayer.setIsTouchWiget(false);
+        videoPlayer.setIsTouchWigetFull(true);
+
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
             mPraentViewGroup.removeAllViews();
         }
-        mPraentViewGroup.addView(mVDVideoView);
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
+        mPraentViewGroup.addView(videoPlayer);
         if (!TextUtils.isEmpty(imgUrl)) {
             if(view_Tip==null){
                 initView(mContext);
                 mPraentViewGroup.addView(view_Tip);
             }
-            mImageView = new ImageViewVideo(context);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
-            mImageView.parseItemImg(ScaleType.CENTER_CROP, imgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
-            mImageView.setLayoutParams(params);
+            initImageView(context);
             mPraentViewGroup.addView(mImageView);
-            mImageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setOnClick();
-                }
-            });
         }
-        String temp= (String) UtilFile.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
+        String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
-        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
-            @Override
-            public void onVDVideoCompletion(VDVideoInfo vdVideoInfo, int i) {
-                Log.i("zhangyujian2","setCompletionListener::::");
-                mVDVideoView.play(0);
-                VDVideoViewController controller = VDVideoViewController.getInstance(mContext);
-                if (controller != null) {
-                    controller.resume();
-                    controller.start();
-                }
+    }
 
+    private void initImageView(Context context){
+        mImageView = new ImageViewVideo(context);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
+        mImageView.parseItemImg(ScaleType.CENTER_CROP, imgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
+        mImageView.setLayoutParams(params);
+        mImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setOnClick();
             }
         });
-        mVDVideoView.setErrorListener(new VDVideoExtListeners.OnVDVideoErrorListener() {
+    }
+
+    private void setNetworkCallback(){
+        videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
             @Override
-            public void onVDVideoError(VDVideoInfo vdVideoInfo, int i, int i1) {
-                Log.i("zhangyujian2","setErrorListener::::");
+            public void wifiConnected() {
+                removeTipView();
+                onResume();
+            }
+
+            @Override
+            public void mobileConnected() {
+                if(view_Tip==null){
+                    initView(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
+            }
+
+            @Override
+            public void nothingConnected() {
+                if(view_Tip == null){
+                    initNoNetwork(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
+                isNetworkDisconnect = true;
             }
         });
     }
@@ -132,7 +173,6 @@ public class VideoImagePlayerController {
         }
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
-            if (VideoApplication.initSuccess) {
                 if(isShowAd){
                     if(mediaViewCallBack!=null)mediaViewCallBack.onclick();
                     return;
@@ -141,98 +181,67 @@ public class VideoImagePlayerController {
                 if(!isShowMedia){
                     Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
                     if(isAutoPaly){//当前wifi
-                        if(view_Tip!=null){
-                            mPraentViewGroup.removeView(view_Tip);
-                            view_Tip=null;
-                        }
+                        removeTipView();
                     }else{
-                        if(mImageView!=null){
-                            mPraentViewGroup.removeView(mImageView);
-                            mImageView=null;
-                        }
+                        removeImaegView();
                         return;
                     }
                 }
-                try {
-                    VDVideoViewController controller1 = VDVideoViewController.getInstance(mContext);
-                    if(controller1!=null)controller1.notifyHideTip();
-                    mVDVideoView.play(0);
-                } catch (Exception e) {
-                    isError = true;
-                    Tools.showToast(mContext, "视频解码库加载失败，请重试");
-                    FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xianghatest/libs/");
-                    return;
-                }
-                VDVideoViewController controller = VDVideoViewController.getInstance(mContext);
-                if (controller != null) {
-                    controller.resume();
-                    controller.start();
-                }
-                if(mImageView!=null)
-                    mPraentViewGroup.removeView(mImageView);
-                if(view_Tip!=null){
-                    mPraentViewGroup.removeView(view_Tip);
-                    view_Tip=null;
-                }
+                videoPlayer.startPlayLogic();
+
+                removeImaegView();
+                removeTipView();
                 if (mStatisticsPlayCountCallback != null) {
                     mStatisticsPlayCountCallback.onStatistics();
                 }
-            } else {
-                Tools.showToast(mContext, "加载视频解码库中...");
-            }
         } else {
             Tools.showToast(mContext, "努力获取视频信息中...");
         }
 
     }
 
+    protected void removeTipView(){
+        if(view_Tip!=null){
+            mPraentViewGroup.removeView(view_Tip);
+            view_Tip=null;
+        }
+    }
+
+    protected void removeImaegView(){
+        if(mImageView!=null){
+            mPraentViewGroup.removeView(mImageView);
+//            mImageView=null;
+        }
+    }
+
     /**
      * 处理view显示
      */
     public void setOnStop(){
-        VDVideoViewController controller = VDVideoViewController.getInstance(mContext);
-        if (controller != null) {
-            controller.stop();
+        onDestroy();
+        if(mImageView == null){
+            initImageView(mContext);
         }
-        mPraentViewGroup.removeAllViews();
+        mPraentViewGroup.removeView(mImageView);
         mPraentViewGroup.addView(mImageView);
-
-
     }
+
     /**
      * 初始化视频播放数据,直接使用url
      */
     public void initVideoView2( String url,String title) {
-
+        this.videoUrl = url;
+        videoPlayer.setUp(url,false,"");
         mHasVideoInfo = true;
-        if (ToolsDevice.isNetworkAvailable(XHApplication.in())){
-            VideoApplication.getInstence().initialize(XHApplication.in());
-        }
-        videoUrl=url;
-        VDVideoInfo videoInfo = new VDVideoInfo(url);
-        videoInfo.mTitle = title;
-        mVDVideoView.open(mContext, videoInfo);
-    }
-    /**
-     * 外部重写keyDown()时调用
-     *
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    public boolean onVDKeyDown(int keyCode, KeyEvent event) {
-        if (mVDVideoView != null) {
-            return mVDVideoView.onVDKeyDown(keyCode, event);
-        }
-        return true;
     }
 
-    public VDVideoView getVDVideoView() {
-        return mVDVideoView;
-    }
-
-    public void setVDVideoView(VDVideoView mVDVideoView) {
-        this.mVDVideoView = mVDVideoView;
+    public boolean onBackPressed(){
+        //先返回正常状态
+        if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            StandardGSYVideoPlayer.backFromWindowFull(mContext);
+            return true;
+        }
+        return false;
     }
 
     public ImageViewVideo getVideoImageView() {
@@ -242,55 +251,27 @@ public class VideoImagePlayerController {
     /**
      * 是否正在播放
      *
-     * @return
+     * @return true：正在播放 ，false反之
      */
     public boolean isPlaying() {
-        if (mVDVideoView != null) {
-            return mVDVideoView.getIsPlaying();
-        }
-        return false;
+        return null != videoPlayer && CURRENT_STATE_PLAYING==videoPlayer.getCurrentState();
     }
 
     public void onResume() {
-        if (mHasVideoInfo) {
-            if (mVDVideoView != null) {
-                mVDVideoView.onResume();
-            }
+        if (mHasVideoInfo && videoPlayer != null) {
+            videoPlayer.onVideoResume();
         }
     }
 
     public void onPause() {
-        if (mVDVideoView != null) {
-            mVDVideoView.onPause();
-        }
-    }
-
-    public void onStart() {
-        if (mVDVideoView != null) {
-            mVDVideoView.onStart();
-        }
-    }
-    public void onStop() {
-        if (mVDVideoView != null) {
-            mVDVideoView.onStop();
+        if (videoPlayer != null) {
+            videoPlayer.onVideoPause();
         }
     }
 
     public void onDestroy() {
-        if (mVDVideoView != null) {
-            mVDVideoView.release(false);
-        }
-    }
-
-    /**
-     * 设置时候全屏
-     *
-     * @param isFullScreen true ? 全屏 : 不全屏
-     */
-    public void setIsFullScreen(boolean isFullScreen) {
-        if (mVDVideoView != null) {
-            mVDVideoView.setIsFullScreen(isFullScreen);
-        }
+        if(null != videoPlayer)
+            videoPlayer.release();
     }
 
     /**
@@ -299,24 +280,16 @@ public class VideoImagePlayerController {
      * @author Administrator
      */
     public interface StatisticsPlayCountCallback {
-        public void onStatistics();
+        void onStatistics();
     }
 
     /**
      * 设置播放统计监听
      *
-     * @param callback
+     * @param callback 回调
      */
     public void setStatisticsPlayCountCallback(StatisticsPlayCountCallback callback) {
         this.mStatisticsPlayCountCallback = callback;
-    }
-
-    //统计视频初始化错误
-    private void statisticsInitVideoError(Context context) {
-        isError = true;
-//		Tools.showToast(context, "您的手机暂时不支持播放视频");
-        XHClick.mapStat(context, "init_video_error", "CPU型号", "" + CPUTool.getCpuName());
-        XHClick.mapStat(context, "init_video_error", "手机型号", android.os.Build.BRAND + "_" + android.os.Build.MODEL);
     }
 
     //是否显示广告
@@ -349,8 +322,10 @@ public class VideoImagePlayerController {
         LayoutParams layoutParams= new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
         view_Tip= LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
         view_Tip.setLayoutParams(layoutParams);
-        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        final TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
         tipMessage.setText("现在是非WIFI，看视频要花费流量了");
+        final Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("继续播放");
         view_Tip.findViewById(R.id.tipLayout).setOnClickListener(onClickListener);
         view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(onClickListener);
     }
@@ -359,7 +334,26 @@ public class VideoImagePlayerController {
         public void onClick(View v) {
             setShowMedia(true);
             setOnClick();
-            UtilFile.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+            FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
+        }
+    };
+
+    protected void initNoNetwork(Context context){
+        LayoutParams layoutParams= new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+        view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
+        view_Tip.setLayoutParams(layoutParams);
+        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        tipMessage.setText("网络未连接，请检查网络设置");
+        Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("去设置");
+        view_Tip.findViewById(R.id.tipLayout).setOnClickListener(disconnectClick);
+        view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(disconnectClick);
+    }
+
+    private OnClickListener disconnectClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mContext.startActivity(new Intent(Settings.ACTION_SETTINGS));
         }
     };
 

@@ -81,7 +81,6 @@ public class StringManager extends UtilString {
     public final static String api_Activity = apiUrl + urlSection.get("home5") + "getActivity";
     public final static String api_localPushData = apiUrl + urlSection.get("home5") + "getPushInfo";
     public final static String api_statisticShare = apiUrl + urlSection.get("home5") + "addShareStatistic";
-    public final static String api_andFix = apiUrl + urlSection.get("main6") + "getIncUpInfo";
 
     public final static String api_getSurpriseActivity = apiUrl + urlSection.get("home5") + "getSurpriseActivity";
     public final static String api_getProductList = apiUrl + urlSection.get("home5") + "getProductList";

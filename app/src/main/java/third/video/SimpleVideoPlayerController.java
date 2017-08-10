@@ -1,30 +1,29 @@
 package third.video;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.res.Resources;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.sina.sinavideo.sdk.VDVideoExtListeners;
-import com.sina.sinavideo.sdk.VDVideoView;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.xianghatest.R;
-
+import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import acore.tools.FileManager;
-import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.widget.ImageViewVideo;
-import xh.basic.tool.UtilFile;
 
 /**
  * Created by sll on 2017/6/12.
  */
-
 public class SimpleVideoPlayerController extends VideoPlayerController {
+    private Activity activity;
+
+
     /**
      * 初始化操作：
      *
@@ -32,12 +31,14 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
      * @param viewGroup ---布局容器
      * @param imgUrl    ---图片路径
      */
-    public SimpleVideoPlayerController(Context context, ViewGroup viewGroup, String imgUrl) {
+    public SimpleVideoPlayerController(Activity context, ViewGroup viewGroup, String imgUrl) {
         super(context, viewGroup, imgUrl);
     }
 
-    public SimpleVideoPlayerController(Context context) {
+    public SimpleVideoPlayerController(Activity context) {
         super(context);
+        this.activity = context;
+
     }
 
     public void setViewGroup(ViewGroup parent) {
@@ -49,70 +50,142 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
     }
 
     public void initView() {
-        try {
-            //视频解码库初始化
-            VideoApplication.getInstence().initialize(mContext);
-        } catch (Exception e) {
-            statisticsInitVideoError(mContext);
-            LogManager.reportError("视频软解包初始化异常", e);
-            return;
-        } catch (Error e) {
-            statisticsInitVideoError(mContext);
-            return;
-        }
+        //初始化网络断开链接
+        isNetworkDisconnect = false;
 
-        if (mVDVideoView == null) {
-            mVDVideoView = new VDVideoView(mContext);
-            mVDVideoView.setLayers(R.array.my_videoview_layers);
-            mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
-                //暂时未实现
-                @Override
-                public void onVDVideoCompletion(VDVideoInfo info, int status) {
-                }
-            });
+        if(videoPlayer == null){
+            videoPlayer = new StandardGSYVideoPlayer(mContext);
+        }else{
+            onDestroy();
         }
+        //设置旋转
+        orientationUtils = new OrientationUtils(activity, videoPlayer);
+        videoPlayer.setShowFullAnimation(true);
+        videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                videoPlayer.startWindowFullscreen(mContext, true, true);
+            }
+        });
+        videoPlayer.setNeedShowWifiTip(true);
+        videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
+            @Override
+            public void onAutoComplete(String url, Object... objects) {
+                super.onAutoComplete(url, objects);
+                if(onPlayingCompletionListener != null){
+                    onPlayingCompletionListener.onPlayingCompletion();
+                    videoPlayer.hideAllWidget();
+                }
+            }
 
-        VDVideoViewController controller = VDVideoViewController.getInstance(mContext);
-        if (controller != null) {
-            controller.addOnCompletionListener(new VDVideoViewListeners.OnCompletionListener() {
-                @Override
-                public void onCompletion() {
-                    if (mOnPlayingCompletionListener != null) {
-                        mOnPlayingCompletionListener.onPlayingCompletion();
-                    }
-                }
-            });
-        }
+            @Override
+            public void onPrepared(String url, Object... objects) {
+                super.onPrepared(url, objects);
+                setNetworkCallback();
+            }
+
+            @Override
+            public void onEnterFullscreen(String url, Object... objects) {
+                super.onEnterFullscreen(url, objects);
+                orientationUtils.resolveByClick();
+            }
+
+            @Override
+            public void onQuitFullscreen(String url, Object... objects) {
+                super.onQuitFullscreen(url, objects);
+                orientationUtils.resolveByClick();
+            }
+        });
+
+        Resources resources = mContext.getResources();
+        videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
+        videoPlayer.setDialogProgressBar(resources.getDrawable(R.drawable.video_new_progress));
+        videoPlayer.setBottomShowProgressBarDrawable(resources.getDrawable(R.drawable.video_new_seekbar_progress),
+                resources.getDrawable(R.drawable.video_new_seekbar_thumb));
+
+        //是否可以滑动调整
+        videoPlayer.setIsTouchWiget(false);
+        videoPlayer.setIsTouchWigetFull(true);
+
+//        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
+//            @Override
+//            public boolean onError() {
+//                if(ToolsDevice.isNetworkAvailable(mContext)
+//                        && isNetworkDisconnect
+//                        && autoRetryCount < 3){
+//                    autoRetryCount++;
+//                    JCUtils.saveProgress(mContext,mVideoUrl,videoPlayerStandard.getCurrentPositionWhenPlaying());
+//                    videoPlayerStandard.startVideo();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
         if (mPraentViewGroup == null)
             return;
         if (mPraentViewGroup.getChildCount() > 0) {
             mPraentViewGroup.removeAllViews();
         }
-        mPraentViewGroup.addView(mVDVideoView);
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
+        mPraentViewGroup.addView(videoPlayer);
         if (!TextUtils.isEmpty(mImgUrl)) {
             if(view_Tip==null){
                 initView(mContext);
                 mPraentViewGroup.addView(view_Tip);
             }
-            if (mImageView == null) {
-                mImageView = new ImageViewVideo(mContext);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
-                mImageView.parseItemImg(ImageView.ScaleType.CENTER_CROP, mImgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
-                mImageView.setLayoutParams(params);
-                mPraentViewGroup.addView(mImageView);
-                this.view_dish=mImageView;
-                mImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setOnClick();
-                    }
-                });
-            }
+            mImageView = new ImageViewVideo(mContext);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            mImageView.playImgWH = Tools.getDimen(mContext, R.dimen.dp_50);
+            mImageView.parseItemImg(ImageView.ScaleType.CENTER_CROP, mImgUrl, true, false, R.drawable.i_nopic, FileManager.save_cache);
+            mImageView.setLayoutParams(params);
+            mPraentViewGroup.addView(mImageView);
+            this.view_dish=mImageView;
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setOnClick();
+                }
+            });
         }
-        String temp= (String) UtilFile.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
-        if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
+        String temp= (String) FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
+        if(!TextUtils.isEmpty(temp) && "1".equals(temp))
             setShowMedia(true);
+    }
+
+    private void setNetworkCallback(){
+        videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
+            @Override
+            public void wifiConnected() {
+                Log.i("tzy","wifiConnected");
+                removeTipView();
+                if(view_dish != null){
+                    view_dish.performClick();
+                }else{
+                    onResume();
+                }
+            }
+
+            @Override
+            public void mobileConnected() {
+                Log.i("tzy","mobileConnected");
+                if(view_Tip==null){
+                    initView(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
+            }
+
+            @Override
+            public void nothingConnected() {
+                Log.i("tzy","nothingConnected");
+                isNetworkDisconnect = true;
+                if(view_Tip==null){
+                    initNoNetwork(mContext);
+                    mPraentViewGroup.addView(view_Tip);
+                }
+                onPause();
+            }
+        });
     }
 }

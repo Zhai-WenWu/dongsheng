@@ -9,6 +9,7 @@ package acore.override.activity.mian;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -23,7 +24,7 @@ import amodule.main.Main;
 import third.ad.AdsShow;
 import third.mall.aplug.MallCommon;
 
-public class MainBaseActivity extends FragmentActivity {
+public class MainBaseActivity extends AppCompatActivity {
 	protected int level = 1;
 	public RelativeLayout rl;
 	public LoadManager loadManager;
@@ -50,10 +51,11 @@ public class MainBaseActivity extends FragmentActivity {
 		return mActMagager.onCreateOptionsMenu(menu);
 	}
 
+
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		mActMagager.onMenuItemSelected(featureId, item);
-		return super.onMenuItemSelected(featureId, item);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		mActMagager.onMenuItemSelected(0, item);
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

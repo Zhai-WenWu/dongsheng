@@ -179,7 +179,7 @@ public class MenuDish extends BaseActivity {
 		XHClick.mapStat(MenuDish.this, "a_share400", "菜谱", "菜单列表");
 		barShare = new BarShare(MenuDish.this, "精选菜单","菜单");
 		String type = BarShare.IMG_TYPE_RES;
-		String shareImg = "" + R.drawable.umen_share_launch;
+		String shareImg = "" + R.drawable.share_launcher;
 		String title = "精选菜单大全，强烈推荐！";
 		String clickUrl = StringManager.wwwUrl + "caipu/caidan";
 		String content = "最近一直在用香哈菜谱，内容好、分类全，还可以离线下载菜谱~";

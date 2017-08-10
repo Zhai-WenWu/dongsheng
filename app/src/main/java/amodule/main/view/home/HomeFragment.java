@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.xianghatest.R;
 
 import java.util.ArrayList;
@@ -690,9 +689,10 @@ public class HomeFragment extends BaseHomeFragment{
             }
             if (mPlayerController != null) {
                 mPlayerController.removePlayingCompletionListener();
-                mPlayerController.onPause();
+                mPlayerController.onDestroy();
             }
             mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_container);
+            Log.i("tzy","mPlayerController = " + mPlayerController);
             if (mPlayerController == null)
                 mPlayerController = new SimpleVideoPlayerController(mActivity);
             mPlayerController.setViewGroup(mVideoLayout);
@@ -708,13 +708,11 @@ public class HomeFragment extends BaseHomeFragment{
                         int width = ToolsDevice.getWindowPx(getContext()).widthPixels;
                         for (Map<String, String> map : maps) {
                             if (map != null) {
-                                if (width <= 480 && map.containsKey("D480p")) {
+                                videoD = map.get("defaultUrl");
+                                if (TextUtils.isEmpty(videoD)) {
                                     videoD = map.get("D480p");
-                                } else if (width > 720 && map.containsKey("D1080p")) {
-                                    videoD = map.get("D1080p");
-                                } else if (map.containsKey("D720p")) {
-                                    videoD = map.get("D720p");
-                                }
+                                } else
+                                    break;
                             }
                         }
                         mPlayerController.initVideoView2(videoD, dataMap.get("name"), null);
@@ -722,7 +720,6 @@ public class HomeFragment extends BaseHomeFragment{
                 }
             }
             mPlayerController.hideFullScreen();
-            mPlayerController.setMute(false, false);
             mPlayerController.setOnClick();
             mPlayerController.setOnPlayingCompletionListener(new VideoPlayerController.OnPlayingCompletionListener() {
                 @Override
@@ -746,10 +743,11 @@ public class HomeFragment extends BaseHomeFragment{
                 if (resumeView != null && resumeView.getVisibility() != View.GONE)
                     resumeView.setVisibility(View.GONE);
             }
-            mPlayerController.onPause();
             mPlayParentView = null;
             if (mVideoLayout != null)
                 mVideoLayout.removeAllViews();
+            mPlayerController.onPause();
+            mPlayerController.onDestroy();
         }
     }
 
@@ -757,11 +755,7 @@ public class HomeFragment extends BaseHomeFragment{
      * 重播
      */
     private void restartVideo() {
-        VDVideoViewController controller = VDVideoViewController.getInstance(mActivity);
-        if (controller != null) {
-            controller.resume();
-            controller.start();
-        }
+        mPlayerController.onStart();
     }
 
     /**
@@ -804,8 +798,8 @@ public class HomeFragment extends BaseHomeFragment{
             mVideoLayout.addView(mReplayAndShareView);
         }
         mReplayAndShareView.setVisibility(View.VISIBLE);
-        mVideoLayout.requestLayout();
-        mVideoLayout.invalidate();
+//        mVideoLayout.requestLayout();
+//        mVideoLayout.invalidate();
     }
 
     private void hideReplayShareView() {

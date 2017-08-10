@@ -1,10 +1,12 @@
 package amodule.quan.tool;
 
+import android.app.Activity;
 import android.widget.RelativeLayout;
 
 import com.xianghatest.R;
 
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import amodule.quan.view.BarSubjectFloorOwnerNew;
 import third.ad.AdParent;
 import third.ad.AdsShow;
@@ -20,11 +22,11 @@ import static third.ad.tools.TencenApiAdTools.TX_ID_QUAN_DETAIL;
  * E_mail : ztanzeyu@gmail.com
  */
 public class SubjectFloorAdvertControl {
-    private BaseActivity mAct;
+    private BaseAppCompatActivity mAct;
     private BarSubjectFloorOwnerNew floorView;
     private String tongjiId ="";
 
-    public SubjectFloorAdvertControl(BaseActivity mAct,BarSubjectFloorOwnerNew floorView,String tongjiId){
+    public SubjectFloorAdvertControl(BaseAppCompatActivity mAct,BarSubjectFloorOwnerNew floorView,String tongjiId){
         this.mAct = mAct;
         this.floorView = floorView;
         this.tongjiId = tongjiId;
