@@ -127,12 +127,10 @@ public class EvalutionUploadControl {
                         public void loadstat(int flag, String url, Object msg, Object... stat) {
                             isPublishing = false;
                             if(flag >= MallReqInternet.REQ_OK_STRING){
-                                //TODO
 
                                 if(onPublishCallback != null)
                                     onPublishCallback.onSuccess();
                             }else{
-                                //TODO
 
                                 if(onPublishCallback != null)
                                     onPublishCallback.onFailed();

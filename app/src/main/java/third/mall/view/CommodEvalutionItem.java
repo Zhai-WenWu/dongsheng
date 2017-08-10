@@ -107,7 +107,6 @@ public class CommodEvalutionItem extends ItemBaseView {
                         return;
                     }
                     Intent intent = new Intent(getContext(), PublishEvalutionSingleActivity.class);
-                    //TODO ceshi
                     intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_CODE,code);
                     intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_IMAGE,data.get("product_img"));
                     intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,score);

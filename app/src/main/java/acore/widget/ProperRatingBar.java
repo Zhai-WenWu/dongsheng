@@ -42,7 +42,7 @@ import com.xianghatest.R;
  */
 
 /**
- * TODO : add doc
+ * add doc
  * * See {@link R.styleable#ProperRatingBar ProperRatingBar Attributes}
  */
 public class ProperRatingBar extends LinearLayout {
