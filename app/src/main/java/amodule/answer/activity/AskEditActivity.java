@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -13,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,11 +23,14 @@ import acore.broadcast.ConnectionChangeReceiver;
 import acore.dialogManager.PushManager;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.upload.AskAnswerUploadListPool;
+import amodule.answer.window.FloatingWindow;
 import amodule.dish.view.CommonDialog;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
@@ -95,8 +99,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         mAskDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AppCommon.openUrl(AskEditActivity.this, StringManager.API_QA_QASTATEMENT, false);
                 XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击【查看问答细则及责任声明】", "");
-                //TODO 点击责任声明
             }
         });
     }
@@ -379,15 +383,16 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         Map<String, String> map = StringManager.getFirstMap(response);
         String type = map.get("type");
         String msg = map.get("msg");
-        mQADetailUrl = map.get("url");
+        mQADetailUrl = map.get("appUrl");
         if (!TextUtils.isEmpty(type)) {
             try {
                 int t = Integer.parseInt(type);
                 if (t > 200 && !TextUtils.isEmpty(msg)) {// >200表示失败，
                     showPriceChangeDialog(msg);
+                    onPriceDataReady(true, map);
                 } else {// <=200表示成功，吊起支付弹窗
                     mQAID = map.get("id");
-                    mWebUrl = map.get("url");
+                    mWebUrl = map.get("payUrl");
                     startPay();
                 }
             } catch (Exception e){
@@ -406,9 +411,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         mPayFinish = true;
         if (succ) {
             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
+            Tools.showToast(this, "支付成功");
             AppCommon.openUrl(this, mQADetailUrl, false);
             if (!PushManager.isNotificationEnabled()) {
-                getQANum();
+                getIsTip();
             }
             this.finish();
         } else {
@@ -417,45 +423,44 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         }
     }
 
-    private void getQANum() {
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_NUM, "type=1", new InternetCallback(this) {
+    private void getIsTip() {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_ISTIP, "type=1", new InternetCallback(this) {
             @Override
-            public void loaded(int i, String s, Object o) {
-                Map<String, String> map = StringManager.getFirstMap(o);
-                if (map != null && !map.isEmpty()) {
-                    String numStr = map.get("num");
-                    if (!TextUtils.isEmpty(numStr)) {
-                        try {
-                            final int num = Integer.parseInt(numStr);
-                            if (num == 1 || num == 5) {
-                                final XhDialog dialog = new XhDialog(AskEditActivity.this);
-                                dialog.setTitle("开启推送通知，作者回答后将在第一时间通知你，是否开启？")
-                                        .setCanselButton("否", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                dialog.cancel();
-                                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人第" + num + "次推送", "否");
-                                            }
-                                        })
-                                        .setSureButton("是", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人第" + num + "次推送", "是");
-                                                PushManager.requestPermission();
-                                            }
-                                        }).show();
+            public void loaded(int i, String s, Object obj) {
+                final FloatingWindow window = FloatingWindow.getInstance();
+                if (i >= UtilInternet.REQ_OK_STRING) {
+                    Map<String, String> map = StringManager.getFirstMap(obj);
+                    if (map != null && !map.isEmpty() && "2".equals(map.get("isTip"))) {
+                        View view = LayoutInflater.from(XHApplication.in().getApplicationContext()).inflate(R.layout.c_common_dialog, null, false);
+                        ((TextView) view.findViewById(R.id.dialog_message)).setText("开启推送通知，作者回答后将在第一时间通知你，是否开启？");
+                        TextView tvCancel = (TextView) view.findViewById(R.id.dialog_cancel);
+                        tvCancel.setText("否");
+                        tvCancel.setVisibility(View.VISIBLE);
+                        tvCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                window.cancelFloatingWindow();
+                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人推送", "否");
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        });
+                        view.findViewById(R.id.dialog_negative_line).setVisibility(View.VISIBLE);
+                        TextView tvSure = (TextView) view.findViewById(R.id.dialog_sure);
+                        tvSure.setText("是");
+                        tvSure.setVisibility(View.VISIBLE);
+                        tvSure.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                window.cancelFloatingWindow();
+                                PushManager.requestPermission();
+                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人推送", "是");
+                            }
+                        });
+                        window.setContentView(view);
+                        window.setCancelable(true);
+                        window.showFloatingWindow();
                     }
                 }
             }
         });
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
     }
 }

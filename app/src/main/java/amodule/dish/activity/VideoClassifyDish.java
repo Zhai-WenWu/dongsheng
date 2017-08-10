@@ -17,7 +17,7 @@ import android.view.View.OnClickListener;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class VideoClassifyDish extends BaseActivity {
 	

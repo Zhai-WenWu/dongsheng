@@ -16,7 +16,7 @@ import aplug.basic.LoadImage;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class MallAdapterSimple extends AdapterSimple {
 

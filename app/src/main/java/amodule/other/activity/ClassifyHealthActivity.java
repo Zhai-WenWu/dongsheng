@@ -9,9 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +20,6 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
-import amodule.main.Main;
 import amodule.other.fragment.ClassifyHealthFragment;
 
 /**

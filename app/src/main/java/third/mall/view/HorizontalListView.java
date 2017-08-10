@@ -40,7 +40,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.Scroller;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.LinkedList;
 import java.util.Queue;

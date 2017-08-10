@@ -23,7 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 import com.xiangha.emojiutil.EmojiUtil;
 
 import java.util.ArrayList;

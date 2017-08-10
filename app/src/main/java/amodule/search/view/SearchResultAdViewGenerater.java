@@ -8,11 +8,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
 import acore.logic.AppCommon;
 import acore.tools.FileManager;

@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -48,7 +48,6 @@ import aplug.imageselector.constant.ImageSelectorConstant;
 
 import static amodule.quan.activity.FriendQuan.REQUEST_CODE_QUAN_FRIEND;
 
-//import android.util.Log;
 
 /**
  * 发美食贴

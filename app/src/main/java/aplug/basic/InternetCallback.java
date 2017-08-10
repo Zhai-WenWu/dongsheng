@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tencent.android.tpush.XGPushConfig;
 import com.umeng.message.PushAgent;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.io.InputStream;
 import java.util.ArrayList;

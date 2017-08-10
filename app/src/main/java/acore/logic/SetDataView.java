@@ -15,7 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;

@@ -23,7 +23,7 @@ import android.widget.Toast;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class CircleUserBlack extends BaseActivity implements OnClickListener {
 	

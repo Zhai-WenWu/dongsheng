@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

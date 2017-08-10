@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONObject;
 
@@ -46,7 +46,7 @@ import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
-import static com.xiangha.R.id.share_layout;
+import static com.xianghatest.R.id.share_layout;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -59,7 +59,6 @@ public class DetailDish extends BaseAppCompatActivity {
 
     private DishActivityViewControlNew dishActivityViewControl;//view处理控制
 
-    private Handler mHandler;
     private Map<String,String> permissionMap = new HashMap<>();
     private Map<String,String> detailPermissionMap = new HashMap<>();
     private int statusBarHeight = 0;//广告所用bar高度
@@ -138,58 +137,14 @@ public class DetailDish extends BaseAppCompatActivity {
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
             }
         });
-        initData();
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadHistoryData();
+                loadDishInfo();
+                loadOtherData();
+
             }
         });
-    }
-
-    /**延迟handler数据回调     */
-    private void initData() {
-        mHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                switch (msg.what) {
-                    case LOAD_DISH://读取历史记录回来
-                        Log.i("detailDish","load_dish dishJson:" + dishJson);
-                        if (!TextUtils.isEmpty(dishJson) && dishJson.length() > 10) {
-                            imgLevel = LoadImage.SAVE_LONG;
-                            loadOtherData();
-                            analyzeHistoryData();
-                        } else {
-                            loadDishInfo();
-                            loadOtherData();
-                        }
-                        break;
-                    case LOAD_DISH_OVER://数据读取成功
-                        findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
-                        break;
-                }
-                return false;
-            }
-        });
-    }
-
-    /**
-     * 读取是否有离线菜谱
-     */
-    private void loadHistoryData() {
-        //处理延迟操作
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(!ToolsDevice.getNetActiveState(DetailDish.this)) {
-                    //获取离线菜谱的 json 数据
-                    dishJson = DataOperate.buyBurden(XHApplication.in(), code);
-                }
-                //获取手机中的离线菜谱数量
-                AppCommon.buyBurdenNum = getListMapByJson(DataOperate.buyBurden(XHApplication.in(), "")).size();
-                mHandler.sendEmptyMessage(LOAD_DISH);
-            }
-        }).start();
     }
 
     /**
@@ -241,8 +196,12 @@ public class DetailDish extends BaseAppCompatActivity {
         });
     }
 
+    /**
+     * 请求其他接口数据
+     */
     private void loadOtherData(){
         String params = "code=" + code;
+        //获取帖子数据
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDish.this) {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -252,6 +211,7 @@ public class DetailDish extends BaseAppCompatActivity {
             }
         });
 
+        //获取点赞数据
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDish.this) {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -260,16 +220,6 @@ public class DetailDish extends BaseAppCompatActivity {
                 }
             }
         });
-    }
-
-    /**
-     * 处理离线菜谱数据：
-     * 历史记录都是:dishInfo的数据
-     */
-    private void analyzeHistoryData() {
-        dishActivityViewControl.analyzeDishInfoData(dishJson, new HashMap<String, String>(),true);
-        loadManager.loadOver(ReqInternet.REQ_OK_STRING, 1, true);
-        mHandler.sendEmptyMessage(LOAD_DISH_OVER);
     }
 
     /**
@@ -332,11 +282,6 @@ public class DetailDish extends BaseAppCompatActivity {
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
-        }
-        //释放资源。
-        if(mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
         }
     }
 

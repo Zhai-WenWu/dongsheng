@@ -66,8 +66,8 @@
          <item name="android:gravity">center</item>
          <item name="android:textColor">#333333</item>
          <item name="android:textSize">@dimen/sp_13</item>
-         <item name="com.xiangha:radius">@dimen/dp_4</item>
-         <item name="com.xiangha:backgroundColor">#d9d8d3</item>
+         <item name="com.xianghatest:radius">@dimen/dp_4</item>
+         <item name="com.xianghatest:backgroundColor">#d9d8d3</item>
 
      </style>
 
@@ -79,8 +79,8 @@
         <item name="android:text">步骤图</item>
         <item name="android:paddingLeft">@dimen/dp_2</item>
         <item name="android:paddingRight">@dimen/dp_2</item>
-         <item name="com.xiangha:radius">@dimen/dp_2</item>
-         <item name="com.xiangha:backgroundColor">#E9E9E9</item>
+         <item name="com.xianghatest:radius">@dimen/dp_2</item>
+         <item name="com.xianghatest:backgroundColor">#E9E9E9</item>
      </style>
     
 </resources>

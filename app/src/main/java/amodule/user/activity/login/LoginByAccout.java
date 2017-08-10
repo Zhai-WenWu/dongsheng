@@ -14,8 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mob.MobSDK;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.HashMap;
 import java.util.Map;

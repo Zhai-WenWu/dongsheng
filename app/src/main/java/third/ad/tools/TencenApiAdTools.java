@@ -80,7 +80,7 @@ public class TencenApiAdTools {
     //请求url
     private final String reqUrl = "http://u.l.qq.com/bpxiangh";
 //    private final String reqUrl = "http://tpap.l.qq.com/bpxiangh";
-    private final String mAppId = "com.xiangha";
+    private final String mAppId = "com.xianghatest";
     private final String mpublisherId = "_adb_u2011";
 
     private String mLat,mLon,ua;

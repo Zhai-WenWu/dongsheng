@@ -1,52 +1,5 @@
 package amodule.dish.video.control;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.xiangha.R;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Map;
-
-import acore.logic.LoginManager;
-import acore.tools.FileManager;
-import amodule.dish.db.UploadDishData;
-import amodule.dish.db.UploadDishSqlite;
-import amodule.dish.video.View.MediaImageCover;
-import amodule.dish.video.bean.MediaPaperBean;
-import amodule.dish.video.bean.SpeechBean;
-import amodule.dish.video.tools.MediaVideoEditor;
-import xh.basic.tool.UtilString;
-
-import static amodule.dish.video.control.MediaControl.path_voide;
-import static amodule.dish.video.control.MediaControl.viewPath_cancel;
-
 /**
  * 视频裁剪操作具体控制类
  * 大图片转视频20%

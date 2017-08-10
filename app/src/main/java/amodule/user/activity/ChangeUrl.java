@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
@@ -14,7 +15,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
@@ -101,27 +102,9 @@ public class ChangeUrl extends BaseActivity {
                 switch (radioButtonId) {
                     case R.id.protocol1:
                         mProtocol = "https://";
-                        mXHPortEt.setText("");
-                        if (mXHPortEt.isFocused()) {
-                            mXHPortEt.clearFocus();
-                        }
-                        if (mXHSwitchBtn.isChecked()) {
-                            mXHSwitchBtn.setChecked(false);
-                        }
-
-                        mMallPortEt.setText("");
-                        if (mMallPortEt.isFocused()) {
-                            mMallPortEt.clearFocus();
-                        }
-                        if (mMallSwitchBtn.isChecked())
-                            mMallSwitchBtn.setChecked(false);
                         break;
                     case R.id.protocol2:
                         mProtocol = "http://";
-                        if (!mXHSwitchBtn.isChecked())
-                            mXHSwitchBtn.setChecked(true);
-                        if (!mMallSwitchBtn.isChecked())
-                            mMallSwitchBtn.setChecked(true);
                         break;
                 }
             }
@@ -135,8 +118,6 @@ public class ChangeUrl extends BaseActivity {
                         if (isChecked) {
                             mXHDomain = mXHTestDomain;
                             mXHPort = mXHPortEt.getText().toString().trim();
-                            if (!mProtocolBtn2.isChecked())
-                                mProtocolBtn2.setChecked(true);
                         } else {
                             mXHDomain = StringManager.defaultDomain;
                             mXHPort = "";
@@ -146,8 +127,6 @@ public class ChangeUrl extends BaseActivity {
                         if (isChecked) {
                             mMallDomain = mMallTestDomain;
                             mMallPort = mMallPortEt.getText().toString().trim();
-                            if (!mProtocolBtn2.isChecked())
-                                mProtocolBtn2.setChecked(true);
                         } else {
                             mMallDomain = mMallDefDomain;
                             mMallPort = "";
@@ -274,7 +253,6 @@ public class ChangeUrl extends BaseActivity {
             mMallSwitchBtn.setChecked(false);
         }
         mInitMallData = mMallDomain + mMallPort;
-
         //初始化是否开启请求返回值提示开关
         mRequsetFailTipSwitch.setChecked(Tools.isOpenRequestTip(this));
 

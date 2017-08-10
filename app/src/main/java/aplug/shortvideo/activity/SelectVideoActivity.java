@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
 import acore.widget.GridViewWithHeaderAndFooter;
-import amodule.dish.video.control.MediaHandleControl;
 import aplug.shortvideo.ShortVideoInit;
 import aplug.shortvideo.adapter.SelectVideoAdapter;
 import aplug.shortvideo.view.VideoPreviewView;

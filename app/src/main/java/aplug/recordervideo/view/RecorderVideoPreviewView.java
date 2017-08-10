@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import acore.tools.Tools;
 import aplug.recordervideo.tools.FileToolsCammer;

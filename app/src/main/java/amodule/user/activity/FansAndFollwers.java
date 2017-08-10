@@ -18,11 +18,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 @SuppressLint("ResourceAsColor")
 public class FansAndFollwers extends BaseActivity implements OnClickListener {

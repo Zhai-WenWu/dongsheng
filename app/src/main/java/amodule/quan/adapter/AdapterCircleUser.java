@@ -22,7 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class AdapterCircleUser extends AdapterSimple{
 	private Context mContext;

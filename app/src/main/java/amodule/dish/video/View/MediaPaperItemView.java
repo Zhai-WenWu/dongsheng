@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.text.DecimalFormat;
 import java.util.Timer;
@@ -21,7 +21,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.video.bean.MediaPaperBean;
 
-import static com.xiangha.R.id.item_surfaceVideoView;
+import static com.xianghatest.R.id.item_surfaceVideoView;
 
 /**
  * 视频裁剪itemview

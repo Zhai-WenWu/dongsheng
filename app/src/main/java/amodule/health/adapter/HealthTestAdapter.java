@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class HealthTestAdapter extends AdapterSimple {
 	public int[] selections = { R.id.health_item_selection_1, R.id.health_item_selection_2, R.id.health_item_selection_3,

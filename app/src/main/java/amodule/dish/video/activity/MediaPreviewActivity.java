@@ -20,15 +20,15 @@
 //import android.widget.TextView;
 //import android.widget.Toast;
 //
-//import com.sina.sinavideo.sdk.VDVideoExtListeners;
-//import com.sina.sinavideo.sdk.VDVideoView;
-//import com.sina.sinavideo.sdk.VDVideoViewController;
+//
+//
+//
 //import com.sina.sinavideo.sdk.container.VDVideoControlBottomRelativeContainer;
 //import com.sina.sinavideo.sdk.data.VDVideoInfo;
 //import com.sina.sinavideo.sdk.widgets.VDVideoFullScreenButton;
 //import com.sina.sinavideo.sdk.widgets.VDVideoPlaySeekBar;
 //import com.sina.sinavideo.sdk.widgets.VDVideoTimeTextView;
-//import com.xiangha.R;
+//
 //
 //import java.io.File;
 //import java.lang.ref.WeakReference;

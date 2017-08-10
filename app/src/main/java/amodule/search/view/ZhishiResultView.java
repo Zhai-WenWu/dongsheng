@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -30,7 +30,6 @@ import amodule.search.adapter.AdapterSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
 
 /**
  * Created by ：airfly on 2016/10/21 17:45.

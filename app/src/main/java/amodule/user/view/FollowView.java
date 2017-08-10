@@ -2,7 +2,6 @@ package amodule.user.view;
 
 import acore.logic.LoginManager;
 import acore.override.XHApplication;
-import acore.tools.Tools;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +16,7 @@ import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /**
  * 关注控件

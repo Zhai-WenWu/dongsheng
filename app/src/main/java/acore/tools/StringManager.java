@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.dialogManager.PushManager;
 import xh.basic.tool.UtilString;
 
 public class StringManager extends UtilString {
@@ -63,7 +64,7 @@ public class StringManager extends UtilString {
 
     public final static String appID = "1";
     //第三方下载链接（应用宝）
-    public final static String third_downLoadUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xiangha";
+    public final static String third_downLoadUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xianghatest";
     //崩溃
     public final static String api_uploadCrashLog = "http://crash.xiangha.com/report";
     //统计
@@ -250,6 +251,7 @@ public class StringManager extends UtilString {
     public final static String api_getDishLikeNumStatus = apiUrl + "main7/dish/likeNumStatus";
     public final static String api_getDishLikeHate = apiUrl + "main7/dish/likeHate";
     public final static String api_addCollection = apiUrl + "main7/dish/addCollection";
+    public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶
@@ -334,11 +336,14 @@ public class StringManager extends UtilString {
     public final static String api_Video = mUrl + "videoInfo/";//视频详情页m
 
     /*付费问答*/
-    public final static String API_QA_NUM = apiUrl + "main7/qa/getQaNum";//获取问答次数
+    public final static String API_QA_ISTIP = apiUrl + "main7/qa/getIsTip";//获取是否弹窗提示
     public final static String API_QA_GETREPORT = apiUrl + "main7/qa/getReport";//获取问答问答举报信息
     public final static String API_QA_COMMITREPORT = apiUrl + "main7/qa/addReport";//提交问答举报
     public final static String API_QA_GETPRICE = apiUrl + "main7/qa/getQaPrice";//获取提问金额
-    public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//获取提问金额
+    public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//添加问答
+    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//获取问答消息列表顶部tab信息
+    public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement";//问答细则及责任声明
+    public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet";//问答设置
 
     //替换url
     public final static String replaceUrl(String url) {

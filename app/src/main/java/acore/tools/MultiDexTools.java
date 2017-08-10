@@ -13,7 +13,7 @@ import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.xiangha.LoadResActivity;
+import com.xianghatest.LoadResActivity;
 
 import java.util.Map;
 import java.util.jar.Attributes;
@@ -102,7 +102,7 @@ public class MultiDexTools {
     }
     private static void waitForDexopt(Context base) {
         Intent intent = new Intent();
-        ComponentName componentName = new ComponentName( "com.xiangha", LoadResActivity.class.getName());
+        ComponentName componentName = new ComponentName( "com.xianghatest", LoadResActivity.class.getName());
         intent.setComponent(componentName);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         base.startActivity(intent);

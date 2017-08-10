@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +13,11 @@ import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
-
 import java.util.Map;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.LogManager;
-import acore.tools.StringManager;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;

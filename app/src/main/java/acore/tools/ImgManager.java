@@ -20,7 +20,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import aplug.basic.LoadImage;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 public class ImgManager extends UtilImage{
 	

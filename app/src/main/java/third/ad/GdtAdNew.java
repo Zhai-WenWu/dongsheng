@@ -20,7 +20,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.qq.e.ads.nativ.NativeADDataRef;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.List;
 import java.util.Random;

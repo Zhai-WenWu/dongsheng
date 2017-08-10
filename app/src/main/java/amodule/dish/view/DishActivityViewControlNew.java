@@ -10,7 +10,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import org.json.JSONObject;
 
@@ -45,7 +45,7 @@ public class  DishActivityViewControlNew {
     private XhScrollView mScrollView;
     private View view_oneImage;
     private RelativeLayout dishVidioLayout;
-    private XHWebView xhWebView;//干什么用的？
+    private XHWebView pageXhWebView;//页面限制：例如显示一个开通会员页面
 
     private int wm_height;//屏幕高度
     private int adBarHeight = 0;//广告所用bar高度
@@ -102,9 +102,7 @@ public class  DishActivityViewControlNew {
                 mAct.finish();
             }
         });
-        //xhwebView
-        WebviewManager manager = new WebviewManager(mAct,loadManager,true);
-        xhWebView = manager.createWebView(R.id.XHWebview);
+
         mXhWebView = (DishWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
         mXhWebView.setWebViewCallBack(new DishWebView.DishWebViewCallBack() {
             @Override
@@ -187,7 +185,6 @@ public class  DishActivityViewControlNew {
         mScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.i("zyj","onTouch::");
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (firstItemIndex == 0 && !isHasVideo) {
@@ -254,13 +251,10 @@ public class  DishActivityViewControlNew {
             state = "";
             dishTitleViewControl.setstate(state);
         }
+        if(customer != null&& !TextUtils.isEmpty(customer.get("code")) ){
+        mFootControl.setAuthorCode(customer.get("code"));}
         dishTitleViewControl.setViewState();
 
-        if(permissionMap != null && permissionMap.containsKey("offLine")){
-            Map<String,String> offlineMap = StringManager.getFirstMap(permissionMap.get("offLine"));
-            offlineMap = StringManager.getFirstMap(offlineMap.get("common"));
-            dishTitleViewControl.setOfflineLayoutVisibility("2".equals(offlineMap.get("isShow")));
-        }
 
         //头部view
         dishHeaderView.setData(list, new DishHeaderViewNew.DishHeaderVideoCallBack() {
@@ -413,7 +407,7 @@ public class  DishActivityViewControlNew {
         dishTitleViewControl.reset();
         dishHeaderView.reset();
         setLoginStatus();
-        xhWebView.setVisibility(View.GONE);
+        if(pageXhWebView!=null)pageXhWebView.setVisibility(View.GONE);
     }
 
     public void setLoginStatus(){
@@ -422,17 +416,21 @@ public class  DishActivityViewControlNew {
     }
 
     /**
+     * 页面限制：显示h5页面，例如：显示一个开通会员页面
      * @param pagePermission
      * @return
      */
     public boolean analyzePagePermissionData(Map<String,String> pagePermission){
         if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
+            //xhwebView
+            WebviewManager manager = new WebviewManager(mAct,loadManager,true);
+            pageXhWebView = manager.createWebView(R.id.XHWebview);
             String url = pagePermission.get("url");
-            xhWebView.loadUrl(url);
-            xhWebView.setVisibility(View.VISIBLE);
+            pageXhWebView.loadUrl(url);
+            pageXhWebView.setVisibility(View.VISIBLE);
             return false;
         }
-        xhWebView.setVisibility(View.GONE);
+        if(pageXhWebView!=null)pageXhWebView.setVisibility(View.GONE);
         return true;
     }
 
