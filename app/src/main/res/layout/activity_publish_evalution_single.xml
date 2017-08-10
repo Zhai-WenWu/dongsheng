@@ -9,6 +9,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -94,7 +96,7 @@
                     android:lineSpacingExtra="@dimen/sp_10"
                     android:lineSpacingMultiplier="1"
                     android:minHeight="@dimen/dp_240"
-                    android:paddingBottom="@dimen/dp_100"
+                    android:paddingBottom="@dimen/dp_105"
                     android:paddingLeft="@dimen/dp_20"
                     android:paddingRight="@dimen/dp_20"
                     android:paddingTop="@dimen/dp_15"/>

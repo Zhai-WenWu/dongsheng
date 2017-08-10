@@ -36,6 +36,7 @@ import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.CommodEvalutionImageItem;
 
 public class PublishEvalutionSingleActivity extends BaseActivity implements View.OnClickListener {
+    public static final String TAG = PublishEvalutionSingleActivity.class.getSimpleName();
     public static final String EXTRAS_CODE = "code";
     public static final String EXTRAS_SCORE = "score";
     public static final int DEFAULT_SCORE = 5;
@@ -56,7 +57,6 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private RelativeLayout shareLayout;
 
     EvalutionUploadControl uploadControl;
-    ArrayList<String> imageArray = new ArrayList<>();
 
     String code = "";
     int score = DEFAULT_SCORE;
@@ -73,9 +73,9 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private void initData() {
         Intent intent = getIntent();
         code = intent.getStringExtra(EXTRAS_CODE);
-        if(TextUtils.isEmpty(code))
+        if (TextUtils.isEmpty(code))
             this.finish();
-        score = intent.getIntExtra(EXTRAS_SCORE,DEFAULT_SCORE);
+        score = intent.getIntExtra(EXTRAS_SCORE, DEFAULT_SCORE);
 
         uploadControl = new EvalutionUploadControl(this);
         uploadControl.setCode(code);
@@ -153,10 +153,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         shareToCircleImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(shareToCircleImage.isSelected()){
+                if (shareToCircleImage.isSelected()) {
                     shareToCircleImage.setSelected(false);
                     shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share);
-                }else{
+                } else {
                     shareToCircleImage.setSelected(true);
                     shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share_selected);
                 }
@@ -174,12 +174,18 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         publishButton.setOnClickListener(this);
     }
 
+    /**
+     * 是否可以分享到美食圈
+     *
+     * @return
+     */
     private boolean canShareToCircle() {
         return ratingBar.getRating() >= 4
                 && contentEdit.getText().length() > 0
                 && imageArray.size() > 0;
     }
 
+    /** 更新分享layout显示状态 */
     private void updateShareLayoutVisibility() {
         if (canShareToCircle()) {
             if (shareLayout.getVisibility() == View.GONE) {
@@ -189,10 +195,11 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         shareLayout.setVisibility(canShareToCircle() ? View.VISIBLE : View.GONE);
     }
 
+    /** 更新文字长度提示 */
     private void updateContentLengthText() {
         int contentLength = contentEdit.getText().length();
         contentLengthText.setText(contentLength + "/" + maxTextCount);
-        contentLengthText.setTextColor(contentLength == maxTextCount ? R.color.comment_color : R.color.psts_tab_text);
+        contentLengthText.setTextColor(getResources().getColor(contentLength == maxTextCount ? R.color.comment_color : R.color.psts_tab_text));
     }
 
     @Override
@@ -202,36 +209,68 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             case SELECT_IMAE_REQUEST_CODE:
                 if (resultCode == RESULT_OK && data != null) {
                     ArrayList<String> images = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);
+                    Log.i(TAG,"images = " + images.toString());
+                    //更新上传数据，必须先于UI更新
+                    updateUploadImages(images);
+                    //UI更新同时更新数据
                     updateImage(images);
                 }
+                break;
+            default:
                 break;
         }
     }
 
+    /**
+     * 更新上传数据
+     * @param images
+     */
+    private void updateUploadImages(ArrayList<String> images) {
+        //对比新增数据
+        for(String imagePath:images){
+            if(!imageArray.contains(imagePath))
+                uploadControl.uploadImage(imagePath);//上传
+        }
+        //对比旧的移除数据
+        for(String imagePath:imageArray){
+            if(!images.contains(imagePath))
+                uploadControl.delUploadImage(imagePath);//移除上传
+        }
+    }
+
+    ArrayList<String> imageArray = new ArrayList<>();
+
+    /**
+     * 更新UI以及数据集合
+     * @param images
+     */
     private void updateImage(ArrayList<String> images) {
+        imageArray.clear();
         //替换数据
         for (int index = 0, length = images.size(); index < length; index++) {
             CommodEvalutionImageItem item = null;
             String imagePath = images.get(index);
+            Log.i(TAG,"imagePath = " + imagePath);
             if (imagesLayout.getChildCount() > index + 1) {
                 //有image了
                 item = (CommodEvalutionImageItem) imagesLayout.getChildAt(index);
+                Log.i(TAG,"复用ImageView");
             } else {
                 //没有image
                 item = new CommodEvalutionImageItem(this);
                 imagesLayout.addView(item);
+                Log.i(TAG,"新建ImageView");
             }
-            //重复验证
-            Object tagValue = item.getTag(R.id.image_path);
-            if (tagValue != null && imagePath.equals(tagValue)) {
-                continue;
-            }
-            //设置数据
-            item.setTag(R.id.image_path, imagePath);
+//            //重复验证
+//            Object tagValue = item.getTag(R.id.image_path);
+//            if (tagValue != null && imagePath.equals(tagValue)) {
+//                Log.i(TAG,"tag相同，进入下一次循环");
+//                continue;
+//            }
+//            //设置数据
+//            item.setTag(R.id.image_path, imagePath);
             imageArray.add(imagePath);
-            setImage(imagePath,item);
-            //上传
-            uploadControl.uploadImage(imagePath);
+            setImage(imagePath, item);
         }
         //
         for (int index = imagesLayout.getChildCount(); index > images.size(); index--) {
@@ -241,7 +280,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         selectImage.setVisibility(imageArray.size() == 3 ? View.GONE : View.VISIBLE);
     }
 
-    private void setImage(final String imagePath,final CommodEvalutionImageItem item){
+    private void setImage(final String imagePath, final CommodEvalutionImageItem item) {
         item.setImage(imagePath, new CommodEvalutionImageItem.OnLoadImageFailed() {
             @Override
             public void onLoadFailed() {
@@ -281,6 +320,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     }
 
     private Dialog mUploadingDialog;
+
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
