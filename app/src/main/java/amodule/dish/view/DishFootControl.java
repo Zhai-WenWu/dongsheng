@@ -305,6 +305,7 @@ public class DishFootControl implements View.OnClickListener{
                 }
                 Intent showIntent = new Intent(mAct, UploadSubjectNew.class);
                 showIntent.putExtra("dishCode",code);
+                showIntent.putExtra("title",mDishName);
                 showIntent.putExtra("skip", true);
                 showIntent.putExtra("cid", "1");
                 mAct.startActivity(showIntent);
