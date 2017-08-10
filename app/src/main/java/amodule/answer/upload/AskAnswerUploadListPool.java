@@ -338,19 +338,19 @@ public class AskAnswerUploadListPool extends UploadListPool {
         return uploadTextData;
     }
 
-    private String replaceUrl(String content,ArrayList<Map<String,String>> arrayList,String pathKey,String urlKey){
-        for(int i = 0; i < arrayList.size(); i++){
-            Map<String,String> map = arrayList.get(i);
-            String path = map.get(pathKey);
-            String url = map.get(urlKey);
-            String newPath = path.replace("/","\\/");
-            String newUrl = url.replace("/","\\/");
-            Log.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
-            content = content.replace(newPath,newUrl);
-            Log.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
-        }
-        return content;
-    }
+//    private String replaceUrl(String content,ArrayList<Map<String,String>> arrayList,String pathKey,String urlKey){
+//        for(int i = 0; i < arrayList.size(); i++){
+//            Map<String,String> map = arrayList.get(i);
+//            String path = map.get(pathKey);
+//            String url = map.get(urlKey);
+//            String newPath = path.replace("/","\\/");
+//            String newUrl = url.replace("/","\\/");
+//            Log.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
+//            content = content.replace(newPath,newUrl);
+//            Log.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
+//        }
+//        return content;
+//    }
 
     /**
      * 检查物料是否上传完毕

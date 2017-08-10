@@ -36,6 +36,7 @@ import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.answer.window.FloatingWindow;
 import amodule.dish.view.CommonDialog;
+import amodule.main.Main;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
@@ -160,12 +161,15 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             @Override
             public void onUploadOver(boolean flag, String response) {
                 XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "上传状态", flag ? "成功" : "上传失败");
-                AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
-                sqLite.deleteData(mUploadPoolData.getDraftId());
+                if (flag) {
+                    AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+                    sqLite.deleteData(mUploadPoolData.getDraftId());
+                }
                 if (Tools.isAppOnForeground() && flag) {
                     if (!PushManager.isNotificationEnabled()) {
                         getIsTip();
                     }
+                    Main.colse_level = 1;
                     AppCommon.openUrl(AskAnswerUploadListActivity.this, mQADetailUrl, false);
                     AskAnswerUploadListActivity.this.finish();
                 }
