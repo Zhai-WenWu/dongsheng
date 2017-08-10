@@ -343,8 +343,8 @@ public class StringManager extends UtilString {
     public final static String API_QA_GETPRICE = apiUrl + "main7/qa/getQaPrice";//获取提问金额
     public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//添加问答
     public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//获取问答消息列表顶部tab信息
-    public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement?fullScreen=2";//问答细则及责任声明
-    public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet?fullScreen=2";//问答设置
+    public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement";//问答细则及责任声明
+    public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet";//问答设置
 
     //替换url
     public final static String replaceUrl(String url) {
