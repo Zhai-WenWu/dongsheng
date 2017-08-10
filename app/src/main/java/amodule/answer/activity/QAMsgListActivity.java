@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 
 import com.xianghatest.R;
@@ -13,10 +15,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.activity.base.BaseFragmentActivity;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.answer.adapter.QAMsgPagerAdapter;
 import amodule.answer.model.QAMsgModel;
+import aplug.basic.ReqInternet;
+import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
@@ -104,6 +109,18 @@ public class QAMsgListActivity extends BaseFragmentActivity {
 
     private void getTabData() {
         loadManager.showProgressBar();
+        Map<String,String> header= ReqInternet.in().getHeader(this);
+        String cookieKey= StringManager.appWebUrl.replace(StringManager.appWebTitle, "");
+        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+        String[] cookie = cookieStr.split(";");
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        for (int i = 0; i < cookie.length; i++) {
+            if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
+            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
+            cookieManager.setCookie(cookieKey, cookie[i]);
+        }
+        CookieSyncManager.getInstance().sync();
         mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST));
     }
 

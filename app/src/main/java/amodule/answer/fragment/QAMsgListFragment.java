@@ -7,14 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
 
 import com.xianghatest.R;
 
+import java.util.Map;
+
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseFragmentActivity;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import amodule.answer.model.QAMsgModel;
+import aplug.basic.ReqInternet;
+import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
@@ -62,6 +69,18 @@ public class QAMsgListFragment extends Fragment {
             }
         });
         mWebContainer.addView(mWebView);
+        Map<String,String> header= ReqInternet.in().getHeader(mActivity);
+        String cookieKey= StringManager.appWebUrl.replace(StringManager.appWebTitle, "");
+        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+        String[] cookie = cookieStr.split(";");
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        for (int i = 0; i < cookie.length; i++) {
+            if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
+            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
+            cookieManager.setCookie(cookieKey, cookie[i]);
+        }
+        CookieSyncManager.getInstance().sync();
         mIsCreateView = true;
         if (getUserVisibleHint())
             loadUrl();
