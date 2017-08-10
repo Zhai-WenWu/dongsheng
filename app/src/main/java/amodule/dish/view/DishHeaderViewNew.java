@@ -24,8 +24,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -51,8 +50,9 @@ import xh.basic.tool.UtilString;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
- * 菜单详情页顶部原生view处理
+ * Created by Administrator on 2016/9/21.
  */
+
 public class DishHeaderViewNew extends LinearLayout {
     private Context context;
     private Activity activity;
@@ -313,8 +313,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 isContinue = true;
                 isHaspause = false;
                 dredgeVipLayout.setVisibility(GONE);
-                mVideoPlayerController.setControlLayerVisibility(true);
-                VDVideoViewController.getInstance(context).setSeekPause(false);
             }
 
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
@@ -342,8 +340,10 @@ public class DishHeaderViewNew extends LinearLayout {
         }
         return isUrlVaild;
     }
+
     private RelativeLayout dredgeVipLayout;
     private VideoDredgeVipView vipView;
+
     private void setVipPermision(final Map<String, String> common){
         if(!StringManager.getBooleanByEqualsValue(common,"isShow")){
             Log.i("tzy","common = " + common.toString());
@@ -361,67 +361,34 @@ public class DishHeaderViewNew extends LinearLayout {
                         return;
                     }
 
-                    dredgeVipLayout.setVisibility(GONE);
-                    mVideoPlayerController.onStart();
-                    VDVideoViewController.getInstance(context).onStartWithVideoResume();
-                    mVideoPlayerController.setControlLayerVisibility(true);
                 }
             });
             dredgeVipLayout.setPadding(0, distance, 0, 0);
-            mVideoPlayerController.setOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
+            mVideoPlayerController.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
                 @Override
-                public void onProgressUpdate(long current, long duration) {
-                    int currentS = Math.round(current/1000f);
-                    int durationS = Math.round(duration/1000f);
-                    if(limitTime > durationS){
-                        mVideoPlayerController.setControlLayerVisibility(true);
-                    }
-                    if(isHaspause){
-                        VDVideoViewController.getInstance(context).setSeekPause(true);
-                        mVideoPlayerController.onPause();
-                        mVideoPlayerController.onResume();
-                        return;
-                    }
-                    if((currentS > limitTime
+                public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+                    int currentS = Math.round(currentTime / 1000f);
+                    int durationS = Math.round(totalTime / 1000f);
+                    Log.i("tzy","currentS = " + currentS + " ; durationS = " + durationS);
+                    Log.i("tzy","limitTime = " + limitTime);
+                    Log.i("tzy","progress = " + progress);
+                    Log.i("tzy","======================================");
+                    if (currentS >= 0 && durationS >= 0) {
+                        if (isHaspause) {
+                            mVideoPlayerController.onPause();
+                            return;
+                        }
+                        if ((currentS > limitTime
 //                            || limitTime > durationS
-                    )&& !isContinue){
-                        currentTime = current;
-                        dredgeVipLayout.setVisibility(VISIBLE);
-                        VDVideoViewController.getInstance(context).setSeekPause(true);
-                        mVideoPlayerController.onPause();
-                        mVideoPlayerController.onResume();
-                        isHaspause = true;
-                    }
-                }
-
-                @Override
-                public void onDragProgess(long current, long duration) {
-                    int currentS = Math.round(current/1000f);
-                    int durationS = Math.round(duration/1000f);
-                    if(limitTime > durationS){
-                        mVideoPlayerController.setControlLayerVisibility(true);
-                    }
-                    if(isHaspause){
-                        VDVideoViewController.getInstance(context).setSeekPause(true);
-                        mVideoPlayerController.onPause();
-                        mVideoPlayerController.onResume();
-                        return;
-                    }
-                    if((currentS > limitTime
-//                            || limitTime > durationS
-                    ) && !isContinue){
-                        currentTime = current;
-                        dredgeVipLayout.setVisibility(VISIBLE);
-                        VDVideoViewController.getInstance(context).setSeekPause(true);
-                        mVideoPlayerController.onPause();
-                        mVideoPlayerController.onResume();
-
-                        isHaspause = true;
+                        ) && !isContinue) {
+                            dredgeVipLayout.setVisibility(VISIBLE);
+                            mVideoPlayerController.onPause();
+                            isHaspause = true;
+                        }
                     }
                 }
             });
         }
-
     }
 
 
@@ -468,10 +435,24 @@ public class DishHeaderViewNew extends LinearLayout {
 
     public void onResume() {
         isOnResuming = true;
+        if(mVideoPlayerController != null
+                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE))
+            mVideoPlayerController.onResume();
     }
 
     public void onPause() {
         isOnResuming = false;
+        if(mVideoPlayerController != null)
+        mVideoPlayerController.onPause();
+    }
+
+    public void onDestroy() {
+        if(mVideoPlayerController != null)
+        mVideoPlayerController.onDestroy();
+    }
+
+    public boolean onBackPressed(){
+        return mVideoPlayerController != null ? mVideoPlayerController.onBackPressed() : false;
     }
 
     public View getVideoView(){

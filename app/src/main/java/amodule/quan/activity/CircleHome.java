@@ -23,6 +23,7 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.override.data.UploadData;
 import acore.override.helper.UploadHelper.UploadCallback;
@@ -50,7 +51,7 @@ import third.share.ShareTools;
  *
  * @author Eva
  */
-public class CircleHome extends BaseFragmentActivity implements OnClickListener {
+public class CircleHome extends BaseAppCompatActivity implements OnClickListener {
     /** 当前subjectData不存在于本地集合中的返回值 */
     private final int NO_EXIST = -1;
     /** 该页面的tab控件 */

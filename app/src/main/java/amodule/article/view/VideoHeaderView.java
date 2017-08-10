@@ -8,13 +8,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +23,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
-import com.sina.sinavideo.sdk.VDVideoViewController;
-import com.sina.sinavideo.sdk.VDVideoViewListeners;
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -74,18 +73,20 @@ public class VideoHeaderView extends RelativeLayout {
 
     public VideoHeaderView(Context context) {
         super(context);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage, null);
-        addView(view);
+        inflateView();
     }
 
     public VideoHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage, null);
-        addView(view);
+        inflateView();
     }
 
     public VideoHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        inflateView();
+    }
+
+    private void inflateView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage, null);
         addView(view);
     }
@@ -104,13 +105,8 @@ public class VideoHeaderView extends RelativeLayout {
     public void setData(Map<String, String> data, DishHeaderViewNew.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
         if (callBack == null) {
             this.callBack = new DishHeaderViewNew.DishHeaderVideoCallBack() {
-                @Override
-                public void videoImageOnClick() {
-                }
-
-                @Override
-                public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
-                }
+                @Override public void videoImageOnClick() { }
+                @Override public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) { }
             };
         } else this.callBack = callBack;
 
@@ -124,12 +120,8 @@ public class VideoHeaderView extends RelativeLayout {
                 Toast.makeText(getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (videoUrlData.containsKey("D1080p") && !TextUtils.isEmpty(videoUrlData.get("D1080p"))) {
-                url = videoUrlData.get("D1080p");
-            } else if (videoUrlData.containsKey("D720p") && !TextUtils.isEmpty(videoUrlData.get("D720p"))) {
-                url = videoUrlData.get("D720p");
-            } else if (videoUrlData.containsKey("D480p") && !TextUtils.isEmpty(videoUrlData.get("D480p"))) {
-                url = videoUrlData.get("D480p");
+            if (videoUrlData.containsKey("defaultUrl") && !TextUtils.isEmpty(videoUrlData.get("defaultUrl"))) {
+                url = videoUrlData.get("defaultUrl");
             }
             videoData.put("url", url);
             setSelfVideo(videoData,detailPermissionMap);
@@ -150,7 +142,6 @@ public class VideoHeaderView extends RelativeLayout {
             public void callBack(Map<String, String> maps) {
                 String temp = maps.get(AdPlayIdConfig.ARTICLE_TIEPIAN);
                 mapAd = StringManager.getFirstMap(temp);
-//                Log.i("tzy", "needVideoControl time = " + System.currentTimeMillis());
                 if (mapAd != null && mapAd.size() > 0
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
@@ -213,7 +204,8 @@ public class VideoHeaderView extends RelativeLayout {
                     view.setVisibility(View.GONE);
                     if (!mVideoPlayerController.isPlaying()) {
                         mVideoPlayerController.setShowAd(false);
-                        if (isOnResuming) mVideoPlayerController.setOnClick();
+                        if (isOnResuming)
+                            mVideoPlayerController.setOnClick();
                     }
                 }
             }
@@ -267,7 +259,9 @@ public class VideoHeaderView extends RelativeLayout {
         String img = selfVideoMap.get("videoImg");
         if (!TextUtils.isEmpty(videoUrl)
                 && videoUrl.startsWith("http")) {
-            mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+            if(null == mVideoPlayerController)
+                mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+            else onDestroy();
 
             if(permissionMap != null && permissionMap.containsKey("video")){
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
@@ -281,8 +275,6 @@ public class VideoHeaderView extends RelativeLayout {
                 isContinue = true;
                 isHaspause = false;
                 dredgeVipLayout.setVisibility(GONE);
-                mVideoPlayerController.setControlLayerVisibility(true);
-                VDVideoViewController.getInstance(activity).setSeekPause(false);
             }
 
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
@@ -348,55 +340,25 @@ public class VideoHeaderView extends RelativeLayout {
                 }
             }
         });
-        mVideoPlayerController.setOnProgressUpdateListener(new VDVideoViewListeners.OnProgressUpdateListener() {
+        mVideoPlayerController.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
             @Override
-            public void onProgressUpdate(long current, long duration) {
-                int currentS = Math.round(current/1000f);
-                int durationS = Math.round(duration/1000f);
-                if(limitTime > durationS){
-                    mVideoPlayerController.setControlLayerVisibility(true);
-                }
-                if(isHaspause){
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-                    return;
-                }
-                if((currentS > limitTime
-//                        || limitTime > durationS
-                ) && !isContinue){
-                    currentTime = current;
-                    dredgeVipLayout.setVisibility(VISIBLE);
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-                    isHaspause = true;
-                }
-            }
-
-            @Override
-            public void onDragProgess(long current, long duration) {
-                int currentS = Math.round(current/1000f);
-                int durationS = Math.round(duration/1000f);
-                if(limitTime > durationS){
-                    mVideoPlayerController.setControlLayerVisibility(true);
-                }
-                if(isHaspause){
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-                    return;
-                }
-                if((currentS > limitTime
-//                        || limitTime > durationS
-                ) && !isContinue){
-                    currentTime = current;
-                    dredgeVipLayout.setVisibility(VISIBLE);
-                    VDVideoViewController.getInstance(activity).setSeekPause(true);
-                    mVideoPlayerController.onPause();
-                    mVideoPlayerController.onResume();
-
-                    isHaspause = true;
+            public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+                int currentS = Math.round(currentTime / 1000f);
+                int durationS = Math.round(totalTime / 1000f);
+                if (currentS >= 0 && durationS >= 0) {
+                    if (isHaspause) {
+                        mVideoPlayerController.onPause();
+//                        mVideoPlayerController.onResume();
+                        return;
+                    }
+                    if ((currentS > limitTime
+//                            || limitTime > durationS
+                    ) && !isContinue) {
+                        dredgeVipLayout.setVisibility(VISIBLE);
+                        mVideoPlayerController.onPause();
+//                        mVideoPlayerController.onResume();
+                        isHaspause = true;
+                    }
                 }
             }
         });
@@ -404,15 +366,35 @@ public class VideoHeaderView extends RelativeLayout {
 
     public void onResume() {
         isOnResuming = true;
+        if(mVideoPlayerController != null
+                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE)){
+            mVideoPlayerController.onResume();
+        }
     }
 
     public void onPause() {
         isOnResuming = false;
+        if(mVideoPlayerController != null){
+            mVideoPlayerController.onPause();
+        }
     }
 
     public void setLoginStatus(){
         if(vipView != null){
             vipView.setLogin();
+        }
+    }
+
+    public boolean onBackPressed() {
+        if(mVideoPlayerController != null){
+            return mVideoPlayerController.onBackPressed();
+        }
+        return false;
+    }
+
+    public void onDestroy() {
+        if(mVideoPlayerController != null){
+            mVideoPlayerController.onDestroy();
         }
     }
 }

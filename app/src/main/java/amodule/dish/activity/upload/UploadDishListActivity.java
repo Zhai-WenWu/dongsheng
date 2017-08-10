@@ -32,7 +32,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.ToolsDevice;
 import amodule.dish.upload.VideoDishUploadListPool;
-import amodule.dish.video.activity.MediaPreviewActivity;
+//import amodule.dish.video.activity.MediaPreviewActivity;
 import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
 import amodule.upload.UploadListControl;
@@ -179,12 +179,12 @@ public class UploadDishListActivity extends BaseActivity {
     }
 
     private void closePreActivity() {
-        if (MediaPreviewActivity.mediaPreWeakRe != null) {
-            Activity mediaPreAct = MediaPreviewActivity.mediaPreWeakRe.get();
-            MediaPreviewActivity.mediaPreWeakRe = null;
-            if (mediaPreAct != null)
-                mediaPreAct.finish();
-        }
+//        if (MediaPreviewActivity.mediaPreWeakRe != null) {
+//            Activity mediaPreAct = MediaPreviewActivity.mediaPreWeakRe.get();
+//            MediaPreviewActivity.mediaPreWeakRe = null;
+//            if (mediaPreAct != null)
+//                mediaPreAct.finish();
+//        }
 
         if(UploadDishActivity.uploaDishWeakRef !=null){
             Activity dishActivity =UploadDishActivity.uploaDishWeakRef.get();

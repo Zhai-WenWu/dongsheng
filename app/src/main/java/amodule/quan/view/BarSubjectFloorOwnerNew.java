@@ -17,6 +17,7 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -35,7 +36,7 @@ import third.video.VideoImagePlayerController;
 
 public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickListener {
     public final static int TAG_ID = R.string.tag;
-    private BaseActivity mAct;
+    private BaseAppCompatActivity mAct;
     private Handler handler;
     private View headerView;
     private LinearLayout sb_header_linear_body_imgs;
@@ -62,7 +63,7 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
 
     private boolean saveHistoryOver = false;
 
-    public BarSubjectFloorOwnerNew(BaseActivity mAct, Handler handler, RelativeLayout qpView) {
+    public BarSubjectFloorOwnerNew(BaseAppCompatActivity mAct, Handler handler, RelativeLayout qpView) {
         super(mAct);
         this.mAct = mAct;
         this.handler = handler;
@@ -303,12 +304,6 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
         }
     }
 
-    public void onConfigurationChanged(int requestedOrientation) {
-        if (videoLayout != null) {
-            videoLayout.onConfigurationChanged(requestedOrientation);
-        }
-    }
-
     public ImageViewVideo getImageViewVideo() {
         if (videoLayout != null) {
             return videoLayout.getImageViewVideo();
@@ -332,6 +327,13 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
         if (videoLayout != null) {
             videoLayout.onDestroy();
         }
+    }
+
+    public boolean onBackPressed(){
+        if(videoLayout != null){
+            return videoLayout.onBackPressed();
+        }
+        return false;
     }
 
     /** 回调 */

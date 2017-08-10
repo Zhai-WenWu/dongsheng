@@ -35,18 +35,6 @@ public class VideoAllHeaderView extends LinearLayout {
         this.setOrientation(LinearLayout.VERTICAL);
         initView();
     }
-//
-//    public VideoAllHeaderView(Context context, @Nullable AttributeSet attrs) {
-//        super(context, attrs);
-//        this.setOrientation(LinearLayout.VERTICAL);
-//        initView();
-//    }
-//
-//    public VideoAllHeaderView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-//        super(context, attrs, defStyleAttr);
-//        this.setOrientation(LinearLayout.VERTICAL);
-//        initView();
-//    }
 
     private void initView(){
         videoHeaderView = new VideoHeaderView(getContext());
@@ -73,21 +61,11 @@ public class VideoAllHeaderView extends LinearLayout {
         videoInfoView.setType(mCurrType);
         setVisibility(VISIBLE);
         if(!isOnlyUser){
-            videoHeaderView.setData(mapVideo, new DishHeaderViewNew.DishHeaderVideoCallBack() {
-                @Override
-                public void videoImageOnClick() {
-                }
-
-                @Override
-                public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
-                    callBack.getVideoPlayerController(mVideoPlayerController);
-                }
-            },detailPermissionMap);
+            videoHeaderView.setData(mapVideo, null,detailPermissionMap);
             //设置videoinfo数据
             videoInfoView.setData(mapVideo);
             setUserData(mapVideo);
         }
-
     }
 
     public void setupCommentNum(String commentNumStr){
@@ -124,14 +102,13 @@ public class VideoAllHeaderView extends LinearLayout {
             videoHeaderView.onPause();
     }
 
-    private VideoViewCallBack callBack;
-    public interface VideoViewCallBack{
-        public void getVideoPlayerController(VideoPlayerController mVideoPlayerController);
-        public void gotoRequest();
+    public boolean onBackPressed() {
+        return null != videoHeaderView && videoHeaderView.onBackPressed();
     }
 
-    public void setCallBack(VideoViewCallBack callBack) {
-        this.callBack = callBack;
+    public void onDestroy() {
+        if(videoHeaderView != null)
+            videoHeaderView.onDestroy();
     }
 
     public VideoHeaderView getVideoHeaderView() {
