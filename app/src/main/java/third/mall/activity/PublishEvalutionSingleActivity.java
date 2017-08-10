@@ -1,7 +1,6 @@
 package third.mall.activity;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,20 +8,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -36,7 +28,7 @@ import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.CommodEvalutionImageItem;
 
 public class PublishEvalutionSingleActivity extends BaseActivity implements View.OnClickListener {
-    public static final String TAG = PublishEvalutionSingleActivity.class.getSimpleName();
+    public static final String TAG = "tzy";
     public static final String EXTRAS_CODE = "code";
     public static final String EXTRAS_SCORE = "score";
     public static final int DEFAULT_SCORE = 5;
@@ -251,33 +243,25 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             CommodEvalutionImageItem item = null;
             String imagePath = images.get(index);
             Log.i(TAG,"imagePath = " + imagePath);
-            if (imagesLayout.getChildCount() > index + 1) {
+            if(index < imagesLayout.getChildCount()){
                 //有image了
-                item = (CommodEvalutionImageItem) imagesLayout.getChildAt(index);
                 Log.i(TAG,"复用ImageView");
-            } else {
+                item = (CommodEvalutionImageItem) imagesLayout.getChildAt(index);
+            }else {
                 //没有image
                 item = new CommodEvalutionImageItem(this);
                 imagesLayout.addView(item);
                 Log.i(TAG,"新建ImageView");
             }
-//            //重复验证
-//            Object tagValue = item.getTag(R.id.image_path);
-//            if (tagValue != null && imagePath.equals(tagValue)) {
-//                Log.i(TAG,"tag相同，进入下一次循环");
-//                continue;
-//            }
-//            //设置数据
-//            item.setTag(R.id.image_path, imagePath);
+            item.setTag(R.id.image_path, imagePath);
             imageArray.add(imagePath);
             setImage(imagePath, item);
         }
-        //
-        for (int index = imagesLayout.getChildCount(); index > images.size(); index--) {
-            imagesLayout.removeViewAt(index - 1);
-            imageArray.remove(index - 1);
+        //移除多余view
+        for (int index = imagesLayout.getChildCount() - 1; index >= images.size(); index--) {
+            imagesLayout.removeViewAt(index);
         }
-        selectImage.setVisibility(imageArray.size() == 3 ? View.GONE : View.VISIBLE);
+        selectImage.setVisibility(imagesLayout.getChildCount() == 3 ? View.GONE : View.VISIBLE);
     }
 
     private void setImage(final String imagePath, final CommodEvalutionImageItem item) {
