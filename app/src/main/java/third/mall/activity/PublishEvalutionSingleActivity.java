@@ -10,11 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.bumptech.glide.Glide;
+import com.xianghatest.R;
 
 import java.util.ArrayList;
 
@@ -25,12 +25,14 @@ import acore.widget.ProperRatingBar;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import third.mall.upload.EvalutionUploadControl;
-import third.mall.view.CommodEvalutionImageItem;
+import third.mall.view.EvalutionImageLayout;
+import xh.windowview.XhDialog;
 
 public class PublishEvalutionSingleActivity extends BaseActivity implements View.OnClickListener {
     public static final String TAG = "tzy";
     public static final String EXTRAS_CODE = "code";
     public static final String EXTRAS_SCORE = "score";
+    public static final String EXTRAS_IMAGE = "image";
     public static final int DEFAULT_SCORE = 5;
 
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
@@ -45,12 +47,13 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private ProperRatingBar ratingBar;
     private EditText contentEdit;
 
-    private LinearLayout imagesLayout;
+    private EvalutionImageLayout imagesLayout;
     private RelativeLayout shareLayout;
 
     EvalutionUploadControl uploadControl;
 
     String code = "";
+    String image = "";
     int score = DEFAULT_SCORE;
 
     @Override
@@ -65,6 +68,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private void initData() {
         Intent intent = getIntent();
         code = intent.getStringExtra(EXTRAS_CODE);
+        image = intent.getStringExtra(EXTRAS_IMAGE);
         if (TextUtils.isEmpty(code))
             this.finish();
         score = intent.getIntExtra(EXTRAS_SCORE, DEFAULT_SCORE);
@@ -100,8 +104,13 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         contentLengthText = (TextView) findViewById(R.id.content_length_text);
         contentEdit = (EditText) findViewById(R.id.content_edit);
         ratingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
-        imagesLayout = (LinearLayout) findViewById(R.id.images);
+        imagesLayout = (EvalutionImageLayout) findViewById(R.id.images);
         shareLayout = (RelativeLayout) findViewById(R.id.share_to_circle);
+
+        Glide.with(this).load(image)
+                .placeholder(R.drawable.i_nopic)
+                .error(R.drawable.i_nopic)
+                .into(commodityImage);
     }
 
     private void setListener() {
@@ -155,10 +164,23 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             }
         });
 
-        imagesLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        imagesLayout.setOnHierarchyChangeCallback(new EvalutionImageLayout.OnHierarchyChangeCallback() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            public void onChildViewAdded(View parent, View child) {
+                Log.i("tzy","onChildViewAdded");
                 updateShareLayoutVisibility();
+                updateSelectImageVisibility();
+            }
+
+            @Override
+            public void onChildViewRemoved(View parent, View child) {
+                Log.i("tzy","onChildViewRemoved");
+                updateShareLayoutVisibility();
+                updateSelectImageVisibility();
+                //移除上传图片
+                if (child != null && child.getTag(R.id.image_path) != null) {
+                    uploadControl.delUploadImage(child.getTag(R.id.image_path).toString());
+                }
             }
         });
 
@@ -174,7 +196,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private boolean canShareToCircle() {
         return ratingBar.getRating() >= 4
                 && contentEdit.getText().length() > 0
-                && imageArray.size() > 0;
+                && imagesLayout.getChildCount() > 0;
     }
 
     /** 更新分享layout显示状态 */
@@ -182,9 +204,15 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         if (canShareToCircle()) {
             if (shareLayout.getVisibility() == View.GONE) {
                 selectImage.setSelected(true);
+                shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share_selected);
             }
         }
         shareLayout.setVisibility(canShareToCircle() ? View.VISIBLE : View.GONE);
+    }
+
+    /** 更新图片选择显示状态 */
+    private void updateSelectImageVisibility() {
+        selectImage.setVisibility(imagesLayout.getChildCount() == 3 ? View.GONE : View.VISIBLE);
     }
 
     /** 更新文字长度提示 */
@@ -201,11 +229,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             case SELECT_IMAE_REQUEST_CODE:
                 if (resultCode == RESULT_OK && data != null) {
                     ArrayList<String> images = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);
-                    Log.i(TAG,"images = " + images.toString());
                     //更新上传数据，必须先于UI更新
                     updateUploadImages(images);
                     //UI更新同时更新数据
-                    updateImage(images);
+                    imagesLayout.updateImage(images);
                 }
                 break;
             default:
@@ -215,77 +242,27 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     /**
      * 更新上传数据
+     *
      * @param images
      */
     private void updateUploadImages(ArrayList<String> images) {
         //对比新增数据
-        for(String imagePath:images){
-            if(!imageArray.contains(imagePath))
+        for (String imagePath : images) {
+            if (!imagesLayout.getImageArray().contains(imagePath))
                 uploadControl.uploadImage(imagePath);//上传
         }
         //对比旧的移除数据
-        for(String imagePath:imageArray){
-            if(!images.contains(imagePath))
+        for (String imagePath : imagesLayout.getImageArray()) {
+            if (!images.contains(imagePath))
                 uploadControl.delUploadImage(imagePath);//移除上传
         }
-    }
-
-    ArrayList<String> imageArray = new ArrayList<>();
-
-    /**
-     * 更新UI以及数据集合
-     * @param images
-     */
-    private void updateImage(ArrayList<String> images) {
-        imageArray.clear();
-        //替换数据
-        for (int index = 0, length = images.size(); index < length; index++) {
-            CommodEvalutionImageItem item = null;
-            String imagePath = images.get(index);
-            Log.i(TAG,"imagePath = " + imagePath);
-            if(index < imagesLayout.getChildCount()){
-                //有image了
-                Log.i(TAG,"复用ImageView");
-                item = (CommodEvalutionImageItem) imagesLayout.getChildAt(index);
-            }else {
-                //没有image
-                item = new CommodEvalutionImageItem(this);
-                imagesLayout.addView(item);
-                Log.i(TAG,"新建ImageView");
-            }
-            item.setTag(R.id.image_path, imagePath);
-            imageArray.add(imagePath);
-            setImage(imagePath, item);
-        }
-        //移除多余view
-        for (int index = imagesLayout.getChildCount() - 1; index >= images.size(); index--) {
-            imagesLayout.removeViewAt(index);
-        }
-        selectImage.setVisibility(imagesLayout.getChildCount() == 3 ? View.GONE : View.VISIBLE);
-    }
-
-    private void setImage(final String imagePath, final CommodEvalutionImageItem item) {
-        item.setImage(imagePath, new CommodEvalutionImageItem.OnLoadImageFailed() {
-            @Override
-            public void onLoadFailed() {
-                imageArray.remove(imagePath);
-                imagesLayout.removeView(item);
-                uploadControl.delUploadImage(imagePath);
-            }
-        });
-        item.setRemoveClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imagesLayout.removeView(item);
-            }
-        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rightText:
-                uploadControl.publishEvalution();
+                publishEvalution();
                 break;
             case R.id.select_image:
                 openSelectImages();
@@ -293,14 +270,54 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         }
     }
 
-    /**
-     * 选择图片
-     */
+    /** 发布评论 */
+    private void publishEvalution() {
+        uploadControl.setScore(ratingBar.getRating())
+                .setContent(contentEdit.getText().toString())
+                .setCanShare(canShareToCircle())
+                .publishEvalution();
+    }
+
+    /** 选择图片 */
     private void openSelectImages() {
         Intent intent = new Intent(this, ImageSelectorActivity.class);
         intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 3);
-        intent.putExtra(ImageSelectorConstant.EXTRA_DEFAULT_SELECTED_LIST, imageArray);
+        intent.putExtra(ImageSelectorConstant.EXTRA_DEFAULT_SELECTED_LIST, imagesLayout.getImageArray());
         startActivityForResult(intent, SELECT_IMAE_REQUEST_CODE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isSureBack) {
+            super.onBackPressed();
+        } else
+            showSureBackDialog();
+    }
+
+    /** 确认返回 */
+    private boolean isSureBack = false;
+
+    /** 显示确认返回dialog */
+    private void showSureBackDialog() {
+        final XhDialog dialog = new XhDialog(this);
+        dialog.setMessage("是否取消发布")
+                .setCanselButton("是", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isSureBack = true;
+                        dialog.cancel();
+                        PublishEvalutionSingleActivity.this.onBackPressed();
+                    }
+                })
+                .setSureButtonTextColor("#333333")
+                .setSureButton("否", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        isSureBack = false;
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 
     private Dialog mUploadingDialog;

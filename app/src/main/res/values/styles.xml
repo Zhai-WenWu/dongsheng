@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     
 
     <!--
@@ -12,6 +12,8 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+        <item name="android:colorPrimary" tools:targetApi="lollipop">@color/comment_color</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/comment_color</item>
     </style>
 
     <!-- welcome theme. -->

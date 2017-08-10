@@ -6,11 +6,15 @@
 package aplug.web;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,6 +32,9 @@ import acore.override.activity.base.WebActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.widget.CommentBar;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -49,6 +56,8 @@ public class  ShowWeb extends WebActivity {
 	protected String nousCodeString = "";
 	protected RelativeLayout shareLayout;
 	protected RelativeLayout favLayout,homeLayout;
+	protected RelativeLayout editControlerLayout;
+	protected CommentBar commentBar;
 	protected TextView favoriteNousTextView,title;
 	private RelativeLayout shopping_layout;
 	private TextView mall_news_num,mall_news_num_two;
@@ -57,9 +66,34 @@ public class  ShowWeb extends WebActivity {
 	private String data_type="";
 	private String code="";//code--首页使用功能
 	private String module_type="";
+	private String userCode = "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initExtras();
+		initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_webview);
+		initTitleView();
+		initWeb();
+		initCommentBar();
+		if(mCommonBottomView!=null){
+			if(setShowCommonBottomView())
+				mCommonBottomView.setVisibility(View.VISIBLE);
+			else
+				mCommonBottomView.setVisibility(View.GONE);
+		}
+		setTitle();
+		// 设置加载
+		loadManager.setLoading(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				loadData();
+			}
+		});
+		MallCommon common= new MallCommon(this);
+		common.setStatisticStat(url);
+	}
+
+	private void initExtras(){
 		Bundle bundle = this.getIntent().getExtras();
 		// 正常调用
 		if (bundle != null) {
@@ -70,8 +104,9 @@ public class  ShowWeb extends WebActivity {
 			module_type= bundle.getString("module_type");
 			JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
 		}
-		
-		initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_webview);
+	}
+
+	private void initWeb(){
 		webViewManager = new WebviewManager(this,loadManager,true);
 		webview = webViewManager.createWebView(R.id.XHWebview);
 		webview.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
@@ -92,26 +127,81 @@ public class  ShowWeb extends WebActivity {
 		webViewManager.setJSObj(webview, jsAppCommon=new JsAppCommon(this, webview,loadManager,barShare));
 		jsAppCommon.setUrl(url);
 		htmlData = "";
-		initTitleView();
-		if(mCommonBottomView!=null){
-			if(setShowCommonBottomView())
-				mCommonBottomView.setVisibility(View.VISIBLE);
-			else
-				mCommonBottomView.setVisibility(View.GONE);
-		}
-		setTitle();
-		// 设置加载
-		loadManager.setLoading(new OnClickListener() {
+	}
+
+	private int heightDifference = -1;
+	private void initCommentBar() {
+		Log.i("tzy","initCommentBar");
+		editControlerLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
+		editControlerLayout.setOnTouchListener(new View.OnTouchListener() {
 			@Override
-			public void onClick(View v) {
-				loadData();
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()){
+					case MotionEvent.ACTION_DOWN:
+						resetCommentBar();
+						break;
+				}
+				return false;
 			}
 		});
-		MallCommon common= new MallCommon(this);
-		common.setStatisticStat(url);
-		webview.upWebViewNum();
+		commentBar = (CommentBar) findViewById(R.id.comment_bar);
+//		commentBar.setVisibility(View.GONE);
+		commentBar.setOnPublishCommentCallback(new CommentBar.OnPublishCommentCallback() {
+			@Override
+			public boolean onPrePublishComment() {
+				if(!LoginManager.isLogin()){
+					Tools.showToast(ShowWeb.this,"请登录");
+					startActivity(new Intent(ShowWeb.this, LoginByAccout.class));
+					return true;
+				}
+				if(!ToolsDevice.isNetworkAvailable(ShowWeb.this)){
+					Tools.showToast(ShowWeb.this,"请检查网络连接");
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public void onPublishComment(String content) {
+				if(webview != null)
+					webview.loadUrl("Javascript:publishComment(\""+content+"\",\"" + userCode + "\"");
+				resetCommentBar();
+			}
+		});
+		setOnKeyBoardListener(new OnKeyBoardListener() {
+			@Override
+			public void show() {
+				if(heightDifference != -1){
+					int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+					Rect r = new Rect();
+					rl.getWindowVisibleDisplayFrame(r);
+					int screenHeight = rl.getRootView().getHeight();
+					heightDifference = screenHeight - (r.bottom - r.top);
+					boolean isKeyboradShow = heightDifference > 200;
+					heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
+				}
+				editControlerLayout.setPadding(0, 0, 0, heightDifference);
+			}
+
+			@Override
+			public void hint() {
+				editControlerLayout.setPadding(0, 0, 0, 0);
+			}
+		});
 	}
-	
+
+	public void showCommentBar(String userName,String userCode){
+		this.userCode = userCode;
+		commentBar.setVisibility(View.VISIBLE);
+		commentBar.setEditTextHint("回复 ：" + userName);
+	}
+
+	public void resetCommentBar(){
+		commentBar.setEditTextHint("回复 ");
+		commentBar.hide();
+		userCode = "";
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();

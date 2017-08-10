@@ -6,18 +6,22 @@ import xh.basic.tool.UtilString;
 
 public class MallStringManager extends UtilString {
 
-    public final static String defaultDomain = ".ds.xiangha.com";
-    //	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
+//    public final static String defaultDomain = ".ds.xiangha.com";
+//    	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
+    //TODO
+    	public final static String defaultDomain = ".ds.mamaweiyang.net:7000";
     public static String apiAPI = "api";
     public static String appm = "m";
-    public static String httpData = "https://";
+    //TODO
+//    public static String httpData = "https://";
+    public static String httpData = "http://";
 
     public static String apiTitle = httpData + apiAPI;
     public static String appWebTitle = httpData + appm;
     //当前域名
     public static String domain = defaultDomain;
     //API请求地址
-    public static String mall_apiUrl = apiTitle + defaultDomain;
+    public final static String mall_apiUrl = apiTitle + defaultDomain;
     public static String mall_web_apiUrl = appWebTitle + defaultDomain;
 
     //	public static String mall_apiUrl = "http://api.ds.mamaweiyang.net:7888";
@@ -89,7 +93,9 @@ public class MallStringManager extends UtilString {
     //sign
     public final static String mall_getToken = mall_apiUrl + "/v2/sign/getToken";
     //评价
+    public final static String mall_toComment = mall_apiUrl + "/v3/order/toComment";
     public final static String mall_addComment = mall_apiUrl + "/v3/comment/addComment";
+    public final static String mall_addMuiltComment = mall_apiUrl + "/v3/comment/addMuiltComment";
 
     /**
      * 替换url
@@ -98,25 +104,27 @@ public class MallStringManager extends UtilString {
      * @return
      */
     public static String replaceUrl(String url) {
-        if (domain != defaultDomain) {
-            String[] find = new String[]{apiTitle, appWebTitle};
-            String[] replace = new String[]{mall_apiUrl, mall_web_apiUrl};
-            for (int i = 0; i < find.length; i++) {
-                String findStr = find[i] + defaultDomain;
-                if (url.indexOf(findStr) == 0) {
-                    return url.replace(findStr, replace[i]);
-                }
-            }
-        }
+        //TODO
+//        if (domain != defaultDomain) {
+//            String[] find = new String[]{apiTitle, appWebTitle};
+//            String[] replace = new String[]{mall_apiUrl, mall_web_apiUrl};
+//            for (int i = 0; i < find.length; i++) {
+//                String findStr = find[i] + defaultDomain;
+//                if (url.indexOf(findStr) == 0) {
+//                    return url.replace(findStr, replace[i]);
+//                }
+//            }
+//        }
         return url;
     }
 
     //更换url
     public final static void changeUrl(String newDomain) {
-        if (newDomain.length() > 1) {
-            domain = newDomain;
-            mall_apiUrl = apiTitle + domain;
-            mall_web_apiUrl = appWebTitle + domain;
-        }
+        //TODO
+//        if (newDomain.length() > 1) {
+//            domain = newDomain;
+//            mall_apiUrl = apiTitle + domain;
+//            mall_web_apiUrl = appWebTitle + domain;
+//        }
     }
 }

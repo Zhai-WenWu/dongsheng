@@ -29,7 +29,7 @@
                     android:layout_height="@dimen/dp_50"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_20"
-                    android:src="#7de"/>
+                    android:src="@drawable/i_nopic"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -58,8 +58,8 @@
                         app:prb_defaultRating="5"
                         app:prb_tickNormalDrawable="@drawable/i_score"
                         app:prb_tickSelectedDrawable="@drawable/i_score_activity"
-                        app:prb_tickSize="@dimen/dp_35"
-                        app:prb_tickSpacing="@dimen/dp_7.5"
+                        app:prb_tickSize="@dimen/dp_30"
+                        app:prb_tickSpacing="@dimen/dp_5"
                         app:prb_totalTicks="5"/>
 
                     <TextView
@@ -93,9 +93,9 @@
                     android:gravity="top"
                     android:textColorHint="@color/common_super_tint_text"
                     android:hint="@string/publish_evalution_desc_hint"
-                    android:lineSpacingExtra="@dimen/sp_10"
+                    android:lineSpacingExtra="@dimen/sp_6"
                     android:lineSpacingMultiplier="1"
-                    android:minHeight="@dimen/dp_240"
+                    android:minHeight="@dimen/dp_257.5"
                     android:paddingBottom="@dimen/dp_105"
                     android:paddingLeft="@dimen/dp_20"
                     android:paddingRight="@dimen/dp_20"
@@ -121,18 +121,18 @@
                     android:layout_alignBottom="@+id/content_edit"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <third.mall.view.EvalutionImageLayout
                         android:id="@+id/images"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:orientation="horizontal"/>
+                        android:layout_gravity="bottom"/>
 
                     <ImageView
                         android:id="@+id/select_image"
+                        android:layout_marginTop="@dimen/dp_6"
                         android:layout_width="@dimen/dp_80"
                         android:layout_height="@dimen/dp_80"
-                        android:src="#F00"/>
+                        android:src="@drawable/evalution_select_image"/>
 
                 </LinearLayout>
             </RelativeLayout>
@@ -141,6 +141,7 @@
                 android:id="@+id/share_to_circle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <View

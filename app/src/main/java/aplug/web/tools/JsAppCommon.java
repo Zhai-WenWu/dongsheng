@@ -48,6 +48,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.imageselector.ImgWallActivity;
+import aplug.web.ShowWeb;
 import aplug.web.view.XHWebView;
 import third.mall.activity.ShoppingActivity;
 import third.mall.alipay.MallAlipay;
@@ -1015,6 +1016,18 @@ public class JsAppCommon extends JsBase {
         PushManager.requestPermission();
     }
 
+    @JavascriptInterface
+    public void showCommentBar(final String userName,final String userCode){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(mAct instanceof ShowWeb){
+                    ShowWeb showWeb = (ShowWeb) mAct;
+                    showWeb.showCommentBar(userName,userCode);
+                }
+            }
+        });
+    }
 
 
 }

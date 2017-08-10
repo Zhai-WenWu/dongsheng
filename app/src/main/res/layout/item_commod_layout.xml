@@ -51,8 +51,8 @@
             app:prb_defaultRating="5"
             app:prb_tickNormalDrawable="@drawable/i_score"
             app:prb_tickSelectedDrawable="@drawable/i_score_activity"
-            app:prb_tickSize="@dimen/dp_15"
-            app:prb_tickSpacing="@dimen/dp_1.5"
+            app:prb_tickSize="@dimen/dp_18"
+            app:prb_tickSpacing="@dimen/dp_2"
             app:prb_totalTicks="5"/>
 
         <TextView

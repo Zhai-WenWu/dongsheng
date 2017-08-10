@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dp_80"
-    android:layout_height="@dimen/dp_80">
+    android:layout_width="@dimen/dp_92"
+    android:layout_height="@dimen/dp_86">
 
     <ImageView
         android:id="@+id/image"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_alignParentBottom="true"
         android:scaleType="centerCrop"
-        android:layout_width="@dimen/dp_70"
-        android:layout_height="@dimen/dp_70"/>
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="@dimen/dp_80"/>
 
     <ImageView
         android:id="@+id/remove"
         android:layout_alignParentRight="true"
-        android:src="#709"
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20"/>
+        android:src="@drawable/delete_image_icon"
+        android:layout_marginRight="@dimen/dp_5"
+        android:layout_width="@dimen/dp_18"
+        android:layout_height="@dimen/dp_18"/>
 
 </RelativeLayout>

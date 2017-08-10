@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 /*
     The MIT License (MIT)
@@ -344,6 +344,7 @@ public class ProperRatingBar extends LinearLayout {
      */
     public void setRating(int rating) {
         if (rating  > this.totalTicks) rating = totalTicks;
+        if (rating <= 0 ) rating = 1;
         this.rating = rating;
         lastSelectedTickIndex = rating - 1;
         redrawTicks();

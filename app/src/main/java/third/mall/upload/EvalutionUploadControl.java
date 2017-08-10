@@ -3,6 +3,7 @@ package third.mall.upload;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -158,6 +159,7 @@ public class EvalutionUploadControl {
         uploadTextData.put("socre", String.valueOf(bean.getScore()));
         uploadTextData.put("content", getCotnent().toString());
         uploadTextData.put("is_quan", bean.isCanShare() ? "2" : "1");
+        Log.i("tzy","combineParameter :: " + uploadTextData.toString());
         return uploadTextData;
     }
 
@@ -188,13 +190,24 @@ public class EvalutionUploadControl {
         return true;
     }
 
-
-    public void setCode(String code){
-        bean.setCode(code);
+    public EvalutionUploadControl setContent(String content){
+        bean.setContent(content);
+        return this;
     }
 
-    public void setScore(int score){
+    public EvalutionUploadControl setCode(String code){
+        bean.setCode(code);
+        return this;
+    }
+
+    public EvalutionUploadControl setScore(int score){
         bean.setScore(score);
+        return this;
+    }
+
+    public EvalutionUploadControl setCanShare(boolean canShare){
+        bean.setCanShare(canShare);
+        return this;
     }
 
     public OnPublishCallback getOnPublishCallback() {

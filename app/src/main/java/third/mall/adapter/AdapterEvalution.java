@@ -70,7 +70,7 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                 view.setOnRatePickedCallback(new CommodEvalutionItem.OnRatePickedCallback() {
                     @Override
                     public void onRatePicked(int rating) {
-                        data.put("stars",String.valueOf(rating));
+                        data.put("score",String.valueOf(rating));
                         AdapterEvalution.this.notifyDataSetChanged();
                     }
                 });

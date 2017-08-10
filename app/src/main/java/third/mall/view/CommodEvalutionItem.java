@@ -8,11 +8,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.Map;
 
 import acore.override.view.ItemBaseView;
+import acore.tools.Tools;
 import acore.widget.ProperRatingBar;
 import third.mall.activity.PublishEvalutionSingleActivity;
 
@@ -63,22 +64,24 @@ public class CommodEvalutionItem extends ItemBaseView {
      * 设置数据
      * @param data
      */
-    public void setData(Map<String, String> data) {
-        setViewText(title,data,"title");
-        setViewImage(image,"img");
+    public void setData(final Map<String, String> data) {
+        setViewText(title,data,"product_name");
+        setViewImage(image,"product_img");
 
         //初始化ratingbar
         int rating = evalutionStarDescArray.length - 1;
-        if(data.containsKey("stars") && !TextUtils.isEmpty(data.get("stars"))){
-            rating = Integer.parseInt(data.get("stars"));
+        if(data.containsKey("score") && !TextUtils.isEmpty(data.get("score"))){
+            rating = Integer.parseInt(data.get("score"));
         }
         final int score = rating;
         ratingBar.setRating(rating);
         ratingBar.setListener(new ProperRatingBar.RatingListener() {
             @Override
             public void onRatePicked(ProperRatingBar ratingBar) {
+                int rating = ratingBar.getRating() - 1;
+                starDesc.setText(evalutionStarDescArray[rating]);
                 if(onRatePickedCallback != null){
-                    onRatePickedCallback.onRatePicked(ratingBar.getRating() - 1);
+                    onRatePickedCallback.onRatePicked(ratingBar.getRating());
                 }
             }
         });
@@ -98,9 +101,15 @@ public class CommodEvalutionItem extends ItemBaseView {
             evalutionButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String code = data.get("product_code");
+                    if(TextUtils.isEmpty(code)){
+                        Tools.showToast(getContext(),"数据错误");
+                        return;
+                    }
                     Intent intent = new Intent(getContext(), PublishEvalutionSingleActivity.class);
                     //TODO ceshi
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_CODE,"12");
+                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_CODE,code);
+                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_IMAGE,data.get("product_img"));
                     intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,score);
                     getContext().startActivity(intent);
                 }
