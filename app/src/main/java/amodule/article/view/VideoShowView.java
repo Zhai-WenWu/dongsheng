@@ -5,9 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,11 +18,14 @@ import com.xianghatest.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
+
+import static aplug.recordervideo.tools.FileToolsCammer.VIDEO_CATCH;
 
 /**
  * PackageName : amodule.article.view
@@ -33,12 +36,12 @@ import xh.basic.tool.UtilImage;
 public class VideoShowView extends BaseView implements View.OnClickListener {
     private ImageView coverImage;
     private ImageView deleteImage;
-    private RelativeLayout videoLayout;
+    private RelativeLayout videoLayout,chooseCoverImgLayout;
     private LinearLayout defaultLayout;
 
     private boolean enableEdit = false;
     private boolean isSecondEdit = false;
-    private String coverImageUrl;
+    private String coverImageUrl,chooseCoverImageUrl;
     private String videoUrl;
     private boolean isWrapContent = true;
     private int position;
@@ -77,6 +80,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 }
             }
         });
+        chooseCoverImgLayout = (RelativeLayout) findViewById(R.id.video_choose_cover_img_parent);
+        findViewById(R.id.video_choose_cover_img).setOnClickListener(this);
+        findViewById(R.id.video_delete_cover_img).setOnClickListener(this);
 
         coverImage.setOnClickListener(this);
         deleteImage.setOnClickListener(this);
@@ -84,7 +90,6 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     /**
      * [video src="videoUrl" poster="coverUrl"][video]
-     *
      * @return
      */
     @Override
@@ -95,6 +100,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         try {
             jsonObject.put("type", VIDEO);
             jsonObject.put("videosimageurl", coverImageUrl);
+            jsonObject.put("chooseCoverImageUrl", chooseCoverImageUrl);
             jsonObject.put("videourl", videoUrl);
             if(!TextUtils.isEmpty(idStr))
                 jsonObject.put("id", idStr);
@@ -106,47 +112,11 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     public void resetData(){
         coverImageUrl = "";
+        chooseCoverImageUrl = "";
         videoUrl = "";
         defaultLayout.setVisibility(VISIBLE);
+        findViewById(R.id.video_delete_cover_img).setVisibility(View.GONE);
         coverImage.setImageResource(R.drawable.i_nopic);
-    }
-
-    public void setVideoDataFromService(String coverImageUrl, String videoUrl, int position) {
-        if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
-            return;
-        }
-        defaultLayout.setVisibility(GONE);
-        findViewById(R.id.image_layout).setVisibility(VISIBLE);
-        this.position = position;
-        this.coverImageUrl = coverImageUrl;
-        this.videoUrl = videoUrl;
-        LoadImage.with(getContext())
-                .load(coverImageUrl)
-                .build()
-                .into(new SubBitmapTarget() {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if (bitmap != null) {
-                            int imageWidth = bitmap.getWidth();
-                            int imageHieght = bitmap.getHeight();
-                            if (isWrapContent) {
-                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                UtilImage.setImgViewByWH(coverImage, bitmap, newWaith, 0, false);
-                            }else{
-                                int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-                                int height = width * 9 / 16;
-                                coverImage.setLayoutParams(new LayoutParams(width,height));
-                                coverImage.setScaleType(imageWidth > imageHieght?ImageView.ScaleType.CENTER_CROP:ImageView.ScaleType.FIT_CENTER);
-                                coverImage.setBackgroundColor(Color.parseColor("#000000"));
-                                coverImage.setImageBitmap(bitmap);
-                            }
-                        }
-                    }
-                });
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                Tools.getDimen(getContext(), R.dimen.dp_200));//
-        videoLayout.setPadding(0, 0, 0, ToolsDevice.dp2px(getContext(), 5));
-        videoLayout.setLayoutParams(params);
     }
 
     public void setVideoData(String coverImageUrl, String videoUrl) {
@@ -157,31 +127,76 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         findViewById(R.id.image_layout).setVisibility(VISIBLE);
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
+        setVideoImage(false,coverImageUrl);
+    }
+
+    /**
+     * 设置视频上的第一帧图片
+     * @param isCut ：是否按照16：9 裁剪图片
+     * @param imgUrl ：第一帧图片路径
+     */
+    private void setVideoImage(final boolean isCut, final String imgUrl){
         LoadImage.with(getContext())
-                .load(coverImageUrl)
+                .load(imgUrl)
                 .build()
                 .into(new SubBitmapTarget() {
                     @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                    public void onResourceReady(final Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                         if (bitmap != null) {
-                            int imageWidth = bitmap.getWidth();
-                            int imageHieght = bitmap.getHeight();
-
-                            if (isWrapContent) {
-                                int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                UtilImage.setImgViewByWH(coverImage, bitmap, newWaith, 0, false);
-                            }else{
-                                int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
-                                int height = width * 9 / 16;
-                                coverImage.setLayoutParams(new LayoutParams(width,height));
-                                coverImage.setScaleType(imageWidth > imageHieght?ImageView.ScaleType.CENTER_CROP:ImageView.ScaleType.FIT_CENTER);
-                                coverImage.setBackgroundColor(Color.parseColor("#000000"));
-                                coverImage.setImageBitmap(bitmap);
+                            if(isCut){ //需要剪切图片，按照比例16：9，并且保存起来
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        final int imageWidth = bitmap.getWidth();
+                                        final int imageHieght = bitmap.getHeight();
+                                        Bitmap newBitmap = bitmap;
+                                        if(imageWidth * 9 != imageHieght * 16){
+                                            int newImgW = imageWidth;
+                                            int newImgH = (int) (newImgW * 9.0 / 16);
+                                            if (newImgH > imageHieght) {
+                                                newImgH = imageHieght;
+                                                newImgW = (int) (imageHieght * 16.0 / 9);
+                                                newBitmap = Bitmap.createBitmap(newBitmap, (imageWidth - newImgW) / 2, 0, newImgW, newImgH);
+                                            } else {
+                                                newBitmap = Bitmap.createBitmap(newBitmap, 0, (imageHieght - newImgH) / 2, newImgW, newImgH);
+                                            }
+                                            chooseCoverImageUrl = FileManager.getSDDir() + VIDEO_CATCH + Tools.getMD5(imgUrl) + ".jpg";
+                                            FileManager.saveImgToCompletePath(newBitmap, chooseCoverImageUrl, Bitmap.CompressFormat.JPEG);
+                                        }
+                                        final Bitmap finalBitmap = newBitmap;
+                                        coverImage.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                setImageToCoverImage(finalBitmap);
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }else {
+                                if (isWrapContent) {
+                                    int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                                    UtilImage.setImgViewByWH(coverImage, bitmap, newWaith, 0, false);
+                                } else {
+                                    setImageToCoverImage(bitmap);
+                                }
                             }
                         }
                     }
                 });
     }
+
+    private void setImageToCoverImage(Bitmap bitmap){
+        int imageWidth = bitmap.getWidth();
+        int imageHieght = bitmap.getHeight();
+        int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_20) * 2;
+        int height = width * 9 / 16;
+        coverImage.setLayoutParams(new LayoutParams(width, height));
+        coverImage.setScaleType(imageWidth > imageHieght ? ImageView.ScaleType.CENTER_CROP : ImageView.ScaleType.FIT_CENTER);
+        coverImage.setBackgroundColor(Color.parseColor("#000000"));
+        coverImage.setImageBitmap(bitmap);
+    }
+
+
 
     public void setEnableEdit(boolean enable) {
         this.enableEdit = enable;
@@ -206,11 +221,28 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                     mOnRemoveCallback.onRemove(this);
                 }
                 break;
+            case R.id.video_choose_cover_img:
+                if(mOnChooseImageListener != null) mOnChooseImageListener.onClick(VideoShowView.this);
+                break;
+            case R.id.video_delete_cover_img:
+                chooseCoverImageUrl = null;
+                findViewById(R.id.video_delete_cover_img).setVisibility(View.GONE);
+                setVideoImage(false,coverImageUrl);
+                break;
+
         }
     }
 
     public String getCoverImageUrl() {
-        return coverImageUrl;
+        if(TextUtils.isEmpty(chooseCoverImageUrl))
+            return coverImageUrl;
+        return chooseCoverImageUrl;
+    }
+
+    public void setChooseCoverImageUrl(String chooseCoverImageUrl) {
+        this.chooseCoverImageUrl = chooseCoverImageUrl;
+        findViewById(R.id.video_delete_cover_img).setVisibility(View.VISIBLE);
+        setVideoImage(true,chooseCoverImageUrl);
     }
 
     public void setCoverImageUrl(String coverImageUrl) {
