@@ -74,6 +74,21 @@ public class  ShowWeb extends WebActivity {
 		initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_webview);
 		webViewManager = new WebviewManager(this,loadManager,true);
 		webview = webViewManager.createWebView(R.id.XHWebview);
+		webview.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
+			@Override
+			public void onChange(int num) {
+				ImageView close = (ImageView) findViewById(R.id.leftClose);
+				close.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						ShowWeb.this.finish();
+					}
+				});
+				boolean isShow = num > 1
+						&& (findViewById(R.id.leftText) != null && findViewById(R.id.leftText).getVisibility() != View.VISIBLE);
+				close.setVisibility(isShow ? View.VISIBLE : View.GONE);
+			}
+		});
 		webViewManager.setJSObj(webview, jsAppCommon=new JsAppCommon(this, webview,loadManager,barShare));
 		jsAppCommon.setUrl(url);
 		htmlData = "";
@@ -127,16 +142,15 @@ public class  ShowWeb extends WebActivity {
 	protected void onRestart() {
 		super.onRestart();
 		loadManager.hideProgressBar();
-		webview.upWebViewNum();
 	}
-	
+
 	@Override
 	public OnClickListener getBackBtnAction() {
 		return new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				ShowWeb.this.finish();
+				ShowWeb.this.onBackPressed();
 			}
 		};
 	}
