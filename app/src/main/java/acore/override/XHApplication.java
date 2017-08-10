@@ -10,6 +10,9 @@ import android.util.Log;
 
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
+import com.shuyu.gsyvideoplayer.utils.Debuger;
+import com.taobao.sophix.SophixManager;
+import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
@@ -23,12 +26,9 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
-import third.andfix.AndFixTools;
 import third.growingio.GrowingIOController;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
-
-import static com.sina.sinavideo.coreplayer.util.AndroidUtil.getProcessName;
 
 public class XHApplication extends MobApplication {
     /**包名*/
@@ -40,23 +40,25 @@ public class XHApplication extends MobApplication {
         return mAppApplication;
     }
 
-    private XHAppActivityLifecycleCallbacks xhAppActivityLifecycleCallbacks;
     public long startTime;
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+        initHotfix();
+        Debuger.enable();
     }
 
     @Override
     public void onCreate() {
-        Log.i("zhangyujian", "进程名字::" + getProcessName(this));
+        SophixManager.getInstance().queryAndLoadNewPatch();
+        Log.i("zhangyujian", "进程名字::" + Tools.getProcessName(this));
         startTime = System.currentTimeMillis();
         super.onCreate();
         mAppApplication = this;
         initUmengPush();
-        String processName = getProcessName(this);
+        String processName = Tools.getProcessName(this);
         if (processName != null) {
             if (processName.equals(PACKAGE_NAME)) {//多进程多初始化，只对xiangha进程进行初始化
                 initData();
@@ -92,8 +94,6 @@ public class XHApplication extends MobApplication {
         AppActivity.getActionBarColorTheme().setTitleColor(commonTopTextColor);
         AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
         AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
-
-        AndFixTools.getAndFix().initPatchManager(this);
 
         //GrowingIO初始化
         new GrowingIOController().init(this);
@@ -167,6 +167,24 @@ public class XHApplication extends MobApplication {
                 CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
             }
         }).start();
+
+    }
+
+    private void initHotfix() {
+        SophixManager.getInstance().setContext(this)
+                .setAppVersion(VersionOp.getVerName(this))
+                .setAesKey("v587xiangha05186")
+                .setEnableDebug(false)
+                .setPatchLoadStatusStub(new PatchLoadStatusListener() {
+                    @Override
+                    public void onLoad(final int mode, final int code, final String info, final int handlePatchVersion) {
+                        String msg = new StringBuilder("").append("Mode:").append(mode)
+                                .append(" Code:").append(code)
+                                .append(" Info:").append(info)
+                                .append(" HandlePatchVersion:").append(handlePatchVersion).toString();
+                        Log.i("tzy_hot",msg);
+                    }
+                }).initialize();
 
     }
 }

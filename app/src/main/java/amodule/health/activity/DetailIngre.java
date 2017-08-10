@@ -30,7 +30,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-import org.apache.http.protocol.HTTP;
+
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -501,7 +501,7 @@ public class DetailIngre extends BaseActivity {
 			break;
 		case R.id.fankui_info:
 			try {
-				intent_feek.putExtra("feekUrl", "http://www.xiangha.com/shicai/"+URLEncoder.encode(ingre, HTTP.UTF_8));
+				intent_feek.putExtra("feekUrl", "http://www.xiangha.com/shicai/"+URLEncoder.encode(ingre, "utf-8"));
 				startActivity(intent_feek);
 			} catch (UnsupportedEncodingException e) {
 				UtilLog.reportError("URLEncoder异常", e);

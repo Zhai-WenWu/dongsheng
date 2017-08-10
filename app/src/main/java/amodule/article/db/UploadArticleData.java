@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.apache.http.protocol.HTTP;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -205,11 +205,11 @@ public class UploadArticleData {
         Log.i("articleUpload","upload()  title:" + getTitle());
         LinkedHashMap map = new LinkedHashMap();
 //        map.put("title",getTitle());
-        map.put("title", Uri.encode(getTitle(), HTTP.UTF_8));
+        map.put("title", Uri.encode(getTitle(), "utf-8"));
         map.put("classCode",getClassCode());
         try{
 //            map.put("content",getContent());
-            map.put("content", Uri.encode(getContent(), HTTP.UTF_8));
+            map.put("content", Uri.encode(getContent(), "utf-8"));
         }catch (Exception e){
             e.printStackTrace();
         }

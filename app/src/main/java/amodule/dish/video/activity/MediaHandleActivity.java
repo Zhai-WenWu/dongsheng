@@ -194,7 +194,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
         showDialog();
 //        super.onBackPressed();
     }
-    
+
     private void cancelOriTime(){
         if(originalTimer!=null)originalTimer.cancel();
         originalTimer=null;
@@ -218,14 +218,14 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
      */
     private void startPreview(){
         Log.i("zhangyujian","合成成功:::"+path_finish+":::"+id_data+"::::"+time_key+"::::");
-        if(!TextUtils.isEmpty(path_finish)&&id_data>-1) {
-            Intent intent = new Intent(MediaHandleActivity.this, MediaPreviewActivity.class);
-            intent.putExtra("path", path_finish);
-            intent.putExtra("id", id_data);
-            intent.putExtra("time",time_key);
-            intent.putExtra("coverPath",coverPath);
-            MediaHandleActivity.this.startActivity(intent);
-            MediaHandleActivity.this.finish();
-        }
+//        if(!TextUtils.isEmpty(path_finish)&&id_data>-1) {
+//            Intent intent = new Intent(MediaHandleActivity.this, MediaPreviewActivity.class);
+//            intent.putExtra("path", path_finish);
+//            intent.putExtra("id", id_data);
+//            intent.putExtra("time",time_key);
+//            intent.putExtra("coverPath",coverPath);
+//            MediaHandleActivity.this.startActivity(intent);
+//            MediaHandleActivity.this.finish();
+//        }
     }
 }

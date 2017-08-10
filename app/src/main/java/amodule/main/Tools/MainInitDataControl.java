@@ -41,10 +41,8 @@ import aplug.service.alarm.PushAlarm;
 import aplug.service.base.ServiceManager;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.TencenApiAdTools;
-import third.andfix.AndFixTools;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
-import third.video.VideoApplication;
 import xh.basic.tool.UtilFile;
 import xh.windowview.XhDialog;
 
@@ -130,16 +128,11 @@ public class MainInitDataControl {
         //电商首页数据
         MallCommon.getDsInfo(act, null);
 
-        //新浪播放器初始化
-        if(ToolsDevice.isNetworkAvailable(act)){
-            VideoApplication.getInstence().initialize(act);
-        }
         //更新热词匹配数据库
         new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
 
         ServiceManager.startProtectService(act);
 
-        AndFixTools.getAndFix().doGetFixFile(act);
         AppCommon.saveUrlRuleFile(act);
         //请求本地推送data
         new XGLocalPushServer(act).getNousLocalPushData();

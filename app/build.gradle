@@ -14,35 +14,34 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libsAdBaidu')
     compile fileTree(include: '*.jar', dir: 'libs')
     //百度市场要求加的自动更新sdk
-//        compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
-    compile(name: 'AndFix-master-debug', ext: 'aar')
-    //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
+    //        compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     //    compile(name: 'PhotoView-release', ext: 'aar')
     compile(name: 'photoview-release-2.0.0', ext: 'aar')
     compile(name: 'PushSDK-debug', ext: 'aar')
-    compile(name: 'sinavideo_player_core_v2.0-release', ext: 'aar')
-    compile(name: 'sinavideo_player_sdk_v2.0-debug', ext: 'aar')
     compile(name: 'XH_Basic3.0-release', ext: 'aar')
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
     compile(name: 'SMSSDK-3.0.0', ext: 'aar')
-    //    compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
-    //    compile 'com.android.support:support-v4:23.4.0'
     //    compile 'com.github.chrisbanes:photoview:latest.release'
-    compile 'com.android.support:recyclerview-v7:23.1.0'
-    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile 'com.tencent.bugly:crashreport:2.3.1'
     compile 'com.android.support:multidex:1.0.1'
+//    compile 'com.google.code.gson:gson:2.7'
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
-    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile('com.aliyun.ams:alicloud-android-hotfix:3.0.6') {
+        exclude(module: 'alicloud-android-utdid')
+    }
+    compile project(':gsyVideoPlayer-java')
 }
 
 android {
-    compileSdkVersion 21
+
+    compileSdkVersion 25
     buildToolsVersion '25.0.2'
 
     defaultConfig {
@@ -56,13 +55,18 @@ android {
         //GrowingIO
         resValue("string", "growingio_project_id", "bf5bf872bedc95d3")
         resValue("string", "growingio_url_scheme", "growing.e3205a1fdf7cb86e")
+        ndk {
+            //APP的build.gradle设置支持的SO库架构
+            moduleName "gsyVideoPlayer-java"
+            abiFilters 'armeabi-v7a'
+        }
     }
 
     signingConfigs {
         MainXiangha {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
-            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
+//            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
             storeFile file('D:/android_workspace/xiangha.keystore')
 //            storeFile file('E:/keystore/xiangha.keystore')
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
@@ -71,6 +75,7 @@ android {
 //            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
 //            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+//            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }
