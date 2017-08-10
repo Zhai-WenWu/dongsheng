@@ -955,12 +955,13 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAsk(String dishId, String authorId, String qaId, String qaTitle, String isAskMore) {
+    public void goAsk(String dishId, String authorId, String qaId, String qaTitle, String answerCode, String isAskMore) {
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);
         bundle.putString("qaCode", qaId);
         bundle.putString("qaTitle", qaTitle);
+        bundle.putString("answerCode", answerCode);
         bundle.putString("isAskMore", isAskMore);
         Intent intent = new Intent(mAct, AskEditActivity.class);
         intent.putExtras(bundle);
