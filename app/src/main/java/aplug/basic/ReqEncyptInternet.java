@@ -307,7 +307,7 @@ public class ReqEncyptInternet extends UtilInternet {
      * 获取当前加密值
      * @return
      */
-    private String getEncryptParam(){
+    public String getEncryptParam(){
         long now_request_time=System.currentTimeMillis();
         int time= (int) (now_request_time-now_login_time)/1000;
         //处理当前sign，获取要传输的sign

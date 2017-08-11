@@ -895,17 +895,18 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void getSign() {
-        ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
-            @Override
-            public void getSignEncyntParam(final String encryptparam) {
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.loadUrl("Javascript:signCallback(\"" + encryptparam + "\")");
-                    }
-                });
-            }
-        });
+//        ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
+//            @Override
+//            public void getSignEncyntParam(final String encryptparam) {
+//                mWebView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mWebView.loadUrl("Javascript:signCallback(\"" + encryptparam + "\")");
+//                    }
+//                });
+//            }
+//        });
+        mWebView.loadUrl("Javascript:signCallback(\"" + ReqEncyptInternet.in().getEncryptParam() + "\")");
     }
     @JavascriptInterface
     public void getCookie(){
