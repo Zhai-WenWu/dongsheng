@@ -17,6 +17,9 @@ import com.xianghatest.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+
 /**
  * 包含两个ScrollView的容器
  */
@@ -351,6 +354,8 @@ public class ScrollViewContainer extends RelativeLayout {
                 if(bottomView instanceof ScrollView){
                     ((ScrollView)bottomView).scrollTo(0,1000);
                 }
+                int height=ToolsDevice.getWindowPx(context).heightPixels;
+//                this.scrollBy(0,height);
                 break;
         }
     }
