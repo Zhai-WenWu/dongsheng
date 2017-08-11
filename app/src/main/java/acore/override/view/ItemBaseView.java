@@ -66,6 +66,10 @@ public class ItemBaseView extends RelativeLayout {
 
     }
 
+    public void setViewImage(final ImageView v,Map<String,String> map,String key){
+        setViewImage(v,map == null ? "" : map.get(key));
+    }
+
     public void setViewImage(final ImageView v, String value) {
         v.setVisibility(View.VISIBLE);
         if(TextUtils.isEmpty(value)){

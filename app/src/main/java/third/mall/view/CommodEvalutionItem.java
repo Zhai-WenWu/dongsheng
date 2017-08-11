@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,26 +48,22 @@ public class CommodEvalutionItem extends ItemBaseView {
     private OnRatePickedCallback onRatePickedCallback;
 
     private void initialize(){
-        initData();
+        evalutionStarDescArray = getResources().getStringArray(R.array.evalution_star_descriptions);
+
         image = (ImageView) findViewById(R.id.image);
         title = (TextView) findViewById(R.id.title_text);
         starDesc = (TextView) findViewById(R.id.evalution_button);
         evalutionButton = (TextView) findViewById(R.id.evalution_status);
         ratingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
-
-    }
-
-    private void initData() {
-        evalutionStarDescArray = getResources().getStringArray(R.array.evalution_star_descriptions);
     }
 
     /**
      * 设置数据
-     * @param data
+     * @param data 数据
      */
     public void setData(final Map<String, String> data) {
         setViewText(title,data,"product_name");
-        setViewImage(image,"product_img");
+        setViewImage(image,data,"product_img");
 
         //初始化ratingbar
         int rating = evalutionStarDescArray.length - 1;
@@ -75,25 +72,26 @@ public class CommodEvalutionItem extends ItemBaseView {
         }
         final int score = rating;
         ratingBar.setRating(rating);
-        ratingBar.setListener(new ProperRatingBar.RatingListener() {
-            @Override
-            public void onRatePicked(ProperRatingBar ratingBar) {
-                int rating = ratingBar.getRating() - 1;
-                starDesc.setText(evalutionStarDescArray[rating]);
-                if(onRatePickedCallback != null){
-                    onRatePickedCallback.onRatePicked(ratingBar.getRating());
-                }
-            }
-        });
-
         //初始化评价button
         if("2".equals(data.get("status"))){
+            ratingBar.setClickable(false);
             evalutionButton.setText("已评价");
             evalutionButton.setTextColor(getResources().getColor(R.color.common_super_tint_text));
             evalutionButton.setBackgroundResource(R.drawable.bg_evalution_status_select);
 
             evalutionButton.setClickable(false);
         }else{
+            ratingBar.setClickable(true);
+            ratingBar.setListener(new ProperRatingBar.RatingListener() {
+                @Override
+                public void onRatePicked(ProperRatingBar ratingBar) {
+                    int rating = ratingBar.getRating() - 1;
+                    starDesc.setText(evalutionStarDescArray[rating]);
+                    if(onRatePickedCallback != null){
+                        onRatePickedCallback.onRatePicked(ratingBar.getRating());
+                    }
+                }
+            });
             evalutionButton.setText("评价晒单");
             evalutionButton.setTextColor(getResources().getColor(R.color.comment_color));
             evalutionButton.setBackgroundResource(R.drawable.bg_evalution_status);
@@ -125,6 +123,6 @@ public class CommodEvalutionItem extends ItemBaseView {
     }
 
     public interface OnRatePickedCallback{
-        public void onRatePicked(int rating);
+        void onRatePicked(int rating);
     }
 }

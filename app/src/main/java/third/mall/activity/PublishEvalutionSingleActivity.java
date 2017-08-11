@@ -103,9 +103,13 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         scoreDescText = (TextView) findViewById(R.id.evalution_desc);
         contentLengthText = (TextView) findViewById(R.id.content_length_text);
         contentEdit = (EditText) findViewById(R.id.content_edit);
+        contentEdit.setHint(getResources().getString(R.string.publish_evalution_desc_hint));
         ratingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
         imagesLayout = (EvalutionImageLayout) findViewById(R.id.images);
         shareLayout = (RelativeLayout) findViewById(R.id.share_to_circle);
+
+        int itemIwdth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_85)) / 3;
+        imagesLayout.setViewSize(itemIwdth);
 
         Glide.with(this).load(image)
                 .placeholder(R.drawable.i_nopic)
