@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,6 +51,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     private EvalutionImageLayout imagesLayout;
     private RelativeLayout shareLayout;
+    private LinearLayout contentLayout;
 
     EvalutionUploadControl uploadControl;
 
@@ -107,9 +110,22 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         ratingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
         imagesLayout = (EvalutionImageLayout) findViewById(R.id.images);
         shareLayout = (RelativeLayout) findViewById(R.id.share_to_circle);
+        contentLayout = (LinearLayout) findViewById(R.id.content_layout);
 
-        int itemIwdth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_85)) / 3;
-        imagesLayout.setViewSize(itemIwdth);
+        int itemIwdth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_100)) / 3;
+        int imageWidth = itemIwdth - Tools.getDimen(this,R.dimen.dp_12_5);
+        if(imageWidth < Tools.getDimen(this,R.dimen.dp_75)){
+            imagesLayout.setViewSize(itemIwdth);
+            selectImage.setLayoutParams(new LinearLayout.LayoutParams(imageWidth,imageWidth));
+        }
+        int starItemWidth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_198)) / 5 - 10;
+        int defaultWidth = Tools.getDimen(this,R.dimen.dp_32);
+        int defaultStarWidth = Tools.getDimen(this,R.dimen.dp_18);
+        if(starItemWidth < defaultWidth){
+            int starWidth = defaultStarWidth * starItemWidth / Tools.getDimen(this,R.dimen.dp_32);
+            int difference = starWidth - Tools.getDimen(this,R.dimen.dp_16);
+            ratingBar.setStarWidth(starItemWidth,difference > 0?difference:ratingBar.getTickSpacing());
+        }
 
         Glide.with(this).load(image)
                 .placeholder(R.drawable.i_nopic)
@@ -192,6 +208,19 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         publishButton.setOnClickListener(this);
     }
 
+    /** 更新分享layout显示状态 */
+    private void updateShareLayoutVisibility() {
+        if (canShareToCircle()) {
+            if(shareLayout.getVisibility() == View.GONE){
+                selectImage.setSelected(true);
+                shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share_selected);
+            }
+            shareLayout.setVisibility(View.VISIBLE);
+        }else{
+            shareLayout.setVisibility(View.GONE);
+        }
+    }
+
     /**
      * 是否可以分享到美食圈
      *
@@ -201,17 +230,6 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         return ratingBar.getRating() >= 4
                 && contentEdit.getText().length() > 0
                 && imagesLayout.getChildCount() > 0;
-    }
-
-    /** 更新分享layout显示状态 */
-    private void updateShareLayoutVisibility() {
-        if (canShareToCircle()) {
-            if (shareLayout.getVisibility() == View.GONE) {
-                selectImage.setSelected(true);
-                shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share_selected);
-            }
-        }
-        shareLayout.setVisibility(canShareToCircle() ? View.VISIBLE : View.GONE);
     }
 
     /** 更新图片选择显示状态 */

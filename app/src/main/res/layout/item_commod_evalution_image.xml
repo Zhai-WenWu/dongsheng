@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dp_92.5"
-    android:layout_height="@dimen/dp_86.5">
+    android:layout_width="@dimen/dp_87.5"
+    android:layout_height="@dimen/dp_81.5">
 
     <ImageView
         android:id="@+id/image"

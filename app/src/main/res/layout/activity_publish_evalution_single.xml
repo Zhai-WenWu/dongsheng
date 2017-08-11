@@ -9,14 +9,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFE"
@@ -24,12 +22,12 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_80">
+                android:layout_height="@dimen/dp_76">
 
                 <ImageView
                     android:id="@+id/commodity_image"
-                    android:layout_width="@dimen/dp_50"
-                    android:layout_height="@dimen/dp_50"
+                    android:layout_width="@dimen/dp_46"
+                    android:layout_height="@dimen/dp_46"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_20"
                     android:src="@drawable/i_nopic"/>
@@ -42,15 +40,15 @@
                     android:layout_toRightOf="@+id/commodity_image"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/dp_15">
+                    android:paddingLeft="@dimen/dp_12">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_35"
                         android:layout_height="wrap_content"
                         android:paddingRight="@dimen/dp_5"
                         android:text="评分"
                         android:textColor="@color/common_text"
-                        android:textSize="@dimen/sp_14"/>
+                        android:textSize="@dimen/dp_15"/>
 
                     <acore.widget.ProperRatingBar
                         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -61,18 +59,26 @@
                         app:prb_defaultRating="5"
                         app:prb_tickNormalDrawable="@drawable/i_score"
                         app:prb_tickSelectedDrawable="@drawable/i_score_activity"
-                        app:prb_tickSize="@dimen/dp_30"
-                        app:prb_tickSpacing="@dimen/dp_5"
+                        app:prb_tickSize="@dimen/dp_32"
+                        app:prb_tickSpacing="@dimen/dp_7"
                         app:prb_totalTicks="5"/>
 
-                    <TextView
-                        android:id="@+id/evalution_desc"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/dp_5"
-                        android:text="非常满意"
-                        android:textColor="@color/common_super_tint_text"
-                        android:textSize="@dimen/sp_14"/>
+                        android:paddingRight="@dimen/dp_20">
+
+                        <TextView
+                            android:id="@+id/evalution_desc"
+                            android:layout_width="@dimen/dp_65"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:paddingLeft="@dimen/dp_5"
+                            android:gravity="center"
+                            android:text="满意"
+                            android:textColor="@color/common_super_tint_text"
+                            android:textSize="@dimen/dp_15"/>
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -91,41 +97,46 @@
                 <EditText
                     android:id="@+id/content_edit"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp_257.5"
+                    android:textSize="@dimen/sp_15"
+                    android:textColor="@color/common_text"
                     android:background="@android:color/transparent"
                     android:gravity="top"
-                    android:textColorHint="@color/common_super_tint_text"
-                    tools:hint="@string/publish_evalution_desc_hint"
-                    android:lineSpacingExtra="@dimen/sp_6"
+                    android:lineSpacingExtra="@dimen/dp_4"
                     android:lineSpacingMultiplier="1"
-                    android:minHeight="@dimen/dp_257.5"
-                    android:paddingBottom="@dimen/dp_105"
+                    android:paddingBottom="@dimen/dp_110"
                     android:paddingLeft="@dimen/dp_20"
                     android:paddingRight="@dimen/dp_20"
-                    android:paddingTop="@dimen/dp_15"/>
+                    android:paddingTop="@dimen/dp_10"
+                    android:textColorHint="@color/common_super_tint_text"
+                    tools:hint="@string/publish_evalution_desc_hint"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
 
                 <TextView
                     android:id="@+id/content_length_text"
-                    android:layout_width="@dimen/dp_45"
+                    android:layout_width="@dimen/dp_60"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/content_edit"
                     android:layout_alignParentRight="true"
-                    android:gravity="right"
                     android:layout_marginBottom="@dimen/dp_40"
                     android:layout_marginRight="@dimen/dp_20"
-                    android:textSize="@dimen/dp_12"
-                    android:text="0/500"
-                    android:textColor="@color/common_super_tint_text"/>
+                    android:gravity="right"
+                    android:text="500/500"
+                    android:textColor="@color/common_super_tint_text"
+                    android:textSize="@dimen/dp_15"/>
 
                 <LinearLayout
                     android:id="@+id/images_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_20"
-                    android:paddingBottom="@dimen/dp_20"
-                    android:layout_toLeftOf="@+id/content_length_text"
                     android:layout_alignBottom="@+id/content_edit"
-                    android:orientation="horizontal">
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_toLeftOf="@+id/content_length_text"
+                    android:orientation="horizontal"
+                    android:gravity="bottom"
+                    android:paddingBottom="@dimen/dp_20">
 
                     <third.mall.view.EvalutionImageLayout
                         android:id="@+id/images"
@@ -135,9 +146,9 @@
 
                     <ImageView
                         android:id="@+id/select_image"
+                        android:layout_width="@dimen/dp_75"
+                        android:layout_height="@dimen/dp_75"
                         android:layout_marginTop="@dimen/dp_6"
-                        android:layout_width="@dimen/dp_80"
-                        android:layout_height="@dimen/dp_80"
                         android:src="@drawable/evalution_select_image"/>
 
                 </LinearLayout>
@@ -147,8 +158,7 @@
                 android:id="@+id/share_to_circle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -157,21 +167,21 @@
 
                 <ImageView
                     android:id="@+id/share_image"
-                    android:layout_marginLeft="@dimen/dp_20"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dp_20"
                     android:background="@drawable/evalution_can_share_selected"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/share_image"
-                    android:layout_marginLeft="@dimen/dp_9"
-                    android:textSize="@dimen/sp_15"
-                    android:textColor="@color/common_text"
                     android:layout_centerVertical="true"
-                    android:text="@string/publish_evalution_share_text"/>
+                    android:layout_marginLeft="@dimen/dp_9"
+                    android:layout_toRightOf="@+id/share_image"
+                    android:text="@string/publish_evalution_share_text"
+                    android:textColor="@color/common_text"
+                    android:textSize="@dimen/sp_15"/>
 
             </RelativeLayout>
 

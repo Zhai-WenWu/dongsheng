@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="@dimen/dp_85"
-        android:layout_height="@dimen/dp_85"
+        android:layout_width="@dimen/dp_81"
+        android:layout_height="@dimen/dp_81"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -24,12 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/image"
-        android:paddingTop="@dimen/dp_5"
+        android:paddingTop="@dimen/dp_2"
         android:ellipsize="end"
-        android:lineSpacingExtra="@dimen/dp_5"
+        android:lineSpacingExtra="@dimen/dp_3"
         android:lineSpacingMultiplier="1"
         android:maxLines="2"
-        android:paddingLeft="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_11"
         android:textColor="@color/common_text"
         android:textSize="@dimen/sp_14"
         tools:text="这是一个标题，只能是没有填充正式文案看看效果而已"/>
@@ -42,7 +42,7 @@
         android:layout_toRightOf="@+id/image"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/dp_8.5">
+        android:paddingLeft="@dimen/dp_8">
 
         <acore.widget.ProperRatingBar
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -53,8 +53,8 @@
             app:prb_defaultRating="5"
             app:prb_tickNormalDrawable="@drawable/i_score"
             app:prb_tickSelectedDrawable="@drawable/i_score_activity"
-            app:prb_tickSize="@dimen/dp_18"
-            app:prb_tickSpacing="@dimen/dp_2"
+            app:prb_tickSize="@dimen/dp_17"
+            app:prb_tickSpacing="@dimen/dp_3"
             app:prb_totalTicks="5"/>
 
         <TextView
@@ -76,7 +76,6 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/bg_evalution_status"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/dp_4"
         android:textColor="@color/comment_color"
         android:textSize="@dimen/sp_12"
         tools:text="评价晒单"/>

@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -62,6 +61,9 @@ public class CommentBar extends RelativeLayout {
     public void initialize() {
         Log.i("tzy","initialize");
         View view = LayoutInflater.from(getContext()).inflate(R.layout.v_comment_bar, this);
+        setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {}
+        });
         commentEdittext = (EditText) findViewById(R.id.commend_write_et);
         sendingProgress = (ProgressBar) findViewById(R.id.comment_send_progress);
         sendComment = (TextView) findViewById(R.id.comment_send);
@@ -100,6 +102,22 @@ public class CommentBar extends RelativeLayout {
                 }
             }
         });
+        //无法正常修改enter样式，不实现该功能了
+//        commentEdittext.setImeOptions(EditorInfo.IME_ACTION_SEND);
+//        commentEdittext.setOnKeyListener(new OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                switch (keyCode){
+//                    case KeyEvent.KEYCODE_ENTER:
+//                        if(event.getAction() == KeyEvent.ACTION_DOWN){
+//                            publishComment();
+//                            return true;
+//                        }
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     /**

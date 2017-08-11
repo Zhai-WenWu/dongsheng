@@ -355,6 +355,16 @@ public class ProperRatingBar extends LinearLayout {
         afterInit();
     }
 
+    public void setStarWidth(int tickSize,int tickSpacing){
+        this.tickSize = tickSize;
+        this.tickSpacing = tickSpacing;
+        afterInit();
+    }
+
+    public int getTickSpacing(){
+        return tickSpacing;
+    }
+
     public String getSymbolicTick() {
         return this.symbolicTick;
     }

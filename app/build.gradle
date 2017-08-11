@@ -67,7 +67,7 @@ android {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-//            storeFile file('D:/android_workspace/xiangha.keystore')
+            storeFile file('D:/android_workspace/xiangha.keystore')
 //            storeFile file('E:/keystore/xiangha.keystore')
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
@@ -76,7 +76,7 @@ android {
 //            mac
 //            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
 //            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
-            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
+//            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }
