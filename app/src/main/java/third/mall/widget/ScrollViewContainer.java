@@ -133,8 +133,6 @@ public class ScrollViewContainer extends RelativeLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-
-
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 if (vt == null)
@@ -351,7 +349,7 @@ public class ScrollViewContainer extends RelativeLayout {
                     ((MyScrollView)topView).fullScroll(ScrollView.FOCUS_DOWN);
                 }
                 if(bottomView instanceof ScrollView){
-                    ((ScrollView)bottomView).fullScroll(ScrollView.FOCUS_UP);
+                    ((ScrollView)bottomView).scrollTo(0,1000);
                 }
                 break;
         }

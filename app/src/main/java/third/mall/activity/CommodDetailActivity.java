@@ -181,8 +181,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             explain_detail_webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-//        findViewById(R.id.commod_mercat).setOnClickListener(this);
-//        findViewById(R.id.home_mercat).setOnClickListener(this);
         findViewById(R.id.commod_shop_linear).setOnClickListener(this);
         findViewById(R.id.service_mercat).setOnClickListener(this);
         findViewById(R.id.commod_buy).setOnClickListener(this);
