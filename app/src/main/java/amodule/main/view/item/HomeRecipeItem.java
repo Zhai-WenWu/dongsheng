@@ -104,21 +104,18 @@ public class HomeRecipeItem extends HomeItem {
         if (mDataMap.containsKey("video")) {
             String video = mDataMap.get("video");
             if (!TextUtils.isEmpty(video)) {
-                ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(video);
-                for (Map<String, String> map : maps) {
-                    if (map != null) {
-                        if (map.containsKey("videoTime")) {
-                            String videoTime = map.get("videoTime");
-                            if (!TextUtils.isEmpty(videoTime) && !"00:00".equals(videoTime) && mVideoTime != null) {
-                                mVideoTime.setText(videoTime);
-                                mVideoTime.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        if (map.containsKey("isVideo")) {
-                            String isVideo = map.get("isVideo");
-                            if (!TextUtils.isEmpty(isVideo) && isVideo.equals("2"))
-                                mIsVideo = true;
-                        }
+                Map<String, String> videoMap = StringManager.getFirstMap(video);
+                String videoTime = videoMap.get("videoTime");
+                if (!TextUtils.isEmpty(videoTime) && !"00:00".equals(videoTime) && mVideoTime != null) {
+                    mVideoTime.setText(videoTime);
+                    mVideoTime.setVisibility(View.VISIBLE);
+                }
+                String videoUrl = videoMap.get("videoUrl");
+                if (!TextUtils.isEmpty(videoUrl)) {
+                    Map<String, String> videoUrlMap = StringManager.getFirstMap(videoUrl);
+                    String defUrl = videoUrlMap.get("defaultUrl");
+                    if (!TextUtils.isEmpty(defUrl)) {
+                        mIsVideo = true;
                     }
                 }
                 if (mVideoContainer != null)
