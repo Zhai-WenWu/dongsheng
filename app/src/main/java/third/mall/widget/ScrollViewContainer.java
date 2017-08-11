@@ -348,14 +348,17 @@ public class ScrollViewContainer extends RelativeLayout {
 
                 break;
             case "2"://滚动到第二视图
-                if(topView instanceof MyScrollView){
-                    ((MyScrollView)topView).fullScroll(ScrollView.FOCUS_DOWN);
-                }
-                if(bottomView instanceof ScrollView){
-                    ((ScrollView)bottomView).scrollTo(0,1000);
-                }
-                int height=ToolsDevice.getWindowPx(context).heightPixels;
-//                this.scrollBy(0,height);
+//                if(topView instanceof MyScrollView){
+//                    ((MyScrollView)topView).fullScroll(ScrollView.FOCUS_DOWN);
+//                }
+//                if(bottomView instanceof ScrollView){
+//                    ((ScrollView)bottomView).scrollTo(0,1000);
+//                }
+//                int height=ToolsDevice.getWindowPx(context).heightPixels;
+                vt = VelocityTracker.obtain();
+                mMoveLen=3000;
+                state = AUTO_DOWN;
+                mTimer.schedule(2);
                 break;
         }
     }
