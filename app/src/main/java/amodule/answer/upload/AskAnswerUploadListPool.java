@@ -265,19 +265,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         }
     }
 
-    public interface UploadOverListener {
-        void onUploadOver(boolean flag, String response);
-    }
-
-    private UploadOverListener mUploadOverListener;
-    public void setUploadOverListener(UploadOverListener overListener) {
-        mUploadOverListener = overListener;
-    }
-
-    public UploadOverListener getUploadOverListener() {
-        return mUploadOverListener;
-    }
-
     @Override
     public void uploadLast() {
         Log.i("articleUpload","uploadLast()");

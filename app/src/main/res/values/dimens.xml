@@ -22,6 +22,10 @@
     <!-- 美食圈bar上的消息数量通知 -->
     <dimen name="bar_tab_marginright">15dp</dimen>
 
+    <dimen name="prb_symbolic_tick_default_text_size">15sp</dimen>
+    <dimen name="prb_drawable_tick_default_spacing">1dp</dimen>
+    <dimen name="prb_drawable_tick_default_size">1dp</dimen>
+
     <!-- 大小 *1 -->
     <dimen name="dp__100">-100dp</dimen>
     <dimen name="dp__30">-30dp</dimen>

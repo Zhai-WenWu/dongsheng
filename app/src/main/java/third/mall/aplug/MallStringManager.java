@@ -7,7 +7,7 @@ import xh.basic.tool.UtilString;
 public class MallStringManager extends UtilString {
 
     public final static String defaultDomain = ".ds.xiangha.com";
-    //	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
+//    	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
     public static String apiAPI = "api";
     public static String appm = "m";
     public static String httpData = "https://";
@@ -88,6 +88,10 @@ public class MallStringManager extends UtilString {
     public final static String mall_getHotRecommend = mall_apiUrl + "/v1/product/getHotRecommend";
     //sign
     public final static String mall_getToken = mall_apiUrl + "/v2/sign/getToken";
+    //评价
+    public final static String mall_toComment = mall_apiUrl + "/v3/order/toComment";
+    public final static String mall_addComment = mall_apiUrl + "/v3/comment/addComment";
+    public final static String mall_addMuiltComment = mall_apiUrl + "/v3/comment/addMuiltComment";
 
     /**
      * 替换url

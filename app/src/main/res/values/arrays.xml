@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="evalution_star_descriptions">
+        <item>不满意</item>
+        <item>不太满意</item>
+        <item>感觉一般</item>
+        <item>满意</item>
+        <item>非常满意</item>
+    </string-array>
+</resources>

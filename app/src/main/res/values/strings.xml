@@ -53,4 +53,9 @@
     <string name="guidance_title2">想发菜谱、发贴子的友友来这里~（2/3）</string>
     <string name="guidance_title3">""</string>
 
+    <string name="prb_default_symbolic_string">$</string>
+
+    <string name="publish_evalution_desc_hint">现在是瞎写的，=文案出来在给换上。。。。</string>
+    <string name="publish_evalution_share_text">分享到美食圈</string>
+
 </resources>

@@ -29,6 +29,7 @@ public class UploadListPool {
     protected boolean isPause = false;
     protected boolean isCancel = false;
 
+    protected UploadOverListener mUploadOverListener;
 
     public UploadListPool() {
         init();
@@ -311,6 +312,18 @@ public class UploadListPool {
 
     public UploadPoolData getUploadPoolData() {
         return uploadPoolData;
+    }
+
+    public void setUploadOverListener(UploadOverListener overListener) {
+        mUploadOverListener = overListener;
+    }
+
+    public UploadOverListener getUploadOverListener() {
+        return mUploadOverListener;
+    }
+
+    public interface UploadOverListener {
+        void onUploadOver(boolean flag, String response);
     }
 
 }
