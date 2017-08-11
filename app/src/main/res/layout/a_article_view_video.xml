@@ -75,7 +75,7 @@
                 android:textColor="@color/comment_color"
                 android:textSize="@dimen/sp_12"
                 android:paddingRight="@dimen/dp_10"
-                android:visibility="visible"
+                android:visibility="gone"
                 />
 
         </RelativeLayout>
