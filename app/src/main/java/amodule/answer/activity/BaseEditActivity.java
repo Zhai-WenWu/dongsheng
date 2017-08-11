@@ -197,6 +197,7 @@ public class BaseEditActivity extends BaseActivity {
                         //处理回答的上传
                         Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
                         intent.putExtra("draftId", (int)mModel.getmId());
+                        intent.putExtra("isAutoUpload", true);
                         if (!TextUtils.isEmpty(mQADetailUrl))
                             intent.putExtra("qaDetailUrl", mQADetailUrl);
                         startActivity(intent);

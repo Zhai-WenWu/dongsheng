@@ -54,7 +54,7 @@ public class AnswerEditActivity extends BaseEditActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType, mQACode));
+                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
             }
         }).start();
     }

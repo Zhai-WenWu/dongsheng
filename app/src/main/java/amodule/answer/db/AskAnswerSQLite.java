@@ -135,15 +135,15 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
         }
     }
 
-    public AskAnswerModel queryData(String dishCode, String qaType, String qaCode) {
+    public AskAnswerModel queryData(String dishCode, String qaType) {
         AskAnswerModel model = null;
-        if (TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(qaType) || TextUtils.isEmpty(qaCode))
+        if (TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(qaType))
             return model;
         SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
             database = getReadableDatabase();
-            cursor = database.query(mTabName, null, mColumnDishCode + "=? and " + mColumnType + "=? and " + mColumnQACode + "=?", new String[]{dishCode, qaType, qaCode}, null, null, mColumnId + " desc");
+            cursor = database.query(mTabName, null, mColumnDishCode + "=? and " + mColumnType + "=?", new String[]{dishCode, qaType}, null, null, mColumnId + " desc");
             if (cursor.moveToFirst()) {
                 do {
                     model = new AskAnswerModel();

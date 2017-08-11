@@ -147,7 +147,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType, mQACode));
+                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
             }
         }).start();
     }
