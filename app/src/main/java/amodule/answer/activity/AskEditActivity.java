@@ -394,7 +394,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 } else {// <=200表示成功，吊起支付弹窗
                     mQAID = map.get("id");
                     mWebUrl = map.get("payUrl");
-                    if (!mIsAskMore) {
+                    if (mIsAskMore) {
                         startQADetail();
                     } else {
                         startPay();

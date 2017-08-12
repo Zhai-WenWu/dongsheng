@@ -1045,6 +1045,16 @@ public class JsAppCommon extends JsBase {
         PushManager.requestPermission();
     }
 
-
+    @JavascriptInterface
+    public void openShareNew() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mBarShare != null) {
+                    mBarShare.openShareNewActivity();
+                }
+            }
+        });
+    }
 
 }
