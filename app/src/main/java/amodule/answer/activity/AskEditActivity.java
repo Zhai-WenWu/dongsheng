@@ -196,8 +196,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         loadManager.hideProgressBar();
         if (succ && map != null && !map.isEmpty()) {
             mAskPrice = map.get("price");
-            mPriceText.setText(mAskPrice + "元");
-            mPriceText.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(mAskPrice)) {
+                mPriceText.setText(mAskPrice + "元");
+                mPriceText.setVisibility(View.VISIBLE);
+            }
         }
     }
 
