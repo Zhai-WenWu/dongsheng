@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +19,7 @@ import com.xianghatest.R;
 
 import java.util.ArrayList;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -31,7 +31,9 @@ import third.mall.view.EvalutionImageLayout;
 import xh.windowview.XhDialog;
 
 public class PublishEvalutionSingleActivity extends BaseActivity implements View.OnClickListener {
-    public static final String TAG = "tzy";
+    public static final String STATISTICS_ID = "a_publish_commerce";
+    public static final String STATISTICS_RETURN_ID = "a_comcoment_return";
+    public static final String STATISTICS_PUBLISH_ID = "a_comcoment_result";
     public static final String EXTRAS_CODE = "code";
     public static final String EXTRAS_SCORE = "score";
     public static final String EXTRAS_IMAGE = "image";
@@ -86,12 +88,19 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
             @Override
             public void onSuccess() {
+                XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"成功提交","");
                 cancelUploadingDialog();
+                //TODO 跳转评论成功
+//                Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
+//                intent.putExtra("url","http://m.xiangha.com");
+//                startActivity(intent);
             }
 
             @Override
             public void onFailed() {
+                XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"提交失败","");
                 cancelUploadingDialog();
+
             }
         });
     }
@@ -118,7 +127,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             imagesLayout.setViewSize(itemIwdth);
             selectImage.setLayoutParams(new LinearLayout.LayoutParams(imageWidth,imageWidth));
         }
-        int starItemWidth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_198)) / 5 - 10;
+        int starItemWidth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_198)) / 5;
         int defaultWidth = Tools.getDimen(this,R.dimen.dp_32);
         int defaultStarWidth = Tools.getDimen(this,R.dimen.dp_18);
         if(starItemWidth < defaultWidth){
@@ -138,6 +147,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         ratingBar.setListener(new ProperRatingBar.RatingListener() {
             @Override
             public void onRatePicked(ProperRatingBar ratingBar) {
+                XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_ID,"点击星星","");
                 uploadControl.setScore(ratingBar.getRating());
                 scoreDescText.setText(starEvalutionDesc[ratingBar.getRating() - 1]);
                 updateShareLayoutVisibility();
@@ -181,6 +191,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                     shareToCircleImage.setSelected(true);
                     shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share_selected);
                 }
+                XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_ID,"点击分享美食圈","");
             }
         });
 
@@ -284,9 +295,11 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rightText:
+                XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_ID,"点击发布按钮","");
                 publishEvalution();
                 break;
             case R.id.select_image:
+                XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_ID,"点击添加图片","");
                 openSelectImages();
                 break;
         }
@@ -326,6 +339,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 .setCanselButton("是", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","是");
                         isSureBack = true;
                         dialog.cancel();
                         PublishEvalutionSingleActivity.this.onBackPressed();
@@ -335,6 +349,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 .setSureButton("否", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","否");
                         isSureBack = false;
                         dialog.cancel();
                     }

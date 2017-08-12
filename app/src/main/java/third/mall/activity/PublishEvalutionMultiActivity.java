@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -30,6 +31,7 @@ import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 
 public class PublishEvalutionMultiActivity extends BaseActivity {
+    public static final String STATISTICS_ID = "a_publish_comment";
     public static final String EXTRAS_ORDER_ID = "id";
 
     private TextView rightText;
@@ -68,6 +70,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         rightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(PublishEvalutionMultiActivity.this, STATISTICS_ID,"点击发布按钮","");
                 publishMutilEvalution();
             }
         });
@@ -99,12 +102,12 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     private void loadData() {
         loadManager.showProgressBar();
         loadManager.changeMoreBtn(MallReqInternet.REQ_OK_STRING,-1,-1,1,true);
-        StringBuilder params = new StringBuilder();
-//                .append("order_id=")
-//                .append(orderId);
-//        MallReqInternet.in().doPost(MallStringManager.mall_toComment,
-        MallReqInternet.in().doGet(MallStringManager.mall_toComment,
-//                params.toString(),
+        StringBuilder params = new StringBuilder()
+                .append("order_id=")
+                .append(orderId);
+        MallReqInternet.in().doPost(MallStringManager.mall_toComment,
+//        MallReqInternet.in().doGet(MallStringManager.mall_toComment,
+                params.toString(),
                 new MallInternetCallback(this) {
                     @Override
                     public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -172,6 +175,12 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
         }
         return jsonArray.toString();
+    }
+
+    @Override
+    public void onBackPressed() {
+        XHClick.mapStat(PublishEvalutionMultiActivity.this, STATISTICS_ID,"点击返回按钮","");
+        super.onBackPressed();
     }
 
     private Dialog mUploadingDialog;

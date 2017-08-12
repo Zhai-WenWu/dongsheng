@@ -13,9 +13,11 @@ import com.xianghatest.R;
 
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
 import acore.widget.ProperRatingBar;
+import third.mall.activity.PublishEvalutionMultiActivity;
 import third.mall.activity.PublishEvalutionSingleActivity;
 
 /**
@@ -99,6 +101,7 @@ public class CommodEvalutionItem extends ItemBaseView {
             evalutionButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    XHClick.mapStat(getContext(), PublishEvalutionMultiActivity.STATISTICS_ID,"点击评价晒单","");
                     String code = data.get("product_code");
                     if(TextUtils.isEmpty(code)){
                         Tools.showToast(getContext(),"数据错误");

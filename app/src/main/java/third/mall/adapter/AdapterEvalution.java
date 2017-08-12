@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
+import third.mall.activity.PublishEvalutionMultiActivity;
 import third.mall.view.CommodEvalutionItem;
 
 /**
@@ -71,6 +73,7 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                     @Override
                     public void onRatePicked(int rating) {
                         data.put("score",String.valueOf(rating));
+                        XHClick.mapStat(view.getContext(), PublishEvalutionMultiActivity.STATISTICS_ID,"点击星星","");
                         AdapterEvalution.this.notifyDataSetChanged();
                     }
                 });
