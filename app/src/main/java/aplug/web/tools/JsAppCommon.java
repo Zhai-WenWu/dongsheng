@@ -961,12 +961,18 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String isAnswerMore) {
+    public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String qaTitle, String isAnswerMore) {
+        if (!LoginManager.isLogin()) {
+            Intent intent = new Intent(mAct, LoginByAccout.class);
+            mAct.startActivity(intent);
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);
         bundle.putString("qaCode", qaId);
         bundle.putString("answerCode", answerCode);
+        bundle.putString("qaTitle", qaTitle);
         bundle.putString("mIsAnswerMore", isAnswerMore);
         Intent intent = new Intent(mAct, AnswerEditActivity.class);
         intent.putExtras(bundle);
@@ -974,12 +980,16 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAsk(String dishId, String authorId, String qaId, String qaTitle, String answerCode, String isAskMore) {
+    public void goAsk(String dishId, String authorId, String qaId, String answerCode, String isAskMore) {
+        if (!LoginManager.isLogin()) {
+            Intent intent = new Intent(mAct, LoginByAccout.class);
+            mAct.startActivity(intent);
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);
         bundle.putString("qaCode", qaId);
-        bundle.putString("qaTitle", qaTitle);
         bundle.putString("answerCode", answerCode);
         bundle.putString("isAskMore", isAskMore);
         Intent intent = new Intent(mAct, AskEditActivity.class);

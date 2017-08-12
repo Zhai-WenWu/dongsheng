@@ -65,11 +65,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private boolean mIsAno;
 
     private String mQAID;
+    private String mQADetailUrl;//问答详情页的url
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView("我问", R.layout.ask_edit_activity);
+        initView(mIsAskMore ? "追问" : "我问", R.layout.ask_edit_activity);
     }
 
     private void setListener() {
@@ -282,23 +283,21 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void startPay() {
-        if (!mIsAskMore) {
-            if (TextUtils.isEmpty(mWebUrl) || TextUtils.isEmpty(mQAID))
-                return ;
-            Map<String,String> header= ReqInternet.in().getHeader(this);
-            String cookieKey= StringManager.appWebUrl.replace(StringManager.appWebTitle, "");
-            String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-            String[] cookie = cookieStr.split(";");
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.setAcceptCookie(true);
-            for (int i = 0; i < cookie.length; i++) {
-                if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
-                LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
-                cookieManager.setCookie(cookieKey, cookie[i]);
-            }
-            CookieSyncManager.getInstance().sync();
-            mWebView.loadUrl(mWebUrl);
+        if (TextUtils.isEmpty(mWebUrl) || TextUtils.isEmpty(mQAID))
+            return ;
+        Map<String,String> header= ReqInternet.in().getHeader(this);
+        String cookieKey= StringManager.appWebUrl.replace(StringManager.appWebTitle, "");
+        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+        String[] cookie = cookieStr.split(";");
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        for (int i = 0; i < cookie.length; i++) {
+            if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
+            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
+            cookieManager.setCookie(cookieKey, cookie[i]);
         }
+        CookieSyncManager.getInstance().sync();
+        mWebView.loadUrl(mWebUrl);
     }
 
     @Override
@@ -395,7 +394,11 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 } else {// <=200表示成功，吊起支付弹窗
                     mQAID = map.get("id");
                     mWebUrl = map.get("payUrl");
-                    startPay();
+                    if (!mIsAskMore) {
+                        startQADetail();
+                    } else {
+                        startPay();
+                    }
                 }
             } catch (Exception e){
                 e.printStackTrace();
@@ -414,15 +417,21 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         if (succ) {
             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
             Tools.showToast(this, "支付成功");
-            AppCommon.openUrl(this, mQADetailUrl, false);
-            if (!PushManager.isNotificationEnabled()) {
-                getIsTip();
-            }
-            this.finish();
+            startQADetail();
         } else {
             if (mIsAskMore)
                 XHClick.mapStat(this, getTjId(), "点击发布按钮", "未发布成功");
         }
+    }
+
+    private void startQADetail() {
+        if (TextUtils.isEmpty(mQADetailUrl))
+            return;
+        AppCommon.openUrl(this, mQADetailUrl, false);
+        if (!PushManager.isNotificationEnabled()) {
+            getIsTip();
+        }
+        this.finish();
     }
 
     private void getIsTip() {

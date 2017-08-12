@@ -45,6 +45,7 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import aplug.web.FullScreenWeb;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -73,7 +74,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     private String mTimesStamp;
     private String mCoverPath;
     private String mFinalVideoPath;
-    private String mQADetailUrl;
 
     private int mHeaderViewCount;
     private boolean mIsStopUpload;
@@ -95,7 +95,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mTimesStamp = intent.getStringExtra("time");
         mCoverPath = intent.getStringExtra("coverPath");
         mFinalVideoPath = intent.getStringExtra("finalVideoPath");
-        mQADetailUrl = intent.getStringExtra("qaDetailUrl");
     }
 
     private void registnetworkListener() {
@@ -170,7 +169,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                         getIsTip();
                     }
                     Main.colse_level = 1;
-                    AppCommon.openUrl(AskAnswerUploadListActivity.this, mQADetailUrl, false);
+                    if (FullScreenWeb.isAlive)
+                        FullScreenWeb.isReload = true;
                     AskAnswerUploadListActivity.this.finish();
                 }
             }

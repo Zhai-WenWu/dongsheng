@@ -76,6 +76,7 @@ import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
 import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
@@ -268,6 +269,11 @@ public class Main extends Activity implements OnClickListener {
                         .setSureButton("是", new OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if (!LoginManager.isLogin()) {
+                                    Intent intent = new Intent(Main.this, LoginByAccout.class);
+                                    Main.this.startActivity(intent);
+                                    return;
+                                }
                                 Main.this.startActivity(finalIntent);
                                 dialog.cancel();
                             }

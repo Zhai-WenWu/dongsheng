@@ -25,7 +25,7 @@ public class AnswerEditActivity extends BaseEditActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView("我答", R.layout.answer_edit_activity);
+        initView(mIsAnswerMore ? "追答" : "我答", R.layout.answer_edit_activity);
     }
 
     @Override
