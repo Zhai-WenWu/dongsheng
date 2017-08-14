@@ -10,7 +10,7 @@ public class MallStringManager extends UtilString {
 //    	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
     public static String apiAPI = "api";
     public static String appm = "m";
-    public static String httpData = "https://";
+    public static String httpData = "http://";
 
     public static String apiTitle = httpData + apiAPI;
     public static String appWebTitle = httpData + appm;
@@ -25,6 +25,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_api_register = mall_apiUrl + "/v1/customer/register";
     public final static String mall_api_home = mall_apiUrl + "/v1/home";
     public final static String mall_api_product_info = mall_apiUrl + "/v1/product/info";
+    public final static String mall_api_product_info_v3 = mall_apiUrl + "/v3/product/info";
     public final static String mall_api_computeOrderAmt = mall_apiUrl + "/v1/order/computeOrderAmt";
     public final static String mall_api_createOrder = mall_apiUrl + "/v1/order/createOrder";
     public final static String mall_api_getShippingAddress = mall_apiUrl + "/v1/customer/getShippingAddress";
@@ -56,7 +57,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_web_classify = mall_web_apiUrl + "/v1/classify/classifyInfo";
 
     //获取dsToken
-    public final static String mall_getDsToken = "https://oauth.xiangha.com/ds/getDsToken";
+    public final static String mall_getDsToken = "http://oauth.xiangha.com/ds/getDsToken";
     //购物车
     public final static String mall_getCartProductNum = mall_apiUrl + "/v1/cart/getCartProductNum";
     public final static String mall_getCartInfo = mall_apiUrl + "/v1/cart/getCartInfo";

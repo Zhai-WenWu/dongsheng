@@ -237,7 +237,7 @@
                                     android:layout_width="@dimen/dp_0.5"
                                     android:layout_height="match_parent"
                                     android:layout_alignParentLeft="true"
-                                    android:background="#333333"
+                                    android:background="@drawable/mall_commod_detail_info_back"
                                     />
 
                                 <LinearLayout
@@ -431,7 +431,7 @@
                 android:layout_width="@dimen/dp_18"
                 android:layout_height="@dimen/dp_18"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/z_mall_detail_home"/>
+                android:background="@drawable/product_service"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -465,7 +465,7 @@
                     android:layout_height="@dimen/dp_24"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:src="@drawable/z_mall_shopcat_iv"/>
+                    android:src="@drawable/product_shop"/>
 
                 <TextView
                     android:id="@+id/mall_news_num"
