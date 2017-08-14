@@ -42,7 +42,6 @@ import amodule.search.avtivity.HomeSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import third.mall.activity.PublishEvalutionMultiActivity;
 
 /**
  * 新的框架首页
@@ -120,8 +119,7 @@ public class MainHome extends MainBaseActivity {
                 switch (v.getId()) {
                     case R.id.fenlei_linear:
                         XHClick.mapStat(MainHome.this, "a_index530", "顶部", "点击分类按钮");
-//                        startActivity(new Intent(MainHome.this, ClassifyHealthActivity.class));
-                        startActivity(new Intent(MainHome.this, PublishEvalutionMultiActivity.class));
+                        startActivity(new Intent(MainHome.this, ClassifyHealthActivity.class));
                         break;
                     case R.id.ed_search_layout_main:
                         XHClick.mapStat(MainHome.this, "a_index530", "顶部", "点击搜索框");
