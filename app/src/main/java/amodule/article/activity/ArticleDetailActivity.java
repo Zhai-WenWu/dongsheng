@@ -139,6 +139,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        if(mArticleCommentBar != null) mArticleCommentBar = null;
         //统计
         long nowTime = System.currentTimeMillis();
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {

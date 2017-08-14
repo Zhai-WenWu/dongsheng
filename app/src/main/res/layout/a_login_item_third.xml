@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/dp_25">
+
+
+    <ImageView
+        android:id="@+id/iv_qq"
+        android:layout_width="@dimen/dp_49"
+        android:layout_height="@dimen/dp_49"
+        android:background="@drawable/a_login_button_qq" />
+
+    <View
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/iv_weixin"
+        android:layout_width="@dimen/dp_49"
+        android:layout_height="@dimen/dp_49"
+        android:background="@drawable/a_login_button_weixin" />
+
+    <View
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="match_parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_weibo"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:background="@drawable/a_login_button_xinliang" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/iv_mailbox"
+        android:layout_width="@dimen/dp_49"
+        android:layout_height="@dimen/dp_49"
+        android:background="@drawable/a_login_button_youxiang" />
+
+</LinearLayout>

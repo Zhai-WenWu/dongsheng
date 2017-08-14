@@ -39,9 +39,7 @@ import amodule.user.activity.login.ChangePhone;
 import amodule.user.activity.login.CheckSrcret;
 import amodule.user.activity.login.InputIdentifyCode;
 import amodule.user.activity.login.LoginByAccout;
-import amodule.user.activity.login.LoginByPhoneIndentify;
 import amodule.user.activity.login.LoginbyEmail;
-import amodule.user.activity.login.RegisterByPhoneOne;
 import amodule.user.activity.login.SetPersonalInfo;
 import amodule.user.activity.login.SetSecretActivity;
 import aplug.basic.InternetCallback;
@@ -552,7 +550,7 @@ public class BaseLoginActivity extends BaseActivity {
     }
 
     protected void register(Context context, String countyrCode, String phone_number) {
-        Intent intent = new Intent(context, RegisterByPhoneOne.class);
+        Intent intent = new Intent(context, LoginByAccout.class);
         intent.putExtra(ZONE_CODE, countyrCode);
         intent.putExtra(PHONE_NUM, phone_number);
         startActivity(intent);
@@ -607,7 +605,7 @@ public class BaseLoginActivity extends BaseActivity {
     }
 
     protected void gotoLoginByIndetify(Context context, String zoneCode, String phoneNum) {
-        Intent intent = new Intent(context, LoginByPhoneIndentify.class);
+        Intent intent = new Intent(context, LoginByAccout.class);
         intent.putExtra(ZONE_CODE, zoneCode);
         intent.putExtra(PHONE_NUM, phoneNum);
         startActivity(intent);

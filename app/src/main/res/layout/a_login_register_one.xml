@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/activityLayout"
-                style="@style/layout"
-                android:background="@color/backgroup_color"
-                android:paddingTop="@dimen/dp_20"
-                android:paddingBottom="@dimen/dp_20">
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@color/backgroup_color"
+    android:paddingBottom="@dimen/dp_20"
+    android:paddingTop="@dimen/dp_20">
 
     <RelativeLayout
         android:id="@+id/rl_topbar"
@@ -20,9 +20,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_marginTop="@dimen/dp_15"
+            android:padding="@dimen/dp_5"
             android:scaleType="centerInside"
-            android:src="@drawable/a_login_button_return"
-            android:padding="@dimen/dp_5"/>
+            android:src="@drawable/a_login_button_return" />
 
 
     </RelativeLayout>
@@ -32,57 +32,69 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_topbar"
         android:layout_marginTop="46dp"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
-        android:orientation="vertical">
+        android:paddingRight="@dimen/dp_20">
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_title"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:text="手机注册"
-                android:textColor="@color/c_black_text"
-                android:textSize="@dimen/sp_26"/>
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="找回密码"
+            android:textColor="@color/c_black_text"
+            android:textSize="@dimen/sp_26"
+            android:textStyle="bold" />
 
 
         <amodule.user.view.PhoneNumInputView
             android:id="@+id/phone_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_53"/>
+            android:layout_marginTop="@dimen/dp_53" />
+
+        <amodule.user.view.IdentifyInputView
+            android:id="@+id/phone_identify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_3" />
+
+        <amodule.user.view.SpeechaIdentifyInputView
+            android:id="@+id/login_speeach_identify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
 
         <amodule.user.view.NextStepView
             android:id="@+id/btn_next_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_43"
-            />
+            android:layout_marginTop="@dimen/dp_41" />
 
-
+        <TextView
+            android:id="@+id/tv_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="遇到问题?"
+            android:textColor="#737272"
+            android:textSize="@dimen/sp_14" />
     </LinearLayout>
 
 
     <TextView
-
         android:id="@+id/tv_agreenment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp_10"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dp_10"
         android:maxLines="1"
+        android:text="邮箱账号，请用电脑访问xiangha.com找回密码！"
         android:textColor="#999898"
-        android:text="注册代表阅读并同意香哈用户协议"
-        android:textSize="@dimen/sp_13"/>
+        android:textSize="@dimen/sp_13" />
 
 
 </RelativeLayout>

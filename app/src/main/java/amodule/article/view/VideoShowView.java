@@ -32,7 +32,6 @@ import static aplug.recordervideo.tools.FileToolsCammer.VIDEO_CATCH;
  * Created by MrTrying on 2017/5/19 09:42.
  * E_mail : ztanzeyu@gmail.com
  */
-
 public class VideoShowView extends BaseView implements View.OnClickListener {
     private ImageView coverImage;
     private ImageView deleteImage;

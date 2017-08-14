@@ -835,13 +835,13 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="amodule.user.activity.login.LoginbyEmail"
+            android:name="amodule.user.activity.login.LoginByPassword"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="amodule.user.activity.login.LoginByPhoneIndentify"
+            android:name="amodule.user.activity.login.LoginbyEmail"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"

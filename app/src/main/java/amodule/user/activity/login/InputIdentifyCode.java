@@ -170,7 +170,6 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
         btn_next_step.init("下一步",  new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
-
                 if (ORIGIN_REGISTER.equals(origin)) {
                     XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "验证码页，点击下一步");
                 } else if (ORIGIN_BIND_PHONE_NUM.equals(origin)) {

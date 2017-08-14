@@ -8,7 +8,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:id="@+id/content_layout"
@@ -107,110 +110,34 @@
 
                     <TextView
                         android:id="@+id/tv_register"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="注册"
-                        android:textColor="#9c9c9c"
-                        android:textSize="@dimen/sp_14"/>
+                        style="@style/userLoginOtherText"
+                        android:text="注册"/>
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="@dimen/dp_13"
-                        android:layout_marginLeft="@dimen/dp_8"
-                        android:layout_marginRight="@dimen/dp_8"
-                        android:layout_marginTop="@dimen/dp_2"
-                        android:background="#dfdfdf"
-
+                        style="@style/userLoginOtherLine"
                         />
 
                     <TextView
                         android:id="@+id/tv_identify"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="验证码登录"
-                        android:textColor="#9c9c9c"
-                        android:textSize="@dimen/sp_14"/>
+                        style="@style/userLoginOtherText"
+                        android:text="验证码登录"/>
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="@dimen/dp_13"
-                        android:layout_marginLeft="@dimen/dp_8"
-                        android:layout_marginRight="@dimen/dp_8"
-                        android:layout_marginTop="@dimen/dp_2"
-                        android:background="#dfdfdf"
-
+                        style="@style/userLoginOtherLine"
                         />
 
                     <TextView
                         android:id="@+id/tv_lostsercet"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="忘记密码?"
-                        android:textColor="#9c9c9c"
-                        android:textSize="@dimen/sp_14"/>
+                        style="@style/userLoginOtherText"
+                        android:text="忘记密码?"/>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/dp_25">
+                <include
+                    layout="@layout/a_login_item_third" />
 
-
-                    <ImageView
-                        android:id="@+id/iv_qq"
-                        android:layout_width="@dimen/dp_49"
-                        android:layout_height="@dimen/dp_49"
-                        android:background="@drawable/a_login_button_qq"/>
-
-                    <View
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="match_parent"/>
-
-                    <ImageView
-                        android:id="@+id/iv_weixin"
-                        android:layout_width="@dimen/dp_49"
-                        android:layout_height="@dimen/dp_49"
-                        android:background="@drawable/a_login_button_weixin"/>
-
-                    <View
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="match_parent"/>
-
-
-                    <ImageView
-                        android:id="@+id/iv_weibo"
-                        android:layout_width="@dimen/dp_50"
-                        android:layout_height="@dimen/dp_50"
-                        android:background="@drawable/a_login_button_xinliang"/>
-
-                    <View
-                        android:id="@+id/view5"
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="match_parent"/>
-
-                    <ImageView
-                        android:id="@+id/iv_mailbox"
-                        android:layout_width="@dimen/dp_49"
-                        android:layout_height="@dimen/dp_49"
-                        android:background="@drawable/a_login_button_youxiang"/>
-
-                    <View
-                        android:id="@+id/v_meizu_space"
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="match_parent"
-                        android:visibility="visible"/>
-
-                    <ImageView
-                        android:id="@+id/iv_meizu"
-                        android:layout_width="@dimen/dp_49"
-                        android:layout_height="@dimen/dp_49"
-                        android:background="@drawable/a_login_button_flym"
-                        android:visibility="visible"/>
-
-                </LinearLayout>
+                <include
+                    layout="@layout/a_login_item_agreenment" />
 
             </LinearLayout>
 
