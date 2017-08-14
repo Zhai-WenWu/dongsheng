@@ -398,7 +398,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
      */
     @Override
     protected void uploadThingOver(final boolean flag, final String uniquId, final String responseStr, final JSONObject jsonObject) {
-        Log.i("articleUpload","uploadThingOver() flag:" + flag + "  uniquId: " + uniquId + "  responseStr: " + responseStr + "  json: " + jsonObject.toString());
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(),
@@ -406,10 +405,7 @@ public class AskAnswerUploadListPool extends UploadListPool {
                     @Override
                     public boolean onLoop(UploadItemData itemData) {
                         if (itemData.getUniqueId().equals(uniquId)) {
-                            if (flag) {
-                                if (jsonObject != null)
-                                    Log.e("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
-
+                            if (flag && jsonObject != null) {
                                 if (UploadItemData.TYPE_VIDEO == itemData.getType()){
                                     //处理url,has值丢失
                                     if(TextUtils.isEmpty(responseStr)||(TextUtils.isEmpty(jsonObject.optString("hash")))){

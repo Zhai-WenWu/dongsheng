@@ -25,7 +25,7 @@ public class AnswerEditActivity extends BaseEditActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView("我答", R.layout.answer_edit_activity);
+        initView(mIsAnswerMore ? "追答" : "我答", R.layout.answer_edit_activity);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AnswerEditActivity extends BaseEditActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType, mQACode));
+                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
             }
         }).start();
     }

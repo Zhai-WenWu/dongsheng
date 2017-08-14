@@ -61,6 +61,7 @@ public class QAMsgListFragment extends Fragment {
 
         mWebViewManager = new WebviewManager(mActivity, mLoadManager, false);
         mWebView = mWebViewManager.createWebView(0);
+        mWebView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mWebViewManager.setJSObj(mWebView, new JsAppCommon(mActivity, mWebView, mLoadManager, null));
         mWebViewManager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
             @Override

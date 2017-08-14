@@ -1,5 +1,6 @@
 package amodule.article.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,10 +33,15 @@ import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichText;
 import amodule.article.view.richtext.RichURLSpan;
+import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
+import aplug.imageselector.ImageSelectorActivity;
+import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
 
+import static amodule.article.activity.edit.EditParentActivity.REQUEST_CHOOSE_VIDEO_COVER;
+import static amodule.quan.activity.upload.UploadSubjectNew.UP_SUBJECT_CHOOSE_IMG;
 import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
 
 /**
@@ -57,6 +63,8 @@ public class TextAndImageMixLayout extends LinearLayout
     /** 图片集合 */
     //path:url
     private Map<String, String> imageMap = new HashMap<>();
+
+    private VideoShowView mCurrentViewShowView;
 
     public TextAndImageMixLayout(Context context) {
         this(context, null);
@@ -111,7 +119,7 @@ public class TextAndImageMixLayout extends LinearLayout
                     addImage(map.get("gifurl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.VIDEO:
-                    addVideo(map.get("videosimageurl"), map.get("videourl"),map.get("id"), isLast, "");
+                    addVideo(map.get("videosimageurl"),map.get("chooseCoverImageUrl"), map.get("videourl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.URLS:
                     //do nothing
@@ -473,7 +481,7 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param content
      */
     public void addVideo(String coverImageUrl, String videoUrl, boolean ifAddText, CharSequence content) {
-        addVideo(coverImageUrl, videoUrl,"", ifAddText, content);;
+        addVideo(coverImageUrl,null, videoUrl,"", ifAddText, content);;
     }
 
     /**
@@ -484,7 +492,7 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param ifAddText
      * @param content
      */
-    public void addVideo(String coverImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
+    public void addVideo(String coverImageUrl,String chooseImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
         if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
             Tools.showToast(getContext(),"文件已损坏");
             return;
@@ -533,9 +541,33 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setEnableEdit(true);
         view.setSecondEdit(isSecondEdit);
         view.setVideoData(coverImageUrl, videoUrl);
+        if(!TextUtils.isEmpty(chooseImageUrl)){
+            view.setChooseCoverImageUrl(chooseImageUrl);
+        }
         view.setIdStr(idStr);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);
+        view.setOnChooseCoverListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentViewShowView = (VideoShowView) view;
+                Activity act = (Activity) TextAndImageMixLayout.this.getContext();
+                Intent intentAddImg = new Intent();
+                intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE, ImageSelectorConstant.MODE_MULTI);
+                intentAddImg.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 1);
+                intentAddImg.setClass(act, ImageSelectorActivity.class);
+                act.startActivityForResult(intentAddImg, REQUEST_CHOOSE_VIDEO_COVER);
+            }
+        });
+    }
+
+    public void onActivityResult(Intent data) {
+        if(mCurrentViewShowView != null){
+            ArrayList<String> array = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);
+            if(array != null && array.size() > 0) {
+                mCurrentViewShowView.setChooseCoverImageUrl(array.get(0));
+            }
+        }
     }
 
     public void setVideo(VideoShowView.VideoDefaultClickCallback callback) {
