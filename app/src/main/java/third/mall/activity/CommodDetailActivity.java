@@ -391,15 +391,12 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         setGetFavorable();
 
         // 轮转图
-        images = UtilString.getListMapByJson(map.get("images"));
+        images = UtilString.getListMapByJson(map.get("resource"));
         initViewPager(images);
-        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
+//        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
             mall_ScrollViewContainer.setState_two(false);
             findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
-        } else {
-            mall_ScrollViewContainer.setState_two(true);
-            findViewById(R.id.explain_detail_but_linear).setVisibility(View.GONE);
-        }
+
     }
 
     /**
@@ -514,7 +511,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         for (int i = 0; i < images.size(); i++) {
             ImageView iv = new ImageView(this);
             iv.setScaleType(ScaleType.FIT_XY);
-            setImageView(iv, images.get(i).get(""), false);
+            setImageView(iv, images.get(i).get("img"), false);
             views.add(iv);
         }
         imageviews = new ImageView[views.size()];
@@ -637,7 +634,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         switch (v.getId()) {
             case R.id.service_mercat:
                 Intent intentmark= new Intent(this, Feedback.class);
-                intentmark.putExtra("feekUrl","");
+                intentmark.putExtra("feekUrl",map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:
