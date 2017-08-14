@@ -27,11 +27,15 @@ public class FullScreenWeb extends WebActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
 
+    public static boolean isAlive = false;
+    public static boolean isReload = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
+        isAlive = true;
 //        ToolsDevice.modifyStateTextColor(this);
         initActivity("",0,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
@@ -78,5 +82,24 @@ public class FullScreenWeb extends WebActivity {
             XHClick.saveStatictisFile("FullScreenWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isReload) {
+            isReload = false;
+            reloadData();
+        }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        isAlive = false;
+    }
+
+    public void reloadData() {
+        loadData();
     }
 }

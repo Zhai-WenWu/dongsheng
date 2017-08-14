@@ -85,4 +85,16 @@ public class BarShare {
 		dataMap.put("parent", mParent);
 		new SharePopupWindow((Activity) mContext, dataMap).showShare();
 	}
+
+	public void openShareNewActivity() {
+		Intent intent = new Intent(mContext,ShareNewActivity.class);
+		intent.putExtra("type", mType);
+		intent.putExtra("title", mTitle);
+		intent.putExtra("clickUrl", mClickUrl);
+		intent.putExtra("content", mContent);
+		intent.putExtra("imgUrl", mImgUrl);
+		intent.putExtra("from", mFrom);
+		intent.putExtra("parent", mParent);
+		mContext.startActivity(intent);
+	}
 }

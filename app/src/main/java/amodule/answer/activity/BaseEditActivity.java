@@ -66,7 +66,6 @@ public class BaseEditActivity extends BaseActivity {
     protected String mAnonymity;//是否匿名 "1":否 "2":是
     protected String mType = "5";//类型：5-菜谱问答
     protected String mQATitle = "";//问答相关问题的标题
-    protected String mQADetailUrl;//问答详情页的url
 
     private TextView mTitle;
     private TextView mUpload;
@@ -99,9 +98,12 @@ public class BaseEditActivity extends BaseActivity {
             mType = bundle.getString("type", "5");
             mQATitle = bundle.getString("qaTitle", "");
             mAnswerCode = bundle.getString("answerCode");
-            mIsAskMore = bundle.getBoolean("isAskMore", false);
-            mIsAnswerMore = bundle.getBoolean("mIsAnswerMore", false);
-            mQADetailUrl = bundle.getString("qaDetailUrl");
+            String askMoreStr = bundle.getString("isAskMore");
+            if ("2".equals(askMoreStr))
+                mIsAskMore = true;
+            String answerMoreStr = bundle.getString("mIsAnswerMore");
+            if ("2".equals(answerMoreStr))
+                mIsAnswerMore = true;
         }
         mModel = new AskAnswerModel();
         mSQLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
@@ -197,8 +199,7 @@ public class BaseEditActivity extends BaseActivity {
                         //处理回答的上传
                         Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
                         intent.putExtra("draftId", (int)mModel.getmId());
-                        if (!TextUtils.isEmpty(mQADetailUrl))
-                            intent.putExtra("qaDetailUrl", mQADetailUrl);
+                        intent.putExtra("isAutoUpload", true);
                         startActivity(intent);
                         XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
                         break;
@@ -334,14 +335,23 @@ public class BaseEditActivity extends BaseActivity {
     }
 
     protected long saveDraft() {
-        if (mModel == null)
-            return -1;
         long rowId = -1;
+        if (mModel == null) {
+            return rowId;
+        }
         Editable editable = mEditText.getText();
+        ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
+        ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
+        long id = mModel.getmId();
+        if ((editable == null || TextUtils.isEmpty(editable.toString())) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
+            if (id > 0)
+                mSQLite.deleteData((int) id);
+            return rowId;
+        }
         mModel.setmText(editable == null ? "" : editable.toString());
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
-        mModel.setmVideos(mImgController.getVideosArray());
-        mModel.setmImgs(mImgController.getImgsArray());
+        mModel.setmVideos(videoArrs);
+        mModel.setmImgs(imgArrs);
         mModel.setmDishCode(mDishCode == null ? "" : mDishCode);
         mModel.setmQACode(mQACode == null ? "" : mQACode);
         mModel.setmAnswerCode(mAnswerCode == null ? "" : mAnswerCode);
@@ -360,10 +370,8 @@ public class BaseEditActivity extends BaseActivity {
     }
 
     private void handleBackClick() {
-        if (!TextUtils.isEmpty(mEditText.getText()) || mImgsContainer.getChildCount() > 0) {
-            if (saveDraft() != -1)
-                Tools.showToast(this, "内容已保存");
-        }
+        if (saveDraft() != -1)
+            Tools.showToast(this, "内容已保存");
     }
 
     @Override

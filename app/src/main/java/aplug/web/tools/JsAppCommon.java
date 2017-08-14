@@ -894,25 +894,44 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void getSign() {
-        ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
-            @Override
-            public void getSignEncyntParam(final String encryptparam) {
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.loadUrl("Javascript:signCallback(\"" + encryptparam + "\")");
-                    }
-                });
-            }
-        });
+    public String getSign() {
+//        ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
+//            @Override
+//            public void getSignEncyntParam(final String encryptparam) {
+//                mWebView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mWebView.loadUrl("Javascript:signCallback(\"" + encryptparam + "\")");
+//                    }
+//                });
+//            }
+//        });
+        return ReqEncyptInternet.in().getEncryptParam();
+//        mWebView.loadUrl("Javascript:signCallback(\"" + ReqEncyptInternet.in().getEncryptParam() + "\")");
     }
     @JavascriptInterface
-    public void getCookie(){
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
+    public String getCookie(){
+//        mWebView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    //cookie结构json
+//                    Map<String, String> header = ReqInternet.in().getHeader(mAct);
+//                    String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
+//                    Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
+//                    JSONObject jsonObject = new JSONObject();
+//                    for (Map.Entry<String, String> entry : mapdata.entrySet()) {
+//                        jsonObject.put(entry.getKey(), entry.getValue());
+//                    }
+//                    String data= jsonObject.toString();
+//                    data=data.replace("\"","\\\"");
+//                    mWebView.loadUrl("Javascript:cookieCallback(\"" + data + "\")");
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+        try {
                     //cookie结构json
                     Map<String, String> header = ReqInternet.in().getHeader(mAct);
                     String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
@@ -923,12 +942,12 @@ public class JsAppCommon extends JsBase {
                     }
                     String data= jsonObject.toString();
                     data=data.replace("\"","\\\"");
-                    mWebView.loadUrl("Javascript:cookieCallback(\"" + data + "\")");
+                    return data;
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-            }
-        });
+                return "";
+
     }
 
     public interface OnPayFinishListener {
@@ -942,12 +961,18 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String isAnswerMore) {
+    public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String qaTitle, String isAnswerMore) {
+        if (!LoginManager.isLogin()) {
+            Intent intent = new Intent(mAct, LoginByAccout.class);
+            mAct.startActivity(intent);
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);
         bundle.putString("qaCode", qaId);
         bundle.putString("answerCode", answerCode);
+        bundle.putString("qaTitle", qaTitle);
         bundle.putString("mIsAnswerMore", isAnswerMore);
         Intent intent = new Intent(mAct, AnswerEditActivity.class);
         intent.putExtras(bundle);
@@ -955,12 +980,17 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAsk(String dishId, String authorId, String qaId, String qaTitle, String isAskMore) {
+    public void goAsk(String dishId, String authorId, String qaId, String answerCode, String isAskMore) {
+        if (!LoginManager.isLogin()) {
+            Intent intent = new Intent(mAct, LoginByAccout.class);
+            mAct.startActivity(intent);
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);
         bundle.putString("qaCode", qaId);
-        bundle.putString("qaTitle", qaTitle);
+        bundle.putString("answerCode", answerCode);
         bundle.putString("isAskMore", isAskMore);
         Intent intent = new Intent(mAct, AskEditActivity.class);
         intent.putExtras(bundle);
@@ -1015,6 +1045,26 @@ public class JsAppCommon extends JsBase {
         PushManager.requestPermission();
     }
 
-
+    /**
+     * 直接打开一个中间显示的分享页面
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享类型
+     * callback:    回调统计
+     */
+    @JavascriptInterface
+    public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                initShare(title, content, img, url, type, callback);
+                if (mBarShare != null) {
+                    mBarShare.openShareNewActivity();
+                }
+            }
+        });
+    }
 
 }

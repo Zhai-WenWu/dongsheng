@@ -76,6 +76,7 @@ import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
 import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
@@ -216,8 +217,31 @@ public class Main extends Activity implements OnClickListener {
             AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
             AskAnswerModel model = sqLite.queryData(qaModelType);
             String msg = "";
+            Intent intent = null;
             Class tempC = null;
             if (model != null) {
+                intent = new Intent();
+                intent.putExtra("code", model.getmDishCode());
+                intent.putExtra("qaCode", model.getmQACode());
+                intent.putExtra("authorCode", model.getmAuthorCode());
+                intent.putExtra("qaTitle", model.getmTitle());
+                intent.putExtra("answerCode", model.getmAnswerCode());
+                intent.putExtra("answerCode", model.getmAnswerCode());
+                boolean isAskAgain = false;
+                boolean isAnswerAgain = false;
+                String qaType = model.getmType();
+                if (!TextUtils.isEmpty(qaType)) {
+                    switch (qaType) {
+                        case AskAnswerModel.TYPE_ANSWER_AGAIN:
+                            isAnswerAgain = true;
+                            break;
+                        case AskAnswerModel.TYPE_ASK_AGAIN:
+                            isAskAgain = true;
+                            break;
+                    }
+                }
+                intent.putExtra("mIsAnswerMore", isAnswerAgain);
+                intent.putExtra("isAskMore", isAskAgain);
                 switch (qaModelType) {
                     case AskAnswerModel.TYPE_ASK:
                         msg = "你有一个问题尚未发布，是否继续？";
@@ -231,7 +255,8 @@ public class Main extends Activity implements OnClickListener {
                 if (tempC == null)
                     return show;
                 show = true;
-                final Class c = tempC;
+                intent.setClass(Main.this, tempC);
+                final Intent finalIntent = intent;
                 final XhDialog dialog = new XhDialog(Main.this);
                 dialog.setTitle(msg)
                         .setCancelable(true)
@@ -244,7 +269,12 @@ public class Main extends Activity implements OnClickListener {
                         .setSureButton("是", new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Main.this.startActivity(new Intent(Main.this, c));
+                                if (!LoginManager.isLogin()) {
+                                    Intent intent = new Intent(Main.this, LoginByAccout.class);
+                                    Main.this.startActivity(intent);
+                                    return;
+                                }
+                                Main.this.startActivity(finalIntent);
                                 dialog.cancel();
                             }
                         })
