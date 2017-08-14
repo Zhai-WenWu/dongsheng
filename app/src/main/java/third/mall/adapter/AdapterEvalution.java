@@ -1,6 +1,8 @@
 package third.mall.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
+import third.mall.activity.PublishEvalutionMultiActivity;
+import third.mall.activity.PublishEvalutionSingleActivity;
 import third.mall.view.CommodEvalutionItem;
 
 /**
@@ -19,12 +24,12 @@ import third.mall.view.CommodEvalutionItem;
 
 public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
 
-    private Context context;
+    private Activity activity;
 
     private List<Map<String,String>> data = new ArrayList<>();
 
-    public AdapterEvalution(Context context, List<Map<String, String>> data){
-        this.context = context;
+    public AdapterEvalution(Activity activity, List<Map<String, String>> data){
+        this.activity = activity;
         this.data = data;
     }
 
@@ -47,7 +52,7 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if(convertView == null){
-            convertView = new CommodEvalutionItem(context);
+            convertView = new CommodEvalutionItem(activity);
             viewHolder = new ViewHolder((CommodEvalutionItem) convertView);
             convertView.setTag(viewHolder);
         }else{
@@ -71,7 +76,18 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                     @Override
                     public void onRatePicked(int rating) {
                         data.put("score",String.valueOf(rating));
+                        XHClick.mapStat(view.getContext(), PublishEvalutionMultiActivity.STATISTICS_ID,"点击星星","");
                         AdapterEvalution.this.notifyDataSetChanged();
+                    }
+                });
+                view.setOnEvalutionClickCallback(new CommodEvalutionItem.OnEvalutionClickCallback() {
+                    @Override
+                    public void onEvalutionClick(CommodEvalutionItem view, Map<String, String> data) {
+                        Intent intent = new Intent(activity, PublishEvalutionSingleActivity.class);
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_ID,data.get("product_code"));
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,data.get("score"));
+                        activity.startActivityForResult(intent,PublishEvalutionMultiActivity.REQUEST_CODE_NEED_REFRESH);
                     }
                 });
             }

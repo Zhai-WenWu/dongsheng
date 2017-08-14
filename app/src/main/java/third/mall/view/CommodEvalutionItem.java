@@ -12,9 +12,11 @@ import com.xianghatest.R;
 
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
 import acore.widget.ProperRatingBar;
+import third.mall.activity.PublishEvalutionMultiActivity;
 import third.mall.activity.PublishEvalutionSingleActivity;
 
 /**
@@ -45,28 +47,25 @@ public class CommodEvalutionItem extends ItemBaseView {
 
     private String[] evalutionStarDescArray;
     private OnRatePickedCallback onRatePickedCallback;
+    private OnEvalutionClickCallback onEvalutionClickCallback;
 
     private void initialize(){
-        initData();
+        evalutionStarDescArray = getResources().getStringArray(R.array.evalution_star_descriptions);
+
         image = (ImageView) findViewById(R.id.image);
         title = (TextView) findViewById(R.id.title_text);
         starDesc = (TextView) findViewById(R.id.evalution_button);
         evalutionButton = (TextView) findViewById(R.id.evalution_status);
         ratingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
-
-    }
-
-    private void initData() {
-        evalutionStarDescArray = getResources().getStringArray(R.array.evalution_star_descriptions);
     }
 
     /**
      * 设置数据
-     * @param data
+     * @param data 数据
      */
     public void setData(final Map<String, String> data) {
         setViewText(title,data,"product_name");
-        setViewImage(image,"product_img");
+        setViewImage(image,data,"product_img");
 
         //初始化ratingbar
         int rating = evalutionStarDescArray.length - 1;
@@ -75,25 +74,26 @@ public class CommodEvalutionItem extends ItemBaseView {
         }
         final int score = rating;
         ratingBar.setRating(rating);
-        ratingBar.setListener(new ProperRatingBar.RatingListener() {
-            @Override
-            public void onRatePicked(ProperRatingBar ratingBar) {
-                int rating = ratingBar.getRating() - 1;
-                starDesc.setText(evalutionStarDescArray[rating]);
-                if(onRatePickedCallback != null){
-                    onRatePickedCallback.onRatePicked(ratingBar.getRating());
-                }
-            }
-        });
-
         //初始化评价button
         if("2".equals(data.get("status"))){
+            ratingBar.setClickable(false);
             evalutionButton.setText("已评价");
             evalutionButton.setTextColor(getResources().getColor(R.color.common_super_tint_text));
             evalutionButton.setBackgroundResource(R.drawable.bg_evalution_status_select);
 
             evalutionButton.setClickable(false);
         }else{
+            ratingBar.setClickable(true);
+            ratingBar.setListener(new ProperRatingBar.RatingListener() {
+                @Override
+                public void onRatePicked(ProperRatingBar ratingBar) {
+                    int rating = ratingBar.getRating() - 1;
+                    starDesc.setText(evalutionStarDescArray[rating]);
+                    if(onRatePickedCallback != null){
+                        onRatePickedCallback.onRatePicked(ratingBar.getRating());
+                    }
+                }
+            });
             evalutionButton.setText("评价晒单");
             evalutionButton.setTextColor(getResources().getColor(R.color.comment_color));
             evalutionButton.setBackgroundResource(R.drawable.bg_evalution_status);
@@ -101,16 +101,15 @@ public class CommodEvalutionItem extends ItemBaseView {
             evalutionButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    XHClick.mapStat(getContext(), PublishEvalutionMultiActivity.STATISTICS_ID,"点击评价晒单","");
                     String code = data.get("product_code");
                     if(TextUtils.isEmpty(code)){
                         Tools.showToast(getContext(),"数据错误");
                         return;
                     }
-                    Intent intent = new Intent(getContext(), PublishEvalutionSingleActivity.class);
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_CODE,code);
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_IMAGE,data.get("product_img"));
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,score);
-                    getContext().startActivity(intent);
+                    if(onEvalutionClickCallback != null){
+                        onEvalutionClickCallback.onEvalutionClick(CommodEvalutionItem.this,data);
+                    }
                 }
             });
         }
@@ -124,7 +123,19 @@ public class CommodEvalutionItem extends ItemBaseView {
         this.onRatePickedCallback = onRatePickedCallback;
     }
 
+    public OnEvalutionClickCallback getOnEvalutionClickCallback() {
+        return onEvalutionClickCallback;
+    }
+
+    public void setOnEvalutionClickCallback(OnEvalutionClickCallback onEvalutionClickCallback) {
+        this.onEvalutionClickCallback = onEvalutionClickCallback;
+    }
+
     public interface OnRatePickedCallback{
-        public void onRatePicked(int rating);
+        void onRatePicked(int rating);
+    }
+
+    public interface OnEvalutionClickCallback{
+        void onEvalutionClick(CommodEvalutionItem view,Map<String,String> data);
     }
 }

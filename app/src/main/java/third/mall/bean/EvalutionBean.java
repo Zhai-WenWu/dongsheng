@@ -13,7 +13,8 @@ import java.util.HashMap;
 
 public class EvalutionBean {
 
-    public String code;
+    public String orderId;
+    public String productId;
     /**评分*/
     public int score;
     /**内容*/
@@ -23,12 +24,20 @@ public class EvalutionBean {
     /**是否可以分享到朋友圈*/
     public boolean canShare = false;
 
-    public String getCode() {
-        return code;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String code) {
+        this.productId = code;
     }
 
     public int getScore() {

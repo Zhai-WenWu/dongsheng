@@ -91,9 +91,10 @@ public class  ShowWeb extends WebActivity {
 		});
 		MallCommon common= new MallCommon(this);
 		common.setStatisticStat(url);
+//		webview.upWebViewNum();
 	}
 
-	private void initExtras(){
+	protected void initExtras(){
 		Bundle bundle = this.getIntent().getExtras();
 		// 正常调用
 		if (bundle != null) {
@@ -106,7 +107,7 @@ public class  ShowWeb extends WebActivity {
 		}
 	}
 
-	private void initWeb(){
+	protected void initWeb(){
 		webViewManager = new WebviewManager(this,loadManager,true);
 		webview = webViewManager.createWebView(R.id.XHWebview);
 		webview.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
@@ -129,8 +130,8 @@ public class  ShowWeb extends WebActivity {
 		htmlData = "";
 	}
 
-	private int heightDifference = -1;
-	private void initCommentBar() {
+	protected int heightDifference = -1;
+	protected void initCommentBar() {
 		Log.i("tzy","initCommentBar");
 		editControlerLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
 		editControlerLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -145,7 +146,7 @@ public class  ShowWeb extends WebActivity {
 			}
 		});
 		commentBar = (CommentBar) findViewById(R.id.comment_bar);
-//		commentBar.setVisibility(View.GONE);
+		commentBar.setVisibility(View.GONE);
 		commentBar.setOnPublishCommentCallback(new CommentBar.OnPublishCommentCallback() {
 			@Override
 			public boolean onPrePublishComment() {
@@ -244,8 +245,8 @@ public class  ShowWeb extends WebActivity {
 			}
 		};
 	}
-	
-	private void initTitleView(){
+
+	protected void initTitleView(){
 		title = (TextView)findViewById(R.id.title);
  		rightBtn = (Button) findViewById(R.id.rightBtn1);
 		shareLayout = (RelativeLayout) findViewById(R.id.shar_layout);
@@ -333,13 +334,13 @@ public class  ShowWeb extends WebActivity {
 
     @Override
     public boolean selfLoadUrl(String theUrl, boolean openThis) {
-        boolean isSameUrl = !TextUtils.isEmpty(theUrl)
-                && !TextUtils.isEmpty(webview.getmUrl())
+        boolean isSameUrl = theUrl != null
+                && webview.getmUrl() != null
                 && !theUrl.equals(webview.getUrl());
         Log.i("tzy", "selfLoadUrl :: webview.getUrl() = " + webview.getUrl());
         boolean flag = super.selfLoadUrl(theUrl, openThis);
         Log.i("tzy", "selfLoadUrl :: theUrl = " + theUrl + " ; openThis = " + openThis);
-        if (flag && isSameUrl) {
+        if (isSameUrl) {
             webview.upWebViewNum();
         }
         return flag;
@@ -348,7 +349,7 @@ public class  ShowWeb extends WebActivity {
     /**
      * 设置展示
      */
-    private boolean setShowCommonBottomView() {
+	protected boolean setShowCommonBottomView() {
         String msg = FileManager.getFromAssets(this, "showCommonBottom");
         ArrayList<Map<String, String>> list = UtilString.getListMapByJson(UtilString.getListMapByJson(msg).get(0).get("h5"));
         if (url.contains("?")) {

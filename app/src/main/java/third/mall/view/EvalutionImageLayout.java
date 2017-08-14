@@ -12,6 +12,8 @@ import com.xianghatest.R;
 
 import java.util.ArrayList;
 
+import acore.tools.Tools;
+
 /**
  * PackageName : third.mall.view
  * Created by MrTrying on 2017/8/10 13:12.
@@ -39,6 +41,9 @@ public class EvalutionImageLayout extends LinearLayout {
     ArrayList<String> imageArray = new ArrayList<>();
     private OnHierarchyChangeCallback onHierarchyChangeCallback;
 
+    private int itemWidth = -1;
+    private int itemHeight=-1;
+
     private void initialize(){
         setOrientation(HORIZONTAL);
         setGravity(Gravity.BOTTOM);
@@ -58,6 +63,15 @@ public class EvalutionImageLayout extends LinearLayout {
     }
 
     /**
+     * 设置宽度，通过宽度计算高度
+     * @param width
+     */
+    public void setViewSize(int width){
+        this.itemWidth = width;
+        this.itemHeight = width - Tools.getDimen(getContext(),R.dimen.dp_6);
+    }
+
+    /**
      * 更新UI以及数据集合
      * @param images 图片集合
      */
@@ -74,6 +88,9 @@ public class EvalutionImageLayout extends LinearLayout {
             }else {
                 //没有image
                 item = new CommodEvalutionImageItem(getContext());
+                if(itemWidth != -1 && itemHeight != -1){
+                    item.setLayoutParams(new LayoutParams(itemWidth,itemHeight));
+                }
                 addView(item);
             }
             item.setTag(R.id.image_path, imagePath);

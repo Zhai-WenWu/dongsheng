@@ -20,8 +20,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
 import third.mall.aplug.MallInternetCallback;
@@ -29,7 +31,9 @@ import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 
 public class PublishEvalutionMultiActivity extends BaseActivity {
-    public static final String EXTRAS_ORDER_ID = "id";
+    public static final int REQUEST_CODE_NEED_REFRESH = 0x2;
+    public static final String STATISTICS_ID = "a_publish_comment";
+    public static final String EXTRAS_ORDER_ID = "orderid";
 
     private TextView rightText;
     private PtrClassicFrameLayout refershLayout;
@@ -67,6 +71,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         rightText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(PublishEvalutionMultiActivity.this, STATISTICS_ID,"点击发布按钮","");
                 publishMutilEvalution();
             }
         });
@@ -87,6 +92,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                         loadData();
                     }
                 });
+        loadManager.getSingleLoadMore(commodList).setText("没有更多了");
     }
 
     private void refersh() {
@@ -96,12 +102,12 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
     private void loadData() {
         loadManager.showProgressBar();
-        StringBuilder params = new StringBuilder();
-//                .append("order_id=")
-//                .append(orderId);
-//        MallReqInternet.in().doPost(MallStringManager.mall_toComment,
-        MallReqInternet.in().doGet(MallStringManager.mall_toComment,
-//                params.toString(),
+        loadManager.changeMoreBtn(MallReqInternet.REQ_OK_STRING,-1,-1,1,true);
+        StringBuilder params = new StringBuilder()
+                .append("order_id=")
+                .append(orderId);
+        MallReqInternet.in().doPost(MallStringManager.mall_toComment,
+                params.toString(),
                 new MallInternetCallback(this) {
                     @Override
                     public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -118,13 +124,14 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         for(int i = 0 ; i < 5 ; i ++){
             Map<String,String> map = new HashMap<>();
             map.put("product_code","" + i);
-            map.put("product_img","https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white_fe6da1ec.png");
-            map.put("product_name","随便");
-            map.put("status","1");
+            map.put("product_img","http://ws1.sinaimg.cn/large/610dc034ly1fid5poqfznj20u011imzm.jpg");
+            map.put("product_name","这是一个标题，只能是没有填充正式文案看看效果而已，凑合看吧！！！");
+            map.put("status", (Tools.getRandom(0,10) % 2 == 0) ? "1" : "2");
             map.put("score","5");
             commodData.add(map);
             adapter.notifyDataSetChanged();
         }
+        loadManager.changeMoreBtn(MallReqInternet.REQ_OK_STRING,10,0,2,false);
     }
 
     private void publishMutilEvalution() {
@@ -168,6 +175,23 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
         }
         return jsonArray.toString();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case REQUEST_CODE_NEED_REFRESH:
+                if(resultCode == RESULT_OK){
+                    refersh();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        XHClick.mapStat(PublishEvalutionMultiActivity.this, STATISTICS_ID,"点击返回按钮","");
+        super.onBackPressed();
     }
 
     private Dialog mUploadingDialog;

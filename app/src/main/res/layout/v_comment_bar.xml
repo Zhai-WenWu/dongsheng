@@ -39,6 +39,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:imeOptions="actionSearch"
             android:layout_toLeftOf="@+id/comment_send_parent"
             android:background="@drawable/bg_round40_dbdbdb"
             android:gravity="center_vertical"

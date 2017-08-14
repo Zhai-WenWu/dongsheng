@@ -1029,5 +1029,17 @@ public class JsAppCommon extends JsBase {
         });
     }
 
+    @JavascriptInterface
+    public void initMallCloseBtn(){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(mAct instanceof ShowWeb){
+                    ShowWeb showWeb = (ShowWeb) mAct;
+                }
+            }
+        });
+    }
+
 
 }

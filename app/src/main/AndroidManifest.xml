@@ -1182,6 +1182,14 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"
             />
+        <activity
+            android:name="third.mall.activity.EvalutionSuccessActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"
+            />
         <!-- mall end -->
         <!-- ad start -->
         <activity
