@@ -207,7 +207,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 
             @Override
             public void setState(int state) {
-                Log.i("zyj","mall_ScrollViewContainer:::"+state+":::"+load_state);
                 titleState=state==1?"1":"2";
                 handleTitleState();
                 if (load_state) {
@@ -338,7 +337,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
      * 请求网络数据
      */
     private void setRequest() {
-        actionUrl = MallStringManager.mall_api_product_info + "?product_code=" + code;
+        actionUrl = MallStringManager.mall_api_product_info_v3 + "?product_code=" + code;
         for (String key : map_statistic.keySet()) {
             actionUrl += "&" + key + "=" + map_statistic.get(key);
         }
@@ -408,7 +407,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
      */
     private void setGetFavorable() {
         RelativeLayout view_getfavorable = (RelativeLayout) findViewById(R.id.view_getfavorable);
-        if (map.containsKey("shop_coupon_package") && !TextUtils.isEmpty(map.get("shop_coupon_package")) && !"[]".equals(map.get("shop_coupon_package"))) {
+        if (map.containsKey("coupon_desc") && !TextUtils.isEmpty(map.get("coupon_desc")) && !"[]".equals(map.get("coupon_desc"))) {
             view_getfavorable.setVisibility(View.VISIBLE);
             TextView favor_title= (TextView) findViewById(R.id.favor_title);
             favor_title.setOnClickListener(new OnClickListener() {
@@ -434,15 +433,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 }
             });
 
-            ArrayList<Map<String, String>> list = UtilString.getListMapByJson(map.get("shop_coupon_package"));
-            ArrayList<String> strs = new ArrayList<String>();
-            for (int i = 0, size = list.size(); i < size; i++) {
-                if (list.get(i).containsKey("desc")) {
-                    strs.add(list.get(i).get("desc"));
-                }
-            }
-            favor_title.setText(strs.get(0));
-        } else view_getfavorable.setVisibility(View.VISIBLE);
+            favor_title.setText(map.get("coupon_desc"));
+        } else view_getfavorable.setVisibility(View.GONE);
     }
 
     /**

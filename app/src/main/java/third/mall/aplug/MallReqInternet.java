@@ -11,6 +11,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 
 @SuppressLint("DefaultLocale")
 public class MallReqInternet extends UtilInternet{
@@ -53,6 +54,7 @@ public class MallReqInternet extends UtilInternet{
 	@Override
 	public void doGet(String url, InterCallback callback) {
 		url = MallStringManager.replaceUrl(url);
+		Log.i("wyl","url:doGet:"+url);
 		if(!url.equals(MallStringManager.mall_getDsToken))
 			setMD5(url);
 		url=setStatisticUrl(url);
@@ -61,15 +63,17 @@ public class MallReqInternet extends UtilInternet{
 
 	@Override
 	public void doPost(String actionUrl, String param, InterCallback callback) {
-//		actionUrl = MallStringManager.replaceUrl(actionUrl);
-//		setMD5(actionUrl);
-//		actionUrl=setStatisticUrl(actionUrl);
+		actionUrl = MallStringManager.replaceUrl(actionUrl);
+		Log.i("wyl","actionUrl:doPost:"+actionUrl);
+		setMD5(actionUrl);
+		actionUrl=setStatisticUrl(actionUrl);
 		super.doPost(actionUrl, param, callback);
 	}
 
 	@Override
 	public void doPost(String actionUrl, LinkedHashMap<String, String> map,InterCallback callback) {
 		actionUrl = MallStringManager.replaceUrl(actionUrl);
+		Log.i("wyl","actionUrl:doPost::22:"+actionUrl);
 		setMD5(actionUrl);
 		actionUrl=setStatisticUrl(actionUrl);
 		super.doPost(actionUrl, map, callback);
