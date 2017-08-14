@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -108,8 +107,8 @@ public class CommodEvalutionItem extends ItemBaseView {
                         return;
                     }
                     Intent intent = new Intent(getContext(), PublishEvalutionSingleActivity.class);
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_CODE,code);
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_IMAGE,data.get("product_img"));
+                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_ID,code);
+                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
                     intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,score);
                     getContext().startActivity(intent);
                 }

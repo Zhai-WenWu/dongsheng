@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.xianghatest.R;
 
+import acore.logic.XHClick;
 import amodule.main.Main;
 import aplug.web.ShowWeb;
 import aplug.web.view.XHWebView;
@@ -25,6 +26,7 @@ public class EvalutionSuccessActivity extends ShowWeb {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(EvalutionSuccessActivity.this,"a_publish_comachi","点击X","");
                 EvalutionSuccessActivity.this.finish();
             }
         });

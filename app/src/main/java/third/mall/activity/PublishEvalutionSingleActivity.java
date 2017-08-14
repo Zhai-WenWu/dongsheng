@@ -34,9 +34,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     public static final String STATISTICS_ID = "a_publish_commerce";
     public static final String STATISTICS_RETURN_ID = "a_comcoment_return";
     public static final String STATISTICS_PUBLISH_ID = "a_comcoment_result";
-    public static final String EXTRAS_CODE = "code";
+    public static final String EXTRAS_ORDER_ID = "orderid";
+    public static final String EXTRAS_PRODUCT_ID = "productid";
+    public static final String EXTRAS_PRODUCT_IMAGE = "productimg";
     public static final String EXTRAS_SCORE = "score";
-    public static final String EXTRAS_IMAGE = "image";
     public static final int DEFAULT_SCORE = 5;
 
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
@@ -57,7 +58,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     EvalutionUploadControl uploadControl;
 
-    String code = "";
+    String productID = "";
     String image = "";
     int score = DEFAULT_SCORE;
 
@@ -72,14 +73,14 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     private void initData() {
         Intent intent = getIntent();
-        code = intent.getStringExtra(EXTRAS_CODE);
-        image = intent.getStringExtra(EXTRAS_IMAGE);
-        if (TextUtils.isEmpty(code))
+        productID = intent.getStringExtra(EXTRAS_PRODUCT_ID);
+        if (TextUtils.isEmpty(productID))
             this.finish();
+        image = intent.getStringExtra(EXTRAS_PRODUCT_IMAGE);
         score = intent.getIntExtra(EXTRAS_SCORE, DEFAULT_SCORE);
 
         uploadControl = new EvalutionUploadControl(this);
-        uploadControl.setCode(code);
+        uploadControl.setProductId(productID);
         uploadControl.setOnPublishCallback(new EvalutionUploadControl.OnPublishCallback() {
             @Override
             public void onStratPublish() {

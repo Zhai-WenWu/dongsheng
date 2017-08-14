@@ -9,12 +9,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
-import acore.tools.Tools;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
@@ -153,7 +150,8 @@ public class EvalutionUploadControl {
     public LinkedHashMap<String, String> combineParameter() {
         LinkedHashMap<String, String> uploadTextData = new LinkedHashMap<>();
         uploadTextData.put("type", "6");
-        uploadTextData.put("code", bean.getCode());
+        uploadTextData.put("order_id", bean.getOrderId());
+        uploadTextData.put("code", bean.getProductId());
         uploadTextData.put("socre", String.valueOf(bean.getScore()));
         uploadTextData.put("content", getCotnent().toString());
         uploadTextData.put("is_quan", bean.isCanShare() ? "2" : "1");
@@ -193,8 +191,8 @@ public class EvalutionUploadControl {
         return this;
     }
 
-    public EvalutionUploadControl setCode(String code){
-        bean.setCode(code);
+    public EvalutionUploadControl setProductId(String code){
+        bean.setProductId(code);
         return this;
     }
 

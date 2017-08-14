@@ -18,7 +18,7 @@
         android:layout_marginLeft="@dimen/dp_15"
         android:src="@drawable/calssify_health_back"/>
 
-    <Button
+    <TextView
         android:id="@+id/btn_search_global"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

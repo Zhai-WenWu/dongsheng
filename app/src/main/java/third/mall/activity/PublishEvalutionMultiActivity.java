@@ -32,7 +32,7 @@ import third.mall.aplug.MallStringManager;
 
 public class PublishEvalutionMultiActivity extends BaseActivity {
     public static final String STATISTICS_ID = "a_publish_comment";
-    public static final String EXTRAS_ORDER_ID = "id";
+    public static final String EXTRAS_ORDER_ID = "orderid";
 
     private TextView rightText;
     private PtrClassicFrameLayout refershLayout;
