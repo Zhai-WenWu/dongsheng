@@ -31,6 +31,7 @@ import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 
 public class PublishEvalutionMultiActivity extends BaseActivity {
+    public static final int REQUEST_CODE_NEED_REFRESH = 0x2;
     public static final String STATISTICS_ID = "a_publish_comment";
     public static final String EXTRAS_ORDER_ID = "orderid";
 
@@ -106,7 +107,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                 .append("order_id=")
                 .append(orderId);
         MallReqInternet.in().doPost(MallStringManager.mall_toComment,
-//        MallReqInternet.in().doGet(MallStringManager.mall_toComment,
                 params.toString(),
                 new MallInternetCallback(this) {
                     @Override
@@ -175,6 +175,17 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
         }
         return jsonArray.toString();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case REQUEST_CODE_NEED_REFRESH:
+                if(resultCode == RESULT_OK){
+                    refersh();
+                }
+                break;
+        }
     }
 
     @Override

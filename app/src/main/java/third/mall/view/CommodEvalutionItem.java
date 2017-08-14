@@ -47,6 +47,7 @@ public class CommodEvalutionItem extends ItemBaseView {
 
     private String[] evalutionStarDescArray;
     private OnRatePickedCallback onRatePickedCallback;
+    private OnEvalutionClickCallback onEvalutionClickCallback;
 
     private void initialize(){
         evalutionStarDescArray = getResources().getStringArray(R.array.evalution_star_descriptions);
@@ -106,11 +107,9 @@ public class CommodEvalutionItem extends ItemBaseView {
                         Tools.showToast(getContext(),"数据错误");
                         return;
                     }
-                    Intent intent = new Intent(getContext(), PublishEvalutionSingleActivity.class);
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_ID,code);
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
-                    intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,score);
-                    getContext().startActivity(intent);
+                    if(onEvalutionClickCallback != null){
+                        onEvalutionClickCallback.onEvalutionClick(CommodEvalutionItem.this,data);
+                    }
                 }
             });
         }
@@ -124,7 +123,19 @@ public class CommodEvalutionItem extends ItemBaseView {
         this.onRatePickedCallback = onRatePickedCallback;
     }
 
+    public OnEvalutionClickCallback getOnEvalutionClickCallback() {
+        return onEvalutionClickCallback;
+    }
+
+    public void setOnEvalutionClickCallback(OnEvalutionClickCallback onEvalutionClickCallback) {
+        this.onEvalutionClickCallback = onEvalutionClickCallback;
+    }
+
     public interface OnRatePickedCallback{
         void onRatePicked(int rating);
+    }
+
+    public interface OnEvalutionClickCallback{
+        void onEvalutionClick(CommodEvalutionItem view,Map<String,String> data);
     }
 }

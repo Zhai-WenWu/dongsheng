@@ -18,9 +18,11 @@ import com.bumptech.glide.Glide;
 import com.xianghatest.R;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ProperRatingBar;
@@ -88,20 +90,24 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             }
 
             @Override
-            public void onSuccess() {
+            public void onSuccess(Object msg) {
                 XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"成功提交","");
                 cancelUploadingDialog();
-                //TODO 跳转评论成功
-//                Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
-//                intent.putExtra("url","http://m.xiangha.com");
-//                startActivity(intent);
+                Map<String,String> data = StringManager.getFirstMap(msg);
+                if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
+                    Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
+                    intent.putExtra("url","http://m.xiangha.com");
+                    startActivity(intent);
+                }else{
+                    setResult(RESULT_OK);
+                    PublishEvalutionSingleActivity.this.finish();
+                }
             }
 
             @Override
             public void onFailed() {
                 XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"提交失败","");
                 cancelUploadingDialog();
-
             }
         });
     }

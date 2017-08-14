@@ -126,7 +126,7 @@ public class EvalutionUploadControl {
                             if(flag >= MallReqInternet.REQ_OK_STRING){
 
                                 if(onPublishCallback != null)
-                                    onPublishCallback.onSuccess();
+                                    onPublishCallback.onSuccess(msg);
                             }else{
 
                                 if(onPublishCallback != null)
@@ -150,9 +150,9 @@ public class EvalutionUploadControl {
     public LinkedHashMap<String, String> combineParameter() {
         LinkedHashMap<String, String> uploadTextData = new LinkedHashMap<>();
         uploadTextData.put("type", "6");
-        uploadTextData.put("order_id", bean.getOrderId());
-        uploadTextData.put("code", bean.getProductId());
+        uploadTextData.put("product_code", bean.getProductId());
         uploadTextData.put("socre", String.valueOf(bean.getScore()));
+        uploadTextData.put("order_id", bean.getOrderId());
         uploadTextData.put("content", getCotnent().toString());
         uploadTextData.put("is_quan", bean.isCanShare() ? "2" : "1");
         Log.i("tzy","combineParameter :: " + uploadTextData.toString());
@@ -216,7 +216,7 @@ public class EvalutionUploadControl {
 
     public interface OnPublishCallback{
         void onStratPublish();
-        void onSuccess();
+        void onSuccess(Object msg);
         void onFailed();
     }
 
