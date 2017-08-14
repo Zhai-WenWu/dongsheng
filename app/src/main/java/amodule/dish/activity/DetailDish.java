@@ -220,6 +220,25 @@ public class DetailDish extends BaseAppCompatActivity {
                 }
             }
         });
+
+        //获取点赞数据
+        ReqEncyptInternet.in().doEncypt(StringManager.api_authorInfo, params, new InternetCallback(DetailDish.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING){
+                    dishActivityViewControl.analyzeDishAutorInfo(String.valueOf(o));
+                }
+            }
+        });
+        //获取点赞数据
+        ReqEncyptInternet.in().doEncypt(StringManager.api_basicInfo, params, new InternetCallback(DetailDish.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING){
+                    dishActivityViewControl.analyzeDishInfo(String.valueOf(o));
+                }
+            }
+        });
     }
 
     /**
@@ -235,7 +254,7 @@ public class DetailDish extends BaseAppCompatActivity {
             return;
         }
         requestWeb(data);
-        dishActivityViewControl.analyzeDishInfoData(data,permissionMap,false);
+        dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
 
     }
 

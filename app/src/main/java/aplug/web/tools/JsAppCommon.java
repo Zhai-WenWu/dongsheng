@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -759,7 +760,7 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (mAct != null && mWebView != null) {
-                    mWebView.setLayoutParams(new RelativeLayout.LayoutParams(mAct.getResources().getDisplayMetrics().widthPixels,
+                    mWebView.setLayoutParams(new ViewGroup.LayoutParams(mAct.getResources().getDisplayMetrics().widthPixels,
                             (int) (height * mAct.getResources().getDisplayMetrics().density)));
                 }
             }
@@ -895,42 +896,11 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public String getSign() {
-//        ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
-//            @Override
-//            public void getSignEncyntParam(final String encryptparam) {
-//                mWebView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mWebView.loadUrl("Javascript:signCallback(\"" + encryptparam + "\")");
-//                    }
-//                });
-//            }
-//        });
         return ReqEncyptInternet.in().getEncryptParam();
 //        mWebView.loadUrl("Javascript:signCallback(\"" + ReqEncyptInternet.in().getEncryptParam() + "\")");
     }
     @JavascriptInterface
     public String getCookie(){
-//        mWebView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    //cookie结构json
-//                    Map<String, String> header = ReqInternet.in().getHeader(mAct);
-//                    String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
-//                    Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
-//                    JSONObject jsonObject = new JSONObject();
-//                    for (Map.Entry<String, String> entry : mapdata.entrySet()) {
-//                        jsonObject.put(entry.getKey(), entry.getValue());
-//                    }
-//                    String data= jsonObject.toString();
-//                    data=data.replace("\"","\\\"");
-//                    mWebView.loadUrl("Javascript:cookieCallback(\"" + data + "\")");
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
         try {
                     //cookie结构json
                     Map<String, String> header = ReqInternet.in().getHeader(mAct);

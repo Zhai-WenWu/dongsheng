@@ -154,33 +154,12 @@ public class DishWebView extends XHWebView {
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     }
 
-    public void loadDishData(String code){
-        loadDishData(code,false);
-    }
-
-    public void loadDishData(String code,boolean isReadLocal){
+    public void loadDishData(String code,String dishInfo,String authorInfo){
         if(TextUtils.isEmpty(code)){
             return;
         }
         dishCode = code;
-        if(isReadLocal) {
-            String htmlPath = String.valueOf(FileManager.loadShared(getContext(), FileManager.file_dishMould, code));
-            mMouldVersion = String.valueOf(FileManager.loadShared(getContext(), FileManager.file_dishMouldVersion, code));
-            Log.i(TAG, "loadDishData() htmlPath:" + htmlPath);
-            if (TextUtils.isEmpty(htmlPath)) {
-                loadMould(code);
-                return;
-            }
-            String htmlStr = FileManager.readFile(htmlPath);
-            Log.i(TAG, "loadDishData() htmlStr:" + htmlStr);
-            if (TextUtils.isEmpty(htmlStr)) {
-                loadMould(code);
-                return;
-            }
-            loadDataWithBaseURL(null,htmlStr,"text/html","utf-8", null);
-        }else{
-            loadMould(code);
-        }
+        loadMould(code,dishInfo,authorInfo);
     }
 
     public String getMouldVersion(){
@@ -190,13 +169,15 @@ public class DishWebView extends XHWebView {
      * 根据code，加载模板
      * @param code
      */
-    private void loadMould(final String code){
+    private void loadMould(final String code, final String dishInfo, final String authorInfo){
         DishMouldControl.getDishMould(new DishMouldControl.OnDishMouldListener() {
             @Override
             public void loaded(boolean isSucess, String data,String mouldVersion) {
                 mMouldVersion = mouldVersion;
                 if(isSucess){
                     data = data.replace("<{code}>",code);
+//                    data = data.replace("<{dishMes}>",dishInfo);
+//                    data = data.replace("<{customerMes}>",authorInfo);
                     final String html = data;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
@@ -217,7 +198,6 @@ public class DishWebView extends XHWebView {
      */
     public void onLoadFinishCallback(String html){
         mHtmlData = html;
-        Log.i("zyj","onLoadFinishCallback::");
     }
 
     /**
