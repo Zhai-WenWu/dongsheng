@@ -175,9 +175,9 @@ public class DishWebView extends XHWebView {
             public void loaded(boolean isSucess, String data,String mouldVersion) {
                 mMouldVersion = mouldVersion;
                 if(isSucess){
-                    data = data.replace("<{code}>",code);
-                    data = data.replace("<{dishMes}>",dishInfo);
-                    data = data.replace("<{customerMes}>",authorInfo);
+                    data = data.replace("var dishCode = ''","var dishCode = "+code);
+                    data = data.replace("var dishMes = ","var dishMes = "+dishInfo);
+                    data = data.replace("var customerMes = ","var customerMes = "+authorInfo);
                     final String html = data;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
