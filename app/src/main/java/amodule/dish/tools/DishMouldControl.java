@@ -59,7 +59,6 @@ public class DishMouldControl {
                                 if (listener != null&&!TextUtils.isEmpty(readStr))
                                     listener.loaded(true, readStr, String.valueOf(versionSign));
                             }
-                            if(listener != null) listener.loaded(false,"",String.valueOf(versionSign));
                         }
                     }).start();
                 }else{

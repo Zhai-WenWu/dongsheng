@@ -71,8 +71,6 @@ public class  DishActivityViewControlNew {
     private DishViewCallBack callBack;
     private String dishJson = "";
     private int titleHeight;//标题高度
-    private String authorInfo = "";
-    private String dsihMes = "";
     private boolean isLoadWebViewData=false;//是否webview加载过数据
 
     public DishActivityViewControlNew(Activity activity){
@@ -240,6 +238,7 @@ public class  DishActivityViewControlNew {
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
         dishInfoMap = list.get(0);
+        handlerDishWebviewData();
 
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
@@ -326,23 +325,6 @@ public class  DishActivityViewControlNew {
         mFootControl.initLikeState(dishJson);
     }
 
-    /**
-     * 解析用户信息数据
-     * @param dishJson
-     */
-    public void analyzeDishAutorInfo(String dishJson){
-        authorInfo=dishJson;
-        handlerDishWebviewData();
-    }
-
-    /**
-     * 解析菜谱基础信息
-     * @param dishJson
-     */
-    public void analyzeDishInfo(String dishJson){
-        dsihMes=dishJson;
-        handlerDishWebviewData();
-    }
     /**
      * 设置当前标题颜色状态
      */
@@ -437,9 +419,9 @@ public class  DishActivityViewControlNew {
      * 处理dishWebView的数据
      */
     public void handlerDishWebviewData(){
-        if(!TextUtils.isEmpty(mDishCode)&&!TextUtils.isEmpty(dsihMes)&&!TextUtils.isEmpty(authorInfo)&&!isLoadWebViewData) {
-            mXhWebView.loadDishData(mDishCode, dsihMes, authorInfo);
-            isLoadWebViewData=true;
+        if(!isLoadWebViewData) {
+            mXhWebView.loadDishData();
+            isLoadWebViewData = true;
         }
     }
     /**

@@ -154,37 +154,27 @@ public class DishWebView extends XHWebView {
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     }
 
-    public void loadDishData(String code,String dishInfo,String authorInfo){
-        if(TextUtils.isEmpty(code)){
-            return;
-        }
-        dishCode = code;
-        loadMould(code,dishInfo,authorInfo);
+    public void loadDishData(){
+        loadMould();
     }
 
     public String getMouldVersion(){
         return mMouldVersion;
     }
     /**
-     * 根据code，加载模板
-     * @param code
+     * 加载模板
      */
-    private void loadMould(final String code, final String dishInfo, final String authorInfo){
+    private void loadMould(){
         DishMouldControl.getDishMould(new DishMouldControl.OnDishMouldListener() {
             @Override
             public void loaded(boolean isSucess, String data,String mouldVersion) {
                 mMouldVersion = mouldVersion;
                 if(isSucess){
-                    data = data.replace("var dishCode = ''","var dishCode = "+code);
-                    data = data.replace("var dishMes = ","var dishMes = "+dishInfo);
-                    data = data.replace("var customerMes = ","var customerMes = "+authorInfo);
                     final String html = data;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             loadDataWithBaseURL(null,html,"text/html","utf-8", null);
-//                            loadData(html,"text/html; charset=UTF-8", null);
-//                            loadUrl("http://www.ixiangha.com:9813/test/main7/caipuInfo?code=89006552");
                         }
                     });
                 }

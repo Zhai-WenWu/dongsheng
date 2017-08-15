@@ -78,6 +78,7 @@ public class DetailDish extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         //处理广告
         Bundle bundle = getIntent().getExtras();
+        startTime= System.currentTimeMillis();
         // 正常调用
         if (bundle != null) {
             code = bundle.getString("code");
@@ -107,7 +108,7 @@ public class DetailDish extends BaseAppCompatActivity {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        startTime= System.currentTimeMillis();
+
     }
 
     @Override
@@ -220,25 +221,6 @@ public class DetailDish extends BaseAppCompatActivity {
                 }
             }
         });
-
-        //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_authorInfo, params, new InternetCallback(DetailDish.this) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING){
-                    dishActivityViewControl.analyzeDishAutorInfo(String.valueOf(o));
-                }
-            }
-        });
-        //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_basicInfo, params, new InternetCallback(DetailDish.this) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING){
-                    dishActivityViewControl.analyzeDishInfo(String.valueOf(o));
-                }
-            }
-        });
     }
 
     /**
@@ -278,6 +260,7 @@ public class DetailDish extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         Log.i("DetailDishActivity","onResume() colse_level:" + Main.colse_level);
+        Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
         Rect outRect = new Rect();
@@ -322,5 +305,11 @@ public class DetailDish extends BaseAppCompatActivity {
             String url="subjectInfo.app?code=" + subjectCode + "&title=" + dishInfoMap.get("name");
             AppCommon.openUrl(this,url,true);
         }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
     }
 }
