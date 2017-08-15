@@ -156,11 +156,12 @@ public class LostSecret extends BaseLoginActivity {
                                     }
                                 }
                             });
-                } else if (getIsBindPhone()) { //绑定手机号
+                } else if (getIsBindPhone()) { //绑定手机号,说明之前是第三方登录的，没有账号密码，所以绑定手机号成功之后，设置一下密码
                     bindPhone(LostSecret.this, zoneCode, phoneNum, login_identify.getIdentify(),
                             new BaseLoginCallback() {
                                 @Override
                                 public void onSuccess() {
+                                    gotoSetSecrt(zoneCode, phoneNum, origin, login_identify.getIdentify());
                                     XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "绑定成功");
                                 }
 
