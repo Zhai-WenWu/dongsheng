@@ -28,13 +28,13 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.override.activity.base.BaseLoginActivity;
 import acore.override.adapter.AdapterSimple;
 import amodule.article.activity.edit.ArticleEidtActiivty;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
-import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
@@ -219,9 +219,10 @@ public class ChangeSendDialog extends Dialog {
                     activity.startActivity(new Intent(activity, LoginByAccout.class));
                 }else if (LoginManager.isBindMobilePhone())
                     activity.startActivity(new Intent(activity, ArticleEidtActiivty.class));
-                else
-                    activity.startActivity(new Intent(activity, BindPhoneNum.class));
+                else {
+                    BaseLoginActivity.gotoBindPhoneNum(activity);
 //                    showDialog("文章", StringManager.api_applyArticlePower);
+                }
                 break;
             case "7":
                 closeDialog();
@@ -229,9 +230,10 @@ public class ChangeSendDialog extends Dialog {
                     activity.startActivity(new Intent(activity, LoginByAccout.class));
                 }else if (LoginManager.isBindMobilePhone())
                     activity.startActivity(new Intent(activity, VideoEditActivity.class));
-                else
-                    activity.startActivity(new Intent(activity, BindPhoneNum.class));
+                else {
+                    BaseLoginActivity.gotoBindPhoneNum(activity);
 //                    showDialog("短视频", StringManager.api_applyVideoPower);
+                }
                 break;
         }
     }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xianghatest.R;
 
@@ -30,30 +31,41 @@ public class LostSecret extends BaseLoginActivity {
     private SpeechaIdentifyInputView speechaIdentifyInputView;
 
     private boolean isFirst = true;
-    private String origin,nextStepStr = "登录";
+    protected String origin, nextStepStr = "登录";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("", 4, 0, 0, R.layout.a_login_register_one);
-        Intent intent = getIntent();
-        origin = intent.getStringExtra(PATH_ORIGIN);
+        initData();
         initView();
         initTitle();
         ToolsDevice.modifyStateTextColor(this);
+    }
+
+    protected void initData() {
+        Intent intent = getIntent();
+        origin = intent.getStringExtra(PATH_ORIGIN);
     }
 
     private void initView() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
 
-        if (ORIGIN_BIND_PHONE_NUM.equals(origin)) {
+        if (getIsBindPhone() || ORIGIN_MODIFY_PSW.equals(origin)) {
             tv_title.setText("绑定手机");
             nextStepStr = "下一步";
+            findViewById(R.id.tv_agreenment).setVisibility(View.GONE);
         }
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
         login_identify = (IdentifyInputView) findViewById(R.id.phone_identify);
         speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
+        findViewById(R.id.tv_help).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoFeedBack();
+            }
+        });
 
         phone_info.init("手机号", "86", "", new PhoneNumInputView.PhoneNumInputViewCallback() {
             @Override
@@ -73,7 +85,7 @@ public class LostSecret extends BaseLoginActivity {
             @Override
             public void onClick(View v) {
                 loadManager.showProgressBar();
-                reqIdentifySpeecha(phone_info.getPhoneNum(),new BaseLoginCallback(){
+                reqIdentifySpeecha(phone_info.getPhoneNum(), new BaseLoginCallback() {
                     @Override
                     public void onSuccess() {
                         loadManager.hideProgressBar();
@@ -94,7 +106,7 @@ public class LostSecret extends BaseLoginActivity {
             @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnState();
-                if("86".equals(phone_info.getZoneCode())) {
+                if ("86".equals(phone_info.getZoneCode())) {
                     if (isFirst) {
                         isFirst = false;
                         speechaIdentifyInputView.setVisibility(View.VISIBLE);
@@ -110,14 +122,14 @@ public class LostSecret extends BaseLoginActivity {
 
             @Override
             public void onCliclSendIdentify() {
-               sendSmsClick();
+                sendSmsClick();
             }
         });
 
         btn_next_step.init(nextStepStr, new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
-                if (ORIGIN_BIND_PHONE_NUM.equals(origin)) {
+                if (getIsBindPhone() || ORIGIN_MODIFY_PSW.equals(origin)) {
                     XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "验证码页，点下一步");
                 } else if (ORIGIN_FIND_PSW.equals(origin)) {
                     XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码", "获取验证码页，点下一步");
@@ -125,7 +137,7 @@ public class LostSecret extends BaseLoginActivity {
                 final String zoneCode = phone_info.getZoneCode();
                 final String phoneNum = phone_info.getPhoneNum();
 
-                if (ORIGIN_REGISTER.equals(origin)) {
+                if (ORIGIN_REGISTER.equals(origin)) { //注册
                     logInByIdentify(LostSecret.this, zoneCode, phoneNum, login_identify.getIdentify(),
                             new BaseLoginCallback() {
                                 @Override
@@ -144,31 +156,21 @@ public class LostSecret extends BaseLoginActivity {
                                     }
                                 }
                             });
-                } else if (ORIGIN_BIND_PHONE_NUM.equals(origin) || ORIGIN_BIND_FROM_WEB.equals(origin)) {
-
-                    bindPhone(LostSecret.this, zoneCode, phoneNum,
-                            login_identify.getIdentify(),
+                } else if (getIsBindPhone()) { //绑定手机号
+                    bindPhone(LostSecret.this, zoneCode, phoneNum, login_identify.getIdentify(),
                             new BaseLoginCallback() {
                                 @Override
                                 public void onSuccess() {
-
-                                    gotoSetSecrt(zoneCode, phoneNum, origin, login_identify.getIdentify());
-                                    if(ORIGIN_BIND_PHONE_NUM.equals(origin)){
-                                        XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "绑定成功");
-                                    }
-
+                                    XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "绑定成功");
                                 }
 
                                 @Override
                                 public void onFalse(int flag) {
-                                    if(ORIGIN_BIND_PHONE_NUM.equals(origin)){
-                                        XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "失败原因：验证码错误");
-                                        XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "绑定失败");
-                                    }
+                                    XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "失败原因：验证码错误");
+                                    XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "绑定失败");
                                 }
                             });
-                } else {
-
+                } else if(ORIGIN_FIND_PSW.equals(origin)){ //修改密码
                     checkIdentifyCode(LostSecret.this, zoneCode, phoneNum,
                             login_identify.getIdentify(), new BaseLoginCallback() {
                                 @Override
@@ -178,9 +180,7 @@ public class LostSecret extends BaseLoginActivity {
 
                                 @Override
                                 public void onFalse(int flag) {
-                                    if (ORIGIN_FIND_PSW.equals(origin)) {
-                                        XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码", "失败原因：验证码错误");
-                                    }
+                                    XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码", "失败原因：验证码错误");
                                 }
                             });
                 }
@@ -188,59 +188,74 @@ public class LostSecret extends BaseLoginActivity {
         });
     }
 
-    private void sendSmsClick(){
-        if (ORIGIN_BIND_PHONE_NUM.equals(origin)) {
+    private boolean getIsBindPhone() {
+        return ORIGIN_BIND_PHONE_NUM.equals(origin) || ORIGIN_BIND_FROM_WEB.equals(origin);
+    }
+
+    private void sendSmsClick() {
+        if (getIsBindPhone()) {
             XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "验证码页，点获取验证码");
         } else if (ORIGIN_FIND_PSW.equals(origin)) {
             XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "忘记密码", "验证手机号页，点获取验证码");
+        }else if(ORIGIN_MODIFY_PSW.equals(origin)){
+            XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "修改密码", "验证手机号页，点获取验证码");
         }
         loadManager.showProgressBar();
-        String errorType = LoginCheck.checkPhoneFormatWell(LostSecret.this, phone_info.getZoneCode(),phone_info.getPhoneNum());
+        String errorType = LoginCheck.checkPhoneFormatWell(LostSecret.this, phone_info.getZoneCode(), phone_info.getPhoneNum());
         if (LoginCheck.WELL_TYPE.equals(errorType)) {
             checkPhoneRegisted(LostSecret.this, phone_info.getZoneCode(), phone_info.getPhoneNum(),
                     new BaseLoginCallback() {
                         @Override
                         public void onSuccess() {
-                            sendSms();
+                            if (getIsBindPhone() || ORIGIN_MODIFY_PSW.equals(origin)) { //当动作是绑定手机号，但手机号被绑定了
+                                loadManager.hideProgressBar();
+                                XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "失败原因：手机号被绑定");
+                                Toast.makeText(LostSecret.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
+                            } else
+                                sendSms();
                         }
 
                         @Override
                         public void onFalse(int flag) {
-                            loadManager.hideProgressBar();
-                            final XhDialog xhDialog = new XhDialog(LostSecret.this);
-                            xhDialog.setTitle("网络有问题或手机号未注册？")
-                                    .setCanselButton("取消", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
-                                                    "失败原因：弹框未注册，选择不注册");
-                                            xhDialog.cancel();
-                                        }
-                                    })
-                                    .setSureButton("立即注册", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            register(LostSecret.this, phone_info.getZoneCode(),
-                                                    phone_info.getPhoneNum());
-                                            XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
-                                                    "失败原因：弹框未注册，选择注册");
-                                            finish();
-                                            xhDialog.cancel();
-                                        }
-                                    })
-                                    .setSureButtonTextColor("#007aff")
-                                    .setCancelButtonTextColor("#007aff");
-                            xhDialog.show();
+                            if (getIsBindPhone() || ORIGIN_MODIFY_PSW.equals(origin)) {
+                                sendSms();
+                            } else {
+                                loadManager.hideProgressBar();
+                                final XhDialog xhDialog = new XhDialog(LostSecret.this);
+                                xhDialog.setTitle("网络有问题或手机号未注册？")
+                                        .setCanselButton("取消", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
+                                                        "失败原因：弹框未注册，选择不注册");
+                                                xhDialog.cancel();
+                                            }
+                                        })
+                                        .setSureButton("立即注册", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                register(LostSecret.this, phone_info.getZoneCode(),
+                                                        phone_info.getPhoneNum());
+                                                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
+                                                        "失败原因：弹框未注册，选择注册");
+                                                finish();
+                                                xhDialog.cancel();
+                                            }
+                                        })
+                                        .setSureButtonTextColor("#007aff")
+                                        .setCancelButtonTextColor("#007aff");
+                                xhDialog.show();
+                            }
                         }
                     });
-        }else if(LoginCheck.NOT_11_NUM.equals(errorType)){
-            XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码","失败原因：手机号不是11位");
-        }else if(LoginCheck.ERROR_FORMAT.equals(errorType)){
-            XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码","失败原因：手机号格式错误");
+        } else if (LoginCheck.NOT_11_NUM.equals(errorType)) {
+            XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码", "失败原因：手机号不是11位");
+        } else if (LoginCheck.ERROR_FORMAT.equals(errorType)) {
+            XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码", "失败原因：手机号格式错误");
         }
     }
 
-    private void sendSms(){
+    private void sendSms() {
         reqIdentifyCode(phone_info.getZoneCode(), phone_info.getPhoneNum(), new SMSSendCallback() {
             @Override
             public void onSendSuccess() {
@@ -254,9 +269,9 @@ public class LostSecret extends BaseLoginActivity {
                 loadManager.hideProgressBar();
                 login_identify.setOnBtnClickState(true);
                 speechaIdentifyInputView.setState(true);
-                if (ORIGIN_BIND_PHONE_NUM.equals(origin)) {
+                if (getIsBindPhone()) {
                     XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "失败原因：验证码超限");
-                }else if (ORIGIN_FIND_PSW.equals(origin)) {
+                } else if (ORIGIN_FIND_PSW.equals(origin)) {
                     XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码", "失败原因：验证码超限");
                 }
             }

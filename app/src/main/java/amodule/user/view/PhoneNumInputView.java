@@ -100,6 +100,16 @@ public class PhoneNumInputView extends RelativeLayout implements View.OnClickLis
         }
     }
 
+    public void setInfo(String zoneCode, String phoneNum){
+        if (!TextUtils.isEmpty(zoneCode))
+            user_contryId.setText("+" + zoneCode);
+
+        if (!TextUtils.isEmpty(phoneNum)) {
+            user_phone_number.setText("86".equals(zoneCode)
+                    ? phoneNum.replaceAll("(\\d{3})(\\d{4})(\\d{4})", "$1 $2 $3") : phoneNum);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

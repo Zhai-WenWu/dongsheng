@@ -163,58 +163,22 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
 
                 String errorType = LoginCheck.checkPhoneFormatWell(LoginByAccout.this, zoneCode, phoneNum);
                 if (LoginCheck.WELL_TYPE.equals(errorType)) {
-                    checkPhoneRegisted(LoginByAccout.this, zoneCode, phoneNum, new BaseLoginCallback() {
+                    loadManager.showProgressBar();
+                    reqIdentifyCode(zoneCode, phoneNum, new SMSSendCallback() {
                         @Override
-                        public void onSuccess() {
-                            loadManager.showProgressBar();
-                            reqIdentifyCode(zoneCode, phoneNum, new SMSSendCallback() {
-                                @Override
-                                public void onSendSuccess() {
-                                    loadManager.hideProgressBar();
-                                    login_identify.startCountDown();
-                                    speechaIdentifyInputView.setState(false);
-                                }
-
-                                @Override
-                                public void onSendFalse() {
-                                    loadManager.hideProgressBar();
-                                    login_identify.setOnBtnClickState(true);
-                                    speechaIdentifyInputView.setState(true);
-                                    XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
-                                            "失败原因：验证码超限");
-                                }
-                            });
-
+                        public void onSendSuccess() {
+                            loadManager.hideProgressBar();
+                            login_identify.startCountDown();
+                            speechaIdentifyInputView.setState(false);
                         }
 
                         @Override
-                        public void onFalse(int flag) {
+                        public void onSendFalse() {
+                            loadManager.hideProgressBar();
                             login_identify.setOnBtnClickState(true);
                             speechaIdentifyInputView.setState(true);
-                            if (flag >= UtilInternet.REQ_OK_STRING) {
-                                final XhDialog xhDialog = new XhDialog(LoginByAccout.this);
-                                xhDialog.setTitle("网络有问题或手机号未注册？")
-                                        .setCanselButton("取消", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
-                                                        "失败原因：弹框未注册，选择不注册");
-                                                xhDialog.cancel();
-                                            }
-                                        })
-                                        .setSureButton("立即注册", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                register(LoginByAccout.this, phone_info.getZoneCode(), phone_info.getPhoneNum());
-                                                XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
-                                                        "失败原因：弹框未注册，选择注册");
-                                                xhDialog.cancel();
-                                            }
-                                        })
-                                        .setSureButtonTextColor("#007aff")
-                                        .setCancelButtonTextColor("#007aff")
-                                        .show();
-                            }
+                            XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
+                                    "失败原因：验证码超限");
                         }
                     });
                 } else {
@@ -256,6 +220,45 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
             }
         });
 
+    }
+
+    private void checkPhone(){
+        checkPhoneRegisted(LoginByAccout.this, zoneCode, phoneNum, new BaseLoginCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFalse(int flag) {
+                login_identify.setOnBtnClickState(true);
+                speechaIdentifyInputView.setState(true);
+                if (flag >= UtilInternet.REQ_OK_STRING) {
+                    final XhDialog xhDialog = new XhDialog(LoginByAccout.this);
+                    xhDialog.setTitle("网络有问题或手机号未注册？")
+                            .setCanselButton("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
+                                            "失败原因：弹框未注册，选择不注册");
+                                    xhDialog.cancel();
+                                }
+                            })
+                            .setSureButton("立即注册", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    register(LoginByAccout.this, phone_info.getZoneCode(), phone_info.getPhoneNum());
+                                    XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
+                                            "失败原因：弹框未注册，选择注册");
+                                    xhDialog.cancel();
+                                }
+                            })
+                            .setSureButtonTextColor("#007aff")
+                            .setCancelButtonTextColor("#007aff")
+                            .show();
+                }
+            }
+        });
     }
 
 
@@ -318,5 +321,15 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
     protected void onPressTopBar() {
         super.onPressTopBar();
         XHClick.mapStat(this, PHONE_TAG, "手机验证码登录", "点击返回");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String phoneNum = intent.getStringExtra(PHONE_NUM);
+        String zoneCode = intent.getStringExtra(ZONE_CODE);
+        if(!TextUtils.isEmpty(phoneNum) && !TextUtils.isEmpty(zoneCode)){
+            phone_info.setInfo(zoneCode,phoneNum);
+        }
     }
 }

@@ -833,7 +833,9 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"
+            />
         <activity
             android:name="amodule.user.activity.login.LoginByPassword"
             android:configChanges="orientation|keyboardHidden"
@@ -842,12 +844,6 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.user.activity.login.LoginbyEmail"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.user.activity.login.RegisterByPhoneOne"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
@@ -878,12 +874,6 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.user.activity.login.BindPhone"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.user.activity.login.BindPhoneNum"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/dp_10"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -12,9 +11,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:maxLines="1"
-        android:text="注册代表阅读并同意"
+        android:text="登录即代表同意"
         android:textColor="#999898"
-        android:textSize="@dimen/sp_13" />
+        android:textSize="@dimen/sp_12" />
 
     <TextView
         android:id="@+id/tv_agreenment"
@@ -24,7 +23,7 @@
         android:layout_centerHorizontal="true"
         android:maxLines="1"
         android:text="《香哈用户协议》"
-        android:textColor="#66aaff"
-        android:textSize="@dimen/sp_13" />
+        android:textColor="#333"
+        android:textSize="@dimen/sp_12" />
 
 </LinearLayout>

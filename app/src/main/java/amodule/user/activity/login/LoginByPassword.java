@@ -32,8 +32,6 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
     private PhoneNumInputView phone_info;
     private SecretInputView ll_secret;
     private NextStepView btn_next_step;
-    private LinearLayout contentLayout;
-    private LinearLayout otherLoginLayout;
     private TextView tvRegister;
     private TextView tvIdentify;
     private TextView tvLostsercet,tv_agreenment;
@@ -51,8 +49,6 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
     }
 
     private void initView() {
-        contentLayout = (LinearLayout) findViewById(R.id.content_layout);
-        otherLoginLayout = (LinearLayout) findViewById(R.id.ll_other_login);
         top_left_view = (ImageView) findViewById(R.id.top_left_view);
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
         ll_secret = (SecretInputView) findViewById(R.id.ll_secret);
@@ -67,22 +63,11 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
         imageWeibo = (ImageView) findViewById(R.id.iv_weibo);
         imageMailbox = (ImageView) findViewById(R.id.iv_mailbox);
 
-        contentLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                if (contentLayout.getHeight() < ToolsDevice.getWindowPx(LoginByPassword.this).heightPixels) {
-                    contentLayout.removeView(otherLoginLayout);
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    rl.addView(otherLoginLayout, layoutParams);
-                }
-            }
-        });
-
         top_left_view.setOnClickListener(this);
         tvRegister.setOnClickListener(this);
         tvIdentify.setOnClickListener(this);
         tvLostsercet.setOnClickListener(this);
+        tv_agreenment.setOnClickListener(this);
         imageMailbox.setOnClickListener(this);
         imageWeixin.setOnClickListener(this);
         imageQq.setOnClickListener(this);
@@ -121,7 +106,7 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
             //密码是否显示
             @Override
             public void OnClicksecret() {
-                XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录", "点击密码眼睛");
+                XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录", "点击密码验证");
             }
         });
 
@@ -138,13 +123,13 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_register:
-                LoginByPassword.this.onBackPressed();
+            case R.id.tv_register: //注册
+                register(this,phone_info.getZoneCode(),phone_info.getPhoneNum());
                 break;
-            case R.id.tv_identify:
-                startActivity(new Intent(this, LoginByAccout.class));
+            case R.id.tv_identify: //验证码登陆
+                gotoLoginByIndetify(this,phone_info.getZoneCode(),phone_info.getPhoneNum());
                 break;
-            case R.id.tv_lostsercet:
+            case R.id.tv_lostsercet: //找回密码
                 startActivity(new Intent(this, LostSecret.class));
                 break;
             case R.id.tv_agreenment: //香哈协议
@@ -188,7 +173,6 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
                     new BaseLoginActivity.BaseLoginCallback() {
                         @Override
                         public void onSuccess() {
-
                             loginByAccout(LoginByPassword.this, PHONE_LOGIN_TYPE, phone_info.getZoneCode(),
                                     phone_info.getPhoneNum(),
                                     ll_secret.getPassword(), new BaseLoginActivity.BaseLoginCallback() {

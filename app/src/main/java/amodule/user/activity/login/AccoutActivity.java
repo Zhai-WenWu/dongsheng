@@ -187,7 +187,9 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
     private void motifySecret() {
         if (TextUtils.isEmpty(tel)) {
-            gotoBindPhoneNum(this);
+            Intent bindPhoneIntent = new Intent(this, LostSecret.class);
+            bindPhoneIntent.putExtra(PATH_ORIGIN, ORIGIN_MODIFY_PSW);
+            startActivity(bindPhoneIntent);
         } else {
             final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
             xhDialog.setTitle("修改登录密码" + "\n将给手机" +

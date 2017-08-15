@@ -34,12 +34,12 @@ import amodule.main.Main;
 import amodule.main.view.CommonBottonControl;
 import amodule.user.activity.login.AddNewPhone;
 import amodule.user.activity.login.BindPhone;
-import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.ChangePhone;
 import amodule.user.activity.login.CheckSrcret;
 import amodule.user.activity.login.InputIdentifyCode;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.activity.login.LoginbyEmail;
+import amodule.user.activity.login.LostSecret;
 import amodule.user.activity.login.SetPersonalInfo;
 import amodule.user.activity.login.SetSecretActivity;
 import aplug.basic.InternetCallback;
@@ -72,7 +72,7 @@ public class BaseLoginActivity extends BaseActivity {
     protected static final String ORIGIN_REGISTER = "origin_register";
     protected static final String ORIGIN_FIND_PSW = "origin_find_psw";
     protected static final String ORIGIN_MODIFY_PSW = "origin_modify_psw";
-    protected static final String ORIGIN_BIND_PHONE_NUM = "origin_bind_phone_num";
+    public static final String ORIGIN_BIND_PHONE_NUM = "origin_bind_phone_num";
     protected static final String ORIGIN_BIND_FROM_WEB = "origin_bind_phone_web";
 
     protected static final String EMAIL_LOGIN_TYPE = "email_login_type";
@@ -179,9 +179,9 @@ public class BaseLoginActivity extends BaseActivity {
                         callback.onSuccess();
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {
-                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_MAILBOX,"", "", phoneNum);
+                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_MAILBOX, "", "", phoneNum);
                             } else {
-                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_PHONE,zoneCode, phoneNum, "");
+                                LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_PHONE, zoneCode, phoneNum, "");
                             }
                         }
                     } else {
@@ -228,7 +228,7 @@ public class BaseLoginActivity extends BaseActivity {
                         .setSureButton("我知道了", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                XHClick.mapStat(mAct, PHONE_TAG,"邮箱登录", "失败原因：弹框电脑找回密码");
+                                XHClick.mapStat(mAct, PHONE_TAG, "邮箱登录", "失败原因：弹框电脑找回密码");
                                 xhDialog.cancel();
                             }
                         })
@@ -294,8 +294,8 @@ public class BaseLoginActivity extends BaseActivity {
     protected void checkPhoneRegisted(final Context context, final String zoneCode,
                                       final String phoneNum, final BaseLoginCallback callback) {
         //判断网络
-        if(!ToolsDevice.getNetActiveState(context)){
-            Tools.showToast(context,"网络错误，请检查网络或重试");
+        if (!ToolsDevice.getNetActiveState(context)) {
+            Tools.showToast(context, "网络错误，请检查网络或重试");
             return;
         }
         //发起请求
@@ -328,7 +328,7 @@ public class BaseLoginActivity extends BaseActivity {
         });
     }
 
-    protected void reqIdentifySpeecha(final String phoneNum, final BaseLoginCallback callback){
+    protected void reqIdentifySpeecha(final String phoneNum, final BaseLoginCallback callback) {
         if (TextUtils.isEmpty(phoneNum)) {
             Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
             callback.onFalse(-1);
@@ -346,14 +346,14 @@ public class BaseLoginActivity extends BaseActivity {
                                     callback.onSuccess();
                                     return;
                                 }
-                            }else if(String.valueOf(data).contains("网络错误")){
-                                Tools.showToast(BaseLoginActivity.this.getApplicationContext(),String.valueOf(data));
+                            } else if (String.valueOf(data).contains("网络错误")) {
+                                Tools.showToast(BaseLoginActivity.this.getApplicationContext(), String.valueOf(data));
                             }
-                            sendFalseRequest(data.toString(),"86",phoneNum);
+                            sendFalseRequest(data.toString(), "86", phoneNum);
                             callback.onFalse(flag);
                         }
                     });
-        }else{
+        } else {
             callback.onFalse(-1);
         }
     }
@@ -368,7 +368,7 @@ public class BaseLoginActivity extends BaseActivity {
     protected boolean reqIdentifyCode(final String countyrCode, final String phone_number, @NonNull final SMSSendCallback callback) {
         eventHandler = new EventHandler() {
             @Override
-            public void afterEvent(final int event,final  int result, final Object data) {
+            public void afterEvent(final int event, final int result, final Object data) {
                 SyntaxTools.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -379,7 +379,7 @@ public class BaseLoginActivity extends BaseActivity {
 
                             } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                                 // 获取验证码成功
-                                if(callback != null)
+                                if (callback != null)
                                     callback.onSendSuccess();
                             } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
                                 // 返回支持发送验证码的国家列表
@@ -387,10 +387,10 @@ public class BaseLoginActivity extends BaseActivity {
                             }
                         } else if (result == SMSSDK.RESULT_ERROR) {
                             handlerError(data);
-                            if(callback != null)
+                            if (callback != null)
                                 callback.onSendFalse();
                             LogManager.print("w", data.toString() + "");
-                            sendFalseRequest(data.toString(),countyrCode,phone_number);
+                            sendFalseRequest(data.toString(), countyrCode, phone_number);
                         }
                     }
                 });
@@ -400,15 +400,15 @@ public class BaseLoginActivity extends BaseActivity {
              *
              * @param data
              */
-            private void handlerError(Object data){
+            private void handlerError(Object data) {
                 try {
                     Throwable throwable = (Throwable) data;
                     throwable.printStackTrace();
                     JSONObject object = new JSONObject(throwable.getMessage());
                     String des = object.optString("detail");//错误描述
                     int status = object.optInt("status");//错误代码
-                    Log.i("login","sendSMS() status:" + status + " ; \n des:" + des);
-                    Log.i("login","sendSMS() des:" + des);
+                    Log.i("login", "sendSMS() status:" + status + " ; \n des:" + des);
+                    Log.i("login", "sendSMS() des:" + des);
                     //统计错误情况
                     statisticsErrorCode(status);
                     if (462 == status || 472 == status) {
@@ -431,15 +431,16 @@ public class BaseLoginActivity extends BaseActivity {
 
     /**
      * 发送失败统计,自己的统计
+     *
      * @param data
      * @param countyrCode
      */
-    private void sendFalseRequest(String data,String countyrCode,String phoneNumber){
+    private void sendFalseRequest(String data, String countyrCode, String phoneNumber) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("log=").append(data);
-        if(!TextUtils.isEmpty(phoneNumber))
+        if (!TextUtils.isEmpty(phoneNumber))
             stringBuilder.append("&phoneNumber=").append(phoneNumber);
-        if(!TextUtils.isEmpty(countyrCode))
+        if (!TextUtils.isEmpty(countyrCode))
             stringBuilder.append("&code=").append(countyrCode);
         ReqInternet.in().doPost(StringManager.api_smsReport, stringBuilder.toString(),
                 new InternetCallback(mAct.getApplicationContext()) {
@@ -479,7 +480,6 @@ public class BaseLoginActivity extends BaseActivity {
 
     protected void checkIdentifyCode(Context context, String zoneCode, String phoneNum,
                                      String identify_code, final BaseLoginCallback callback) {
-
         String url = StringManager.api_compareVerCode;
         String param = "phoneNum=" + phoneNum + "&zone=" + zoneCode + "&verCode="
                 + identify_code + "&sdkVes=" + SMS_SDK_VERSION;
@@ -556,14 +556,6 @@ public class BaseLoginActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    protected void gotoLogin(String zoneCode, String phoneNum) {
-        Intent intent = new Intent(mAct, LoginByAccout.class);
-        intent.putExtra(ZONE_CODE, zoneCode);
-        intent.putExtra(PHONE_NUM, phoneNum);
-        startActivity(intent);
-        finish();
-    }
-
     protected void gotoFeedBack() {
         startActivity(new Intent(this, Feedback.class));
     }
@@ -596,7 +588,7 @@ public class BaseLoginActivity extends BaseActivity {
         startActivity(new Intent(context, CheckSrcret.class));
     }
 
-    protected void gotoAddNewPhone(Context context, String zoneCode, String phoneNum,String motifyType) {
+    protected void gotoAddNewPhone(Context context, String zoneCode, String phoneNum, String motifyType) {
         Intent intent = new Intent(context, AddNewPhone.class);
         intent.putExtra(ZONE_CODE, zoneCode);
         intent.putExtra(PHONE_NUM, phoneNum);
@@ -611,9 +603,9 @@ public class BaseLoginActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    protected void gotoSetPersonInfo(Context context,String loginType) {
+    protected void gotoSetPersonInfo(Context context, String loginType) {
         Intent intent = new Intent(context, SetPersonalInfo.class);
-        intent.putExtra(LOGINTYPE,loginType);
+        intent.putExtra(LOGINTYPE, loginType);
         startActivity(intent);
     }
 
@@ -623,8 +615,10 @@ public class BaseLoginActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    protected void gotoBindPhoneNum(Context context) {
-        startActivity(new Intent(context, BindPhoneNum.class));
+    public static void gotoBindPhoneNum(Context context) {
+        Intent bindPhoneIntent = new Intent(context, LostSecret.class);
+        bindPhoneIntent.putExtra(PATH_ORIGIN, ORIGIN_BIND_PHONE_NUM);
+        context.startActivity(bindPhoneIntent);
     }
 
     public void gotoLoginByEmail(Context context) {
@@ -642,7 +636,7 @@ public class BaseLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(eventHandler != null)
+        if (eventHandler != null)
             SMSSDK.unregisterEventHandler(eventHandler);
     }
 
@@ -686,143 +680,144 @@ public class BaseLoginActivity extends BaseActivity {
     private final String statisticsErrorCode_ID = "sms_error_id";
     private String ServerError = "服务器错误码";
     private String LocalError = "本地错误码";
-    private void statisticsErrorCode(int status){
-        switch (status){
+
+    private void statisticsErrorCode(int status) {
+        switch (status) {
             case 400:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_客户端请求不能被识别");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_客户端请求不能被识别");
                 break;
             case 405:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_请求的AppKey为空");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_请求的AppKey为空");
                 break;
             case 406:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_请求的AppKey不存在");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_请求的AppKey不存在");
                 break;
             case 407:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_请求提交的数据缺少必要的数据");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_请求提交的数据缺少必要的数据");
                 break;
             case 408:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_无效的请求参数");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_无效的请求参数");
                 break;
             case 418:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_内部接口调用失败");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_内部接口调用失败");
                 break;
             case 420:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_本地请求duid文件不存在");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_本地请求duid文件不存在");
                 break;
             case 450:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_无权执行该操作");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_无权执行该操作");
                 break;
             case 454:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_数据格式错误");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_数据格式错误");
                 break;
             case 455:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_签名无效");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_签名无效");
                 break;
             case 456:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_提交的手机号码或者区号为空");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_提交的手机号码或者区号为空");
                 break;
             case 457:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_提交的手机号格式不正确");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_提交的手机号格式不正确");
                 break;
             case 458:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_手机号码在发送黑名单中");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_手机号码在发送黑名单中");
                 break;
             case 459:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_获取appKey控制发送短信的数据失败");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_获取appKey控制发送短信的数据失败");
                 break;
             case 460:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_无权限发送短信");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_无权限发送短信");
                 break;
             case 461:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_不支持该地区发送短信");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_不支持该地区发送短信");
                 break;
             case 462:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_每分钟发送次数超限");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_每分钟发送次数超限");
                 break;
             case 463:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_手机号码每天发送次数超限");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_手机号码每天发送次数超限");
                 break;
             case 464:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_每台手机每天发送次数超限");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_每台手机每天发送次数超限");
                 break;
             case 465:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_号码在App中每天发送短信的次数超限");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_号码在App中每天发送短信的次数超限");
                 break;
             case 466:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_校验的验证码为空");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_校验的验证码为空");
                 break;
             case 467:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_5分钟内校验错误超过3次，验证码失效");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_5分钟内校验错误超过3次，验证码失效");
                 break;
             case 468:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_用户提交校验的验证码错误");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_用户提交校验的验证码错误");
                 break;
             case 469:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_没有打开通过网页端发送短信的开关");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_没有打开通过网页端发送短信的开关");
                 break;
             case 470:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_账户的短信余额不足");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_账户的短信余额不足");
                 break;
             case 471:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_通过服务端发送或验证短信的IP错误");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_通过服务端发送或验证短信的IP错误");
                 break;
             case 472:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_客户端请求发送短信验证过于频繁");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_客户端请求发送短信验证过于频繁");
                 break;
             case 473:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_服务端根据duid获取平台错误");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_服务端根据duid获取平台错误");
                 break;
             case 474:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_没有打开服务端验证开关");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_没有打开服务端验证开关");
                 break;
             case 475:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_appKey的应用信息不存在");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_appKey的应用信息不存在");
                 break;
             case 476:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_当前appkey发送短信的数量超过限额");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_当前appkey发送短信的数量超过限额");
                 break;
             case 477:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_当前手机号发送短信的数量超过限额");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_当前手机号发送短信的数量超过限额");
                 break;
             case 478:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_当前手机号在当前应用内发送超过限额");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_当前手机号在当前应用内发送超过限额");
                 break;
             case 500:
-                XHClick.mapStat(this,statisticsErrorCode_ID,ServerError,status + "_服务器内部错误");
+                XHClick.mapStat(this, statisticsErrorCode_ID, ServerError, status + "_服务器内部错误");
                 break;
 
             case 600:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_请求太频繁，API使用受限制");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_请求太频繁，API使用受限制");
                 break;
             case 601:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_短信发送受限");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_短信发送受限");
                 break;
             case 602:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_无法发送此地区短信");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_无法发送此地区短信");
                 break;
             case 603:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_请填写正确的手机号码");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_请填写正确的手机号码");
                 break;
             case 604:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_当前服务暂不支持此国家");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_当前服务暂不支持此国家");
                 break;
             case 606:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_无权访问该接口");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_无权访问该接口");
                 break;
             case 607:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_Request header错误：Contet-Length错误");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_Request header错误：Contet-Length错误");
                 break;
             case 608:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_检查meta是否配置了appkey");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_检查meta是否配置了appkey");
                 break;
             case 609:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_Request header错误：Sign为空");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_Request header错误：Sign为空");
                 break;
             case 610:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_Request header错误：UserAgent为空");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_Request header错误：UserAgent为空");
                 break;
             case 611:
-                XHClick.mapStat(this,statisticsErrorCode_ID,LocalError,status + "_AppSecret为空");
+                XHClick.mapStat(this, statisticsErrorCode_ID, LocalError, status + "_AppSecret为空");
                 break;
         }
     }
