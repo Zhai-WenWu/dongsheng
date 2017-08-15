@@ -60,6 +60,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     EvalutionUploadControl uploadControl;
 
+    String orderID = "";
     String productID = "";
     String image = "";
     int score = DEFAULT_SCORE;
@@ -75,13 +76,15 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     private void initData() {
         Intent intent = getIntent();
+        orderID = intent.getStringExtra(EXTRAS_ORDER_ID);
         productID = intent.getStringExtra(EXTRAS_PRODUCT_ID);
-        if (TextUtils.isEmpty(productID))
+        if (TextUtils.isEmpty(productID) || TextUtils.isEmpty(orderID))
             this.finish();
         image = intent.getStringExtra(EXTRAS_PRODUCT_IMAGE);
         score = intent.getIntExtra(EXTRAS_SCORE, DEFAULT_SCORE);
 
         uploadControl = new EvalutionUploadControl(this);
+        uploadControl.setOrderId(orderID);
         uploadControl.setProductId(productID);
         uploadControl.setOnPublishCallback(new EvalutionUploadControl.OnPublishCallback() {
             @Override
@@ -162,6 +165,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         });
         //设置数据
         ratingBar.setRating(score);
+        scoreDescText.setText(starEvalutionDesc[score - 1]);
 
         contentEdit.addTextChangedListener(new TextWatcher() {
             @Override

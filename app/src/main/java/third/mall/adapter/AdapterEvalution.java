@@ -28,9 +28,12 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
 
     private List<Map<String,String>> data = new ArrayList<>();
 
-    public AdapterEvalution(Activity activity, List<Map<String, String>> data){
+    private String orderId;
+
+    public AdapterEvalution(Activity activity, List<Map<String, String>> data,String orderId){
         this.activity = activity;
         this.data = data;
+        this.orderId = orderId;
     }
 
     @Override
@@ -84,9 +87,10 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                     @Override
                     public void onEvalutionClick(CommodEvalutionItem view, Map<String, String> data) {
                         Intent intent = new Intent(activity, PublishEvalutionSingleActivity.class);
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ORDER_ID,orderId);
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_ID,data.get("product_code"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
-                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,data.get("score"));
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,Integer.parseInt(data.get("score")));
                         activity.startActivityForResult(intent,PublishEvalutionMultiActivity.REQUEST_CODE_NEED_REFRESH);
                     }
                 });

@@ -191,6 +191,11 @@ public class EvalutionUploadControl {
         return this;
     }
 
+    public EvalutionUploadControl setOrderId(String orderId){
+        bean.setOrderId(orderId);
+        return this;
+    }
+
     public EvalutionUploadControl setProductId(String code){
         bean.setProductId(code);
         return this;

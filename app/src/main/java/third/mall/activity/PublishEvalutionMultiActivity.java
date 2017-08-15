@@ -59,6 +59,8 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         if (intent != null) {
             orderId = intent.getStringExtra(EXTRAS_ORDER_ID);
         }
+        //TODO
+        orderId="101381878";
     }
 
     private void initView() {
@@ -78,7 +80,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     }
 
     private void setLoading() {
-        adapter = new AdapterEvalution(this, commodData);
+        adapter = new AdapterEvalution(this, commodData,orderId);
         loadManager.setLoading(refershLayout, commodList, adapter, true,
                 new View.OnClickListener() {
                     @Override
@@ -103,10 +105,12 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     private void loadData() {
         loadManager.showProgressBar();
         loadManager.changeMoreBtn(MallReqInternet.REQ_OK_STRING,-1,-1,1,true);
-        StringBuilder params = new StringBuilder()
-                .append("order_id=")
+        StringBuilder params = new StringBuilder(MallStringManager.mall_toComment)
+                .append("?order_id=")
                 .append(orderId);
-        MallReqInternet.in().doPost(MallStringManager.mall_toComment,
+        MallReqInternet.in().doGet(
+//        MallReqInternet.in().doPost(
+//                MallStringManager.mall_toComment,
                 params.toString(),
                 new MallInternetCallback(this) {
                     @Override
@@ -119,19 +123,10 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                             commodData.addAll(datas);
                             adapter.notifyDataSetChanged();
                         }
+                        loadManager.changeMoreBtn(flag,commodData.size(),0,2,false);
+                        commodList.setVisibility(commodData.size() > 0 ? View.VISIBLE : View.GONE);
                     }
                 });
-        for(int i = 0 ; i < 5 ; i ++){
-            Map<String,String> map = new HashMap<>();
-            map.put("product_code","" + i);
-            map.put("product_img","http://ws1.sinaimg.cn/large/610dc034ly1fid5poqfznj20u011imzm.jpg");
-            map.put("product_name","这是一个标题，只能是没有填充正式文案看看效果而已，凑合看吧！！！");
-            map.put("status", (Tools.getRandom(0,10) % 2 == 0) ? "1" : "2");
-            map.put("score","5");
-            commodData.add(map);
-            adapter.notifyDataSetChanged();
-        }
-        loadManager.changeMoreBtn(MallReqInternet.REQ_OK_STRING,10,0,2,false);
     }
 
     private void publishMutilEvalution() {
