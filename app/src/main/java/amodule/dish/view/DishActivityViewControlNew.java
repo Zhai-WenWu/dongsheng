@@ -31,6 +31,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 
+import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.dish.activity.DetailDish.tongjiId;
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -90,6 +91,7 @@ public class  DishActivityViewControlNew {
      * view的初始化
      */
     private void initView(){
+        Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
         initTitle();
 
@@ -110,11 +112,18 @@ public class  DishActivityViewControlNew {
             public void setOnIngre(String ingre) {
                 saveHistoryToDB(ingre);
             }
+
             @Override
-            public void onLoadFinish() {
+            public void onLoadFinishDelayOne() {
                 if(mFootControl!=null)mFootControl.showFootView();
             }
+
+            @Override
+            public void onLoadFinish() {
+//                if(dishHeaderView!=null)dishHeaderView.showHeaderView();
+            }
         });
+        handlerDishWebviewData();
         //头部view处理
         dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
         videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
@@ -234,12 +243,11 @@ public class  DishActivityViewControlNew {
      * @param permissionMap
      */
     public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
+        Log.i("zyj","analyzeDishInfoData::"+(System.currentTimeMillis()-startTime));
         dishJson = dishInfo;
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
         dishInfoMap = list.get(0);
-        handlerDishWebviewData();
-
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         if(isHasVideo)tongjiId="a_menu_detail_video";
@@ -420,7 +428,8 @@ public class  DishActivityViewControlNew {
      */
     public void handlerDishWebviewData(){
         if(!isLoadWebViewData) {
-            mXhWebView.loadDishData();
+            Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
+            mXhWebView.loadDishData(mDishCode);
             isLoadWebViewData = true;
         }
     }

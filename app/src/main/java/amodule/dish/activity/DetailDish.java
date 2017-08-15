@@ -6,16 +6,23 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.TranslateAnimation;
 
 import com.xianghatest.R;
 
@@ -54,6 +61,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  */
 public class DetailDish extends BaseAppCompatActivity {
     public static String tongjiId = "a_menu_detail_normal430";//统计标示
+    public static String DishName="amodule.dish.activity.DetailDish";
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
 
@@ -70,11 +78,14 @@ public class DetailDish extends BaseAppCompatActivity {
     private boolean contiunRefresh = true;
     private String lastPermission = "";
 
-    private long startTime= 0;
+    public static long startTime= 0;
     private String data_type="";
     private String module_type="";
+    private int height;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        overridePendingTransition(R.anim.activity_open,0);
+        overridePendingTransition(R.anim.in_from_right_400, R.anim.out_to_left);
         super.onCreate(savedInstanceState);
         //处理广告
         Bundle bundle = getIntent().getExtras();
@@ -106,6 +117,7 @@ public class DetailDish extends BaseAppCompatActivity {
         },5 * 60 * 1000);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        Log.i("zyj","activity:::"+(System.currentTimeMillis()-startTime));
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
 
@@ -131,13 +143,13 @@ public class DetailDish extends BaseAppCompatActivity {
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);
         dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControlNew.DishViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
             }
         });
+        setCommonStyle();
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -312,4 +324,10 @@ public class DetailDish extends BaseAppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
     }
+
+//    @Override
+//    public void finish() {
+//        super.finish();
+//        overridePendingTransition(0, R.anim.activity_close);
+//    }
 }

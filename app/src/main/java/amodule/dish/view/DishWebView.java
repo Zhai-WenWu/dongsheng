@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -32,6 +33,7 @@ import third.mall.aplug.MallStringManager;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
+import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.main.Main.timer;
 import static aplug.web.tools.WebviewManager.ERROR_HTML_URL;
 
@@ -70,7 +72,11 @@ public class DishWebView extends XHWebView {
     protected void init(Context context){
         mAct = (Activity) context;
         WebviewManager.initWebSetting(this);
-
+        if(Build.VERSION.SDK_INT >= 19) {
+            this.getSettings().setLoadsImagesAutomatically(true);
+        } else {
+            this.getSettings().setLoadsImagesAutomatically(false);
+        }
 
         setWebViewClient(new WebViewClient() {
             @Override
@@ -78,13 +84,11 @@ public class DishWebView extends XHWebView {
                 if (!ERROR_HTML_URL.equals(url)) {
                     DishWebView.this.setUrl(url);
                 }
-                Log.i("zyj","onPageStarted");
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                Log.i("zyj","onPageFinished");
                 super.onPageFinished(view, url);
                 if (JSAction.loadAction.length() > 0) {
                     view.loadUrl("javascript:" + JSAction.loadAction + ";");
@@ -108,6 +112,9 @@ public class DishWebView extends XHWebView {
                 String sessionId = UtilInternet.cookieMap.get("USERID");
                 if (map.get("USERID") != null && !map.get("USERID").equals(sessionId == null ? "" : sessionId)) {
                     UtilInternet.cookieMap.put("USERID", map.get("USERID"));
+                }
+                if(dishWebViewCallBack!=null){
+                    dishWebViewCallBack.onLoadFinishDelayOne();
                 }
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
@@ -154,8 +161,10 @@ public class DishWebView extends XHWebView {
         setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     }
 
-    public void loadDishData(){
-        loadMould();
+    public void loadDishData(String dishCode){
+        if(TextUtils.isEmpty(dishCode))
+            return;
+        loadMould(dishCode);
     }
 
     public String getMouldVersion(){
@@ -164,12 +173,13 @@ public class DishWebView extends XHWebView {
     /**
      * 加载模板
      */
-    private void loadMould(){
+    private void loadMould(final String code){
         DishMouldControl.getDishMould(new DishMouldControl.OnDishMouldListener() {
             @Override
             public void loaded(boolean isSucess, String data,String mouldVersion) {
                 mMouldVersion = mouldVersion;
                 if(isSucess){
+                    data=data.replace("<{code}>",code);
                     final String html = data;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
@@ -213,6 +223,7 @@ public class DishWebView extends XHWebView {
     public interface DishWebViewCallBack{
         //设置页面加载的数据
         public void setOnIngre(String ingre);
+        public void onLoadFinishDelayOne();
         public void onLoadFinish();
     }
 }

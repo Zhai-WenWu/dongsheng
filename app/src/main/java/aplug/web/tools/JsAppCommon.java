@@ -760,8 +760,9 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (mAct != null && mWebView != null) {
-                    mWebView.setLayoutParams(new ViewGroup.LayoutParams(mAct.getResources().getDisplayMetrics().widthPixels,
-                            (int) (height * mAct.getResources().getDisplayMetrics().density)));
+                    ViewGroup.LayoutParams params = mWebView.getLayoutParams();
+                    params.height=(int) (height * mAct.getResources().getDisplayMetrics().density);
+                    params.width=mAct.getResources().getDisplayMetrics().widthPixels;
                 }
             }
         });
