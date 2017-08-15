@@ -968,7 +968,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="aplug.feedback.activity.ShowImage"
             android:configChanges="orientation|keyboardHidden"
