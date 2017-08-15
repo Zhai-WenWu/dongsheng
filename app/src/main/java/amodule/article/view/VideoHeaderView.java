@@ -59,7 +59,7 @@ public class VideoHeaderView extends RelativeLayout {
     private Activity activity;
     private Context context;
 
-    private RelativeLayout dishVidioLayout;
+    private RelativeLayout dishVidioLayout,adParentLayout;
     private FrameLayout adLayout;
 
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
@@ -88,7 +88,7 @@ public class VideoHeaderView extends RelativeLayout {
     }
 
     private void inflateView() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_video_header_oneimage_port, null);
         addView(view);
     }
 
@@ -101,6 +101,18 @@ public class VideoHeaderView extends RelativeLayout {
         setLayoutParams(params);
         dishVidioLayout = (RelativeLayout) findViewById(R.id.video_layout);
         dredgeVipLayout = (RelativeLayout) findViewById(R.id.video_dredge_vip_layout);
+        adParentLayout = (RelativeLayout) findViewById(R.id.video_ad_layout_parent);
+        adParentLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    public void setViewSize(int videoW,int videoH){
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
+        setLayoutParams(params);
     }
 
     public void setData(Map<String, String> data, DishHeaderViewNew.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
@@ -113,6 +125,10 @@ public class VideoHeaderView extends RelativeLayout {
 
         try {
             Map<String, String> videoData = StringManager.getFirstMap(data.get("video"));
+
+            //TODO 重新设置视频大小
+//            setViewSize();
+
             status = videoData.get("status");
             videoData.put("title", data.get("title"));
             Map<String, String> videoUrlData = StringManager.getFirstMap(videoData.get("videoUrl"));
@@ -178,6 +194,7 @@ public class VideoHeaderView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 view.setVisibility(View.GONE);
+                adParentLayout.setVisibility(GONE);
                 mVideoPlayerController.setShowAd(false);
                 mVideoPlayerController.setOnClick();
             }
@@ -203,6 +220,7 @@ public class VideoHeaderView extends RelativeLayout {
                 mNum.setText("" + msg.what);
                 if (msg.what == 0) {
                     view.setVisibility(View.GONE);
+                    adParentLayout.setVisibility(GONE);
                     if (!mVideoPlayerController.isPlaying()) {
                         mVideoPlayerController.setShowAd(false);
                         if (isOnResuming)
@@ -231,6 +249,7 @@ public class VideoHeaderView extends RelativeLayout {
                 @Override
                 public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
                     view.setVisibility(View.VISIBLE);
+                    adParentLayout.setVisibility(VISIBLE);
                     mImageView.setVisibility(View.VISIBLE);
                     bitmap.getHeight();
                     mImageView.setImageBitmap(bitmap);

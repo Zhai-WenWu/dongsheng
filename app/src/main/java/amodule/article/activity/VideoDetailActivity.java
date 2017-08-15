@@ -8,11 +8,14 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -78,6 +81,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private TextView mTitle;
     private ImageView rightButton;
     private RelativeLayout dredgeVipLayout;
+    private RelativeLayout allTitleRela;
+    private RelativeLayout allTitleRelaPort;
     private TextView dredgeVipImmediately;
     private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
@@ -109,6 +114,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
     private Long startTime;//统计使用的时间
+    public boolean isPortrait = true;
+    int statusBarH = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +203,9 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
-        initTitle();
+        allTitleRela = (RelativeLayout) findViewById(R.id.relativeLayout_global);
+        allTitleRelaPort = (RelativeLayout) findViewById(R.id.all_title_rela_transparent);
+        initTitle(allTitleRela);
         //初始化listview
         initListView();
         //初始化评论框
@@ -215,30 +224,38 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     }
 
     private void initStatusBar() {
+        statusBarH = Tools.getStatusBarHeight(this);
         if (Tools.isShowTitle()) {
             final RelativeLayout bottomBarLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
             //设置layout监听，处理键盘弹出的高度问题
             rl.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
                         public void onGlobalLayout() {
-                            int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+                            int heightDiff = rl.getRootView().getHeight() - rl.getHeight() + (isPortrait ? statusBarH : 0);
                             Rect r = new Rect();
                             rl.getWindowVisibleDisplayFrame(r);
                             int screenHeight = rl.getRootView().getHeight();
                             int heightDifference = screenHeight - (r.bottom - r.top);
                             isKeyboradShow = heightDifference > 200;
-                            heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
+                            heightDifference = isKeyboradShow ? heightDifference - heightDiff  : 0;
                             bottomBarLayout.setPadding(0, 0, 0, heightDifference);
                         }
                     });
+            bottomBarLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (TextUtils.isEmpty(mCommentBar.getEditText().getText().toString()))
+                        mCommentBar.setEditTextShow(false);
+                    ToolsDevice.keyboardControl(false, VideoDetailActivity.this, mCommentBar.getEditText());
+                    return false;
+                }
+            });
         }
-        String color = Tools.getColorStr(this, R.color.common_top_bg);
-        Tools.setStatusBarColor(this, Color.parseColor(color));
     }
 
     /** 初始化title */
-    private void initTitle() {
-        View leftClose = findViewById(R.id.leftClose);
+    private void initTitle(View view) {
+        View leftClose = view.findViewById(R.id.leftClose);
         leftClose.setVisibility(View.VISIBLE);
         leftClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,18 +264,18 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 VideoDetailActivity.this.finish();
             }
         });
-        mTitle = (TextView) findViewById(R.id.title);
+        mTitle = (TextView) view.findViewById(R.id.title);
         int dp85 = Tools.getDimen(this,R.dimen.dp_85);
         mTitle.setPadding(dp85,0,dp85,0);
-        rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
-        ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
+        rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
+        ImageView leftImage = (ImageView) view.findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
         layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
         leftImage.setLayoutParams(layoutParams);
-        RelativeLayout titleBar = (RelativeLayout) findViewById(R.id.relativeLayout_global);
-        titleBar.setBackgroundColor(Color.parseColor("#00FFFFFE"));
+//        RelativeLayout titleBar = (RelativeLayout) view.findViewById(R.id.relativeLayout_global);
+//        titleBar.setBackgroundColor(Color.parseColor("#00FFFFFE"));
 
-        findViewById(R.id.back).setOnClickListener(
+        view.findViewById(R.id.back).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -273,20 +290,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         refreshLayout.setHorizontalFadingEdgeEnabled(true);
         listView = (ListView) findViewById(R.id.listview);
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    //设置触摸收起键盘
-                    case MotionEvent.ACTION_DOWN:
-                        if (TextUtils.isEmpty(mCommentBar.getEditText().getText().toString()))
-                            mCommentBar.setEditTextShow(false);
-                        ToolsDevice.keyboardControl(false, VideoDetailActivity.this, mCommentBar.getEditText());
-                        break;
-                }
-                return false;
-            }
-        });
         //initListView
         mHaederLayout = new VideoAllHeaderView(this);
         mHaederLayout.setType(TYPE_VIDEO);
@@ -382,6 +385,10 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         });
         listView.setAdapter(detailAdapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            int dp45 = Tools.getDimen(VideoDetailActivity.this,R.dimen.dp_45);
+            int screenH = ToolsDevice.getWindowPx(VideoDetailActivity.this).heightPixels;
+            String comTopBgColor = getResources().getString(R.color.common_top_bg);
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -394,11 +401,19 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     int[] location = new int[2];
                     headerView.getLocationOnScreen(location);
                     int viewBottom = location[1] + headerView.getHeight();
-                    int mixHeight = Tools.getStatusBarHeight(VideoDetailActivity.this) + Tools.getDimen(VideoDetailActivity.this,R.dimen.dp_45);
-                    if(viewBottom <= mixHeight && mCommentBar.getVisibility() != View.VISIBLE){
-                        dredgeVipLayout.setVisibility(View.VISIBLE);
-                    }else
-                        dredgeVipLayout.setVisibility(View.GONE);
+                    int mixHeight = (isPortrait ? 0 : statusBarH) + dp45;
+                    //设置Vip框是否显示
+                    boolean isVipShow = viewBottom <= mixHeight
+                            && !isPortrait
+                            && mCommentBar.getVisibility() != View.VISIBLE;
+                    dredgeVipLayout.setVisibility(isVipShow?View.VISIBLE:View.GONE);
+                    //设置评论框是否显示
+                    boolean isCommentShow = screenH - viewBottom > mCommentBar.getHeight()
+                            && isPortrait
+                            && dredgeVipLayout.getVisibility() == View.GONE;
+                    mCommentBar.setVisibility(isCommentShow?View.VISIBLE:View.GONE);
+                    //
+                    allTitleRelaPort.setBackgroundColor(Color.parseColor(isPortrait && viewBottom <= dp45 + statusBarH ? comTopBgColor : "#00000000"));
                 }
             }
         });
@@ -524,6 +539,11 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private void analysVideoData(boolean onlyUser, @NonNull final Map<String, String> mapVideo, Map<String, String> detailPermissionMap){
         if (mapVideo.isEmpty()) return;
+
+        if(isPortrait){
+            handlerPortrait();
+        }
+
         xhWebView.setVisibility(View.GONE);
         mCommentBar.setVisibility(View.VISIBLE);
         customerData = StringManager.getFirstMap(mapVideo.get("customer"));
@@ -587,6 +607,32 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                         AppCommon.openUrl(VideoDetailActivity.this,url,true);
                 }
             });
+        }
+    }
+
+    private  void handlerPortrait(){
+        findViewById(R.id.relativeLayout_global).setVisibility(View.GONE);
+        allTitleRelaPort.setVisibility(View.VISIBLE);
+        allTitleRelaPort.setBackgroundColor(Color.parseColor("#00000000"));
+        View view = findViewById(R.id.relativeLayout_global_transparent);
+        view.setBackgroundColor(Color.parseColor("#00FFFFFE"));
+        initTitle(allTitleRelaPort);
+        if(Tools.isShowTitle()){
+            Window window = this.getWindow();
+            //设置Window为全透明
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
+            //获取父布局
+            View mContentChild = mContentView.getChildAt(0);
+            //不预留系统栏位置
+            if (mContentChild != null) {
+                ViewCompat.setFitsSystemWindows(mContentChild, false);
+            }
+            int height = Tools.getDimen(this, R.dimen.dp_46) + statusBarH;
+            RelativeLayout all_title = (RelativeLayout) findViewById(R.id.all_title_rela_transparent);
+            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
+            all_title.setLayoutParams(layout);
+            all_title.setPadding(0, statusBarH, 0, 0);
         }
     }
 
