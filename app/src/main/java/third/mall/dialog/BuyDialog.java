@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -64,6 +65,7 @@ public class BuyDialog extends SimpleDialog {
     private RelativeLayout item_commod_cut;
     private Map<String,String> mapData;
     private int productNum=1;
+    private int saleableNum,maxSaleNum;
 
     public BuyDialog(Activity activity, Map<String,String> mapData) {
         super(activity, R.layout.dialog_mall_buy);
@@ -109,6 +111,15 @@ public class BuyDialog extends SimpleDialog {
         findViewById(R.id.item_commod_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("zyj","maxSaleNum::"+maxSaleNum+":::"+saleableNum);
+                if(saleableNum>0&&saleableNum<=productNum){
+                    Tools.showToast(context,"最多购买"+productNum+"个");
+                    return;
+                }
+                if(maxSaleNum>0&&maxSaleNum<=productNum){
+                    Tools.showToast(context,"最多购买"+productNum+"个");
+                    return;
+                }
                 ++productNum;
                 item_commod_num.setText(String.valueOf(productNum));
             }
@@ -120,6 +131,12 @@ public class BuyDialog extends SimpleDialog {
                 setRequestOrder(getOrderInfo());
             }
         });
+        if(mapData.containsKey("saleable_num")&&!TextUtils.isEmpty(mapData.get("saleable_num"))) {
+            saleableNum=Integer.parseInt(mapData.get("saleable_num"));
+        }
+        if(mapData.containsKey("max_sale_num")&&!TextUtils.isEmpty(mapData.get("max_sale_num"))) {
+            maxSaleNum=Integer.parseInt(mapData.get("max_sale_num"));
+        }
     }
 
     /**

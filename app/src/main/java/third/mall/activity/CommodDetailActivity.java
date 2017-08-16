@@ -199,7 +199,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
                 }
             }
-
             @Override
             public void changeTitleState(boolean state) {
             }
