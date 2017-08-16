@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -97,8 +98,7 @@ public class VideoHeaderView extends RelativeLayout {
         this.context = activity.getBaseContext();
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * 9 / 16);
-        setLayoutParams(params);
+        setViewSize(16,9);
         dishVidioLayout = (RelativeLayout) findViewById(R.id.video_layout);
         dredgeVipLayout = (RelativeLayout) findViewById(R.id.video_dredge_vip_layout);
         adParentLayout = (RelativeLayout) findViewById(R.id.video_ad_layout_parent);
@@ -116,8 +116,9 @@ public class VideoHeaderView extends RelativeLayout {
      * @param videoH
      */
     public void setViewSize(int videoW,int videoH){
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
         setLayoutParams(params);
+        requestLayout();
     }
 
     public void setData(Map<String, String> data, DishHeaderViewNew.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
@@ -132,11 +133,12 @@ public class VideoHeaderView extends RelativeLayout {
             Map<String, String> videoData = StringManager.getFirstMap(data.get("video"));
 
             //重新设置视频大小
+            float videoW = 0,videoH = 0;
             if(videoData.containsKey("width") && !TextUtils.isEmpty(videoData.get("width"))
                     && videoData.containsKey("height") && !TextUtils.isEmpty(videoData.get("height"))){
-                int videoW = Integer.parseInt(videoData.get("width"));
-                int videoH = Integer.parseInt(videoData.get("height"));
-                setViewSize(videoW,videoH);
+                videoW = Integer.parseInt(videoData.get("width"));
+                videoH = Integer.parseInt(videoData.get("height"));
+                setViewSize((int)videoW,(int)videoH);
             }
 
             status = videoData.get("status");
@@ -152,6 +154,9 @@ public class VideoHeaderView extends RelativeLayout {
             }
             videoData.put("url", url);
             setSelfVideo(videoData,detailPermissionMap);
+
+                //设置全屏播放时的横竖屏状态
+                mVideoPlayerController.setPortrait(VideoPlayerController.isPortraitVideo(videoW,videoH));
         } catch (Exception e) {
             Toast.makeText(getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
         }
@@ -426,5 +431,13 @@ public class VideoHeaderView extends RelativeLayout {
         if(mVideoPlayerController != null){
             mVideoPlayerController.onDestroy();
         }
+    }
+
+    public int getLimitTime() {
+        return limitTime;
+    }
+
+    public void setLimitTime(int limitTime) {
+        this.limitTime = limitTime;
     }
 }

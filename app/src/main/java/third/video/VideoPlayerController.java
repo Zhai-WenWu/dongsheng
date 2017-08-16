@@ -59,7 +59,7 @@ public class VideoPlayerController {
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
-    public boolean isPortrait = true;
+    public boolean isPortrait = false;
 
     protected StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
@@ -603,6 +603,14 @@ public class VideoPlayerController {
         }
     };
 
+    public boolean isPortrait() {
+        return isPortrait;
+    }
+
+    public void setPortrait(boolean portrait) {
+        isPortrait = portrait;
+    }
+
     public boolean isShowMedia() {
         return isShowMedia;
     }
@@ -624,4 +632,10 @@ public class VideoPlayerController {
     }
     protected OnPlayingCompletionListener mOnPlayingCompletionListener;
 
+    public static boolean isPortraitVideo(float videoW,float videoH){
+        if(videoW <= 0 || videoH <= 0)
+            return false;
+        //视频比例大于3：4则为竖屏视频
+        return videoW/videoH >= 3/4;
+    }
 }
