@@ -128,7 +128,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private void registnetworkListener() {
         mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
-            public void disconnect() {}
+            public void disconnect() {
+                allStartOrPause(false);
+                Toast.makeText(AskEditActivity.this, "因网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+            }
 
             @Override
             public void wifi() {}
@@ -417,7 +420,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 e.printStackTrace();
             }
         }
-        if (!flag) {
+        if (!flag && !ToolsDevice.getNetActiveState(this)) {
             XHClick.mapStat(this, getTjId(), "点击发布按钮", "因网络原因发布失败");
         }
     }

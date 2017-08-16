@@ -23,7 +23,6 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.dialogManager.PushManager;
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -101,6 +100,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
             public void disconnect() {
+                allStartOrPause(false);
+                Toast.makeText(AskAnswerUploadListActivity.this, "因网络异常，请检查网络", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -308,36 +309,17 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mCancelUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String btnMsg1 = "确定";
-                String btnMsg2 = "取消";
-
-                final CommonDialog dialog = new CommonDialog(AskAnswerUploadListActivity.this);
-                dialog.setMessage("确定取消上传吗？").setSureButton(btnMsg1, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                        mListPool.cancelUpload();
-                        mAllStart.setVisibility(View.VISIBLE);
-                        mAllStop.setVisibility(View.GONE);
-                        mIsStopUpload = true;
-                        XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "取消上传", "");
-                        AskAnswerUploadListActivity.this.finish();
-                    }
-                });
-                dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
+                showCancelDialog();
             }
         });
 
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBack();
+                if (goBack())
+                    return;
+                else
+                    finish();
             }
         });
 
@@ -356,16 +338,44 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         });
     }
 
-    private void goBack() {
+    private void showCancelDialog() {
+        String btnMsg1 = "确定";
+        String btnMsg2 = "取消";
+
+        final CommonDialog dialog = new CommonDialog(AskAnswerUploadListActivity.this);
+        dialog.setMessage("确定取消上传吗？").setSureButton(btnMsg1, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                mListPool.cancelUpload();
+                mAllStart.setVisibility(View.VISIBLE);
+                mAllStop.setVisibility(View.GONE);
+                mIsStopUpload = true;
+                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "取消上传", "");
+                AskAnswerUploadListActivity.this.finish();
+            }
+        });
+        dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
+    private boolean goBack() {
         if (!mIsStopUpload) {
-            Toast.makeText(XHApplication.in().getApplicationContext(), "问答会在后台继续上传", Toast.LENGTH_SHORT).show();
+            showCancelDialog();
+            return true;
         }
-        finish();
+        return false;
     }
 
     @Override
     public void onBackPressed() {
-        goBack();
+        if (goBack())
+            return;
         super.onBackPressed();
     }
 
@@ -410,5 +420,12 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mConnectionChangeReceiver != null)
+            unregisterReceiver(mConnectionChangeReceiver);
     }
 }

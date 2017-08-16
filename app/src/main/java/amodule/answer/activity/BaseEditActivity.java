@@ -225,8 +225,9 @@ public class BaseEditActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int tempLength = String.valueOf(s).trim().length();
                 int length = mEditText.getText().length();
-                if (length > 0) {
+                if (length > 0 && tempLength > 0) {
                     if (!mUpload.isEnabled())
                         mUpload.setEnabled(true);
                 } else
@@ -358,7 +359,7 @@ public class BaseEditActivity extends BaseActivity {
         ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
         ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
         long id = mModel.getmId();
-        if ((editable == null || TextUtils.isEmpty(editable.toString())) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
+        if ((editable == null || TextUtils.isEmpty(editable.toString()) || editable.toString().trim().length() == 0) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
             if (id > 0)
                 mSQLite.deleteData((int) id);
             return rowId;
