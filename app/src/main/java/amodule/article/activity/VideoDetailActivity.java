@@ -39,6 +39,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -541,6 +542,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private void analysVideoData(boolean onlyUser, @NonNull final Map<String, String> mapVideo, Map<String, String> detailPermissionMap){
         if (mapVideo.isEmpty()) return;
 
+        //判断是否是长视频
+        isPortrait = isPortraitVideo(mapVideo);
         if(isPortrait){
             handlerPortrait();
         }
@@ -611,7 +614,25 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         }
     }
 
-    private  void handlerPortrait(){
+    private boolean isPortraitVideo(Map<String, String> data){
+        try{
+            Map<String, String> videoData = StringManager.getFirstMap(data.get("video"));
+            if(videoData.containsKey("width") && !TextUtils.isEmpty(videoData.get("width"))
+                    && videoData.containsKey("height") && !TextUtils.isEmpty(videoData.get("height"))){
+                float videoW = Integer.parseInt(videoData.get("width"));
+                float videoH = Integer.parseInt(videoData.get("height"));
+                //视频比例大于3：4则为竖屏视频
+                return videoW/videoH >= 3/4;
+            }
+        }catch (Exception e){
+            //数据异常
+            LogManager.print("e","Exception::" + e.getMessage());
+            return false;
+        }
+        return false;
+    }
+
+    private void handlerPortrait(){
         findViewById(R.id.relativeLayout_global).setVisibility(View.GONE);
         allTitleRelaPort.setVisibility(View.VISIBLE);
         allTitleRelaPort.setBackgroundColor(Color.parseColor("#00000000"));

@@ -110,6 +110,11 @@ public class VideoHeaderView extends RelativeLayout {
         });
     }
 
+    /**
+     * 根据宽高设置视频播放器大小
+     * @param videoW
+     * @param videoH
+     */
     public void setViewSize(int videoW,int videoH){
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
         setLayoutParams(params);
@@ -126,8 +131,13 @@ public class VideoHeaderView extends RelativeLayout {
         try {
             Map<String, String> videoData = StringManager.getFirstMap(data.get("video"));
 
-            //TODO 重新设置视频大小
-//            setViewSize();
+            //重新设置视频大小
+            if(videoData.containsKey("width") && !TextUtils.isEmpty(videoData.get("width"))
+                    && videoData.containsKey("height") && !TextUtils.isEmpty(videoData.get("height"))){
+                int videoW = Integer.parseInt(videoData.get("width"));
+                int videoH = Integer.parseInt(videoData.get("height"));
+                setViewSize(videoW,videoH);
+            }
 
             status = videoData.get("status");
             videoData.put("title", data.get("title"));
