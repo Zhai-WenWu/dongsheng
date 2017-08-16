@@ -1017,10 +1017,10 @@ public class JsAppCommon extends JsBase {
      */
     @JavascriptInterface
     public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
+        initShare(title, content, img, url, type, callback);
         handler.post(new Runnable() {
             @Override
             public void run() {
-                initShare(title, content, img, url, type, callback);
                 if (mBarShare != null) {
                     mBarShare.openShareNewActivity();
                 }
