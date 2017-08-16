@@ -162,11 +162,13 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		mImageCount.setText(resultList.size() + "/" + mDefaultCount);
 		mTitle = (TextView) findViewById(R.id.title);
 		mSubmitButton = (Button) findViewById(R.id.commit);
-		 if(resultList == null || resultList.size() == 0){
-        	mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
-        }else{
-        	mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
-        }
+		if (resultList == null || resultList.size() == 0) {
+			mSubmitButton.setEnabled(false);
+			mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
+		} else {
+			mSubmitButton.setEnabled(true);
+			mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
+		}
 		
 		mPreviewBtn = (Button) findViewById(R.id.preview);
         // 初始化，按钮状态初始化
@@ -587,10 +589,12 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		}
         if(resultList.size() == 0){
         	mPreviewBtn.setTextColor(Color.parseColor("#999999"));
+			mSubmitButton.setEnabled(false);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
         }else{
         	mImageCount.setText(resultList.size() + "/" + mDefaultCount);
         	mPreviewBtn.setTextColor(Color.parseColor("#333333"));
+			mSubmitButton.setEnabled(true);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
         }
 	}
@@ -604,9 +608,11 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		// 当为选择图片时候的状态
         if(resultList.size() == 0){
         	mPreviewBtn.setTextColor(Color.parseColor("#999999"));
+			mSubmitButton.setEnabled(false);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
         }else{
         	mPreviewBtn.setTextColor(Color.parseColor("#333333"));
+			mSubmitButton.setEnabled(true);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
         }
 	}
