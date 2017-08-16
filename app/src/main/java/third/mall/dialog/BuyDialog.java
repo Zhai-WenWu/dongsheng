@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -66,16 +69,27 @@ public class BuyDialog extends SimpleDialog {
         super(activity, R.layout.dialog_mall_buy);
         this.context = activity;
         this.mapData= mapData;
-        this.productNum= productNum;
         setLatyoutHeight();
         initView();
     }
+
+    @Override
+    public void setLatyoutHeight() {
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        int height = wm.getDefaultDisplay().getHeight();
+        RelativeLayout ll_view=(RelativeLayout) findViewById(R.id.ll_view);
+        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        ll_view.setLayoutParams(params);
+        findViewById(R.id.dialog_close).setOnClickListener(this);
+    }
+
     private  void initView(){
         item_commod_iv= (ImageView) findViewById(R.id.item_commod_iv);
         item_commod_texts= (TextView) findViewById(R.id.item_commod_texts);
         item_commod_price= (TextView) findViewById(R.id.item_commod_price);
         item_commod_num= (TextView) findViewById(R.id.item_commod_num);
-        setViewImage(item_commod_iv,mapData.get("m_url"));
+        setViewImage(item_commod_iv,mapData.get("buy_img"));
         item_commod_texts.setText(mapData.get("title"));
         item_commod_price.setText("¥" + mapData.get("discount_price"));
         //减少数量
@@ -232,5 +246,37 @@ public class BuyDialog extends SimpleDialog {
                 }
             }
         };
+    }/**
+     * 关闭dialog
+     */
+    public void closeDialog() {
+
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, height);
+        animation.setDuration(500);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                myDismiss();
+                if (buyDialogCallBack != null)
+                    buyDialogCallBack.dialogDismiss(productNum);
+            }
+        });
+        view.startAnimation(animation);
+    }
+
+    public interface BuyDialogCallBack{
+        public void dialogDismiss(int productNum);
+    }
+    public  BuyDialogCallBack buyDialogCallBack;
+    public void setBuyDialogCallBack(BuyDialogCallBack buyDialogCallBack){
+        this.buyDialogCallBack= buyDialogCallBack;
     }
 }

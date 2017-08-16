@@ -2,15 +2,12 @@ package third.mall.activity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,8 +16,6 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.Html;
-import android.text.Html.ImageGetter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -29,8 +24,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -40,12 +33,10 @@ import android.view.animation.ScaleAnimation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -58,21 +49,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.logic.SetDataView;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
-import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.SubBitmapTarget;
 import aplug.basic.LoadImage;
 import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
-import third.mall.adapter.AdapterRecommed;
+import aplug.shortvideo.activity.VideoFullScreenActivity;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallCommon.InterfaceMallAddShopping;
@@ -82,8 +70,6 @@ import third.mall.aplug.MallStringManager;
 import third.mall.dialog.BuyDialog;
 import third.mall.dialog.FavorableDialog;
 import third.mall.tool.ToolView;
-import third.mall.view.DetailGetFavorableView;
-import third.mall.view.ViewPromotion;
 import third.mall.widget.MyScrollView;
 import third.mall.widget.MyScrollView.ScrollViewInterface;
 import third.mall.widget.ScrollViewContainer;
@@ -115,9 +101,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     private TextView mall_news_num;
     private TextView commod_shop;
     private MallCommon common;
-    private HorizontalScrollView product_recommed_hsv;
-    private LinearLayout product_recommed_ll;
-    private boolean product_deserve_state = false;
     private Rect scrollBounds;
     private RelativeLayout share_layout;
     private RelativeLayout back;
@@ -511,10 +494,14 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         LinearLayout point_linear = (LinearLayout) findViewById(R.id.point_linear);
         List<View> views = new ArrayList<View>();
         for (int i = 0; i < images.size(); i++) {
-            ImageView iv = new ImageView(this);
+            View topView=LayoutInflater.from(this).inflate(R.layout.v_product_top_view,null);
+            if(images.get(i).containsKey("type")&&"1".equals(images.get(i).get("type"))){
+                topView.findViewById(R.id.image_video).setVisibility(View.VISIBLE);
+            }else topView.findViewById(R.id.image_video).setVisibility(View.GONE);
+            ImageView iv= (ImageView) topView.findViewById(R.id.image);
             iv.setScaleType(ScaleType.FIT_XY);
             setImageView(iv, images.get(i).get("img"), false);
-            views.add(iv);
+            views.add(topView);
         }
         imageviews = new ImageView[views.size()];
         for (int i = 0; i < views.size(); i++) {
@@ -611,8 +598,14 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
-                    intent.putExtra("url", images.get(position).get(""));
-                    intent.setClass(CommodDetailActivity.this, ShowImageActivity.class);
+                    if(images.get(position).containsKey("type")&&"1".equals(images.get(position).get("type"))){
+                        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, StringManager.getFirstMap(images.get(position).get("video")).get("default_url"));
+                        intent.setClass(CommodDetailActivity.this, VideoFullScreenActivity.class);
+                    }else {
+                        intent.putExtra("url", images.get(position).get("img"));
+                        intent.setClass(CommodDetailActivity.this, ShowImageActivity.class);
+
+                    }
                     startActivity(intent);
                 }
             });
@@ -636,32 +629,33 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         switch (v.getId()) {
             case R.id.service_mercat://客服
                 Intent intentmark= new Intent(this, Feedback.class);
-                intentmark.putExtra("feekUrl",map.get("m_url"));
+                intentmark.putExtra("backData",map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:
-                if(buyDialog==null)
-                    buyDialog=new BuyDialog(this,map);
-                buyDialog.initProductNum(productNum);
-                buyDialog.show();
+                if (LoginManager.isLogin()) {
+                    if(buyDialog==null) {
+                        buyDialog = new BuyDialog(this, map);
+                        buyDialog.setBuyDialogCallBack(new BuyDialog.BuyDialogCallBack() {
+                            @Override
+                            public void dialogDismiss(int productNum) {
+                                CommodDetailActivity.this.productNum= productNum;
+                            }
+                        });
+                    }
+                    buyDialog.initProductNum(productNum);
+                    buyDialog.show();
+                } else {
+                    Intent intent_user = new Intent(this, LoginByAccout.class);
+                    startActivity(intent_user);
+                    return;
+                }
+
                 break;
-//            case R.id.home_mercat://回到主页
-//                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "首页");
-//                AppCommon.openUrl(CommodDetailActivity.this, "xhds.home.app", true);
-//                CommodDetailActivity.this.finish();
-//                break;
-//            case R.id.commod_mercat:// 商家店铺
-//                MallClickContorl.getInstance().setStatisticUrl(actionUrl, null, mall_stat_statistic, this);
-//                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "店铺");
-//                String mall_stat = (String) UtilFile.loadShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT);
-//                String url = MallStringManager.replaceUrl(MallStringManager.mall_web_shop_home) + "?shop_code=" + map.get("shop_code") + "&" + mall_stat;
-//                AppCommon.openUrl(this, url, true);
-//                break;
             case R.id.commod_shop_linear:// 购物车
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "购物车");
                 if (LoginManager.isLogin()) {
                     MallClickContorl.getInstance().setStatisticUrl(actionUrl, null, mall_stat_statistic, this);
-                    ;
                     this.startActivity(new Intent(this, ShoppingActivity.class));
                 } else {
                     Intent intent_user = new Intent(this, LoginByAccout.class);
@@ -711,7 +705,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         String title = map.get("product_share_title");
         String clickUrl = map.get("product_share_url");
         String content = map.get("product_share_desc");
-        String imgUrl = images.get(0).get("");
+        String imgUrl = map.get("buy_img");
         //分享添加路径统计
         Object msg = UtilFile.loadShared(this, FileManager.MALL_URI_STAT, FileManager.MALL_URI_STAT);
         ArrayList<Map<String, String>> list = UtilString.getListMapByJson(msg);

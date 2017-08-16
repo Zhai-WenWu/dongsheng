@@ -505,7 +505,7 @@
                 android:layout_marginTop="@dimen/dp__3.5"
                 android:gravity="center_vertical"
                 android:text="购物车"
-                android:textColor="@color/comment_color"
+                android:textColor="#929292"
                 android:textSize="@dimen/sp_11"/>
         </LinearLayout>
 
