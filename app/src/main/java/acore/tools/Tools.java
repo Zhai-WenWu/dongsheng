@@ -514,7 +514,7 @@ public class Tools {
      * @param context
      * @return
      */
-    public static int getDaoHangHeight(Context context) {
+    public static int getNavigationBarHeight(Context context) {
         int result = 0;
         int resourceId = 0;
         int rid = context.getResources().getIdentifier("config_showNavigationBar", "bool", "android");

@@ -3,6 +3,7 @@ package com.shuyu.gsyvideoplayer.utils;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.OrientationEventListener;
 
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;

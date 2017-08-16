@@ -4,80 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/dp_15"
-    android:paddingLeft="@dimen/dp_20"
-    android:paddingRight="@dimen/dp_20"
-    android:paddingTop="@dimen/dp_15"
     tools:context="third.mall.activity.PublishEvalutionMultiActivity">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/dp_81"
-        android:layout_height="@dimen/dp_81"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:scaleType="centerCrop"/>
-
-    <TextView
-        android:id="@+id/title_text"
+    <RelativeLayout
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/image"
-        android:paddingTop="@dimen/dp_2"
-        android:ellipsize="end"
-        android:lineSpacingExtra="@dimen/dp_3"
-        android:lineSpacingMultiplier="1"
-        android:maxLines="2"
-        android:paddingLeft="@dimen/dp_11"
-        android:textColor="@color/common_text"
-        android:textSize="@dimen/sp_14"
-        tools:text="这是一个标题，只能是没有填充正式文案看看效果而已"/>
+        android:paddingBottom="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_15">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/evalution_status"
-        android:layout_alignTop="@+id/evalution_status"
-        android:layout_toRightOf="@+id/image"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/dp_8">
-
-        <acore.widget.ProperRatingBar
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/rating_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:prb_clickable="true"
-            app:prb_defaultRating="5"
-            app:prb_tickNormalDrawable="@drawable/i_score"
-            app:prb_tickSelectedDrawable="@drawable/i_score_activity"
-            app:prb_tickSize="@dimen/dp_17"
-            app:prb_tickSpacing="@dimen/dp_3"
-            app:prb_totalTicks="5"/>
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/dp_81"
+            android:layout_height="@dimen/dp_81"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"/>
 
         <TextView
-            android:id="@+id/evalution_button"
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/image"
+            android:ellipsize="end"
+            android:lineSpacingExtra="@dimen/dp_3"
+            android:lineSpacingMultiplier="1"
+            android:maxLines="2"
+            android:paddingLeft="@dimen/dp_11"
+            android:paddingTop="@dimen/dp_2"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/sp_14"
+            tools:text="这是一个标题，只能是没有填充正式文案看看效果而已"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp_3"
-            android:text="非常满意"
-            android:textColor="@color/common_super_tint_text"
-            android:textSize="@dimen/sp_11"/>
+            android:layout_alignBottom="@+id/evalution_status"
+            android:layout_alignTop="@+id/evalution_status"
+            android:layout_toRightOf="@+id/image"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_8">
 
-    </LinearLayout>
+            <acore.widget.ProperRatingBar
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:prb_clickable="true"
+                app:prb_defaultRating="5"
+                app:prb_tickNormalDrawable="@drawable/i_score"
+                app:prb_tickSelectedDrawable="@drawable/i_score_activity"
+                app:prb_tickSize="@dimen/dp_17"
+                app:prb_tickSpacing="@dimen/dp_3"
+                app:prb_totalTicks="5"/>
 
-    <TextView
-        android:id="@+id/evalution_status"
-        android:layout_width="@dimen/dp_74"
-        android:layout_height="@dimen/dp_25"
-        android:layout_alignBottom="@+id/image"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/bg_evalution_status"
-        android:gravity="center"
-        android:textColor="@color/comment_color"
-        android:textSize="@dimen/sp_12"
-        tools:text="评价晒单"/>
+            <TextView
+                android:id="@+id/evalution_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_3"
+                android:text="非常满意"
+                android:textColor="@color/common_super_tint_text"
+                android:textSize="@dimen/sp_11"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/evalution_status"
+            android:layout_width="@dimen/dp_74"
+            android:layout_height="@dimen/dp_25"
+            android:layout_alignBottom="@+id/image"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_evalution_status"
+            android:gravity="center"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_12"
+            tools:text="评价晒单"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBottom="@+id/content_layout"
+        android:background="#E9E9E9"/>
 
 </RelativeLayout>

@@ -98,13 +98,16 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="@drawable/video_title_bg"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <ImageView
             android:id="@+id/back"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:paddingLeft="10dp"
+            android:padding="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/video_back" />
 

@@ -46,6 +46,7 @@ public class VideoImagePlayerController {
     private String imgUrl="";
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
+    public boolean isPortrait = false;
 
     public VideoImagePlayerController(Activity context, ViewGroup viewGroup, String imgUrl) {
         this.mContext = context;
@@ -80,13 +81,14 @@ public class VideoImagePlayerController {
             @Override
             public void onEnterFullscreen(String url, Object... objects) {
                 super.onEnterFullscreen(url, objects);
-                orientationUtils.resolveByClick();
+                if(!isPortrait)
+                    orientationUtils.resolveByClick();
             }
 
             @Override
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
-                orientationUtils.resolveByClick();
+                orientationUtils.backToProtVideo();
             }
         });
 
@@ -237,9 +239,8 @@ public class VideoImagePlayerController {
 
     public boolean onBackPressed(){
         //先返回正常状态
-        if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            StandardGSYVideoPlayer.backFromWindowFull(mContext);
-            return true;
+        if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || isPortrait) {
+            return StandardGSYVideoPlayer.backFromWindowFull(mContext);
         }
         return false;
     }

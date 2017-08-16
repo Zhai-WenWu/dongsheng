@@ -1,7 +1,5 @@
 package third.mall.aplug;
 
-import android.text.TextUtils;
-
 import xh.basic.tool.UtilString;
 
 public class MallStringManager extends UtilString {
@@ -57,7 +55,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_web_classify = mall_web_apiUrl + "/v1/classify/classifyInfo";
 
     //获取dsToken
-    public final static String mall_getDsToken = "http://oauth.xiangha.com/ds/getDsToken";
+    public final static String mall_getDsToken = httpData + "oauth.xiangha.com/ds/getDsToken";
     //购物车
     public final static String mall_getCartProductNum = mall_apiUrl + "/v1/cart/getCartProductNum";
     public final static String mall_getCartInfo = mall_apiUrl + "/v1/cart/getCartInfo";

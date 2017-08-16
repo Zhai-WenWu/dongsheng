@@ -41,6 +41,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     public static final String EXTRAS_PRODUCT_IMAGE = "productimg";
     public static final String EXTRAS_SCORE = "score";
     public static final int DEFAULT_SCORE = 5;
+    public static final int MAX_IMAGE = 3;
 
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
     private static final int maxTextCount = 500;
@@ -60,6 +61,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     EvalutionUploadControl uploadControl;
 
+    String orderID = "";
     String productID = "";
     String image = "";
     int score = DEFAULT_SCORE;
@@ -75,13 +77,15 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     private void initData() {
         Intent intent = getIntent();
+        orderID = intent.getStringExtra(EXTRAS_ORDER_ID);
         productID = intent.getStringExtra(EXTRAS_PRODUCT_ID);
-        if (TextUtils.isEmpty(productID))
+        if (TextUtils.isEmpty(productID) || TextUtils.isEmpty(orderID))
             this.finish();
         image = intent.getStringExtra(EXTRAS_PRODUCT_IMAGE);
         score = intent.getIntExtra(EXTRAS_SCORE, DEFAULT_SCORE);
 
         uploadControl = new EvalutionUploadControl(this);
+        uploadControl.setOrderId(orderID);
         uploadControl.setProductId(productID);
         uploadControl.setOnPublishCallback(new EvalutionUploadControl.OnPublishCallback() {
             @Override
@@ -162,6 +166,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         });
         //设置数据
         ratingBar.setRating(score);
+        scoreDescText.setText(starEvalutionDesc[score - 1]);
 
         contentEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -323,8 +328,8 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     /** 选择图片 */
     private void openSelectImages() {
         Intent intent = new Intent(this, ImageSelectorActivity.class);
-        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 3);
-        intent.putExtra(ImageSelectorConstant.EXTRA_DEFAULT_SELECTED_LIST, imagesLayout.getImageArray());
+        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, MAX_IMAGE - imagesLayout.getImageArray().size());
+        intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imagesLayout.getImageArray());
         startActivityForResult(intent, SELECT_IMAE_REQUEST_CODE);
     }
 

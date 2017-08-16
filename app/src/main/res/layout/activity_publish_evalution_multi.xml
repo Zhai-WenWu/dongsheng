@@ -25,7 +25,6 @@
             style="@style/listNoDivider"
             android:dividerHeight="1px"
             android:background="#FFFFFE"
-            android:divider="#E9E9E9"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
             android:layout_width="match_parent"
