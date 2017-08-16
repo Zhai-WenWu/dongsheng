@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/dialog_rela"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="match_parent" >
 
+    <RelativeLayout
+        android:id="@+id/ll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/backgroup_color">
     <RelativeLayout
         android:id="@+id/item_rela"
         android:layout_width="match_parent"
@@ -58,7 +64,7 @@
                 android:text="(缺货)"
                 android:textColor="#8a8f97"
                 android:textSize="@dimen/sp_13"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
 
         </RelativeLayout>
@@ -159,5 +165,10 @@
         android:text="下一步"
         android:textColor="#fffffe"
         android:textSize="@dimen/sp_17"/>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/dialog_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

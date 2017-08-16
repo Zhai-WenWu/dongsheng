@@ -79,6 +79,7 @@ import third.mall.aplug.MallCommon.InterfaceMallAddShopping;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.dialog.BuyDialog;
 import third.mall.dialog.FavorableDialog;
 import third.mall.tool.ToolView;
 import third.mall.view.DetailGetFavorableView;
@@ -134,7 +135,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     private TextView title,title_detail;
     private String titleState="1";//目前状态，1：标题，2：详情
     private FavorableDialog favorableDialog;
-
+    private int productNum = 1;//购买商品数量
+    private BuyDialog buyDialog;
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -632,13 +634,16 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.service_mercat:
+            case R.id.service_mercat://客服
                 Intent intentmark= new Intent(this, Feedback.class);
                 intentmark.putExtra("feekUrl",map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:
-                //
+                if(buyDialog==null)
+                    buyDialog=new BuyDialog(this,map);
+                buyDialog.initProductNum(productNum);
+                buyDialog.show();
                 break;
 //            case R.id.home_mercat://回到主页
 //                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "首页");
