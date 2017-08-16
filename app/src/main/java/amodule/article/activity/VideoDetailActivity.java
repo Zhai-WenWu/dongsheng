@@ -63,6 +63,7 @@ import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.share.BarShare;
 import third.share.ShareActivityDialog;
+import third.video.VideoPlayerController;
 import xh.windowview.XhDialog;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_VIDEO;
@@ -404,12 +405,12 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     int viewBottom = location[1] + headerView.getHeight();
                     int mixHeight = (isPortrait ? 0 : statusBarH) + dp45;
                     //设置Vip框是否显示
-                    boolean isVipShow = viewBottom <= mixHeight
-                            && !isPortrait
-                            && mCommentBar.getVisibility() != View.VISIBLE;
-                    dredgeVipLayout.setVisibility(isVipShow?View.VISIBLE:View.GONE);
+                    if(mHaederLayout.getVideoHeaderView().getLimitTime() > 0){
+                        boolean isVipShow = viewBottom <= mixHeight;
+                        dredgeVipLayout.setVisibility(isVipShow?View.VISIBLE:View.GONE);
+                    }
                     //设置评论框是否显示
-                    if(isPortrait){
+                    if(isPortrait && mHaederLayout.getVideoHeaderView().getLimitTime() <= 0){
                         boolean isCommentShow = screenH - viewBottom > mCommentBar.getHeight()
                                 && dredgeVipLayout.getVisibility() == View.GONE;
                         mCommentBar.setVisibility(isCommentShow?View.VISIBLE:View.GONE);
@@ -420,7 +421,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             }
         });
         View view = new View(this);
-        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_34));
+        view.setMinimumHeight(Tools.getDimen(this, R.dimen.dp_43));
         listView.addFooterView(view);
         //请求文章数据
         requestVideoData(false);
@@ -614,6 +615,11 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 判断视屏长宽问题
+     * @param data
+     * @return true：竖   false：横
+     */
     private boolean isPortraitVideo(Map<String, String> data){
         try{
             Map<String, String> videoData = StringManager.getFirstMap(data.get("video"));
@@ -622,7 +628,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 float videoW = Integer.parseInt(videoData.get("width"));
                 float videoH = Integer.parseInt(videoData.get("height"));
                 //视频比例大于3：4则为竖屏视频
-                return videoW/videoH >= 3/4;
+                return VideoPlayerController.isPortraitVideo(videoW,videoH);
             }
         }catch (Exception e){
             //数据异常
