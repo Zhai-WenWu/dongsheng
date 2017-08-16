@@ -692,6 +692,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 }
                 break;
             case R.id.title:
+                mall_ScrollViewContainer.setViewIndex("1");
                 break;
             case R.id.title_detail:
                 mall_ScrollViewContainer.setViewIndex("2");
