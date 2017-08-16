@@ -76,6 +76,7 @@ public class EvalutionImageLayout extends LinearLayout {
      * @param images 图片集合
      */
     public void updateImage(ArrayList<String> images) {
+        images.addAll(0,imageArray);
         imageArray.clear();
         //替换数据
         for (int index = 0, length = images.size(); index < length; index++) {

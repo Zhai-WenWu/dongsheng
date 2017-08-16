@@ -433,7 +433,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 				} else {
 					// 判断选择数量问题
 					if (mDefaultCount == resultList.size()) {
-						Tools.showToast(this, "一次只能选" + mDefaultCount + "张图片", Gravity.CENTER);
+						Tools.showToast(this, "最多只能选" + mDefaultCount + "张图片", Gravity.CENTER);
 						return;
 					}
 					onImageSelected(image.path);

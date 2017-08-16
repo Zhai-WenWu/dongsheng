@@ -41,6 +41,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     public static final String EXTRAS_PRODUCT_IMAGE = "productimg";
     public static final String EXTRAS_SCORE = "score";
     public static final int DEFAULT_SCORE = 5;
+    public static final int MAX_IMAGE = 3;
 
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
     private static final int maxTextCount = 500;
@@ -327,8 +328,8 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     /** 选择图片 */
     private void openSelectImages() {
         Intent intent = new Intent(this, ImageSelectorActivity.class);
-        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, 3);
-        intent.putExtra(ImageSelectorConstant.EXTRA_DEFAULT_SELECTED_LIST, imagesLayout.getImageArray());
+        intent.putExtra(ImageSelectorConstant.EXTRA_SELECT_COUNT, MAX_IMAGE - imagesLayout.getImageArray().size());
+        intent.putExtra(ImageSelectorConstant.EXTRA_NOT_SELECTED_LIST, imagesLayout.getImageArray());
         startActivityForResult(intent, SELECT_IMAE_REQUEST_CODE);
     }
 

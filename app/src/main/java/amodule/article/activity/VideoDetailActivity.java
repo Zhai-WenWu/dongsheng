@@ -408,10 +408,11 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                             && mCommentBar.getVisibility() != View.VISIBLE;
                     dredgeVipLayout.setVisibility(isVipShow?View.VISIBLE:View.GONE);
                     //设置评论框是否显示
-                    boolean isCommentShow = screenH - viewBottom > mCommentBar.getHeight()
-                            && isPortrait
-                            && dredgeVipLayout.getVisibility() == View.GONE;
-                    mCommentBar.setVisibility(isCommentShow?View.VISIBLE:View.GONE);
+                    if(isPortrait){
+                        boolean isCommentShow = screenH - viewBottom > mCommentBar.getHeight()
+                                && dredgeVipLayout.getVisibility() == View.GONE;
+                        mCommentBar.setVisibility(isCommentShow?View.VISIBLE:View.GONE);
+                    }
                     //
                     allTitleRelaPort.setBackgroundColor(Color.parseColor(isPortrait && viewBottom <= dp45 + statusBarH ? comTopBgColor : "#00000000"));
                 }

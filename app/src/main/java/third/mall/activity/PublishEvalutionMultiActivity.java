@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,6 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
 import third.mall.aplug.MallInternetCallback;
@@ -59,8 +57,8 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         if (intent != null) {
             orderId = intent.getStringExtra(EXTRAS_ORDER_ID);
         }
-        //TODO
-        orderId="101381878";
+        //TODO  101382361，101382360 ， 101382362
+        orderId="101382020";
     }
 
     private void initView() {
@@ -109,8 +107,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                 .append("?order_id=")
                 .append(orderId);
         MallReqInternet.in().doGet(
-//        MallReqInternet.in().doPost(
-//                MallStringManager.mall_toComment,
                 params.toString(),
                 new MallInternetCallback(this) {
                     @Override
@@ -145,8 +141,10 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                         if (flag >= MallReqInternet.REQ_OK_STRING) {
                             Map<String, String> data = StringManager.getFirstMap(msg);
                             if (data.containsKey("status") && "2".equals(data.get("status"))) {
-                                //TODO 去评价成功
-
+                                //去评价成功
+                                Intent intent = new Intent(PublishEvalutionMultiActivity.this,EvalutionSuccessActivity.class);
+                                intent.putExtra("url","http://m.xiangha.com");
+                                startActivity(intent);
                             } else {
 
                             }
