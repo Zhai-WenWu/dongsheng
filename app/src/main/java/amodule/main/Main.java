@@ -269,11 +269,6 @@ public class Main extends Activity implements OnClickListener {
                         .setSureButton("是", new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (!LoginManager.isLogin()) {
-                                    Intent intent = new Intent(Main.this, LoginByAccout.class);
-                                    Main.this.startActivity(intent);
-                                    return;
-                                }
                                 Main.this.startActivity(finalIntent);
                                 dialog.cancel();
                             }

@@ -933,11 +933,6 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String qaTitle, String isAnswerMore) {
-        if (!LoginManager.isLogin()) {
-            Intent intent = new Intent(mAct, LoginByAccout.class);
-            mAct.startActivity(intent);
-            return;
-        }
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);
@@ -952,11 +947,6 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void goAsk(String dishId, String authorId, String qaId, String answerCode, String isAskMore) {
-        if (!LoginManager.isLogin()) {
-            Intent intent = new Intent(mAct, LoginByAccout.class);
-            mAct.startActivity(intent);
-            return;
-        }
         Bundle bundle = new Bundle();
         bundle.putString("code", dishId);
         bundle.putString("authorCode", authorId);

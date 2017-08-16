@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -33,6 +34,7 @@ import amodule.answer.model.AskAnswerModel;
 import amodule.answer.view.AskAnswerImgController;
 import amodule.answer.view.AskAnswerImgItemView;
 import amodule.article.activity.ArticleVideoSelectorActivity;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.recordervideo.db.RecorderVideoData;
@@ -273,11 +275,24 @@ public class BaseEditActivity extends BaseActivity {
         return false;
     }
 
+    private boolean mTryLogin = true;
     @Override
     protected void onResume() {
         super.onResume();
-        startTimer();
+        if (!LoginManager.isLogin() && mTryLogin) {
+            mTryLogin = false;
+            startActivity(new Intent(BaseEditActivity.this, LoginByAccout.class));
+            return;
+        } else if (!LoginManager.isLogin() && !mTryLogin) {
+            finish();
+            return;
+        } else if (LoginManager.isLogin()) {
+            onLoginSucc();
+            startTimer();
+        }
     }
+
+    protected void onLoginSucc() {}
 
     @Override
     protected void onPause() {

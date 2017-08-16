@@ -13,6 +13,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xianghatest.R;
 
@@ -22,6 +23,7 @@ import java.util.Map;
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.dialogManager.PushManager;
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
@@ -157,7 +159,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (!mIsAskMore)
+                if (!mIsAskMore && LoginManager.isLogin())
                     getPriceData();
                 else
                     loadManager.hideProgressBar();
@@ -178,11 +180,20 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         });
     }
 
+    @Override
+    protected void onLoginSucc() {
+        if (!mLoadPrice)
+            getPriceData();
+    }
+
+    private boolean mLoadPrice = false;
     private void getPriceData() {
         if (TextUtils.isEmpty(mDishCode) || TextUtils.isEmpty(mAuthorCode) || TextUtils.isEmpty(mType)) {
             this.finish();
             return;
         }
+        loadManager.showProgressBar();
+        mLoadPrice = true;
         String params = "code=" + mDishCode + "&authorCode=" + mAuthorCode + "&type=" + mType;
         ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETPRICE, params, new InternetCallback(this) {
             @Override
@@ -339,6 +350,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     protected void onEditTextChanged(CharSequence s, int start, int before, int count) {
         mCountText.setText(s.length() + "/100");
+        if (s.length() >= 100)
+            Toast.makeText(this, "不能继续输入", Toast.LENGTH_SHORT).show();
     }
 
     private Dialog mUploadingDialog;

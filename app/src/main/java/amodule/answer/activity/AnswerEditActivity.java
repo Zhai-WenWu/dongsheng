@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xianghatest.R;
 
@@ -98,6 +99,8 @@ public class AnswerEditActivity extends BaseEditActivity {
     @Override
     protected void onEditTextChanged(CharSequence s, int start, int before, int count) {
         mCountText.setText(s.length() + "/2000");
+        if (s.length() >= 2000)
+            Toast.makeText(this, "不能继续输入", Toast.LENGTH_SHORT).show();
     }
 
 }
