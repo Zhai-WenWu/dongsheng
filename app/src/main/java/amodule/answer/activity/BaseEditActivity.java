@@ -379,6 +379,7 @@ public class BaseEditActivity extends BaseActivity {
         mModel.setmType(mQAType);
         mModel.setmAnonymity(mAnonymity);
         mModel.setmAuthorCode(mAuthorCode);
+        mModel.setmSaveTime(String.valueOf(System.currentTimeMillis()));
         if (mModel.getmId() > 0) {
             mSQLite.updateData((int) mModel.getmId(), mModel);
             rowId = mModel.getmId();

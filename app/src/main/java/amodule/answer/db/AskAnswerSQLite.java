@@ -31,6 +31,7 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
     private String mColumnText = "text";
     private String mColumnAnonymity = "anonymity";
     private String mColumnAuthorCode = "authorCode";
+    private String mColumnSaveTime = "saveTime";
 
     public AskAnswerSQLite(Context context) {
         super(context, mTabName, null, mVersion);
@@ -51,6 +52,7 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                 + mColumnVideos + " text,"
                 + mColumnText + " text,"
                 + mColumnAnonymity + " text,"
+                + mColumnSaveTime + " text,"
                 + mColumnAuthorCode + " text)");
     }
 
@@ -77,6 +79,7 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
         cv.put(mColumnText, model.getmText());
         cv.put(mColumnAnonymity, model.getmAnonymity());
         cv.put(mColumnAuthorCode, model.getmAuthorCode());
+        cv.put(mColumnSaveTime, model.getmSaveTime());
         try {
             database = getWritableDatabase();
             row = database.insert(mTabName, null, cv);
@@ -153,6 +156,12 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                 model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
                 model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
                 model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                if (!model.isValid()) {
+                    model = null;
+                    database.delete(mTabName, mColumnId + "=?", new String[]{mColumnId});
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -204,6 +213,12 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                     model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
                     model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
                     model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                    model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                    if (!model.isValid()) {
+                        model = null;
+                        database.delete(mTabName, mColumnDishCode + "=? and " + mColumnType + "=?", new String[]{dishCode, qaType});
+                    }
                     break;
                 } while (cursor.moveToNext());
             }
@@ -241,6 +256,12 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                     model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
                     model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
                     model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                    model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                    if (!model.isValid()) {
+                        model = null;
+                        database.delete(mTabName, mColumnId + "=?", new String[]{String.valueOf(id)});
+                    }
                     break;
                 } while (cursor.moveToNext());
             }
@@ -278,6 +299,12 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                     model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
                     model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
                     model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                    model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                    if (!model.isValid()) {
+                        model = null;
+                        database.delete(mTabName, mColumnType + "=?", new String[]{qaType});
+                    }
                     break;
                 } while (cursor.moveToNext());
             }
