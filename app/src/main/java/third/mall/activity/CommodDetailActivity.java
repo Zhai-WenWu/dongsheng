@@ -99,7 +99,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     private boolean load_state = true;
     private ImageView commod_add;
     private TextView mall_news_num;
-    private TextView commod_shop;
+    private TextView commod_shop,commod_buy;
     private MallCommon common;
     private Rect scrollBounds;
     private RelativeLayout share_layout;
@@ -115,11 +115,12 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     private String module_type = "";
     private Long startTime;//统计使用的时间
 
-    private TextView title,title_detail;
-    private String titleState="1";//目前状态，1：标题，2：详情
+    private TextView title, title_detail;
+    private String titleState = "1";//目前状态，1：标题，2：详情
     private FavorableDialog favorableDialog;
     private int productNum = 1;//购买商品数量
     private BuyDialog buyDialog;
+
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -168,7 +169,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         }
         findViewById(R.id.commod_shop_linear).setOnClickListener(this);
         findViewById(R.id.service_mercat).setOnClickListener(this);
-        findViewById(R.id.commod_buy).setOnClickListener(this);
+        commod_buy= (TextView) findViewById(R.id.commod_buy);
+        commod_buy.setOnClickListener(this);
 
         mall_commod_scroll = (MyScrollView) findViewById(R.id.mall_commod_scroll);
         commod_shop = (TextView) findViewById(R.id.commod_shop);
@@ -183,16 +185,15 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 
             @Override
             public void setYandState(float y, boolean state) {
-                Log.i("zyj","setInterfaceSv::"+state);
+                Log.i("zyj", "setInterfaceSv::" + state);
             }
         });
 
         mall_ScrollViewContainer = (ScrollViewContainer) findViewById(R.id.mall_ScrollViewContainer);
         mall_ScrollViewContainer.setInterface(new ScrollviewContaninerInter() {
-
             @Override
             public void setState(int state) {
-                titleState=state==1?"1":"2";
+                titleState = state == 1 ? "1" : "2";
                 handleTitleState();
                 if (load_state) {
                     explain_detail_webview.loadUrl(MallStringManager.replaceUrl(MallStringManager.mall_web_product_detail) + "?product_code=" + code);
@@ -209,7 +210,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         viewpager_layout.setLayoutParams(new RelativeLayout.LayoutParams(width, width));
 
     }
-    private void initTopView(){
+
+    private void initTopView() {
         back = (RelativeLayout) findViewById(R.id.back);
         back.setOnClickListener(this);
         leftImgBtn = (ImageView) findViewById(R.id.leftImgBtn);
@@ -220,8 +222,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         back.setBackgroundColor(Color.parseColor("#00ffffff"));
         share_layout.setBackgroundColor(Color.parseColor("#00ffffff"));
         //标题
-        title= (TextView) findViewById(R.id.title);
-        title_detail= (TextView) findViewById(R.id.title_detail);
+        title = (TextView) findViewById(R.id.title);
+        title_detail = (TextView) findViewById(R.id.title_detail);
         handleTitleState();
         title.setOnClickListener(this);
         title_detail.setOnClickListener(this);
@@ -230,8 +232,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     /**
      * 处理标题状态颜色
      */
-    private void handleTitleState(){
-        switch (titleState){
+    private void handleTitleState() {
+        switch (titleState) {
             case "1":
                 title.setTextColor(Color.parseColor("#fffffe"));
                 title_detail.setTextColor(Color.parseColor("#999999"));
@@ -242,6 +244,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 break;
         }
     }
+
     /**
      * 展示购物车数量
      */
@@ -307,7 +310,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 super.onPageFinished(view, url);
             }
         });
-
         loadManager.setLoading(new OnClickListener() {
 
             @Override
@@ -378,8 +380,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         images = UtilString.getListMapByJson(map.get("resource"));
         initViewPager(images);
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
-            mall_ScrollViewContainer.setState_two(false);
-            findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
+        mall_ScrollViewContainer.setState_two(false);
+        findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
 
     }
 
@@ -390,24 +392,24 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         RelativeLayout view_getfavorable = (RelativeLayout) findViewById(R.id.view_getfavorable);
         if (map.containsKey("coupon_desc") && !TextUtils.isEmpty(map.get("coupon_desc")) && !"[]".equals(map.get("coupon_desc"))) {
             view_getfavorable.setVisibility(View.VISIBLE);
-            TextView favor_title= (TextView) findViewById(R.id.favor_title);
+            TextView favor_title = (TextView) findViewById(R.id.favor_title);
             favor_title.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(LoginManager.isLogin()){
+                    if (LoginManager.isLogin()) {
                         XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "领券", "");
-                        if(favorableDialog==null){
-                            favorableDialog= new FavorableDialog(CommodDetailActivity.this,map.get("shop_code"));
+                        if (favorableDialog == null) {
+                            favorableDialog = new FavorableDialog(CommodDetailActivity.this, map.get("shop_code"));
                             favorableDialog.setCallBack(new FavorableDialog.showCallBack() {
                                 @Override
                                 public void setShow() {
                                     favorableDialog.show();
                                 }
                             });
-                        }else{
+                        } else {
                             favorableDialog.show();
                         }
-                    }else{
+                    } else {
                         Intent intent_user = new Intent(CommodDetailActivity.this, LoginByAccout.class);
                         CommodDetailActivity.this.startActivity(intent_user);
                     }
@@ -432,15 +434,22 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 product_lose_tv.setText("暂时无货，非常抱歉!");
 
             commod_shop.setEnabled(false);
+            commod_buy.setEnabled(false);
+
             commod_shop.setTextColor(Color.parseColor("#70ffffff"));
-            commod_shop.setBackgroundColor(Color.parseColor("#febf14"));
+            commod_shop.setBackgroundColor(Color.parseColor("#999999"));
+            commod_buy.setTextColor(Color.parseColor("#70ffffff"));
+            commod_buy.setBackgroundColor(Color.parseColor("#999999"));
             findViewById(R.id.product_lose_rela).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.product_lose_rela).setVisibility(View.GONE);
             commod_shop.setEnabled(true);
+            commod_buy.setEnabled(true);
+
             commod_shop.setTextColor(Color.parseColor("#ffffff"));
             commod_shop.setBackgroundColor(Color.parseColor("#febf14"));
-            commod_shop.setAlpha(255);
+            commod_buy.setTextColor(Color.parseColor("#ffffff"));
+            commod_buy.setBackgroundColor(Color.parseColor("#f23030"));
         }
     }
 
@@ -493,11 +502,11 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         LinearLayout point_linear = (LinearLayout) findViewById(R.id.point_linear);
         List<View> views = new ArrayList<View>();
         for (int i = 0; i < images.size(); i++) {
-            View topView=LayoutInflater.from(this).inflate(R.layout.v_product_top_view,null);
-            if(images.get(i).containsKey("type")&&"1".equals(images.get(i).get("type"))){
+            View topView = LayoutInflater.from(this).inflate(R.layout.v_product_top_view, null);
+            if (images.get(i).containsKey("type") && "1".equals(images.get(i).get("type"))) {
                 topView.findViewById(R.id.image_video).setVisibility(View.VISIBLE);
-            }else topView.findViewById(R.id.image_video).setVisibility(View.GONE);
-            ImageView iv= (ImageView) topView.findViewById(R.id.image);
+            } else topView.findViewById(R.id.image_video).setVisibility(View.GONE);
+            ImageView iv = (ImageView) topView.findViewById(R.id.image);
             iv.setScaleType(ScaleType.FIT_XY);
             setImageView(iv, images.get(i).get("img"), false);
             views.add(topView);
@@ -597,10 +606,10 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
-                    if(images.get(position).containsKey("type")&&"1".equals(images.get(position).get("type"))){
+                    if (images.get(position).containsKey("type") && "1".equals(images.get(position).get("type"))) {
                         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, StringManager.getFirstMap(images.get(position).get("video")).get("default_url"));
                         intent.setClass(CommodDetailActivity.this, VideoFullScreenActivity.class);
-                    }else {
+                    } else {
                         intent.putExtra("url", images.get(position).get("img"));
                         intent.setClass(CommodDetailActivity.this, ShowImageActivity.class);
 
@@ -627,18 +636,18 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.service_mercat://客服
-                Intent intentmark= new Intent(this, Feedback.class);
-                intentmark.putExtra("backData",map.get("m_url"));
+                Intent intentmark = new Intent(this, Feedback.class);
+                intentmark.putExtra("backData", map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:
                 if (LoginManager.isLogin()) {
-                    if(buyDialog==null) {
+                    if (buyDialog == null) {
                         buyDialog = new BuyDialog(this, map);
                         buyDialog.setBuyDialogCallBack(new BuyDialog.BuyDialogCallBack() {
                             @Override
                             public void dialogDismiss(int productNum) {
-                                CommodDetailActivity.this.productNum= productNum;
+                                CommodDetailActivity.this.productNum = productNum;
                             }
                         });
                     }
@@ -798,6 +807,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 
         }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
