@@ -21,6 +21,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xianghatest.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -150,10 +151,12 @@ public class BuyDialog extends SimpleDialog {
 
     private String getOrderInfo(){
         try{
+            JSONArray jsonArray = new JSONArray();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("product_code",mapData.get("product_code"));
             jsonObject.put("product_num",String.valueOf(productNum));
-            return  jsonObject.toString();
+            jsonArray.put(jsonObject);
+            return  jsonArray.toString();
         }catch (Exception e){
         }
         return "";
@@ -180,6 +183,7 @@ public class BuyDialog extends SimpleDialog {
                         if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
                             intent.putExtra("stat", (String) stat[0]);
                         }
+                        context.startActivity(intent);
                     }else{
                         setRequestOrder(orderInfo);
                     }
