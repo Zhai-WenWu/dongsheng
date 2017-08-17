@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.tools.StringManager;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
@@ -39,7 +40,11 @@ public class EvalutionUploadControl {
     }
 
     public void uploadImage(final String filePath) {
-        uploadImage(filePath, new SimpleUploadListNetCallBack(){});
+        uploadImage(filePath,true, new SimpleUploadListNetCallBack(){});
+    }
+
+    private void uploadAgin(final String filePath){
+        uploadImage(filePath, false,new SimpleUploadListNetCallBack(){});
     }
 
     /**
@@ -47,11 +52,12 @@ public class EvalutionUploadControl {
      *
      * @param filePath
      */
-    public void uploadImage(final String filePath, @NonNull final UploadListNetCallBack callBack) {
+    public void uploadImage(final String filePath,boolean isFirst, @NonNull final UploadListNetCallBack callBack) {
         if (TextUtils.isEmpty(filePath))
             return;
-
-        bean.addImage(filePath);
+        if(isFirst){
+            bean.addImage(filePath);
+        }
         BreakPointControl uploadControl = new BreakPointControl(context, filePath, filePath, "img");
         BreakPointUploadManager.getInstance().addBreakPointContorl(filePath, uploadControl);
         uploadControl.start(new UploadListNetCallBack() {
@@ -138,7 +144,7 @@ public class EvalutionUploadControl {
             //上传未上传完成的的图片
             for(String imageUrl:bean.getImages()){
                 if(!imageUrl.startsWith("http"))
-                    uploadImage(imageUrl);
+                    uploadAgin(imageUrl);
             }
         }
     }
@@ -151,10 +157,14 @@ public class EvalutionUploadControl {
         LinkedHashMap<String, String> uploadTextData = new LinkedHashMap<>();
         uploadTextData.put("type", "6");
         uploadTextData.put("product_code", bean.getProductId());
-        uploadTextData.put("socre", String.valueOf(bean.getScore()));
+        uploadTextData.put("score", String.valueOf(bean.getScore()));
         uploadTextData.put("order_id", bean.getOrderId());
-        uploadTextData.put("content", getCotnent().toString());
         uploadTextData.put("is_quan", bean.isCanShare() ? "2" : "1");
+        uploadTextData.put("content[0][text]", bean.getContent());
+        ArrayList<String> images = bean.getImages();
+        for (int i = 0; i < images.size(); i ++) {
+            uploadTextData.put("content[0][imgs][" + i + "]", images.get(i));
+        }
         Log.i("tzy","combineParameter :: " + uploadTextData.toString());
         return uploadTextData;
     }

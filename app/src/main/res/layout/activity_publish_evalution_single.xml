@@ -123,7 +123,7 @@
                     android:layout_marginBottom="@dimen/dp_40"
                     android:layout_marginRight="@dimen/dp_20"
                     android:gravity="right"
-                    android:text="500/500"
+                    android:text="0/500"
                     android:textColor="@color/common_super_tint_text"
                     android:textSize="@dimen/dp_15"/>
 

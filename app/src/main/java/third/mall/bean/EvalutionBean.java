@@ -1,6 +1,7 @@
 package third.mall.bean;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +70,12 @@ public class EvalutionBean {
     }
 
     public void replaceImage(String oldUrl,String newUrl){
-        images.set(images.indexOf(oldUrl),newUrl);
+        if(images.indexOf(oldUrl) >= 0  && images.indexOf(oldUrl) < images.size()
+                && images.indexOf(newUrl) < 0){
+            images.set(images.indexOf(oldUrl),newUrl);
+        }else{
+            addImage(newUrl);
+        }
     }
 
     public void removeImage(@NonNull String key){

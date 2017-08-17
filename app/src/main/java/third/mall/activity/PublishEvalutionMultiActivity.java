@@ -31,7 +31,8 @@ import third.mall.aplug.MallStringManager;
 public class PublishEvalutionMultiActivity extends BaseActivity {
     public static final int REQUEST_CODE_NEED_REFRESH = 0x2;
     public static final String STATISTICS_ID = "a_publish_comment";
-    public static final String EXTRAS_ORDER_ID = "orderid";
+
+    public static final String EXTRAS_ORDER_ID = "order_id";
 
     private TextView rightText;
     private PtrClassicFrameLayout refershLayout;
@@ -58,7 +59,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
             orderId = intent.getStringExtra(EXTRAS_ORDER_ID);
         }
         //TODO  101382361，101382360 ， 101382362
-        orderId="101382020";
+        orderId="101382362";
     }
 
     private void initView() {
@@ -96,7 +97,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     }
 
     private void refersh() {
-        commodData.clear();
         loadData();
     }
 
@@ -111,6 +111,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                 new MallInternetCallback(this) {
                     @Override
                     public void loadstat(int flag, String url, Object msg, Object... stat) {
+                        commodData.clear();
                         loadManager.hideProgressBar();
                         refershLayout.refreshComplete();
                         Log.i("tzy","msg = " + msg);

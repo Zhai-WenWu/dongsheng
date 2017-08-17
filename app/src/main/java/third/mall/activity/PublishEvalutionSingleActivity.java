@@ -36,10 +36,12 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     public static final String STATISTICS_ID = "a_publish_commerce";
     public static final String STATISTICS_RETURN_ID = "a_comcoment_return";
     public static final String STATISTICS_PUBLISH_ID = "a_comcoment_result";
-    public static final String EXTRAS_ORDER_ID = "orderid";
-    public static final String EXTRAS_PRODUCT_ID = "productid";
-    public static final String EXTRAS_PRODUCT_IMAGE = "productimg";
+
+    public static final String EXTRAS_ORDER_ID = "orderi_d";
+    public static final String EXTRAS_PRODUCT_CODE = "product_code";
+    public static final String EXTRAS_PRODUCT_IMAGE = "product_img";
     public static final String EXTRAS_SCORE = "score";
+
     public static final int DEFAULT_SCORE = 5;
     public static final int MAX_IMAGE = 3;
 
@@ -78,11 +80,16 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private void initData() {
         Intent intent = getIntent();
         orderID = intent.getStringExtra(EXTRAS_ORDER_ID);
-        productID = intent.getStringExtra(EXTRAS_PRODUCT_ID);
+        productID = intent.getStringExtra(EXTRAS_PRODUCT_CODE);
         if (TextUtils.isEmpty(productID) || TextUtils.isEmpty(orderID))
             this.finish();
         image = intent.getStringExtra(EXTRAS_PRODUCT_IMAGE);
-        score = intent.getIntExtra(EXTRAS_SCORE, DEFAULT_SCORE);
+        //url规则中只能使用String类型，这里处理类型转换异常
+        try{
+            score = Integer.parseInt(intent.getStringExtra(EXTRAS_SCORE));
+        }catch (Exception ignore){
+            score = DEFAULT_SCORE;
+        }
 
         uploadControl = new EvalutionUploadControl(this);
         uploadControl.setOrderId(orderID);
@@ -264,7 +271,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private void updateContentLengthText() {
         int contentLength = contentEdit.getText().length();
         contentLengthText.setText(contentLength + "/" + maxTextCount);
-        contentLengthText.setTextColor(getResources().getColor(contentLength == maxTextCount ? R.color.comment_color : R.color.psts_tab_text));
+        contentLengthText.setTextColor(getResources().getColor(contentLength == maxTextCount ? R.color.comment_color : R.color.common_super_tint_text));
     }
 
     @Override

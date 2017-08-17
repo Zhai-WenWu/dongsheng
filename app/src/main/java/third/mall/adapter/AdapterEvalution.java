@@ -1,7 +1,6 @@
 package third.mall.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,9 +87,9 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                     public void onEvalutionClick(CommodEvalutionItem view, Map<String, String> data) {
                         Intent intent = new Intent(activity, PublishEvalutionSingleActivity.class);
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ORDER_ID,orderId);
-                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_ID,data.get("product_code"));
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,data.get("product_code"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
-                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,Integer.parseInt(data.get("score")));
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,data.get("score"));
                         activity.startActivityForResult(intent,PublishEvalutionMultiActivity.REQUEST_CODE_NEED_REFRESH);
                     }
                 });
