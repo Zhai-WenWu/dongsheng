@@ -932,30 +932,40 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String qaTitle, String isAnswerMore) {
-        Bundle bundle = new Bundle();
-        bundle.putString("code", dishId);
-        bundle.putString("authorCode", authorId);
-        bundle.putString("qaCode", qaId);
-        bundle.putString("answerCode", answerCode);
-        bundle.putString("qaTitle", qaTitle);
-        bundle.putString("mIsAnswerMore", isAnswerMore);
-        Intent intent = new Intent(mAct, AnswerEditActivity.class);
-        intent.putExtras(bundle);
-        mAct.startActivity(intent);
+    public void goAnswer(final String dishId, final String authorId, final String qaId, final String answerCode, final String qaTitle, final String isAnswerMore) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = new Bundle();
+                bundle.putString("code", dishId);
+                bundle.putString("authorCode", authorId);
+                bundle.putString("qaCode", qaId);
+                bundle.putString("answerCode", answerCode);
+                bundle.putString("qaTitle", qaTitle);
+                bundle.putString("mIsAnswerMore", isAnswerMore);
+                Intent intent = new Intent(mAct, AnswerEditActivity.class);
+                intent.putExtras(bundle);
+                mAct.startActivity(intent);
+            }
+        });
     }
 
     @JavascriptInterface
-    public void goAsk(String dishId, String authorId, String qaId, String answerCode, String isAskMore) {
-        Bundle bundle = new Bundle();
-        bundle.putString("code", dishId);
-        bundle.putString("authorCode", authorId);
-        bundle.putString("qaCode", qaId);
-        bundle.putString("answerCode", answerCode);
-        bundle.putString("isAskMore", isAskMore);
-        Intent intent = new Intent(mAct, AskEditActivity.class);
-        intent.putExtras(bundle);
-        mAct.startActivity(intent);
+    public void goAsk(final String dishId, final String authorId, final String qaId, final String answerCode, final String isAskMore) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = new Bundle();
+                bundle.putString("code", dishId);
+                bundle.putString("authorCode", authorId);
+                bundle.putString("qaCode", qaId);
+                bundle.putString("answerCode", answerCode);
+                bundle.putString("isAskMore", isAskMore);
+                Intent intent = new Intent(mAct, AskEditActivity.class);
+                intent.putExtras(bundle);
+                mAct.startActivity(intent);
+            }
+        });
     }
 	/**
 	 * 问答举报
@@ -966,23 +976,33 @@ public class JsAppCommon extends JsBase {
 	 * @param dishCode 菜谱code
 	 */
 	@JavascriptInterface
-	public void report(String nickName, String authorCode, String qaCode, String askAuthorCode, String dishCode) {
-		Bundle bundle = new Bundle();
-		bundle.putString("reportName", nickName);
-		bundle.putString("qaCode", qaCode);
-		bundle.putString("authorCode", authorCode);
-		bundle.putString("askAuthorCode", askAuthorCode);
-		bundle.putString("dishCode", dishCode);
-		Intent intent = new Intent(mAct, QAReportActivity.class);
-		intent.putExtras(bundle);
-		mAct.startActivity(intent);
+	public void report(final String nickName, final String authorCode, final String qaCode, final String askAuthorCode, final String dishCode) {
+		handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = new Bundle();
+                bundle.putString("reportName", nickName);
+                bundle.putString("qaCode", qaCode);
+                bundle.putString("authorCode", authorCode);
+                bundle.putString("askAuthorCode", askAuthorCode);
+                bundle.putString("dishCode", dishCode);
+                Intent intent = new Intent(mAct, QAReportActivity.class);
+                intent.putExtras(bundle);
+                mAct.startActivity(intent);
+            }
+        });
 	}
 
     @JavascriptInterface
     public void closePayWeb() {
-        if (mAct instanceof AskEditActivity) {
-            ((AskEditActivity) mAct).closePayWindow();
-        }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof AskEditActivity) {
+                    ((AskEditActivity) mAct).closePayWindow();
+                }
+            }
+        });
     }
 
     public interface OnGetDataListener {
@@ -1003,7 +1023,12 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void openSysSetting() {
-        PushManager.requestPermission();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PushManager.requestPermission();
+            }
+        });
     }
 
     /**
