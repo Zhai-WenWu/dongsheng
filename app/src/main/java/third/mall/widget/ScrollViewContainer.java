@@ -82,6 +82,7 @@ public class ScrollViewContainer extends RelativeLayout {
 
         @Override
         public void handleMessage(Message msg) {
+            Log.i("zyj","mMoveLen::"+mMoveLen+"::state:"+state);
             if (mMoveLen != 0) {
                 if (state == AUTO_UP) {
                     mMoveLen -= SPEED;
@@ -102,6 +103,8 @@ public class ScrollViewContainer extends RelativeLayout {
                 } else {
                     mTimer.cancel();
                 }
+            }else{
+                mTimer.cancel();
             }
             requestLayout();
         }
@@ -342,23 +345,22 @@ public class ScrollViewContainer extends RelativeLayout {
      * @param viewIndex
      */
     public void setViewIndex(String viewIndex){
-        Log.i("zyj","viewIndex::"+viewIndex);
         switch (viewIndex){
             case "1"://滚动到第一视图
-
+                if(0!=mCurrentViewIndex) {
+                    if (vt == null) vt = VelocityTracker.obtain();
+                    mMoveLen = -ToolsDevice.getWindowPx(context).heightPixels;
+                    state = AUTO_DOWN;
+                    mTimer.schedule(2);
+                }
                 break;
             case "2"://滚动到第二视图
-//                if(topView instanceof MyScrollView){
-//                    ((MyScrollView)topView).fullScroll(ScrollView.FOCUS_DOWN);
-//                }
-//                if(bottomView instanceof ScrollView){
-//                    ((ScrollView)bottomView).scrollTo(0,1000);
-//                }
-//                int height=ToolsDevice.getWindowPx(context).heightPixels;
-                vt = VelocityTracker.obtain();
-                mMoveLen=3000;
-                state = AUTO_DOWN;
-                mTimer.schedule(2);
+                if(1!=mCurrentViewIndex) {
+                    if (vt == null) vt = VelocityTracker.obtain();
+                    mMoveLen = -1;
+                    state = AUTO_UP;
+                    mTimer.schedule(2);
+                }
                 break;
         }
     }

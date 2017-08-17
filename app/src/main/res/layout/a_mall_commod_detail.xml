@@ -233,12 +233,17 @@
                                 android:layout_height="match_parent">
 
                                 <!--android:background="@drawable/mall_buycommod_linear_back_top"-->
-                                <ImageView
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:orientation="horizontal">
+                                <View
                                     android:layout_width="@dimen/dp_0.5"
                                     android:layout_height="match_parent"
                                     android:layout_alignParentLeft="true"
                                     android:background="@drawable/mall_commod_detail_info_back"
                                     />
+                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -505,7 +510,7 @@
                 android:layout_marginTop="@dimen/dp__3.5"
                 android:gravity="center_vertical"
                 android:text="购物车"
-                android:textColor="@color/comment_color"
+                android:textColor="#929292"
                 android:textSize="@dimen/sp_11"/>
         </LinearLayout>
 
