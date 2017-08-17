@@ -101,7 +101,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             @Override
             public void disconnect() {
                 allStartOrPause(false);
-                Toast.makeText(AskAnswerUploadListActivity.this, "因网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AskAnswerUploadListActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
             }
 
             @Override

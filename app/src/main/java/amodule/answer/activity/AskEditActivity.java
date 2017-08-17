@@ -130,7 +130,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             @Override
             public void disconnect() {
                 allStartOrPause(false);
-                Toast.makeText(AskEditActivity.this, "因网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AskEditActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
             }
 
             @Override
