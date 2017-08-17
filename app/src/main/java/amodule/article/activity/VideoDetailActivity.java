@@ -116,7 +116,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
     private Long startTime;//统计使用的时间
-    public boolean isPortrait = true;
+    public boolean isPortrait = false;
     int statusBarH = 0;
 
     @Override
