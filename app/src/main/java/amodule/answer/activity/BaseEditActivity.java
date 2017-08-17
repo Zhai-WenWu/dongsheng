@@ -85,6 +85,8 @@ public class BaseEditActivity extends BaseActivity {
     protected AskAnswerModel mModel;
     protected AskAnswerSQLite mSQLite;
 
+    private AskAnswerModel mFirstDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +111,7 @@ public class BaseEditActivity extends BaseActivity {
         }
         mModel = new AskAnswerModel();
         mSQLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+        mFirstDB = mSQLite.queryFirstData();
     }
 
     protected void initView(String title, int contentResId) {
@@ -364,6 +367,8 @@ public class BaseEditActivity extends BaseActivity {
                 mSQLite.deleteData((int) id);
             return rowId;
         }
+        if (mFirstDB != null)
+            mModel.setmId(mFirstDB.getmId());
         mModel.setmText(editable == null ? "" : editable.toString());
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
         mModel.setmVideos(videoArrs);

@@ -185,7 +185,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
 
     @Override
     protected void onLoginSucc() {
-        if (!mLoadPrice)
+        if (!mLoadPrice && !mIsAskMore)
             getPriceData();
     }
 
@@ -411,6 +411,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     mQAID = map.get("id");
                     mWebUrl = map.get("payUrl");
                     if (mIsAskMore) {
+                        if (flag)
+                            mSQLite.deleteData(mUploadPoolData.getDraftId());
                         startQADetail();
                     } else {
                         startPay();

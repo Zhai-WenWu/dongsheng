@@ -64,9 +64,6 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
         if (model == null) {
             return row;
         }
-
-        Log.e("SLL", "insertData = " + model.toString());
-
         SQLiteDatabase database = null;
         ContentValues cv = new ContentValues();
         cv.put(mColumnAnswerCode, model.getmAnswerCode());
@@ -132,6 +129,54 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
             if (database != null)
                 database.close();
             return num > 0;
+        }
+    }
+
+    public AskAnswerModel queryFirstData() {
+        AskAnswerModel model = null;
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = getWritableDatabase();
+            cursor = database.rawQuery("select * from " + mTabName + " limit 1", null);
+            if (cursor.moveToFirst()) {
+                model = new AskAnswerModel();
+                model.setmId(cursor.getInt(cursor.getColumnIndex(mColumnId)));
+                model.setmType(cursor.getString(cursor.getColumnIndex(mColumnType)));
+                model.setmAnswerCode(cursor.getString(cursor.getColumnIndex(mColumnAnswerCode)));
+                model.setmQACode(cursor.getString(cursor.getColumnIndex(mColumnQACode)));
+                model.setmDishCode(cursor.getString(cursor.getColumnIndex(mColumnDishCode)));
+                model.setmImgs(cursor.getString(cursor.getColumnIndex(mColumnImgs)));
+                model.setmText(cursor.getString(cursor.getColumnIndex(mColumnText)));
+                model.setmAnonymity(cursor.getString(cursor.getColumnIndex(mColumnAnonymity)));
+                model.setmAuthorCode(cursor.getString(cursor.getColumnIndex(mColumnAuthorCode)));
+                model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
+                model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
+                model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+            if (database != null)
+                database.close();
+            return model;
+        }
+    }
+
+    public boolean deleteAll() {
+        int ret = 0;
+        SQLiteDatabase database = null;
+        try {
+            database = getWritableDatabase();
+            ret = database.delete(mTabName, null, null);
+        } catch (Exception e){}
+        finally {
+            if (database != null)
+                database.close();
+            return ret != 0;
         }
     }
 
