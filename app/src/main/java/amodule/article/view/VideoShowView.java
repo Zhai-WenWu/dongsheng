@@ -36,12 +36,11 @@ import static aplug.recordervideo.tools.FileToolsCammer.VIDEO_CATCH;
 public class VideoShowView extends BaseView implements View.OnClickListener {
     private ImageView coverImage;
     private ImageView deleteImage;
-    private RelativeLayout videoLayout,chooseCoverImgLayout;
     private LinearLayout defaultLayout;
 
     private boolean enableEdit = false;
     private boolean isSecondEdit = false;
-    private String coverImageUrl,chooseCoverImageUrl;
+    private String coverImageUrl,chooseCoverImageUrl,oldCoverImageUrl;
     private String videoUrl;
     private boolean isWrapContent = true;
     private int position;
@@ -65,7 +64,6 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         LayoutInflater.from(getContext()).inflate(R.layout.a_article_view_video, this);
         coverImage = (ImageView) findViewById(R.id.video_cover_image);
         deleteImage = (ImageView) findViewById(R.id.delete_image);
-        videoLayout = (RelativeLayout) findViewById(R.id.video_layout);
         defaultLayout = (LinearLayout) findViewById(R.id.default_layout);
         int width = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_20) * 2;
         int height = width * 9 / 16;
@@ -80,7 +78,6 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 }
             }
         });
-        chooseCoverImgLayout = (RelativeLayout) findViewById(R.id.video_choose_cover_img_parent);
         findViewById(R.id.video_choose_cover_img).setOnClickListener(this);
         findViewById(R.id.video_delete_cover_img).setOnClickListener(this);
 
@@ -100,6 +97,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         try {
             jsonObject.put("type", VIDEO);
             jsonObject.put("videosimageurl", coverImageUrl);
+            jsonObject.put("oldVideoSimageUrl", oldCoverImageUrl);
             jsonObject.put("chooseCoverImageUrl", chooseCoverImageUrl);
             jsonObject.put("videourl", videoUrl);
             if(!TextUtils.isEmpty(idStr))
@@ -113,6 +111,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void resetData(){
         coverImageUrl = "";
         chooseCoverImageUrl = "";
+        oldCoverImageUrl = "";
         videoUrl = "";
         defaultLayout.setVisibility(VISIBLE);
         findViewById(R.id.video_delete_cover_img).setVisibility(View.GONE);
@@ -161,6 +160,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                                                 newBitmap = Bitmap.createBitmap(newBitmap, 0, (imageHieght - newImgH) / 2, newImgW, newImgH);
                                             }
                                             chooseCoverImageUrl = FileManager.getSDDir() + VIDEO_CATCH + Tools.getMD5(imgUrl) + ".jpg";
+                                            coverImageUrl = chooseCoverImageUrl;
                                             FileManager.saveImgToCompletePath(newBitmap, chooseCoverImageUrl, Bitmap.CompressFormat.JPEG);
                                         }
                                         final Bitmap finalBitmap = newBitmap;
@@ -226,6 +226,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 break;
             case R.id.video_delete_cover_img:
                 chooseCoverImageUrl = null;
+                coverImageUrl = oldCoverImageUrl;
                 findViewById(R.id.video_delete_cover_img).setVisibility(View.GONE);
                 setVideoImage(false,coverImageUrl);
                 break;
@@ -233,17 +234,24 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         }
     }
 
+    public void setOldCoverImageUrl(String url){
+        Log.i("FRJ","setOldCoverImageUrl() url:" + url);
+        if(TextUtils.isEmpty(oldCoverImageUrl))
+            oldCoverImageUrl = url;
+    }
+
     public String getCoverImageUrl() {
-        if(TextUtils.isEmpty(chooseCoverImageUrl))
-            return coverImageUrl;
-        return chooseCoverImageUrl;
+        return coverImageUrl;
     }
 
     public void setChooseCoverImageUrl(String chooseCoverImageUrl) {
         this.chooseCoverImageUrl = chooseCoverImageUrl;
+        setOldCoverImageUrl(coverImageUrl);
         findViewById(R.id.video_delete_cover_img).setVisibility(View.VISIBLE);
         setVideoImage(true,chooseCoverImageUrl);
     }
+
+
 
     public void setCoverImageUrl(String coverImageUrl) {
         this.coverImageUrl = coverImageUrl;
