@@ -3,7 +3,7 @@
     android:id="@+id/activityLayout"
     style="@style/layout"
     android:background="@color/backgroup_color"
-    android:paddingBottom="@dimen/dp_20"
+    android:paddingBottom="@dimen/dp_27"
     android:paddingTop="@dimen/dp_20">
 
     <RelativeLayout
@@ -23,7 +23,6 @@
             android:padding="@dimen/dp_5"
             android:scaleType="centerInside"
             android:src="@drawable/a_login_button_return" />
-
 
     </RelativeLayout>
 
@@ -66,7 +65,6 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-
         <amodule.user.view.NextStepView
             android:id="@+id/btn_next_step"
             android:layout_width="wrap_content"
@@ -75,13 +73,12 @@
 
         <TextView
             android:id="@+id/tv_help"
+            style="@style/userLoginOtherText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_25"
             android:gravity="center"
-            android:text="遇到问题?"
-            android:textColor="#737272"
-            android:textSize="@dimen/sp_14" />
+            android:text="遇到问题?" />
     </LinearLayout>
 
 
@@ -91,11 +88,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dp_10"
         android:maxLines="1"
         android:text="邮箱账号，请用电脑访问xiangha.com找回密码！"
-        android:textColor="#999898"
-        android:textSize="@dimen/sp_13" />
+        android:textColor="#9c9c9c"
+        android:textSize="@dimen/sp_12" />
 
 
 </RelativeLayout>

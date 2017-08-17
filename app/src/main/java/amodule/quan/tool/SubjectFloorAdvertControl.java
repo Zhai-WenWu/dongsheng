@@ -1,11 +1,9 @@
 package amodule.quan.tool;
 
-import android.app.Activity;
 import android.widget.RelativeLayout;
 
 import com.xianghatest.R;
 
-import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.BaseAppCompatActivity;
 import amodule.quan.view.BarSubjectFloorOwnerNew;
 import third.ad.AdParent;

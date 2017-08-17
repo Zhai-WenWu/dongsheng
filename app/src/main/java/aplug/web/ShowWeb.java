@@ -31,7 +31,6 @@ import acore.tools.Tools;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
-import aplug.web.view.XHWebView;
 import third.mall.activity.ShoppingActivity;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallStringManager;

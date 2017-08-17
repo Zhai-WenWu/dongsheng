@@ -3,7 +3,7 @@
     android:id="@+id/activityLayout"
     style="@style/layout"
     android:background="@color/backgroup_color"
-    android:paddingBottom="@dimen/dp_30"
+    android:paddingBottom="@dimen/dp_27"
     android:paddingTop="@dimen/dp_20">
 
     <RelativeLayout
@@ -71,7 +71,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_25"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -109,5 +109,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/dp_25" />
+        android:layout_marginTop="@dimen/dp_20" />
 </RelativeLayout>

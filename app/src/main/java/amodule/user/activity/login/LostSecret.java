@@ -2,7 +2,9 @@ package amodule.user.activity.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,6 +13,7 @@ import com.xianghatest.R;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
@@ -46,6 +49,7 @@ public class LostSecret extends BaseLoginActivity {
     protected void initData() {
         Intent intent = getIntent();
         origin = intent.getStringExtra(PATH_ORIGIN);
+        if(TextUtils.isEmpty(origin)) origin = ORIGIN_FIND_PSW;
     }
 
     private void initView() {
@@ -110,6 +114,8 @@ public class LostSecret extends BaseLoginActivity {
                     if (isFirst) {
                         isFirst = false;
                         speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btn_next_step.getLayoutParams();
+                        layoutParams.setMargins(0, Tools.getDimen(mAct,R.dimen.dp_36),0,0);
                     }
                     speechaIdentifyInputView.setState(true);
                 }
@@ -210,6 +216,7 @@ public class LostSecret extends BaseLoginActivity {
                         public void onSuccess() {
                             if (getIsBindPhone() || ORIGIN_MODIFY_PSW.equals(origin)) { //当动作是绑定手机号，但手机号被绑定了
                                 loadManager.hideProgressBar();
+                                login_identify.setOnBtnClickState(true);
                                 XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "失败原因：手机号被绑定");
                                 Toast.makeText(LostSecret.this, "这个手机号已被其他账号绑定", Toast.LENGTH_SHORT).show();
                             } else
@@ -230,6 +237,7 @@ public class LostSecret extends BaseLoginActivity {
                                                 XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
                                                         "失败原因：弹框未注册，选择不注册");
                                                 xhDialog.cancel();
+                                                login_identify.setOnBtnClickState(true);
                                             }
                                         })
                                         .setSureButton("立即注册", new View.OnClickListener() {

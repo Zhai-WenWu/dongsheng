@@ -62,7 +62,6 @@ import xh.windowview.XhDialog;
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
 import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
-import static android.icu.text.UnicodeSet.CASE;
 
 /**
  * PackageName : amodule.article.activity

@@ -3,9 +3,7 @@ package amodule.article.view;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.xianghatest.R;
 
@@ -13,8 +11,6 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.view.DishHeaderViewNew;
-import third.video.VideoPlayerController;
 
 /**
  * PackageName : amodule.article.view

@@ -33,7 +33,6 @@ import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichText;
 import amodule.article.view.richtext.RichURLSpan;
-import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.imageselector.ImageSelectorActivity;
@@ -41,7 +40,6 @@ import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
 
 import static amodule.article.activity.edit.EditParentActivity.REQUEST_CHOOSE_VIDEO_COVER;
-import static amodule.quan.activity.upload.UploadSubjectNew.UP_SUBJECT_CHOOSE_IMG;
 import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
 
 /**

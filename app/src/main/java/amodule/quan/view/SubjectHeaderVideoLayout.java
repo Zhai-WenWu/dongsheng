@@ -2,7 +2,6 @@ package amodule.quan.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;

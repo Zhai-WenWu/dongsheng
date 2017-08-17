@@ -3,7 +3,7 @@
     android:id="@+id/activityLayout"
     style="@style/layout"
     android:background="@color/backgroup_color"
-    android:paddingBottom="@dimen/dp_30"
+    android:paddingBottom="@dimen/dp_27"
     android:paddingTop="@dimen/dp_20">
 
 
@@ -67,18 +67,18 @@
             android:id="@+id/login_speeach_identify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <amodule.user.view.NextStepView
             android:id="@+id/btn_next_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_40" />
+            android:layout_marginTop="@dimen/dp_41" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_25"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -115,7 +115,7 @@
         layout="@layout/a_login_item_agreenment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_25"
+        android:layout_marginTop="@dimen/dp_20"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

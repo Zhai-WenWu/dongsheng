@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -140,6 +141,8 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
                     if (isFirst) {
                         isFirst = false;
                         speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btn_next_step.getLayoutParams();
+                        layoutParams.setMargins(0, Tools.getDimen(mAct,R.dimen.dp_36),0,0);
                     }
                     speechaIdentifyInputView.setState(true);
                 }

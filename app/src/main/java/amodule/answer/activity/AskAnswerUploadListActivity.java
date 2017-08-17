@@ -23,7 +23,6 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.dialogManager.PushManager;
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;

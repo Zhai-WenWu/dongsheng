@@ -25,7 +25,6 @@ import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import acore.broadcast.NetworkBroadcastReceiver;
 
 import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
 

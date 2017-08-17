@@ -328,7 +328,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
         if (feektext.length() != 0) {
             String addTime = Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0);
             String timeShow = Tools.getAssignTime("HH:mm", 0);
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             map.put("author", "2");
             map.put("content", feektext);
             map.put("timeShow", timeShow);

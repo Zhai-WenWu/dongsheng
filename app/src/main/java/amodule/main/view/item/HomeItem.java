@@ -17,10 +17,6 @@ import android.widget.TextView;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xianghatest.R;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
