@@ -21,7 +21,6 @@ import amodule.user.view.SpeechaIdentifyInputView;
 /**
  * Created by ：fei_teng on 2017/2/22 21:31.
  */
-
 public class AddNewPhone extends BaseLoginActivity implements View.OnClickListener {
 
     private IdentifyInputView login_identify;
@@ -113,13 +112,11 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
 
                     @Override
                     public void onInputDataChanged() {
-
                         refreshNextStepBtnStat();
                     }
 
                     @Override
                     public void onCliclSendIdentify() {
-
                         final String newZoneCode = phone_info.getZoneCode();
                         final String newPhoneNum = phone_info.getPhoneNum();
                         if (TextUtils.isEmpty(newZoneCode) || TextUtils.isEmpty(newPhoneNum)) {
@@ -131,7 +128,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                         String error_type = LoginCheck.checkPhoneFormatWell(AddNewPhone.this, newZoneCode, newPhoneNum);
                         if (LoginCheck.WELL_TYPE.equals(error_type)) {
                             if (newZoneCode.equals(zoneCode) && newPhoneNum.equals(phoneNum)) {
-                                Toast.makeText(AddNewPhone.this, "你已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddNewPhone.this, "您已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
                                 login_identify.setOnBtnClickState(true);
                                 dataStatics("失败原因：已经绑定这个手机号");
                                 return;
