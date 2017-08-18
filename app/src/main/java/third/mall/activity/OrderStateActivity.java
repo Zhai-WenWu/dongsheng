@@ -25,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -57,6 +56,11 @@ import xh.basic.tool.UtilString;
  *
  */
 public class OrderStateActivity extends BaseActivity implements OnClickListener{
+	public static final int request_order=2000;
+	public static final int result_del= 2001;
+	public static final int result_cancel= 2002;
+	public static final int result_sure= 2003;
+	public static final int result_comment_success = 2004;
 
 	private String order_id;
 	private String order_satus;
@@ -65,7 +69,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	private AdapterOrderState adapter;
 	private ArrayList<Map<String, String>> listMapByJson,listMapByJson_payment;
 	private TextView buycommod_consignee_man_name,buycommod_consignee_man_number,buycommod_consignee_man_address
-	,buycommod_order_number_text,copy_order_number_text,buycommod_commod_price_end,title;
+	,buycommod_order_number_text,copy_order_number_text,buycommod_commod_price_end;
 	private Handler handler;
 	private static final int SHOW_OK=1;
 	private String status;
@@ -73,23 +77,19 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	private ImageView order_logistics_iv;
 	private TextView order_logistics_now_content;
 	private TextView order_logistics_now_time;
-	private ArrayList<Map<String,String>> list_recommend= new ArrayList<Map<String,String>>();
+	private ArrayList<Map<String,String>> list_recommend= new ArrayList<>();
 	private ImageView pay_wechat;
 	private ImageView pay_alipay;
 	private MallPayType payType;
 	private TextView tv_status;
 	private LinearLayout order_status_linear;
 	View viewpay ;
-	public static final int request_order=2000;
 	private int code;
 	private int position;
-	public static final int result_del= 2001;
-	public static final int result_cancel= 2002;
-	public static final int result_sure= 2003;
-	public static final int result_comment_success = 2004;
 	private int state_now;//当前状态
 	private String url_statistic;
 	private String mall_stat_statistic;
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
@@ -105,22 +105,11 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		payType= new MallPayType(this);
 		initView();
 		initData();
-//		initTitle();
 		XHClick.track(this,"浏览订单详情");
 	}
-	private void initTitle() {
-		if(Tools.isShowTitle()) {
-			int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-			int height = dp_45 + Tools.getStatusBarHeight(this);
 
-			RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_all_rela);
-			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-			bar_title.setLayoutParams(layout);
-			bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-		}
-	}
 	private void initView() {
-		title=(TextView)findViewById(R.id.title);
+		TextView title=(TextView)findViewById(R.id.title);
 		title.setText("订单信息");
 		tv_status=(TextView) findViewById(R.id.tv_status);
 		findViewById(R.id.back).setOnClickListener(this);
@@ -151,11 +140,11 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		pay_wechat = (ImageView) findViewById(R.id.pay_wechat);
 		pay_alipay = (ImageView) findViewById(R.id.pay_alipay);
 		order_status_linear=(LinearLayout) findViewById(R.id.order_status_linear);
-		
 	}
+
 	private void initData() {
 		loadManager.showProgressBar();
-		listData= new ArrayList<Map<String,String>>();
+		listData= new ArrayList<>();
 		adapter = new AdapterOrderState(this,listview, listData, R.layout.a_mall_order_item, 
 				new String[]{},new int[]{});
 		listview.setDivider(null);
@@ -186,9 +175,10 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		//设置支付状态
 		setPayView();
 	}
+
 	/**
 	 * 处理view
-	 * @param view
+	 * @param view 底部按钮中的textview
 	 */
 	private void setButtonViewLayout(View view){
 		int dp_69= (int) getResources().getDimension(R.dimen.dp_69);
@@ -235,12 +225,11 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 					adapter.setUrl(url_statistic,mall_stat_statistic);
 					adapter.notifyDataSetChanged();
 					handler.sendEmptyMessage(SHOW_OK);
-				}else if(flag==UtilInternet.REQ_CODE_ERROR&& msg instanceof Map){
+				}else if(flag==UtilInternet.REQ_CODE_ERROR && msg instanceof Map){
 					Map<String,String> map= (Map<String, String>) msg;
 					//处理code过期问题
 					if(MallCommon.code_past.equals(map.get("code"))){
 						common.setLoading(new InterfaceMallReqIntert() {
-							
 							@Override
 							public void setState(int state) {
 								if(state>=UtilInternet.REQ_OK_STRING){
@@ -256,6 +245,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			}
 		});
 	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -297,25 +287,20 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			});
 		}
 	}
+
 	/**
-	 * true:微信 false；支付
+	 * 设置支付类型
 	 * @param state_type
+	 * 				true:微信 false；支付宝
 	 */
 	private void setPayType(boolean state_type){
-		boolean state= false;
-		
-		if(state_type){
-			state=payType.setPayType("1");
-		}else{
-			state=payType.setPayType("2");
-		}
-		if(state){
+		boolean state = payType.setPayType(state_type ? "1" : "2");
+
+		if(state)
 			setPayView();
-		}
 	}
-	/**
-	 * 设置支付view
-	 */
+
+	/** 设置支付view */
 	private void setPayView(){
 		//获取支付方式选择
 		if("1".equals(MallPayType.pay_type)){
@@ -326,6 +311,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			pay_alipay.setImageResource(R.drawable.z_mall_shopcat_choose);
 		}
 	}
+
 	/**
 	 * order类型解析
 	 * @param listMapByJson
@@ -348,6 +334,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		}
 		setOrderNumberShowView(listMapByJson.get(0));
 	}
+
 	/**
 	 * PaymentOrder解析
 	 * @param listMapByJson
@@ -406,19 +393,15 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			data+="\n下单时间："+map.get("create_time");
 		}
 		buycommod_order_number_text.setText(data);
-
 	}
+
 	/**
 	 * 设置状态
-	 * @param status
+	 * @param status true:显示  false:隐藏
 	 */
 	private void setStatus(String status,String name){
 		tv_status.setText(name);
-		if(status.equals("1")){
-			findViewById(R.id.order_pay).setVisibility(View.VISIBLE);
-		}else {
-			findViewById(R.id.order_pay).setVisibility(View.GONE);
-		}
+		findViewById(R.id.order_pay).setVisibility(status.equals("1")?View.VISIBLE:View.GONE);
 	}
 	
 	/** 物流信息 */
@@ -681,7 +664,6 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 				break;
 			case 7://订单超时
 				View view_del= buttonView.createViewDelOrder(new InterfaceViewCallback() {
-					
 					@Override
 					public void sucessCallBack() {
 						XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","删除订单");
@@ -714,19 +696,21 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 
 	/**
 	 * 去评价
-	 * @param orderMap
-	 * @param productArray
+	 * @param orderMap 订单数据
+	 * @param productArray 所有商品数据
 	 */
 	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray){
+		XHClick.mapStat(this,XHClick.comcomment_icon,"订单详情-评价按钮","");
 		if(productArray.size() == 1){
 			gotoCommentSingle(orderMap , StringManager.getFirstMap(productArray.get(0).get("info")));
 		}else if(productArray.size() > 1){
 			gotoCommentMulti(orderMap);
 		}
 	}
+
 	/**
-	 *
-	 * @param map
+	 * 发布评论列表
+	 * @param map 订单数据
 	 */
 	private void gotoCommentMulti(final Map<String, String> map){
 		Intent intent = new Intent(this, PublishEvalutionMultiActivity.class);
@@ -737,9 +721,9 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	}
 
 	/**
-	 *
-	 * @param orderMap
-	 * @param productMap
+	 * 发布评论
+	 * @param orderMap 订单数据
+	 * @param productMap 商品数据
 	 */
 	private void gotoCommentSingle(final Map<String, String> orderMap,Map<String, String> productMap){
 		Intent intent = new Intent(this, PublishEvalutionSingleActivity.class);
@@ -780,9 +764,8 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		setResult(state_now, intent);
 		super.finish();
 	}
-	/**
-	 * 对电商按钮进行统计
-	 */
+
+	/** 对电商按钮进行统计 */
 	private void setStatisticIndex(){
 		MallClickContorl.getInstance().setStatisticUrl(url_statistic, null,mall_stat_statistic, this);
 	}

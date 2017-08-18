@@ -404,6 +404,11 @@ public class OrderItem2View extends ViewItemBase {
 	}
 
 	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray, final int position){
+		if(0 == id){
+			XHClick.mapStat(getContext(),XHClick.comcomment_icon,"我的订单-【全部】的评价按钮","");
+		}else if(4 == id){
+			XHClick.mapStat(getContext(),XHClick.comcomment_icon,"我的订单-【待评价】的评价按钮","");
+		}
         //去评价
         if(productArray.size() == 1){
             gotoCommentSingle(orderMap , productArray.get(0) , position);
@@ -411,6 +416,7 @@ public class OrderItem2View extends ViewItemBase {
             gotoCommentMulti(orderMap, position);
         }
     }
+
     /**
      *
      * @param map
@@ -463,7 +469,6 @@ public class OrderItem2View extends ViewItemBase {
 	 *            ---单图文字数据
 	 */
 	private void setProductNum(RelativeLayout one, TextView one_tv, ImageView one_iv, HorizontalListView listview, boolean isImageNum, ArrayList<String> strs, String url, String value) {
-
 		if (isImageNum) {// 多图
 			ArrayList<Map<String, String>> list_data = new ArrayList<>();
 			for (int i = 0; i < strs.size(); i++) {
@@ -500,7 +505,6 @@ public class OrderItem2View extends ViewItemBase {
 		} else {// 香哈
 			tv.setText("香哈");
 			view.setBackgroundResource(R.drawable.mall_myorder_myself);
-
 		}
 	}
 

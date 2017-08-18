@@ -33,20 +33,21 @@ import third.mall.view.EvalutionImageLayout;
 import xh.windowview.XhDialog;
 
 public class PublishEvalutionSingleActivity extends BaseActivity implements View.OnClickListener {
+    /** 统计id */
     public static final String STATISTICS_ID = "a_publish_commerce";
     public static final String STATISTICS_RETURN_ID = "a_comcoment_return";
     public static final String STATISTICS_PUBLISH_ID = "a_comcoment_result";
-
+    /** 传参 key */
     public static final String EXTRAS_ORDER_ID = "orderi_d";
     public static final String EXTRAS_PRODUCT_CODE = "product_code";
     public static final String EXTRAS_PRODUCT_IMAGE = "product_img";
     public static final String EXTRAS_SCORE = "score";
     public static final String EXTRAS_POSITION = "position";
     public static final String EXTRAS_ID = "id";
-
+    /** 默认值 */
     public static final int DEFAULT_SCORE = 5;
     public static final int MAX_IMAGE = 3;
-
+    /**  */
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
     private static final int maxTextCount = 500;
 
