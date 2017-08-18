@@ -113,6 +113,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     }
 
     public void resetData(){
+        imgWhB = 0;
         coverImageUrl = "";
         chooseCoverImageUrl = "";
         oldCoverImageUrl = "";
@@ -126,11 +127,11 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
             return;
         }
+        resetData();
         defaultLayout.setVisibility(GONE);
         findViewById(R.id.image_layout).setVisibility(VISIBLE);
         this.coverImageUrl = coverImageUrl;
         this.videoUrl = videoUrl;
-        imgWhB = 0;
         setVideoImage(false,coverImageUrl);
     }
 
