@@ -893,6 +893,11 @@ public class Tools {
         return null;
     }
 
+    /**
+     * 插入文本到剪切板
+     * @param context
+     * @param str
+     */
     public static void inputToClipboard(Context context,String str){
         if(context == null || TextUtils.isEmpty(str))
             return;
