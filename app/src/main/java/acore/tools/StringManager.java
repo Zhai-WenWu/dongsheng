@@ -467,4 +467,21 @@ public class StringManager extends UtilString {
         }
         return jsonArray;
     }
+
+    /**
+     * 查看字符是否有正常字符，除空格和换行
+     * @param content
+     * @return
+     */
+    public static boolean isHasChar(String content){
+        if(TextUtils.isEmpty(content))
+            return false;
+        content = content.replace(" ","");
+        if(content.length() == 0)
+            return false;
+        content = content.replace("\n","");
+        if(content.length() == 0)
+            return false;
+        return true;
+    }
 }
