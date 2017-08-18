@@ -1,7 +1,5 @@
 package third.mall.activity;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -365,9 +363,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 					copy_order_number_text.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							final ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-							ClipData clip = ClipData.newPlainText("simple text copy", map.get("order_id"));
-							manager.setPrimaryClip(clip);
+							Tools.inputToClipboard(OrderStateActivity.this,map.get("order_id"));
 							Tools.showToast(OrderStateActivity.this,"复制成功");
 						}
 					});

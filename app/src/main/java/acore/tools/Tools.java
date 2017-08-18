@@ -3,6 +3,8 @@ package acore.tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -889,5 +891,13 @@ public class Tools {
             }
         }
         return null;
+    }
+
+    public static void inputToClipboard(Context context,String str){
+        if(context == null || TextUtils.isEmpty(str))
+            return;
+        final ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("simple text copy", str);
+        manager.setPrimaryClip(clip);
     }
 }
