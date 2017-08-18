@@ -1,6 +1,5 @@
 package amodule.answer.upload;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -92,9 +91,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
                         String videoUrl = map.get("videoUrl");
                         String videoImage = map.get("thumImg");
                         String imageUrl = map.get("imageUrl");
-
-                        Log.e("articleUpload", "文章上传 videoPath: " + videoPath + "  videoUrl:" + videoUrl);
-                        Log.e("articleUpload", "文章上传 videoImage: " + videoImage + "  imageUrl:" + imageUrl);
                         if (videoPath.indexOf("http") != 0 && !Tools.isFileExists(videoPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章视频路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
@@ -235,7 +231,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
 
     @Override
     public void uploadOver(final boolean flag, final String response) {
-        Log.i("articleUpload","uploadOver flag:" + flag + "   response:" + response);
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTailDataList(),
@@ -267,7 +262,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
 
     @Override
     public void uploadLast() {
-        Log.i("articleUpload","uploadLast()");
 
         //排除物料上传成功后，重复回调物料上传成功，触发上传最后一步
         if(mHasDoUploadLastInfo.get())
@@ -325,20 +319,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         return uploadTextData;
     }
 
-    private String replaceUrl(String content,ArrayList<Map<String,String>> arrayList,String pathKey,String urlKey){
-        for(int i = 0; i < arrayList.size(); i++){
-            Map<String,String> map = arrayList.get(i);
-            String path = map.get(pathKey);
-            String url = map.get(urlKey);
-            String newPath = path.replace("/","\\/");
-            String newUrl = url.replace("/","\\/");
-            Log.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
-            content = content.replace(newPath,newUrl);
-            Log.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
-        }
-        return content;
-    }
-
     /**
      * 检查物料是否上传完毕
      *
@@ -349,7 +329,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         uploadPoolData.loopPoolData(uploadPoolData.getHeadDataList(), new UploadPoolData.LoopCallback() {
             @Override
             public boolean onLoop(UploadItemData itemData) {
-                Log.i("articleUpload","checkStuffUploadOver() ---HeadData--- itemData.getRecMsg():" + itemData.getRecMsg());
                 if (TextUtils.isEmpty(itemData.getRecMsg())) {
                     mFlag = false;
                     return true;
@@ -364,7 +343,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
         uploadPoolData.loopPoolData(uploadPoolData.getBodyDataList(), new UploadPoolData.LoopCallback() {
             @Override
             public boolean onLoop(UploadItemData itemData) {
-                Log.i("articleUpload","checkStuffUploadOver()   ---BodyData--- itemData.getRecMsg():" + itemData.getRecMsg());
                 if (TextUtils.isEmpty(itemData.getRecMsg())) {
                     mFlag = false;
                     return true;
@@ -385,7 +363,6 @@ public class AskAnswerUploadListPool extends UploadListPool {
      */
     @Override
     protected void uploadThingOver(final boolean flag, final String uniquId, final String responseStr, final JSONObject jsonObject) {
-        Log.i("articleUpload","uploadThingOver() flag:" + flag + "  uniquId: " + uniquId + "  responseStr: " + responseStr + "  json: " + jsonObject.toString());
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(),
@@ -393,10 +370,7 @@ public class AskAnswerUploadListPool extends UploadListPool {
                     @Override
                     public boolean onLoop(UploadItemData itemData) {
                         if (itemData.getUniqueId().equals(uniquId)) {
-                            if (flag) {
-                                if (jsonObject != null)
-                                    Log.e("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
-
+                            if (flag && jsonObject != null) {
                                 if (UploadItemData.TYPE_VIDEO == itemData.getType()){
                                     //处理url,has值丢失
                                     if(TextUtils.isEmpty(responseStr)||(TextUtils.isEmpty(jsonObject.optString("hash")))){

@@ -31,6 +31,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 
+import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.dish.activity.DetailDish.tongjiId;
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -71,6 +72,7 @@ public class  DishActivityViewControlNew {
     private DishViewCallBack callBack;
     private String dishJson = "";
     private int titleHeight;//标题高度
+    private boolean isLoadWebViewData=false;//是否webview加载过数据
 
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
@@ -89,6 +91,7 @@ public class  DishActivityViewControlNew {
      * view的初始化
      */
     private void initView(){
+        Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
         initTitle();
 
@@ -109,11 +112,18 @@ public class  DishActivityViewControlNew {
             public void setOnIngre(String ingre) {
                 saveHistoryToDB(ingre);
             }
+
             @Override
-            public void onLoadFinish() {
+            public void onLoadFinishDelayOne() {
                 if(mFootControl!=null)mFootControl.showFootView();
             }
+
+            @Override
+            public void onLoadFinish() {
+//                if(dishHeaderView!=null)dishHeaderView.showHeaderView();
+            }
         });
+        handlerDishWebviewData();
         //头部view处理
         dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
         videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
@@ -232,14 +242,12 @@ public class  DishActivityViewControlNew {
      * @param dishInfo
      * @param permissionMap
      */
-    public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap,boolean isReadLocal) {
+    public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
+        Log.i("zyj","analyzeDishInfoData::"+(System.currentTimeMillis()-startTime));
         dishJson = dishInfo;
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
-
         dishInfoMap = list.get(0);
-        mXhWebView.loadDishData(mDishCode,isReadLocal);
-
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         if(isHasVideo)tongjiId="a_menu_detail_video";
@@ -416,6 +424,16 @@ public class  DishActivityViewControlNew {
     }
 
     /**
+     * 处理dishWebView的数据
+     */
+    public void handlerDishWebviewData(){
+        if(!isLoadWebViewData) {
+            Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
+            mXhWebView.loadDishData(mDishCode);
+            isLoadWebViewData = true;
+        }
+    }
+    /**
      * 页面限制：显示h5页面，例如：显示一个开通会员页面
      * @param pagePermission
      * @return
@@ -462,4 +480,19 @@ public class  DishActivityViewControlNew {
 
     }
 
+    private String getMapToJson(Map<String,String> map){
+        if(map==null||map.size()>0)return "";
+        String data="";
+        try{
+            JSONObject jsonObject = new JSONObject();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                jsonObject.put(entry.getKey(), entry.getValue());
+            }
+            data= jsonObject.toString();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return data;
+    }
 }

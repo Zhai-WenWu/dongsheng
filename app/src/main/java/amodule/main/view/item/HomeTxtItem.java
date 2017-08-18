@@ -28,9 +28,12 @@ public class HomeTxtItem extends HomeItem {
     private TextView mDesc;
     private ImageView mImg;
     private ImageView mVIP;
+    private ImageView mPlayImg;
     private RelativeLayout mImgs;
     private RelativeLayout mContainer;
     private View mLayerView;
+
+    private boolean mIsVideo;
 
     public HomeTxtItem(Context context) {
         this(context, null);
@@ -51,6 +54,7 @@ public class HomeTxtItem extends HomeItem {
         mDesc = (TextView) findViewById(R.id.desc);
         mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
+        mPlayImg = (ImageView) findViewById(R.id.play_img);
         mImgs = (RelativeLayout) findViewById(R.id.imgs);
         mContainer = (RelativeLayout) findViewById(R.id.txt_container);
         mLayerView = findViewById(R.id.layer_view);
@@ -72,6 +76,19 @@ public class HomeTxtItem extends HomeItem {
                 }
             }
         }
+        String video = mDataMap.get("video");
+        if (!TextUtils.isEmpty(video)) {
+            Map<String, String> videoMap = StringManager.getFirstMap(video);
+            String videoUrl = videoMap.get("videoUrl");
+            if (!TextUtils.isEmpty(videoUrl)) {
+                Map<String, String> videoUrlMap = StringManager.getFirstMap(videoUrl);
+                String defVideoUrl = videoUrlMap.get("defaultUrl");
+                if (!TextUtils.isEmpty(defVideoUrl))
+                    mIsVideo = true;
+            }
+        }
+        if (mIsVideo && mPlayImg != null)
+            mPlayImg.setVisibility(View.VISIBLE);
         int imgCount = 0;
         if(mDataMap.containsKey("style")&& String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))){//右图模式
             if (mDataMap.containsKey("styleData")) {
@@ -121,6 +138,7 @@ public class HomeTxtItem extends HomeItem {
     @Override
     protected void resetData() {
         super.resetData();
+        mIsVideo = false;
     }
 
     @Override
@@ -142,5 +160,7 @@ public class HomeTxtItem extends HomeItem {
             mLayerView.setVisibility(View.GONE);
         if (viewIsVisible(mDesc))
             mDesc.setVisibility(View.GONE);
+        if (viewIsVisible(mPlayImg))
+            mPlayImg.setVisibility(View.GONE);
     }
 }

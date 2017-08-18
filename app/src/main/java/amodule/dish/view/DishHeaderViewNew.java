@@ -47,6 +47,7 @@ import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
+import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
@@ -116,6 +117,7 @@ public class DishHeaderViewNew extends LinearLayout {
         //处理简介
         //头部加载view
         this.addView(videoViewGroup);
+//        INVisibiHeaderView();
     }
 
     /**
@@ -475,5 +477,19 @@ public class DishHeaderViewNew extends LinearLayout {
          * @param mVideoPlayerController
          */
         public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage);
+    }
+
+    /**
+     * 展示view
+     */
+    public void showHeaderView(){
+        this.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 不显示view
+     */
+    public void INVisibiHeaderView(){
+        this.setVisibility(INVISIBLE);
     }
 }

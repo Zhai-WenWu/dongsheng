@@ -302,9 +302,11 @@ public class DishFootControl implements View.OnClickListener{
             case R.id.a_dish_detail_new_relevantTv: //晒我做的这道菜
                 if(!LoginManager.isLogin()){
                     mAct.startActivity(new Intent(mAct,LoginByAccout.class));
+                    return;
                 }
                 Intent showIntent = new Intent(mAct, UploadSubjectNew.class);
                 showIntent.putExtra("dishCode",code);
+                showIntent.putExtra("title",mDishName);
                 showIntent.putExtra("skip", true);
                 showIntent.putExtra("cid", "1");
                 mAct.startActivity(showIntent);
@@ -343,7 +345,6 @@ public class DishFootControl implements View.OnClickListener{
                      handlerDishLikeState("2");
                      onChangeLikeState(dishLikeHover,false);
                  }else {
-//                     dishLikeHover = true;//去点赞
                      dishLikeStatus="1";
                      handlerDishLikeState("1");
                  }
@@ -362,7 +363,6 @@ public class DishFootControl implements View.OnClickListener{
                 intentn.putExtra("title",mDishName);
                 mAct.startActivity(intentn);
                 break;
-
         }
     }
 
@@ -403,7 +403,6 @@ public class DishFootControl implements View.OnClickListener{
         LinkedHashMap<String,String> map = new LinkedHashMap<>();
         map.put("code",code);
         map.put("status",isLike ? "2" : "1");
-        Log.i("zyj","isLike::"+isLike+":::dishLikeStatus"+dishLikeStatus);
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback(mAct) {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -480,7 +479,6 @@ public class DishFootControl implements View.OnClickListener{
         });
     }
     private void handlrAskStatus(String status){
-        Log.i("zyj","status:::"+status);
         askStatus=status;
         switch (status){
             case "2":

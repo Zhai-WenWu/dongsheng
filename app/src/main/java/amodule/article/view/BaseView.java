@@ -21,6 +21,7 @@ public abstract class BaseView extends RelativeLayout {
     protected static final String VIDEO = "video";
     protected static final String URLS = "urls";
     protected OnClickImageListener mOnClickImageListener;
+    protected OnClickListener mOnChooseImageListener;
     protected OnRemoveCallback mOnRemoveCallback;
 
     public BaseView(Context context) {
@@ -51,6 +52,10 @@ public abstract class BaseView extends RelativeLayout {
 
     public void setmOnClickImageListener(OnClickImageListener mOnClickImageListener) {
         this.mOnClickImageListener = mOnClickImageListener;
+    }
+
+    public void setOnChooseCoverListener(OnClickListener onChooseCoverListener){
+        mOnChooseImageListener = onChooseCoverListener;
     }
 
     public OnRemoveCallback getmOnRemoveCallback() {
