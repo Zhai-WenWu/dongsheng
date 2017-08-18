@@ -448,7 +448,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	private void setOrderStatus(int status,final Map<String,String> map){
 		MallButtonView buttonView= new MallButtonView(this);
 		//TODO ceshi
-		map.put("order_comment_status",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
+		map.put("comment_statuts",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
 
 		if("payment_order".equals(order_satus)){//未拆单之前的样子
 			switch (status) {
@@ -634,7 +634,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 				setButtonViewLayout(view_reqeat.findViewById(R.id.textview));
 				order_status_linear.addView(view_reqeat);
 
-				if("1".equals(map.get("order_comment_status"))){
+				if("1".equals(map.get("comment_statuts"))){
 					View view_comment = buttonView.createViewComment(new InterfaceViewCallback() {
 						@Override
 						public void sucessCallBack() {
@@ -644,7 +644,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 					});
 					setButtonViewLayout(view_comment.findViewById(R.id.textview));
 					order_status_linear.addView(view_comment);
-				}else if("2".equals(map.get("order_comment_status"))){
+				}else if("2".equals(map.get("comment_statuts"))){
 					View view_commented = buttonView.createViewCommented();
 					setButtonViewLayout(view_commented.findViewById(R.id.textview));
 					order_status_linear.addView(view_commented);

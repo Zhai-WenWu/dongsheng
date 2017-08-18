@@ -136,7 +136,7 @@ public class OrderItem2View extends ViewItemBase {
 		final ArrayList<Map<String, String>> listMapByJson_product = UtilString.getListMapByJson(map.get("order_product"));
 
 		//TODO ceshi
-		map.put("order_comment_status",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
+		map.put("comment_statuts",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
 
 		if(map.containsKey("shop_code")){
 			order_logistics_back.setVisibility(View.VISIBLE );
@@ -174,7 +174,7 @@ public class OrderItem2View extends ViewItemBase {
 			}
 		});
 		String satus = map.get("order_status");
-		String comment_status = map.get("order_comment_status");
+		String comment_status = map.get("comment_statuts");
 		myorder_merchant_state_2.setText(map.get("order_status_desc"));// 描述
 		MallButtonView buttonView = new MallButtonView(activity);
 		myorder_button_linear.removeAllViews();
@@ -220,7 +220,7 @@ public class OrderItem2View extends ViewItemBase {
 					} else {
 						myorder_state_linear_2.setVisibility(View.GONE);
 						map.put("order_status", "5");
-						map.put("order_comment_status","1");
+						map.put("comment_statuts","1");
 						map.put("order_status_desc", "已完成");
 						myorder_merchant_state_2.setText("完成");
 						myorder_merchant_state_2.setTextColor(Color.parseColor("#333333"));
