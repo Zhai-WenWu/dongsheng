@@ -64,9 +64,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
             position = intent.getIntExtra(EXTRAS_POSITION,position);
             id = intent.getIntExtra(EXTRAS_ID,id);
         }
-        Log.i("tzy",getClass().getSimpleName() + " :: initExtras :: id = " + id + " , position = " + position);
-        //TODO  101382361，101382360 ， 101382362
-//        order_id ="101382362";
     }
 
     private void initView() {

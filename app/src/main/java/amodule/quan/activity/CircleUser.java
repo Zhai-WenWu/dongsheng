@@ -95,7 +95,7 @@ public class CircleUser extends BaseActivity implements OnClickListener{
 		mTvUserNum = (TextView)findViewById(R.id.c_circle_bar_num);
 		headerView = new CircleHeaderView(this);
 		headerView.setVisibility(View.GONE);
-		headerView.initTopView("邀请好友一起玩", "#f1eee4", "#333333",new CircleHeaderView.ItemCallback(){
+		headerView.initTopView("邀请好友一起玩", getResources().getString(R.color.common_bg), "#333333",new CircleHeaderView.ItemCallback(){
 
 			@Override
 			public void onClick(String con) {
