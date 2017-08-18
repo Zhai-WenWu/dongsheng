@@ -69,7 +69,7 @@ public class HomeRecipeItem extends HomeItem {
         mContainer = (RelativeLayout) findViewById(R.id.container);
         mRecommendLine = findViewById(R.id.recommend_line);
         mLayerView = findViewById(R.id.layer_view);
-        addListener();
+
     }
 
     private void addListener() {
@@ -97,6 +97,9 @@ public class HomeRecipeItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
+        //设置监听
+        addListener();
+
         if (mIsAd) {
             if (mLayerView != null)
                 mLayerView.setVisibility(View.VISIBLE);

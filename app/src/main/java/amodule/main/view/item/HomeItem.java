@@ -108,17 +108,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
         mHomeItemBottomView.setVisibility(View.GONE);
 
         mTimeTagContainer = (LinearLayout) findViewById(R.id.time_tag_container);
-        if (mTimeTagContainer != null)
-            mTimeTagContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mRefreshCallBack != null)
-                        mRefreshCallBack.viewOnClick(true);
-                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
-                        XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
-                }
-            });
-        addDefaultListener();
+
     }
 
     private void addDefaultListener() {
@@ -260,6 +250,19 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
     @Override
     public void setData(Map<String, String> dataMap, int position) {
         super.setData(dataMap, position);
+        //设置监听
+        if (mTimeTagContainer != null)
+            mTimeTagContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mRefreshCallBack != null)
+                        mRefreshCallBack.viewOnClick(true);
+                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
+                        XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
+                }
+            });
+        addDefaultListener();
+        //设置数据
         if (mDataMap != null) {
             initData();
             //统计---只展示一次，isShow 2已经显示
