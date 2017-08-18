@@ -33,6 +33,8 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     public static final String STATISTICS_ID = "a_publish_comment";
 
     public static final String EXTRAS_ORDER_ID = "order_id";
+    public static final String EXTRAS_POSITION = "position";
+    public static final String EXTRAS_ID = "id";
 
     private TextView rightText;
     private PtrClassicFrameLayout refershLayout;
@@ -42,8 +44,10 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
     private List<Map<String, String>> commodData = new ArrayList<>();
 
-    private String orderId = "";
-
+    private String order_id = "";
+    private int position = -1;
+    private int id = -1;
+    int status;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +60,13 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         if (intent != null) {
-            orderId = intent.getStringExtra(EXTRAS_ORDER_ID);
+            order_id = intent.getStringExtra(EXTRAS_ORDER_ID);
+            position = intent.getIntExtra(EXTRAS_POSITION,position);
+            id = intent.getIntExtra(EXTRAS_ID,id);
         }
+        Log.i("tzy",getClass().getSimpleName() + " :: initExtras :: id = " + id + " , position = " + position);
         //TODO  101382361，101382360 ， 101382362
-        orderId="101382362";
+//        order_id ="101382362";
     }
 
     private void initView() {
@@ -79,7 +86,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     }
 
     private void setLoading() {
-        adapter = new AdapterEvalution(this, commodData,orderId);
+        adapter = new AdapterEvalution(this, commodData, order_id);
         loadManager.setLoading(refershLayout, commodList, adapter, true,
                 new View.OnClickListener() {
                     @Override
@@ -105,7 +112,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         loadManager.changeMoreBtn(MallReqInternet.REQ_OK_STRING,-1,-1,1,true);
         StringBuilder params = new StringBuilder(MallStringManager.mall_toComment)
                 .append("?order_id=")
-                .append(orderId);
+                .append(order_id);
         MallReqInternet.in().doGet(
                 params.toString(),
                 new MallInternetCallback(this) {
@@ -130,7 +137,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         showUploadingDialog();
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("type", "6");
-        params.put("order_id", orderId);
+        params.put("order_id", order_id);
         params.put("data", getCommentData());
         Log.i("tzy","params = " + params.toString());
         MallReqInternet.in().doPost(MallStringManager.mall_addMuiltComment,
@@ -173,12 +180,20 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: requestCode = " + requestCode);
+        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: resultCode = " + resultCode);
         switch (requestCode){
             case REQUEST_CODE_NEED_REFRESH:
                 if(resultCode == RESULT_OK){
                     refersh();
                 }
                 break;
+            case OrderStateActivity.request_order:
+                if (resultCode == OrderStateActivity.result_comment_success) {
+                    status = requestCode;
+                }
+                break;
+            default:break;
         }
     }
 
@@ -186,6 +201,20 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     public void onBackPressed() {
         XHClick.mapStat(PublishEvalutionMultiActivity.this, STATISTICS_ID,"点击返回按钮","");
         super.onBackPressed();
+    }
+
+    @Override
+    public void finish() {
+        if(id != -1 && position != -1){
+            Log.i("tzy",getClass().getSimpleName() + " :: finish :: id = " + id);
+            Log.i("tzy",getClass().getSimpleName() + " :: finish :: position = " + position);
+            Log.i("tzy",getClass().getSimpleName() + " :: finish :: status = " + status);
+            Intent intent = new Intent();
+            intent.putExtra("code", String.valueOf(id));
+            intent.putExtra("position", String.valueOf(position));
+            setResult(status, intent);
+        }
+        super.finish();
     }
 
     private Dialog mUploadingDialog;

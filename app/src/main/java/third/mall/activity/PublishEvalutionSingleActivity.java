@@ -41,6 +41,8 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     public static final String EXTRAS_PRODUCT_CODE = "product_code";
     public static final String EXTRAS_PRODUCT_IMAGE = "product_img";
     public static final String EXTRAS_SCORE = "score";
+    public static final String EXTRAS_POSITION = "position";
+    public static final String EXTRAS_ID = "id";
 
     public static final int DEFAULT_SCORE = 5;
     public static final int MAX_IMAGE = 3;
@@ -64,9 +66,13 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     EvalutionUploadControl uploadControl;
 
     String orderID = "";
+    String name = "";
     String productID = "";
     String image = "";
+    int position = -1;
+    int id = -1;
     int score = DEFAULT_SCORE;
+     int status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +96,9 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         }catch (Exception ignore){
             score = DEFAULT_SCORE;
         }
+        id = intent.getIntExtra(EXTRAS_ID,id);
+        position = intent.getIntExtra(EXTRAS_POSITION,position);
+        Log.i("tzy",getClass().getSimpleName() + " :: initExtras :: id = " + id + " , position = " + position);
 
         uploadControl = new EvalutionUploadControl(this);
         uploadControl.setOrderId(orderID);
@@ -107,8 +116,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
                     Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
+                    intent.putExtra(EvalutionSuccessActivity.EXTRAS_ID,id);
+                    intent.putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position);
                     intent.putExtra("url","http://m.xiangha.com");
-                    startActivity(intent);
+                    startActivityForResult(intent,OrderStateActivity.request_order);
                 }else{
                     setResult(RESULT_OK);
                     PublishEvalutionSingleActivity.this.finish();
@@ -276,6 +287,8 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: requestCode = " + requestCode);
+        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: resultCode = " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case SELECT_IMAE_REQUEST_CODE:
@@ -285,6 +298,11 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                     updateUploadImages(images);
                     //UI更新同时更新数据
                     imagesLayout.updateImage(images);
+                }
+                break;
+            case OrderStateActivity.request_order:
+                if (resultCode == OrderStateActivity.result_comment_success) {
+                    status = resultCode;
                 }
                 break;
             default:
@@ -346,6 +364,20 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             super.onBackPressed();
         } else
             showSureBackDialog();
+    }
+
+    @Override
+    public void finish() {
+        if(id != -1 && position != -1){
+            Log.i("tzy",getClass().getSimpleName() + " :: finish :: id = " + id);
+            Log.i("tzy",getClass().getSimpleName() + " :: finish :: position = " + position);
+            Log.i("tzy",getClass().getSimpleName() + " :: finish :: status = " + status);
+            Intent intent = new Intent();
+            intent.putExtra("code", String.valueOf(id));
+            intent.putExtra("position", String.valueOf(position));
+            setResult(status, intent);
+        }
+        super.finish();
     }
 
     /** 确认返回 */

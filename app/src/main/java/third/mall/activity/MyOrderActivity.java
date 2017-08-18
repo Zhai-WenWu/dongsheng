@@ -293,6 +293,18 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 						}
 						isRefresh = true;
 						ids.add(id);
+					}else if(resultCode == OrderStateActivity.result_comment_success){//评价成功
+						Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: 评价成功");
+						Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: id = " + id);
+						Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: position = " + position);
+						if (Integer.parseInt(id) == 0) {// 全部
+							fragment.refresh();
+						} else if(Integer.parseInt(id) == 4){// 待评价
+							fragment.listData.remove(Integer.parseInt(position));
+							fragment.adapter.notifyDataSetChanged();
+						}
+						isRefresh = true;
+						ids.add(id);
 					}
 
 				}

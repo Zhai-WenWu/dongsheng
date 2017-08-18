@@ -1,5 +1,7 @@
 package third.mall.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,11 +25,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
 import third.mall.adapter.AdapterOrderState;
@@ -61,7 +65,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	private AdapterOrderState adapter;
 	private ArrayList<Map<String, String>> listMapByJson,listMapByJson_payment;
 	private TextView buycommod_consignee_man_name,buycommod_consignee_man_number,buycommod_consignee_man_address
-	,buycommod_order_number_text,buycommod_commod_price_end,title;
+	,buycommod_order_number_text,copy_order_number_text,buycommod_commod_price_end,title;
 	private Handler handler;
 	private static final int SHOW_OK=1;
 	private String status;
@@ -82,6 +86,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	public static final int result_del= 2001;
 	public static final int result_cancel= 2002;
 	public static final int result_sure= 2003;
+	public static final int result_comment_success = 2004;
 	private int state_now;//当前状态
 	private String url_statistic;
 	private String mall_stat_statistic;
@@ -126,6 +131,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		buycommod_consignee_man_address = (TextView) findViewById(R.id.buycommod_consignee_man_address);
 		//订单号
 		buycommod_order_number_text =(TextView) findViewById(R.id.buycommod_order_number_text);
+		copy_order_number_text = (TextView) findViewById(R.id.copy_order_number_text);
 		//价格
 		buycommod_commod_price_end=(TextView) findViewById(R.id.buycommod_commod_price_end);
 		
@@ -269,9 +275,8 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			break;
 		}
 	}
-	/**
-	 * 去支付
-	 */
+
+	/** 去支付 */
 	private void setToPay(final View view){
 		MallCommon.payment_order_id="";
 		view.setEnabled(false);
@@ -361,7 +366,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		setOrderNumberShowView(listMapByJson.get(0));
 	}
 	
-	private void setOrderNumberShowView(Map<String,String> map){
+	private void setOrderNumberShowView(final Map<String,String> map){
 		//订单
 		String data="订单号：";
 		if("order".equals(order_satus)){
@@ -369,7 +374,16 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			if(map.containsKey("payment_type_desc")&&map.containsKey("order_timing_info")){
 				if(!TextUtils.isEmpty(map.get("payment_type_desc"))||!TextUtils.isEmpty(map.get("order_timing_info"))){
 					buycommod_order_number_text.setVisibility(View.VISIBLE);
-					
+					copy_order_number_text.setVisibility(View.VISIBLE);
+					copy_order_number_text.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							final ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+							ClipData clip = ClipData.newPlainText("simple text copy", map.get("order_id"));
+							manager.setPrimaryClip(clip);
+							Tools.showToast(OrderStateActivity.this,"复制成功");
+						}
+					});
 					if(!TextUtils.isEmpty(map.get("payment_type_desc"))){
 						data+="\n支付方式："+map.get("payment_type_desc");
 					}
@@ -392,6 +406,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			data+="\n下单时间："+map.get("create_time");
 		}
 		buycommod_order_number_text.setText(data);
+
 	}
 	/**
 	 * 设置状态
@@ -406,9 +421,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		}
 	}
 	
-	/**
-	 * 物流信息
-	 */
+	/** 物流信息 */
 	private void getShoppingurl(){
 		url_statistic = MallStringManager.mall_getShippingUrl+"?order_id="+listMapByJson_payment.get(0).get("order_id");
 		MallReqInternet.in().doGet(url_statistic, new MallInternetCallback(this) {
@@ -427,6 +440,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			}
 		});
 	}
+
 	private void setRecommendProduct(){
 		if(list_recommend.size()>0){
 			MyGridView gridview=(MyGridView) findViewById(R.id.gridview);
@@ -450,6 +464,9 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	
 	private void setOrderStatus(int status,final Map<String,String> map){
 		MallButtonView buttonView= new MallButtonView(this);
+		//TODO ceshi
+		map.put("order_comment_status",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
+
 		if("payment_order".equals(order_satus)){//未拆单之前的样子
 			switch (status) {
 			case 1:
@@ -598,6 +615,16 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 						}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
 						setButtonViewLayout(view_repeat.findViewById(R.id.textview));
 						order_status_linear.addView(view_repeat);
+
+						View view_comment = buttonView.createViewComment(new InterfaceViewCallback() {
+							@Override
+							public void sucessCallBack() {
+								ArrayList<Map<String,String>> productArr = StringManager.getListMapByJson(map.get("order_product"));
+								gotoComment(map,productArr);
+							}
+						});
+						setButtonViewLayout(view_comment.findViewById(R.id.textview));
+						order_status_linear.addView(view_comment);
 					}
 				}, map,url_statistic,mall_stat_statistic);
 				setButtonViewLayout(view_receipt.findViewById(R.id.textview));
@@ -623,6 +650,22 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 				}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
 				setButtonViewLayout(view_reqeat.findViewById(R.id.textview));
 				order_status_linear.addView(view_reqeat);
+
+				if("1".equals(map.get("order_comment_status"))){
+					View view_comment = buttonView.createViewComment(new InterfaceViewCallback() {
+						@Override
+						public void sucessCallBack() {
+							ArrayList<Map<String,String>> productArr = StringManager.getListMapByJson(map.get("order_product"));
+							gotoComment(map,productArr);
+						}
+					});
+					setButtonViewLayout(view_comment.findViewById(R.id.textview));
+					order_status_linear.addView(view_comment);
+				}else if("2".equals(map.get("order_comment_status"))){
+					View view_commented = buttonView.createViewCommented();
+					setButtonViewLayout(view_commented.findViewById(R.id.textview));
+					order_status_linear.addView(view_commented);
+				}
 				break;
 			case 6://已取消
 			case 8://已退款
@@ -662,15 +705,75 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 			}
 		}
 	}
-	/**
-	 * 去购物车
-	 */
+
+	/** 去购物车 */
 	private void goShopping(){
 		Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
 		OrderStateActivity.this.startActivity(intent);
 	}
+
+	/**
+	 * 去评价
+	 * @param orderMap
+	 * @param productArray
+	 */
+	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray){
+		if(productArray.size() == 1){
+			gotoCommentSingle(orderMap , StringManager.getFirstMap(productArray.get(0).get("info")));
+		}else if(productArray.size() > 1){
+			gotoCommentMulti(orderMap);
+		}
+	}
+	/**
+	 *
+	 * @param map
+	 */
+	private void gotoCommentMulti(final Map<String, String> map){
+		Intent intent = new Intent(this, PublishEvalutionMultiActivity.class);
+		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ORDER_ID, map.get("order_id"));
+		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_POSITION, position);
+		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ID, code);
+		startActivityForResult(intent, OrderStateActivity.request_order);
+	}
+
+	/**
+	 *
+	 * @param orderMap
+	 * @param productMap
+	 */
+	private void gotoCommentSingle(final Map<String, String> orderMap,Map<String, String> productMap){
+		Intent intent = new Intent(this, PublishEvalutionSingleActivity.class);
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ORDER_ID,orderMap.get("order_id"));
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,productMap.get("product_code"));
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,productMap.get("img"));
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION, position);
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ID, code);
+		startActivityForResult(intent, OrderStateActivity.request_order);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: requestCode = " + requestCode);
+		Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: resultCode = " + resultCode);
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == OrderStateActivity.request_order){
+			if(resultCode == OrderStateActivity.result_comment_success){
+				state_now = OrderStateActivity.result_comment_success;
+				//改变评价按钮状态
+				order_status_linear.removeViewAt(order_status_linear.getChildCount() - 1);
+				MallButtonView buttonView= new MallButtonView(this);
+				View view_commented = buttonView.createViewCommented();
+				setButtonViewLayout(view_commented.findViewById(R.id.textview));
+				order_status_linear.addView(view_commented);
+			}
+		}
+	}
+
 	@Override
 	public void finish() {
+		Log.i("tzy",getClass().getSimpleName() + " :: finish :: id = " + code);
+		Log.i("tzy",getClass().getSimpleName() + " :: finish :: position = " + position);
+		Log.i("tzy",getClass().getSimpleName() + " :: finish :: status = " + state_now);
 		Intent intent= new Intent();
 		intent.putExtra("code", String.valueOf(code));
 		intent.putExtra("position", String.valueOf(position));

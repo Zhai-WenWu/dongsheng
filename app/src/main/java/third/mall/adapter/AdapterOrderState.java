@@ -165,8 +165,10 @@ public class AdapterOrderState extends MallAdapterSimple {
 			}else rela_remark.setVisibility(View.GONE);
 			if(listMapByJson_order.get(0).containsKey("shop_tel")&&!TextUtils.isEmpty(listMapByJson_order.get(0).get("shop_tel"))){
 				rela_shop.setVisibility(View.VISIBLE);
-				tv_shop_tel.setText(listMapByJson_order.get(0).get("shop_tel"));
-			}else rela_shop.setVisibility(View.GONE);
+			//不显示电话号码
+//				tv_shop_tel.setText(listMapByJson_order.get(0).get("shop_tel"));
+			}else
+				rela_shop.setVisibility(View.GONE);
 			rela_shop.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

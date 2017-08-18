@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/common_bg"
-    android:paddingTop="@dimen/dp_15"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingTop="@dimen/dp_15">
 
     <RelativeLayout
         android:id="@+id/rela_mall_order_2"
@@ -13,21 +15,22 @@
         android:background="#fffffe"
         android:paddingLeft="@dimen/dp_15"
         android:paddingRight="@dimen/dp_15"
-        android:visibility="gone" >
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <!-- 商家 -->
 
         <RelativeLayout
             android:id="@+id/myorder_merchant_rela_2"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_37" >
+            android:layout_height="@dimen/dp_37">
 
             <ImageView
                 android:id="@+id/myorder_merchant_iv_2"
                 android:layout_width="@dimen/dp_14"
                 android:layout_height="@dimen/dp_14"
                 android:layout_centerVertical="true"
-                android:background="@drawable/mall_buycommod_commod_merchant_iv" />
+                android:background="@drawable/mall_buycommod_commod_merchant_iv"/>
 
             <TextView
                 android:id="@+id/myorder_merchant_name_2"
@@ -37,18 +40,31 @@
                 android:layout_marginLeft="@dimen/dp_5"
                 android:layout_toRightOf="@+id/myorder_merchant_iv_2"
                 android:textColor="#333333"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_14"
+                tools:text="香哈自营品牌店"/>
 
             <ImageView
-            	android:id="@+id/order_logistics_back"
-            	android:layout_width="@dimen/dp_13"
-            	android:layout_height="@dimen/dp_13"
-           	 	android:layout_toRightOf="@+id/myorder_merchant_name_2"
-            	android:layout_marginLeft="@dimen/dp_15"
-            	android:paddingTop="@dimen/dp_1"
-            	android:layout_centerVertical="true"
-            	android:src="@drawable/z_find_home_ico_go" />
-            
+                android:id="@+id/order_logistics_back"
+                android:layout_width="@dimen/dp_13"
+                android:layout_height="@dimen/dp_13"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_7.5"
+                android:layout_toRightOf="@+id/myorder_merchant_name_2"
+                android:paddingTop="@dimen/dp_1"
+                android:src="@drawable/z_find_home_ico_go"/>
+
+            <TextView
+                android:id="@+id/myorder_check_logistics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_15"
+                android:layout_toLeftOf="@+id/myorder_merchant_state_2"
+                android:text="查看物流"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_13"
+                android:visibility="gone"/>
+
             <TextView
                 android:id="@+id/myorder_merchant_state_2"
                 android:layout_width="wrap_content"
@@ -56,13 +72,14 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:textColor="@color/comment_color"
-                android:textSize="@dimen/sp_13" />
+                android:textSize="@dimen/sp_13"
+                tools:text="已完成"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0.5"
                 android:layout_alignParentBottom="true"
-                android:background="#e1e2e4" />
+                android:background="#e1e2e4"/>
         </RelativeLayout>
         <!-- 商品 -->
 
@@ -70,7 +87,7 @@
             android:id="@+id/myorder_commod_rela_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/myorder_merchant_rela_2" >
+            android:layout_below="@+id/myorder_merchant_rela_2">
 
             <!-- 订单状态.取消.退款.已发送 -->
 
@@ -79,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/myorder_state_order_tv_2"
@@ -88,7 +105,7 @@
                     android:ellipsize="end"
                     android:singleLine="false"
                     android:textColor="#666666"
-                    android:textSize="@dimen/sp_12" />
+                    android:textSize="@dimen/sp_12"/>
 
                 <TextView
                     android:id="@+id/myorder_state_order_tv_explian_2"
@@ -99,8 +116,8 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="#666666"
-                    android:visibility="gone"
-                    android:textSize="@dimen/sp_12" />
+                    android:textSize="@dimen/sp_12"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/myorder_state_order_time_2"
@@ -112,7 +129,7 @@
                     android:singleLine="true"
                     android:text="2015-09-30 14:00"
                     android:textColor="#9a9a9a"
-                    android:textSize="@dimen/sp_10" />
+                    android:textSize="@dimen/sp_10"/>
             </LinearLayout>
 
             <RelativeLayout
@@ -121,30 +138,31 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/myorder_state_linear_2"
                 android:layout_marginBottom="@dimen/dp_12"
-                android:layout_marginTop="@dimen/dp_12" >
+                android:layout_marginTop="@dimen/dp_12">
 
                 <RelativeLayout
-                    android:id="@+id/myorder_explian_iv_2_rela" 
+                    android:id="@+id/myorder_explian_iv_2_rela"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-                <ImageView
-                    android:id="@+id/myorder_explian_iv_2"
-                    android:layout_width="@dimen/dp_65"
-                    android:layout_height="@dimen/dp_65"
-                    android:background="#ff9b9b" />
+
+                    <ImageView
+                        android:id="@+id/myorder_explian_iv_2"
+                        android:layout_width="@dimen/dp_65"
+                        android:layout_height="@dimen/dp_65"
+                        android:background="#ff9b9b"/>
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/myorder_explian_text_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_10"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/myorder_explian_iv_2_rela"
                     android:ellipsize="end"
                     android:lineSpacingExtra="@dimen/dp_1.5"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_13" />
+                    android:textSize="@dimen/sp_13"/>
             </RelativeLayout>
 
             <!-- 多图模式 -->
@@ -156,7 +174,7 @@
                 android:layout_below="@+id/myorder_state_linear_2"
                 android:layout_marginBottom="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </RelativeLayout>
 
         <!-- 价格 -->
@@ -165,13 +183,13 @@
             android:id="@+id/myorder_price_rela_2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_45"
-            android:layout_below="@+id/myorder_commod_rela_2" >
+            android:layout_below="@+id/myorder_commod_rela_2">
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dp_0.5"
                 android:layout_alignParentTop="true"
-                android:background="#e1e2e4" />
+                android:background="#e1e2e4"/>
 
             <TextView
                 android:id="@+id/myorder_price_text_2"
@@ -180,7 +198,7 @@
                 android:layout_centerVertical="true"
                 android:text="实付款："
                 android:textColor="#595056"
-                android:textSize="@dimen/sp_13" />
+                android:textSize="@dimen/sp_13"/>
 
             <TextView
                 android:id="@+id/myorder_price_text_number_2"
@@ -189,18 +207,18 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/myorder_price_text_2"
                 android:textColor="@color/comment_color"
-                android:textSize="@dimen/sp_13" />
+                android:textSize="@dimen/sp_13"/>
             <!-- rong_user_dialog_self -->
 
-			<LinearLayout
-			    android:id="@+id/myorder_button_linear" 
-			    android:layout_width="wrap_content"
-			    android:layout_height="match_parent"
-			    android:layout_alignParentRight="true"
+            <LinearLayout
+                android:id="@+id/myorder_button_linear"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-			    />
+                />
         </RelativeLayout>
     </RelativeLayout>
 

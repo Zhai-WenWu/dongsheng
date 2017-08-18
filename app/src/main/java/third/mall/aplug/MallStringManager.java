@@ -87,10 +87,11 @@ public class MallStringManager extends UtilString {
     public final static String mall_getHotRecommend = mall_apiUrl + "/v1/product/getHotRecommend";
     //sign
     public final static String mall_getToken = mall_apiUrl + "/v2/sign/getToken";
-    //评价
+    //详情页改版&评论
     public final static String mall_toComment = mall_apiUrl + "/v3/order/toComment";
     public final static String mall_addComment = mall_apiUrl + "/v3/comment/addComment";
     public final static String mall_addMuiltComment = mall_apiUrl + "/v3/comment/addMuiltComment";
+    public final static String mall_api_listOrder_v3 = mall_apiUrl + "/v3/order/listOrder";
 
     /**
      * 替换url
