@@ -661,7 +661,6 @@ public class JsAppCommon extends JsBase {
                 //统计
                 Intent it = new Intent(mAct, PlayVideo.class);
                 String urlTemp = url;
-                Log.i("tzy", "videourl = " + url);
                 it.putExtra("url", urlTemp);
                 it.putExtra("name", name);
                 it.putExtra("img", img);

@@ -2,7 +2,6 @@ package third.mall.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -49,7 +48,6 @@ public class EvalutionSuccessActivity extends ShowWeb {
             id = bundle.getInt(EXTRAS_ID,id);
             position = bundle.getInt(EXTRAS_POSITION,position);
         }
-        Log.i("tzy",getClass().getSimpleName() + " :: initExtras :: id = " + id + " , position = " + position);
     }
 
     @Override
@@ -67,8 +65,6 @@ public class EvalutionSuccessActivity extends ShowWeb {
     public void finish() {
         Main.colse_level = 6;
         if(id != -1 && position != -1){
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: id = " + id);
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: position = " + position);
             setResult(OrderStateActivity.result_comment_success, new Intent());
         }
         super.finish();

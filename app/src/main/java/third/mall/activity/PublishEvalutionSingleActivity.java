@@ -99,7 +99,6 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         }
         id = intent.getIntExtra(EXTRAS_ID,id);
         position = intent.getIntExtra(EXTRAS_POSITION,position);
-        Log.i("tzy",getClass().getSimpleName() + " :: initExtras :: id = " + id + " , position = " + position);
 
         uploadControl = new EvalutionUploadControl(this);
         uploadControl.setOrderId(orderID);
@@ -229,14 +228,12 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         imagesLayout.setOnHierarchyChangeCallback(new EvalutionImageLayout.OnHierarchyChangeCallback() {
             @Override
             public void onChildViewAdded(View parent, View child) {
-                Log.i("tzy","onChildViewAdded");
                 updateShareLayoutVisibility();
                 updateSelectImageVisibility();
             }
 
             @Override
             public void onChildViewRemoved(View parent, View child) {
-                Log.i("tzy","onChildViewRemoved");
                 updateShareLayoutVisibility();
                 updateSelectImageVisibility();
                 //移除上传图片
@@ -288,8 +285,6 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: requestCode = " + requestCode);
-        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: resultCode = " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case SELECT_IMAE_REQUEST_CODE:
@@ -370,9 +365,6 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     @Override
     public void finish() {
         if(id != -1 && position != -1){
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: id = " + id);
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: position = " + position);
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: status = " + status);
             Intent intent = new Intent();
             intent.putExtra("code", String.valueOf(id));
             intent.putExtra("position", String.valueOf(position));

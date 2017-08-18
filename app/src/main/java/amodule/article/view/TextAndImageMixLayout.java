@@ -93,10 +93,8 @@ public class TextAndImageMixLayout extends LinearLayout
             removeAllViews();
 
         List<Map<String, String>> dataArray = StringManager.getListMapByJson(content);
-//        Log.i("tzy", "dataArray = " + dataArray.toString());
         for (int index = 0; index < dataArray.size(); index++) {
             Map<String, String> map = dataArray.get(index);
-//            Log.i("tzy", "map = " + map.toString());
             if (!map.containsKey("type")
                     || TextUtils.isEmpty(map.get("type"))) {
                 continue;
@@ -214,7 +212,6 @@ public class TextAndImageMixLayout extends LinearLayout
 
         if (htmlTmep.indexOf(">") + 1 >= 0)
             html = htmlTmep.substring(htmlTmep.indexOf(">") + 1, htmlTmep.length());
-//        Log.i("tzy","html = " + html);
         //处理<a></a>
 //        while (htmlTmep.indexOf("<a") >= 0) {
 //            int startIndex = htmlTmep.indexOf("<a");
@@ -232,9 +229,6 @@ public class TextAndImageMixLayout extends LinearLayout
 //                        break;
 //                    }
 //                }
-//                Log.i("tzy", "htmlTmep = " + htmlTmep);
-//                Log.i("tzy", "title = " + title);
-//                Log.i("tzy", "url = " + url);
 //                if (!TextUtils.isEmpty(title)
 //                        && !TextUtils.isEmpty(url))
 //                    editTextView.addLinkToData(url, title);
@@ -246,7 +240,6 @@ public class TextAndImageMixLayout extends LinearLayout
         if("<br>".equals(html)){
             html = "";
         }
-//        Log.i("tzy","html = " + html);
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
         editTextView.setSelection(editTextView.getRichText().getText().length());
@@ -265,7 +258,6 @@ public class TextAndImageMixLayout extends LinearLayout
             JSONObject jsonObject = baseView.getOutputData();
             if (jsonObject != null)
                 jsonArray.put(jsonObject);
-//            Log.i("tzy", jsonArray.toString());
         }
         jsonArray.put(getUrlsJsonObj());
         return jsonArray.toString();
@@ -462,7 +454,6 @@ public class TextAndImageMixLayout extends LinearLayout
             if (view instanceof ImageShowView) {
                 Map<String, String> map = new HashMap<>();
                 String path = ((ImageShowView) view).getImageUrl();
-//                Log.i("tzy", "getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
                 map.put("path", path);
                 map.put("url", imageMap.get(path));
                 arrayList.add(map);

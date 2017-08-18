@@ -550,7 +550,6 @@ public class ArticleUploadListPool extends UploadListPool {
             Log.i("articleUpload", "combineParameter() uploadArticleData.getVideos():" + uploadArticleData.getVideos());
             uploadTextData.put("title", Uri.encode(uploadArticleData.getTitle(), "utf-8"));
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
-//            Log.i("tzy","content = " + content);
             uploadTextData.put("content", new String(Uri.encode(content, "utf-8")));
             uploadTextData.put("isOriginal", String.valueOf(uploadArticleData.getIsOriginal()));
             uploadTextData.put("repAddress", uploadArticleData.getRepAddress());

@@ -83,7 +83,6 @@ public class VideoFullScreenActivity extends BaseAppCompatActivity implements Vi
 
     /**初始化video UI*/
     private void initVideoView() {
-        Log.i("tzy",this.getClass().getSimpleName() + " : videoUrl = " + videoUrl);
         videoPlayer = (StandardGSYVideoPlayer) findViewById(R.id.video_player);
         Resources resources = getResources();
         videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));

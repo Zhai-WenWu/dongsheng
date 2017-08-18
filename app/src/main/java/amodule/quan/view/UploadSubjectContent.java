@@ -161,13 +161,10 @@ public class UploadSubjectContent implements OnClickListener{
 		          if (heightDiff > 200) {
 		        	  DisplayMetrics dm = new DisplayMetrics();
 		        	  act.getWindowManager().getDefaultDisplay().getMetrics(dm);
-		        	  Log.v("键盘", "键盘弹出状态");
 		        	  int distance= dm.heightPixels-FocusLocation;
-					  Log.i("tzy","heightDiff = " +heightDiff);
 		        	  if(distance<=heightDiff){
 		        		  final int dp_50=(int) act.getResources().getDimension(R.dimen.dp_50);
 		        		  final int src_distance= heightDiff-distance;
-		        		  Log.v("移动", "scrollview");
 		        		  scrollview.postDelayed(new Runnable() {
 							
 		        			  @Override

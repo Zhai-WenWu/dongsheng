@@ -21,7 +21,6 @@ import acore.tools.Tools;
  */
 
 public class EvalutionImageLayout extends LinearLayout {
-    public static final String TAG = "tzy";
 
     public EvalutionImageLayout(Context context) {
         super(context);
@@ -82,7 +81,6 @@ public class EvalutionImageLayout extends LinearLayout {
         for (int index = 0, length = images.size(); index < length; index++) {
             CommodEvalutionImageItem item;
             String imagePath = images.get(index);
-            Log.i(TAG,"imagePath = " + imagePath);
             if(index < getChildCount()){
                 //有image了
                 item = (CommodEvalutionImageItem) getChildAt(index);

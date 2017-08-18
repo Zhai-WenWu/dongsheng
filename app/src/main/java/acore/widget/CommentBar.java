@@ -59,7 +59,6 @@ public class CommentBar extends RelativeLayout {
     int minLength = -1, maxLength = -1;
 
     public void initialize() {
-        Log.i("tzy","initialize");
         View view = LayoutInflater.from(getContext()).inflate(R.layout.v_comment_bar, this);
         setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {}

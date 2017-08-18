@@ -501,7 +501,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                             lastPermission = obj.toString();
                     }
                     permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPagePermission = analyzePagePermissionData(pagePermission);
@@ -792,7 +791,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         }
         if (commentMap != null && allDataListMap.indexOf(commentMap) < 0)
             allDataListMap.add(commentMap);
-//        Log.i("tzy", "index = " + allDataListMap.indexOf(commentMap));
         detailAdapter.notifyDataSetChanged();
     }
 

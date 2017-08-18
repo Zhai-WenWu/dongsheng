@@ -371,10 +371,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
                     int currentS = Math.round(currentTime / 1000f);
                     int durationS = Math.round(totalTime / 1000f);
-                    Log.i("tzy","currentS = " + currentS + " ; durationS = " + durationS);
-                    Log.i("tzy","limitTime = " + limitTime);
-                    Log.i("tzy","progress = " + progress);
-                    Log.i("tzy","======================================");
                     if (currentS >= 0 && durationS >= 0) {
                         if (isHaspause) {
                             mVideoPlayerController.onPause();

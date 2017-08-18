@@ -246,8 +246,6 @@ public class RichParser {
             }
 
             withinStyle(out, text, i, next);
-//            Log.i("tzy","text = " + text);
-//            Log.i("tzy","out = " + out);
             for (int j = spans.length - 1; j >= 0; j--) {
                 if (spans[j] instanceof URLSpan) {
                     out.append("</a>");

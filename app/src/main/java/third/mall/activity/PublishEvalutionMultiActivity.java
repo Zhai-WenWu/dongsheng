@@ -118,7 +118,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                         commodData.clear();
                         loadManager.hideProgressBar();
                         refershLayout.refreshComplete();
-                        Log.i("tzy","msg = " + msg);
                         if (flag >= MallReqInternet.REQ_OK_STRING) {
                             List<Map<String, String>> datas = StringManager.getListMapByJson(msg);
                             commodData.addAll(datas);
@@ -177,8 +176,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: requestCode = " + requestCode);
-        Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: resultCode = " + resultCode);
         switch (requestCode){
             case REQUEST_CODE_NEED_REFRESH:
                 if(resultCode == RESULT_OK){
@@ -203,9 +200,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     @Override
     public void finish() {
         if(id != -1 && position != -1){
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: id = " + id);
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: position = " + position);
-            Log.i("tzy",getClass().getSimpleName() + " :: finish :: status = " + status);
             Intent intent = new Intent();
             intent.putExtra("code", String.valueOf(id));
             intent.putExtra("position", String.valueOf(position));

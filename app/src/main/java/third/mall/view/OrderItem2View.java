@@ -427,7 +427,6 @@ public class OrderItem2View extends ViewItemBase {
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ORDER_ID, map.get("order_id"));
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_POSITION, position);
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ID, id);
-		Log.i("tzy",getClass().getSimpleName() + " :: initExtras :: id = " + id + " , position = " + position);
 		activity.startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 
@@ -444,7 +443,6 @@ public class OrderItem2View extends ViewItemBase {
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,productMap.get("proudct_code"));
         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION, position);
         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ID, id);
-		Log.i("tzy",getClass().getSimpleName() + " :: initExtras :: id = " + id + " , position = " + position);
 		activity.startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 

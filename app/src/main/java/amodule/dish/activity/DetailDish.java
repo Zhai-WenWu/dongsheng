@@ -179,7 +179,6 @@ public class DetailDish extends BaseAppCompatActivity {
                             lastPermission = obj.toString();
                     }
                     permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);

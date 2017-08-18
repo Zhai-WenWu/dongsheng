@@ -244,11 +244,6 @@ public class WebviewManager {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-//                Log.i("tzy","--------------onReceivedError------------------");
-//                Log.i("tzy","errorCode = " + errorCode);
-//                Log.i("tzy","description = " + description);
-//                Log.i("tzy","failingUrl = " + failingUrl);
-//                Log.i("tzy","--------------onReceivedError------------------");
                 webview.loadUrl(ERROR_HTML_URL);
             }
         });

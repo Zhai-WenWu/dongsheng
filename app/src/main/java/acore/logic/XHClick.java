@@ -614,7 +614,6 @@ public class XHClick {
         String param;
         try {
             param = "from=" + URLEncoder.encode(from, "utf-8") + "&link=" + link + "&type=" + type;
-            Log.i("tzy", "param = " + param);
             ReqInternet.in().doPost(actionUrl, param, new InternetCallback(XHApplication.in()) {
 
                 @Override

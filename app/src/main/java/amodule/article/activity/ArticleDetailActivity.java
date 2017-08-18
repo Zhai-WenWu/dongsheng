@@ -384,7 +384,6 @@ public class ArticleDetailActivity extends BaseActivity {
         mArticleAdContrler.setOnBigAdCallback(new ArticleAdContrler.OnBigAdCallback() {
             @Override
             public void onBigAdData(Map<String, String> adDataMap) {
-//                Log.i("tzy","adDataMap = " + adDataMap);
                 if (adDataMap != null) {
                     ArticleDetailActivity.this.adDataMap.putAll(adDataMap);
                     showAd(adDataMap);

@@ -733,8 +733,6 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: requestCode = " + requestCode);
-		Log.i("tzy",getClass().getSimpleName() + " :: onActivityResult :: resultCode = " + resultCode);
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == OrderStateActivity.request_order){
 			if(resultCode == OrderStateActivity.result_comment_success){
@@ -751,9 +749,6 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 
 	@Override
 	public void finish() {
-		Log.i("tzy",getClass().getSimpleName() + " :: finish :: id = " + code);
-		Log.i("tzy",getClass().getSimpleName() + " :: finish :: position = " + position);
-		Log.i("tzy",getClass().getSimpleName() + " :: finish :: status = " + state_now);
 		Intent intent= new Intent();
 		intent.putExtra("code", String.valueOf(code));
 		intent.putExtra("position", String.valueOf(position));

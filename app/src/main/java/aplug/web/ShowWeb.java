@@ -132,7 +132,6 @@ public class  ShowWeb extends WebActivity {
 
 	protected int heightDifference = -1;
 	protected void initCommentBar() {
-		Log.i("tzy","initCommentBar");
 		editControlerLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
 		editControlerLayout.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -337,9 +336,7 @@ public class  ShowWeb extends WebActivity {
         boolean isSameUrl = theUrl != null
                 && webview.getmUrl() != null
                 && !theUrl.equals(webview.getUrl());
-        Log.i("tzy", "selfLoadUrl :: webview.getUrl() = " + webview.getUrl());
         boolean flag = super.selfLoadUrl(theUrl, openThis);
-        Log.i("tzy", "selfLoadUrl :: theUrl = " + theUrl + " ; openThis = " + openThis);
         if (isSameUrl) {
             webview.upWebViewNum();
         }
