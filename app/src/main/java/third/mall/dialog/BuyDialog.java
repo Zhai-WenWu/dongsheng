@@ -168,11 +168,13 @@ public class BuyDialog extends SimpleDialog {
         if(TextUtils.isEmpty(orderInfo)){
             return;
         }
+        findViewById(R.id.next_order).setEnabled(false);
         String param="order_info="+orderInfo;
         MallReqInternet.in().doPost(MallStringManager.mall_checkoutOrder_v2, param, new MallInternetCallback(context) {
 
             @Override
             public void loadstat(int flag, String url, Object msg, Object... stat) {
+                findViewById(R.id.next_order).setEnabled(true);
                 if(flag>= UtilInternet.REQ_OK_STRING){
                     ArrayList<Map<String,String>> list_data=UtilString.getListMapByJson(UtilString.getListMapByJson(msg).get(0).get("sub_order"));
                     if(list_data.size()>0){
