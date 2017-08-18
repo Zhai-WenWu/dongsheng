@@ -301,6 +301,24 @@ public class AppCommon {
             act.startActivity(intentLink);
             return;
 
+        }else if(url.indexOf("nativeWeb.app")==0){//外链 或者是打开某个app
+            String temp = url.substring(url.indexOf("?") + 1, url.length());
+            LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
+            // other app
+            String protocolUrl = map_link.get("protocolurl");
+            // browser
+            String browserUrl = map_link.get("browserurl");
+            String  packageName = map_link.get("package");
+            Intent intentLink = new Intent();
+            intentLink.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse(browserUrl);
+            if (Tools.isPkgInstalled(packageName,XHApplication.in())) {
+                content_url = Uri.parse(protocolUrl);
+            }
+            intentLink.setData(content_url);
+            act.startActivity(intentLink);
+            return;
+
         }
         intent = parseURL(XHApplication.in(), bundle, url);
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
