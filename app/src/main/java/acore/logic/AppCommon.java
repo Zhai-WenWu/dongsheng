@@ -453,7 +453,7 @@ public class AppCommon {
      */
     public synchronized static void saveAppData() {
         final String appDataPath = FileManager.getDataDir() + FileManager.file_appData;
-//        if (FileManager.ifFileModifyByCompletePath(appDataPath, 6 * 60) == null) {
+        if (FileManager.ifFileModifyByCompletePath(appDataPath, 6 * 60) == null) {
             ReqInternet.in().doGet(StringManager.api_appData + "?type=newData", new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, final Object returnObj) {
@@ -475,7 +475,7 @@ public class AppCommon {
                     }.start();
                 }
             });
-//        }
+        }
     }
 
     /**

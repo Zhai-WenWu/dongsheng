@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.mob.MobApplication;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.taobao.sophix.SophixManager;
@@ -37,7 +39,7 @@ import third.push.umeng.UMPushServer;
 
 public class XHApplication extends MobApplication {
     /**包名*/
-    private static final String PACKAGE_NAME = "com.xianghatest";
+    public static final String ONLINE_PACKAGE_NAME = "com.xiangha";
     private static XHApplication mAppApplication;
 
     //仿造单例，获取application对象
@@ -52,7 +54,7 @@ public class XHApplication extends MobApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
         initHotfix();
-        Debuger.enable();
+//        Debuger.enable();
     }
 
     @Override
@@ -65,7 +67,7 @@ public class XHApplication extends MobApplication {
         initUmengPush();
         String processName = Tools.getProcessName(this);
         if (processName != null) {
-            if (processName.equals(PACKAGE_NAME)) {//多进程多初始化，只对xiangha进程进行初始化
+            if (processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
                 initData();
             }
         }
@@ -141,6 +143,7 @@ public class XHApplication extends MobApplication {
             public void onActivityDestroyed(Activity activity) {
             }
         });
+
     }
 
 
