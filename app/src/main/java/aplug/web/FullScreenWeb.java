@@ -15,7 +15,7 @@ import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 
 /**
- * Created by Fang Ruijiao on 2017/3/15.
+ * 全屏weview
  */
 public class FullScreenWeb extends WebActivity {
 

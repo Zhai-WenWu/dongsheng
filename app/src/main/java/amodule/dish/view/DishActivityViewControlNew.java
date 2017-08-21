@@ -2,6 +2,8 @@ package amodule.dish.view;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -28,6 +30,7 @@ import amodule.main.Main;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
+import aplug.web.view.TemplateWebView;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 
@@ -42,7 +45,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 public class  DishActivityViewControlNew {
     private Activity mAct;
     private RelativeLayout bar_title_1;
-    private DishWebView mXhWebView;
+    private TemplateWebView templateWebView;
     private XhScrollView mScrollView;
     private View view_oneImage;
     private RelativeLayout dishVidioLayout;
@@ -106,21 +109,22 @@ public class  DishActivityViewControlNew {
             }
         });
 
-        mXhWebView = (DishWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
-        mXhWebView.setWebViewCallBack(new DishWebView.DishWebViewCallBack() {
-            @Override
-            public void setOnIngre(String ingre) {
-                saveHistoryToDB(ingre);
-            }
-
-            @Override
-            public void onLoadFinishDelayOne() {
-                if(mFootControl!=null)mFootControl.showFootView();
-            }
-
+        templateWebView = (TemplateWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
+        templateWebView.initBaseData(mAct,loadManager);
+        templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
             @Override
             public void onLoadFinish() {
-//                if(dishHeaderView!=null)dishHeaderView.showHeaderView();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mFootControl!=null)mFootControl.showFootView();
+                    }
+                },1*1000);
+            }
+
+            @Override
+            public void onLoadStart() {
+
             }
         });
         handlerDishWebviewData();
@@ -139,7 +143,7 @@ public class  DishActivityViewControlNew {
                 return dishJson;
             }
         });
-        dishTitleViewControl.initView(mAct,mXhWebView);
+        dishTitleViewControl.initView(mAct);
         dishTitleViewControl.setstate(state);
         //底部view
         mFootControl = new DishFootControl(mAct,mDishCode);
@@ -429,7 +433,7 @@ public class  DishActivityViewControlNew {
     public void handlerDishWebviewData(){
         if(!isLoadWebViewData) {
             Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
-            mXhWebView.loadDishData(mDishCode);
+            templateWebView.loadData("XhDish",new String[]{"<{code}>"},new String[]{mDishCode});
             isLoadWebViewData = true;
         }
     }

@@ -85,7 +85,7 @@ public class DetailDish extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        overridePendingTransition(R.anim.activity_open,0);
-        overridePendingTransition(R.anim.in_from_right_400, R.anim.out_to_left);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         super.onCreate(savedInstanceState);
         //处理广告
         Bundle bundle = getIntent().getExtras();
