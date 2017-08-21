@@ -272,6 +272,17 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
         }
     }
 
+    @Override
+    protected void onCountrySelected(String country_code) {
+        super.onCountrySelected(country_code);
+        phone_info.setZoneCode("+" + country_code);
+        if(!"86".equals(country_code)){
+            speechaIdentifyInputView.setVisibility(View.GONE);
+            speechaIdentifyInputView.setState(false);
+            isFirst = true;
+        }
+    }
+
     /**
      *
      * @param valueSuffix 统计值的后缀

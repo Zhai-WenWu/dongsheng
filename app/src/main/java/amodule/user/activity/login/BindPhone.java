@@ -23,7 +23,6 @@ import amodule.user.view.SpeechaIdentifyInputView;
 /**
  * Created by ：fei_teng on 2017/2/21 16:40.
  */
-
 public class BindPhone extends BaseLoginActivity implements View.OnClickListener {
 
     private TextView tv_top_right;

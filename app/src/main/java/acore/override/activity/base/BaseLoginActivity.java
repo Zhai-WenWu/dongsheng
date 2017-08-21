@@ -417,6 +417,7 @@ public class BaseLoginActivity extends BaseActivity {
                             || 476 == status || 477 == status || 478 == status) {
                         Toast.makeText(mAct, "短信验证码使用次数已超限，请明日再试", Toast.LENGTH_SHORT).show();
                     } else {
+                        Tools.showToast(mAct,des);
                     }
                 } catch (Exception e) {
                 }

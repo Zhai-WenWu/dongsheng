@@ -112,11 +112,6 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
             }
         });
 
-        if (TextUtils.isEmpty(zoneCode)) {
-            zoneCode = lastLoginAccout.getAreaCode();
-            phoneNum = lastLoginAccout.getPhoneNum();
-        }
-
         phone_info.init("手机号", zoneCode, phoneNum,
                 new PhoneNumInputView.PhoneNumInputViewCallback() {
                     @Override
@@ -282,6 +277,11 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
     protected void onCountrySelected(String country_code) {
         super.onCountrySelected(country_code);
         phone_info.setZoneCode("+" + country_code);
+        if(!"86".equals(country_code)){
+            speechaIdentifyInputView.setVisibility(View.GONE);
+            speechaIdentifyInputView.setState(false);
+            isFirst = true;
+        }
     }
 
     @Override
