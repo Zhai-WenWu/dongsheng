@@ -107,16 +107,25 @@ public class LostSecret extends BaseLoginActivity {
         });
 
         login_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback() {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(isFirst && millisUntilFinished >= 20 * 1000){
+                    final String zoneCode = phone_info.getZoneCode();
+                    if ("86".equals(zoneCode)) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btn_next_step.getLayoutParams();
+                        layoutParams.setMargins(0, Tools.getDimen(mAct, R.dimen.dp_36), 0, 0);
+                        speechaIdentifyInputView.setState(true);
+                    }
+                }
+            }
+
             @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnState();
                 if ("86".equals(phone_info.getZoneCode())) {
-                    if (isFirst) {
-                        isFirst = false;
-                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btn_next_step.getLayoutParams();
-                        layoutParams.setMargins(0, Tools.getDimen(mAct,R.dimen.dp_36),0,0);
-                    }
                     speechaIdentifyInputView.setState(true);
                 }
             }

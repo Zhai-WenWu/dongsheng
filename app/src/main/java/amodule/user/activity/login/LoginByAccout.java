@@ -133,17 +133,26 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
                 });
 
         login_identify.init("请输入4位验证码", new IdentifyInputView.IdentifyInputViewCallback() {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(isFirst && millisUntilFinished >= 20 * 1000){
+                    final String zoneCode = phone_info.getZoneCode();
+                    if ("86".equals(zoneCode)) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btn_next_step.getLayoutParams();
+                        layoutParams.setMargins(0, Tools.getDimen(mAct, R.dimen.dp_36), 0, 0);
+                        speechaIdentifyInputView.setState(true);
+                    }
+                }
+            }
+
             @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnStat();
                 final String zoneCode = phone_info.getZoneCode();
                 if ("86".equals(zoneCode)) {
-                    if (isFirst) {
-                        isFirst = false;
-                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btn_next_step.getLayoutParams();
-                        layoutParams.setMargins(0, Tools.getDimen(mAct,R.dimen.dp_36),0,0);
-                    }
                     speechaIdentifyInputView.setState(true);
                 }
             }
@@ -223,45 +232,6 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
             }
         });
 
-    }
-
-    private void checkPhone(){
-        checkPhoneRegisted(LoginByAccout.this, zoneCode, phoneNum, new BaseLoginCallback() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onFalse(int flag) {
-                login_identify.setOnBtnClickState(true);
-                speechaIdentifyInputView.setState(true);
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    final XhDialog xhDialog = new XhDialog(LoginByAccout.this);
-                    xhDialog.setTitle("网络有问题或手机号未注册？")
-                            .setCanselButton("取消", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
-                                            "失败原因：弹框未注册，选择不注册");
-                                    xhDialog.cancel();
-                                }
-                            })
-                            .setSureButton("立即注册", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    register(LoginByAccout.this, phone_info.getZoneCode(), phone_info.getPhoneNum());
-                                    XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
-                                            "失败原因：弹框未注册，选择注册");
-                                    xhDialog.cancel();
-                                }
-                            })
-                            .setSureButtonTextColor("#007aff")
-                            .setCancelButtonTextColor("#007aff")
-                            .show();
-                }
-            }
-        });
     }
 
 

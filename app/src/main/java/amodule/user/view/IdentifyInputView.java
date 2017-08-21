@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 
 import com.xianghatest.R;
 
+import static com.baidu.location.b.k.ca;
+
 /**
  * Created by dao on 2017/2/19.
  */
@@ -69,6 +71,7 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
                 btn_identify_request.setTextColor(Color.parseColor("#999999"));
                 btn_identify_request.setClickable(false);
                 btn_identify_request.setText("重新获取(" + (int)(millisUntilFinished / 1000) + ")");
+                callback.onTick(waitTime * 1000 - millisUntilFinished);
             }
 
             @Override
@@ -122,6 +125,12 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
     }
 
     public interface IdentifyInputViewCallback {
+
+        /**
+         * 每隔countDownInterval秒会回调一次onTick()方法
+         * @param millisUntilFinished
+         */
+        void onTick(long millisUntilFinished);
 
         /**
          * 倒计时完成后回调
