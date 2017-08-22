@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -37,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -61,6 +63,7 @@ import aplug.basic.LoadImage;
 import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
+import aplug.web.view.TemplateWebView;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallCommon.InterfaceMallAddShopping;
@@ -120,6 +123,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     private FavorableDialog favorableDialog;
     private int productNum = 1;//购买商品数量
     private BuyDialog buyDialog;
+    private TemplateWebView middle_templateWebView;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -156,17 +160,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
      */
     private void initView() {
         initTopView();
+        initWeb();
         findViewById(R.id.linear_buy).setVisibility(View.GONE);
-        explain_detail_webview = (WebView) findViewById(R.id.explain_detail_webview);
-        explain_detail_webview.getSettings().setJavaScriptEnabled(true);// 执行角标文件
-        explain_detail_webview.setScrollBarStyle(0);// 滚动条风格，为0就是不给滚动条留空间，滚动条覆盖在网页上
-        explain_detail_webview.setHorizontalScrollBarEnabled(false);
-        explain_detail_webview.setVerticalScrollBarEnabled(true);
-        explain_detail_webview.getSettings().setDefaultTextEncodingName("UTF-8");
-        //兼容https,在部分版本上资源显示不全的问题
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            explain_detail_webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
         findViewById(R.id.commod_shop_linear).setOnClickListener(this);
         findViewById(R.id.service_mercat).setOnClickListener(this);
         commod_buy= (TextView) findViewById(R.id.commod_buy);
@@ -188,7 +183,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 Log.i("zyj", "setInterfaceSv::" + state);
             }
         });
-
         mall_ScrollViewContainer = (ScrollViewContainer) findViewById(R.id.mall_ScrollViewContainer);
         mall_ScrollViewContainer.setInterface(new ScrollviewContaninerInter() {
             @Override
@@ -208,9 +202,11 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         int width = wm.getDefaultDisplay().getWidth();
         RelativeLayout viewpager_layout = (RelativeLayout) findViewById(R.id.viewpager_layout);
         viewpager_layout.setLayoutParams(new RelativeLayout.LayoutParams(width, width));
-
     }
 
+    /**
+     * 初始化标题
+     */
     private void initTopView() {
         back = (RelativeLayout) findViewById(R.id.back);
         back.setOnClickListener(this);
@@ -227,6 +223,36 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         handleTitleState();
         title.setOnClickListener(this);
         title_detail.setOnClickListener(this);
+    }
+
+    /**
+     * 初始化web
+     */
+    private void initWeb(){
+        //中间模版数据
+        middle_templateWebView= (TemplateWebView) findViewById(R.id.middle_templateWebView);
+        middle_templateWebView.initBaseData(this,loadManager);
+        middle_templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
+            @Override
+            public void onLoadFinish() {
+                int height=middle_templateWebView.getMeasuredHeight();
+                if(mall_ScrollViewContainer!=null)mall_ScrollViewContainer.setOneViewHeight(height);
+            }
+            @Override
+            public void onLoadStart() {
+            }
+        });
+        //底部webview
+        explain_detail_webview = (WebView) findViewById(R.id.explain_detail_webview);
+        explain_detail_webview.getSettings().setJavaScriptEnabled(true);// 执行角标文件
+        explain_detail_webview.setScrollBarStyle(0);// 滚动条风格，为0就是不给滚动条留空间，滚动条覆盖在网页上
+        explain_detail_webview.setHorizontalScrollBarEnabled(false);
+        explain_detail_webview.setVerticalScrollBarEnabled(true);
+        explain_detail_webview.getSettings().setDefaultTextEncodingName("UTF-8");
+        //兼容https,在部分版本上资源显示不全的问题
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            explain_detail_webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
     }
 
     /**
@@ -294,7 +320,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 load_state = true;
                 findViewById(R.id.widget_progress).setVisibility(View.VISIBLE);
-                findViewById(R.id.explain_detail_but_linear).setVisibility(View.GONE);
                 findViewById(R.id.explain_detail_linear).setVisibility(View.GONE);
                 findViewById(R.id.explain_detail_webview).setVisibility(View.GONE);
                 super.onPageStarted(view, url, favicon);
@@ -304,7 +329,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
             public void onPageFinished(WebView view, String url) {
                 load_state = false;
                 findViewById(R.id.widget_progress).setVisibility(View.GONE);
-                findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
                 findViewById(R.id.explain_detail_linear).setVisibility(View.VISIBLE);
                 findViewById(R.id.explain_detail_webview).setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
@@ -381,7 +405,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         initViewPager(images);
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
         mall_ScrollViewContainer.setState_two(false);
-        findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
+        middle_templateWebView.loadData("XhDish",new String[]{"<{code}>"},new String[]{"94888485"});
 
     }
 

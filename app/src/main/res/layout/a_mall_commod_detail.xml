@@ -295,39 +295,12 @@
                             android:layout_height="@dimen/dp_15"
                             android:layout_below="@+id/view_getfavorable"/>
                     </RelativeLayout>
-
-
-                    <RelativeLayout
+                    <aplug.web.view.TemplateWebView
+                        android:id="@+id/middle_templateWebView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/title_commod_rela">
-
-
-                        <LinearLayout
-                            android:id="@+id/explain_detail_but_linear"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dp_15"
-                            android:layout_centerInParent="true"
-                            android:layout_marginBottom="@dimen/dp_15"
-                            android:layout_marginTop="@dimen/dp_15"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="@dimen/dp_13"
-                                android:layout_height="@dimen/dp_8"
-                                android:layout_gravity="center_vertical"
-                                android:background="@drawable/mall_explain_detail_but_linear_iv"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="@dimen/dp_6"
-                                android:text="上拉查看详细介绍"
-                                android:textColor="#8a8f97"
-                                android:textSize="@dimen/sp_12"/>
-                        </LinearLayout>
-                    </RelativeLayout>
+                    </aplug.web.view.TemplateWebView>
                 </RelativeLayout>
 
                 <RelativeLayout

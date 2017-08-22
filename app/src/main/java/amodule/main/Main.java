@@ -79,6 +79,7 @@ import amodule.user.activity.MyMessage;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
+import aplug.web.ShowTemplateWeb;
 import third.ad.control.AdControlHomeDish;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
@@ -794,6 +795,11 @@ public class Main extends Activity implements OnClickListener {
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
+                    Intent intent = new Intent(this,ShowTemplateWeb.class);
+                    intent.putExtra(ShowTemplateWeb.ORIGINDATA,new String[]{"<{code}>"});
+                    intent.putExtra(ShowTemplateWeb.NOWDATA,new String[]{"94888485"});
+                    intent.putExtra(ShowTemplateWeb.REQUESTMETHOD,"XhDish");
+                    this.startActivity(intent);
                 }
                 // 当软件所在页面正式你要刷新的页面,就直接刷新,不在跳了
 //				if (tabHost.getCurrentTab() == i && i == 2) {
