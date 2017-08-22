@@ -320,7 +320,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 load_state = true;
                 findViewById(R.id.widget_progress).setVisibility(View.VISIBLE);
-                findViewById(R.id.explain_detail_linear).setVisibility(View.GONE);
+                findViewById(R.id.explain_detail_but_linear).setVisibility(View.GONE);
+//                findViewById(R.id.explain_detail_linear).setVisibility(View.GONE);
                 findViewById(R.id.explain_detail_webview).setVisibility(View.GONE);
                 super.onPageStarted(view, url, favicon);
             }
@@ -329,7 +330,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
             public void onPageFinished(WebView view, String url) {
                 load_state = false;
                 findViewById(R.id.widget_progress).setVisibility(View.GONE);
-                findViewById(R.id.explain_detail_linear).setVisibility(View.VISIBLE);
+                findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
+//                findViewById(R.id.explain_detail_linear).setVisibility(View.VISIBLE);
                 findViewById(R.id.explain_detail_webview).setVisibility(View.VISIBLE);
                 super.onPageFinished(view, url);
             }

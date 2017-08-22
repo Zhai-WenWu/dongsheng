@@ -31,8 +31,6 @@ public class ShowTemplateWeb extends WebActivity{
     protected RelativeLayout shareLayout;
     protected RelativeLayout favLayout,homeLayout;
     protected TextView favoriteNousTextView,title;
-    private RelativeLayout shopping_layout;
-    private TextView mall_news_num,mall_news_num_two;
     private TemplateWebView templateWebView;
 
     @Override
@@ -81,9 +79,6 @@ public class ShowTemplateWeb extends WebActivity{
 //		收藏按钮图片
         favoriteNousImageView = (ImageView) findViewById(R.id.img_fav);
         favoriteNousTextView = (TextView) findViewById(R.id.tv_fav);
-        shopping_layout = (RelativeLayout) findViewById(R.id.shopping_layout);
-        mall_news_num = (TextView) findViewById(R.id.mall_news_num);
-        mall_news_num_two = (TextView) findViewById(R.id.mall_news_num_two);
     }
 
     /**
