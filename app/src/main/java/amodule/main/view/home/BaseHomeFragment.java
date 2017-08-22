@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.ValueCallback;
 import android.widget.RelativeLayout;
 
 import java.util.Map;
@@ -50,6 +48,7 @@ public class BaseHomeFragment extends Fragment {
         return (BaseHomeFragment) setArgumentsToFragment(fragment, moduleBean);
     }
 
+    /** 将储块信息存板到Argument中 */
     public static Fragment setArgumentsToFragment(Fragment fragment, HomeModuleBean moduleBean) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(MODULEDATA, moduleBean);

@@ -79,13 +79,13 @@ public class XHConf extends BasicConf {
 //			if(jsonStr.length()>1) net_domain2ipJson=jsonStr;
 //		}
 		String httpData= AppCommon.getConfigByLocal("netProtocol");
-		Log.i("wyj","httpData:::"+httpData);
+		Log.i("zyj","httpData:::"+httpData);
 		if(!TextUtils.isEmpty(httpData)){
 			Map<String,String> map=StringManager.getFirstMap(httpData);
 			if(map!=null&&map.containsKey("text")&&!TextUtils.isEmpty(map.get("text"))) {
 				StringManager.httpState=map.get("text").equals("http");
 				StringManager.changeUrl(StringManager.httpState?"http://":"","");
-				Log.i("wyj","MallStringManager.httpData:::"+MallStringManager.httpData);
+				Log.i("zyj","MallStringManager.httpData:::"+MallStringManager.httpData);
 			}
 		}
 

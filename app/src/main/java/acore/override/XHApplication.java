@@ -10,10 +10,7 @@ import android.util.Log;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
 import com.mob.MobApplication;
-import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -54,7 +51,6 @@ public class XHApplication extends MobApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
         initHotfix();
-//        Debuger.enable();
     }
 
     @Override
