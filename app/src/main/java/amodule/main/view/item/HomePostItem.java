@@ -64,47 +64,29 @@ public class HomePostItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
-        if (mDataMap.containsKey("styleData")) {
-            String imgs = mDataMap.get("styleData");
-            if (!TextUtils.isEmpty(imgs)) {
-                ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(imgs);
-                if (maps != null && maps.size() >= 3) {
-                    if (mImgsContainerCenter != null)
-                        mImgsContainerCenter.setVisibility(View.VISIBLE);
-                    if (mIsAd) {
-                        if (mLayerView1 != null)
-                            mLayerView1.setVisibility(View.VISIBLE);
-                        if (mLayerView2 != null)
-                            mLayerView2.setVisibility(View.VISIBLE);
-                        if (mLayerView3 != null)
-                            mLayerView3.setVisibility(View.VISIBLE);
-                    }
-                    loadImage(maps.get(0).get("url"), mImg1);
-                    loadImage(maps.get(1).get("url"), mImg2);
-                    loadImage(maps.get(2).get("url"), mImg3);
+        String imgs = mDataMap.get("styleData");
+        if (!TextUtils.isEmpty(imgs)) {
+            ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(imgs);
+            if (maps != null && maps.size() >= 3) {
+                mImgsContainerCenter.setVisibility(View.VISIBLE);
+                if (mIsAd) {
+                    mLayerView1.setVisibility(View.VISIBLE);
+                    mLayerView2.setVisibility(View.VISIBLE);
+                    mLayerView3.setVisibility(View.VISIBLE);
                 }
+                loadImage(maps.get(0).get("url"), mImg1);
+                loadImage(maps.get(1).get("url"), mImg2);
+                loadImage(maps.get(2).get("url"), mImg3);
             }
         }
-        String title = "";
-        if (mIsAd) {
-            if (mDataMap.containsKey("content")) {
-                title = mDataMap.get("content");
-            }
-        } else if (mDataMap.containsKey("name")) {
-            title = mDataMap.get("name");
-        }
-        if (!TextUtils.isEmpty(title) && mTitle != null) {
-            mTitle.setText(title);
-            mTitle.setVisibility(View.VISIBLE);
-        }
+        String title = mIsAd ? mDataMap.get("content") : mDataMap.get("name");
+        mTitle.setText(title);
+        mTitle.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
     }
 
     @Override
     protected void resetView() {
         super.resetView();
-        if (viewIsVisible(mTitle))
-            mTitle.setVisibility(View.GONE);
-        if (viewIsVisible(mImgsContainerCenter))
-            mImgsContainerCenter.setVisibility(View.GONE);
+        mImgsContainerCenter.setVisibility(View.GONE);
     }
 }

@@ -57,50 +57,39 @@ public class HomeAnyImgStyleItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
-        boolean hasTitleTop = false;
         String titleTop = mDataMap.get("name");
-        if (!TextUtils.isEmpty(titleTop)) {
-            mTitleTop.setText(titleTop);
-            mTitleTop.setVisibility(View.VISIBLE);
-            hasTitleTop = true;
-        }
-        if (mModuleBean != null && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip"))) {
+        boolean hasTitleTop = !TextUtils.isEmpty(titleTop);
+        mTitleTop.setText(titleTop);
+        mTitleTop.setVisibility(hasTitleTop ? View.VISIBLE : View.GONE);
+        if (mModuleBean != null && !mIsAd && "2".equals(mDataMap.get("isVip"))) {
             mVIP.setVisibility(View.VISIBLE);
         }
-        ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
-        if (datas != null && datas.size() > 0) {
-            Map<String, String> imgMap = datas.get(0);
-            if (imgMap != null && imgMap.size() > 0) {
-                String imgUrl = imgMap.get("url");
-                MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
-                if (mIsAd) {
-                    if (mLayerView != null)
-                        mLayerView.setVisibility(View.VISIBLE);
-
-                    int[] size = new int[2];
-                    getADImgSize(size, mDataMap.get("style"));
-                    if (size[0] > 0 && size[1] > 0) {
-                        containerParams.width = size[0];
-                        containerParams.height = size[1];
-                    }
-                    mContainer.requestLayout();
-                    mContainer.invalidate();
-                } else {
-                    int[] size = new int[2];
-                    ImageUtility.getInstance().getImageSizeByUrl(imgUrl, size);
-                    if (size[0] > 0 && size[1] > 0) {
-                        int fixedWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
-                        int newHeight = fixedWidth * size[1] / size[0];
-                        RelativeLayout.LayoutParams params = (LayoutParams) mImg.getLayoutParams();
-                        params.height = newHeight;
-                        containerParams.height = newHeight;
-                    }
+        Map<String, String> imgMap = StringManager.getFirstMap(mDataMap.get("styleData"));
+        if (imgMap.size() > 0) {
+            String imgUrl = imgMap.get("url");
+            MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
+            if (mIsAd) {
+                mLayerView.setVisibility(View.VISIBLE);
+                int[] size = new int[2];
+                getADImgSize(size, mDataMap.get("style"));
+                if (size[0] > 0 && size[1] > 0) {
+                    containerParams.width = size[0];
+                    containerParams.height = size[1];
                 }
-                containerParams.topMargin = getResources().getDimensionPixelSize(hasTitleTop ? R.dimen.dp_6 : R.dimen.dp_15);
-                requestLayout();
-                invalidate();
-                loadImage(imgUrl, mImg);
+            } else {
+                int[] size = new int[2];
+                ImageUtility.getInstance().getImageSizeByUrl(imgUrl, size);
+                if (size[0] > 0 && size[1] > 0) {
+                    int fixedWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
+                    int newHeight = fixedWidth * size[1] / size[0];
+                    RelativeLayout.LayoutParams params = (LayoutParams) mImg.getLayoutParams();
+                    params.height = newHeight;
+                    containerParams.height = newHeight;
+                }
             }
+            containerParams.topMargin = getResources().getDimensionPixelSize(hasTitleTop ? R.dimen.dp_6 : R.dimen.dp_15);
+            mContainer.setLayoutParams(containerParams);
+            loadImage(imgUrl, mImg);
         }
 
     }
@@ -113,20 +102,14 @@ public class HomeAnyImgStyleItem extends HomeItem {
         MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
         containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         containerParams.width = MarginLayoutParams.MATCH_PARENT;
-        mContainer.requestLayout();
-        mContainer.invalidate();
+        mContainer.setLayoutParams(containerParams);
     }
 
     @Override
     protected void resetView() {
         super.resetView();
-        if (viewIsVisible(mTitleTop))
-            mTitleTop.setVisibility(View.GONE);
-        if (viewIsVisible(mImg))
-            mImg.setVisibility(View.GONE);
-        if (viewIsVisible(mVIP))
-            mVIP.setVisibility(View.GONE);
-        if (viewIsVisible(mLayerView))
-            mLayerView.setVisibility(View.GONE);
+        mImg.setVisibility(View.GONE);
+        mVIP.setVisibility(View.GONE);
+        mLayerView.setVisibility(View.GONE);
     }
 }
