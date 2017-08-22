@@ -28,6 +28,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
@@ -85,8 +86,6 @@ public class BaseEditActivity extends BaseActivity {
     protected AskAnswerModel mModel;
     protected AskAnswerSQLite mSQLite;
 
-    private AskAnswerModel mFirstDB;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +110,6 @@ public class BaseEditActivity extends BaseActivity {
         }
         mModel = new AskAnswerModel();
         mSQLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
-        mFirstDB = mSQLite.queryFirstData();
     }
 
     protected void initView(String title, int contentResId) {
@@ -273,6 +271,22 @@ public class BaseEditActivity extends BaseActivity {
         });
     }
 
+    protected void initImgControllerData (AskAnswerModel model) {
+        if (model == null)
+            return;
+        ArrayList<Map<String, String>> imgsArr = StringManager.getListMapByJson(model.getmImgs());
+        if (!imgsArr.isEmpty()) {
+            for (Map<String, String> img : imgsArr)
+                mImgController.addData(img);
+        } else {
+            ArrayList<Map<String, String>> videosArr = StringManager.getListMapByJson(model.getmVideos());
+            if (!videosArr.isEmpty()) {
+                for (Map<String, String> img : videosArr)
+                    mImgController.addData(img);
+            }
+        }
+    }
+
     protected void onPayFin(boolean succ, Object data){};
 
     protected boolean handleUpload() {
@@ -361,14 +375,9 @@ public class BaseEditActivity extends BaseActivity {
         Editable editable = mEditText.getText();
         ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
         ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
-        long id = mModel.getmId();
         if ((editable == null || TextUtils.isEmpty(editable.toString()) || editable.toString().trim().length() == 0) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
-            if (id > 0)
-                mSQLite.deleteData((int) id);
             return rowId;
         }
-        if (mFirstDB != null)
-            mModel.setmId(mFirstDB.getmId());
         mModel.setmText(editable == null ? "" : editable.toString());
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
         mModel.setmVideos(videoArrs);
