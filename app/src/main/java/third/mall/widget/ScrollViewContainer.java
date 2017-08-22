@@ -271,6 +271,15 @@ public class ScrollViewContainer extends RelativeLayout {
             ScrollView sv = (ScrollView) v;
             canPullUp = sv.getScrollY() == (sv.getChildAt(0).getMeasuredHeight() - sv
                     .getMeasuredHeight()) && mCurrentViewIndex == 0;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    if (sv.getChildAt(0)  != null && sv.getChildAt(0) .getMeasuredHeight() <= sv.getScrollY() + sv.getHeight()) {
+                        Log.i("wyl","--到底部了");
+                    } else if (sv.getScrollY() == 0) {
+                        Log.i("wyl","-到顶部了");
+                    }
+                    break;
+            }
             return false;
         }
     };
@@ -281,6 +290,15 @@ public class ScrollViewContainer extends RelativeLayout {
 
             ScrollView sv = (ScrollView) v;
             canPullDown = sv.getScrollY() == 0 && mCurrentViewIndex == 1;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    if (sv.getChildAt(0)  != null && sv.getChildAt(0) .getMeasuredHeight() <= sv.getScrollY() + sv.getHeight()) {
+                        Log.i("wyl","--到底部了");
+                    } else if (sv.getScrollY() == 0) {
+                        Log.i("wyl","-到顶部了");
+                    }
+                    break;
+            }
             return false;
         }
     };
@@ -357,7 +375,9 @@ public class ScrollViewContainer extends RelativeLayout {
             case "2"://滚动到第二视图
                 if(1!=mCurrentViewIndex) {
                     if (vt == null) vt = VelocityTracker.obtain();
-                    mMoveLen = -1;
+                    if(OneViewheight>0){
+                        mMoveLen=-OneViewheight;
+                    }else mMoveLen = -1;
                     state = AUTO_UP;
                     mTimer.schedule(2);
                 }
@@ -365,4 +385,13 @@ public class ScrollViewContainer extends RelativeLayout {
         }
     }
 
+    private int OneViewheight;
+
+    /**
+     * 设置当前view的高度
+     * @param height
+     */
+    public void setOneViewHeight(int height){
+        this.OneViewheight= height;
+    }
 }
