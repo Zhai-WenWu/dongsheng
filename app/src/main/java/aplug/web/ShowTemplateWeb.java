@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.xianghatest.R;
 
 import acore.override.activity.base.WebActivity;
-import acore.widget.CommentBar;
 import aplug.web.tools.JSAction;
 import aplug.web.view.TemplateWebView;
 
