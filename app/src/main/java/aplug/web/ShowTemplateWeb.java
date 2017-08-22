@@ -1,6 +1,10 @@
 package aplug.web;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,12 +21,11 @@ import aplug.web.view.TemplateWebView;
  * 展示模版url
  */
 public class ShowTemplateWeb extends WebActivity{
-    protected String url = "", htmlData = "";
-    private long startTime=0;
-    private String data_type="";
-    private String code="";//code--首页使用功能
-    private String module_type="";
-    private String userCode = "";
+    public static final String ORIGINDATA ="originData";//替换原始数据的集合key
+    public static final String NOWDATA ="nowData";//替换后数据的集合的key
+    public static final String REQUESTMETHOD ="requestmethod";//替换后数据的集合的key
+    protected String requestmethod = "";
+    private String[] originData, nowData;
 
     protected Button rightBtn;
     protected ImageView favoriteNousImageView;
@@ -39,26 +42,37 @@ public class ShowTemplateWeb extends WebActivity{
         initExtras();
         initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_template_webview);
         initUI();
-
+        loadManager.setLoading(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadData();
+            }
+        });
     }
 
-    private void initUI() {
-        initTitleView();
-        initWeb();
-    }
-
+    /**
+     * 获取外部的参数
+     */
     private void initExtras(){
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用
         if (bundle != null) {
-            url = bundle.getString("requestmethod");
-            startTime=System.currentTimeMillis();
-            data_type = bundle.getString("data_type");
-            code= bundle.getString("code");
-            module_type= bundle.getString("module_type");
+            requestmethod = bundle.getString(REQUESTMETHOD);
+            originData=bundle.getStringArray(ORIGINDATA);
+            nowData=bundle.getStringArray(NOWDATA);
             JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
         }
     }
+    /**
+     * 初始化ui
+     */
+    private void initUI() {
+        initTitleView();
+        initWeb();
+    }
+    /**
+     * 初始化标题
+     */
     protected void initTitleView() {
         title = (TextView) findViewById(R.id.title);
         rightBtn = (Button) findViewById(R.id.rightBtn1);
@@ -72,8 +86,26 @@ public class ShowTemplateWeb extends WebActivity{
         mall_news_num = (TextView) findViewById(R.id.mall_news_num);
         mall_news_num_two = (TextView) findViewById(R.id.mall_news_num_two);
     }
+
+    /**
+     * web初始化
+     */
     private void initWeb(){
         templateWebView= (TemplateWebView) findViewById(R.id.TemplateWebView);
+        templateWebView.initBaseData(this,loadManager);
+        templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
+            @Override
+            public void onLoadFinish() {
+            }
+            @Override
+            public void onLoadStart() {
+            }
+        });
+    }
+
+    @Override
+    public void loadData() {
+        templateWebView.loadData(requestmethod,originData,nowData);
     }
 
     @Override

@@ -37,6 +37,7 @@ import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.JsBase;
 import aplug.web.tools.TemplateWebViewControl;
 import aplug.web.tools.WebviewManager;
+import aplug.web.tools.XHTemplateManager;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -255,8 +256,8 @@ public class TemplateWebView extends XHWebView{
      * @param nowData
      */
     public void loadData(String requestMethod, final String[] originData, final String[] nowData ){
-        TemplateWebViewControl templateWebViewControl = new TemplateWebViewControl();
-        templateWebViewControl.setMouldCallBack(new TemplateWebViewControl.MouldCallBack() {
+        XHTemplateManager xhTemplateManager = new XHTemplateManager();
+        xhTemplateManager.getSingleTemplate(requestMethod,new TemplateWebViewControl.MouldCallBack() {
             @Override
             public void load(boolean isSuccess, String data, String requestMothed, String version) {
                 mMouldVersion = version;
@@ -272,6 +273,5 @@ public class TemplateWebView extends XHWebView{
                 }
             }
         });
-        templateWebViewControl.getH5MDWithRequestMed(requestMethod);
     }
 }

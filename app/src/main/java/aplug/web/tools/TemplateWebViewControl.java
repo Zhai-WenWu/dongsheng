@@ -22,6 +22,7 @@ import third.mall.aplug.MallStringManager;
 
 /**
  * 电商webview的模版控制的类
+ * 严谨外部使用
  */
 public class TemplateWebViewControl {
     /**
@@ -31,7 +32,9 @@ public class TemplateWebViewControl {
      * @param requestMethod
      */
     public void handleXHMouldData(final String requestMethod) {
-//        final String key=StringManager.stringToMD5(url.toLowerCase()).toLowerCase();
+//        final String key=StringManager.stringToMD5(url.toLowersuCase()).toLowerCase();
+        long time= System.currentTimeMillis();
+        Log.i("zyj","time::handleXHMouldData::"+(time-XHTemplateManager.starttime));
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(), requestMethod, "versionSign");
@@ -42,6 +45,8 @@ public class TemplateWebViewControl {
             @Override
             public void loaded(int i, String s, final Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
+                    long time= System.currentTimeMillis();
+                    Log.i("zyj","time::url::"+(time-XHTemplateManager.starttime));
                     if (!TextUtils.isEmpty(String.valueOf(o)) && !"[]".equals(String.valueOf(o)) && StringManager.getFirstMap(o).size() > 0) {
                         Map<String, String> map = StringManager.getFirstMap(o);
                         String data = map.get("html");
@@ -128,6 +133,8 @@ public class TemplateWebViewControl {
      * @param requestMethod
      */
     public void getH5MDWithRequestMed(String requestMethod) {
+        long time= System.currentTimeMillis();
+        Log.i("zyj","time::getH5MDWithRequestMed::"+(time-XHTemplateManager.starttime));
         if (TextUtils.isEmpty(requestMethod)) {
             return;
         }
