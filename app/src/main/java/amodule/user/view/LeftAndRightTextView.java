@@ -21,6 +21,7 @@ public class LeftAndRightTextView extends RelativeLayout implements View.OnClick
     private final Context context;
     private TextView tv_left;
     private TextView tv_right;
+    private TextView tv_hint_newInfo;
     private ImageView iv_right,iv_switch;
     private View line_bottom;
     private RelativeLayout rl_outer;
@@ -44,6 +45,7 @@ public class LeftAndRightTextView extends RelativeLayout implements View.OnClick
     private void initView() {
         tv_left = (TextView) findViewById(R.id.tv_left);
         tv_right = (TextView) findViewById(R.id.tv_right);
+        tv_hint_newInfo = (TextView) findViewById(R.id.hint_new_info);
         iv_right = (ImageView) findViewById(R.id.iv_right);
         iv_switch = (ImageView) findViewById(R.id.iv_switch);
         line_bottom = (View) findViewById(R.id.line_bottom);
@@ -58,7 +60,7 @@ public class LeftAndRightTextView extends RelativeLayout implements View.OnClick
 
     public void init(String leftStr, String rightStr, boolean showRightIcon,
                      final LeftAndRightTextViewCallback callback) {
-        init(leftStr, rightStr, showRightIcon, false, callback);
+        init(leftStr, rightStr, true, showRightIcon, callback);
     }
 
     public void init(String leftStr, String rightStr, boolean showBelowLine,boolean showRightIcon,final LeftAndRightTextViewCallback callback) {
@@ -116,6 +118,18 @@ public class LeftAndRightTextView extends RelativeLayout implements View.OnClick
             default:
                 break;
         }
+    }
+
+    public void setNewHintVisibility(int visibility) {
+        tv_hint_newInfo.setVisibility(visibility);
+    }
+
+    public void setArrowRightVisibility (int visibility) {
+        iv_right.setVisibility(visibility);
+    }
+
+    public void setSwitchBtnVisibility (int visibility) {
+        iv_switch.setVisibility(visibility);
     }
 
     public interface LeftAndRightTextViewCallback {
