@@ -1,6 +1,5 @@
 package amodule.main.Tools;
 
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -59,6 +58,10 @@ public class CacheControler {
         saveCacheToFile();
     }
 
+    /**
+     * 读取数据
+     * @param callback 回调
+     */
     public synchronized void loadCacheData(@NonNull OnLoadCallback callback){
         Log.i("tzy","status = " + status);
         if(status != DEFAULT_STATUS)

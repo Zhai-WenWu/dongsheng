@@ -1,6 +1,7 @@
 package third.mall.activity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -131,13 +132,8 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
     private void publishMutilEvalution() {
         showUploadingDialog();
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("type", "6");
-        params.put("order_id", order_id);
-        params.put("data", getCommentData());
-        Log.i("tzy","params = " + params.toString());
         MallReqInternet.in().doPost(MallStringManager.mall_addMuiltComment,
-                params,
+                getParams(),
                 new MallInternetCallback(this) {
                     @Override
                     public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -155,6 +151,15 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    private LinkedHashMap<String,String> getParams(){
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("type", "6");
+        params.put("order_id", order_id);
+        params.put("data", getCommentData());
+        Log.i("tzy","params = " + params.toString());
+        return params;
     }
 
     private String getCommentData() {
@@ -216,7 +221,13 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         if (mUploadingDialog == null) {
             mUploadingDialog = new Dialog(this, R.style.dialog);
             mUploadingDialog.setContentView(R.layout.ask_upload_dialoglayout);
-            mUploadingDialog.setCancelable(false);
+//            mUploadingDialog.setCancelable(false);
+            mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    MallReqInternet.in().cancelRequset(new StringBuffer(MallStringManager.mall_addMuiltComment).append(getParams()).toString());
+                }
+            });
         }
         mUploadingDialog.show();
     }
