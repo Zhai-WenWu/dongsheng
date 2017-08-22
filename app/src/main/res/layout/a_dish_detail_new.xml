@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <amodule.dish.view.DishWebView
+            <aplug.web.view.TemplateWebView
                 android:id="@+id/a_dish_detail_new_web"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

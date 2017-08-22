@@ -49,7 +49,6 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  */
 public class DishTitleViewControlNew implements View.OnClickListener{
     private Context context;
-    private DishWebView mDishWebView;
     private ImageView favImg;
     private TextView favText,titleView;
     private Activity detailDish;
@@ -71,9 +70,8 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         mListener = listener;
     }
 
-    public void initView(Activity detailDish,DishWebView xhWebView) {
+    public void initView(Activity detailDish) {
         this.detailDish= detailDish;
-        mDishWebView = xhWebView;
         //处理标题
         titleView = (TextView)detailDish.findViewById(R.id.title);
         detailDish.findViewById(back).setOnClickListener(this);
