@@ -27,7 +27,6 @@
             android:gravity="center"
             android:text="公告"
             android:textColor="@color/comment_color"
-            android:textScaleX="0"
             android:textSize="@dimen/sp_10"/>
     </RelativeLayout>
 

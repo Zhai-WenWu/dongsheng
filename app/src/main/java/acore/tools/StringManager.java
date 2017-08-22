@@ -252,6 +252,8 @@ public class StringManager extends UtilString {
     public final static String api_getDishLikeHate = apiUrl + "main7/dish/likeHate";
     public final static String api_addCollection = apiUrl + "main7/dish/addCollection";
     public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
+    public final static String api_authorInfo = apiUrl + "main7/dish/authorInfo";
+    public final static String api_basicInfo = apiUrl + "main7/dish/basicInfo";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶
@@ -352,7 +354,7 @@ public class StringManager extends UtilString {
             String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl, mUrl};
             for (int i = 0; i < find.length; i++) {
                 String findStr = defaultProtocol + find[i] + defaultDomain + "/";
-                if (url != null && url.indexOf(findStr) == 0 && url.indexOf(api_uploadImg) != 0) {
+                if (url != null && url.indexOf(findStr) == 0 ) {
                     return url.replace(findStr, replace[i]);
                 }
             }

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -33,6 +34,7 @@ import amodule.answer.model.AskAnswerModel;
 import amodule.answer.view.AskAnswerImgController;
 import amodule.answer.view.AskAnswerImgItemView;
 import amodule.article.activity.ArticleVideoSelectorActivity;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.recordervideo.db.RecorderVideoData;
@@ -66,7 +68,6 @@ public class BaseEditActivity extends BaseActivity {
     protected String mAnonymity;//是否匿名 "1":否 "2":是
     protected String mType = "5";//类型：5-菜谱问答
     protected String mQATitle = "";//问答相关问题的标题
-    protected String mQADetailUrl;//问答详情页的url
 
     private TextView mTitle;
     private TextView mUpload;
@@ -84,6 +85,8 @@ public class BaseEditActivity extends BaseActivity {
     protected AskAnswerModel mModel;
     protected AskAnswerSQLite mSQLite;
 
+    private AskAnswerModel mFirstDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,12 +102,16 @@ public class BaseEditActivity extends BaseActivity {
             mType = bundle.getString("type", "5");
             mQATitle = bundle.getString("qaTitle", "");
             mAnswerCode = bundle.getString("answerCode");
-            mIsAskMore = bundle.getBoolean("isAskMore", false);
-            mIsAnswerMore = bundle.getBoolean("mIsAnswerMore", false);
-            mQADetailUrl = bundle.getString("qaDetailUrl");
+            String askMoreStr = bundle.getString("isAskMore");
+            if ("2".equals(askMoreStr))
+                mIsAskMore = true;
+            String answerMoreStr = bundle.getString("mIsAnswerMore");
+            if ("2".equals(answerMoreStr))
+                mIsAnswerMore = true;
         }
         mModel = new AskAnswerModel();
         mSQLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+        mFirstDB = mSQLite.queryFirstData();
     }
 
     protected void initView(String title, int contentResId) {
@@ -197,8 +204,7 @@ public class BaseEditActivity extends BaseActivity {
                         //处理回答的上传
                         Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
                         intent.putExtra("draftId", (int)mModel.getmId());
-                        if (!TextUtils.isEmpty(mQADetailUrl))
-                            intent.putExtra("qaDetailUrl", mQADetailUrl);
+                        intent.putExtra("isAutoUpload", true);
                         startActivity(intent);
                         XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
                         break;
@@ -222,8 +228,9 @@ public class BaseEditActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int tempLength = String.valueOf(s).trim().length();
                 int length = mEditText.getText().length();
-                if (length > 0) {
+                if (length > 0 && tempLength > 0) {
                     if (!mUpload.isEnabled())
                         mUpload.setEnabled(true);
                 } else
@@ -272,11 +279,24 @@ public class BaseEditActivity extends BaseActivity {
         return false;
     }
 
+    private boolean mTryLogin = true;
     @Override
     protected void onResume() {
         super.onResume();
-        startTimer();
+        if (!LoginManager.isLogin() && mTryLogin) {
+            mTryLogin = false;
+            startActivity(new Intent(BaseEditActivity.this, LoginByAccout.class));
+            return;
+        } else if (!LoginManager.isLogin() && !mTryLogin) {
+            finish();
+            return;
+        } else if (LoginManager.isLogin()) {
+            onLoginSucc();
+            startTimer();
+        }
     }
+
+    protected void onLoginSucc() {}
 
     @Override
     protected void onPause() {
@@ -334,20 +354,32 @@ public class BaseEditActivity extends BaseActivity {
     }
 
     protected long saveDraft() {
-        if (mModel == null)
-            return -1;
         long rowId = -1;
+        if (mModel == null) {
+            return rowId;
+        }
         Editable editable = mEditText.getText();
+        ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
+        ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
+        long id = mModel.getmId();
+        if ((editable == null || TextUtils.isEmpty(editable.toString()) || editable.toString().trim().length() == 0) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
+            if (id > 0)
+                mSQLite.deleteData((int) id);
+            return rowId;
+        }
+        if (mFirstDB != null)
+            mModel.setmId(mFirstDB.getmId());
         mModel.setmText(editable == null ? "" : editable.toString());
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
-        mModel.setmVideos(mImgController.getVideosArray());
-        mModel.setmImgs(mImgController.getImgsArray());
+        mModel.setmVideos(videoArrs);
+        mModel.setmImgs(imgArrs);
         mModel.setmDishCode(mDishCode == null ? "" : mDishCode);
         mModel.setmQACode(mQACode == null ? "" : mQACode);
         mModel.setmAnswerCode(mAnswerCode == null ? "" : mAnswerCode);
         mModel.setmType(mQAType);
         mModel.setmAnonymity(mAnonymity);
         mModel.setmAuthorCode(mAuthorCode);
+        mModel.setmSaveTime(String.valueOf(System.currentTimeMillis()));
         if (mModel.getmId() > 0) {
             mSQLite.updateData((int) mModel.getmId(), mModel);
             rowId = mModel.getmId();
@@ -360,10 +392,8 @@ public class BaseEditActivity extends BaseActivity {
     }
 
     private void handleBackClick() {
-        if (!TextUtils.isEmpty(mEditText.getText()) || mImgsContainer.getChildCount() > 0) {
-            if (saveDraft() != -1)
-                Tools.showToast(this, "内容已保存");
-        }
+        if (saveDraft() != -1)
+            Tools.showToast(this, "内容已保存");
     }
 
     @Override

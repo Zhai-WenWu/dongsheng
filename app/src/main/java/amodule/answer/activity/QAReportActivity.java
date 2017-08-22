@@ -182,7 +182,7 @@ public class QAReportActivity extends BaseActivity {
                     params += "&";
             }
         }
-        params += "code=" + mDishCode + "&askAuthorCode=" + mAskAuthorCode + "&qaCode" + mQACode;
+        params += (TextUtils.isEmpty(params) ? "" : "&") + "code=" + mDishCode + "&askAuthorCode=" + mAskAuthorCode + "&qaCode=" + mQACode;
         ReqEncyptInternet.in().doEncypt(StringManager.API_QA_COMMITREPORT, params, new InternetCallback(QAReportActivity.this) {
             @Override
             public void loaded(int i, String s, Object o) {

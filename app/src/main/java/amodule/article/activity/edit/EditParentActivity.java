@@ -62,6 +62,7 @@ import xh.windowview.XhDialog;
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
 import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
+import static android.icu.text.UnicodeSet.CASE;
 
 /**
  * PackageName : amodule.article.activity
@@ -75,6 +76,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     private final int REQUEST_SELECT_IMAGE = 0x01;
     private final int REQUEST_SELECT_VIDEO = 0x02;
+    public static final int REQUEST_CHOOSE_VIDEO_COVER = 0x03;
 
     public static final int DATA_TYPE_ARTICLE = 100;
     public static final int DATA_TYPE_VIDEO = 101;
@@ -670,6 +672,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                     if (!isVideo)
                         text = mixLayout.getCurrentEditText().getSelectionEndContent();
                     mixLayout.addVideo(coverPath, videoPath, !isVideo, text);
+                    break;
+                case REQUEST_CHOOSE_VIDEO_COVER:
+                    mixLayout.onActivityResult(data);
                     break;
             }
         }

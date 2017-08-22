@@ -31,6 +31,7 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
     private String mColumnText = "text";
     private String mColumnAnonymity = "anonymity";
     private String mColumnAuthorCode = "authorCode";
+    private String mColumnSaveTime = "saveTime";
 
     public AskAnswerSQLite(Context context) {
         super(context, mTabName, null, mVersion);
@@ -51,6 +52,7 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                 + mColumnVideos + " text,"
                 + mColumnText + " text,"
                 + mColumnAnonymity + " text,"
+                + mColumnSaveTime + " text,"
                 + mColumnAuthorCode + " text)");
     }
 
@@ -64,9 +66,6 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
         if (model == null) {
             return row;
         }
-
-        Log.e("SLL", "insertData = " + model.toString());
-
         SQLiteDatabase database = null;
         ContentValues cv = new ContentValues();
         cv.put(mColumnAnswerCode, model.getmAnswerCode());
@@ -80,6 +79,7 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
         cv.put(mColumnText, model.getmText());
         cv.put(mColumnAnonymity, model.getmAnonymity());
         cv.put(mColumnAuthorCode, model.getmAuthorCode());
+        cv.put(mColumnSaveTime, model.getmSaveTime());
         try {
             database = getWritableDatabase();
             row = database.insert(mTabName, null, cv);
@@ -135,15 +135,69 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
         }
     }
 
-    public AskAnswerModel queryData(String dishCode, String qaType, String qaCode) {
+    public AskAnswerModel queryFirstData() {
         AskAnswerModel model = null;
-        if (TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(qaType) || TextUtils.isEmpty(qaCode))
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = getWritableDatabase();
+            cursor = database.rawQuery("select * from " + mTabName + " limit 1", null);
+            if (cursor.moveToFirst()) {
+                model = new AskAnswerModel();
+                model.setmId(cursor.getInt(cursor.getColumnIndex(mColumnId)));
+                model.setmType(cursor.getString(cursor.getColumnIndex(mColumnType)));
+                model.setmAnswerCode(cursor.getString(cursor.getColumnIndex(mColumnAnswerCode)));
+                model.setmQACode(cursor.getString(cursor.getColumnIndex(mColumnQACode)));
+                model.setmDishCode(cursor.getString(cursor.getColumnIndex(mColumnDishCode)));
+                model.setmImgs(cursor.getString(cursor.getColumnIndex(mColumnImgs)));
+                model.setmText(cursor.getString(cursor.getColumnIndex(mColumnText)));
+                model.setmAnonymity(cursor.getString(cursor.getColumnIndex(mColumnAnonymity)));
+                model.setmAuthorCode(cursor.getString(cursor.getColumnIndex(mColumnAuthorCode)));
+                model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
+                model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
+                model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                if (!model.isValid()) {
+                    model = null;
+                    database.delete(mTabName, mColumnId + "=?", new String[]{mColumnId});
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+            if (database != null)
+                database.close();
+            return model;
+        }
+    }
+
+    public boolean deleteAll() {
+        int ret = 0;
+        SQLiteDatabase database = null;
+        try {
+            database = getWritableDatabase();
+            ret = database.delete(mTabName, null, null);
+        } catch (Exception e){}
+        finally {
+            if (database != null)
+                database.close();
+            return ret != 0;
+        }
+    }
+
+    public AskAnswerModel queryData(String dishCode, String qaType) {
+        AskAnswerModel model = null;
+        if (TextUtils.isEmpty(dishCode) || TextUtils.isEmpty(qaType))
             return model;
         SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
             database = getReadableDatabase();
-            cursor = database.query(mTabName, null, mColumnDishCode + "=? and " + mColumnType + "=? and " + mColumnQACode + "=?", new String[]{dishCode, qaType, qaCode}, null, null, mColumnId + " desc");
+            cursor = database.query(mTabName, null, mColumnDishCode + "=? and " + mColumnType + "=?", new String[]{dishCode, qaType}, null, null, mColumnId + " desc");
             if (cursor.moveToFirst()) {
                 do {
                     model = new AskAnswerModel();
@@ -159,6 +213,12 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                     model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
                     model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
                     model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                    model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                    if (!model.isValid()) {
+                        model = null;
+                        database.delete(mTabName, mColumnDishCode + "=? and " + mColumnType + "=?", new String[]{dishCode, qaType});
+                    }
                     break;
                 } while (cursor.moveToNext());
             }
@@ -196,6 +256,12 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                     model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
                     model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
                     model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                    model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                    if (!model.isValid()) {
+                        model = null;
+                        database.delete(mTabName, mColumnId + "=?", new String[]{String.valueOf(id)});
+                    }
                     break;
                 } while (cursor.moveToNext());
             }
@@ -233,6 +299,12 @@ public class AskAnswerSQLite extends SQLiteOpenHelper {
                     model.setmTitle(cursor.getString(cursor.getColumnIndex(mColumnTitle)));
                     model.setmPrice(cursor.getString(cursor.getColumnIndex(mColumnPrice)));
                     model.setmVideos(cursor.getString(cursor.getColumnIndex(mColumnVideos)));
+                    model.setmSaveTime(cursor.getString(cursor.getColumnIndex(mColumnSaveTime)));
+
+                    if (!model.isValid()) {
+                        model = null;
+                        database.delete(mTabName, mColumnType + "=?", new String[]{qaType});
+                    }
                     break;
                 } while (cursor.moveToNext());
             }

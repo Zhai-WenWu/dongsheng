@@ -23,7 +23,6 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.dialogManager.PushManager;
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -36,6 +35,7 @@ import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.answer.window.FloatingWindow;
 import amodule.dish.view.CommonDialog;
+import amodule.main.Main;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
@@ -44,6 +44,7 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import aplug.web.FullScreenWeb;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -72,7 +73,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     private String mTimesStamp;
     private String mCoverPath;
     private String mFinalVideoPath;
-    private String mQADetailUrl;
 
     private int mHeaderViewCount;
     private boolean mIsStopUpload;
@@ -94,13 +94,14 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mTimesStamp = intent.getStringExtra("time");
         mCoverPath = intent.getStringExtra("coverPath");
         mFinalVideoPath = intent.getStringExtra("finalVideoPath");
-        mQADetailUrl = intent.getStringExtra("qaDetailUrl");
     }
 
     private void registnetworkListener() {
         mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
             public void disconnect() {
+                allStartOrPause(false);
+                Toast.makeText(AskAnswerUploadListActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -160,13 +161,17 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             @Override
             public void onUploadOver(boolean flag, String response) {
                 XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "上传状态", flag ? "成功" : "上传失败");
-                AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
-                sqLite.deleteData(mUploadPoolData.getDraftId());
+                if (flag) {
+                    AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+                    sqLite.deleteData(mUploadPoolData.getDraftId());
+                }
                 if (Tools.isAppOnForeground() && flag) {
                     if (!PushManager.isNotificationEnabled()) {
                         getIsTip();
                     }
-                    AppCommon.openUrl(AskAnswerUploadListActivity.this, mQADetailUrl, false);
+                    Main.colse_level = 1;
+                    if (FullScreenWeb.isAlive)
+                        FullScreenWeb.isReload = true;
                     AskAnswerUploadListActivity.this.finish();
                 }
             }
@@ -304,36 +309,17 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mCancelUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String btnMsg1 = "确定";
-                String btnMsg2 = "取消";
-
-                final CommonDialog dialog = new CommonDialog(AskAnswerUploadListActivity.this);
-                dialog.setMessage("确定取消上传吗？").setSureButton(btnMsg1, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                        mListPool.cancelUpload();
-                        mAllStart.setVisibility(View.VISIBLE);
-                        mAllStop.setVisibility(View.GONE);
-                        mIsStopUpload = true;
-                        XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "取消上传", "");
-                        AskAnswerUploadListActivity.this.finish();
-                    }
-                });
-                dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
+                showCancelDialog();
             }
         });
 
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBack();
+                if (goBack())
+                    return;
+                else
+                    finish();
             }
         });
 
@@ -352,16 +338,44 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         });
     }
 
-    private void goBack() {
+    private void showCancelDialog() {
+        String btnMsg1 = "确定";
+        String btnMsg2 = "取消";
+
+        final CommonDialog dialog = new CommonDialog(AskAnswerUploadListActivity.this);
+        dialog.setMessage("确定取消上传吗？").setSureButton(btnMsg1, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                mListPool.cancelUpload();
+                mAllStart.setVisibility(View.VISIBLE);
+                mAllStop.setVisibility(View.GONE);
+                mIsStopUpload = true;
+                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "取消上传", "");
+                AskAnswerUploadListActivity.this.finish();
+            }
+        });
+        dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
+    private boolean goBack() {
         if (!mIsStopUpload) {
-            Toast.makeText(XHApplication.in().getApplicationContext(), "问答会在后台继续上传", Toast.LENGTH_SHORT).show();
+            showCancelDialog();
+            return true;
         }
-        finish();
+        return false;
     }
 
     @Override
     public void onBackPressed() {
-        goBack();
+        if (goBack())
+            return;
         super.onBackPressed();
     }
 
@@ -406,5 +420,12 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mConnectionChangeReceiver != null)
+            unregisterReceiver(mConnectionChangeReceiver);
     }
 }

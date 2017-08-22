@@ -23,7 +23,7 @@
         android:layout_centerInParent="true"
         android:text="全部照片"/>
 
-    <Button
+    <TextView
         android:id="@+id/category_btn"
         style="@style/top_text_other"
         android:layout_width="wrap_content"

@@ -24,6 +24,17 @@
         android:layout_above="@+id/footer_bar"
         android:layout_below="@+id/title_rela_all"/>
 
+    <ListView
+        android:id="@+id/category_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer_bar"
+        android:layout_below="@+id/title_rela_all"
+        android:background="#fffffe"
+        android:visibility="invisible">
+
+    </ListView>
+
     <include
         android:id="@+id/footer_bar"
         layout="@layout/image_seletor_footer_bar"

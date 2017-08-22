@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xianghatest.R;
 
@@ -25,7 +26,7 @@ public class AnswerEditActivity extends BaseEditActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView("我答", R.layout.answer_edit_activity);
+        initView(mIsAnswerMore ? "追答" : "我答", R.layout.answer_edit_activity);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class AnswerEditActivity extends BaseEditActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType, mQACode));
+                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
             }
         }).start();
     }
@@ -98,6 +99,8 @@ public class AnswerEditActivity extends BaseEditActivity {
     @Override
     protected void onEditTextChanged(CharSequence s, int start, int before, int count) {
         mCountText.setText(s.length() + "/2000");
+        if (s.length() >= 2000)
+            Toast.makeText(this, "不能继续输入", Toast.LENGTH_SHORT).show();
     }
 
 }
