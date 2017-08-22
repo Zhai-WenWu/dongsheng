@@ -9,13 +9,15 @@
         android:id="@+id/image_rela"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_20" >
+        android:paddingTop="@dimen/dp_10" >
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            />
 
         <ImageView
             android:id="@+id/image_del"
@@ -24,7 +26,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:padding="@dimen/dp_8"
-            android:src="@drawable/z_common_post_imag_del" />
+            android:src="@drawable/delete_image_icon" />
 
         <LinearLayout
             android:id="@+id/water_lin"
@@ -73,7 +75,6 @@
             android:hint="添加文字/图片"
             android:lineSpacingExtra="@dimen/dp_8"
             android:maxLength="10000"
-            android:minLines="1"
             android:paddingLeft="@dimen/dp_1"
             android:paddingTop="@dimen/dp_15"
             android:textColor="#494949"
