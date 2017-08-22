@@ -1,6 +1,8 @@
 package third.mall.activity;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -73,7 +75,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     int position = -1;
     int id = -1;
     int score = DEFAULT_SCORE;
-     int status;
+    int status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -341,7 +343,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     /** 发布评论 */
     private void publishEvalution() {
         uploadControl.setScore(ratingBar.getRating())
-                .setContent(contentEdit.getText().toString())
+                .setContent(contentEdit.getText().toString().trim())
                 .setCanShare(canShareToCircle())
                 .publishEvalution();
     }
@@ -409,14 +411,22 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         if (mUploadingDialog == null) {
             mUploadingDialog = new Dialog(this, R.style.dialog);
             mUploadingDialog.setContentView(R.layout.ask_upload_dialoglayout);
-            mUploadingDialog.setCancelable(false);
+//            mUploadingDialog.setCancelable(false);
+            mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    uploadControl.cancelUpload();
+                }
+            });
         }
+
         mUploadingDialog.show();
     }
 
-    private void cancelUploadingDialog() {
+    private boolean cancelUploadingDialog() {
         if (mUploadingDialog == null || !mUploadingDialog.isShowing())
-            return;
+            return false;
         mUploadingDialog.cancel();
+        return true;
     }
 }

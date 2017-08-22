@@ -32,6 +32,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import aplug.feedback.activity.Feedback;
 import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallStringManager;
@@ -172,7 +173,8 @@ public class AdapterOrderState extends MallAdapterSimple {
 			rela_shop.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					showDialog(listMapByJson_order.get(0).get("shop_tel"));
+					context.startActivity(new Intent(context, Feedback.class));
+//					showDialog(listMapByJson_order.get(0).get("shop_tel"));
 				}
 			});
 			/***************************处理用户留言，和联系商家end****************************************8 */
@@ -251,34 +253,34 @@ public class AdapterOrderState extends MallAdapterSimple {
 		 * 弹出对话框
 		 * @param des
 		 */
-		private void showDialog(final String des){
-			final Dialog dialog= new Dialog(context,R.style.dialog);
-			dialog.setContentView(R.layout.a_mall_alipa_dialog);
-			Window window=dialog.getWindow();
-			window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-			TextView dialog_message= (TextView) window.findViewById(R.id.dialog_message);
-			dialog_message.setText(des);
-			TextView dialog_cancel= (TextView) window.findViewById(R.id.dialog_cancel);
-			TextView dialog_sure= (TextView) window.findViewById(R.id.dialog_sure);
-			dialog_cancel.setText("取消");
-			dialog_sure.setText("确定");
-			dialog_cancel.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					dialog.cancel();
-				}
-			});
-			dialog_sure.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					toTel(des);
-					dialog.cancel();
-				}
-			});
-			dialog.show();
-		}
+//		private void showDialog(final String des){
+//			final Dialog dialog= new Dialog(context,R.style.dialog);
+//			dialog.setContentView(R.layout.a_mall_alipa_dialog);
+//			Window window=dialog.getWindow();
+//			window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
+//			TextView dialog_message= (TextView) window.findViewById(R.id.dialog_message);
+//			dialog_message.setText(des);
+//			TextView dialog_cancel= (TextView) window.findViewById(R.id.dialog_cancel);
+//			TextView dialog_sure= (TextView) window.findViewById(R.id.dialog_sure);
+//			dialog_cancel.setText("取消");
+//			dialog_sure.setText("确定");
+//			dialog_cancel.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					dialog.cancel();
+//				}
+//			});
+//			dialog_sure.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					toTel(des);
+//					dialog.cancel();
+//				}
+//			});
+//			dialog.show();
+//		}
 		/**
 		 * 打电话
 		 */

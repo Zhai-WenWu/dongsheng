@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -55,6 +56,8 @@ import aplug.recordervideo.tools.SortComparator;
 import third.mall.tool.ToolView;
 import xh.basic.tool.UtilLog;
 
+import static acore.override.XHApplication.ONLINE_PACKAGE_NAME;
+
 @SuppressLint("SimpleDateFormat")
 public class Tools {
 
@@ -66,7 +69,8 @@ public class Tools {
     public static boolean isDebug(Context context){
         String versoinName = VersionOp.getVerName(context);
         String[] temp = versoinName.split("\\.");
-        return temp.length != 3;
+        String currentPackName = ToolsDevice.getPackageName(context);
+        return temp.length != 3 || !ONLINE_PACKAGE_NAME.equals(currentPackName);
     }
 
     /**
