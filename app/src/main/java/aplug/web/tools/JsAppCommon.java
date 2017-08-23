@@ -33,6 +33,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
+import amodule.answer.activity.BaseEditActivity;
 import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -945,7 +946,7 @@ public class JsAppCommon extends JsBase {
                 bundle.putString("mIsAnswerMore", isAnswerMore);
                 Intent intent = new Intent(mAct, AnswerEditActivity.class);
                 intent.putExtras(bundle);
-                mAct.startActivity(intent);
+                mAct.startActivityForResult(intent, BaseEditActivity.REQUEST_CODE_A);
             }
         });
     }
@@ -963,7 +964,7 @@ public class JsAppCommon extends JsBase {
                 bundle.putString("isAskMore", isAskMore);
                 Intent intent = new Intent(mAct, AskEditActivity.class);
                 intent.putExtras(bundle);
-                mAct.startActivity(intent);
+                mAct.startActivityForResult(intent, BaseEditActivity.REQUEST_CODE_Q);
             }
         });
     }

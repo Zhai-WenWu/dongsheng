@@ -58,6 +58,8 @@ public class BaseEditActivity extends BaseActivity {
 
     protected final int REQUEST_SELECT_IMAGE = 0x01;
     protected final int REQUEST_SELECT_VIDEO = 0x02;
+    public static final int REQUEST_CODE_Q = 0x03;
+    public static final int REQUEST_CODE_A = 0x04;
 
     protected String mQACode;
     protected String mAnswerCode;
@@ -203,7 +205,7 @@ public class BaseEditActivity extends BaseActivity {
                         Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
                         intent.putExtra("draftId", (int)mModel.getmId());
                         intent.putExtra("isAutoUpload", true);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_A);
                         XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
                         break;
                     case R.id.back:
@@ -443,6 +445,10 @@ public class BaseEditActivity extends BaseActivity {
                         dataMap.put("video", videoPath);
                         mImgController.addData(dataMap);
                     }
+                    break;
+                case REQUEST_CODE_A:
+                    setResult(resultCode, data);
+                    finish();
                     break;
             }
         }

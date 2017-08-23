@@ -117,6 +117,8 @@ public class QAMsgListFragment extends Fragment {
     }
 
     private void loadUrl() {
+        if (mLoadManager == null || mWebView == null)
+            return;
         mLoadManager.showProgressBar();
         mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "&type=" + mModelData.getmType()));
     }

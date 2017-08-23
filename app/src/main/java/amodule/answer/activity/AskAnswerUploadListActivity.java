@@ -29,9 +29,9 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
-import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.answer.window.FloatingWindow;
 import amodule.dish.view.CommonDialog;
@@ -44,7 +44,6 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import aplug.web.FullScreenWeb;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -170,8 +169,9 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                         getIsTip();
                     }
                     Main.colse_level = 1;
-                    if (FullScreenWeb.isAlive)
-                        FullScreenWeb.isReload = true;
+                    Intent intent = new Intent();
+                    intent.putExtra("reload", true);
+                    setResult(RESULT_OK, intent);
                     AskAnswerUploadListActivity.this.finish();
                 }
             }

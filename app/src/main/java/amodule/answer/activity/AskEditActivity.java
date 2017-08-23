@@ -2,6 +2,7 @@ package amodule.answer.activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 
 import com.xianghatest.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
@@ -56,6 +56,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private TextView mPriceText;
     private ImageView mBlackBtn;
     private RelativeLayout mAskDesc;
+    private RelativeLayout mAnoContainer;
 
     private String mAskPrice;//提问价格
     private String mWebUrl;//打开Web支付页面
@@ -81,7 +82,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             public void onClick(View v) {
                 mIsAno = !mIsAno;
                 mAnonymity = mIsAno ? "2" : "1";
-                mBlackBtn.setImageResource(mIsAno ? R.drawable.i_switch_on : R.drawable.i_switch_off);
+                switchBtn(mIsAno);
                 XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击匿名按钮", mIsAno ? "点击打开" : "点击关闭");
             }
         });
@@ -120,6 +121,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         mPriceText = (TextView) findViewById(R.id.price_text);
         mBlackBtn = (ImageView) findViewById(R.id.black_btn);
         mAskDesc = (RelativeLayout) findViewById(R.id.ask_desc);
+        mAnoContainer = (RelativeLayout) findViewById(R.id.anonymity_container);
+        mAnoContainer.setVisibility(mIsAskMore ? View.GONE : View.VISIBLE);
         setListener();
         registnetworkListener();
         getLocalData();
@@ -129,8 +132,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
             public void disconnect() {
-                allStartOrPause(false);
                 Toast.makeText(AskEditActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+                allStartOrPause(false);
             }
 
             @Override
@@ -173,11 +176,19 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                         mModel = model;
                         mEditText.setText(model.getmText());
                         mIsAno = "2".equals(model.getmAnonymity());
+                        if (!mIsAskMore)
+                            switchBtn(mIsAno);
                         initImgControllerData(model);
                     }
                 }
             }
         });
+    }
+
+    private void switchBtn(boolean on) {
+        if (mBlackBtn == null)
+            return;
+        mBlackBtn.setImageResource(on ? R.drawable.i_switch_on : R.drawable.i_switch_off);
     }
 
     @Override
@@ -223,6 +234,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void allStartOrPause(boolean isAllStart) {
+        if (mListPool == null)
+            return;
         showUploadingDialog();
         mIsStopUpload = !isAllStart;
         mListPool.allStartOrStop(isAllStart ? UploadListPool.TYPE_START : UploadListPool.TYPE_PAUSE);
@@ -408,9 +421,13 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     mQAID = map.get("id");
                     mWebUrl = map.get("payUrl");
                     if (mIsAskMore) {
-                        if (flag)
+                        if (flag) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
-                        startQADetail();
+                            Intent intent = new Intent();
+                            intent.putExtra("reload", true);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
                     } else {
                         startPay();
                     }
