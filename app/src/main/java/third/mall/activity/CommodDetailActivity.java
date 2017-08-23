@@ -78,6 +78,7 @@ import third.mall.widget.MyScrollView.ScrollViewInterface;
 import third.mall.widget.ScrollViewContainer;
 import third.mall.widget.ScrollViewContainer.ScrollviewContaninerInter;
 import third.share.BarShare;
+import third.share.ShareActivityDialog;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -401,6 +402,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         setProductPrice();
         //设置领券
         setGetFavorable();
+        //设置好评度
+        setProductPraise();
 
         // 轮转图
         images = UtilString.getListMapByJson(map.get("resource"));
@@ -516,6 +519,17 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         // 邮费
         TextView title_commod_price_postage = (TextView) findViewById(R.id.title_commod_price_postage);
         title_commod_price_postage.setText(map.get("product_postage_desc"));
+    }
+
+    /**
+     * 设置好评度
+     */
+    private void setProductPraise(){
+        findViewById(R.id.scroe_linear).setOnClickListener(this);
+        TextView title_good_scroe= (TextView) findViewById(R.id.title_good_scroe);
+        title_good_scroe.setText(map.get("product_praise"));
+        TextView title_buy= (TextView) findViewById(R.id.title_buy);
+        title_buy.setText(map.get("saled_num")+"人购买");
     }
 
     /**
@@ -635,6 +649,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                     if (images.get(position).containsKey("type") && "1".equals(images.get(position).get("type"))) {
                         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, StringManager.getFirstMap(images.get(position).get("video")).get("default_url"));
                         intent.setClass(CommodDetailActivity.this, VideoFullScreenActivity.class);
+                        XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "商品视频播放量", "");
                     } else {
                         intent.putExtra("url", images.get(position).get("img"));
                         intent.setClass(CommodDetailActivity.this, ShowImageActivity.class);
@@ -662,12 +677,14 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.service_mercat://客服
+                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "客服按钮");
                 Intent intentmark = new Intent(this, Feedback.class);
                 intentmark.putExtra("backData", map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:
                 if (LoginManager.isLogin()) {
+                    XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "立即购买");
                     if (buyDialog == null) {
                         buyDialog = new BuyDialog(this, map);
                         buyDialog.setBuyDialogCallBack(new BuyDialog.BuyDialogCallBack() {
@@ -727,20 +744,28 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 break;
             case R.id.title:
                 mall_ScrollViewContainer.setViewIndex("1");
+                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "顶部tab", "商品点击量");
                 break;
             case R.id.title_detail:
                 mall_ScrollViewContainer.setViewIndex("2");
+                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "顶部tab", "详情点击量");
+                break;
+            case R.id.scroe_linear://评论列表
+                Intent intent= new Intent(this,EvalutionListActivity.class);
+                this.startActivity(intent);
                 break;
         }
     }
 
     private void doshare() {
-        barShare = new BarShare(this, "商品详情页", "");
-        String type = BarShare.IMG_TYPE_WEB;
-        String title = map.get("product_share_title");
+
+
+//        barShare = new BarShare(this, "商品详情页", "");
+//        String type = BarShare.IMG_TYPE_WEB;
+//        String title = map.get("product_share_title");
         String clickUrl = map.get("product_share_url");
-        String content = map.get("product_share_desc");
-        String imgUrl = map.get("buy_img");
+//        String content = map.get("product_share_desc");
+//        String imgUrl = map.get("buy_img");
         //分享添加路径统计
         Object msg = UtilFile.loadShared(this, FileManager.MALL_URI_STAT, FileManager.MALL_URI_STAT);
         ArrayList<Map<String, String>> list = UtilString.getListMapByJson(msg);
@@ -748,8 +773,18 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         if (list != null && list.size() > 0 && list.get(0).containsKey(url_temp)) {
             clickUrl += "&fr1=" + list.get(0).containsKey(url_temp) + "_share&fr1_msg=" + code;
         }
-        barShare.setShare(type, title, content, imgUrl, clickUrl);
-        barShare.openShare();
+//        barShare.setShare(type, title, content, imgUrl, clickUrl);
+        Intent intent = new Intent(this, ShareActivityDialog.class);
+        intent.putExtra("tongjiId", "a_mail_goods");
+        intent.putExtra("imgUrl", map.get("buy_img"));
+        intent.putExtra("clickUrl", clickUrl);
+        intent.putExtra("title", map.get("product_share_title"));
+        intent.putExtra("content", map.get("product_share_desc"));
+        intent.putExtra("type", BarShare.IMG_TYPE_WEB);
+        intent.putExtra("shareFrom", "商品详情页");
+        intent.putExtra("shareTwoContent","分享");
+        this.startActivity(intent);
+//        barShare.openShare();
     }
 
     /**

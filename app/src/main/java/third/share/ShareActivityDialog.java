@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.ToolsDevice;
 import amodule.quan.activity.QuanReport;
@@ -23,13 +25,13 @@ import amodule.quan.activity.QuanReport;
 import static third.share.ShareTools.mParent;
 
 /**
- * Created by Fang Ruijiao on 2016/9/21.
+ * 分享弹框：
  */
 public class ShareActivityDialog extends Activity implements View.OnClickListener{
 
     private ArrayList<Map<String,String>> mData = new ArrayList<>();
     private String[] mSharePlatforms;
-    private String mTitle,mContent,mType,mImgUrl,mClickUrl, mShareFrom;
+    private String mTitle,mContent,mType,mImgUrl,mClickUrl, mShareFrom,mShareTwoData,reportUrl;
     private Boolean isHasReport;
 
     private String nickName,userCode;
@@ -62,6 +64,13 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
         mShareFrom = getIntent().getStringExtra("shareFrom");
         if (TextUtils.isEmpty(mShareFrom))
             mShareFrom = "个人主页";
+        //分享的二级内容
+        mShareTwoData= getIntent().getStringExtra("shareTwoContent");
+        if(TextUtils.isEmpty(mShareTwoData)){
+            mShareTwoData="分享和举报";
+        }
+        //举报跳转页面
+        reportUrl=getIntent().getStringExtra("reportUrl");
         init();
     }
 
@@ -81,15 +90,19 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String platfrom = mSharePlatforms[position];
-                XHClick.mapStat(ShareActivityDialog.this, tongjiId, "分享和举报", mData.get(position).get("name"));
+                XHClick.mapStat(ShareActivityDialog.this, tongjiId, mShareTwoData, mData.get(position).get("name"));
                 if("report".equals(platfrom)){ //举报
-                    Intent intent = new Intent(ShareActivityDialog.this, QuanReport.class);
-                    intent.putExtra("isQuan", "0");
-                    intent.putExtra("nickName", "举报 " + nickName);
-                    intent.putExtra("code", userCode);
-                    intent.putExtra("repType", "4");
-                    intent.putExtra("subjectCode", "0");
-                    ShareActivityDialog.this.startActivity(intent);
+                    if(TextUtils.isEmpty(reportUrl)) {
+                        Intent intent = new Intent(ShareActivityDialog.this, QuanReport.class);
+                        intent.putExtra("isQuan", "0");
+                        intent.putExtra("nickName", "举报 " + nickName);
+                        intent.putExtra("code", userCode);
+                        intent.putExtra("repType", "4");
+                        intent.putExtra("subjectCode", "0");
+                        ShareActivityDialog.this.startActivity(intent);
+                    }else{
+                        AppCommon.openUrl(ShareActivityDialog.this,reportUrl,true);
+                    }
                 }else{
                     ShareTools barShare = ShareTools.getBarShare(ShareActivityDialog.this);
                     barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom, mShareFrom ,mParent);

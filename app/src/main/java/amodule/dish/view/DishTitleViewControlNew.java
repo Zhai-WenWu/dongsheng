@@ -240,6 +240,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         intent.putExtra("content", mapData.get("mContent"));
         intent.putExtra("type", mapData.get("mType"));
         intent.putExtra("shareFrom", "文章详情");
+        intent.putExtra("reportUrl", "Feedback.app?feekUrl=http://www.xiangha.com/caipu/88397498.html");
         detailDish.startActivity(intent);
     }
 
