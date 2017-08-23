@@ -25,11 +25,13 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import third.mall.activity.MyOrderActivity;
 import third.mall.activity.OrderStateActivity;
 import third.mall.activity.ShoppingActivity;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import third.mall.view.MallButtonView.InterfaceViewCallback;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -192,6 +194,8 @@ public class OrderItemView extends ViewItemBase {
 							public void sucessCallBack() {
 								XHClick.mapStat(context, "a_mail_orders","按钮点击","再次购买");
 								Intent intent = new Intent(context, ShoppingActivity.class);
+								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
+								intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"再次购买-未拆单" );
 								context.startActivity(intent);
 							}
 						}, map, MallButtonView.list_state_payment,url,mall_stat_statistic);
@@ -208,7 +212,7 @@ public class OrderItemView extends ViewItemBase {
 
 				@Override
 				public void sucessCallBack() {
-					goOrderState(map, position);
+					goOrderState(map, position,"去支付");
 					XHClick.mapStat(context, "a_mail_orders","按钮点击","去支付");
 				}
 			});
@@ -238,7 +242,7 @@ public class OrderItemView extends ViewItemBase {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
-				goOrderState(map, position);
+				goOrderState(map, position,"商品多件");
 			}
 		});
 	}
@@ -264,6 +268,8 @@ public class OrderItemView extends ViewItemBase {
 					@Override
 					public void sucessCallBack() {
 						Intent intent= new Intent(context,ShoppingActivity.class);
+						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
+						intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"其他状态" );
 						context.startActivity(intent);
 					}
 				}, map, MallButtonView.list_state_payment,url,mall_stat_statistic);
@@ -314,7 +320,7 @@ public class OrderItemView extends ViewItemBase {
 
 			@Override
 			public void onClick(View v) {
-				goOrderState(map, position);
+				goOrderState(map, position,"商品单件");
 			}
 		});
 	}
@@ -413,7 +419,7 @@ public class OrderItemView extends ViewItemBase {
 	 * 去详情页
 	 * @param map
 	 */
-	private void goOrderState(Map<String, String> map,int position){
+	private void goOrderState(Map<String, String> map,int position,String info){
 		setStatisticIndex();
 		XHClick.mapStat(context, "a_mail_orders","点击到订单详情页","");
 		Intent intent = new Intent(context, OrderStateActivity.class);
@@ -421,6 +427,8 @@ public class OrderItemView extends ViewItemBase {
 		intent.putExtra("order_satus", "payment_order");
 		intent.putExtra("position", position);
 		intent.putExtra("code", id);
+		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
+		intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,info);
 		context.startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 

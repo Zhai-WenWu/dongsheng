@@ -24,6 +24,7 @@ import acore.logic.ActivityMethodManager;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -41,6 +42,8 @@ public class BaseFragmentActivity extends FragmentActivity {
 	public CommonBottomView mCommonBottomView;
 	public String className;
 	public CommonBottonControl control;
+
+	private long resumeTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +179,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		resumeTime = System.currentTimeMillis();
 		if (XHApplication.in() == null) {
 			Intent i = getBaseContext().getPackageManager()
 					.getLaunchIntentForPackage(getBaseContext().getPackageName());
@@ -191,6 +195,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		PageStatisticsUtils.onPausePage(this,resumeTime,System.currentTimeMillis());
 		mActMagager.onPause();
 	}
 	

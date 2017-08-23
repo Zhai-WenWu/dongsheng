@@ -50,6 +50,7 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.XiangHaTabHost;
@@ -76,7 +77,6 @@ import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
 import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import aplug.web.ShowTemplateWeb;
@@ -134,6 +134,9 @@ public class Main extends Activity implements OnClickListener {
     public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
     private boolean isInit=false;//是否已经进行初始化
     private WelcomeDialog welcomeDialog;//dialog,显示
+
+    private long resumeTime;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -491,6 +494,7 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        resumeTime = System.currentTimeMillis();
         long endTime = System.currentTimeMillis();
         Log.i("zhangyujian", "main::onResume::" + (endTime - XHApplication.in().startTime));
         mainOnResumeState = true;
@@ -556,6 +560,7 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onStop() {
         super.onStop();
+        PageStatisticsUtils.onPausePage(this,resumeTime,System.currentTimeMillis());
         if (!Tools.isAppOnForeground()) {
             isForeground = false;
             homebackTime = System.currentTimeMillis();

@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
 import third.mall.alipay.MallPayActivity;
@@ -36,6 +36,7 @@ import third.mall.aplug.MallCommon.InterfaceMallReqIntert;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -47,7 +48,7 @@ import static com.xianghatest.R.id.mall_buycommod_scrollview;
  *
  * @author yu
  */
-public class BuyCommodActivity extends BaseActivity implements OnClickListener {
+public class BuyCommodActivity extends MallBaseActivity implements OnClickListener {
 
 	private String code, imageUrl, title, shop_name, price;
 	private int num = 1;
@@ -191,6 +192,7 @@ public class BuyCommodActivity extends BaseActivity implements OnClickListener {
 			case R.id.buycommod_consignee_rela:
 				Intent intent = new Intent(this, AddressActivity.class);
 				intent.putExtra("address_id", address_id);
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
 				this.startActivityForResult(intent, OK_ADDRESS);
 				break;
 		}

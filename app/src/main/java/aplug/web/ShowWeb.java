@@ -9,12 +9,9 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,6 +27,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -43,6 +41,9 @@ import third.mall.activity.ShoppingActivity;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallStringManager;
 import xh.basic.tool.UtilString;
+
+import static third.mall.override.MallBaseActivity.PAGE_FROM;
+import static third.mall.override.MallBaseActivity.PAGE_FROM_TWO;
 
 /**
  * 打开网页，bundle中传入url，当页面加载完会获取页面title来设置
@@ -104,6 +105,12 @@ public class  ShowWeb extends WebActivity {
 			code= bundle.getString("code");
 			module_type= bundle.getString("module_type");
 			JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
+
+			String from = getIntent().getStringExtra(PAGE_FROM);
+			String two = getIntent().getStringExtra(PAGE_FROM_TWO);
+			if(!TextUtils.isEmpty(from)){
+				PageStatisticsUtils.onPageChange(TextUtils.isEmpty(two) ? from : from + "-" + two,this);
+			}
 		}
 	}
 
@@ -286,6 +293,8 @@ public class  ShowWeb extends WebActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ShowWeb.this, ShoppingActivity.class);
+					intent.putExtra(PAGE_FROM, PageStatisticsUtils.getPageName(ShowWeb.this));
+					intent.putExtra(PAGE_FROM_TWO,"子订单item" );
                     startActivity(intent);
                     finish();
                 }

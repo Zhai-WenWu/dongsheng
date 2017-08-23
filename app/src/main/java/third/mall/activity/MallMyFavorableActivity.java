@@ -30,6 +30,7 @@ import amodule.main.view.CommonBottonControl;
 import aplug.feedback.activity.Feedback;
 import third.mall.aplug.MallCommon;
 import third.mall.fragment.MallMyFavorableFragment;
+import third.mall.override.MallOrderBaseActivity;
 
 /**
  * 我的优惠券信息

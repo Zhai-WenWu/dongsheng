@@ -27,6 +27,7 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
 import acore.widget.PagerSlidingTabStrip;
@@ -36,6 +37,8 @@ import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
 import third.mall.bean.OrderBean;
 import third.mall.fragment.MallOrderFragment;
+import third.mall.override.MallBaseActivity;
+import third.mall.override.MallOrderBaseActivity;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
@@ -235,7 +238,9 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 			break;
 		case R.id.feedbak_layout:
 			XHClick.mapStat(MyOrderActivity.this, "a_mail_orders","优惠券","");
-			this.startActivity(new Intent(this, MallMyFavorableActivity.class));
+			Intent intent = new Intent(this,MallMyFavorableActivity.class);
+			intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+			this.startActivity(intent);
 			break;
 		}
 	}

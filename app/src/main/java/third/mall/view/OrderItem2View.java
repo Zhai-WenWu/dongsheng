@@ -2,7 +2,6 @@ package third.mall.view;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,6 +24,7 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
 import third.mall.activity.MyOrderActivity;
@@ -36,6 +36,7 @@ import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import third.mall.view.MallButtonView.InterfaceViewCallback;
 import third.mall.view.OrderItemView.InterfaceCallBack;
 import xh.basic.tool.UtilFile;
@@ -170,6 +171,8 @@ public class OrderItem2View extends ViewItemBase {
 				intent.putExtra("order_satus", "order");
 				intent.putExtra("position", position);
 				intent.putExtra("code", id);
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+				intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"商品多件" );
 				activity.startActivityForResult(intent, OrderStateActivity.request_order);
 			}
 		});
@@ -234,6 +237,8 @@ public class OrderItem2View extends ViewItemBase {
 							@Override
 							public void sucessCallBack() {
 								Intent intent = new Intent(activity, ShoppingActivity.class);
+								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+								intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"再次购买-订单发货" );
 								activity.startActivity(intent);
 								XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 							}
@@ -260,6 +265,8 @@ public class OrderItem2View extends ViewItemBase {
 				@Override
 				public void sucessCallBack() {
 					Intent intent = new Intent(activity, ShoppingActivity.class);
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+					intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"再次购买-订单完成" );
 					activity.startActivity(intent);
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
@@ -308,7 +315,10 @@ public class OrderItem2View extends ViewItemBase {
 
 				@Override
 				public void sucessCallBack() {
-					activity.startActivity(new Intent(activity, ShoppingActivity.class));
+					Intent intent = new Intent(activity,ShoppingActivity.class);
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+					intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"再次购买-订单取消" );
+					activity.startActivity(intent);
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
 			}, map, buttonView.list_state_order,url,mall_stat_statistic));
@@ -336,6 +346,8 @@ public class OrderItem2View extends ViewItemBase {
 				@Override
 				public void sucessCallBack() {
 					Intent intent = new Intent(activity, ShoppingActivity.class);
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+					intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"再次购买-订单退款" );
 					activity.startActivity(intent);
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
@@ -372,6 +384,8 @@ public class OrderItem2View extends ViewItemBase {
 				intent.putExtra("order_satus", "order");
 				intent.putExtra("position", position);
 				intent.putExtra("code", id);
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+				intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"商品单件" );
 				activity.startActivityForResult(intent, OrderStateActivity.request_order);
 			}
 		});
@@ -427,6 +441,7 @@ public class OrderItem2View extends ViewItemBase {
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ORDER_ID, map.get("order_id"));
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_POSITION, position);
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ID, id);
+		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
 		activity.startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 
@@ -443,6 +458,7 @@ public class OrderItem2View extends ViewItemBase {
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,productMap.get("proudct_code"));
         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION, position);
         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ID, id);
+		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
 		activity.startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 

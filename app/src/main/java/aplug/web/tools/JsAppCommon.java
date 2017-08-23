@@ -29,6 +29,7 @@ import acore.logic.PayCallback;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.activity.AnswerEditActivity;
@@ -38,7 +39,6 @@ import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.db.DataOperate;
 import amodule.dish.db.DishOffSqlite;
-import amodule.dish.view.DishWebView;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -59,6 +59,7 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.dialog.FavorableDialog;
+import third.mall.override.MallBaseActivity;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
 import xh.basic.tool.UtilFile;
@@ -394,6 +395,7 @@ public class JsAppCommon extends JsBase {
                                 }
                             }
                             Intent intent = new Intent(mAct, ShoppingActivity.class);
+                            intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(mAct));
                             mAct.startActivity(intent);
                         }
                     }

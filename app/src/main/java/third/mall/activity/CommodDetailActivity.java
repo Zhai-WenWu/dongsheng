@@ -22,7 +22,6 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -38,7 +37,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -53,13 +51,12 @@ import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.user.activity.login.LoginByAccout;
-import aplug.basic.SubBitmapTarget;
 import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
 import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
@@ -72,6 +69,7 @@ import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.dialog.BuyDialog;
 import third.mall.dialog.FavorableDialog;
+import third.mall.override.MallBaseActivity;
 import third.mall.tool.ToolView;
 import third.mall.widget.MyScrollView;
 import third.mall.widget.MyScrollView.ScrollViewInterface;
@@ -87,7 +85,7 @@ import xh.basic.tool.UtilString;
  *
  * @author yu
  */
-public class CommodDetailActivity extends BaseActivity implements OnClickListener {
+public class CommodDetailActivity extends MallBaseActivity implements OnClickListener {
 
     private ViewPager viewpager;
     private ImageView[] imageviews;

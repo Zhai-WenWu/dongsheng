@@ -1,6 +1,5 @@
 package third.mall.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -32,10 +30,12 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import aplug.feedback.activity.Feedback;
 import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import third.mall.tool.ToolView;
 import third.mall.view.HorizontalListView;
 import xh.basic.tool.UtilFile;
@@ -197,7 +197,8 @@ public class AdapterOrderState extends MallAdapterSimple {
 						 MallClickContorl.getInstance().setStatisticUrl(url, null,mall_stat_statistic, context);
 						 Intent intent= new Intent(context,CommodDetailActivity.class);
 						 intent.putExtra("product_code", UtilString.getListMapByJson(listMapByJson.get(position).get("info")).get(0).get("product_code"));
-						 context.startActivity(intent);
+						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+						context.startActivity(intent);
 					}
 				});
 				ToolView.setListViewHeightBasedOnChildren(listview);

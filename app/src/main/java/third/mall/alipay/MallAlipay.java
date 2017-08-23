@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.activity.OrderStateActivity;
 import third.mall.activity.PaySuccedActvity;
@@ -27,6 +28,7 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import acore.logic.PayCallback;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -85,6 +87,7 @@ public class MallAlipay {
 						Toast.makeText(mAct, "支付成功", Toast.LENGTH_SHORT).show();
 						Intent intent = new Intent(mAct, PaySuccedActvity.class);
 						intent.putExtra("amt", listMapByJson.get(0).get("amt"));
+						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(mAct));
 						mAct.startActivity(intent);
 					} else {
 						// 判断resultStatus 为非“9000”则代表可能支付失败
@@ -99,6 +102,7 @@ public class MallAlipay {
 								intent.setClass(mAct, OrderStateActivity.class);
 								intent.putExtra("order_id", MallCommon.payment_order_id);
 								intent.putExtra("order_satus", "payment_order");
+								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(mAct));
 								mAct.startActivity(intent);
 							}
 

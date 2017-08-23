@@ -16,7 +16,7 @@ import com.xianghatest.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.adapter.AdapterAddressChange;
 import third.mall.aplug.MallClickContorl;
@@ -25,6 +25,7 @@ import third.mall.aplug.MallCommon.InterfaceMallReqIntert;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -33,7 +34,7 @@ import xh.basic.tool.UtilString;
  * @author Administrator
  *
  */
-public class MallAddressChangeActivity extends BaseActivity implements OnClickListener{
+public class MallAddressChangeActivity extends MallBaseActivity implements OnClickListener{
 
 	private ListView address_list;
 	private ArrayList<Map<String, String>> ListData=new ArrayList<Map<String,String>>();
@@ -120,6 +121,8 @@ public class MallAddressChangeActivity extends BaseActivity implements OnClickLi
 					}
 					if(ListData.size()<=0&& state_del){
 						Intent intent = new Intent(MallAddressChangeActivity.this,AddressActivity.class);
+						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(MallAddressChangeActivity.this));
+						intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "选择收获地址，地址为空");
 						MallAddressChangeActivity.this.startActivityForResult(intent, ShoppingOrderActivity.OK_ADDRESS);
 					}
 					adapter.notifyDataSetChanged();
@@ -158,6 +161,8 @@ public class MallAddressChangeActivity extends BaseActivity implements OnClickLi
 		case R.id.add_address:
 			setStatisticIndex();
 			Intent intent = new Intent(this,AddressActivity.class);
+			intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+			intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "添加地址");
 			this.startActivityForResult(intent, ShoppingOrderActivity.OK_ADDRESS);
 			break;
 		}

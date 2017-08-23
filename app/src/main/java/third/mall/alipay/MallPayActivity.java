@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Random;
 
 import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -34,6 +35,7 @@ import third.mall.aplug.MallCommon.InterfaceMallReqIntert;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -79,6 +81,7 @@ public class MallPayActivity extends BaseActivity implements OnClickListener{
 								Toast.LENGTH_SHORT).show();
 						Intent intent =new Intent(MallPayActivity.this,PaySuccedActvity.class);
 						intent.putExtra("amt", listMapByJson.get(0).get("amt"));
+						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(MallPayActivity.this));
 						MallPayActivity.this.startActivity(intent);
 					} else {
 						// 判断resultStatus 为非“9000”则代表可能支付失败

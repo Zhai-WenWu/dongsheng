@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import amodule.main.Main;
 import aplug.basic.ReqInternet;
@@ -26,6 +26,7 @@ import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import third.mall.widget.MyGridView;
 import third.mall.wx.WxPay;
 import xh.basic.tool.UtilString;
@@ -35,7 +36,7 @@ import xh.basic.tool.UtilString;
  * @author yu
  *
  */
-public class PaySuccedActvity extends BaseActivity implements OnClickListener{
+public class PaySuccedActvity extends MallBaseActivity implements OnClickListener{
 
 	private String amt;
 	private ArrayList<Map<String,String>> list_recommend;
@@ -136,6 +137,7 @@ public class PaySuccedActvity extends BaseActivity implements OnClickListener{
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Intent intent = new Intent(PaySuccedActvity.this, CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(PaySuccedActvity.this));
 					startActivity(intent);
 				}
 			});

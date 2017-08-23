@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.adapter.AdapterShoppingOrder;
 import third.mall.adapter.AdapterShoppingOrder.OrderChangeCallBack;
@@ -41,6 +41,7 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallPayType;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import third.mall.tool.ToolView;
 import third.mall.wx.WxPay;
 import xh.basic.internet.UtilInternet;
@@ -52,7 +53,7 @@ import xh.basic.tool.UtilString;
  * @author yujian
  *
  */
-public class ShoppingOrderActivity extends BaseActivity implements OnClickListener {
+public class ShoppingOrderActivity extends MallBaseActivity implements OnClickListener {
 
 	private TextView shoporder_consignee_man_name;
 	private TextView shoporder_consignee_man_number;
@@ -350,11 +351,13 @@ public class ShoppingOrderActivity extends BaseActivity implements OnClickListen
 				setStatisticIndex();
 				Intent intent = new Intent(this, AddressActivity.class);
 				intent.putExtra("now_address_id", address_id);
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
 				this.startActivityForResult(intent, OK_ADDRESS);
 			}else{
 				setStatisticIndex();
 				Intent intent = new Intent(this, MallAddressChangeActivity.class);
 				intent.putExtra("now_address_id", address_id);
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
 				this.startActivityForResult(intent, OK_ADDRESS);
 			}
 			break;

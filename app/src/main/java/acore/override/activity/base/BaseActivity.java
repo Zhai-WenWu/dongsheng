@@ -33,13 +33,13 @@ import acore.logic.ActivityMethodManager;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.PopWindowDialog;
 import acore.widget.UploadFailPopWindowDialog;
 import acore.widget.UploadNetChangeWindowDialog;
 import acore.widget.UploadSuccessPopWindowDialog;
-import amodule.dish.activity.DetailDish;
 import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
@@ -72,11 +72,15 @@ public class BaseActivity extends Activity {
 	private long homebackTime;
 	private boolean isForeground = true;
 
+	private long resumeTime;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActMagager = new ActivityMethodManager(this);
 	}
+
+
 
 	/**
 	 * Activity标题初始化
@@ -219,6 +223,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		resumeTime = System.currentTimeMillis();
 		Log.i("FRJ","className:::"+className);
 		if(XHApplication.in()==null){
 			Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
@@ -264,6 +269,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		PageStatisticsUtils.onPausePage(this,resumeTime,System.currentTimeMillis());
 		if(mAds != null){
 			for(AdsShow ad : mAds){
 				ad.onPauseAd();

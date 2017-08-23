@@ -16,13 +16,14 @@ import com.xianghatest.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -31,7 +32,7 @@ import xh.basic.tool.UtilString;
  * @author yu
  *
  */
-public class SelectAddressActivity extends BaseActivity implements OnClickListener{
+public class SelectAddressActivity extends MallBaseActivity implements OnClickListener{
 
 	private String provinceUrl = MallStringManager.mall_api_getprovinces;
 	private String cityUrl = MallStringManager.mall_api_getcitys;
@@ -166,6 +167,7 @@ public class SelectAddressActivity extends BaseActivity implements OnClickListen
 		intent.setClass(SelectAddressActivity.this, AddressActivity.class);
 		intent.putExtra("addressName", select_tv.getText().toString());
 		intent.putExtra("addressCode", code);
+		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(SelectAddressActivity.this));
 		SelectAddressActivity.this.setResult(AddressActivity.code_select, intent);
 		SelectAddressActivity.this.finish();
 	}

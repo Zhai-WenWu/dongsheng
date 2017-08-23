@@ -21,15 +21,19 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 
-public class PublishEvalutionMultiActivity extends BaseActivity {
+/**
+ * 发布评价
+ */
+public class PublishEvalutionMultiActivity extends MallBaseActivity {
     public static final int REQUEST_CODE_NEED_REFRESH = 0x2;
     public static final String STATISTICS_ID = "a_publish_comment";
 
@@ -144,6 +148,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                                 //去评价成功
                                 Intent intent = new Intent(PublishEvalutionMultiActivity.this,EvalutionSuccessActivity.class);
                                 intent.putExtra("url","http://m.xiangha.com");
+                                intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(PublishEvalutionMultiActivity.this));
                                 startActivity(intent);
                             } else {
 

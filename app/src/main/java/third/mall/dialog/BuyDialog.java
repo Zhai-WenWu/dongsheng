@@ -11,10 +11,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -29,16 +27,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
-import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
-import third.mall.activity.ShoppingActivity;
 import third.mall.activity.ShoppingOrderActivity;
-import third.mall.adapter.AdapterFavorable;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
@@ -182,6 +179,7 @@ public class BuyDialog extends SimpleDialog {
                         intent.putExtra("msg_order", msg.toString());
                         intent.putExtra("order_info", orderInfo);
                         intent.putExtra("url", MallStringManager.mall_checkoutOrder_v2);
+                        intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
                         if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
                             intent.putExtra("stat", (String) stat[0]);
                         }

@@ -14,6 +14,7 @@ import com.xianghatest.R;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
 import third.mall.activity.CommodDetailActivity;
@@ -22,6 +23,7 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.bean.ProductBean;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 
 import static com.xianghatest.R.id.shopping_item_commod_rela;
@@ -167,6 +169,7 @@ public class MallShopProductView extends ViewItemBase{
 				 XHClick.mapStat(context, "a_mail_shopping_cart","商品","");
 				 Intent intent= new Intent(context,CommodDetailActivity.class);
 				 intent.putExtra("product_code", bean_product.getCode());
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
 				 context.startActivity(intent);
 			}
 		});
@@ -178,6 +181,7 @@ public class MallShopProductView extends ViewItemBase{
 				 XHClick.mapStat(context, "a_mail_shopping_cart","商品","");
 				 Intent intent= new Intent(context,CommodDetailActivity.class);
 				 intent.putExtra("product_code", bean_product.getCode());
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
 				 context.startActivity(intent);
 			}
 		});

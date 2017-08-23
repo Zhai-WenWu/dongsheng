@@ -27,7 +27,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
@@ -41,6 +41,7 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallPayType;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import third.mall.view.MallButtonView;
 import third.mall.view.MallButtonView.InterfaceViewCallback;
 import third.mall.widget.ListViewForScrollView;
@@ -53,7 +54,7 @@ import xh.basic.tool.UtilString;
  * @author yu
  *
  */
-public class OrderStateActivity extends BaseActivity implements OnClickListener{
+public class OrderStateActivity extends MallBaseActivity implements OnClickListener{
 	public static final int request_order=2000;
 	public static final int result_del= 2001;
 	public static final int result_cancel= 2002;
@@ -432,6 +433,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 					setStatisticIndex();
 					Intent intent = new Intent(OrderStateActivity.this,CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
 					OrderStateActivity.this.startActivity(intent);
 				}
 			});
@@ -478,6 +480,8 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 								Log.i("去购物车3", "去购物车3");
 								Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
+								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
+								intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"再次购买-取消订单" );
 								OrderStateActivity.this.startActivity(intent);
 							}
 						}, map, MallButtonView.detail_state_payment,url_statistic,mall_stat_statistic);
@@ -523,6 +527,8 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 							public void sucessCallBack() {
 								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 								Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
+								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
+								intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"默认" );
 								OrderStateActivity.this.startActivity(intent);
 							}
 						}, map, MallButtonView.detail_state_payment,url_statistic,mall_stat_statistic);
@@ -589,7 +595,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 							@Override
 							public void sucessCallBack() {
 								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
-								goShopping();
+								goShopping("再次购买-已发货");
 							}
 						}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
 						setButtonViewLayout(view_repeat.findViewById(R.id.textview));
@@ -624,7 +630,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 					@Override
 					public void sucessCallBack() {
 						XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
-						goShopping();
+						goShopping("再次购买-已完成");
 					}
 				}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
 				setButtonViewLayout(view_reqeat.findViewById(R.id.textview));
@@ -652,7 +658,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 					@Override
 					public void sucessCallBack() {
 						XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
-						goShopping();
+						goShopping("再次购买-取消或退款");
 					}
 				}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
 				setButtonViewLayout(view_reqeat1.findViewById(R.id.textview));
@@ -673,7 +679,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 					@Override
 					public void sucessCallBack() {
 						XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
-						goShopping();
+						goShopping("再次购买-订单超时");
 					}
 				}, map, MallButtonView.detail_state_payment,url_statistic,mall_stat_statistic);
 				setButtonViewLayout(view_reqeat2.findViewById(R.id.textview));
@@ -685,8 +691,10 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	}
 
 	/** 去购物车 */
-	private void goShopping(){
+	private void goShopping(String info){
 		Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
+		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
+		intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,info );
 		OrderStateActivity.this.startActivity(intent);
 	}
 
@@ -713,6 +721,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ORDER_ID, map.get("order_id"));
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_POSITION, position);
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ID, code);
+		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
 		startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 
@@ -728,6 +737,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,productMap.get("img"));
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION, position);
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ID, code);
+		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
 		startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 

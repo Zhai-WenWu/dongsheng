@@ -6,12 +6,14 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import acore.tools.PageStatisticsUtils;
 import third.mall.activity.CommodDetailActivity;
 import third.mall.adapter.AdapterMallAdvert;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.tool.UtilString;
 import acore.logic.AppCommon;
 import acore.logic.SetDataView;
@@ -113,6 +115,7 @@ public class MalladvertView extends ViewItemBase {
 								XHClick.mapStat(activity, mTongjiId, "你可能会喜欢", "相关商品的点击量");
 								Intent intent = new Intent(activity, CommodDetailActivity.class);
 								intent.putExtra("product_code", list_data.get(index).get("product_code") + "");
+								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
 								activity.startActivity(intent);
 							}
 						} };

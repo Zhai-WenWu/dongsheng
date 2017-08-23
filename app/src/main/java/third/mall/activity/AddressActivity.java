@@ -21,7 +21,6 @@ import com.xianghatest.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
 import acore.widget.SwitchButton;
 import acore.widget.SwitchButton.OnChangeListener;
@@ -31,6 +30,7 @@ import third.mall.aplug.MallCommon.InterfaceMallReqIntert;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -39,7 +39,7 @@ import xh.basic.tool.UtilString;
  * @author yu
  *
  */
-public class AddressActivity extends BaseActivity implements OnClickListener{
+public class AddressActivity extends MallBaseActivity implements OnClickListener{
 
 	private EditText consignee_edit;
 	private EditText number_edit;

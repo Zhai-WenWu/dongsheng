@@ -1,14 +1,12 @@
 package third.mall.activity;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,18 +21,19 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ProperRatingBar;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
+import third.mall.override.MallBaseActivity;
 import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.EvalutionImageLayout;
 import xh.windowview.XhDialog;
 
-public class PublishEvalutionSingleActivity extends BaseActivity implements View.OnClickListener {
+public class PublishEvalutionSingleActivity extends MallBaseActivity implements View.OnClickListener {
     /** 统计id */
     public static final String STATISTICS_ID = "a_publish_commerce";
     public static final String STATISTICS_RETURN_ID = "a_comcoment_return";
@@ -120,6 +119,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                     Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
                     intent.putExtra(EvalutionSuccessActivity.EXTRAS_ID,id);
                     intent.putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position);
+                    intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(PublishEvalutionSingleActivity.this));
                     intent.putExtra("url","http://m.xiangha.com");
                     startActivityForResult(intent,OrderStateActivity.request_order);
                 }else{

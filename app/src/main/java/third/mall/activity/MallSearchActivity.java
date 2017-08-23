@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import aplug.basic.ReqInternet;
@@ -28,6 +27,7 @@ import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import third.mall.tool.ToolFile;
 import third.mall.view.MallSearchTitle;
 import third.mall.view.MallSearchTitle.InterfaceCallBack;
@@ -43,7 +43,7 @@ import xh.basic.tool.UtilString;
  * @author yujian
  *
  */
-public class MallSearchActivity extends BaseActivity{
+public class MallSearchActivity extends MallBaseActivity {
 
 	private MallSearchTitle search_title;
 	private SearchHotView hot_view;

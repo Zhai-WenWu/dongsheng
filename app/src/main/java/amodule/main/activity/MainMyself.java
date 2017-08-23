@@ -27,6 +27,7 @@ import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
@@ -51,6 +52,7 @@ import aplug.feedback.activity.Feedback;
 import third.mall.activity.MallMyFavorableActivity;
 import third.mall.activity.MyOrderActivity;
 import third.mall.alipay.MallPayActivity;
+import third.mall.override.MallBaseActivity;
 import third.push.xg.XGPushServer;
 
 /**
@@ -470,6 +472,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case R.id.ll_coupon:
                     XHClick.mapStat(this, tongjiId,"列表", "优惠券");
                     Intent intent_coupon = new Intent(this,MallMyFavorableActivity.class);
+                    intent_coupon.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
                     startActivity(intent_coupon);
                     break;
             }
@@ -521,6 +524,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case "order":
                     XHClick.mapStat(this, tongjiId,"列表", "订单");
                     Intent intent_order = new Intent(this,MyOrderActivity.class);
+                    intent_order.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
                     startActivity(intent_order);
                     break;
                 case "vip": //会员

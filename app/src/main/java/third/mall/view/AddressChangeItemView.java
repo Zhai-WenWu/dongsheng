@@ -1,10 +1,5 @@
 package third.mall.view;
 
-import java.util.Map;
-
-import third.mall.activity.AddressActivity;
-import third.mall.activity.ShoppingOrderActivity;
-import acore.override.activity.base.BaseActivity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xianghatest.R;
+
+import java.util.Map;
+
+import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
+import third.mall.activity.AddressActivity;
+import third.mall.activity.ShoppingOrderActivity;
+import third.mall.override.MallBaseActivity;
 
 /**
  * 地址选择ItemView
@@ -71,6 +74,7 @@ public class AddressChangeItemView extends RelativeLayout implements OnClickList
 		case R.id.iv_address_edit://去编辑
 			Intent intent = new Intent(context,AddressActivity.class);
 			intent.putExtra("address_id", address_id);
+			intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
 			context.startActivityForResult(intent, ShoppingOrderActivity.OK_ADDRESS);
 			break;
 		case R.id.iv_change_state:

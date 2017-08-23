@@ -2,15 +2,20 @@ package third.mall.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.xianghatest.R;
 
 import acore.logic.XHClick;
+import acore.tools.PageStatisticsUtils;
 import amodule.main.Main;
 import aplug.web.ShowWeb;
 import aplug.web.view.XHWebView;
+
+import static third.mall.override.MallBaseActivity.PAGE_FROM;
+import static third.mall.override.MallBaseActivity.PAGE_FROM_TWO;
 
 /**
  * PackageName : third.mall.activity
@@ -24,6 +29,16 @@ public class EvalutionSuccessActivity extends ShowWeb {
 
     int id = -1;
     int position = -1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String from = getIntent().getStringExtra(PAGE_FROM);
+        String two = getIntent().getStringExtra(PAGE_FROM_TWO);
+        if(!TextUtils.isEmpty(from)){
+            PageStatisticsUtils.onPageChange(TextUtils.isEmpty(two) ? from : from + "-" + two,this);
+        }
+    }
 
     @Override
     protected void initTitleView() {

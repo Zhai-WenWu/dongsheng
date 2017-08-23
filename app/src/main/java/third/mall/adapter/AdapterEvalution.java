@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.tools.PageStatisticsUtils;
 import third.mall.activity.PublishEvalutionMultiActivity;
 import third.mall.activity.PublishEvalutionSingleActivity;
+import third.mall.override.MallBaseActivity;
 import third.mall.view.CommodEvalutionItem;
 
 /**
@@ -90,6 +92,8 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,data.get("product_code"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,data.get("score"));
+                        intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+
                         activity.startActivityForResult(intent,PublishEvalutionMultiActivity.REQUEST_CODE_NEED_REFRESH);
                     }
                 });

@@ -4,10 +4,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.tools.PageStatisticsUtils;
 import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilImage;
 import acore.tools.Tools;
@@ -206,6 +208,7 @@ public class AdapterShoppingItem extends MallAdapterSimple {
 				public void onClick(View v) {
 					Intent intent = new Intent(context, CommodDetailActivity.class);
 					intent.putExtra("product_code", map.get("code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
 					context.startActivity(intent);
 				}
 			});
@@ -215,6 +218,7 @@ public class AdapterShoppingItem extends MallAdapterSimple {
 				public void onClick(View v) {
 					Intent intent = new Intent(context, CommodDetailActivity.class);
 					intent.putExtra("product_code", map.get("code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
 					context.startActivity(intent);
 				}
 			});

@@ -12,10 +12,12 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import acore.tools.PageStatisticsUtils;
 import third.mall.activity.OrderStateActivity;
 import third.mall.activity.PaySuccedActvity;
 import third.mall.aplug.MallCommon;
 import acore.logic.PayCallback;
+import third.mall.override.MallBaseActivity;
 
 /**
  * 微信支付回调页面
@@ -63,6 +65,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 				Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(this, PaySuccedActvity.class);
 				intent.putExtra("amt", "");
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
 				this.startActivity(intent);
 
 			} else {
@@ -71,6 +74,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 					intent.setClass(this, OrderStateActivity.class);
 					intent.putExtra("order_id", MallCommon.payment_order_id);
 					intent.putExtra("order_satus", "payment_order");
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
 					this.startActivity(intent);
 				}
 			}
