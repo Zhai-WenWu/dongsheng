@@ -236,7 +236,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private void allStartOrPause(boolean isAllStart) {
         if (mListPool == null)
             return;
-        showUploadingDialog();
+        if (isAllStart)
+            showUploadingDialog();
+        else
+            cancelUploadingDialog();
         mIsStopUpload = !isAllStart;
         mListPool.allStartOrStop(isAllStart ? UploadListPool.TYPE_START : UploadListPool.TYPE_PAUSE);
     }
@@ -407,6 +410,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     public void onUploadOver(boolean flag, String response) {
         mIsStopUpload = true;
         cancelUploadingDialog();
+        if (!flag && !TextUtils.isEmpty(response)) {
+            Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Map<String, String> map = StringManager.getFirstMap(response);
         String type = map.get("type");
         String msg = map.get("msg");
