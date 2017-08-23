@@ -3,16 +3,12 @@ package amodule.article.activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -20,7 +16,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,7 +62,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private String mTag;
 
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
-    private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
+    private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +187,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<String> formats = new ArrayList<String>();
+                ArrayList<String> formats = new ArrayList<>();
                 formats.add("mov");
                 formats.add("mp4");
                 ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMediasLimitFormats(formats);
@@ -205,7 +200,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                             String parentName = parentFile.getName();
                             List<Map<String, String>> childs;
                             if (!mVideoParentFiles.containsKey(parentName)) {
-                                childs = new ArrayList<Map<String, String>>();
+                                childs = new ArrayList<>();
                                 childs.add(map);
                                 mVideoParentFiles.put(parentName, childs);
                             } else {
@@ -222,7 +217,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
     /**
      * 数据加载完成
-     * @param datas
+     * @param datas 数据
      */
     private void onDataReady(final ArrayList<Map<String, String>> datas) {
         ArticleVideoSelectorActivity.this.runOnUiThread(new Runnable() {
@@ -275,9 +270,9 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                 XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频超过60s");
             }
         } else {
-            if (millis < 1*1000)
+            if (millis < 1000)
                 ret = "不能短于1秒";
-            else if (millis > 1*1000*60*60)
+            else if (millis > 1000 * 60 * 60)
                 ret = "不能长于1小时";
         }
         return ret;

@@ -83,7 +83,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private TextView mTitle;
     private ImageView rightButton;
     private RelativeLayout dredgeVipLayout;
-    private RelativeLayout allTitleRela;
     private RelativeLayout allTitleRelaPort;
     private TextView dredgeVipImmediately;
     private PtrClassicFrameLayout refreshLayout;
@@ -206,7 +205,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
-        allTitleRela = (RelativeLayout) findViewById(R.id.relativeLayout_global);
+        RelativeLayout allTitleRela = (RelativeLayout) findViewById(R.id.relativeLayout_global);
         allTitleRelaPort = (RelativeLayout) findViewById(R.id.all_title_rela_transparent);
         initTitle(allTitleRela);
         //初始化listview

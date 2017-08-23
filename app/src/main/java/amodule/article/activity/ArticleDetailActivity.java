@@ -70,8 +70,9 @@ public class ArticleDetailActivity extends BaseActivity {
     public static final String TYPE_VIDEO = "2";
 
     private ListView listView;
-    /** 头部view */
-    private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
+    private LinearLayout linearLayoutOne;
+    private LinearLayout linearLayoutTwo;
+    private LinearLayout linearLayoutThree;
     private TextView mTitle;
     private ImageView rightButton;
     private PtrClassicFrameLayout refreshLayout;
@@ -286,7 +287,8 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         //initListView
-        layout = new LinearLayout(this);
+        /* 头部view */
+        LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
         linearLayoutOne = new LinearLayout(this);
@@ -462,7 +464,7 @@ public class ArticleDetailActivity extends BaseActivity {
     /**
      * 解析文章数据
      *
-     * @param mapArticle
+     * @param mapArticle 文章数据
      */
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
         if (mapArticle.isEmpty()) return;
@@ -507,9 +509,9 @@ public class ArticleDetailActivity extends BaseActivity {
 
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         String htmlStr = mapArticle.get("html");
-        if (htmlStr.indexOf("&lt;") >= 0)
+        if (htmlStr.contains("&lt;"))
             htmlStr = htmlStr.replace("&lt;", "<");
-        if (htmlStr.indexOf("&gt;") >= 0)
+        if (htmlStr.contains("&gt;"))
             htmlStr = htmlStr.replace("&gt;", ">");
         webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), htmlStr, "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
@@ -674,7 +676,7 @@ public class ArticleDetailActivity extends BaseActivity {
     /**
      * 解析推荐数据
      *
-     * @param ArrayRelate
+     * @param ArrayRelate 推荐数据
      */
     private void analysRelateData(@NonNull ArrayList<Map<String, String>> ArrayRelate) {
         if (ArrayRelate.isEmpty()) return;
