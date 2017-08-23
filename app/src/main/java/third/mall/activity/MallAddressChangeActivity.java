@@ -122,7 +122,7 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 					if(ListData.size()<=0&& state_del){
 						Intent intent = new Intent(MallAddressChangeActivity.this,AddressActivity.class);
 						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(MallAddressChangeActivity.this));
-						intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "选择收获地址，地址为空");
+						intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "选择收货地址，地址为空");
 						MallAddressChangeActivity.this.startActivityForResult(intent, ShoppingOrderActivity.OK_ADDRESS);
 					}
 					adapter.notifyDataSetChanged();

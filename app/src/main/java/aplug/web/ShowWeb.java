@@ -294,7 +294,6 @@ public class  ShowWeb extends WebActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(ShowWeb.this, ShoppingActivity.class);
 					intent.putExtra(PAGE_FROM, PageStatisticsUtils.getPageName(ShowWeb.this));
-					intent.putExtra(PAGE_FROM_TWO,"子订单item" );
                     startActivity(intent);
                     finish();
                 }
