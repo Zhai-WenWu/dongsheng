@@ -83,6 +83,8 @@ public class AppCommon {
 
     private static int fiallNum = 0;
 
+    public static boolean hasArbitration;
+
     /**
      * 获取公用数据消息
      */
@@ -98,6 +100,8 @@ public class AppCommon {
                         feekbackMessage = Integer.parseInt(alertArr[2]);
                         if (alertArr.length >= 5) {
                             myQAMessage = Integer.parseInt(alertArr[3]) + Integer.parseInt(alertArr[4]);
+                            if (alertArr.length >= 6)
+                                hasArbitration = "2".equals(alertArr[5]);
                         }
                         try {
                             // 所有消息数

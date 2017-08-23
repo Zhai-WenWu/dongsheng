@@ -153,7 +153,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
+                onLocalDataReady(mSQLite.queryFirstData());
             }
         }).start();
     }
@@ -167,16 +167,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 else
                     loadManager.hideProgressBar();
                 if (model != null) {
-                    mModel = model;
-                    mEditText.setText(model.getmText());
-                    mIsAno = "2".equals(model.getmAnonymity());
-                    String imgs = model.getmImgs();
-                    if (!TextUtils.isEmpty(imgs)) {
-                        ArrayList<Map<String, String>> imgsArr = StringManager.getListMapByJson(imgs);
-                        if (imgsArr != null && !imgsArr.isEmpty()) {
-                            for (Map<String, String> img : imgsArr)
-                                mImgController.addData(img);
-                        }
+                    mModel.setmId(model.getmId());
+                    if (!TextUtils.isEmpty(mDishCode) && mDishCode.equals(model.getmDishCode())) {
+                        mModel = model;
+                        mEditText.setText(model.getmText());
+                        mIsAno = "2".equals(model.getmAnonymity());
+                        initImgControllerData(model);
                     }
                 }
             }
