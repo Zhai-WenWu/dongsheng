@@ -375,7 +375,11 @@ public class BaseEditActivity extends BaseActivity {
         Editable editable = mEditText.getText();
         ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
         ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
-        if ((editable == null || TextUtils.isEmpty(editable.toString()) || editable.toString().trim().length() == 0) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
+        if ((editable == null || TextUtils.isEmpty(editable.toString()) || editable.toString().trim().length() == 0)
+                && mImgsContainer != null
+                && mImgsContainer.getChildCount() <= 0
+                && !TextUtils.isEmpty(mDishCode)
+                && !mDishCode.equals(mModel.getmDishCode())) {//没有内容，并且 非同一个菜谱，则不保存数据。
             return rowId;
         }
         mModel.setmText(editable == null ? "" : editable.toString());

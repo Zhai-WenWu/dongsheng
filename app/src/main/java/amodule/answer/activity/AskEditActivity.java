@@ -168,6 +168,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     loadManager.hideProgressBar();
                 if (model != null) {
                     mModel.setmId(model.getmId());
+                    mModel.setmDishCode(model.getmDishCode());
                     if (!TextUtils.isEmpty(mDishCode) && mDishCode.equals(model.getmDishCode())) {
                         mModel = model;
                         mEditText.setText(model.getmText());
