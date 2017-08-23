@@ -62,7 +62,6 @@ import xh.windowview.XhDialog;
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
 import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
 import static amodule.article.view.richtext.RichText.FORMAT_UNDERLINED;
-import static android.icu.text.UnicodeSet.CASE;
 
 /**
  * PackageName : amodule.article.activity
@@ -112,7 +111,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         initActivity("", 5, 0, 0, R.layout.a_article_edit_activity);
         mCurrentContext = this;
-        if (this instanceof ArticleEidtActiivty) {
+        if (this instanceof ArticleEidtActivity) {
             mPageTag = mArticlePageTag;
             XHClick.mapStat(this, "a_post_button", "文章", "进入编辑文章页面");
         } else if (this instanceof VideoEditActivity) {
@@ -768,7 +767,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     }
 
     public Class<?> getIntentClass() {
-        return ArticleEidtActiivty.class;
+        return ArticleEidtActivity.class;
     }
 
     private void finshActivity() {

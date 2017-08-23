@@ -32,7 +32,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
@@ -231,7 +231,7 @@ public class ArticleUploadListActivity extends BaseActivity {
 
                         Intent intent = new Intent();
                         if(dataType == EditParentActivity.DATA_TYPE_ARTICLE){
-                            intent.setClass(ArticleUploadListActivity.this, ArticleEidtActiivty.class);
+                            intent.setClass(ArticleUploadListActivity.this, ArticleEidtActivity.class);
                         }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO){
                             intent.setClass(ArticleUploadListActivity.this, VideoEditActivity.class);
                         }

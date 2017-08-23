@@ -1,18 +1,5 @@
 package amodule.quan.activity;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
-import acore.logic.LoginManager;
-import acore.override.activity.base.BaseActivity;
-import acore.tools.StringManager;
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import acore.widget.DownRefreshList;
-import amodule.quan.adapter.AdapterCircleUser;
-import amodule.user.activity.FriendHome;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,11 +17,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqInternet;
 
 import com.xianghatest.R;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import acore.logic.LoginManager;
+import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.widget.DownRefreshList;
+import amodule.quan.adapter.AdapterCircleUser;
+import amodule.user.activity.FriendHome;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqInternet;
+import xh.basic.internet.UtilInternet;
+import xh.basic.tool.UtilString;
+
+/**
+ * 圈子用户搜索
+ */
 public class CircleUserSo extends BaseActivity implements OnClickListener {
 	
 	private String mTitle,mCid;

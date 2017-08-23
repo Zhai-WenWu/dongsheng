@@ -38,7 +38,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.tools.ArticleAdContrler;
 import amodule.article.view.ArticleContentBottomView;
@@ -701,7 +701,7 @@ public class ArticleDetailActivity extends BaseActivity {
         }).addButton("编辑", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ArticleDetailActivity.this, ArticleEidtActiivty.class);
+                Intent intent = new Intent(ArticleDetailActivity.this, ArticleEidtActivity.class);
                 intent.putExtra("code", code);
                 startActivity(intent);
                 statistics("更多", "编辑");

@@ -446,7 +446,7 @@
 
         <!-- article start -->
         <activity
-            android:name="amodule.article.activity.edit.ArticleEidtActiivty"
+            android:name="amodule.article.activity.edit.ArticleEidtActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
@@ -479,7 +479,7 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="amodule.article.activity.ArticleSelectActiivty"
+            android:name="amodule.article.activity.ArticleSelectActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"

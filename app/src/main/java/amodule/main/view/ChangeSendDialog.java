@@ -29,7 +29,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
@@ -218,7 +218,7 @@ public class ChangeSendDialog extends Dialog {
                 if(!LoginManager.isLogin()) {
                     activity.startActivity(new Intent(activity, LoginByAccout.class));
                 }else if (LoginManager.isBindMobilePhone())
-                    activity.startActivity(new Intent(activity, ArticleEidtActiivty.class));
+                    activity.startActivity(new Intent(activity, ArticleEidtActivity.class));
                 else
                     activity.startActivity(new Intent(activity, BindPhoneNum.class));
 //                    showDialog("文章", StringManager.api_applyArticlePower);

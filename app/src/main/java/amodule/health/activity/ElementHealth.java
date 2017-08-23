@@ -1,15 +1,5 @@
 package amodule.health.activity;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
-import acore.logic.SetDataView;
-import acore.override.activity.base.BaseActivity;
-import acore.override.adapter.AdapterSimple;
-import acore.tools.StringManager;
-import acore.tools.Tools;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,14 +11,25 @@ import android.view.View.OnClickListener;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqInternet;
 
 import com.xianghatest.R;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import acore.logic.SetDataView;
+import acore.override.activity.base.BaseActivity;
+import acore.override.adapter.AdapterSimple;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqInternet;
+import xh.basic.internet.UtilInternet;
+import xh.basic.tool.UtilString;
+
 /**
  * Title:ElementHealth.java Copyright: Copyright (c) 2014~2017
- * 
+ * 微量元素高的食材列表
  * @author zeyu_t
  * @date 2014年10月14日
  */

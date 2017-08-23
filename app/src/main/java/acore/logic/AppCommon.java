@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -25,8 +26,6 @@ import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
 import com.xianghatest.R;
-
-//
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -70,6 +69,8 @@ import xh.windowview.BottomDialog;
 
 import static xh.basic.tool.UtilFile.readFile;
 import static xh.basic.tool.UtilString.getListMapByJson;
+
+//
 
 public class AppCommon {
     public static int quanMessage = 0; // 美食圈新消息条数
@@ -205,6 +206,7 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
+        Log.i("FRJ","openUrl() url:" + url);
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
         if ( !url.startsWith("xiangha://welcome?") && !url.startsWith("http")

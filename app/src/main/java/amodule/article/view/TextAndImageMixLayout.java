@@ -28,12 +28,11 @@ import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichText;
 import amodule.article.view.richtext.RichURLSpan;
-import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.imageselector.ImageSelectorActivity;
@@ -41,7 +40,6 @@ import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
 
 import static amodule.article.activity.edit.EditParentActivity.REQUEST_CHOOSE_VIDEO_COVER;
-import static amodule.quan.activity.upload.UploadSubjectNew.UP_SUBJECT_CHOOSE_IMG;
 import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
 
 /**
@@ -711,7 +709,7 @@ public class TextAndImageMixLayout extends LinearLayout
             }
         }
 
-        if (getContext() instanceof ArticleEidtActiivty) {
+        if (getContext() instanceof ArticleEidtActivity) {
             if (view instanceof ImageShowView)
                 XHClick.mapStat(getContext(), "a_ArticleEdit", "编辑文章内容", "删除图片");
             else if (view instanceof VideoShowView)

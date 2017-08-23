@@ -3,16 +3,12 @@ package amodule.article.activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -20,7 +16,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,11 +37,11 @@ import amodule.article.adapter.ArticleVideoFolderAdapter;
 import amodule.article.adapter.ArticleVideoSelectorAdapter;
 import aplug.recordervideo.tools.FileToolsCammer;
 
-
+/**
+ * 选择视频列表页
+ */
 public class ArticleVideoSelectorActivity extends BaseActivity implements View.OnClickListener{
-    public static final String EXTRA_UNSELECT_VIDEO = "extraUnselectVideo";
-
-    private final int SELECTED_VIDEO = 1;
+    public static final String EXTRA_UNSELECT_VIDEO = "extraUnselectVideo";   private final int SELECTED_VIDEO = 1;
 
     private Button mCancelBtn;
     private ImageView mBackImg;

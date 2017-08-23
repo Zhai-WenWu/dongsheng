@@ -8,7 +8,7 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.activity.ArticleDetailActivity;
-import amodule.article.activity.ArticleSelectActiivty;
+import amodule.article.activity.ArticleSelectActivity;
 import amodule.article.db.UploadArticleSQLite;
 
 /**
@@ -16,7 +16,7 @@ import amodule.article.db.UploadArticleSQLite;
  * Created by MrTrying on 2017/5/19 09:19.
  * E_mail : ztanzeyu@gmail.com
  */
-public class ArticleEidtActiivty extends EditParentActivity{
+public class ArticleEidtActivity extends EditParentActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +71,7 @@ public class ArticleEidtActiivty extends EditParentActivity{
         if (TextUtils.isEmpty(checkStr)) {
             saveDraft();
             if(timer != null)timer.cancel();
-            Intent intent = new Intent(this, ArticleSelectActiivty.class);
+            Intent intent = new Intent(this, ArticleSelectActivity.class);
             intent.putExtra("draftId", uploadArticleData.getId());
             intent.putExtra("dataType", EditParentActivity.DATA_TYPE_ARTICLE);
             startActivity(intent);

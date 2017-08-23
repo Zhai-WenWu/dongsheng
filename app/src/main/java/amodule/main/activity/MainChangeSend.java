@@ -26,7 +26,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
@@ -201,7 +201,7 @@ public class MainChangeSend extends BaseActivity {
                     startActivity(new Intent(this, LoginByAccout.class));
                 } else if (LoginManager.isBindMobilePhone()) {
                     finish();
-                    startActivity(new Intent(this, ArticleEidtActiivty.class));
+                    startActivity(new Intent(this, ArticleEidtActivity.class));
                 } else
                     startActivity(new Intent(this, BindPhoneNum.class));
 //                    showDialog("发文章", StringManager.api_applyArticlePower);

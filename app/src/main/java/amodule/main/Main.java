@@ -204,6 +204,8 @@ public class Main extends Activity implements OnClickListener {
                 DishMouldControl.reqDishMould(null);
                 OffDishToFavoriteControl.addCollection(Main.this);
 
+                PageStatisticsUtils.getPageInfo(getApplicationContext());
+
                 if (showQAUploading())
                     return;
                 if (showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？"))

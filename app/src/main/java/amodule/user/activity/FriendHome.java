@@ -33,7 +33,7 @@ import acore.widget.TextViewLimitLine;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.VideoDetailActivity;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
@@ -411,7 +411,7 @@ public class FriendHome extends BaseActivity {
 							FriendHome.this.startActivity(intent);
 						} else if (UploadDishData.UPLOAD_FAIL.equals(uploadType)) {
 							if ("2".equals(type)) { //如果是无多媒体资源文章并且上传失败，点击进入编辑页面
-								Intent intent = new Intent(FriendHome.this, ArticleEidtActiivty.class);
+								Intent intent = new Intent(FriendHome.this, ArticleEidtActivity.class);
 								intent.putExtra("draftId", articleData.getId());
 								startActivity(intent);
 								return;

@@ -26,6 +26,7 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
@@ -109,7 +110,9 @@ public class  ShowWeb extends WebActivity {
 			String from = getIntent().getStringExtra(PAGE_FROM);
 			String two = getIntent().getStringExtra(PAGE_FROM_TWO);
 			if(!TextUtils.isEmpty(from)){
-				PageStatisticsUtils.onPageChange(TextUtils.isEmpty(two) ? from : from + "-" + two,this);
+				PageStatisticsUtils.onPageChange(from ,two);
+			}else if(!TextUtils.isEmpty(url) && url.contains("m.ds.mamaweiyang")){
+				PageStatisticsUtils.onPageChange(XHActivityManager.getInstance().getCurrentActivity(),url);
 			}
 		}
 	}

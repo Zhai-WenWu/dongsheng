@@ -18,7 +18,6 @@ import amodule.answer.model.AskAnswerModel;
 /**
  * Created by sll on 2017/7/18.
  */
-
 public class AnswerEditActivity extends BaseEditActivity {
 
     private TextView mQATitleTextView;

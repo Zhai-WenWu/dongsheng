@@ -33,6 +33,9 @@ import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.EvalutionImageLayout;
 import xh.windowview.XhDialog;
 
+/**
+ * 发布评价
+ */
 public class PublishEvalutionSingleActivity extends MallBaseActivity implements View.OnClickListener {
     /** 统计id */
     public static final String STATISTICS_ID = "a_publish_commerce";

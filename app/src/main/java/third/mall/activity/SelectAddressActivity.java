@@ -28,7 +28,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 /**
- * 选择路径
+ * 选择地址
  * @author yu
  *
  */

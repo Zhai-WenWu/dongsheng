@@ -29,7 +29,7 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.dish.db.UploadDishData;
@@ -105,7 +105,7 @@ public class UserHomeTxt extends TabContentView {
 			@Override
 			public void onClick(View v) {
 				if (LoginManager.isBindMobilePhone())
-					mAct.startActivity(new Intent(mAct, ArticleEidtActiivty.class));
+					mAct.startActivity(new Intent(mAct, ArticleEidtActivity.class));
 				else
 					mAct.startActivity(new Intent(mAct, BindPhoneNum.class));
 			}

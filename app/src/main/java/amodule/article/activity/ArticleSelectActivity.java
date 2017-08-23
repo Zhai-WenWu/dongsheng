@@ -33,7 +33,7 @@ import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.article.activity.edit.ArticleEidtActiivty;
+import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
@@ -53,8 +53,9 @@ import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECOND
 
 /**
  * Created by Fang Ruijiao on 2017/5/22.
+ * 文章或视频发布选择分类
  */
-public class ArticleSelectActiivty extends BaseActivity implements View.OnClickListener{
+public class ArticleSelectActivity extends BaseActivity implements View.OnClickListener{
 
     private GridView gridView;
     private ArrayList<Map<String, String>> data;
@@ -122,7 +123,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.length() > 200){
-                    Tools.showToast(ArticleSelectActiivty.this,"最多200字");
+                    Tools.showToast(ArticleSelectActivity.this,"最多200字");
                     reprintLink.setText(s.subSequence(0,200));
                 }
             }
@@ -172,7 +173,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
                         textView.setBackgroundResource(R.drawable.article_select_classify_yes);
                         textView.setTextColor(Color.parseColor("#ffffff"));
                         checkCode = data.get(i).get("code");
-                        XHClick.mapStat(ArticleSelectActiivty.this, "a_ArticleEdit", "下一步_选择分类", textView.getText() + "");
+                        XHClick.mapStat(ArticleSelectActivity.this, "a_ArticleEdit", "下一步_选择分类", textView.getText() + "");
                     }else{
                         textView.setBackgroundResource(R.drawable.article_select_classify_no);
                         textView.setTextColor(Color.parseColor("#333333"));
@@ -251,7 +252,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
             intent.putExtra("finalVideoPath", videoPath);
             startActivity(intent);
         }else{
-            InternetCallback internetCallback = new InternetCallback(ArticleSelectActiivty.this) {
+            InternetCallback internetCallback = new InternetCallback(ArticleSelectActivity.this) {
                 @Override
                 public void loaded(int flag, String s, Object o) {
                     if(flag >= ReqInternet.REQ_OK_STRING){
@@ -278,7 +279,7 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         super.onBackPressed();
         Intent intent = new Intent();
         if(dataType == EditParentActivity.DATA_TYPE_ARTICLE) {
-            intent.setClass(this, ArticleEidtActiivty.class);
+            intent.setClass(this, ArticleEidtActivity.class);
             XHClick.mapStat(this, "a_ArticleEdit", "下一步", "返回");
         } else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
             intent.setClass(this,VideoEditActivity.class);
@@ -293,28 +294,28 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
         switch (v.getId()){
             case R.id.upload:
                 if(TextUtils.isEmpty(checkCode)){
-                    Tools.showToast(ArticleSelectActiivty.this,"请选择分类");
+                    Tools.showToast(ArticleSelectActivity.this,"请选择分类");
                     return;
                 }
                 if(isCheck > 0) {
-                    if(ToolsDevice.getNetActiveState(ArticleSelectActiivty.this)) {
+                    if(ToolsDevice.getNetActiveState(ArticleSelectActivity.this)) {
                         if (sqLite.checkHasMedia(draftId)) {
                             upload();
                         } else {
                             hintDilog();
                         }
                     }else{
-                        Tools.showToast(ArticleSelectActiivty.this,"网络错误，请检查网络或重试");
+                        Tools.showToast(ArticleSelectActivity.this,"网络错误，请检查网络或重试");
                     }
                 }else{
-                    Tools.showToast(ArticleSelectActiivty.this,"请选择原创/转载");
+                    Tools.showToast(ArticleSelectActivity.this,"请选择原创/转载");
                     return;
                 }
                 XHClick.mapStat(this, "a_ArticleEdit", "下一步", "发布");
                 break;
             case R.id.article_select_check_original_link:
                 XHClick.mapStat(this, "a_ArticleEdit", "下一步_文章来源", "《香哈原创声明》");
-                AppCommon.openUrl(ArticleSelectActiivty.this,StringManager.api_agreementOriginal,true);
+                AppCommon.openUrl(ArticleSelectActivity.this,StringManager.api_agreementOriginal,true);
                 break;
             case R.id.article_select_check_reprint:
             case R.id.article_select_check_hint:
@@ -336,10 +337,10 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void hintDilog(){
-        if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActiivty.this))) {
+        if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActivity.this))) {
             upload();
         }else{
-            final XhDialog xhDialog = new XhDialog(ArticleSelectActiivty.this);
+            final XhDialog xhDialog = new XhDialog(ArticleSelectActivity.this);
             xhDialog.setTitle("当前不是WiFi环境，是否发布？")
                     .setCanselButton("取消", new View.OnClickListener() {
                         @Override
