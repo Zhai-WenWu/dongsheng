@@ -93,7 +93,7 @@ public class EvalutionUploadControl {
                     //如果发布中图片上传失败，发布直接失败
                     if (isPublishing && onPublishCallback != null) {
                         isPublishing = false;
-                        onPublishCallback.onFailed();
+                        onPublishCallback.onFailed("图片上传失败");
                     }
                 }
 
@@ -143,7 +143,7 @@ public class EvalutionUploadControl {
                             } else {
 
                                 if (onPublishCallback != null)
-                                    onPublishCallback.onFailed();
+                                    onPublishCallback.onFailed("发布失败，请重试");
                             }
                         }
                     });
@@ -241,7 +241,7 @@ public class EvalutionUploadControl {
         /**发布成功*/
         void onSuccess(Object msg);
         /**发布失败*/
-        void onFailed();
+        void onFailed(String msg);
     }
 
     /**默认上传进度回调*/

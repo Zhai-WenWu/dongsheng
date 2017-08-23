@@ -23,6 +23,8 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import aplug.web.ShowTemplateWeb;
 import aplug.web.tools.XHTemplateManager;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -79,6 +81,10 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 XHClick.mapStat(PublishEvalutionMultiActivity.this, STATISTICS_ID,"点击发布按钮","");
+                if(!ToolsDevice.isNetworkAvailable(PublishEvalutionMultiActivity.this)){
+                    Tools.showToast(PublishEvalutionMultiActivity.this,"网络异常，请检查网络");
+                    return;
+                }
                 publishMutilEvalution();
             }
         });
