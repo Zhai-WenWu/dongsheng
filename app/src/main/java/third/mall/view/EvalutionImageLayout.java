@@ -3,7 +3,6 @@ package third.mall.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -63,7 +62,7 @@ public class EvalutionImageLayout extends LinearLayout {
 
     /**
      * 设置宽度，通过宽度计算高度
-     * @param width
+     * @param width 图片宽度
      */
     public void setViewSize(int width){
         this.itemWidth = width;

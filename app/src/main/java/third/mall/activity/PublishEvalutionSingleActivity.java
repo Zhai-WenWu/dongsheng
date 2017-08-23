@@ -53,7 +53,6 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
     private static final int maxTextCount = 500;
 
-    private ImageView commodityImage;
     private ImageView selectImage;
     private ImageView shareToCircleImage;
     private TextView scoreDescText;
@@ -64,7 +63,6 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     private EvalutionImageLayout imagesLayout;
     private RelativeLayout shareLayout;
-    private LinearLayout contentLayout;
 
     EvalutionUploadControl uploadControl;
 
@@ -143,7 +141,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         publishButton = (TextView) findViewById(R.id.rightText);
         publishButton.setText("发布");
         publishButton.setVisibility(View.VISIBLE);
-        commodityImage = (ImageView) findViewById(R.id.commodity_image);
+        ImageView commodityImage = (ImageView) findViewById(R.id.commodity_image);
         selectImage = (ImageView) findViewById(R.id.select_image);
         shareToCircleImage = (ImageView) findViewById(R.id.share_image);
         scoreDescText = (TextView) findViewById(R.id.evalution_desc);
@@ -153,13 +151,12 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         ratingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
         imagesLayout = (EvalutionImageLayout) findViewById(R.id.images);
         shareLayout = (RelativeLayout) findViewById(R.id.share_to_circle);
-        contentLayout = (LinearLayout) findViewById(R.id.content_layout);
 
         int itemIwdth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_100)) / 3;
         int imageWidth = itemIwdth - Tools.getDimen(this,R.dimen.dp_12_5);
         if(imageWidth < Tools.getDimen(this,R.dimen.dp_75)){
             imagesLayout.setViewSize(itemIwdth);
-            selectImage.setLayoutParams(new LinearLayout.LayoutParams(imageWidth,imageWidth));
+            selectImage.setLayoutParams(new LinearLayout.LayoutParams(imageWidth, imageWidth));
         }
         int starItemWidth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_198)) / 5;
         int defaultWidth = Tools.getDimen(this,R.dimen.dp_32);
@@ -268,7 +265,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     /**
      * 是否可以分享到美食圈
      *
-     * @return
+     * @return 是否显示分享到美食圈
      */
     private boolean canShareToCircle() {
         /*4星以上 && 去头尾空格内容长度 > 0 && 图片 1 张以上*/
@@ -315,7 +312,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     /**
      * 更新上传数据
      *
-     * @param images
+     * @param images 新选取的数组
      */
     private void updateUploadImages(ArrayList<String> images) {
         //对比新增数据

@@ -1,7 +1,6 @@
 package third.mall.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -17,7 +16,6 @@ import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
 import acore.widget.ProperRatingBar;
 import third.mall.activity.PublishEvalutionMultiActivity;
-import third.mall.activity.PublishEvalutionSingleActivity;
 
 /**
  * PackageName : third.mall.view

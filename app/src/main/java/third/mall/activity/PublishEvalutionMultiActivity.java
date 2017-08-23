@@ -39,7 +39,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     public static final String EXTRAS_POSITION = "position";
     public static final String EXTRAS_ID = "id";
 
-    private TextView rightText;
     private PtrClassicFrameLayout refershLayout;
     private ListView commodList;
 
@@ -70,10 +69,10 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
     }
 
     private void initView() {
-        rightText = (TextView) findViewById(R.id.rightText);
         refershLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         commodList = (ListView) findViewById(R.id.commod_list);
 
+        TextView rightText = (TextView) findViewById(R.id.rightText);
         rightText.setText("发布");
         rightText.setVisibility(View.VISIBLE);
         rightText.setOnClickListener(new View.OnClickListener() {
@@ -149,8 +148,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                                 intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{"94888485"});
                                 intent.putExtra("url","http://m.xiangha.com");
                                 startActivity(intent);
-                            } else {
-
                             }
                         }
                     }
@@ -177,7 +174,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                     jsonArray.put(jsonObj);
                 }
             }
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
 
         }
         return jsonArray.toString();
