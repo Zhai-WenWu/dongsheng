@@ -14,8 +14,7 @@ public class XHTemplateManager {
     public final static Map<String,String[]> TEMPLATE_MATCHING = new HashMap<>();
     //初始化
     static {
-        //菜谱模板
-        TEMPLATE_MATCHING.put(XHDISH,new String[]{"<{code}>"});
+        TEMPLATE_MATCHING.put(XHDISH , new String[]{"<{code}>"});//菜谱模板
     }
 
     public static long starttime;

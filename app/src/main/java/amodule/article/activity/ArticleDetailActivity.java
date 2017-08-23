@@ -96,6 +96,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private boolean isAdShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
+    private boolean isOnce = true;
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
@@ -442,10 +443,12 @@ public class ArticleDetailActivity extends BaseActivity {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
                 //没有数据直接退出
-                if(TextUtils.isEmpty((String) object)){
+                if(TextUtils.isEmpty((String) object) && isOnce){
                     ArticleDetailActivity.this.finish();
                     return;
                 }
+                //解决刷新时没有数据问题
+                isOnce = false;
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysArticleData(onlyUser, StringManager.getFirstMap(object));
                 }

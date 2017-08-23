@@ -271,8 +271,9 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
      * @return
      */
     private boolean canShareToCircle() {
+        /*4星以上 && 去头尾空格内容长度 > 0 && 图片 1 张以上*/
         return ratingBar.getRating() >= 4
-                && contentEdit.getText().length() > 0
+                && contentEdit.getText().toString().trim().length() > 0
                 && imagesLayout.getChildCount() > 0;
     }
 
