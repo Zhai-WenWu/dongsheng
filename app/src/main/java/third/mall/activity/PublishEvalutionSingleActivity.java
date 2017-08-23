@@ -53,9 +53,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
     private static final int maxTextCount = 500;
 
-    private ImageView selectImage;
+    private LinearLayout selectImage;
     private ImageView shareToCircleImage;
     private TextView scoreDescText;
+    private TextView selectImageText;
     private TextView contentLengthText;
     private TextView publishButton;
     private ProperRatingBar ratingBar;
@@ -142,9 +143,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
         publishButton.setText("发布");
         publishButton.setVisibility(View.VISIBLE);
         ImageView commodityImage = (ImageView) findViewById(R.id.commodity_image);
-        selectImage = (ImageView) findViewById(R.id.select_image);
+        selectImage = (LinearLayout) findViewById(R.id.select_image);
         shareToCircleImage = (ImageView) findViewById(R.id.share_image);
         scoreDescText = (TextView) findViewById(R.id.evalution_desc);
+        selectImageText = (TextView) findViewById(R.id.select_image_text);
         contentLengthText = (TextView) findViewById(R.id.content_length_text);
         contentEdit = (EditText) findViewById(R.id.content_edit);
         contentEdit.setHint(getResources().getString(R.string.publish_evalution_desc_hint));
@@ -231,13 +233,13 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             @Override
             public void onChildViewAdded(View parent, View child) {
                 updateShareLayoutVisibility();
-                updateSelectImageVisibility();
+                updateSelectImageStatus();
             }
 
             @Override
             public void onChildViewRemoved(View parent, View child) {
                 updateShareLayoutVisibility();
-                updateSelectImageVisibility();
+                updateSelectImageStatus();
                 //移除上传图片
                 if (child != null && child.getTag(R.id.image_path) != null) {
                     uploadControl.delUploadImage(child.getTag(R.id.image_path).toString());
@@ -253,7 +255,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     private void updateShareLayoutVisibility() {
         if (canShareToCircle()) {
             if(shareLayout.getVisibility() == View.GONE){
-                selectImage.setSelected(true);
+                shareToCircleImage.setSelected(true);
                 shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share_selected);
             }
             shareLayout.setVisibility(View.VISIBLE);
@@ -275,8 +277,15 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     }
 
     /** 更新图片选择显示状态 */
-    private void updateSelectImageVisibility() {
-        selectImage.setVisibility(imagesLayout.getChildCount() == 3 ? View.GONE : View.VISIBLE);
+    private void updateSelectImageStatus() {
+        int imagesCount =  imagesLayout.getChildCount();
+        selectImage.setVisibility(imagesCount == MAX_IMAGE ? View.GONE : View.VISIBLE);
+        if(imagesCount > 0 && imagesCount <= 3){
+            StringBuffer stringBuilder = new StringBuffer().append(imagesCount).append("/3");
+            selectImageText.setText(stringBuilder.toString());
+        }else{
+            selectImageText.setText("添加图片");
+        }
     }
 
     /** 更新文字长度提示 */

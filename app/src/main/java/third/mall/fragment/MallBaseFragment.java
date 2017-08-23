@@ -38,5 +38,5 @@ public abstract class MallBaseFragment extends Fragment {
 
 	protected void onInvisible() {
 	}
-	public void refresh(){};
+	public void refresh(){}
 }

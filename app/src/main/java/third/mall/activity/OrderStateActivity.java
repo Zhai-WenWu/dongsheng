@@ -181,9 +181,19 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	private void setButtonViewLayout(View view){
 		int dp_69= (int) getResources().getDimension(R.dimen.dp_69);
 		int dp_27= (int) getResources().getDimension(R.dimen.dp_27);
-		int dp_10= (int) getResources().getDimension(R.dimen.dp_10);
+		int dp_5= (int) getResources().getDimension(R.dimen.dp_5);
 		RelativeLayout.LayoutParams layout= new LayoutParams(dp_69,dp_27);
-		layout.setMargins(dp_10, 0, 0, 0);
+		layout.setMargins(dp_5, 0, 0, 0);
+		view.setLayoutParams(layout);
+		((TextView)view).setTextSize(Tools.getDimenSp(this, R.dimen.sp_13));
+	}
+
+	private void setEvalutionViewLayout(View view){
+		int dp_56= (int) getResources().getDimension(R.dimen.dp_56);
+		int dp_27= (int) getResources().getDimension(R.dimen.dp_27);
+		int dp_5= (int) getResources().getDimension(R.dimen.dp_5);
+		RelativeLayout.LayoutParams layout= new LayoutParams(dp_56,dp_27);
+		layout.setMargins(dp_5, 0, 0, 0);
 		view.setLayoutParams(layout);
 		((TextView)view).setTextSize(Tools.getDimenSp(this, R.dimen.sp_13));
 	}
@@ -600,7 +610,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 								gotoComment(map,productArr);
 							}
 						});
-						setButtonViewLayout(view_comment.findViewById(R.id.textview));
+						setEvalutionViewLayout(view_comment.findViewById(R.id.textview));
 						order_status_linear.addView(view_comment);
 					}
 				}, map,url_statistic,mall_stat_statistic);
@@ -628,7 +638,7 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 				setButtonViewLayout(view_reqeat.findViewById(R.id.textview));
 				order_status_linear.addView(view_reqeat);
 
-				if("1".equals(map.get("comment_statuts"))){
+				if("1".equals(map.get("comment_status"))){
 					View view_comment = buttonView.createViewComment(new InterfaceViewCallback() {
 						@Override
 						public void sucessCallBack() {
@@ -636,11 +646,11 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 							gotoComment(map,productArr);
 						}
 					});
-					setButtonViewLayout(view_comment.findViewById(R.id.textview));
+					setEvalutionViewLayout(view_comment.findViewById(R.id.textview));
 					order_status_linear.addView(view_comment);
-				}else if("2".equals(map.get("comment_statuts"))){
+				}else if("2".equals(map.get("comment_status"))){
 					View view_commented = buttonView.createViewCommented();
-					setButtonViewLayout(view_commented.findViewById(R.id.textview));
+					setEvalutionViewLayout(view_commented.findViewById(R.id.textview));
 					order_status_linear.addView(view_commented);
 				}
 				break;
@@ -735,14 +745,18 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 		if (requestCode == OrderStateActivity.request_order){
 			if(resultCode == OrderStateActivity.result_comment_success){
 				state_now = OrderStateActivity.result_comment_success;
-				//改变评价按钮状态
-				order_status_linear.removeViewAt(order_status_linear.getChildCount() - 1);
-				MallButtonView buttonView= new MallButtonView(this);
-				View view_commented = buttonView.createViewCommented();
-				setButtonViewLayout(view_commented.findViewById(R.id.textview));
-				order_status_linear.addView(view_commented);
+				updateEvalutionStatus();//改变评价按钮状态
 			}
 		}
+	}
+
+	/**改变评价按钮状态*/
+	private void updateEvalutionStatus(){
+		order_status_linear.removeViewAt(order_status_linear.getChildCount() - 1);
+		MallButtonView buttonView= new MallButtonView(this);
+		View view_commented = buttonView.createViewCommented();
+		setEvalutionViewLayout(view_commented.findViewById(R.id.textview));
+		order_status_linear.addView(view_commented);
 	}
 
 	@Override
