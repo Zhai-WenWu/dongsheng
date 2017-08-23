@@ -26,8 +26,10 @@ import third.mall.bean.EvalutionBean;
 
 public class EvalutionUploadControl {
     private Context context;
-    private OnPublishCallback onPublishCallback;
+    /**评价数据体*/
     private EvalutionBean bean;
+    /**发布状态对调*/
+    private OnPublishCallback onPublishCallback;
 
     boolean isCanceled = false;
     boolean isPublishing = false;

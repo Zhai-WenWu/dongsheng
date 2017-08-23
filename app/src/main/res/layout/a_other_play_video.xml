@@ -5,12 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <cn.fm.jiecao.jcvideoplayer_lib.CustomView.XHVideoPlayerStandard
-        android:id="@+id/jc_video"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
         android:id="@+id/video_player"
         android:layout_width="match_parent"

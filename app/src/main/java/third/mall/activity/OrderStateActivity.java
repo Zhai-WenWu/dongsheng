@@ -443,8 +443,6 @@ public class OrderStateActivity extends BaseActivity implements OnClickListener{
 	
 	private void setOrderStatus(int status,final Map<String,String> map){
 		MallButtonView buttonView= new MallButtonView(this);
-		//TODO ceshi
-		map.put("comment_statuts",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
 
 		if("payment_order".equals(order_satus)){//未拆单之前的样子
 			switch (status) {

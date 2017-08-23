@@ -135,9 +135,6 @@ public class OrderItem2View extends ViewItemBase {
 		myorder_price_text_number_2.setText(map.get("order_amt"));
 		final ArrayList<Map<String, String>> listMapByJson_product = UtilString.getListMapByJson(map.get("order_product"));
 
-		//TODO ceshi
-		map.put("comment_statuts",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
-
 		if(map.containsKey("shop_code")){
 			order_logistics_back.setVisibility(View.VISIBLE );
 			setShopOnClick(order_logistics_back, map);
