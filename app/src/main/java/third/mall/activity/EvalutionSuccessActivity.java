@@ -9,7 +9,7 @@ import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import amodule.main.Main;
-import aplug.web.ShowWeb;
+import aplug.web.ShowTemplateWeb;
 import aplug.web.view.XHWebView;
 
 /**
@@ -18,7 +18,7 @@ import aplug.web.view.XHWebView;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class EvalutionSuccessActivity extends ShowWeb {
+public class EvalutionSuccessActivity extends ShowTemplateWeb {
     public static final String EXTRAS_POSITION = "position";
     public static final String EXTRAS_ID = "id";
 
@@ -53,7 +53,7 @@ public class EvalutionSuccessActivity extends ShowWeb {
     @Override
     protected void initWeb() {
         super.initWeb();
-        webview.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
+        templateWebView.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
             @Override
             public void onChange(int num) {
                 findViewById(R.id.leftImgBtn).setVisibility(num > 1 ? View.VISIBLE : View.GONE);

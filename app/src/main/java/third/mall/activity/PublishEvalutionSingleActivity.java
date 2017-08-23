@@ -1,14 +1,12 @@
 package third.mall.activity;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +28,8 @@ import acore.tools.ToolsDevice;
 import acore.widget.ProperRatingBar;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
+import aplug.web.ShowTemplateWeb;
+import aplug.web.tools.XHTemplateManager;
 import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.EvalutionImageLayout;
 import xh.windowview.XhDialog;
@@ -117,7 +117,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
+                    //TODO
                     Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
+                    intent.putExtra(ShowTemplateWeb.REQUEST_METHOD, XHTemplateManager.XHDISH);
+                    intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{"94888485"});
                     intent.putExtra(EvalutionSuccessActivity.EXTRAS_ID,id);
                     intent.putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position);
                     intent.putExtra("url","http://m.xiangha.com");

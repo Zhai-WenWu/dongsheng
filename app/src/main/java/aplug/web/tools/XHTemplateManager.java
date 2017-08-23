@@ -1,15 +1,26 @@
 package aplug.web.tools;
 
-import android.provider.Settings;
 import android.text.TextUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 香哈模版更新
  */
 
 public class XHTemplateManager {
+    public final static String XHDISH = "XhDish";
+    public final static Map<String,String[]> TEMPLATE_MATCHING = new HashMap<>();
+    //初始化
+    static {
+        //菜谱模板
+        TEMPLATE_MATCHING.put(XHDISH,new String[]{"<{code}>"});
+    }
+
     public static long starttime;
     private String[] templates=new String[]{"","",""};
+
     private int templateNum=-1;
     private TemplateWebViewControl templateWebViewControl;
     public XHTemplateManager(){

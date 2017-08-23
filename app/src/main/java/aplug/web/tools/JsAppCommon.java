@@ -38,7 +38,6 @@ import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.db.DataOperate;
 import amodule.dish.db.DishOffSqlite;
-import amodule.dish.view.DishWebView;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -51,6 +50,7 @@ import aplug.basic.ReqInternet;
 import aplug.imageselector.ImgWallActivity;
 import aplug.web.ShowWeb;
 import aplug.web.view.XHWebView;
+import third.mall.activity.EvalutionListActivity;
 import third.mall.activity.ShoppingActivity;
 import third.mall.alipay.MallAlipay;
 import third.mall.aplug.MallClickContorl;
@@ -1040,8 +1040,8 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mAct instanceof ShowWeb) {
-                    ShowWeb showWeb = (ShowWeb) mAct;
+                if (mAct instanceof EvalutionListActivity) {
+                    EvalutionListActivity showWeb = (EvalutionListActivity) mAct;
                     showWeb.showCommentBar(userName, userCode);
                 }
             }

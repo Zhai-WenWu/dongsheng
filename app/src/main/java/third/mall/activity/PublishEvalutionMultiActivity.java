@@ -23,6 +23,8 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import aplug.web.ShowTemplateWeb;
+import aplug.web.tools.XHTemplateManager;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
 import third.mall.aplug.MallInternetCallback;
@@ -141,8 +143,10 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                         if (flag >= MallReqInternet.REQ_OK_STRING) {
                             Map<String, String> data = StringManager.getFirstMap(msg);
                             if (data.containsKey("status") && "2".equals(data.get("status"))) {
-                                //去评价成功
+                                //TODO 去评价成功
                                 Intent intent = new Intent(PublishEvalutionMultiActivity.this,EvalutionSuccessActivity.class);
+                                intent.putExtra(ShowTemplateWeb.REQUEST_METHOD, XHTemplateManager.XHDISH);
+                                intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{"94888485"});
                                 intent.putExtra("url","http://m.xiangha.com");
                                 startActivity(intent);
                             } else {
