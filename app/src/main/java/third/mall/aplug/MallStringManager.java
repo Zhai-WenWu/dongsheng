@@ -20,7 +20,7 @@ public class MallStringManager extends UtilString {
 
     //	public static String mall_apiUrl = "http://api.ds.mamaweiyang.net:7888";
 //	public static String mall_web_apiUrl = "http://m.ds.mamaweiyang.net:7888";
-    public final static String mall_api_register = mall_apiUrl + "/v1/customer/register";
+    public final static String mall_api_register = mall_apiUrl + "/v1/customer/register ";
     public final static String mall_api_home = mall_apiUrl + "/v1/home";
     public final static String mall_api_product_info = mall_apiUrl + "/v1/product/info";
     public final static String mall_api_product_info_v3 = mall_apiUrl + "/v3/product/info";
@@ -93,7 +93,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_addMuiltComment = mall_apiUrl + "/v3/comment/addMuiltComment";
     public final static String mall_api_listOrder_v3 = mall_apiUrl + "/v3/order/listOrder";
     public final static String mall_dsInfo_v3 = mall_apiUrl + "/v3/home/dsInfo";
-    public final static String mall_api_getTemplate = mall_apiUrl + "/V3/template/getTemplate";
+    public final static String mall_api_getTemplate = mall_apiUrl + "/v3/template/getTemplate";
 
     /**
      * 替换url

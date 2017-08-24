@@ -73,16 +73,24 @@ public class TemplateWebViewControl {
         });
     }
 
+    /**
+     * 处理电商模版
+     * @param requestMethod
+     */
     private void handlerDsMouldData(final String requestMethod) {
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(), requestMethod, "versionSign");
         LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
-        mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
-        String url = MallStringManager.mall_api_getTemplate;
-        MallReqInternet.in().doPost(url, mapParams, new MallInternetCallback(XHApplication.in()) {
+        String version= versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign);
+//        mapParams.put("version_sign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
+//        mapParams.put("request_method",requestMethod);
+        Log.i("zyj","requestMethod::"+requestMethod);
+        String url = MallStringManager.mall_api_getTemplate+"?request_method="+requestMethod+"&version_sign="+version;
+        MallReqInternet.in().doGet(url, new MallInternetCallback(XHApplication.in()) {
             @Override
             public void loadstat(int flag, final String url, final Object msg, Object... stat) {
+                Log.i("zyj","url::"+url+"::::"+msg);
                 if (flag >= MallReqInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(msg);
                     if (arrayList.size() > 0) {

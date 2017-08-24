@@ -124,7 +124,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
     private FavorableDialog favorableDialog;
     private int productNum = 1;//购买商品数量
     private BuyDialog buyDialog;
-    private TemplateWebView middle_templateWebView;
+    private TemplateWebView middle_templateWebView,foot_templateWebView;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -191,6 +191,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 titleState = state == 1 ? "1" : "2";
                 handleTitleState();
                 if (load_state) {
+//                    foot_templateWebView.loadData();
                     explain_detail_webview.loadUrl(MallStringManager.replaceUrl(MallStringManager.mall_web_product_detail) + "?product_code=" + code);
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
                 }
@@ -241,6 +242,24 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
             }
             @Override
             public void onLoadStart() {
+            }
+        });
+        foot_templateWebView= (TemplateWebView) findViewById(R.id.foot_templateWebView);
+        foot_templateWebView.initBaseData(this,loadManager);
+        foot_templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
+            @Override
+            public void onLoadFinish() {
+                load_state = false;
+                findViewById(R.id.widget_progress).setVisibility(View.GONE);
+                findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
+                findViewById(R.id.explain_detail_webview).setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onLoadStart() {
+                load_state = true;
+                findViewById(R.id.widget_progress).setVisibility(View.VISIBLE);
+                findViewById(R.id.explain_detail_but_linear).setVisibility(View.GONE);
+                findViewById(R.id.explain_detail_webview).setVisibility(View.GONE);
             }
         });
         //底部webview
@@ -410,7 +429,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         initViewPager(images);
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
         mall_ScrollViewContainer.setState_two(false);
-        middle_templateWebView.loadData("XhDish",new String[]{"<{code}>"},new String[]{"94888485"});
+        middle_templateWebView.loadData("DsProductInfo",new String[]{"<{code}>"},new String[]{"94888485"});
 
     }
 
@@ -525,11 +544,20 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
      * 设置好评度
      */
     private void setProductPraise(){
-        findViewById(R.id.scroe_linear).setOnClickListener(this);
-        TextView title_good_scroe= (TextView) findViewById(R.id.title_good_scroe);
-        title_good_scroe.setText(map.get("product_praise"));
-        TextView title_buy= (TextView) findViewById(R.id.title_buy);
-        title_buy.setText(map.get("saled_num")+"人购买");
+        String product_praise= map.get("product_praise");
+        if(!TextUtils.isEmpty(product_praise)&&!"0".equals(product_praise)) {
+            findViewById(R.id.scroe_linear).setVisibility(View.VISIBLE);
+            findViewById(R.id.scroe_line).setVisibility(View.VISIBLE);
+
+            findViewById(R.id.scroe_linear).setOnClickListener(this);
+            TextView title_good_scroe = (TextView) findViewById(R.id.title_good_scroe);
+            title_good_scroe.setText(map.get("product_praise"));
+            TextView title_buy = (TextView) findViewById(R.id.title_buy);
+            title_buy.setText(map.get("saled_num") + "人购买");
+        }else{
+            findViewById(R.id.scroe_linear).setVisibility(View.GONE);
+            findViewById(R.id.scroe_line).setVisibility(View.GONE);
+        }
     }
 
     /**
