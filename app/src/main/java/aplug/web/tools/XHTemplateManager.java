@@ -11,6 +11,10 @@ import java.util.Map;
 
 public class XHTemplateManager {
     public final static String XHDISH = "XhDish";
+    public final static String DSPRODUCTINFO = "DsProductInfo";//商品详情页
+    public final static String DSUNDERSCOREPRODUCTINFO = "DsUnderscoreProductInfo";//详情页下划页
+    public final static String DSSUCCESSCOMMENT = "DsSuccessComment";//评论成功页
+    public final static String DSCOMMENTLIST = "DsCommentList";//评论列表页
     public final static Map<String,String[]> TEMPLATE_MATCHING = new HashMap<>();
     //初始化
     static {
