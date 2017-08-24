@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -52,8 +53,9 @@ public class MoreImageShow extends BaseActivity{
             finish();
         }
         int size = mList.size();
-        for(Map<String,String> map : mList){
-            map.put("num",map.get("num") + "");
+        for(int i=0;i<size;i++){
+            Map<String,String> map= mList.get(i);
+            map.put("num",String.valueOf(i+1));
             map.put("numHe","/" + size);
         }
         init();
@@ -113,6 +115,7 @@ public class MoreImageShow extends BaseActivity{
                 if (map != null && map.size() > 0) {
                     for (String adKey : AD_IDS) {
                         String adStr = map.get(adKey);
+                        Log.i("zyj","adStr::"+adStr);
                         if (!TextUtils.isEmpty(adStr)) {
                             ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
                             if (adList != null && adList.size() > 0) {
