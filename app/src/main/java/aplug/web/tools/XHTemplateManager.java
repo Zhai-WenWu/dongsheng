@@ -19,6 +19,8 @@ public class XHTemplateManager {
     //初始化
     static {
         TEMPLATE_MATCHING.put(XHDISH , new String[]{"<{code}>"});//菜谱模板
+        TEMPLATE_MATCHING.put(DSPRODUCTINFO , new String[]{"<{product_code}>"});//商品详情页
+        TEMPLATE_MATCHING.put(DSUNDERSCOREPRODUCTINFO , new String[]{"<{product_code}>"});//商品详情页介绍
     }
 
     public static long starttime;
