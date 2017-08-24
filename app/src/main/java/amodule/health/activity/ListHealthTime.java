@@ -143,7 +143,7 @@ public class ListHealthTime extends BaseActivity {
 				String title = "【" + name + "】中医推荐";
 				String clickUrl = StringManager.third_downLoadUrl;
 				String content = "我在用香哈菜谱【时辰养生】，中医推荐的养生方法，推荐你也试试~";
-				String imgUrl = null;
+				String imgUrl;
 				if (ico_id != null && !ico_id.equals(""))
 					imgUrl = ico_id;
 				else
@@ -201,9 +201,9 @@ public class ListHealthTime extends BaseActivity {
 	}
 
 	public void loadData() {
-		timeList = new ArrayList<Map<String, String>>();
+		timeList = new ArrayList<>();
 		for (int i = 0; i < allDatas.length; i++) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new HashMap<>();
 			map.put("data", allDatas[i]);
 			map.put("state", allStates[i]);
 			timeList.add(map);
@@ -237,10 +237,10 @@ public class ListHealthTime extends BaseActivity {
 			}
 		} };
 		SetDataView.horizontalView(time_scrollView, timeAdapter, null, timeClick);
-		listData = new ArrayList<Map<String, String>>();
-		showData = new ArrayList<Map<String, String>>();
+		listData = new ArrayList<>();
+		showData = new ArrayList<>();
 		tableLayout = (TableLayout) findViewById(R.id.tb_ingredish);
-		String getUrl = "";
+		String getUrl;
 		if (!code.equals(""))
 			getUrl = StringManager.api_nousList + "?type=whatHour&name=" + code;
 		else if (!name.equals(""))

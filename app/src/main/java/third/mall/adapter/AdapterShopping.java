@@ -58,9 +58,9 @@ public class AdapterShopping extends AdapterSimple {
 	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final Map<String, String> map = (Map<String, String>) data.get(position);
+		final Map<String, String> map = data.get(position);
 		// 缓存视图
-		ViewCache viewCache = null;
+		ViewCache viewCache;
 		if (convertView == null) {
 			viewCache = new ViewCache();
 			convertView = LayoutInflater.from(context).inflate(R.layout.a_mall_shopping_listview, parent, false);
@@ -383,7 +383,7 @@ public class AdapterShopping extends AdapterSimple {
 		 * @param fl_product---商家原先价格
 		 * @param fl_new----商家现在价格
 		 */
-		public abstract void setChooseAndChangeShop(ArrayList<Map<String, String>> data,float fl_product,float fl_new);
+		void setChooseAndChangeShop(ArrayList<Map<String, String>> data,float fl_product,float fl_new);
 	}
 	private JSONArray setJsonArraylist(ArrayList<Map<String, String>> list_product){
 		JSONArray jsonArray= new JSONArray();

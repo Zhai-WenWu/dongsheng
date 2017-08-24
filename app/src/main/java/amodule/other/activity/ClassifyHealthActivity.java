@@ -1,5 +1,5 @@
 package amodule.other.activity;
-;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,9 +29,6 @@ import amodule.other.fragment.ClassifyHealthFragment;
 public class ClassifyHealthActivity extends BaseFragmentActivity {
     public static final String STATISTICS_ID = "a_quan_homepage430";
 
-    private PagerSlidingTabStrip mTabStrip;
-    private ViewPager mViewPager;
-
     private ArrayList<Map<String, String>> mDatas;
 
     /**
@@ -54,15 +51,15 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
      * 初始化数据
      */
     private void initData() {
-        mDatas = new ArrayList<Map<String, String>>();
-        Map<String, String> map = new HashMap<String, String>();
+        mDatas = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
         map.put("title", "菜谱分类");
         map.put("type", "caipu");
         map.put("coverStr", "搜菜谱  如：糖醋排骨  或  鸡蛋");
         map.put("eventId", "a_menu_table");
         map.put("statistics", "other_detail_sort");
         mDatas.add(map);
-        Map<String, String> map1 = new HashMap<String, String>();
+        Map<String, String> map1 = new HashMap<>();
         map1.put("title", "美食养生");
         map1.put("type", "jiankang");
         map1.put("coverStr", "搜养生内容");
@@ -75,8 +72,8 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
      * 初始化View
      */
     private void initView() {
-        mTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tab);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        PagerSlidingTabStrip mTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tab);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
         ImageView backImg = (ImageView) findViewById(R.id.back_img);
         backImg.setOnClickListener(new View.OnClickListener() {
             @Override

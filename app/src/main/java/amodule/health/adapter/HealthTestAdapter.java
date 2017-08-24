@@ -17,7 +17,7 @@ public class HealthTestAdapter extends AdapterSimple {
 	public int[] selections = { R.id.health_item_selection_1, R.id.health_item_selection_2, R.id.health_item_selection_3,
 			R.id.health_item_selection_4, R.id.health_item_selection_5 };
 	public int viewHeight = 0;
-	public ArrayList<Map<String, String>> testList = new ArrayList<Map<String, String>>();
+	public ArrayList<Map<String, String>> testList = new ArrayList<>();
 	public View nextView = null;
 	public int n = 0;
 	public boolean sex_selected = false;
@@ -33,8 +33,8 @@ public class HealthTestAdapter extends AdapterSimple {
 		final View view = super.getView(position, convertView, parent);
 		if (testList.get(position).containsKey("classifyName")) 
 			view.findViewById(R.id.health_item_select_classify).setVisibility(View.VISIBLE);
-		for (int i = 0; i < selections.length; i++) {
-			final LinearLayout health_item_selection = (LinearLayout) view.findViewById(selections[i]);
+		for (int selection : selections) {
+			final LinearLayout health_item_selection = (LinearLayout) view.findViewById(selection);
 			ViewGroup.LayoutParams lp = health_item_selection.getLayoutParams();
 			lp.height = viewHeight;
 		}

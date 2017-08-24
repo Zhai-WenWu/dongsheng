@@ -39,7 +39,7 @@ public class AdapterMyOrderNew extends AdapterSimple {
 		Map<String, String> map = (Map<String, String>) data.get(position);
 		String payment_order_satus = map.get("payment_order_status");
 		if ("2".equals(payment_order_satus)) {
-			ViewHodler viewHodler = null;
+			ViewHodler viewHodler;
 			if (convertView == null || !(convertView.getTag() instanceof ViewHodler)) {
 				viewHodler = new ViewHodler(new OrderItemFatherView(context));
 				convertView = viewHodler.view;
@@ -48,7 +48,7 @@ public class AdapterMyOrderNew extends AdapterSimple {
 				viewHodler = (ViewHodler) convertView.getTag();
 			viewHodler.setData(map);
 		} else {
-			ViewHodlerPayment viewHolderPayment = null;
+			ViewHodlerPayment viewHolderPayment;
 			if (convertView == null || !(convertView.getTag() instanceof ViewHodlerPayment)) {
 				viewHolderPayment = new ViewHodlerPayment(new OrderItemView(context));
 				convertView = viewHolderPayment.view;

@@ -131,7 +131,8 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             }
 
             @Override
-            public void onFailed() {
+            public void onFailed(String msg) {
+                Tools.showToast(PublishEvalutionSingleActivity.this,msg);
                 XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"提交失败","");
                 cancelUploadingDialog();
             }
@@ -352,6 +353,10 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
 
     /** 发布评论 */
     private void publishEvalution() {
+        if(!ToolsDevice.isNetworkAvailable(this)){
+            Tools.showToast(this,"网络异常，请检查网络");
+            return;
+        }
         uploadControl.setScore(ratingBar.getRating())
                 .setContent(contentEdit.getText().toString().trim())
                 .setCanShare(canShareToCircle())
