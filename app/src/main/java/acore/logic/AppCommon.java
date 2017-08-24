@@ -1,4 +1,4 @@
-/**
+/*
  * @author Jerry
  * 2013-1-22 下午3:00:33
  * Copyright: Copyright (c) xiangha.com 2011
@@ -54,7 +54,6 @@ import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.quan.db.CircleData;
 import amodule.quan.db.CircleSqlite;
-import amodule.user.activity.ChangeUrl;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -146,7 +145,7 @@ public class AppCommon {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         ArrayList<Map<String, String>> list = getListMapByJson(returnObj);
                         final Map<String, String> map = list.get(0);
-                        if (url.indexOf("&type=part") > -1) {
+                        if (url.contains("&type=part")) {
                             callback.loaded(flag, "part", map);
                         } else {
                             callback.loaded(flag, "newData", map);
@@ -237,7 +236,7 @@ public class AppCommon {
             e.printStackTrace();
         }
         Bundle bundle = new Bundle();
-        Intent intent = null;
+        Intent intent;
         try {
             // 开启url，同时识别是否是原生的
             bundle.putString("url", url);
@@ -245,7 +244,7 @@ public class AppCommon {
             e.printStackTrace();
         }
         //下载apk---直接中断
-        if (url.indexOf("download.app") > -1) {
+        if (url.contains("download.app")) {
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
             String downUrl = map_link.get("url");
@@ -276,19 +275,9 @@ public class AppCommon {
                 e.printStackTrace();
             }
             return;
-        }else if(url.indexOf("fullScreen=2") > -1){
-            Intent it = new Intent(act, FullScreenWeb.class);
-            it.putExtra("url",StringManager.replaceUrl(url));
-            act.startActivity(it);
-            return;
-        }
-        else if (url.indexOf("ChangeUrl.app") > -1) {
-            Intent it = new Intent(act, ChangeUrl.class);
-            act.startActivity(it);
-            return;
-        } else if (url.indexOf("MyRebate.app") > -1) { //我的返现页面
-            return;
-        } else if (url.indexOf("GoodsList.app") > -1) { //返现商品列表
+        } else if (url.contains("MyRebate.app")//我的返现页面
+                        || url.contains("GoodsList.app")//返现商品列表
+                ){
             return;
         } else if(url.indexOf("link.app")==0){//外链
             String temp = url.substring(url.indexOf("?") + 1, url.length());
@@ -300,8 +289,8 @@ public class AppCommon {
             intentLink.setData(content_url);
             act.startActivity(intentLink);
             return;
-
         }
+        //解析生成 intent
         intent = parseURL(XHApplication.in(), bundle, url);
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
         if (intent == null) {
@@ -311,7 +300,10 @@ public class AppCommon {
                     act.finish();
                 return;
             }
-            if (act instanceof WebActivity) {
+            if(url.contains("fullScreen=2")){//兼容老版本开启 FullScreenWeb
+                intent = new Intent(act, FullScreenWeb.class);
+                intent.putExtra("url",StringManager.replaceUrl(url));
+            }else if (act instanceof WebActivity) {
                 final WebActivity allAct = (WebActivity) act;
                 boolean isSelfLoad = allAct.selfLoadUrl(url, openThis);
                 if (!isSelfLoad && !url.contains(".app")) {
@@ -322,7 +314,7 @@ public class AppCommon {
                 intent = new Intent(act, ShowWeb.class);
                 intent.putExtras(bundle);
             }
-        }else if(url.indexOf("nousInfo") > -1){
+        }else if(url.contains("nousInfo")){
             String code = intent.getStringExtra("code");
             AppCommon.openUrl(act, StringManager.api_nouseInfo + code, true);
             intent = null;
@@ -341,7 +333,7 @@ public class AppCommon {
 	 * @return
 	 */
 	public static Intent parseURL(Context act, Bundle bundle, String url) {
-		if (url.indexOf("stat=1") > -1) {
+		if (url.contains("stat=1")) {
 			//服务端做统计用的
 			ReqInternet.in().doGet(StringManager.api_setAppUrl + "?url=" + url, new InternetCallback(XHApplication.in()) {
 				@Override
@@ -353,7 +345,7 @@ public class AppCommon {
 		Intent intent = null;
 		LogManager.print("d", "parseURL:" + url);
 		//特殊处理体质
-		if (url.indexOf("tizhitest.app") > -1) {
+		if (url.contains("tizhitest.app")) {
 			String result = isHealthTest();
 			if (result.equals("")) {
 				intent = new Intent(act, HealthTest.class);
@@ -365,12 +357,12 @@ public class AppCommon {
 			return intent;
 		}
 		//开浏览器
-		if (url.indexOf("internet.app") > -1) {
+		if (url.contains("internet.app")) {
 			String[] urls = url.split("=");
 			intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls[1]));
 			return intent;
 		}
-		if (url.indexOf("ingreInfo.app?type=tizhi") > -1 || url.indexOf("ingreInfo.app?type=jieqi") > -1) {
+		if (url.contains("ingreInfo.app?type=tizhi") || url.contains("ingreInfo.app?type=jieqi")) {
 			url = url.replace("ingreInfo.app", "jiankang.app");
 		}
 		//常规解析
@@ -404,7 +396,7 @@ public class AppCommon {
                         }
 					}
 				}
-				if(url.indexOf("MyDishNew.app")  > -1 || url.indexOf("MySubject.app") > -1){
+				if(url.contains("MyDishNew.app")|| url.contains("MySubject.app")){
 					if(LoginManager.isLogin()){
 						bundle = new Bundle();
 						bundle.putString("code",LoginManager.userInfo.get("code"));
@@ -412,7 +404,7 @@ public class AppCommon {
 						Intent it = new Intent(act, LoginByAccout.class);
 						return it;
 					}
-					if(url.indexOf("MyDishNew.app")  > -1){
+					if(url.contains("MyDishNew.app")){
 						bundle.putInt("index",1);
 					}else{
 						bundle.putInt("index",0);
