@@ -63,6 +63,7 @@ import aplug.basic.LoadImage;
 import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
+import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallCommon;
@@ -192,6 +193,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 handleTitleState();
                 if (load_state) {
 //                    foot_templateWebView.loadData();
+                    middle_templateWebView.loadData(XHTemplateManager.DSUNDERSCOREPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSUNDERSCOREPRODUCTINFO),new String[]{code});
                     explain_detail_webview.loadUrl(MallStringManager.replaceUrl(MallStringManager.mall_web_product_detail) + "?product_code=" + code);
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
                 }
@@ -429,7 +431,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         initViewPager(images);
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
         mall_ScrollViewContainer.setState_two(false);
-        middle_templateWebView.loadData("DsProductInfo",new String[]{"<{code}>"},new String[]{"94888485"});
+        middle_templateWebView.loadData(XHTemplateManager.DSPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSPRODUCTINFO),new String[]{code});
 
     }
 
