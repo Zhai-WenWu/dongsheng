@@ -35,7 +35,7 @@ public class AdapterMyOrderItemNew extends AdapterSimple{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Map<String,String> map = (Map<String, String>) data.get(position);
 		// 缓存视图
-		ViewHolder viewCache = null;
+		ViewHolder viewCache;
 		if (convertView == null) {
 			viewCache = new ViewHolder(new OrderItem2View(context));
 			convertView =  viewCache.view;

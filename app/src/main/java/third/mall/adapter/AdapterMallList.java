@@ -94,10 +94,10 @@ public class AdapterMallList extends MallAdapterSimple{
 //				setTextcolorSpan(tv_number, number.length());
 //				setSaleableNum(false, tv_content, view_backgroup_item);
 //			}else 
-				if(saleable==0){//抢光
+			if(saleable==0){//抢光
 				mall_item_state_rela.setVisibility(View.VISIBLE);
 				view.findViewById(R.id.mall_item_state_rela_item).setVisibility(View.GONE);
-				mall_item_state_rela.setBackground(mall_act.getResources().getDrawable(R.drawable.mall_item_state_rela_iv));
+				mall_item_state_rela.setBackgroundResource(R.drawable.mall_item_state_rela_iv);
 				setSaleableNum(true, tv_content, view_backgroup_item);
 			}else{
 				mall_item_state_rela.setVisibility(View.GONE);

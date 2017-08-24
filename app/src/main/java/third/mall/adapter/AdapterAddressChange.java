@@ -30,7 +30,7 @@ public class AdapterAddressChange extends AdapterSimple{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Map<String, String> map = (Map<String, String>)data.get(position);
-		ViewHolder holder = null;
+		ViewHolder holder;
 		if(convertView == null){
 			holder = new ViewHolder();
 			convertView = holder.view = new AddressChangeItemView(context);
