@@ -75,6 +75,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
 
     private int mHeaderViewCount;
     private boolean mIsStopUpload;
+    private boolean mUploadSucc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,7 +228,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             @Override
             public void uploadOver(boolean flag, String responseStr) {
                 refreshUploadView();
-                mIsStopUpload = !flag;
+                mIsStopUpload = true;
+                mUploadSucc = flag;
             }
         };
     }
@@ -368,6 +370,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         if (!mIsStopUpload) {
             showCancelDialog();
             return true;
+        } else if (!mUploadSucc && mListPool != null) {
+            mListPool.cancelUpload();
         }
         return false;
     }

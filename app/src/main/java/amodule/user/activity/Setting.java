@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.dialogManager.ADPopwindiwManager;
+import acore.dialogManager.PushManager;
 import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -412,7 +413,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.qa_setting:
-                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING, false);
+                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1"), false);
                 break;
             default:
                 break;

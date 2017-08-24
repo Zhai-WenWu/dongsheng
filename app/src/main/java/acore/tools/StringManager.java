@@ -231,7 +231,7 @@ public class StringManager extends UtilString {
     public final static String api_monitoring = "http://stat.xiangha.com/s4.gif";
 
     //钱包会员
-    public final static String api_money = appWebUrl + "vip/wallet?fullScreen=2"; //我的钱包
+    public final static String api_money = appWebUrl + "vip/walletV1?fullScreen=2"; //我的钱包
     public final static String api_vip = appWebUrl + "vip/myvip?fullScreen=2"; //会员中心
     public final static String api_openVip = appWebUrl + "vip/myvip?payset=2&fullScreen=2"; //开通vip
 
@@ -343,9 +343,9 @@ public class StringManager extends UtilString {
     public final static String API_QA_COMMITREPORT = apiUrl + "main7/qa/addReport";//提交问答举报
     public final static String API_QA_GETPRICE = apiUrl + "main7/qa/getQaPrice";//获取提问金额
     public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//添加问答
-    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//获取问答消息列表顶部tab信息
+    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa";//获取问答消息列表顶部tab信息
     public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement";//问答细则及责任声明
-    public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//问答设置
+    public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet";//问答设置
     public final static String API_QA_QAARBITRATION = appWebUrl + "qa/arbitrateList?fullScreen=2";//问答仲裁
 
     //替换url

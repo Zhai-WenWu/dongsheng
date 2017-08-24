@@ -268,10 +268,10 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         String ret = null;
         if (BaseEditActivity.TAG.equals(mTag)) {
             if (millis < 3*1000) {
-                ret = "不能短于3秒";
+                ret = "视频时长不能小于3秒";
                 XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频小于3s");
             } else if (millis > 1000*60) {
-                ret = "不能长于60s";
+                ret = "视频时长不能超过60s";
                 XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频超过60s");
             }
         } else {

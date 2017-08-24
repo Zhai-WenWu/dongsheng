@@ -1054,4 +1054,18 @@ public class JsAppCommon extends JsBase {
         });
     }
 
+    /**
+     * webview自己处理物理返回键
+     * @param loadUrl
+     */
+    @JavascriptInterface
+    public void handleBackSelf (final String loadUrl) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.setBackData(loadUrl);
+            }
+        });
+    }
+
 }

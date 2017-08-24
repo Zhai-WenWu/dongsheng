@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -366,8 +367,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     protected void onEditTextChanged(CharSequence s, int start, int before, int count) {
         mCountText.setText(s.length() + "/100");
-        if (s.length() >= 100)
+        if (s.length() >= 100) {
+            mCountText.setTextColor(Color.parseColor("#ff0000"));
             Toast.makeText(this, "不能继续输入", Toast.LENGTH_SHORT).show();
+        } else {
+            mCountText.setTextColor(Color.parseColor("#d4d4d4"));
+        }
     }
 
     private Dialog mUploadingDialog;

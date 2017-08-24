@@ -15,6 +15,7 @@ import com.xianghatest.R;
 
 import java.util.Map;
 
+import acore.dialogManager.PushManager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.LogManager;
@@ -120,7 +121,7 @@ public class QAMsgListFragment extends Fragment {
         if (mLoadManager == null || mWebView == null)
             return;
         mLoadManager.showProgressBar();
-        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "&type=" + mModelData.getmType()));
+        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1") + "&type=" + mModelData.getmType()));
     }
 
     @Override
