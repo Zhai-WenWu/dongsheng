@@ -163,7 +163,7 @@ public class NousInfo extends ApiShowWeb {
 			jsonObject.put("content", map.get("content") + "");
 			jsonObject.put("title", map.get("title") + "");
 			jsonObject.put("img", map.get("img") + "");
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 
 		}
 		return jsonObject;

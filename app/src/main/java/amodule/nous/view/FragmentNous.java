@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.xianghatest.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class FragmentNous {
     private int adCount = 0;
     private List<Integer> mAds = new ArrayList<>();
     private XHAllAdControl xhAllAdControl;
-    private ArrayList<Map<String, String>> adArray = new ArrayList<Map<String, String>>();
+    private ArrayList<Map<String, String>> adArray = new ArrayList<>();
 
     public FragmentNous(BaseActivity act, String url, String name) {
         this.mAct = act;
@@ -71,9 +72,7 @@ public class FragmentNous {
     private void getAdData() {
         adArray.clear();
         ArrayList<String> adPosList = new ArrayList<>();
-        for (String posStr : MAIN_HOME_ZHISHI_LIST) {
-            adPosList.add(posStr);
-        }
+        Collections.addAll(adPosList, MAIN_HOME_ZHISHI_LIST);
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(Map<String, String> map) {
@@ -140,7 +139,7 @@ public class FragmentNous {
         mAct.loadManager.showProgressBar();
         listNous = (DownRefreshList) view.findViewById(R.id.nous_list);
         listNous.setDivider(null);
-        listDataNous = new ArrayList<Map<String, String>>();
+        listDataNous = new ArrayList<>();
         adapter = new AdapterNousHome(mAct, listNous, listDataNous,
                 R.layout.a_nous_item,
                 new String[]{"img", "title", "allClick"},
@@ -196,7 +195,7 @@ public class FragmentNous {
              */
 
             private void setAdView(RelativeLayout adLayout,Map<String,String> map) {
-                View view = null;
+                View view;
                 if (adLayout.getChildCount() <= 0) {
                     view = LayoutInflater.from(mAct).inflate(R.layout.ad_baidu_view_nous, adLayout);
                 } else {
@@ -301,7 +300,7 @@ public class FragmentNous {
                     ArrayList<Map<String, String>> list3 = UtilString.getListMapByJson(map.get("nous"));
                     for (int i = 0; i < list3.size(); i++) {
                         loadCount++;
-                        Map<String, String> map2 = new HashMap<String, String>();
+                        Map<String, String> map2 = new HashMap<>();
                         map2.put("img", list3.get(i).get("img"));
                         map2.put("title", list3.get(i).get("title"));
                         map2.put("content", list3.get(i).get("content"));
