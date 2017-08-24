@@ -70,8 +70,9 @@ public class CommodEvalutionItem extends ItemBaseView {
         if(data.containsKey("score") && !TextUtils.isEmpty(data.get("score"))){
             rating = Integer.parseInt(data.get("score"));
         }
-        final int score = rating;
-        ratingBar.setRating(rating);
+        final int score = rating > 5 ? 5 : rating;
+        ratingBar.setRating(score);
+        starDesc.setText(evalutionStarDescArray[score - 1]);
         //初始化评价button
         if("2".equals(data.get("status"))){
             ratingBar.setClickable(false);

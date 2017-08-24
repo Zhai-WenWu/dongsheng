@@ -29,10 +29,17 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
     /**订单号*/
     private String orderId;
 
+    int id,orderPosition;
+
     public AdapterEvalution(Activity activity, List<Map<String, String>> data,String orderId){
         this.activity = activity;
         this.data = data;
         this.orderId = orderId;
+    }
+
+    public void setIdAndPosition(int id,int orderPosition){
+        this.id = id;
+        this.orderPosition = orderPosition;
     }
 
     @Override
@@ -60,7 +67,7 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.setData(getItem(position),position);
+        viewHolder.setData(getItem(position));
         return convertView;
     }
 
@@ -74,9 +81,8 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
         /**
          * 设置数据
          * @param data 数据
-         * @param position 当前position
          */
-        public void setData(final Map<String,String> data,final int position){
+        public void setData(final Map<String,String> data){
             if(view != null){
                 view.setData(data);
                 //设置星星点击事件
@@ -94,7 +100,8 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                     public void onEvalutionClick(CommodEvalutionItem view, Map<String, String> data) {
                         Intent intent = new Intent(activity, PublishEvalutionSingleActivity.class);
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ORDER_ID,orderId);
-                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION,position);
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ID,id);
+                        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION,orderPosition);
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,data.get("product_code"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,data.get("score"));
