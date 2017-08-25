@@ -26,7 +26,8 @@ public class XHTemplateManager {
     }
 
     public static long starttime;
-    private String[] templates=new String[]{"","",""};
+    //模版更新集合
+    private String[] templates=new String[]{XHDISH,DSPRODUCTINFO,DSUNDERSCOREPRODUCTINFO,DSSUCCESSCOMMENT,DSCOMMENTLIST};
 
     private int templateNum=-1;
     private TemplateWebViewControl templateWebViewControl;

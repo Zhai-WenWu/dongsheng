@@ -64,7 +64,6 @@ import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
-import amodule.dish.tools.DishMouldControl;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
@@ -196,7 +195,6 @@ public class Main extends Activity implements OnClickListener {
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
 
-                DishMouldControl.reqDishMould(null);
                 OffDishToFavoriteControl.addCollection(Main.this);
 
                 if (showQAUploading())
