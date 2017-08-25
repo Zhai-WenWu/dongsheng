@@ -74,7 +74,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
 
     private int mHeaderViewCount;
     private boolean mIsStopUpload;
-    private boolean mUploadSucc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,7 +226,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             public void uploadOver(boolean flag, String responseStr) {
                 refreshUploadView();
                 mIsStopUpload = true;
-                mUploadSucc = flag;
             }
         };
     }
@@ -318,10 +316,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (goBack())
-                    return;
-                else
-                    finish();
+                onBackPressed();
             }
         });
 
@@ -366,21 +361,13 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         dialog.show();
     }
 
-    private boolean goBack() {
-        if (!mIsStopUpload) {
-            showCancelDialog();
-            return true;
-        } else if (!mUploadSucc && mListPool != null) {
-            mListPool.cancelUpload();
-        }
-        return false;
-    }
-
     @Override
     public void onBackPressed() {
-        if (goBack())
-            return;
         super.onBackPressed();
+        if (mListPool != null) {
+            allStartOrPause(false);
+            mListPool.cancelUpload();
+        }
     }
 
     private void getIsTip() {

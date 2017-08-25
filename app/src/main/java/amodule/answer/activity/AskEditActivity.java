@@ -71,6 +71,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private String mQAID;
     private String mQADetailUrl;//问答详情页的url
 
+    private boolean mIsResuming;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,7 +144,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
 
             @Override
             public void mobile() {
-                if(!mIsStopUpload) {
+                if(!mIsStopUpload && mIsResuming) {
                     allStartOrPause(false);
                     hintNetWork();
                 }
@@ -267,6 +269,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     protected void onResume() {
         super.onResume();
+        mIsResuming = false;
     }
 
     @Override
@@ -335,6 +338,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     protected void onPause() {
         super.onPause();
+        mIsResuming = false;
     }
 
     @Override

@@ -14,7 +14,7 @@
     <EditText
         android:id="@+id/edittext"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_215"
+        android:layout_height="@dimen/dp_235"
         android:layout_below="@+id/title_rela"
         android:background="@null"
         android:gravity="top|left"

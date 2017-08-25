@@ -7,9 +7,10 @@ import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -74,12 +75,9 @@ public class ToolsCammer {
     public static Bitmap getFrameAtTime(String filePath) {
         File file = new File(filePath);
         if(!file.exists()) return null;
-        MediaMetadataRetriever media = new MediaMetadataRetriever();
-        media.setDataSource(filePath);
-        Bitmap bitmap = media.getFrameAtTime();
+        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Images.Thumbnails.MINI_KIND);
         if (bitmap != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             bitmap.setConfig(Bitmap.Config.RGB_565);
-        media.release();
         return bitmap;
     }
 
@@ -90,11 +88,24 @@ public class ToolsCammer {
      * @return
      */
     public static Bitmap getFrameAtTime(String filePath,long time) {
-        MediaMetadataRetriever media = new MediaMetadataRetriever();
-        media.setDataSource(filePath);
-        Bitmap bitmap = media.getFrameAtTime(time);
-        media.release();
-        media = null;
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            bitmap = retriever.getFrameAtTime(time);
+        } catch (IllegalArgumentException ex) {
+            // Assume this is a corrupt video file
+        } catch (RuntimeException ex) {
+            // Assume this is a corrupt video file.
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException ex) {
+                // Ignore failures while cleaning up.
+            }
+        }
+
+        if (bitmap == null) return null;
         return bitmap;
     }
 
