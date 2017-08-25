@@ -121,7 +121,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
         findViewById(R.id.feebback_send).setOnClickListener(this);
         feebback_reply_content = (EditText) findViewById(R.id.feebback_reply_content);
         keyboradEdit = (EditText) findViewById(R.id.feekback_keyboard_view);
-        contentList = new ArrayList<Map<String, String>>();
+        contentList = new ArrayList<>();
         adapter = new AdapterFeedback(Feedback.this, feekback_list, contentList, 0, null, null);
         loadEvent();
 //		 getFeekbackInfo(false);
@@ -132,25 +132,8 @@ public class Feedback extends BaseActivity implements OnClickListener {
                 switch (event.getAction()) {
                     default:
                         ToolsDevice.keyboardControl(false, Feedback.this, feebback_reply_content);
-//					findViewById(R.id.feekback_keyboard_view).setVisibility(View.GONE);
                 }
                 return false;
-            }
-        });
-        feebback_reply_content.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                keyboradEdit.requestFocus();
-                keyboradEdit.requestFocusFromTouch();
-                ToolsDevice.keyboardControl(true, Feedback.this, keyboradEdit);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        feebback_reply_content.requestFocus();
-                    }
-                }, 200);
-                return true;
             }
         });
     }
