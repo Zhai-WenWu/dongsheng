@@ -47,7 +47,7 @@ public class TemplateWebViewControl {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     long time= System.currentTimeMillis();
                     Log.i("zyj","time::url::"+(time-XHTemplateManager.starttime));
-                    if (!TextUtils.isEmpty(String.valueOf(o)) && !"[]".equals(String.valueOf(o)) && StringManager.getFirstMap(o).size() > 0) {
+                    if (!TextUtils.isEmpty(String.valueOf(o)) && !"[]".equals(String.valueOf(o))) {
                         Map<String, String> map = StringManager.getFirstMap(o);
                         String data = map.get("html");
                         String versionSign = map.get("versionSign");
@@ -91,10 +91,11 @@ public class TemplateWebViewControl {
             @Override
             public void loadstat(int flag, final String url, final Object msg, Object... stat) {
                 Log.i("zyj","url::"+url+"::::"+msg);
-                if (flag >= MallReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(msg);
-                    if (arrayList.size() > 0) {
-                        Map<String, String> map = arrayList.get(0);
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    long time= System.currentTimeMillis();
+                    Log.i("zyj","time::url::"+(time-XHTemplateManager.starttime));
+                    if (!TextUtils.isEmpty(String.valueOf(msg)) && !"[]".equals(String.valueOf(msg))) {
+                        Map<String, String> map = StringManager.getFirstMap(msg);
                         String data = map.get("html");
                         String versionSign = map.get("versionSign");
                         if (!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
@@ -111,6 +112,9 @@ public class TemplateWebViewControl {
                         if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
                             mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
                     }
+                } else {
+                    if (mouldCallBack != null)
+                        mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
                 }
             }
         });
