@@ -37,6 +37,7 @@ public class EvalutionListActivity extends ShowTemplateWeb {
     @Override
     protected void initUI() {
         super.initUI();
+        title.setText("评价");
         initCommentBar();
     }
 
@@ -46,7 +47,7 @@ public class EvalutionListActivity extends ShowTemplateWeb {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showCommentBar("去你妹","213");
+//                showCommentBar("去你妹","213");
             }
         },10*1000);
     }
