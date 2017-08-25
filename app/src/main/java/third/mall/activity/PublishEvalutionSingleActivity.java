@@ -124,6 +124,13 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                     intent.putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position);
                     intent.putExtra("url","http://m.xiangha.com");
                     startActivityForResult(intent,OrderStateActivity.request_order);
+                    startActivityForResult(
+                            new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
+                                    .putExtra(EvalutionSuccessActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT)
+                                    .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
+                                    .putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position),
+                            OrderStateActivity.request_order
+                    );
                 }else{
                     setResult(RESULT_OK);
                     PublishEvalutionSingleActivity.this.finish();

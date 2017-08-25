@@ -25,7 +25,6 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import aplug.web.ShowTemplateWeb;
 import aplug.web.tools.XHTemplateManager;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
@@ -148,12 +147,13 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                         if (flag >= MallReqInternet.REQ_OK_STRING) {
                             Map<String, String> data = StringManager.getFirstMap(msg);
                             if (data.containsKey("status") && "2".equals(data.get("status"))) {
-                                //TODO 去评价成功
-                                Intent intent = new Intent(PublishEvalutionMultiActivity.this,EvalutionSuccessActivity.class);
-                                intent.putExtra(ShowTemplateWeb.REQUEST_METHOD, XHTemplateManager.XHDISH);
-                                intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{"94888485"});
-                                intent.putExtra("url","http://m.xiangha.com");
-                                startActivity(intent);
+                                startActivityForResult(
+                                        new Intent(PublishEvalutionMultiActivity.this, EvalutionSuccessActivity.class)
+                                                .putExtra(EvalutionSuccessActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT)
+                                                .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
+                                                .putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position),
+                                        OrderStateActivity.request_order
+                                );
                             }
                         }
                     }

@@ -28,6 +28,7 @@ public class EvalutionSuccessActivity extends ShowTemplateWeb {
     @Override
     protected void initTitleView() {
         super.initTitleView();
+        title.setText("评价成功");
         ImageView close = (ImageView) findViewById(R.id.leftClose);
         close.setOnClickListener(new View.OnClickListener() {
             @Override

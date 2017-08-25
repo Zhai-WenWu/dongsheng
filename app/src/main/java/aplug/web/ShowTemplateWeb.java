@@ -59,12 +59,12 @@ public class ShowTemplateWeb extends WebActivity{
             originData= XHTemplateManager.TEMPLATE_MATCHING.get(requestmethod);
             nowData=bundle.getStringArray(NOW_DATA_ARR);
             //最终方案，需要模版替换兼容
-//            if(nowData == null){
-//                nowData = new String[originData.length];
-//                for(int index = 0 ;index < nowData.length;index ++){
-//                    nowData[index] = bundle.getString(originData[index]);
-//                }
-//            }
+            if(nowData == null && originData != null){
+                nowData = new String[originData.length];
+                for(int index = 0 ;index < nowData.length;index ++){
+                    nowData[index] = bundle.getString(originData[index]);
+                }
+            }
             JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
         }
     }

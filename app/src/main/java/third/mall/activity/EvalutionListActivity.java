@@ -3,6 +3,7 @@ package third.mall.activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -27,7 +28,7 @@ public class EvalutionListActivity extends ShowTemplateWeb {
     protected CommentBar commentBar;
     protected RelativeLayout editControlerLayout;
 
-    private String userCode = "";
+    private String callbackName = "";
 
     @Override
     protected int getLayoutId() {
@@ -44,12 +45,6 @@ public class EvalutionListActivity extends ShowTemplateWeb {
     @Override
     protected void onResume() {
         super.onResume();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                showCommentBar("去你妹","213");
-            }
-        },10*1000);
     }
 
     protected int heightDifference = -1;
@@ -86,7 +81,7 @@ public class EvalutionListActivity extends ShowTemplateWeb {
             @Override
             public void onPublishComment(String content) {
                 if(templateWebView != null)
-                    templateWebView.loadUrl("Javascript:publishComment(\""+content+"\",\"" + userCode + "\"");
+                    templateWebView.loadUrl("Javascript:"+callbackName+"(\""+content+"\")");
                 resetCommentBar();
             }
         });
@@ -112,15 +107,16 @@ public class EvalutionListActivity extends ShowTemplateWeb {
         });
     }
 
-    public void showCommentBar(String userName,String userCode){
-        this.userCode = userCode;
+    public void showCommentBar(String userName,String callbackName){//dsShowCommentBarCallback
+        this.callbackName = callbackName;
         commentBar.setVisibility(View.VISIBLE);
         commentBar.setEditTextHint("回复 ：" + userName);
     }
 
     public void resetCommentBar(){
         commentBar.setEditTextHint("回复 ");
+        commentBar.resetEdit();
         commentBar.hide();
-        userCode = "";
+        callbackName = "";
     }
 }
