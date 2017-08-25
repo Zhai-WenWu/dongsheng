@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -37,38 +38,14 @@ public class TemplateWebViewControl {
         Log.i("zyj","time::handleXHMouldData::"+(time-XHTemplateManager.starttime));
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
-        final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(), requestMethod, "versionSign");
+        final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
         LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
         mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
         String url = StringManager.api_getDishMould;
-        ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(Main.allMain.getApplicationContext()) {
+        ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHApplication.in()) {
             @Override
-            public void loaded(int i, String s, final Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING) {
-                    long time= System.currentTimeMillis();
-                    Log.i("zyj","time::url::"+(time-XHTemplateManager.starttime));
-                    if (!TextUtils.isEmpty(String.valueOf(o)) && !"[]".equals(String.valueOf(o))) {
-                        Map<String, String> map = StringManager.getFirstMap(o);
-                        String data = map.get("html");
-                        String versionSign = map.get("versionSign");
-                        if (!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
-                            File file = FileManager.saveFileToCompletePath(path, data, false);
-                            if (file != null)
-                                FileManager.saveShared(Main.allMain.getApplicationContext(), requestMethod, "versionSign", versionSign);
-                            if (mouldCallBack != null)
-                                mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
-                        } else {//无数据标示已经是最新版本。
-                            if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
-                                mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                        }
-                    } else {
-                        if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
-                            mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                    }
-                } else {
-                    if (mouldCallBack != null)
-                        mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
-                }
+            public void loaded(int flag, String url, final Object msg) {
+                AnalyzData(flag,url,msg,requestMethod,path,readStr, versionSign);
             }
         });
     }
@@ -80,45 +57,53 @@ public class TemplateWebViewControl {
     private void handlerDsMouldData(final String requestMethod) {
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
-        final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(), requestMethod, "versionSign");
+        final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
         LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
         String version= versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign);
-//        mapParams.put("version_sign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
-//        mapParams.put("request_method",requestMethod);
-        Log.i("zyj","requestMethod::"+requestMethod);
         String url = MallStringManager.mall_api_getTemplate+"?request_method="+requestMethod+"&version_sign="+version;
         MallReqInternet.in().doGet(url, new MallInternetCallback(XHApplication.in()) {
             @Override
             public void loadstat(int flag, final String url, final Object msg, Object... stat) {
-                Log.i("zyj","url::"+url+"::::"+msg);
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    long time= System.currentTimeMillis();
-                    Log.i("zyj","time::url::"+(time-XHTemplateManager.starttime));
-                    if (!TextUtils.isEmpty(String.valueOf(msg)) && !"[]".equals(String.valueOf(msg))) {
-                        Map<String, String> map = StringManager.getFirstMap(msg);
-                        String data = map.get("html");
-                        String versionSign = map.get("versionSign");
-                        if (!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
-                            File file = FileManager.saveFileToCompletePath(path, data, false);
-                            if (file != null)
-                                FileManager.saveShared(Main.allMain.getApplicationContext(), requestMethod, "versionSign", versionSign);
-                            if (mouldCallBack != null)
-                                mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
-                        } else {//无数据标示已经是最新版本。
-                            if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
-                                mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                        }
-                    } else {
-                        if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
-                            mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                    }
-                } else {
-                    if (mouldCallBack != null)
-                        mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
-                }
+                AnalyzData(flag,url,msg,requestMethod,path,readStr, versionSign);
             }
         });
+    }
 
+    /**
+     * 处理解析数据
+     * @param flag
+     * @param url
+     * @param msg
+     * @param requestMethod--方法名称
+     * @param path--文件
+     * @param readStr---html代码
+     * @param versionSign--版本
+     */
+    private void AnalyzData(int flag, final String url, final Object msg,String requestMethod,String path,String readStr,Object versionSign){
+        if (flag >= ReqInternet.REQ_OK_STRING) {
+            long time= System.currentTimeMillis();
+            if (!TextUtils.isEmpty(String.valueOf(msg)) && !"[]".equals(String.valueOf(msg))) {
+                Map<String, String> map = StringManager.getFirstMap(msg);
+                String data = map.get("html");
+                versionSign = map.get("versionSign");
+                if (!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
+                    File file = FileManager.saveFileToCompletePath(path, data, false);
+                    if (file != null)
+                        FileManager.saveShared(XHApplication.in(), requestMethod, "versionSign", String.valueOf(versionSign));
+                    if (mouldCallBack != null)
+                        mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
+                } else {//无数据标示已经是最新版本。
+                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
+                        mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
+                }
+            } else {
+                if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
+                    mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
+            }
+        } else {
+            if (mouldCallBack != null)
+                mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
+        }
     }
 
     /**
