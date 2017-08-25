@@ -81,6 +81,7 @@ public class ImgWallActivity extends BaseActivity implements OnClickListener {
         setClick();
 
         AdapterImgWall mAdapter = new AdapterImgWall(this, mData);
+
         mImageViewPager.setAdapter(mAdapter);
         mImageViewPager.setClickable(true);
         mImageViewPager.setLongClickable(true);

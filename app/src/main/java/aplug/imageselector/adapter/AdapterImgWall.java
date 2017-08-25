@@ -26,6 +26,7 @@ public class AdapterImgWall extends PagerAdapter {
 	private ImgWallActivity mAct;
 	private ArrayList<String> urls;
 	private int mChildCount = 0;
+	private boolean enableClick = false;
 
 	public AdapterImgWall(ImgWallActivity act, ArrayList<String> urls) {
 		this.mAct = act;
@@ -95,7 +96,9 @@ public class AdapterImgWall extends PagerAdapter {
 		//设置点击退出
 		imageView.setOnClickListener(new OnClickListener() {
 			@Override public void onClick(View v) {
-				
+				if(enableClick){
+					mAct.onBackPressed();
+				}
 			}
 		});
 		//设置长按保存

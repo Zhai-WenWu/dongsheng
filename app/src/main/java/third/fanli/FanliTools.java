@@ -1,7 +1,5 @@
 package third.fanli;
 
-import android.app.Activity;
-
 /**
  * Created by Fang Ruijiao on 2016/8/18.
  */
