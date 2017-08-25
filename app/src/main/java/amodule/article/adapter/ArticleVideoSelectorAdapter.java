@@ -110,6 +110,8 @@ public class ArticleVideoSelectorAdapter extends RecyclerView.Adapter<ArticleVid
                     Glide.with(image.getContext()).load(new File(imgPath)).centerCrop().into(image);
                 else
                     image.setImageResource(0);
+                //直接使用 Glide 加载图片
+//                    Glide.with(image.getContext()).load(new File(path)).centerCrop().into(image);
             } else
                 image.setImageResource(0);
             if (!TextUtils.isEmpty(videoShowTime))

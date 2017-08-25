@@ -197,8 +197,7 @@ public class AdapterFeedback extends AdapterSimple {
 					setViewImage(viewHolder.feekback_user_send_img, map.get("img"));
 				} else {
 					viewHolder.feekback_user_send_img.setVisibility(View.VISIBLE);
-					Bitmap bmp = null;
-					bmp = UtilImage.imgPathToBitmap(map.get("img"),  ToolsDevice.getWindowPx(mAct).widthPixels/4, 0, false, null);
+					Bitmap bmp = UtilImage.imgPathToBitmap(map.get("img"),  ToolsDevice.getWindowPx(mAct).widthPixels/4, 0, false, null);
 					//因为刷新是大图有bug，所以注释
 //					if(map.get("once") != null && map.get("once").equals("0")){
 //						map.put("once", "1");

@@ -215,6 +215,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
             Intent intent = new Intent();
             intent.putExtra("code", String.valueOf(id));
             intent.putExtra("position", String.valueOf(position));
+            intent.putExtra("order_id",order_id);
             setResult(status, intent);
         }
         super.finish();

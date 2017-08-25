@@ -3,7 +3,6 @@ package third.mall.upload;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -129,7 +128,7 @@ public class EvalutionUploadControl {
         if (onPublishCallback != null)
             onPublishCallback.onStratPublish();
         if (isAllUploadOver()) {
-            //
+            //正式发布评价请求
             MallReqInternet.in().doPost(MallStringManager.mall_addComment,
                     combineParameter(),
                     new MallInternetCallback(context) {
@@ -150,7 +149,7 @@ public class EvalutionUploadControl {
         } else {
             //上传未上传完成的的图片
             for (String imageUrl : bean.getImages()) {
-                if (!imageUrl.startsWith("http"))
+                if (!TextUtils.isEmpty(imageUrl) && !imageUrl.startsWith("http"))
                     uploadAgin(imageUrl);
             }
         }
@@ -173,7 +172,6 @@ public class EvalutionUploadControl {
         for (int i = 0; i < images.size(); i++) {
             uploadTextData.put("content[0][imgs][" + i + "]", images.get(i));
         }
-        Log.i("tzy", "combineParameter :: " + uploadTextData.toString());
         return uploadTextData;
     }
 
@@ -185,7 +183,7 @@ public class EvalutionUploadControl {
     private boolean isAllUploadOver() {
         ArrayList<String> images = bean.getImages();
         for (String imageUrl : images) {
-            if (!imageUrl.startsWith("http")) {
+            if (!TextUtils.isEmpty(imageUrl) && !imageUrl.startsWith("http")) {
                 return false;
             }
         }
@@ -246,24 +244,10 @@ public class EvalutionUploadControl {
 
     /**默认上传进度回调*/
     public static abstract class SimpleUploadListNetCallBack implements UploadListNetCallBack {
-        @Override
-        public void onProgress(double progress, String uniqueId) {
-        }
-
-        @Override
-        public void onLastUploadOver(boolean flag, String responseStr) {
-        }
-
-        @Override
-        public void onProgressSpeed(String uniqueId, long speed) {
-        }
-
-        @Override
-        public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
-        }
-
-        @Override
-        public void onFaild(String faild, String uniqueId) {
-        }
+        @Override public void onProgress(double progress, String uniqueId) { }
+        @Override public void onLastUploadOver(boolean flag, String responseStr) { }
+        @Override public void onProgressSpeed(String uniqueId, long speed) { }
+        @Override public void onSuccess(String url, String uniqueId, JSONObject jsonObject) { }
+        @Override public void onFaild(String faild, String uniqueId) { }
     }
 }

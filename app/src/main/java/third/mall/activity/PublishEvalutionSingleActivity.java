@@ -40,7 +40,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
     public static final String STATISTICS_RETURN_ID = "a_comcoment_return";
     public static final String STATISTICS_PUBLISH_ID = "a_comcoment_result";
     /** 传参 key */
-    public static final String EXTRAS_ORDER_ID = "orderi_d";
+    public static final String EXTRAS_ORDER_ID = "order_id";
     public static final String EXTRAS_PRODUCT_CODE = "product_code";
     public static final String EXTRAS_PRODUCT_IMAGE = "product_img";
     public static final String EXTRAS_SCORE = "score";
@@ -385,6 +385,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
             Intent intent = new Intent();
             intent.putExtra("code", String.valueOf(id));
             intent.putExtra("position", String.valueOf(position));
+            intent.putExtra("order_id",orderID);
             setResult(status, intent);
         }
         super.finish();

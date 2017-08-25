@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/price_bata_rela"
         android:layout_below="@+id/title_all_rela"
+        android:overScrollMode="never"
         android:scrollbars="none">
 
         <RelativeLayout

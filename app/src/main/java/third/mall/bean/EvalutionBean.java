@@ -1,10 +1,8 @@
 package third.mall.bean;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * PackageName : third.mall.bean
@@ -70,8 +68,8 @@ public class EvalutionBean {
     }
 
     public void replaceImage(String oldUrl,String newUrl){
-        if(images.indexOf(oldUrl) >= 0  && images.indexOf(oldUrl) < images.size()
-                && images.indexOf(newUrl) < 0){
+        if(images.contains(oldUrl) && images.indexOf(oldUrl) < images.size()
+                && images.contains(newUrl)){
             images.set(images.indexOf(oldUrl),newUrl);
         }else{
             addImage(newUrl);
