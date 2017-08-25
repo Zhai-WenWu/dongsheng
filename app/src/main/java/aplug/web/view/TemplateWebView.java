@@ -273,8 +273,5 @@ public class TemplateWebView extends XHWebView{
                 }
             }
         });
-//        xhTemplateManager.getSingleTemplate(XHTemplateManager.DSUNDERSCOREPRODUCTINFO,null);
-//        xhTemplateManager.getSingleTemplate(XHTemplateManager.DSSUCCESSCOMMENT,null);
-//        xhTemplateManager.getSingleTemplate(XHTemplateManager.DSCOMMENTLIST,null);
     }
 }

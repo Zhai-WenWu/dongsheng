@@ -33,16 +33,13 @@ public class TemplateWebViewControl {
      * @param requestMethod
      */
     public void handleXHMouldData(final String requestMethod) {
-//        final String key=StringManager.stringToMD5(url.toLowersuCase()).toLowerCase();
-        long time= System.currentTimeMillis();
-        Log.i("zyj","time::handleXHMouldData::"+(time-XHTemplateManager.starttime));
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
         LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
         mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
         String url = StringManager.api_getDishMould;
-        ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHApplication.in()) {
+        ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, final Object msg) {
                 AnalyzData(flag,url,msg,requestMethod,path,readStr, versionSign);
@@ -58,10 +55,9 @@ public class TemplateWebViewControl {
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
-        LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
         String version= versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign);
         String url = MallStringManager.mall_api_getTemplate+"?request_method="+requestMethod+"&version_sign="+version;
-        MallReqInternet.in().doGet(url, new MallInternetCallback(XHApplication.in()) {
+        MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loadstat(int flag, final String url, final Object msg, Object... stat) {
                 AnalyzData(flag,url,msg,requestMethod,path,readStr, versionSign);
@@ -130,8 +126,6 @@ public class TemplateWebViewControl {
      * @param requestMethod
      */
     public void getH5MDWithRequestMed(String requestMethod) {
-        long time= System.currentTimeMillis();
-        Log.i("zyj","time::getH5MDWithRequestMed::"+(time-XHTemplateManager.starttime));
         if (TextUtils.isEmpty(requestMethod)) {
             return;
         }
