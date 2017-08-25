@@ -273,8 +273,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     protected boolean handleUpload() {
         if (mModel != null)
             mModel.setmPrice(mAskPrice);
-        endTimer();
         saveDraft();
+        if ("null".equals(ToolsDevice.getNetWorkType(this))) {
+            Toast.makeText(this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        endTimer();
         if (mModel != null && mModel.getmId() != -1) {
             mListPool = UploadListControl.getUploadListControlInstance()
                     .add(AskAnswerUploadListPool.class,

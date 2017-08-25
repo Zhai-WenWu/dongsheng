@@ -68,7 +68,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     private ArrayList<Map<String, String>> mArrayList = new ArrayList<>();
     private AskAnswerUploadAdapter mAdapter;
     private int mDraftId;
-    private String mTitleText;
     private String mTimesStamp;
     private String mCoverPath;
     private String mFinalVideoPath;
@@ -185,17 +184,16 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             return;
         }
 
-        mTitleText = mUploadPoolData.getTitle();
         mArrayList = mUploadPoolData.getListData();
         mAdapter = new AskAnswerUploadAdapter(this);
-        if (!TextUtils.isEmpty(mTitleText)) {
-            mTitle.setText(mTitleText.length() > 7 ? mTitleText.substring(0, 6) + "..." : mTitleText);
-        }
+        mTitle.setText(AskAnswerModel.TYPE_ANSWER_AGAIN.equals(model.getmType()) ? "追答" : "我答");
 
         boolean isAutoUpload = getIntent().getBooleanExtra("isAutoUpload", false);
         if (isAutoUpload) {
             if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
                 allStartOrPause(true);
+            } else if ("null".equals(ToolsDevice.getNetWorkType(this))) {
+                allStartOrPause(false);
             } else {
                 allStartOrPause(false);
                 hintNetWork();
@@ -292,6 +290,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             public void onClick(View v) {
                 if ("wifi".equals(ToolsDevice.getNetWorkType(AskAnswerUploadListActivity.this))) {
                     allStartOrPause(true);
+                } else if ("null".equals(ToolsDevice.getNetWorkType(AskAnswerUploadListActivity.this))) {
+                    Toast.makeText(AskAnswerUploadListActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
                 } else {
                     hintNetWork();
                 }
