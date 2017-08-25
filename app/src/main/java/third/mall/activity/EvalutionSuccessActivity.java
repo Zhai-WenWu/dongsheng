@@ -10,6 +10,7 @@ import com.xianghatest.R;
 import acore.logic.XHClick;
 import amodule.main.Main;
 import aplug.web.ShowTemplateWeb;
+import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.XHWebView;
 
 /**
@@ -24,6 +25,14 @@ public class EvalutionSuccessActivity extends ShowTemplateWeb {
 
     int id = -1;
     int position = -1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Intent intent  = getIntent();
+        intent.putExtra(EvalutionListActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT);
+        setIntent(intent);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void initTitleView() {

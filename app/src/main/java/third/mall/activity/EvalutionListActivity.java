@@ -2,6 +2,7 @@ package third.mall.activity;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.CommentBar;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.web.ShowTemplateWeb;
+import aplug.web.tools.XHTemplateManager;
 
 /**
  * PackageName : third.mall.activity
@@ -29,6 +31,14 @@ public class EvalutionListActivity extends ShowTemplateWeb {
     protected RelativeLayout editControlerLayout;
 
     private String callbackName = "";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Intent intent  = getIntent();
+        intent.putExtra(EvalutionListActivity.REQUEST_METHOD, XHTemplateManager.DSCOMMENTLIST);
+        setIntent(intent);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected int getLayoutId() {

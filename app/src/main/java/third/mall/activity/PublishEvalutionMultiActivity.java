@@ -149,7 +149,6 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
                             if (data.containsKey("status") && "2".equals(data.get("status"))) {
                                 startActivityForResult(
                                         new Intent(PublishEvalutionMultiActivity.this, EvalutionSuccessActivity.class)
-                                                .putExtra(EvalutionSuccessActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT)
                                                 .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
                                                 .putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position),
                                         OrderStateActivity.request_order

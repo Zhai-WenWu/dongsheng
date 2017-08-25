@@ -116,17 +116,8 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
-                    //TODO
-                    Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
-                    intent.putExtra(ShowTemplateWeb.REQUEST_METHOD, XHTemplateManager.XHDISH);
-                    intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{"94888485"});
-                    intent.putExtra(EvalutionSuccessActivity.EXTRAS_ID,id);
-                    intent.putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position);
-                    intent.putExtra("url","http://m.xiangha.com");
-                    startActivityForResult(intent,OrderStateActivity.request_order);
                     startActivityForResult(
                             new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
-                                    .putExtra(EvalutionSuccessActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT)
                                     .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
                                     .putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position),
                             OrderStateActivity.request_order
