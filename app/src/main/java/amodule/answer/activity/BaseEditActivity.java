@@ -375,16 +375,17 @@ public class BaseEditActivity extends BaseActivity {
             return rowId;
         }
         Editable editable = mEditText.getText();
+        String text = editable == null ? "" : editable.toString();
         ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
         ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
-        if ((editable == null || TextUtils.isEmpty(editable.toString()) || editable.toString().trim().length() == 0)
+        if (TextUtils.isEmpty(text.trim())
                 && mImgsContainer != null
                 && mImgsContainer.getChildCount() <= 0
                 && !TextUtils.isEmpty(mDishCode)
                 && !mDishCode.equals(mModel.getmDishCode())) {//没有内容，并且 非同一个菜谱，则不保存数据。
             return rowId;
         }
-        mModel.setmText(editable == null ? "" : editable.toString());
+        mModel.setmText(text);
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
         mModel.setmVideos(videoArrs);
         mModel.setmImgs(imgArrs);
@@ -396,8 +397,11 @@ public class BaseEditActivity extends BaseActivity {
         mModel.setmAuthorCode(mAuthorCode);
         mModel.setmSaveTime(String.valueOf(System.currentTimeMillis()));
         if (mModel.getmId() > 0) {
-            mSQLite.updateData((int) mModel.getmId(), mModel);
-            rowId = mModel.getmId();
+            if (!TextUtils.isEmpty(text.trim()) || (mImgsContainer != null && mImgsContainer.getChildCount() > 0)) {
+                mSQLite.updateData((int) mModel.getmId(), mModel);
+                rowId = mModel.getmId();
+            } else
+                mSQLite.deleteAll();
         } else {
             rowId = mSQLite.insertData(mModel);
             if (rowId > 0)
