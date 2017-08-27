@@ -159,13 +159,17 @@ public class AdapterMainMsg extends AdapterSimple {
 					switch (type) {
 					case viewUser:
 						if (!"2".equals(map.get("msgType"))) {
-							Intent intent1 = new Intent(mAct, FriendHome.class);
-							Bundle bundle = new Bundle();
-							bundle.putString("code", map.get("nickCode"));
-							if(map.get("msgType").equals("3"))
-								bundle.putString("newsId", map.get("id"));
-							intent1.putExtras(bundle);
-							mAct.startActivity(intent1);
+							if(map.containsKey("customerUrl")){
+								AppCommon.openUrl(mAct,map.get("customerUrl"),true);
+							} else {
+								Intent intent1 = new Intent(mAct, FriendHome.class);
+								Bundle bundle = new Bundle();
+								bundle.putString("code", map.get("nickCode"));
+								if(map.get("msgType").equals("3"))
+									bundle.putString("newsId", map.get("id"));
+								intent1.putExtras(bundle);
+								mAct.startActivity(intent1);
+							}
 						}
 						break;
 					case viewOther:

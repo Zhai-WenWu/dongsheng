@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xianghatest.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -286,11 +289,13 @@ public class MyMessage extends MainBaseActivity {
 							map.put("floorNum", info_map.get("floorNum"));
 							// 添加回复人回复信息;
 							if (listReturn.get(i).containsKey("customer")) {
-								ArrayList<Map<String, String>> customer = UtilString.getListMapByJson(listReturn.get(i).get("customer"));
-								map.put("nickName", customer.get(0).get("nickName"));
-								map.put("nickImg", customer.get(0).get("img"));
-								map.put("nickCode", customer.get(0).get("code"));
-								map.put("isGourmet", customer.get(0).get("isGourmet"));
+								Map<String,String> customer = StringManager.getFirstMap(listReturn.get(i).get("customer"));
+								map.put("nickName", customer.get("nickName"));
+								map.put("nickImg", customer.get("img"));
+								map.put("nickCode", customer.get("code"));
+								map.put("isGourmet", customer.get("isGourmet"));
+								if(customer.containsKey("url") && !TextUtils.isEmpty(customer.get("url")))
+									map.put("customerUrl",customer.get("url"));
 							}
 						} else if (map.get("msgType").equals("2")) {
 							map.put("nickName", "");
@@ -303,11 +308,13 @@ public class MyMessage extends MainBaseActivity {
 							map.put("adminName", "");
 							map.put("isLike", "");
 							if (listReturn.get(i).containsKey("customer")) {
-								ArrayList<Map<String, String>> customer = UtilString.getListMapByJson(listReturn.get(i).get("customer"));
-								map.put("nickName", customer.get(0).get("nickName"));
-								map.put("nickImg", customer.get(0).get("img"));
-								map.put("nickCode", customer.get(0).get("code"));
-								map.put("isGourmet", customer.get(0).get("isGourmet"));
+								Map<String,String> customer = StringManager.getFirstMap(listReturn.get(i).get("customer"));
+								map.put("nickName", customer.get("nickName"));
+								map.put("nickImg", customer.get("img"));
+								map.put("nickCode", customer.get("code"));
+								map.put("isGourmet", customer.get("isGourmet"));
+								if(customer.containsKey("url") && !TextUtils.isEmpty(customer.get("url")))
+									map.put("customerUrl",customer.get("url"));
 							}
 						}
 						if (!map.get("content").equals(""))
@@ -395,11 +402,7 @@ public class MyMessage extends MainBaseActivity {
 			//7.29新添加统计
 			XHClick.mapStat(MyMessage.this, "a_switch_message", "消息中心", "");
 			clickFlag=!clickFlag;
-			if(clickFlag){
-				msg_title_sort.setText("未读");
-			}else{
-				msg_title_sort.setText("全部");
-			}
+			msg_title_sort.setText(clickFlag ? "未读" : "全部");
 			load(true);
 		}
 	};
