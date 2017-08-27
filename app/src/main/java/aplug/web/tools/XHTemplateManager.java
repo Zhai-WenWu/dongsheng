@@ -10,7 +10,7 @@ import java.util.Map;
  */
 
 public class XHTemplateManager {
-    public final static String XHDISH = "XhDish";
+    public final static String XHDISHLAYOUT = "xhDishLayout";
     public final static String DSPRODUCTINFO = "DsProductInfo";//商品详情页
     public final static String DSUNDERSCOREPRODUCTINFO = "DsUnderscoreProductInfo";//详情页下划页
     public final static String DSSUCCESSCOMMENT = "DsSuccessComment";//评论成功页
@@ -18,7 +18,7 @@ public class XHTemplateManager {
     public final static Map<String,String[]> TEMPLATE_MATCHING = new HashMap<>();
     //初始化
     static {
-        TEMPLATE_MATCHING.put(XHDISH , new String[]{"<{code}>"});//菜谱模板
+        TEMPLATE_MATCHING.put(XHDISHLAYOUT , new String[]{"<{code}>"});//菜谱模板
         TEMPLATE_MATCHING.put(DSPRODUCTINFO , new String[]{"<{product_code}>"});//商品详情页
         TEMPLATE_MATCHING.put(DSUNDERSCOREPRODUCTINFO , new String[]{"<{product_code}>"});//商品详情页介绍
         TEMPLATE_MATCHING.put(DSCOMMENTLIST , new String[]{"<{product_code}>"});//评价列表
@@ -26,7 +26,7 @@ public class XHTemplateManager {
 
     public static long starttime;
     //模版更新集合
-    private String[] templates=new String[]{XHDISH,DSPRODUCTINFO,DSUNDERSCOREPRODUCTINFO,DSSUCCESSCOMMENT,DSCOMMENTLIST};
+    private String[] templates=new String[]{XHDISHLAYOUT,DSPRODUCTINFO,DSUNDERSCOREPRODUCTINFO,DSSUCCESSCOMMENT,DSCOMMENTLIST};
 
     private int templateNum=-1;
     private TemplateWebViewControl templateWebViewControl;

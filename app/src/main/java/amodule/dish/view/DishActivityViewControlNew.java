@@ -30,6 +30,7 @@ import amodule.main.Main;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
+import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
@@ -433,7 +434,7 @@ public class  DishActivityViewControlNew {
     public void handlerDishWebviewData(){
         if(!isLoadWebViewData) {
             Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
-            templateWebView.loadData("XhDish",new String[]{"<{code}>"},new String[]{mDishCode});
+            templateWebView.loadData(XHTemplateManager.XHDISHLAYOUT,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT),new String[]{mDishCode});
             isLoadWebViewData = true;
         }
     }

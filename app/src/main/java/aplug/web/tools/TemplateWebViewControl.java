@@ -38,7 +38,8 @@ public class TemplateWebViewControl {
         final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
         LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
         mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
-        String url = StringManager.api_getDishMould;
+        mapParams.put("requestMethod",requestMethod);
+        String url = StringManager.api_getTemplate;
         ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, final Object msg) {
@@ -131,7 +132,7 @@ public class TemplateWebViewControl {
         }
         if (requestMethod.startsWith("Ds")) {//电商请求
             handlerDsMouldData(requestMethod);
-        } else if (requestMethod.startsWith("Xh")) {//香哈
+        } else if (requestMethod.startsWith("xh")) {//香哈
             handleXHMouldData(requestMethod);
         }
     }

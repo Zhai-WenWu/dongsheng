@@ -93,7 +93,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
 
     private ViewPager viewpager;
     private ImageView[] imageviews;
-//    private WebView explain_detail_webview;
     private Map<String, String> map;
     private String code;
     private MyScrollView mall_commod_scroll;
@@ -194,7 +193,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 if (load_state) {
 //                    foot_templateWebView.loadData();
                     foot_templateWebView.loadData(XHTemplateManager.DSUNDERSCOREPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSUNDERSCOREPRODUCTINFO),new String[]{code});
-//                    explain_detail_webview.loadUrl(MallStringManager.replaceUrl(MallStringManager.mall_web_product_detail) + "?product_code=" + code);
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
                 }
             }
@@ -253,28 +251,15 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
             public void onLoadFinish() {
                 load_state = false;
                 findViewById(R.id.widget_progress).setVisibility(View.GONE);
-                findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
                 findViewById(R.id.foot_templateWebView).setVisibility(View.VISIBLE);
             }
             @Override
             public void onLoadStart() {
                 load_state = true;
                 findViewById(R.id.widget_progress).setVisibility(View.VISIBLE);
-                findViewById(R.id.explain_detail_but_linear).setVisibility(View.GONE);
                 findViewById(R.id.foot_templateWebView).setVisibility(View.GONE);
             }
         });
-        //底部webview
-//        explain_detail_webview = (WebView) findViewById(R.id.explain_detail_webview);
-//        explain_detail_webview.getSettings().setJavaScriptEnabled(true);// 执行角标文件
-//        explain_detail_webview.setScrollBarStyle(0);// 滚动条风格，为0就是不给滚动条留空间，滚动条覆盖在网页上
-//        explain_detail_webview.setHorizontalScrollBarEnabled(false);
-//        explain_detail_webview.setVerticalScrollBarEnabled(true);
-//        explain_detail_webview.getSettings().setDefaultTextEncodingName("UTF-8");
-//        //兼容https,在部分版本上资源显示不全的问题
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            explain_detail_webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-//        }
     }
 
     /**
@@ -336,28 +321,6 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 super.handleMessage(msg);
             }
         };
-//        // webview 加载监听
-//        explain_detail_webview.setWebViewClient(new WebViewClient() {
-//            @Override
-//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//                load_state = true;
-//                findViewById(R.id.widget_progress).setVisibility(View.VISIBLE);
-//                findViewById(R.id.explain_detail_but_linear).setVisibility(View.GONE);
-////                findViewById(R.id.explain_detail_linear).setVisibility(View.GONE);
-//                findViewById(R.id.explain_detail_webview).setVisibility(View.GONE);
-//                super.onPageStarted(view, url, favicon);
-//            }
-
-//            @Override
-//            public void onPageFinished(WebView view, String url) {
-//                load_state = false;
-//                findViewById(R.id.widget_progress).setVisibility(View.GONE);
-//                findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
-////                findViewById(R.id.explain_detail_linear).setVisibility(View.VISIBLE);
-//                findViewById(R.id.explain_detail_webview).setVisibility(View.VISIBLE);
-//                super.onPageFinished(view, url);
-//            }
-//        });
         loadManager.setLoading(new OnClickListener() {
 
             @Override
