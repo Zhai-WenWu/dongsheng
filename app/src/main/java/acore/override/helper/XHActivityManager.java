@@ -2,7 +2,11 @@ package acore.override.helper;
 
 import android.app.Activity;
 
+import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 存放当前activity
@@ -42,5 +46,33 @@ public class XHActivityManager{
             currentActivityWeakRef=null;
         }
         currentActivityWeakRef = new WeakReference<Activity>(activity);
+    }
+
+    private ArrayList<Activity> activityArrayList= new ArrayList<>();
+    public void addActivity(Activity activity){
+        activityArrayList.add(activity);
+    }
+    public void removeActivity(Activity activity){
+        activityArrayList.remove(activity);
+    }
+
+    /**
+     * 刷新接口
+     */
+    public interface RefreshCallBack{
+        public void refreshCallBack();
+    }
+
+    /**
+     * 刷新activity
+     */
+    public void refreshActivity(){
+        int size=activityArrayList.size();
+        if(size<=0)return;
+        for(int i= 0;i<size;i++){
+            Activity v=activityArrayList.get(i);
+            if(v instanceof RefreshCallBack)
+                ((RefreshCallBack) v).refreshCallBack();
+        }
     }
 }
