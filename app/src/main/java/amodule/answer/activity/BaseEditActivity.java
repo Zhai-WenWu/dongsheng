@@ -28,6 +28,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.db.AskAnswerSQLite;
@@ -451,7 +452,10 @@ public class BaseEditActivity extends BaseActivity {
                     }
                     break;
                 case REQUEST_CODE_A:
-                    setResult(resultCode, data);
+                    boolean loadSucc = data.getBooleanExtra("loadSucc", false);
+                    if (loadSucc) {
+                        XHActivityManager.getInstance().refreshActivity();
+                    }
                     finish();
                     break;
             }

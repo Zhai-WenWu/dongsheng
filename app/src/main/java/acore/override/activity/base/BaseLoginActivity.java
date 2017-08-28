@@ -25,6 +25,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.login.AccountInfoBean;
 import acore.logic.login.LoginCheck;
+import acore.override.helper.XHActivityManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.SyntaxTools;
@@ -178,6 +179,7 @@ public class BaseLoginActivity extends BaseActivity {
                     if (maps != null && maps.size() > 0) {
                         err_count_secret = 0;
                         LoginManager.loginSuccess(mAct, returnObj.toString());
+                        XHActivityManager.getInstance().refreshActivity();
                         callback.onSuccess();
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {

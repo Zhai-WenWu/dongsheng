@@ -225,6 +225,7 @@ public class MainInitDataControl {
                 for(SubjectData data : array){
                     subjectSqlite.deleteById(data.getId());
                 }
+                FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
             }
         }.start();
 

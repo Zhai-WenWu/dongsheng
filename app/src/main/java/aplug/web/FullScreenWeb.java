@@ -11,7 +11,7 @@ import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
-import amodule.answer.activity.BaseEditActivity;
+import acore.override.helper.XHActivityManager;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -19,7 +19,7 @@ import aplug.web.tools.WebviewManager;
 /**
  * Created by Fang Ruijiao on 2017/3/15.
  */
-public class FullScreenWeb extends WebActivity {
+public class FullScreenWeb extends WebActivity implements XHActivityManager.RefreshCallBack {
 
     private JsAppCommon jsAppCommon;
     protected String url = "";
@@ -37,6 +37,7 @@ public class FullScreenWeb extends WebActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
 //        ToolsDevice.modifyStateTextColor(this);
+        XHActivityManager.getInstance().addActivity(this);
         initActivity("",0,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用
@@ -82,6 +83,7 @@ public class FullScreenWeb extends WebActivity {
             XHClick.saveStatictisFile("FullScreenWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
+        XHActivityManager.getInstance().removeActivity(this);
     }
 
     @Override
@@ -103,9 +105,8 @@ public class FullScreenWeb extends WebActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == BaseEditActivity.REQUEST_CODE_A || requestCode == BaseEditActivity.REQUEST_CODE_Q) && resultCode == RESULT_OK && data != null) {
-            mNeedReload = data.getBooleanExtra("reload", false);
-        }
+    public void refreshCallBack() {
+        mNeedReload = true;
     }
+
 }

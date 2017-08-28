@@ -169,7 +169,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                     }
                     Main.colse_level = 1;
                     Intent intent = new Intent();
-                    intent.putExtra("reload", true);
+                    intent.putExtra("loadSucc", true);
                     setResult(RESULT_OK, intent);
                     AskAnswerUploadListActivity.this.finish();
                 }

@@ -27,6 +27,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -443,9 +444,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     if (mIsAskMore) {
                         if (flag) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
-                            Intent intent = new Intent();
-                            intent.putExtra("reload", true);
-                            setResult(RESULT_OK, intent);
+                            XHActivityManager.getInstance().refreshActivity();
                             finish();
                         }
                     } else {
