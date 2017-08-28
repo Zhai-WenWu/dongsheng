@@ -115,17 +115,17 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"成功提交","");
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
-//                if(data.containsKey("is_has") && "2".equals(data.get("is_has"))){
-//                    startActivityForResult(
-//                            new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
-//                                    .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
-//                                    .putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position),
-//                            OrderStateActivity.request_order
-//                    );
-//                }else{
+                if(data.containsKey("is_has") && "2".equals(data.get("is_has"))){
+                    startActivityForResult(
+                            new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
+                                    .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
+                                    .putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position),
+                            OrderStateActivity.request_order
+                    );
+                }else{
                     status = OrderStateActivity.result_comment_success;
                     PublishEvalutionSingleActivity.this.finish();
-//                }
+                }
             }
 
             @Override
