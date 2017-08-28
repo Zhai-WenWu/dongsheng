@@ -296,7 +296,7 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 					}else if(resultCode == OrderStateActivity.result_comment_success){//评价成功
 						if (Integer.parseInt(id) == 0) {// 全部
 							fragment.refresh();
-						} else if(Integer.parseInt(id) == 4){// 待评价
+						} else if(Integer.parseInt(id) == 5){// 待评价
 							fragment.listData.remove(Integer.parseInt(position));
 							fragment.adapter.notifyDataSetChanged();
 						}

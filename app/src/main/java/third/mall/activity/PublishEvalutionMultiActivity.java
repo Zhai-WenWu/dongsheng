@@ -91,6 +91,7 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
     private void setLoading() {
         adapter = new AdapterEvalution(this, commodData, order_id);
+        adapter.setIdAndPosition(id,position);
         loadManager.setLoading(refershLayout, commodList, adapter, true,
                 new View.OnClickListener() {
                     @Override
@@ -163,39 +164,30 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("type", "6");
         params.put("order_id", order_id);
-        params.put("data", getCommentData());
+        Map<String,String> map;
+        for(int index = 0 ; index < commodData.size() ; index ++){
+            map = commodData.get(index);
+            if("1".equals(map.get("status"))){
+                params.put("data[" + index + "][price_code]",map.get("product_code"));
+                params.put("data[" + index + "][score]",map.get("score"));
+            }
+        }
         Log.i("tzy","params = " + params.toString());
         return params;
-    }
-
-    private String getCommentData() {
-        JSONArray jsonArray = new JSONArray();
-        try {
-            for (Map<String, String> data : commodData) {
-                if("1".equals(data.get("status"))){
-                    JSONObject jsonObj = new JSONObject();
-                    jsonObj.put("product_code", data.get("product_code"));
-                    jsonObj.put("score", data.get("score"));
-                    jsonArray.put(jsonObj);
-                }
-            }
-        } catch (JSONException ignored) {
-
-        }
-        return jsonArray.toString();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case REQUEST_CODE_NEED_REFRESH:
-                if(resultCode == RESULT_OK){
+                if(resultCode == OrderStateActivity.result_comment_success){
+                    status = resultCode;
                     refersh();
                 }
                 break;
             case OrderStateActivity.request_order:
                 if (resultCode == OrderStateActivity.result_comment_success) {
-                    status = requestCode;
+                    status = resultCode;
                 }
                 break;
             default:break;
