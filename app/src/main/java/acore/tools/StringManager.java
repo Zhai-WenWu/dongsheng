@@ -335,8 +335,7 @@ public class StringManager extends UtilString {
 
     public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
     public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
-    public final static String api_article = mUrl + "article/";//文章详情页m
-    public final static String api_Video = mUrl + "videoInfo/";//视频详情页m
+    public final static String api_article = mUrl + "articleVideo/getArticleSource/";//文章详情页m
 
     /*付费问答*/
     public final static String API_QA_ISTIP = apiUrl + "main7/qa/getIsTip";//获取是否弹窗提示
