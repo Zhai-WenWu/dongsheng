@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,6 +33,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
+import amodule.answer.activity.BaseEditActivity;
 import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -759,8 +761,9 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (mAct != null && mWebView != null) {
-                    mWebView.setLayoutParams(new RelativeLayout.LayoutParams(mAct.getResources().getDisplayMetrics().widthPixels,
-                            (int) (height * mAct.getResources().getDisplayMetrics().density)));
+                    ViewGroup.LayoutParams params = mWebView.getLayoutParams();
+                    params.height=(int) (height * mAct.getResources().getDisplayMetrics().density);
+                    params.width=mAct.getResources().getDisplayMetrics().widthPixels;
                 }
             }
         });
@@ -895,42 +898,11 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public String getSign() {
-//        ReqEncyptInternet.in().getSignEncryptParam(new ReqEncyptInternet.SignEncyptCallBck() {
-//            @Override
-//            public void getSignEncyntParam(final String encryptparam) {
-//                mWebView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mWebView.loadUrl("Javascript:signCallback(\"" + encryptparam + "\")");
-//                    }
-//                });
-//            }
-//        });
         return ReqEncyptInternet.in().getEncryptParam();
 //        mWebView.loadUrl("Javascript:signCallback(\"" + ReqEncyptInternet.in().getEncryptParam() + "\")");
     }
     @JavascriptInterface
     public String getCookie(){
-//        mWebView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    //cookie结构json
-//                    Map<String, String> header = ReqInternet.in().getHeader(mAct);
-//                    String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
-//                    Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
-//                    JSONObject jsonObject = new JSONObject();
-//                    for (Map.Entry<String, String> entry : mapdata.entrySet()) {
-//                        jsonObject.put(entry.getKey(), entry.getValue());
-//                    }
-//                    String data= jsonObject.toString();
-//                    data=data.replace("\"","\\\"");
-//                    mWebView.loadUrl("Javascript:cookieCallback(\"" + data + "\")");
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
         try {
                     //cookie结构json
                     Map<String, String> header = ReqInternet.in().getHeader(mAct);
@@ -961,40 +933,40 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void goAnswer(String dishId, String authorId, String qaId, String answerCode, String qaTitle, String isAnswerMore) {
-        if (!LoginManager.isLogin()) {
-            Intent intent = new Intent(mAct, LoginByAccout.class);
-            mAct.startActivity(intent);
-            return;
-        }
-        Bundle bundle = new Bundle();
-        bundle.putString("code", dishId);
-        bundle.putString("authorCode", authorId);
-        bundle.putString("qaCode", qaId);
-        bundle.putString("answerCode", answerCode);
-        bundle.putString("qaTitle", qaTitle);
-        bundle.putString("mIsAnswerMore", isAnswerMore);
-        Intent intent = new Intent(mAct, AnswerEditActivity.class);
-        intent.putExtras(bundle);
-        mAct.startActivity(intent);
+    public void goAnswer(final String dishId, final String authorId, final String qaId, final String answerCode, final String qaTitle, final String isAnswerMore) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = new Bundle();
+                bundle.putString("code", dishId);
+                bundle.putString("authorCode", authorId);
+                bundle.putString("qaCode", qaId);
+                bundle.putString("answerCode", answerCode);
+                bundle.putString("qaTitle", qaTitle);
+                bundle.putString("mIsAnswerMore", isAnswerMore);
+                Intent intent = new Intent(mAct, AnswerEditActivity.class);
+                intent.putExtras(bundle);
+                mAct.startActivityForResult(intent, BaseEditActivity.REQUEST_CODE_A);
+            }
+        });
     }
 
     @JavascriptInterface
-    public void goAsk(String dishId, String authorId, String qaId, String answerCode, String isAskMore) {
-        if (!LoginManager.isLogin()) {
-            Intent intent = new Intent(mAct, LoginByAccout.class);
-            mAct.startActivity(intent);
-            return;
-        }
-        Bundle bundle = new Bundle();
-        bundle.putString("code", dishId);
-        bundle.putString("authorCode", authorId);
-        bundle.putString("qaCode", qaId);
-        bundle.putString("answerCode", answerCode);
-        bundle.putString("isAskMore", isAskMore);
-        Intent intent = new Intent(mAct, AskEditActivity.class);
-        intent.putExtras(bundle);
-        mAct.startActivity(intent);
+    public void goAsk(final String dishId, final String authorId, final String qaId, final String answerCode, final String isAskMore) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = new Bundle();
+                bundle.putString("code", dishId);
+                bundle.putString("authorCode", authorId);
+                bundle.putString("qaCode", qaId);
+                bundle.putString("answerCode", answerCode);
+                bundle.putString("isAskMore", isAskMore);
+                Intent intent = new Intent(mAct, AskEditActivity.class);
+                intent.putExtras(bundle);
+                mAct.startActivityForResult(intent, BaseEditActivity.REQUEST_CODE_Q);
+            }
+        });
     }
 	/**
 	 * 问答举报
@@ -1005,23 +977,33 @@ public class JsAppCommon extends JsBase {
 	 * @param dishCode 菜谱code
 	 */
 	@JavascriptInterface
-	public void report(String nickName, String authorCode, String qaCode, String askAuthorCode, String dishCode) {
-		Bundle bundle = new Bundle();
-		bundle.putString("reportName", nickName);
-		bundle.putString("qaCode", qaCode);
-		bundle.putString("authorCode", authorCode);
-		bundle.putString("askAuthorCode", askAuthorCode);
-		bundle.putString("dishCode", dishCode);
-		Intent intent = new Intent(mAct, QAReportActivity.class);
-		intent.putExtras(bundle);
-		mAct.startActivity(intent);
+	public void report(final String nickName, final String authorCode, final String qaCode, final String askAuthorCode, final String dishCode) {
+		handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = new Bundle();
+                bundle.putString("reportName", nickName);
+                bundle.putString("qaCode", qaCode);
+                bundle.putString("authorCode", authorCode);
+                bundle.putString("askAuthorCode", askAuthorCode);
+                bundle.putString("dishCode", dishCode);
+                Intent intent = new Intent(mAct, QAReportActivity.class);
+                intent.putExtras(bundle);
+                mAct.startActivity(intent);
+            }
+        });
 	}
 
     @JavascriptInterface
     public void closePayWeb() {
-        if (mAct instanceof AskEditActivity) {
-            ((AskEditActivity) mAct).closePayWindow();
-        }
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof AskEditActivity) {
+                    ((AskEditActivity) mAct).closePayWindow();
+                }
+            }
+        });
     }
 
     public interface OnGetDataListener {
@@ -1042,7 +1024,12 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void openSysSetting() {
-        PushManager.requestPermission();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PushManager.requestPermission();
+            }
+        });
     }
 
     /**
@@ -1056,13 +1043,27 @@ public class JsAppCommon extends JsBase {
      */
     @JavascriptInterface
     public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
+        initShare(title, content, img, url, type, callback);
         handler.post(new Runnable() {
             @Override
             public void run() {
-                initShare(title, content, img, url, type, callback);
                 if (mBarShare != null) {
                     mBarShare.openShareNewActivity();
                 }
+            }
+        });
+    }
+
+    /**
+     * webview自己处理物理返回键
+     * @param loadUrl
+     */
+    @JavascriptInterface
+    public void handleBackSelf (final String loadUrl) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.setBackData(loadUrl);
             }
         });
     }

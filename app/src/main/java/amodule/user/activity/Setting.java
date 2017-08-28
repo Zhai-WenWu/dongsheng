@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.dialogManager.ADPopwindiwManager;
+import acore.dialogManager.PushManager;
 import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -70,6 +71,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     private LeftAndRightTextView view_about;
     private LeftAndRightTextView view_change_sever;
     private LeftAndRightTextView view_platform;
+    private LeftAndRightTextView view_qa_arbitration;
     private LeftAndRightTextView view_activity;
     private LeftAndRightTextView view_clear_cace;
     private LeftAndRightTextView view_check_update;
@@ -134,6 +136,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         view_about = (LeftAndRightTextView) findViewById(R.id.view_about);
         view_change_sever = (LeftAndRightTextView) findViewById(R.id.view_change_sever);
         view_platform = (LeftAndRightTextView) findViewById(R.id.view_platform);
+        view_qa_arbitration = (LeftAndRightTextView) findViewById(R.id.view_qa_arbitration);
         view_activity = (LeftAndRightTextView) findViewById(R.id.view_activity);
 
         tv_version = (TextView) findViewById(R.id.tv_version);
@@ -145,8 +148,9 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         ll_sign_out.setOnClickListener(this);
         ll_accout.setOnClickListener(this);
 
-        mQASetting.setVisibility(LoginManager.isLogin() ? View.VISIBLE : View.GONE);
-
+        boolean isLogin = LoginManager.isLogin();
+        mQASetting.setVisibility(isLogin ? View.VISIBLE : View.GONE);
+        view_qa_arbitration.setVisibility(isLogin ? View.VISIBLE : View.GONE);
         showItemGrop();
         initSettingItem();
     }
@@ -297,13 +301,13 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
         });
 
-        view_clear_cace.init("清理缓存", getCacheSize(), true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+        view_clear_cace.init("清理缓存", getCacheSize(), false, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
                 XHClick.mapStat(Setting.this, tongjiId, "清理缓存", "");
                 clearCache();
             }});
-        view_check_update.init("检查新版本", ToolsDevice.getVerName(this), true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+        view_check_update.init("检查新版本", ToolsDevice.getVerName(this), false, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
                 XHClick.mapStat(Setting.this, tongjiId, "检查新版本", "");
@@ -353,6 +357,16 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
 
         });
+        view_qa_arbitration.setNewHintVisibility(AppCommon.hasArbitration ? View.VISIBLE : View.GONE);
+        view_qa_arbitration.init("问答仲裁", "", !AppCommon.hasArbitration, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+            @Override
+            public void onClick() {
+                view_qa_arbitration.setNewHintVisibility(View.GONE);
+                view_qa_arbitration.setArrowRightVisibility(View.VISIBLE);
+                AppCommon.hasArbitration = false;
+                openQAArbitration();
+            }
+        });
         view_activity.init("活动", "", false, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
@@ -399,7 +413,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.qa_setting:
-                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING, false);
+                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1"), false);
                 break;
             default:
                 break;
@@ -473,6 +487,10 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
     private void toPlatform() {
         AppCommon.openUrl(this, StringManager.mmUrl, true);
+    }
+
+    private void openQAArbitration() {
+        AppCommon.openUrl(this, StringManager.API_QA_QAARBITRATION, true);
     }
 
     private void toActivityPage() {

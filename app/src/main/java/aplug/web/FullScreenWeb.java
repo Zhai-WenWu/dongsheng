@@ -1,5 +1,6 @@
 package aplug.web;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
+import amodule.answer.activity.BaseEditActivity;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -27,15 +29,13 @@ public class FullScreenWeb extends WebActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
 
-    public static boolean isAlive = false;
-    public static boolean isReload = false;
+    private boolean mNeedReload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
-        isAlive = true;
 //        ToolsDevice.modifyStateTextColor(this);
         initActivity("",0,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
@@ -87,8 +87,8 @@ public class FullScreenWeb extends WebActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (isReload) {
-            isReload = false;
+        if (mNeedReload) {
+            mNeedReload = false;
             reloadData();
         }
     }
@@ -96,10 +96,16 @@ public class FullScreenWeb extends WebActivity {
     @Override
     public void finish() {
         super.finish();
-        isAlive = false;
     }
 
     public void reloadData() {
         loadData();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((requestCode == BaseEditActivity.REQUEST_CODE_A || requestCode == BaseEditActivity.REQUEST_CODE_Q) && resultCode == RESULT_OK && data != null) {
+            mNeedReload = data.getBooleanExtra("reload", false);
+        }
     }
 }

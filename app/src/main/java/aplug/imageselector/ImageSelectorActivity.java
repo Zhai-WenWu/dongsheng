@@ -6,31 +6,30 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -84,7 +83,6 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	private ImageGridAdapter mImageAdapter;
 	private FolderAdapter mFolderAdapter;
 
-	private PopupWindow mFolderPopupWindow;
 	private ListView mFolderListView;
 
 	// 时间线
@@ -163,11 +161,13 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		mImageCount.setText(resultList.size() + "/" + mDefaultCount);
 		mTitle = (TextView) findViewById(R.id.title);
 		mSubmitButton = (Button) findViewById(R.id.commit);
-		 if(resultList == null || resultList.size() == 0){
-        	mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
-        }else{
-        	mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
-        }
+		if (resultList == null || resultList.size() == 0) {
+			mSubmitButton.setEnabled(false);
+			mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
+		} else {
+			mSubmitButton.setEnabled(true);
+			mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
+		}
 		
 		mPreviewBtn = (Button) findViewById(R.id.preview);
         // 初始化，按钮状态初始化
@@ -180,6 +180,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
         if(mode == ImageSelectorConstant.MODE_SINGLE){
         	findViewById(R.id.footer_bar).setVisibility(View.GONE);
         }
+		mFolderListView = (ListView) findViewById(R.id.category_list);
+		mFolderListView.setAdapter(mFolderAdapter);
 	}
 
 	// 初始化数据
@@ -215,6 +217,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		mPreviewBtn.setOnClickListener(this);
 		mCategoryText.setOnClickListener(this);
 
+		mFolderListView.setOnItemClickListener(mFolderItemClickListener);
 		mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView absListView, int state) {
@@ -288,23 +291,59 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		});
 	}
 
-	/** 初始化相册列表的PopuWindow */
-	private void createPopupFolderList(){
-		mFolderPopupWindow = new PopupWindow(this);
-		View mView = LayoutInflater.from(this).inflate(R.layout.user_country_list, null);
-		mView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		mFolderListView = (ListView) mView.findViewById(R.id.country_list);
-		mFolderListView.setAdapter(mFolderAdapter);
-		mFolderListView.setOnItemClickListener(mFolderItemClickListener);
-		mFolderPopupWindow.setFocusable(true);
-		mFolderPopupWindow.setContentView(mView);
-		mFolderPopupWindow.setWidth(mGridWidth);
-		mFolderPopupWindow.setHeight(mGridHeight);
-		mFolderPopupWindow.setAnimationStyle(R.style.PopupAnimation);
-		//设置popupWindow弹出窗体的背景
-		mFolderPopupWindow.setBackgroundDrawable(new BitmapDrawable(null,""));
+	private boolean mIsOpenAnim = false;
+	/**打开相册列表*/
+	private void openCategoryList(){
+		if (mFolderListView.getVisibility() == View.VISIBLE || mIsOpenAnim)
+			return;
+		excuteAnim(true);
 	}
-	
+
+	private boolean mIsCloseAnim = false;
+	/**关闭相册列表*/
+	private void closeCategoryList() {
+		if (mFolderListView.getVisibility() != View.VISIBLE || mIsCloseAnim)
+			return;
+		excuteAnim(false);
+	}
+
+	private void excuteAnim(final boolean isOpen) {
+		AnimationSet animSet = new AnimationSet(true);
+		animSet.setDuration(200);
+		animSet.setRepeatCount(0);
+		animSet.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				if (isOpen) {
+					mFolderListView.setVisibility(View.VISIBLE);
+					mIsOpenAnim = true;
+				} else
+					mIsCloseAnim = true;
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				if (isOpen)
+					mIsOpenAnim = false;
+				else {
+					mFolderListView.setVisibility(View.GONE);
+					mIsCloseAnim = false;
+				}
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+		});
+		Animation scaleAnim = new ScaleAnimation(isOpen ? 0.5f : 1.0f, isOpen ? 1.0f : 0.5f, isOpen ? 0.5f : 1.0f, isOpen ? 1.0f : 0.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+		Animation alphaAnim = new AlphaAnimation(isOpen ? 0.0f : 1.0f, isOpen ? 1.0f : 0.0f);
+		animSet.addAnimation(scaleAnim);
+		animSet.addAnimation(alphaAnim);
+		mFolderListView.clearAnimation();
+		mFolderListView.startAnimation(animSet);
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -524,7 +563,6 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 					}
 
 					mFolderAdapter.setData(mResultFolder);
-					mFolderAdapter.notifyDataSetChanged();
 					hasFolderGened = true;
 					
 				}
@@ -550,10 +588,12 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		}
         if(resultList.size() == 0){
         	mPreviewBtn.setTextColor(Color.parseColor("#999999"));
+			mSubmitButton.setEnabled(false);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
         }else{
         	mImageCount.setText(resultList.size() + "/" + mDefaultCount);
         	mPreviewBtn.setTextColor(Color.parseColor("#333333"));
+			mSubmitButton.setEnabled(true);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
         }
 	}
@@ -567,9 +607,11 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		// 当为选择图片时候的状态
         if(resultList.size() == 0){
         	mPreviewBtn.setTextColor(Color.parseColor("#999999"));
+			mSubmitButton.setEnabled(false);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_unselected_commit);
         }else{
         	mPreviewBtn.setTextColor(Color.parseColor("#333333"));
+			mSubmitButton.setEnabled(true);
         	mSubmitButton.setBackgroundResource(R.drawable.bg_image_selected_commit);
         }
 	}
@@ -590,17 +632,10 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 		switch (v.getId()) {
 		// 打开相册目录
 		case R.id.category_btn:
-			if(mFolderPopupWindow == null){
-				createPopupFolderList();
-			}
-			if(mFolderPopupWindow.isShowing()){
-				mFolderPopupWindow.dismiss();
-			}else{
-				if(mode == ImageSelectorConstant.MODE_MULTI){
-					mFolderPopupWindow.showAtLocation(mGridViewLayout, Gravity.BOTTOM, 0, Tools.getDimen(this, R.dimen.dp_45));
-				}else{
-					mFolderPopupWindow.showAtLocation(mGridViewLayout, Gravity.BOTTOM, 0, 0);
-				}
+			if (mFolderListView.getVisibility() == View.VISIBLE) {
+				closeCategoryList();
+			} else {
+				openCategoryList();
 				int index = mFolderAdapter.getSelectIndex();
 				index = index == 0 ? index : index - 1;
 				mFolderListView.setSelection(index);
@@ -635,8 +670,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 				if (BaseEditActivity.TAG.equals(mTag)) {
 					XHClick.mapStat(this, mTjId, "点击图片按钮", (resultList.size() < 3 ? "只" : "") + "选择" + resultList.size() + "张图（点击完成）");
 				}
+				commit();
 			}
-			commit();
 			break;
 		}
 	}
@@ -653,7 +688,6 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	public void onBackPressed() {
 		if(!isCanBackOnNoChoose)
 			return;
-
 		if (loaderId != 0) {
 			loaderId = 0;
 			mTitle.setText("全部图片");
@@ -672,46 +706,32 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 	AdapterView.OnItemClickListener mFolderItemClickListener = new AdapterView.OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
 			mFolderAdapter.setSelectIndex(i);
-
-			final int index = i;
-			final AdapterView<?> v = adapterView;
-
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					if(mFolderPopupWindow != null){
-						mFolderPopupWindow.dismiss();
+			int index = i;
+			closeCategoryList();
+			loaderId = index;
+			if (index == 0) {
+				mTitle.setText("全部图片");
+				mCategoryText.setVisibility(View.VISIBLE);
+				ImageSelectorActivity.this.getSupportLoaderManager().restartLoader(LOADER_ALL, null,mLoaderCallback);
+				mIsShowCamera = true;
+				mImageAdapter.setShowCamera(mIsShowCamera);
+			} else {
+				Folder folder = mFolderAdapter.getItem(index);
+				mTitle.setText(folder.name);
+				mCategoryText.setVisibility(View.GONE);
+				if (null != folder) {
+					mImageAdapter.setData(folder.images);
+					// 设定默认选择
+					if (resultList != null && resultList.size() > 0) {
+						mImageAdapter.setDefaultSelected(resultList);
 					}
-
-					loaderId = index;
-					if (index == 0) {
-						mTitle.setText("全部图片");
-						mCategoryText.setVisibility(View.VISIBLE);
-						ImageSelectorActivity.this.getSupportLoaderManager().restartLoader(LOADER_ALL, null,mLoaderCallback);
-						mIsShowCamera = true;
-						mImageAdapter.setShowCamera(mIsShowCamera);
-					} else {
-						Folder folder = (Folder) v.getAdapter().getItem(index);
-						mTitle.setText(folder.name);
-						mCategoryText.setVisibility(View.GONE);
-						if (null != folder) {
-							mImageAdapter.setData(folder.images);
-							// 设定默认选择
-							if (resultList != null && resultList.size() > 0) {
-								mImageAdapter.setDefaultSelected(resultList);
-							}
-						}
-						mIsShowCamera = false;
-						mImageAdapter.setShowCamera(mIsShowCamera);
-					}
-
-					// 滑动到最初始位置
-					mGridView.smoothScrollToPosition(0);
 				}
-			}, 100);
-
+				mIsShowCamera = false;
+				mImageAdapter.setShowCamera(mIsShowCamera);
+			}
+			// 滑动到最初始位置
+			mGridView.smoothScrollToPosition(0);
 		}
 	};
 

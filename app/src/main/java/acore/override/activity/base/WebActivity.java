@@ -71,7 +71,9 @@ public class WebActivity extends BaseActivity{
 		}
 		// 处理在webview上的特殊返回
 		if (webview != null) {
-			if(JSAction.backAction.length() > 0){
+			if (webview.handleBackSelf()) {
+				webview.handleBack();
+			} else if(JSAction.backAction.length() > 0){
 				// 用JS来代替返回
 				if (JSAction.backAction.indexOf("back_") == 0) {
 					webview.loadUrl("javascript:" + JSAction.backAction.replace("back_", "") + ";");

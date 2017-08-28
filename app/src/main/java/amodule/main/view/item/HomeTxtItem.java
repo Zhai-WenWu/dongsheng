@@ -65,73 +65,44 @@ public class HomeTxtItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
-        if (mIsAd) {
-            if (mLayerView != null)
-                mLayerView.setVisibility(View.VISIBLE);
-            if (mDataMap.containsKey("content")) {
-                String desc = mDataMap.get("content");
-                if (!TextUtils.isEmpty(desc) && mTitle != null) {
-                    mTitle.setText(desc);
-                    mTitle.setVisibility(View.VISIBLE);
-                }
-            }
-        }
+        String name = mIsAd ? mDataMap.get("content") : mDataMap.get("name");
+        mTitle.setText(name);
+        mTitle.setVisibility(!TextUtils.isEmpty(name) ? View.VISIBLE : View.GONE);
+        mLayerView.setVisibility(mIsAd ? View.VISIBLE : View.GONE);
         String video = mDataMap.get("video");
-        if (!TextUtils.isEmpty(video)) {
-            Map<String, String> videoMap = StringManager.getFirstMap(video);
-            String videoUrl = videoMap.get("videoUrl");
-            if (!TextUtils.isEmpty(videoUrl)) {
-                Map<String, String> videoUrlMap = StringManager.getFirstMap(videoUrl);
-                String defVideoUrl = videoUrlMap.get("defaultUrl");
-                if (!TextUtils.isEmpty(defVideoUrl))
-                    mIsVideo = true;
-            }
-        }
-        if (mIsVideo && mPlayImg != null)
-            mPlayImg.setVisibility(View.VISIBLE);
+        Map<String, String> videoMap = StringManager.getFirstMap(video);
+        String videoUrl = videoMap.get("videoUrl");
+        Map<String, String> videoUrlMap = StringManager.getFirstMap(videoUrl);
+        String defVideoUrl = videoUrlMap.get("defaultUrl");
+        if (!TextUtils.isEmpty(defVideoUrl))
+            mIsVideo = true;
+        mPlayImg.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         int imgCount = 0;
-        if(mDataMap.containsKey("style")&& String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))){//右图模式
-            if (mDataMap.containsKey("styleData")) {
-                ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
-                if (datas != null && datas.size() > 0) {
-                    Map<String, String> imgMap = datas.get(0);
-                    if (imgMap != null && imgMap.size() > 0) {
-                        String imgUrl = imgMap.get("url");
-                        imgCount = 1;
-                        if (mImgs != null)
-                            mImgs.setVisibility(View.VISIBLE);
-                        if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()) && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
-                            mVIP.setVisibility(View.VISIBLE);
-                        loadImage(imgUrl, mImg);
-                    }
-                }
-            }
-        }else{
-            if (mImgs != null)mImgs.setVisibility(View.GONE);
-        }
-        if (mDataMap.containsKey("name") && !mIsAd) {
-            String name = mDataMap.get("name");
-            if (!TextUtils.isEmpty(name) && mTitle != null) {
-                mTitle.setText(name);
-                mTitle.setVisibility(View.VISIBLE);
-            }
-        }
-        RelativeLayout.LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
-        if (imgCount <= 0) {
-            containerParams.height = LayoutParams.WRAP_CONTENT;
-            mContainer.setMinimumHeight(0);
+        if (String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))) {//右图模式
+            Map<String, String> imgMap = StringManager.getFirstMap(mDataMap.get("styleData"));
+            String imgUrl = imgMap.get("url");
+            if (!TextUtils.isEmpty(imgUrl))
+                imgCount = 1;
+            mImgs.setVisibility(View.VISIBLE);
+            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()) && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
+                mVIP.setVisibility(View.VISIBLE);
+            loadImage(imgUrl, mImg);
         } else {
-            mContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+            mImgs.setVisibility(View.GONE);
         }
         String content = mDataMap.get("content");
-        if (!TextUtils.isEmpty(content) && !mIsAd) {
-            mDesc.setText(content);
-            mDesc.setVisibility(View.VISIBLE);
-        }
-        if (imgCount == 1) {
-            if (TextUtils.isEmpty(content))
-                mTitle.setLines(2);
-            mTitle.setMaxLines(Integer.MAX_VALUE);
+        mDesc.setText(content);
+        mDesc.setVisibility(!TextUtils.isEmpty(content) && !mIsAd ? View.VISIBLE : View.GONE);
+        switch (imgCount) {
+            case 0:
+                mContainer.setMinimumHeight(0);
+                break;
+            case 1:
+                if (TextUtils.isEmpty(content))
+                    mTitle.setLines(2);
+                mTitle.setMaxLines(Integer.MAX_VALUE);
+                mContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+                break;
         }
     }
 
@@ -144,23 +115,11 @@ public class HomeTxtItem extends HomeItem {
     @Override
     protected void resetView() {
         super.resetView();
-        if (viewIsVisible(mTitle))
-            mTitle.setVisibility(View.GONE);
-        if (mTitle != null) {
-            mTitle.setLines(1);
-            mTitle.setMaxLines(2);
-        }
-        if (viewIsVisible(mVIP))
-            mVIP.setVisibility(View.GONE);
-        if (viewIsVisible(mImg))
-            mImg.setVisibility(View.GONE);
-        if (viewIsVisible(mImgs))
-            mImgs.setVisibility(View.GONE);
-        if (viewIsVisible(mLayerView))
-            mLayerView.setVisibility(View.GONE);
-        if (viewIsVisible(mDesc))
-            mDesc.setVisibility(View.GONE);
-        if (viewIsVisible(mPlayImg))
-            mPlayImg.setVisibility(View.GONE);
+        mTitle.setLines(1);
+        mTitle.setMaxLines(2);
+        mVIP.setVisibility(View.GONE);
+        mImg.setVisibility(View.GONE);
+        mImgs.setVisibility(View.GONE);
+        mDesc.setVisibility(View.GONE);
     }
 }

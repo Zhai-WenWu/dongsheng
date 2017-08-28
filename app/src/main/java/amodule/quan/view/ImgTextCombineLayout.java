@@ -53,11 +53,11 @@ public class ImgTextCombineLayout extends RelativeLayout {
 	private static final int BITMAP_NULL = 404;
 
 	private Context context;
-	private ImageView image;
 	public EditTextShow editText;
 	private ImgTextCallBack imgTextCallBack;
 	private TextView imgUrlTextView, water_tv;
 	public TextViewShow textview;
+	private ImageView image;
 	private ImageView image_del;
 	private View view;
 	private RelativeLayout layout;
@@ -239,13 +239,14 @@ public class ImgTextCombineLayout extends RelativeLayout {
 						if (bmp != null) {
 							view.findViewById(R.id.image_rela).setVisibility(View.VISIBLE);
 							image.setVisibility(View.VISIBLE);
-							int newWaith = imgTextCallBack.getWidth() - (int) context.getResources().getDimension(R.dimen.dp_15) * 2;
+							int newWaith = imgTextCallBack.getWidth() - (int) context.getResources().getDimension(R.dimen.dp_20) * 2;
 
 							if (bmp != null) {
 								int waith = newWaith;
 								if (bmp.getWidth() <= newWaith)
 									waith = 0;
-								UtilImage.setImgViewByWH(image, bmp, waith, 0, false);
+//								UtilImage.setImgViewByWH(image, bmp, waith, 0, false);
+								image.setImageBitmap(bmp);
 								setDelImageView(newWaith, waith, bmp.getWidth());
 								//显示水印
 //							if(LoginManager.isLogin()){
@@ -422,6 +423,7 @@ public class ImgTextCombineLayout extends RelativeLayout {
 		dialog_message.setTextColor(Color.parseColor("#333333"));
 		TextView dialog_cancel = (TextView) window.findViewById(R.id.dialog_cancel);
 		TextView dialog_sure = (TextView) window.findViewById(R.id.dialog_sure);
+		dialog_sure.setTextColor(Color.parseColor("#333333"));
 		dialog_cancel.setText("取消");
 		dialog_sure.setText("确定");
 		dialog_cancel.setOnClickListener(new OnClickListener() {
@@ -444,7 +446,6 @@ public class ImgTextCombineLayout extends RelativeLayout {
 
 	/**
 	 * 处理http图片
-	 *
 	 * @param imageview
 	 * @param imgUrl
 	 */
@@ -457,8 +458,6 @@ public class ImgTextCombineLayout extends RelativeLayout {
 		InputStream is = getResources().openRawResource(R.drawable.i_nopic);
 		Bitmap bitmap = UtilImage.inputStreamTobitmap(is);
 		image.setScaleType(ScaleType.CENTER_CROP);
-		Log.i("imgTextCallBack.getWidth()", imgTextCallBack.getWidth() + "");
-		Log.i(" ToolsDevice.getWindowPx(context).widthPixels", ToolsDevice.getWindowPx(context).widthPixels + "");
 		if (view_waith > 0)
 			UtilImage.setImgViewByWH(image, bitmap, view_waith, view_waith * 2 / 3, true);
 		else
@@ -499,6 +498,7 @@ public class ImgTextCombineLayout extends RelativeLayout {
 							UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_10) * 2, 0, false);
 						else
 							UtilImage.setImgViewByWH(imageView, bitmap, 0, 0, false);
+//						imageView.setImageBitmap(bitmap);
 						imageView.setVisibility(View.VISIBLE);
 					}
 				}

@@ -231,7 +231,7 @@ public class StringManager extends UtilString {
     public final static String api_monitoring = "http://stat.xiangha.com/s4.gif";
 
     //钱包会员
-    public final static String api_money = appWebUrl + "vip/wallet?fullScreen=2"; //我的钱包
+    public final static String api_money = appWebUrl + "vip/walletV1?fullScreen=2"; //我的钱包
     public final static String api_vip = appWebUrl + "vip/myvip?fullScreen=2"; //会员中心
     public final static String api_openVip = appWebUrl + "vip/myvip?payset=2&fullScreen=2"; //开通vip
 
@@ -252,6 +252,8 @@ public class StringManager extends UtilString {
     public final static String api_getDishLikeHate = apiUrl + "main7/dish/likeHate";
     public final static String api_addCollection = apiUrl + "main7/dish/addCollection";
     public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
+    public final static String api_authorInfo = apiUrl + "main7/dish/authorInfo";
+    public final static String api_basicInfo = apiUrl + "main7/dish/basicInfo";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶
@@ -341,9 +343,10 @@ public class StringManager extends UtilString {
     public final static String API_QA_COMMITREPORT = apiUrl + "main7/qa/addReport";//提交问答举报
     public final static String API_QA_GETPRICE = apiUrl + "main7/qa/getQaPrice";//获取提问金额
     public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//添加问答
-    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//获取问答消息列表顶部tab信息
-    public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement";//问答细则及责任声明
+    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa";//获取问答消息列表顶部tab信息
+    public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement?fullScreen=2";//问答细则及责任声明
     public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet";//问答设置
+    public final static String API_QA_QAARBITRATION = appWebUrl + "qa/arbitrateList?fullScreen=2";//问答仲裁
 
     //替换url
     public final static String replaceUrl(String url) {
@@ -352,7 +355,7 @@ public class StringManager extends UtilString {
             String[] replace = {apiUrl, appWebUrl, wwwUrl, mmUrl, mUrl};
             for (int i = 0; i < find.length; i++) {
                 String findStr = defaultProtocol + find[i] + defaultDomain + "/";
-                if (url != null && url.indexOf(findStr) == 0 && url.indexOf(api_uploadImg) != 0) {
+                if (url != null && url.indexOf(findStr) == 0 ) {
                     return url.replace(findStr, replace[i]);
                 }
             }

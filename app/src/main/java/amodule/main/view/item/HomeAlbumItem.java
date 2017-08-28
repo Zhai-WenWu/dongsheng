@@ -54,47 +54,27 @@ public class HomeAlbumItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
-        if (mModuleBean != null && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
+        if (mModuleBean != null && !mIsAd && "2".equals(mDataMap.get("isVip")))
             mVIP.setVisibility(View.VISIBLE);
         if (mDataMap.containsKey("styleData")) {
-            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
-            if (datas != null && datas.size() > 0) {
-                Map<String, String> imgMap = datas.get(0);
-                if (imgMap != null && imgMap.size() > 0) {
-                    String imgUrl = imgMap.get("url");
-                    loadImage(imgUrl, mImg);
-                    mLayerView.setVisibility(View.VISIBLE);
-                }
-            }
-        } else findViewById(R.id.layer_view).setVisibility(View.GONE);
-        if (mDataMap.containsKey("name") && mTitle != null) {
-            String albumName = mDataMap.get("name");
-            if (!TextUtils.isEmpty(albumName)) {
-                mTitle.setText(albumName);
-                mTitle.setVisibility(View.VISIBLE);
-            }
-        }
-        if (mDataMap.containsKey("dishNum") && mNum1 != null) {
-            String favorites = handleNumber(mDataMap.get("dishNum"));
-            if (!TextUtils.isEmpty(favorites)) {
-                mNum1.setText(favorites + "道菜");
-                mNum1.setVisibility(View.VISIBLE);
-            }
-        }
+            Map<String, String> imgMap = StringManager.getFirstMap(mDataMap.get("styleData"));
+            mLayerView.setVisibility(imgMap.size() > 0 ? View.VISIBLE : View.GONE);
+            loadImage(imgMap.get("url"), mImg);
+        } else
+            mLayerView.setVisibility(View.GONE);
+        String albumName = mDataMap.get("name");
+        mTitle.setText(albumName);
+        mTitle.setVisibility(!TextUtils.isEmpty(albumName) ? View.VISIBLE : View.GONE);
+        String favorites = handleNumber(mDataMap.get("dishNum"));
+        mNum1.setText(favorites + "道菜");
+        mNum1.setVisibility(!TextUtils.isEmpty(favorites) ? View.VISIBLE : View.GONE);
 
     }
 
     @Override
     protected void resetView() {
         super.resetView();
-        if (viewIsVisible(mTitle))
-            mTitle.setVisibility(View.GONE);
-        if (viewIsVisible(mNum1))
-            mNum1.setVisibility(View.GONE);
-        if (viewIsVisible(mLayerView))
-            mLayerView.setVisibility(View.GONE);
-        if (viewIsVisible(mVIP))
-            mVIP.setVisibility(View.GONE);
+        mVIP.setVisibility(View.GONE);
 
     }
 }

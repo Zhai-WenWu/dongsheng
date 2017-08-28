@@ -24,15 +24,18 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.view.AskAnswerImgController;
 import amodule.answer.view.AskAnswerImgItemView;
 import amodule.article.activity.ArticleVideoSelectorActivity;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.recordervideo.db.RecorderVideoData;
@@ -55,6 +58,8 @@ public class BaseEditActivity extends BaseActivity {
 
     protected final int REQUEST_SELECT_IMAGE = 0x01;
     protected final int REQUEST_SELECT_VIDEO = 0x02;
+    public static final int REQUEST_CODE_Q = 0x03;
+    public static final int REQUEST_CODE_A = 0x04;
 
     protected String mQACode;
     protected String mAnswerCode;
@@ -200,7 +205,7 @@ public class BaseEditActivity extends BaseActivity {
                         Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
                         intent.putExtra("draftId", (int)mModel.getmId());
                         intent.putExtra("isAutoUpload", true);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_A);
                         XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
                         break;
                     case R.id.back:
@@ -223,8 +228,9 @@ public class BaseEditActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int tempLength = String.valueOf(s).trim().length();
                 int length = mEditText.getText().length();
-                if (length > 0) {
+                if (length > 0 && tempLength > 0) {
                     if (!mUpload.isEnabled())
                         mUpload.setEnabled(true);
                 } else
@@ -267,17 +273,46 @@ public class BaseEditActivity extends BaseActivity {
         });
     }
 
+    protected void initImgControllerData (AskAnswerModel model) {
+        if (model == null)
+            return;
+        ArrayList<Map<String, String>> imgsArr = StringManager.getListMapByJson(model.getmImgs());
+        if (!imgsArr.isEmpty()) {
+            for (Map<String, String> img : imgsArr)
+                mImgController.addData(img);
+        } else {
+            ArrayList<Map<String, String>> videosArr = StringManager.getListMapByJson(model.getmVideos());
+            if (!videosArr.isEmpty()) {
+                for (Map<String, String> img : videosArr)
+                    mImgController.addData(img);
+            }
+        }
+    }
+
     protected void onPayFin(boolean succ, Object data){};
 
     protected boolean handleUpload() {
         return false;
     }
 
+    private boolean mTryLogin = true;
     @Override
     protected void onResume() {
         super.onResume();
-        startTimer();
+        if (!LoginManager.isLogin() && mTryLogin) {
+            mTryLogin = false;
+            startActivity(new Intent(BaseEditActivity.this, LoginByAccout.class));
+            return;
+        } else if (!LoginManager.isLogin() && !mTryLogin) {
+            finish();
+            return;
+        } else if (LoginManager.isLogin()) {
+            onLoginSucc();
+            startTimer();
+        }
     }
+
+    protected void onLoginSucc() {}
 
     @Override
     protected void onPause() {
@@ -340,15 +375,17 @@ public class BaseEditActivity extends BaseActivity {
             return rowId;
         }
         Editable editable = mEditText.getText();
+        String text = editable == null ? "" : editable.toString();
         ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
         ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
-        long id = mModel.getmId();
-        if ((editable == null || TextUtils.isEmpty(editable.toString())) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
-            if (id > 0)
-                mSQLite.deleteData((int) id);
+        if (TextUtils.isEmpty(text.trim())
+                && mImgsContainer != null
+                && mImgsContainer.getChildCount() <= 0
+                && !TextUtils.isEmpty(mDishCode)
+                && !mDishCode.equals(mModel.getmDishCode())) {//没有内容，并且 非同一个菜谱，则不保存数据。
             return rowId;
         }
-        mModel.setmText(editable == null ? "" : editable.toString());
+        mModel.setmText(text);
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
         mModel.setmVideos(videoArrs);
         mModel.setmImgs(imgArrs);
@@ -358,9 +395,13 @@ public class BaseEditActivity extends BaseActivity {
         mModel.setmType(mQAType);
         mModel.setmAnonymity(mAnonymity);
         mModel.setmAuthorCode(mAuthorCode);
+        mModel.setmSaveTime(String.valueOf(System.currentTimeMillis()));
         if (mModel.getmId() > 0) {
-            mSQLite.updateData((int) mModel.getmId(), mModel);
-            rowId = mModel.getmId();
+            if (!TextUtils.isEmpty(text.trim()) || (mImgsContainer != null && mImgsContainer.getChildCount() > 0)) {
+                mSQLite.updateData((int) mModel.getmId(), mModel);
+                rowId = mModel.getmId();
+            } else
+                mSQLite.deleteAll();
         } else {
             rowId = mSQLite.insertData(mModel);
             if (rowId > 0)
@@ -408,6 +449,10 @@ public class BaseEditActivity extends BaseActivity {
                         dataMap.put("video", videoPath);
                         mImgController.addData(dataMap);
                     }
+                    break;
+                case REQUEST_CODE_A:
+                    setResult(resultCode, data);
+                    finish();
                     break;
             }
         }
