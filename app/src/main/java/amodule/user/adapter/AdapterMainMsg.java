@@ -40,7 +40,7 @@ public class AdapterMainMsg extends AdapterSimple {
 
 	private List<? extends Map<String, ?>> mData;
 	private LayoutInflater mLayoutInflater;
-	private static MyMessage mAct;
+	private MyMessage mAct;
 
 	public AdapterMainMsg(MyMessage act, View parent, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
 		super(parent, data, resource, from, to);
@@ -55,7 +55,7 @@ public class AdapterMainMsg extends AdapterSimple {
 		@SuppressWarnings("unchecked")
 		Map<String, String> map = (Map<String, String>) mData.get(position);
 		// 缓存视图
-		ViewCacheNormal viewCacheNormal = null;
+		ViewCacheNormal viewCacheNormal;
 		// 获取样式
 		if (convertView == null) {
 			viewCacheNormal = new ViewCacheNormal();
@@ -175,7 +175,7 @@ public class AdapterMainMsg extends AdapterSimple {
 					case viewOther:
 						XHClick.track(view.getContext(), "点击消息列表页");
 						XHClick.mapStat(view.getContext(), "a_message", "点击其他用户消息", "");
-						String url=null;
+						String url;
 						if(map.get("state").equals("1"))
 							url = map.get("url")+ "&newsId=" + map.get("id");
 						else

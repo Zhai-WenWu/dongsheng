@@ -283,10 +283,12 @@ public class MyMessage extends MainBaseActivity {
 							} else
 								map.put("img", "hide");
 							String info_url = map.get("url");
-							Map<String, String> info_map = UtilString.getMapByString(info_url.substring(info_url.indexOf("subjectInfo.php?") + 16),
-									"&", "=");
-							map.put("subjectCode", info_map.get("code"));
-							map.put("floorNum", info_map.get("floorNum"));
+							if(!TextUtils.isEmpty(info_url)){
+								Map<String, String> info_map = UtilString.getMapByString(info_url.substring(info_url.indexOf("subjectInfo.php?") + 16),
+										"&", "=");
+								map.put("subjectCode", info_map.get("code"));
+								map.put("floorNum", info_map.get("floorNum"));
+							}
 							// 添加回复人回复信息;
 							if (listReturn.get(i).containsKey("customer")) {
 								Map<String,String> customer = StringManager.getFirstMap(listReturn.get(i).get("customer"));
