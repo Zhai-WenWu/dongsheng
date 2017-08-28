@@ -48,14 +48,14 @@
                 
                 <ImageButton
                     android:id="@+id/ib_addImg"
-                    android:layout_width="@dimen/dp_42"
+                    android:layout_width="@dimen/dp_43"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/btn_nocolor"
                     android:paddingLeft="@dimen/dp_9"
                     android:paddingRight="@dimen/dp_9"
                     android:scaleType="centerInside"
-                    android:src="@drawable/z_quan_tie_menu_ico_camera_comment" />
+                    android:src="@drawable/i_article_eidt_img" />
                 
                 <ImageButton
                     android:id="@+id/ib_seting"

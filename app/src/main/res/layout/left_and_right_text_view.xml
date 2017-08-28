@@ -42,6 +42,17 @@
                 android:src="@drawable/i_switch_on"
                 android:visibility="gone"/>
 
+            <TextView
+                android:id="@+id/hint_new_info"
+                android:layout_width="@dimen/dp_6"
+                android:layout_height="@dimen/dp_6"
+                android:background="@drawable/btn_circle_red"
+                android:clickable="false"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/sp_10"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/iv_right"
                 android:layout_width="@dimen/dp_7.5"

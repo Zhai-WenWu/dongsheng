@@ -17,15 +17,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.xianghatest.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.xianghatest.R;
 
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import acore.broadcast.NetworkBroadcastReceiver;
 
 import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
 
@@ -74,8 +73,8 @@ public class VideoImageView extends RelativeLayout{
         image_btn_play= (ImageView) findViewById(R.id.image_btn_play);
         load_progress= (ImageView) findViewById(R.id.load_progress);
         video_layout= (RelativeLayout) findViewById(R.id.video_layout);
-        initNormalTipLayout();
         tipLayout= (LinearLayout) findViewById(R.id.tip_root);
+        initNormalTipLayout();
         int height = (ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_30)) * 3 / 4;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
         tipLayout.setLayoutParams(layoutParams);

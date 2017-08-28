@@ -1,7 +1,6 @@
 package third.share;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -15,12 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import amodule.user.activity.login.LoginByAccout;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
 
@@ -85,17 +80,6 @@ public class ShareNewActivity extends Activity{
             @Override
             public void onClick(View v) {
                 onCloseThis(v);
-            }
-        });
-        findViewById(R.id.share_linear_jifen).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(ShareNewActivity.this, tongjiId, "分享", "分享的积分");
-                if(LoginManager.isLogin()){
-                    AppCommon.openUrl(ShareNewActivity.this, StringManager.api_getDailyTask+"?code="+LoginManager.userInfo.get("code"),true);
-                }else{
-                    ShareNewActivity.this.startActivity(new Intent(ShareNewActivity.this, LoginByAccout.class));
-                }
             }
         });
     }

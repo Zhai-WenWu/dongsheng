@@ -349,7 +349,7 @@ public abstract class AdOptionParent {
      * @return
      */
     private boolean getDataIsOk(Map<String, String> dataMap) {
-        if (dataMap.size() < 3) return false;
+        if (dataMap == null || dataMap.size() < 3) return false;
         String timeTag = dataMap.get("timeTag");
         if (TextUtils.isEmpty(timeTag) || System.currentTimeMillis() - Long.parseLong(timeTag) < 30 * 60 * 1000) {
             return true;

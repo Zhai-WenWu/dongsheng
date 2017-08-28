@@ -100,6 +100,17 @@
         </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
     </RelativeLayout>
 
+    <ListView
+        android:id="@+id/category_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer_bar"
+        android:layout_below="@+id/title_rela_all"
+        android:background="#fffffe"
+        android:visibility="invisible">
+
+    </ListView>
+
     <RelativeLayout
         android:id="@+id/video_emptyview"
         android:layout_width="match_parent"

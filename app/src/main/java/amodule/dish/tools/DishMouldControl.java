@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import amodule.main.Main;
@@ -29,10 +30,10 @@ public class DishMouldControl {
     public static void reqDishMould(final OnDishMouldListener listener){
         final String path = FileManager.getSDDir() + "long/" + FileManager.file_dishMould;
         final String readStr = FileManager.readFile(path);
-        final Object versionSign = FileManager.loadShared(Main.allMain.getApplicationContext(),FileManager.file_dishMould,"versionSign");
+        final Object versionSign = FileManager.loadShared(XHApplication.in(),FileManager.file_dishMould,"versionSign");
         LinkedHashMap<String,String> mapParams = new LinkedHashMap<>();
         mapParams.put("versionSign",versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishMould,mapParams, new InternetCallback(Main.allMain.getApplicationContext()) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishMould,mapParams, new InternetCallback(XHApplication.in()) {
             @Override
             public void loaded(int i, String s, final Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
@@ -47,7 +48,7 @@ public class DishMouldControl {
                                 if(!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
                                     File file = FileManager.saveFileToCompletePath(path, data, false);
                                     if (file != null)
-                                        FileManager.saveShared(Main.allMain.getApplicationContext(), FileManager.file_dishMould, "versionSign", versionSign);
+                                        FileManager.saveShared(XHApplication.in(), FileManager.file_dishMould, "versionSign", versionSign);
                                     if (listener != null)
                                         listener.loaded(true, data, String.valueOf(versionSign));
                                     return;

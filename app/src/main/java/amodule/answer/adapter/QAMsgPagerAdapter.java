@@ -107,10 +107,6 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
                     } else if (num > 0) {
                         mNumTextView.setText(numStr);
                     }
-                    if (mDatas.get(position).ismIsSelect())
-                        mNumTextView.setVisibility(View.INVISIBLE);
-                    else if (num > 0)
-                        mNumTextView.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                     mNumTextView.setVisibility(View.INVISIBLE);
