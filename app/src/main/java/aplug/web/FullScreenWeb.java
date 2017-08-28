@@ -12,6 +12,7 @@ import com.xianghatest.R;
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
+import acore.tools.ToolsDevice;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -89,6 +90,7 @@ public class FullScreenWeb extends WebActivity implements XHActivityManager.Refr
     @Override
     protected void onResume() {
         super.onResume();
+        ToolsDevice.keyboardControl(false, this, webview);
         if (mNeedReload) {
             mNeedReload = false;
             reloadData();
