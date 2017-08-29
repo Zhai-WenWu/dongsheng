@@ -19,6 +19,7 @@ import com.xianghatest.R;
 
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -931,7 +932,8 @@ public class JsAppCommon extends JsBase {
                 jsonObject.put(entry.getKey(), entry.getValue());
             }
             String data= jsonObject.toString();
-            data=data.replace("\"","\\\"");
+//            data=data.replace("\"","\\\"");
+            data=Uri.encode(data);
             return data;
         }catch (Exception e){
             e.printStackTrace();
