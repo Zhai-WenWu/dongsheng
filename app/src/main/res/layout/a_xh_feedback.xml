@@ -1,97 +1,94 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activityLayout"
     style="@style/layout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@color/backgroup_color">
+
+    <acore.widget.DownRefreshList
+        android:id="@+id/feebback_reply_list"
+        style="@style/listNoDivider"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_43"
+        android:background="#E8E8E8"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:visibility="gone">
+    </acore.widget.DownRefreshList>
+
+    <View
+        android:id="@+id/feebback_line"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/feebback_reply_content_wrapper"
+        android:background="#C4C4C4"/>
 
     <RelativeLayout
-        android:id="@+id/feebback_conversation_list_wrapper"
+        android:id="@+id/feebback_reply_content_wrapper"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/backgroup_color" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#F8F8F8">
 
-        <acore.widget.DownRefreshList
-            android:id="@+id/feebback_reply_list"
-            style="@style/listNoDivider"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_43"
-            android:background="#E8E8E8"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:visibility="gone" >
-        </acore.widget.DownRefreshList>
+        <Button
+            android:id="@+id/feebback_send"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_43"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:minWidth="@dimen/dp_40"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_10"
+            android:text="发送"
+            android:textColor="@color/comment_color"
+            android:textSize="@dimen/sp_15"/>
 
-        <View
-            android:id="@+id/feebback_line"
-            android:layout_width="fill_parent"
-            android:layout_height="0.5dp"
-            android:layout_above="@+id/feebback_reply_content_wrapper"
-            android:background="#C4C4C4" />
-
-        <RelativeLayout
-            android:id="@+id/feebback_reply_content_wrapper"
+        <EditText
+            android:id="@+id/feebback_reply_content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#F8F8F8" >
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:layout_marginTop="@dimen/dp_4"
+            android:layout_toLeftOf="@id/feebback_send"
+            android:layout_toRightOf="@+id/feekback_img_choice"
+            android:background="@drawable/bg_round_f5"
+            android:hint="欢迎您！"
+            android:maxHeight="@dimen/dp_80"
+            android:minHeight="@dimen/dp_30"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:textColorHint="#BEBEBE"
+            android:textSize="@dimen/sp_13"/>
 
-            <Button
-                android:id="@+id/feebback_send"
-                android:minWidth="@dimen/dp_40"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_43"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@android:color/transparent"
-                android:paddingLeft="@dimen/dp_15"
-                android:paddingRight="@dimen/dp_15"
-                android:paddingBottom="@dimen/dp_10"
-                android:paddingTop="@dimen/dp_10"
-                android:text="发送"
-                android:gravity="center"
-                android:textColor="@color/comment_color"
-                android:textSize="@dimen/sp_15" />
+        <EditText
+            android:id="@+id/feekback_keyboard_view"
+            android:layout_width="wrap_content"
+            android:layout_height="0.5px"
+            android:layout_alignLeft="@+id/feebback_reply_content"
+            android:layout_alignRight="@+id/feebback_reply_content"
+            android:layout_below="@+id/feebback_reply_content"
+            android:layout_marginTop="@dimen/dp_6"
+            android:gravity="bottom"/>
 
-            <EditText
-                android:id="@+id/feebback_reply_content"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:layout_marginTop="@dimen/dp_4"
-                android:layout_gravity="center_vertical"
-                android:layout_toLeftOf="@id/feebback_send"
-                android:layout_toRightOf="@+id/feekback_img_choice"
-                android:background="@drawable/bg_round_f5"
-                android:hint="欢迎您！"
-                android:maxHeight="@dimen/dp_80"
-                android:minHeight="@dimen/dp_30"
-                android:paddingLeft="@dimen/dp_10"
-                android:paddingRight="@dimen/dp_10"
-                android:textColorHint="#BEBEBE"
-                android:textSize="@dimen/sp_13" />
-
-            <EditText
-                android:id="@+id/feekback_keyboard_view"
-                android:layout_width="wrap_content"
-                android:layout_below="@+id/feebback_reply_content"
-                android:layout_alignLeft="@+id/feebback_reply_content"
-                android:layout_alignRight="@+id/feebback_reply_content"
-                android:layout_marginTop="@dimen/dp_6"
-                android:gravity="bottom"
-                android:layout_height="0.5px"/>
-
-            <ImageButton
-                android:id="@+id/feekback_img_choice"
-                android:layout_width="@dimen/dp_25"
-                android:layout_height="@dimen/dp_43"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/z_quan_tie_menu_ico_camera_comment" />
-        </RelativeLayout>
+        <ImageButton
+            android:id="@+id/feekback_img_choice"
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_43"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/z_quan_tie_menu_ico_camera_comment"/>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -143,7 +143,6 @@ public class ArticleAdContrler {
     public View getBigAdView(Map<String, String> dataMap) {
         if (dataMap == null || dataMap.isEmpty())
             return null;
-        Log.i("tzy", "dataMap = " + dataMap.toString());
         View adView = null;
         if ("1".equals(dataMap.get("isBigPic"))) {
             adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad_small, null);

@@ -27,7 +27,7 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
     public final static String TYPE_NOTHING = "null";
 
     private static final String TAG = "NetworkBroadcastReceiver";
-    private List<NetworkNotifyListener> mNotifyListeners = new ArrayList<NetworkNotifyListener>();
+    private List<NetworkNotifyListener> mNotifyListeners = new ArrayList<>();
     private String currentType = "";
 
     public NetworkBroadcastReceiver(Context context) {

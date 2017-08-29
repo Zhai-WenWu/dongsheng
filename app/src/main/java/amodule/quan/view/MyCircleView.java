@@ -61,7 +61,7 @@ public class MyCircleView extends LinearLayout{
 	private void initView(){
 		this.setGravity(Gravity.CENTER_HORIZONTAL);
 		this.setOrientation(LinearLayout.VERTICAL);
-		this.setBackgroundColor(Color.parseColor("#F1eee4"));
+		this.setBackgroundColor(Color.parseColor(getResources().getString(R.color.common_bg)));
 		LayoutInflater inLayout = LayoutInflater.from(mCon);
 		mView = inLayout.inflate(R.layout.view_my_circle, null);
 		mHintTextView = (TextView)mView.findViewById(R.id.view_my_cicle_hint);

@@ -29,9 +29,9 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
-import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.answer.window.FloatingWindow;
 import amodule.dish.view.CommonDialog;
@@ -44,7 +44,6 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import aplug.web.FullScreenWeb;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -69,7 +68,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     private ArrayList<Map<String, String>> mArrayList = new ArrayList<>();
     private AskAnswerUploadAdapter mAdapter;
     private int mDraftId;
-    private String mTitleText;
     private String mTimesStamp;
     private String mCoverPath;
     private String mFinalVideoPath;
@@ -100,6 +98,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
             public void disconnect() {
+                allStartOrPause(false);
+                Toast.makeText(AskAnswerUploadListActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -168,8 +168,9 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                         getIsTip();
                     }
                     Main.colse_level = 1;
-                    if (FullScreenWeb.isAlive)
-                        FullScreenWeb.isReload = true;
+                    Intent intent = new Intent();
+                    intent.putExtra("loadSucc", true);
+                    setResult(RESULT_OK, intent);
                     AskAnswerUploadListActivity.this.finish();
                 }
             }
@@ -182,17 +183,16 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             return;
         }
 
-        mTitleText = mUploadPoolData.getTitle();
         mArrayList = mUploadPoolData.getListData();
         mAdapter = new AskAnswerUploadAdapter(this);
-        if (!TextUtils.isEmpty(mTitleText)) {
-            mTitle.setText(mTitleText.length() > 7 ? mTitleText.substring(0, 6) + "..." : mTitleText);
-        }
+        mTitle.setText(AskAnswerModel.TYPE_ANSWER_AGAIN.equals(model.getmType()) ? "追答" : "我答");
 
         boolean isAutoUpload = getIntent().getBooleanExtra("isAutoUpload", false);
         if (isAutoUpload) {
             if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
                 allStartOrPause(true);
+            } else if ("null".equals(ToolsDevice.getNetWorkType(this))) {
+                allStartOrPause(false);
             } else {
                 allStartOrPause(false);
                 hintNetWork();
@@ -225,7 +225,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             @Override
             public void uploadOver(boolean flag, String responseStr) {
                 refreshUploadView();
-                mIsStopUpload = !flag;
+                mIsStopUpload = true;
             }
         };
     }
@@ -288,6 +288,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             public void onClick(View v) {
                 if ("wifi".equals(ToolsDevice.getNetWorkType(AskAnswerUploadListActivity.this))) {
                     allStartOrPause(true);
+                } else if ("null".equals(ToolsDevice.getNetWorkType(AskAnswerUploadListActivity.this))) {
+                    Toast.makeText(AskAnswerUploadListActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
                 } else {
                     hintNetWork();
                 }
@@ -307,36 +309,14 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mCancelUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String btnMsg1 = "确定";
-                String btnMsg2 = "取消";
-
-                final CommonDialog dialog = new CommonDialog(AskAnswerUploadListActivity.this);
-                dialog.setMessage("确定取消上传吗？").setSureButton(btnMsg1, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                        mListPool.cancelUpload();
-                        mAllStart.setVisibility(View.VISIBLE);
-                        mAllStop.setVisibility(View.GONE);
-                        mIsStopUpload = true;
-                        XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "取消上传", "");
-                        AskAnswerUploadListActivity.this.finish();
-                    }
-                });
-                dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
+                showCancelDialog();
             }
         });
 
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBack();
+                onBackPressed();
             }
         });
 
@@ -355,17 +335,39 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         });
     }
 
-    private void goBack() {
-        if (!mIsStopUpload) {
-            Toast.makeText(XHApplication.in().getApplicationContext(), "问答会在后台继续上传", Toast.LENGTH_SHORT).show();
-        }
-        finish();
+    private void showCancelDialog() {
+        String btnMsg1 = "确定";
+        String btnMsg2 = "取消";
+
+        final CommonDialog dialog = new CommonDialog(AskAnswerUploadListActivity.this);
+        dialog.setMessage("确定取消上传吗？").setSureButton(btnMsg1, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                mListPool.cancelUpload();
+                mAllStart.setVisibility(View.VISIBLE);
+                mAllStop.setVisibility(View.GONE);
+                mIsStopUpload = true;
+                XHClick.mapStat(AskAnswerUploadListActivity.this, "a_answer_upload", "取消上传", "");
+                AskAnswerUploadListActivity.this.finish();
+            }
+        });
+        dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
     }
 
     @Override
     public void onBackPressed() {
-        goBack();
         super.onBackPressed();
+        if (mListPool != null) {
+            allStartOrPause(false);
+            mListPool.cancelUpload();
+        }
     }
 
     private void getIsTip() {
@@ -409,5 +411,12 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mConnectionChangeReceiver != null)
+            unregisterReceiver(mConnectionChangeReceiver);
     }
 }

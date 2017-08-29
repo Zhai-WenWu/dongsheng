@@ -32,8 +32,8 @@
         android:id="@+id/refresh_list_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/common_bg"
         android:layout_below="@+id/all_title_rela"
+        android:background="@color/common_bg"
         cube_ptr:ptr_duration_to_close="200"
         cube_ptr:ptr_duration_to_close_header="500"
         cube_ptr:ptr_pull_to_fresh="false"
@@ -66,17 +66,18 @@
         <amodule.article.view.CommentBar
             android:id="@+id/comment_bar"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <aplug.web.view.XHWebView
         android:id="@+id/XHWebview"
-        android:layout_below="@+id/all_title_rela"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/all_title_rela"
+        android:background="@android:color/transparent"
+        android:visibility="gone"/>
 
     <include
         android:id="@+id/dredge_vip_bottom_layout"
@@ -85,5 +86,20 @@
         android:layout_height="@dimen/dp_51"
         android:layout_alignParentBottom="true"
         android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/all_title_rela_transparent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/relativeLayout_global_transparent"
+            layout="@layout/c_view_bar_title_article"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_46"
+            android:clickable="false"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

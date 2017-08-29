@@ -100,7 +100,7 @@ public class MallMyFavorableFragment extends MallBaseFragment{
 		favorable_list=(DownRefreshList) view.findViewById(R.id.favorable_list);
 		setFootView();
 		common=new MallCommon(activity);
-		listData = new ArrayList<Map<String, String>>();
+		listData = new ArrayList<>();
 		adapter=new AdapterMyFavorable(activity,favorable_list, listData, R.layout.item_mall_favorable_dialog, null, null,id);
 //		favorable_list.setAdapter(adapter);
 		favorable_list.setDivider(null);
@@ -112,12 +112,16 @@ public class MallMyFavorableFragment extends MallBaseFragment{
 			@Override
 			public void onClick(View v) {
 				String state_index="";
-				if(id.equals("1")){
-					state_index= "未使用";
-				}else if(id.equals("2")){
-					state_index="已使用";
-				}else if(id.equals("3")){
-					state_index="已过期";
+				switch (id) {
+					case "1":
+						state_index = "未使用";
+						break;
+					case "2":
+						state_index = "已使用";
+						break;
+					case "3":
+						state_index = "已过期";
+						break;
 				}
 				XHClick.mapStat(activity, "a_mail_coupon",state_index,"更多好券");
 				String url = MallStringManager.replaceUrl(MallStringManager.mall_web_couponSet) ;

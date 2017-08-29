@@ -64,7 +64,6 @@ import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
-import amodule.dish.tools.DishMouldControl;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
@@ -76,7 +75,6 @@ import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
 import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
@@ -197,25 +195,21 @@ public class Main extends Activity implements OnClickListener {
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
 
-                if (showQAUploading(AskAnswerModel.TYPE_ANSWER)) {
-
-                } else if (showQAUploading(AskAnswerModel.TYPE_ASK)) {
-
-                } else if (showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？")) {
-
-                } else if (showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？")) {
-
-                }
-
-                DishMouldControl.reqDishMould(null);
                 OffDishToFavoriteControl.addCollection(Main.this);
+
+                if (showQAUploading())
+                    return;
+                if (showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？"))
+                    return;
+                if (showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？"))
+                    return;
             }
         }
 
-        private boolean showQAUploading(String qaModelType) {
+        private boolean showQAUploading() {
             boolean show = false;
-            AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
-            AskAnswerModel model = sqLite.queryData(qaModelType);
+            final AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+            final AskAnswerModel model = sqLite.queryFirstData();
             String msg = "";
             Intent intent = null;
             Class tempC = null;
@@ -226,32 +220,33 @@ public class Main extends Activity implements OnClickListener {
                 intent.putExtra("authorCode", model.getmAuthorCode());
                 intent.putExtra("qaTitle", model.getmTitle());
                 intent.putExtra("answerCode", model.getmAnswerCode());
-                intent.putExtra("answerCode", model.getmAnswerCode());
                 boolean isAskAgain = false;
                 boolean isAnswerAgain = false;
                 String qaType = model.getmType();
                 if (!TextUtils.isEmpty(qaType)) {
                     switch (qaType) {
+                        case AskAnswerModel.TYPE_ANSWER:
+                            msg = "你有一个回答尚未发布，是否继续？";
+                            tempC = AnswerEditActivity.class;
+                            break;
                         case AskAnswerModel.TYPE_ANSWER_AGAIN:
+                            msg = "你有一个回答尚未发布，是否继续？";
+                            tempC = AnswerEditActivity.class;
                             isAnswerAgain = true;
                             break;
+                        case AskAnswerModel.TYPE_ASK:
+                            msg = "你有一个问题尚未发布，是否继续？";
+                            tempC = AskEditActivity.class;
+                            break;
                         case AskAnswerModel.TYPE_ASK_AGAIN:
+                            msg = "你有一个问题尚未发布，是否继续？";
+                            tempC = AskEditActivity.class;
                             isAskAgain = true;
                             break;
                     }
                 }
-                intent.putExtra("mIsAnswerMore", isAnswerAgain);
-                intent.putExtra("isAskMore", isAskAgain);
-                switch (qaModelType) {
-                    case AskAnswerModel.TYPE_ASK:
-                        msg = "你有一个问题尚未发布，是否继续？";
-                        tempC = AskEditActivity.class;
-                        break;
-                    case AskAnswerModel.TYPE_ANSWER:
-                        msg = "你有一个回答尚未发布，是否继续？";
-                        tempC = AnswerEditActivity.class;
-                        break;
-                }
+                intent.putExtra("mIsAnswerMore", isAnswerAgain ? "2" : "1");
+                intent.putExtra("isAskMore", isAskAgain ? "2" : "1");
                 if (tempC == null)
                     return show;
                 show = true;
@@ -264,16 +259,17 @@ public class Main extends Activity implements OnClickListener {
                             @Override
                             public void onClick(View v) {
                                 dialog.cancel();
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sqLite.deleteAll();
+                                    }
+                                }).start();
                             }
                         })
                         .setSureButton("是", new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (!LoginManager.isLogin()) {
-                                    Intent intent = new Intent(Main.this, LoginByAccout.class);
-                                    Main.this.startActivity(intent);
-                                    return;
-                                }
                                 Main.this.startActivity(finalIntent);
                                 dialog.cancel();
                             }

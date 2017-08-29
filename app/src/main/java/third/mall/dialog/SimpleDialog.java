@@ -121,7 +121,7 @@ public class SimpleDialog extends Dialog implements android.view.View.OnClickLis
 		closeDialog();
 	}
 
-	private void myDismiss() {
+	public void myDismiss() {
 		super.dismiss();
 	}
 

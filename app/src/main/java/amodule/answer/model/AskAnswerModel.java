@@ -17,6 +17,7 @@ public class AskAnswerModel {
     public static final String TYPE_ASK_AGAIN = "3";
     public static final String TYPE_ANSWER_AGAIN = "4";
 
+    private String mSaveTime;
     private String mAuthorCode;
     private String mDishCode;
     private String mQACode;
@@ -30,6 +31,14 @@ public class AskAnswerModel {
     private String mTitle;
     private String mAnonymity;//是否匿名 "1":否  "2":是
     private long mId;
+
+    public String getmSaveTime() {
+        return mSaveTime;
+    }
+
+    public void setmSaveTime(String mSaveTime) {
+        this.mSaveTime = mSaveTime;
+    }
 
     public String getmPrice() {
         return mPrice;
@@ -139,20 +148,15 @@ public class AskAnswerModel {
         mVideos = jsonArray.toString();
     }
 
-    @Override
-    public String toString() {
-        return "AskAnswerModel{" +
-                "mAuthorCode='" + mAuthorCode + '\'' +
-                ", mDishCode='" + mDishCode + '\'' +
-                ", mQACode='" + mQACode + '\'' +
-                ", mAnswerCode='" + mAnswerCode + '\'' +
-                ", mType='" + mType + '\'' +
-                ", mText='" + mText + '\'' +
-                ", mImgs='" + mImgs + '\'' +
-                ", mVideos='" + mVideos + '\'' +
-                ", mTitle='" + mTitle + '\'' +
-                ", mAnonymity='" + mAnonymity + '\'' +
-                ", mId=" + mId +
-                '}';
+    public boolean isValid() {
+        boolean ret = false;
+        try {
+            long saveTime = Long.parseLong(mSaveTime);
+            long off = System.currentTimeMillis() - saveTime;
+            ret = off <= 24 * 60 * 60 * 1000;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 }

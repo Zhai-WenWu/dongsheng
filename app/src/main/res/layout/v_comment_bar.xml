@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/dp_43">
+
+    <ImageView
+        android:id="@+id/shadow"
+        android:layout_width="match_parent"
+        android:layout_height="20px"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_line_shadow"
+        android:visibility="visible"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBottom="@+id/shadow"
+        android:background="#E9E9E9"/>
+
+    <RelativeLayout
+        android:id="@+id/comment_bar_real"
+        style="@style/bottom_navigation"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20px"
+        android:background="#FFFFFE"
+        android:paddingLeft="@dimen/dp_20">
+
+        <EditText
+            android:id="@+id/commend_write_et"
+            style="@style/bottom_navigation_tv_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:imeOptions="actionSearch"
+            android:layout_toLeftOf="@+id/comment_send_parent"
+            android:background="@drawable/bg_round40_dbdbdb"
+            android:gravity="center_vertical"
+            android:hint="回复"
+            android:maxLines="5"
+            android:paddingLeft="@dimen/dp_13"
+            android:paddingRight="@dimen/dp_13"/>
+
+        <ImageView
+            android:id="@+id/commend_write_pen"
+            android:layout_width="@dimen/dp_11"
+            android:layout_height="@dimen/dp_11"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_11"
+            android:src="@drawable/i_comment_pen"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/comment_send_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/commend_write_et"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/commend_write_et"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/comment_send"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_13"
+                android:paddingRight="@dimen/dp_20"
+                android:text="发送"
+                android:textColor="#ccc"
+                android:textSize="@dimen/sp_16"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/comment_send"
+                android:layout_alignTop="@+id/comment_send"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/comment_send_progress"
+                    android:layout_width="@dimen/dp_22"
+                    android:layout_height="@dimen/dp_22"
+                    android:layout_alignParentRight="true"
+                    android:paddingLeft="@dimen/dp_13"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f1eee4"
+    android:background="@color/common_bg"
     android:orientation="vertical"
     android:id="@+id/myorder_item_rela"
     android:paddingTop="@dimen/dp_15" >

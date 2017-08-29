@@ -88,13 +88,14 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
             @Override
             public void onEnterFullscreen(String url, Object... objects) {
                 super.onEnterFullscreen(url, objects);
-                orientationUtils.resolveByClick();
+                if(!isPortrait)
+                    orientationUtils.resolveByClick();
             }
 
             @Override
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
-                orientationUtils.resolveByClick();
+                orientationUtils.backToProtVideo();
             }
         });
 

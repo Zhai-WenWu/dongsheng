@@ -106,6 +106,30 @@ public class MallButtonView {
 	}
 
 	/**
+	 * 评价
+	 * @param callback
+	 * @return
+	 */
+	public View createViewComment(final InterfaceViewCallback callback){
+		View view = createViewStyle_1("评价");
+		view.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				callback.sucessCallBack();
+			}
+		});
+		return view;
+	}
+
+	/**
+	 * 已评价
+	 * @return
+	 */
+	public View createViewCommented(){
+		return createViewStyle_2("已评价");
+	}
+
+	/**
 	 * 确认收货----只有拆单一种情况
 	 * 
 	 * @return

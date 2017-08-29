@@ -28,6 +28,8 @@ import acore.tools.Tools;
 import aplug.basic.ReqInternet;
 import third.mall.activity.MyOrderActivity;
 import third.mall.activity.OrderStateActivity;
+import third.mall.activity.PublishEvalutionMultiActivity;
+import third.mall.activity.PublishEvalutionSingleActivity;
 import third.mall.activity.ShoppingActivity;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallInternetCallback;
@@ -51,6 +53,7 @@ public class OrderItem2View extends ViewItemBase {
 	private ImageView myorder_merchant_iv_2,order_logistics_back;
 	private TextView myorder_merchant_name_2;
 	private TextView myorder_merchant_state_2;
+	private TextView myorder_check_logistics;
 
 	private LinearLayout myorder_state_linear_2;
 	private TextView myorder_state_order_tv_2;
@@ -68,7 +71,7 @@ public class OrderItem2View extends ViewItemBase {
 	private ListView listview_item_2;
 	private RelativeLayout rela_mall_order_2,myorder_explian_iv_2_rela;
 	private LinearLayout myorder_button_linear;
-	private int id;
+//	private int id;
 	private InterfaceCallBack callBack;
 	private String url= "";
 	private String mall_stat_statistic;
@@ -104,6 +107,7 @@ public class OrderItem2View extends ViewItemBase {
 		order_logistics_back.setVisibility(View.GONE);
 		myorder_merchant_name_2 = (TextView) findViewById(R.id.myorder_merchant_name_2);
 		myorder_merchant_state_2 = (TextView) findViewById(R.id.myorder_merchant_state_2);
+		myorder_check_logistics = (TextView) findViewById(R.id.myorder_check_logistics);
 		// 订单状态.取消.退款.已发送
 		myorder_state_linear_2 = (LinearLayout) findViewById(R.id.myorder_state_linear_2);
 		myorder_state_order_tv_2 = (TextView) findViewById(R.id.myorder_state_order_tv_2);
@@ -128,7 +132,7 @@ public class OrderItem2View extends ViewItemBase {
 	public void setData(final Map<String, String> map, final int position, final int id) {
 		// data
 		myorder_price_text_number_2.setText(map.get("order_amt"));
-		ArrayList<Map<String, String>> listMapByJson_product = UtilString.getListMapByJson(map.get("order_product"));
+		final ArrayList<Map<String, String>> listMapByJson_product = UtilString.getListMapByJson(map.get("order_product"));
 
 		if(map.containsKey("shop_code")){
 			order_logistics_back.setVisibility(View.VISIBLE );
@@ -166,9 +170,11 @@ public class OrderItem2View extends ViewItemBase {
 			}
 		});
 		String satus = map.get("order_status");
+		String comment_status = map.get("comment_status");
 		myorder_merchant_state_2.setText(map.get("order_status_desc"));// 描述
 		MallButtonView buttonView = new MallButtonView(activity);
 		myorder_button_linear.removeAllViews();
+		myorder_check_logistics.setVisibility(GONE);
 		if (satus.equals("1")) {// 待支付
 			myorder_state_linear_2.setVisibility(View.GONE);
 			String color = Tools.getColorStr(getContext(),R.color.comment_color);
@@ -197,13 +203,7 @@ public class OrderItem2View extends ViewItemBase {
 			myorder_state_order_tv_2.setText("快递：" + map.get("shipping_bill_no") + "(" + map.get("shipping_type") + ")");
 			myorder_merchant_state_2.setTextColor(activity.getResources().getColor(R.color.comment_color));
 			// 查看物流
-			myorder_button_linear.addView(buttonView.createViewGoLog(new InterfaceViewCallback() {
-				@Override
-				public void sucessCallBack() {
-					getShoppingurl(map,position);
-					XHClick.mapStat(activity, "a_mail_orders","按钮点击","查看物流");
-				}
-			}));
+			myorder_check_logistics.setVisibility(VISIBLE);
 			// 确认收货
 			myorder_button_linear.addView(buttonView.createViewReceipt(new InterfaceViewCallback() {
 				@Override
@@ -216,19 +216,14 @@ public class OrderItem2View extends ViewItemBase {
 					} else {
 						myorder_state_linear_2.setVisibility(View.GONE);
 						map.put("order_status", "5");
+						map.put("comment_status","1");
 						map.put("order_status_desc", "已完成");
 						myorder_merchant_state_2.setText("完成");
 						myorder_merchant_state_2.setTextColor(Color.parseColor("#333333"));
 						myorder_button_linear.removeAllViews();
 						MallButtonView buttonView = new MallButtonView(activity);
 						// 查看物流
-						myorder_button_linear.addView(buttonView.createViewGoLog(new InterfaceViewCallback() {
-							@Override
-							public void sucessCallBack() {
-								getShoppingurl(map,position);
-								XHClick.mapStat(activity, "a_mail_orders","按钮点击","查看物流");
-							}
-						}));
+						myorder_check_logistics.setVisibility(VISIBLE);
 						// 再次购买
 						myorder_button_linear.addView(buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 
@@ -239,6 +234,14 @@ public class OrderItem2View extends ViewItemBase {
 								XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 							}
 						}, map, buttonView.list_state_order,url,mall_stat_statistic));
+						//评价
+						myorder_button_linear.addView(buttonView.createViewComment(new InterfaceViewCallback() {
+							@Override
+							public void sucessCallBack() {
+                                //去评价
+                                gotoComment(map,listMapByJson_product,position,id);
+							}
+						}));
 					}
 				}
 			}, map,url,mall_stat_statistic));
@@ -246,13 +249,7 @@ public class OrderItem2View extends ViewItemBase {
 			myorder_state_linear_2.setVisibility(View.GONE);
 			myorder_merchant_state_2.setTextColor(activity.getResources().getColor(R.color.comment_color));
 			// 查看物流
-			myorder_button_linear.addView(buttonView.createViewGoLog(new InterfaceViewCallback() {
-				@Override
-				public void sucessCallBack() {
-					getShoppingurl(map,position);
-					XHClick.mapStat(activity, "a_mail_orders","按钮点击","查看物流");
-				}
-			}));
+			myorder_check_logistics.setVisibility(VISIBLE);
 			// 再次购买
 			myorder_button_linear.addView(buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 
@@ -263,6 +260,19 @@ public class OrderItem2View extends ViewItemBase {
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
 			}, map, buttonView.list_state_order,url,mall_stat_statistic));
+            //已评价
+			if("2".equals(comment_status)){
+				myorder_button_linear.addView(buttonView.createViewCommented());
+             //评价
+			}else if("1".equals(comment_status)){
+				myorder_button_linear.addView(buttonView.createViewComment(new InterfaceViewCallback() {
+					@Override
+					public void sucessCallBack() {
+						//去评价
+                        gotoComment(map,listMapByJson_product,position,id);
+					}
+				}));
+			}
 		} else if (satus.equals("6") || satus.equals("8")) {// 商家已取消-------订单取消
 			myorder_state_linear_2.setVisibility(View.VISIBLE);
 			ArrayList<Map<String, String>> listMapByJson_order = UtilString.getListMapByJson(map.get("order_log"));
@@ -294,8 +304,7 @@ public class OrderItem2View extends ViewItemBase {
 
 				@Override
 				public void sucessCallBack() {
-					Intent intent = new Intent(activity, ShoppingActivity.class);
-					activity.startActivity(intent);
+					activity.startActivity(new Intent(activity, ShoppingActivity.class));
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
 			}, map, buttonView.list_state_order,url,mall_stat_statistic));
@@ -328,7 +337,7 @@ public class OrderItem2View extends ViewItemBase {
 				}
 			}, map, buttonView.list_state_payment,url,mall_stat_statistic));
 		}
-		setListener(map, position);// 监听
+		setListener(map, position,id);// 监听
 	}
 
 	private void setShopOnClick(View view,final Map<String, String> map){
@@ -345,10 +354,8 @@ public class OrderItem2View extends ViewItemBase {
 		});
 	}
 
-	/**
-	 * 设置监听
-	 */
-	private void setListener(final Map<String, String> map, final int position) {
+	/** 设置监听 */
+	private void setListener(final Map<String, String> map, final int position,final int id) {
 		// 全部点击去到订单详情页面
 		rela_mall_order_2.setOnClickListener(new OnClickListener() {
 
@@ -364,11 +371,17 @@ public class OrderItem2View extends ViewItemBase {
 				activity.startActivityForResult(intent, OrderStateActivity.request_order);
 			}
 		});
+
+		myorder_check_logistics.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getShoppingurl(map,position);
+				XHClick.mapStat(activity, "a_mail_orders","按钮点击","查看物流");
+			}
+		});
 	}
 
-	/**
-	 * 物流信息
-	 */
+	/** 物流信息 */
 	private void getShoppingurl(Map<String, String> map,int position) {
 		setStatisticIndex();
 		url = MallStringManager.mall_getShippingUrl + "?order_id=" + map.get("order_id");
@@ -384,6 +397,49 @@ public class OrderItem2View extends ViewItemBase {
 
 			}
 		});
+	}
+
+	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray, final int position,final int id){
+		if(0 == id){
+			XHClick.mapStat(getContext(),XHClick.comcomment_icon,"我的订单-【全部】的评价按钮","");
+		}else if(5 == id){
+			XHClick.mapStat(getContext(),XHClick.comcomment_icon,"我的订单-【待评价】的评价按钮","");
+		}
+        //去评价
+        if(productArray.size() == 1){
+            gotoCommentSingle(orderMap , productArray.get(0) , position,id);
+        }else if(productArray.size() > 1){
+            gotoCommentMulti(orderMap, position,id);
+        }
+    }
+
+    /**
+     *
+     * @param map
+     * @param position
+     */
+	private void gotoCommentMulti(final Map<String, String> map, final int position ,int id){
+		Intent intent = new Intent(activity, PublishEvalutionMultiActivity.class);
+		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ORDER_ID, map.get("order_id"));
+		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_POSITION, position);
+		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ID, id);
+		activity.startActivityForResult(intent, OrderStateActivity.request_order);
+	}
+
+    /**
+     *
+     * @param orderMap
+     * @param productMap
+     * @param position
+     */
+	private void gotoCommentSingle(final Map<String, String> orderMap,Map<String, String> productMap, final int position,int id){
+		Intent intent = new Intent(activity, PublishEvalutionSingleActivity.class);
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ORDER_ID,orderMap.get("order_id"));
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,productMap.get("img"));
+		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,productMap.get("proudct_code"));
+        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION, position);
+        intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ID, id);
+		activity.startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 
 	/**
@@ -407,7 +463,6 @@ public class OrderItem2View extends ViewItemBase {
 	 *            ---单图文字数据
 	 */
 	private void setProductNum(RelativeLayout one, TextView one_tv, ImageView one_iv, HorizontalListView listview, boolean isImageNum, ArrayList<String> strs, String url, String value) {
-
 		if (isImageNum) {// 多图
 			ArrayList<Map<String, String>> list_data = new ArrayList<>();
 			for (int i = 0; i < strs.size(); i++) {
@@ -444,13 +499,10 @@ public class OrderItem2View extends ViewItemBase {
 		} else {// 香哈
 			tv.setText("香哈");
 			view.setBackgroundResource(R.drawable.mall_myorder_myself);
-
 		}
 	}
 
-	/**
-	 * 对电商按钮进行统计
-	 */
+	/** 对电商按钮进行统计 */
 	private void setStatisticIndex(){
 		MallClickContorl.getInstance().setStatisticUrl(url, null,mall_stat_statistic, activity);
 	}

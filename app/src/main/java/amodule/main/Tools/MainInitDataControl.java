@@ -3,6 +3,9 @@ package amodule.main.Tools;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -53,6 +56,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  * app初始化数据类---只在这里进行初始化
  */
 public class MainInitDataControl {
+    private int delayedTime = 7 * 1000;
 
     /**
      * welcome之前初始化
@@ -92,7 +96,6 @@ public class MainInitDataControl {
                 MobclickAgent.setDebugMode(true);
                 OnlineConfigAgent.getInstance().updateOnlineConfig(activity);
 
-
                 //待处理问题。
                 HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
@@ -119,26 +122,21 @@ public class MainInitDataControl {
     /**
      * Main之后初始化
      */
-    public void iniMainAfter(Activity act){
+    public void iniMainAfter(final Activity act){
         Log.i("zhangyujian","iniMainAfter");
         long startTime= System.currentTimeMillis();
-        ToolsDevice.sendCrashAndAppInfoToServer(act.getApplicationContext(), LoginManager.userInfo.get("code"));
+        //初始化语音
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //讯飞语音： 请勿在“=”与 appid 之间添加任务空字符或者转义符
+                SpeechUtility.createUtility(act, SpeechConstant.APPID +"=56ce9191");
+            }
+        }).start();
         // 发送页面存活时间
         XHClick.sendLiveTime(act);
         //电商首页数据
         MallCommon.getDsInfo(act, null);
-
-        //更新热词匹配数据库
-        new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
-
-        ServiceManager.startProtectService(act);
-
-        AppCommon.saveUrlRuleFile(act);
-        //请求本地推送data
-        new XGLocalPushServer(act).getNousLocalPushData();
-
-        //获取圈子静态数据
-        AppCommon.saveCircleStaticData(act);
 
         AdConfigTools.getInstance().getAdConfigInfo();
         long endTime=System.currentTimeMillis();
@@ -152,32 +150,37 @@ public class MainInitDataControl {
     public void initMainOnResume(final Activity act){
         Log.i("zhangyujian","initMainOnResume");
         long startTime= System.currentTimeMillis();
-        //讯飞语音： 将“12345678”替换成您申请的 APPID，申请地址：http://www.xfyun.cn
-        // 请勿在“=”与 appid 之间添加任务空字符或者转义符
-        SpeechUtility.createUtility(act, SpeechConstant.APPID +"=56ce9191");
 
         TencenApiAdTools.getTencenApiAdTools().getLocation();
-        UploadDishSqlite sqlite = new UploadDishSqlite(act);
-        final int draftId = sqlite.getFailNeedHintId();
-        if (draftId > 0) {
-            final XhDialog xhDialog = new XhDialog(act);
-            xhDialog.setTitle("您的视频菜谱还未上传完毕，是否继续上传？")
-                    .setCanselButton(" 取消", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            xhDialog.cancel();
-                        }
-                    }).setSureButton("去查看", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(act, UploadDishListActivity.class);
-                    it.putExtra("draftId",draftId);
-                    act.startActivity(it);
-                    xhDialog.cancel();
-                }
-            }).show();
-        }
-        UploadDishControl.getInstance().updataAllUploadingDish(act.getApplicationContext());
+
+        delayedExcute(new Runnable() {
+            @Override
+            public void run() {
+                showContiunUploadDialog(act);
+                ToolsDevice.sendCrashAndAppInfoToServer(act.getApplicationContext(), LoginManager.userInfo.get("code"));
+                //更新热词匹配数据库
+                new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
+
+                //请求本地推送data
+                new XGLocalPushServer(act).getNousLocalPushData();
+
+                //获取圈子静态数据
+                AppCommon.saveCircleStaticData(act);
+
+                ServiceManager.startProtectService(act);
+
+                AppCommon.saveUrlRuleFile(act);
+                AppCommon.saveAppData();
+
+                //取消自我唤醒
+                XGPushManager.clearLocalNotifications(act);
+                PushAlarm.closeTimingWake(act);
+            }
+        });
+
+        //获取随机推广数据
+        AppCommon.saveRandPromotionData(act);
+
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initMainOnResume::时间::3::"+(endTime2-startTime));
     }
@@ -189,12 +192,9 @@ public class MainInitDataControl {
         Log.i("zhangyujian","initWelcome");
         long startTime= System.currentTimeMillis();
 
-        // 取消自我唤醒
-        XGPushManager.clearLocalNotifications(context);
-        PushAlarm.closeTimingWake(context);
         // 自动登录
         AppCommon.getCommonData(null);
-        AppCommon.saveAppData();
+
         compatibleData(context);
 
         AppCommon.clearCache();
@@ -206,7 +206,6 @@ public class MainInitDataControl {
             @Override
             public void run() {
                 super.run();
-
                 // 存储device
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(FileManager.xmlKey_device, ToolsDevice.getPhoneDevice(context));
@@ -225,6 +224,7 @@ public class MainInitDataControl {
                 for(SubjectData data : array){
                     subjectSqlite.deleteById(data.getId());
                 }
+                FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"0");
             }
         }.start();
 
@@ -302,5 +302,38 @@ public class MainInitDataControl {
             }
         }
         sqlite.close();
+    }
+
+    /**
+     *
+     * @param act
+     */
+    private void showContiunUploadDialog(final Activity act){
+        UploadDishSqlite sqlite = new UploadDishSqlite(act);
+        final int draftId = sqlite.getFailNeedHintId();
+        if (draftId > 0) {
+            final XhDialog xhDialog = new XhDialog(act);
+            xhDialog.setTitle("您的视频菜谱还未上传完毕，是否继续上传？")
+                    .setCanselButton(" 取消", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            xhDialog.cancel();
+                        }
+                    }).setSureButton("去查看", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent it = new Intent(act, UploadDishListActivity.class);
+                    it.putExtra("draftId",draftId);
+                    act.startActivity(it);
+                    xhDialog.cancel();
+                }
+            }).show();
+        }
+        UploadDishControl.getInstance().updataAllUploadingDish(act.getApplicationContext());
+    }
+
+    private void delayedExcute(@NonNull Runnable runnable){
+        if(runnable == null) return;
+        new Handler(Looper.getMainLooper()).postDelayed(runnable,delayedTime);
     }
 }

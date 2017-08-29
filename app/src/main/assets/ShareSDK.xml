@@ -63,6 +63,7 @@
         AppSecret="454b22860eaa923c71bba8bcc8840fcd"
         RedirectUrl="http://sns.whalecloud.com/sina2/callback"
         ShareByAppClient="true"
+		ShareByWebApi = "false"
         Enable="true" />
 
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->

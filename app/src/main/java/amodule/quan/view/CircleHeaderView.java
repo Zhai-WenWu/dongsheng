@@ -217,7 +217,7 @@ public class CircleHeaderView extends LinearLayout {
         layout.setVisibility(VISIBLE);
         layout.addView(autoScrollADView, ViewGroup.LayoutParams.MATCH_PARENT, (int) height);
         View lineView = new View(getContext());
-        lineView.setBackgroundColor(Color.parseColor("#F1EEE4"));
+        lineView.setBackgroundColor(Color.parseColor(getResources().getString(R.color.common_bg)));
         layout.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, Tools.getDimen(getContext(), R.dimen.dp_1));
         autoScrollADView.start();
     }

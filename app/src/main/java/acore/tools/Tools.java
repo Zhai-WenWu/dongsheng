@@ -3,7 +3,11 @@ package acore.tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -14,6 +18,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -53,6 +58,8 @@ import aplug.recordervideo.tools.SortComparator;
 import third.mall.tool.ToolView;
 import xh.basic.tool.UtilLog;
 
+import static acore.override.XHApplication.ONLINE_PACKAGE_NAME;
+
 @SuppressLint("SimpleDateFormat")
 public class Tools {
 
@@ -64,7 +71,8 @@ public class Tools {
     public static boolean isDebug(Context context){
         String versoinName = VersionOp.getVerName(context);
         String[] temp = versoinName.split("\\.");
-        return temp.length != 3;
+        String currentPackName = ToolsDevice.getPackageName(context);
+        return temp.length != 3 || !ONLINE_PACKAGE_NAME.equals(currentPackName);
     }
 
     /**
@@ -514,7 +522,7 @@ public class Tools {
      * @param context
      * @return
      */
-    public static int getDaoHangHeight(Context context) {
+    public static int getNavigationBarHeight(Context context) {
         int result = 0;
         int resourceId = 0;
         int rid = context.getResources().getIdentifier("config_showNavigationBar", "bool", "android");
@@ -890,4 +898,39 @@ public class Tools {
         }
         return null;
     }
+
+    /**
+     * 插入文本到剪切板
+     * @param context
+     * @param str
+     */
+    public static void inputToClipboard(Context context,String str){
+        if(context == null || TextUtils.isEmpty(str))
+            return;
+        final ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("simple text copy", str);
+        manager.setPrimaryClip(clip);
+    }
+    /*获取Context所在进程的名称
+
+    pkgName 包名
+    *
+    * */
+    public static boolean isPkgInstalled(String pkgName,Context context) {
+        PackageInfo packageInfo = null;
+        try {
+
+            packageInfo = context.getPackageManager().getPackageInfo(pkgName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        if (packageInfo == null) {
+
+            return false;
+        } else {
+            return true;
+        }
+        }
 }

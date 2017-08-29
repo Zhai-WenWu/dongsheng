@@ -164,12 +164,13 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		//新的布局效果
 		ImageView leftImgBtn=(ImageView)findViewById(R.id.leftImgBtn);
 		RelativeLayout.LayoutParams params = (LayoutParams) leftImgBtn.getLayoutParams();
-		params.setMargins((int) getResources().getDimension(R.dimen.dp_7), 0, 0, 0);
-		leftImgBtn.setImageResource(R.drawable.z_home_center_btn_close);
+		params.setMargins((int) getResources().getDimension(R.dimen.dp_18), 0, 0, 0);
+		leftImgBtn.setImageResource(R.drawable.image_selector_close);
 		int dp_2= (int) this.getResources().getDimension(R.dimen.dp_2);
 		int dp_8= (int) this.getResources().getDimension(R.dimen.dp_8);
 		leftImgBtn.setPadding(dp_2, dp_8, dp_2, dp_8);
 		leftImgBtn.setOnClickListener(this);
+
 		uploadSubjectBottomControl = new UploadSubjectBottomControl(this, StringManager.api_agreementOriginal);
 		uploadSubjectBottomControl.setOnBottomListener(new UploadSubjectBottomControl.OnBottomListener() {
 			@Override

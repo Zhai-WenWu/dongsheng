@@ -214,7 +214,6 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
         sbuild.append("type=").append(type).append("&")
                 .append("code=").append(code).append("&")
                 .append("content=").append(getContent());
-//        Log.i("tzy", sbuild.toString());
         ReqEncyptInternet.in().doEncypt(StringManager.api_addForum, sbuild.toString(),
                 new InternetCallback(getContext()) {
                     @Override

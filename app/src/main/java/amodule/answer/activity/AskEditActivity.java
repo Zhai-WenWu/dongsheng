@@ -2,7 +2,9 @@ package amodule.answer.activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,17 +15,19 @@ import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xianghatest.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.dialogManager.PushManager;
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -54,6 +58,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private TextView mPriceText;
     private ImageView mBlackBtn;
     private RelativeLayout mAskDesc;
+    private RelativeLayout mAnoContainer;
 
     private String mAskPrice;//提问价格
     private String mWebUrl;//打开Web支付页面
@@ -67,6 +72,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private String mQAID;
     private String mQADetailUrl;//问答详情页的url
 
+    private boolean mIsResuming;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +86,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             public void onClick(View v) {
                 mIsAno = !mIsAno;
                 mAnonymity = mIsAno ? "2" : "1";
-                mBlackBtn.setImageResource(mIsAno ? R.drawable.i_switch_on : R.drawable.i_switch_off);
+                switchBtn(mIsAno);
                 XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击匿名按钮", mIsAno ? "点击打开" : "点击关闭");
             }
         });
@@ -118,6 +125,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         mPriceText = (TextView) findViewById(R.id.price_text);
         mBlackBtn = (ImageView) findViewById(R.id.black_btn);
         mAskDesc = (RelativeLayout) findViewById(R.id.ask_desc);
+        mAnoContainer = (RelativeLayout) findViewById(R.id.anonymity_container);
+        mAnoContainer.setVisibility(mIsAskMore ? View.GONE : View.VISIBLE);
         setListener();
         registnetworkListener();
         getLocalData();
@@ -126,14 +135,17 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private void registnetworkListener() {
         mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
-            public void disconnect() {}
+            public void disconnect() {
+                Toast.makeText(AskEditActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+                allStartOrPause(false);
+            }
 
             @Override
             public void wifi() {}
 
             @Override
             public void mobile() {
-                if(!mIsStopUpload) {
+                if(!mIsStopUpload && mIsResuming) {
                     allStartOrPause(false);
                     hintNetWork();
                 }
@@ -148,7 +160,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
+                onLocalDataReady(mSQLite.queryFirstData());
             }
         }).start();
     }
@@ -157,32 +169,46 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (!mIsAskMore)
+                if (!mIsAskMore && LoginManager.isLogin())
                     getPriceData();
                 else
                     loadManager.hideProgressBar();
                 if (model != null) {
-                    mModel = model;
-                    mEditText.setText(model.getmText());
-                    mIsAno = "2".equals(model.getmAnonymity());
-                    String imgs = model.getmImgs();
-                    if (!TextUtils.isEmpty(imgs)) {
-                        ArrayList<Map<String, String>> imgsArr = StringManager.getListMapByJson(imgs);
-                        if (imgsArr != null && !imgsArr.isEmpty()) {
-                            for (Map<String, String> img : imgsArr)
-                                mImgController.addData(img);
-                        }
+                    mModel.setmId(model.getmId());
+                    mModel.setmDishCode(model.getmDishCode());
+                    if (!TextUtils.isEmpty(mDishCode) && mDishCode.equals(model.getmDishCode())) {
+                        mModel = model;
+                        mEditText.setText(model.getmText());
+                        mIsAno = "2".equals(model.getmAnonymity());
+                        if (!mIsAskMore)
+                            switchBtn(mIsAno);
+                        initImgControllerData(model);
                     }
                 }
             }
         });
     }
 
+    private void switchBtn(boolean on) {
+        if (mBlackBtn == null)
+            return;
+        mBlackBtn.setImageResource(on ? R.drawable.i_switch_on : R.drawable.i_switch_off);
+    }
+
+    @Override
+    protected void onLoginSucc() {
+        if (!mLoadPrice && !mIsAskMore)
+            getPriceData();
+    }
+
+    private boolean mLoadPrice = false;
     private void getPriceData() {
         if (TextUtils.isEmpty(mDishCode) || TextUtils.isEmpty(mAuthorCode) || TextUtils.isEmpty(mType)) {
             this.finish();
             return;
         }
+        loadManager.showProgressBar();
+        mLoadPrice = true;
         String params = "code=" + mDishCode + "&authorCode=" + mAuthorCode + "&type=" + mType;
         ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETPRICE, params, new InternetCallback(this) {
             @Override
@@ -212,7 +238,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void allStartOrPause(boolean isAllStart) {
-        showUploadingDialog();
+        if (mListPool == null)
+            return;
+        if (isAllStart)
+            showUploadingDialog();
+        else
+            cancelUploadingDialog();
         mIsStopUpload = !isAllStart;
         mListPool.allStartOrStop(isAllStart ? UploadListPool.TYPE_START : UploadListPool.TYPE_PAUSE);
     }
@@ -239,14 +270,19 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     protected void onResume() {
         super.onResume();
+        mIsResuming = false;
     }
 
     @Override
     protected boolean handleUpload() {
         if (mModel != null)
             mModel.setmPrice(mAskPrice);
-        endTimer();
         saveDraft();
+        if ("null".equals(ToolsDevice.getNetWorkType(this))) {
+            Toast.makeText(this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        endTimer();
         if (mModel != null && mModel.getmId() != -1) {
             mListPool = UploadListControl.getUploadListControlInstance()
                     .add(AskAnswerUploadListPool.class,
@@ -303,6 +339,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     protected void onPause() {
         super.onPause();
+        mIsResuming = false;
     }
 
     @Override
@@ -339,6 +376,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     protected void onEditTextChanged(CharSequence s, int start, int before, int count) {
         mCountText.setText(s.length() + "/100");
+        if (s.length() >= 100) {
+            mCountText.setTextColor(Color.parseColor("#ff0000"));
+            Toast.makeText(this, "不能继续输入", Toast.LENGTH_SHORT).show();
+        } else {
+            mCountText.setTextColor(Color.parseColor("#d4d4d4"));
+        }
     }
 
     private Dialog mUploadingDialog;
@@ -381,6 +424,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     public void onUploadOver(boolean flag, String response) {
         mIsStopUpload = true;
         cancelUploadingDialog();
+        if (!flag && !TextUtils.isEmpty(response)) {
+            Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Map<String, String> map = StringManager.getFirstMap(response);
         String type = map.get("type");
         String msg = map.get("msg");
@@ -395,7 +442,11 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     mQAID = map.get("id");
                     mWebUrl = map.get("payUrl");
                     if (mIsAskMore) {
-                        startQADetail();
+                        if (flag) {
+                            mSQLite.deleteData(mUploadPoolData.getDraftId());
+                            XHActivityManager.getInstance().refreshActivity();
+                            finish();
+                        }
                     } else {
                         startPay();
                     }
@@ -404,7 +455,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 e.printStackTrace();
             }
         }
-        if (!flag) {
+        if (!flag && !ToolsDevice.getNetActiveState(this)) {
             XHClick.mapStat(this, getTjId(), "点击发布按钮", "因网络原因发布失败");
         }
     }

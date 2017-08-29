@@ -59,6 +59,7 @@ public class VideoPlayerController {
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
+    public boolean isPortrait = false;
 
     protected StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
@@ -81,7 +82,7 @@ public class VideoPlayerController {
         videoPlayer = new StandardGSYVideoPlayer(context);
         //设置旋转
         orientationUtils = new OrientationUtils(context, videoPlayer);
-        videoPlayer.setShowFullAnimation(true);
+        videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,13 +107,14 @@ public class VideoPlayerController {
             @Override
             public void onEnterFullscreen(String url, Object... objects) {
                 super.onEnterFullscreen(url, objects);
-                orientationUtils.resolveByClick();
+                if(!isPortrait)
+                    orientationUtils.resolveByClick();
             }
 
             @Override
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
-                orientationUtils.resolveByClick();
+                orientationUtils.backToProtVideo();
             }
         });
 
@@ -438,9 +440,9 @@ public class VideoPlayerController {
 
     public boolean onBackPressed(){
         //先返回正常状态
-        if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            StandardGSYVideoPlayer.backFromWindowFull(mContext);
-            return true;
+        if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                || isPortrait) {
+            return StandardGSYVideoPlayer.backFromWindowFull(mContext);
         }
         return false;
     }
@@ -601,6 +603,14 @@ public class VideoPlayerController {
         }
     };
 
+    public boolean isPortrait() {
+        return isPortrait;
+    }
+
+    public void setPortrait(boolean portrait) {
+        isPortrait = portrait;
+    }
+
     public boolean isShowMedia() {
         return isShowMedia;
     }
@@ -622,4 +632,10 @@ public class VideoPlayerController {
     }
     protected OnPlayingCompletionListener mOnPlayingCompletionListener;
 
+    public static boolean isPortraitVideo(float videoW,float videoH){
+        if(videoW <= 0 || videoH <= 0)
+            return false;
+        //视频比例大于3：4则为竖屏视频
+        return videoW/videoH <= 3/4;
+    }
 }

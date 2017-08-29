@@ -216,6 +216,12 @@
                     android:layout_height="wrap_content" />
 
                 <amodule.user.view.LeftAndRightTextView
+                    android:id="@+id/view_qa_arbitration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+                <amodule.user.view.LeftAndRightTextView
                     android:id="@+id/view_activity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

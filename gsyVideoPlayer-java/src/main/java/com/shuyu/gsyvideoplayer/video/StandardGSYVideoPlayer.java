@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -191,7 +192,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
                     if (!mNetSate.equals(state)) {
                         Debuger.printfError("******* change network state ******* " + state);
                         mNetChanged = true;
-                        Log.i(TAG,"******* change network state ******* " + state);
+                        Log.i(TAG, "******* change network state ******* " + state);
                     }
                     mNetSate = state;
                     handlerNetWorkState(getContext());
@@ -214,6 +215,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
      * @param url           播放url
      * @param cacheWithPlay 是否边播边缓存
      * @param title         title
+     *
      * @return
      */
     @Override
@@ -228,6 +230,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
      * @param cacheWithPlay 是否边播边缓存
      * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
      * @param title         title
+     *
      * @return
      */
     @Override
@@ -438,8 +441,11 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     @Override
     protected void setProgressAndTime(int progress, int secProgress, int currentTime, int totalTime) {
         super.setProgressAndTime(progress, secProgress, currentTime, totalTime);
-        if (progress != 0) mBottomProgressBar.setProgress(progress);
-        if (secProgress != 0 && !mCacheFile) mBottomProgressBar.setSecondaryProgress(secProgress);
+        if (progress != 0)
+            mBottomProgressBar.setProgress(progress);
+        if (secProgress != 0 && !mCacheFile)
+            mBottomProgressBar.setSecondaryProgress(secProgress);
+        mBottomProgressBar.invalidate();
     }
 
     @Override
@@ -636,7 +642,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     }
 
     protected void updateStartImage() {
-        if(mStartButton instanceof ImageView) {
+        if (mStartButton instanceof ImageView) {
             ImageView imageView = (ImageView) mStartButton;
             if (mCurrentState == CURRENT_STATE_PLAYING) {
                 imageView.setImageResource(R.drawable.video_click_pause_selector);
@@ -645,7 +651,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             } else {
                 imageView.setImageResource(R.drawable.video_click_play_selector);
             }
-        }else if (mStartButton instanceof ENPlayView) {
+        } else if (mStartButton instanceof ENPlayView) {
             ENPlayView enPlayView = (ENPlayView) mStartButton;
             enPlayView.setDuration(500);
             if (mCurrentState == CURRENT_STATE_PLAYING) {
@@ -894,16 +900,35 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
     }
 
-    /**
-     * 初始化为正常状态
-     */
+    /** 初始化为正常状态 */
     public void initUIState() {
         setStateAndUi(CURRENT_STATE_NORMAL);
     }
 
-    /**
-     * 全屏的UI逻辑
-     */
+    public void setPortraitPlay(boolean isLandscapeVideo){
+        if(mOrientationUtils != null){
+            boolean isLand = mOrientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+            if(mTextureView.getSizeH() > mTextureView.getSizeW() && isLand){
+                mTextureView.setRotation(mTextureView.getRotation() - 90);
+                mTextureView.requestLayout();
+            }
+        }
+    }
+
+    public void rotateVideo(){
+        if (!mHadPlay) {
+            return;
+        }
+        if ((mTextureView.getRotation() - mRotate) == 270) {
+            mTextureView.setRotation(mRotate);
+            mTextureView.requestLayout();
+        } else {
+            mTextureView.setRotation(mTextureView.getRotation() + 90);
+            mTextureView.requestLayout();
+        }
+    }
+
+    /** 全屏的UI逻辑 */
     private void initFullUI(StandardGSYVideoPlayer standardGSYVideoPlayer) {
 
         if (mBottomProgressDrawable != null) {
@@ -985,9 +1010,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         thumb.setLayoutParams(layoutParams);
     }
 
-    /***
-     * 设置封面
-     */
+    /** 设置封面 */
     public void setThumbImageView(View view) {
         if (mThumbImageViewLayout != null) {
             mThumbImageView = view;
@@ -995,18 +1018,14 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
     }
 
-    /***
-     * 清除封面
-     */
+    /** 清除封面 */
     public void clearThumbImageView() {
         if (mThumbImageViewLayout != null) {
             mThumbImageViewLayout.removeAllViews();
         }
     }
 
-    /**
-     * 回去title
-     */
+    /** 回去title */
     public TextView getTitleTextView() {
         return mTitleTextView;
     }
@@ -1024,9 +1043,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
     }
 
-    /**
-     * 底部进度条-非弹出
-     */
+    /** 底部进度条-非弹出 */
     public void setBottomProgressBarDrawable(Drawable drawable) {
         mBottomProgressDrawable = drawable;
         if (mBottomProgressBar != null) {
@@ -1034,39 +1051,29 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
     }
 
-    /**
-     * 声音进度条
-     */
+    /** 声音进度条 */
     public void setDialogVolumeProgressBar(Drawable drawable) {
         mVolumeProgressDrawable = drawable;
     }
 
 
-    /**
-     * 中间进度条
-     */
+    /** 中间进度条 */
     public void setDialogProgressBar(Drawable drawable) {
         mDialogProgressBarDrawable = drawable;
     }
 
-    /**
-     * 中间进度条字体颜色
-     */
+    /** 中间进度条字体颜色 */
     public void setDialogProgressColor(int highLightColor, int normalColor) {
         mDialogProgressHighLightColor = highLightColor;
         mDialogProgressNormalColor = normalColor;
     }
 
-    /**
-     * 是否点击封面可以播放
-     */
+    /** 是否点击封面可以播放 */
     public void setThumbPlay(boolean thumbPlay) {
         this.mThumbPlay = thumbPlay;
     }
 
-    /**
-     * 封面布局
-     */
+    /** 封面布局 */
     public RelativeLayout getThumbImageViewLayout() {
         return mThumbImageViewLayout;
     }
@@ -1084,9 +1091,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         this.mNeedLockFull = needLoadFull;
     }
 
-    /**
-     * 锁屏点击
-     */
+    /** 锁屏点击 */
     public void setLockClickListener(LockClickListener lockClickListener) {
         this.mLockClickListener = lockClickListener;
     }
@@ -1114,13 +1119,13 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     private String currentType = "";
 
     /**
-     *
      * @param context
+     *
      * @return
      */
-    private String getNetWorkState(Context context){
+    private String getNetWorkState(Context context) {
         String netWorkState = NetworkUtils.getNetWorkSimpleType(context);
-        switch (netWorkState){
+        switch (netWorkState) {
             case TYPE_WIFI:
                 return TYPE_WIFI;
             case TYPE_NOTHING:
@@ -1130,7 +1135,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
     }
 
-    public void handlerNetWorkState(Context context){
+    public void handlerNetWorkState(Context context) {
         NetworkInfo.State wifiState = null;
         NetworkInfo.State mobileState = null;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -1156,24 +1161,24 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mobileState = networkInfo.getState();
         }
         Log.d(TAG, "onReceive -- wifiState = " + wifiState + " -- mobileState = " + mobileState);
-            Log.d(TAG, "currentType = " + currentType);
+        Log.d(TAG, "currentType = " + currentType);
         if (wifiState != null && mobileState != null && NetworkInfo.State.CONNECTED != wifiState && NetworkInfo.State.CONNECTED == mobileState) {
             Log.d(TAG, "onReceive -- 手机网络连接成功");
             // 手机网络连接成功
-            if(!TYPE_MOBILE.equals(currentType))
+            if (!TYPE_MOBILE.equals(currentType))
                 mobileNotify();
             currentType = TYPE_MOBILE;
         } else if (wifiState != null && mobileState != null && NetworkInfo.State.CONNECTED != wifiState
                 && NetworkInfo.State.CONNECTED != mobileState) {
             Log.d(TAG, "onReceive -- 手机没有任何的网络");
             // 手机没有任何的网络
-            if(!TYPE_NOTHING.equals(currentType))
+            if (!TYPE_NOTHING.equals(currentType))
                 nothingNotify();
             currentType = TYPE_NOTHING;
         } else if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
             Log.d(TAG, "onReceive -- 无线网络连接成功");
             // 无线网络连接成功
-            if(!TYPE_WIFI.equals(currentType))
+            if (!TYPE_WIFI.equals(currentType))
                 wifiNotify();
             currentType = TYPE_WIFI;
         }

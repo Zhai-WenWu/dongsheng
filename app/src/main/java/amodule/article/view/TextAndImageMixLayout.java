@@ -41,6 +41,7 @@ import aplug.shortvideo.activity.VideoFullScreenActivity;
 
 import static amodule.article.activity.edit.EditParentActivity.REQUEST_CHOOSE_VIDEO_COVER;
 import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
+import static com.xianghatest.R.id.view;
 
 /**
  * PackageName : amodule.article.view
@@ -91,10 +92,8 @@ public class TextAndImageMixLayout extends LinearLayout
             removeAllViews();
 
         List<Map<String, String>> dataArray = StringManager.getListMapByJson(content);
-//        Log.i("tzy", "dataArray = " + dataArray.toString());
         for (int index = 0; index < dataArray.size(); index++) {
             Map<String, String> map = dataArray.get(index);
-//            Log.i("tzy", "map = " + map.toString());
             if (!map.containsKey("type")
                     || TextUtils.isEmpty(map.get("type"))) {
                 continue;
@@ -117,7 +116,7 @@ public class TextAndImageMixLayout extends LinearLayout
                     addImage(map.get("gifurl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.VIDEO:
-                    addVideo(map.get("videosimageurl"),map.get("chooseCoverImageUrl"), map.get("videourl"),map.get("id"), isLast, "");
+                    addVideo(map.get("videosimageurl"),map.get("chooseCoverImageUrl"),map.get("oldVideoSimageUrl"), map.get("videourl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.URLS:
                     //do nothing
@@ -212,7 +211,6 @@ public class TextAndImageMixLayout extends LinearLayout
 
         if (htmlTmep.indexOf(">") + 1 >= 0)
             html = htmlTmep.substring(htmlTmep.indexOf(">") + 1, htmlTmep.length());
-//        Log.i("tzy","html = " + html);
         //处理<a></a>
 //        while (htmlTmep.indexOf("<a") >= 0) {
 //            int startIndex = htmlTmep.indexOf("<a");
@@ -230,9 +228,6 @@ public class TextAndImageMixLayout extends LinearLayout
 //                        break;
 //                    }
 //                }
-//                Log.i("tzy", "htmlTmep = " + htmlTmep);
-//                Log.i("tzy", "title = " + title);
-//                Log.i("tzy", "url = " + url);
 //                if (!TextUtils.isEmpty(title)
 //                        && !TextUtils.isEmpty(url))
 //                    editTextView.addLinkToData(url, title);
@@ -244,7 +239,6 @@ public class TextAndImageMixLayout extends LinearLayout
         if("<br>".equals(html)){
             html = "";
         }
-//        Log.i("tzy","html = " + html);
         editTextView.setCenterHorizontal(isCenter);
         editTextView.setTextFrormHtml(html);
         editTextView.setSelection(editTextView.getRichText().getText().length());
@@ -252,7 +246,6 @@ public class TextAndImageMixLayout extends LinearLayout
 
     /**
      * 获取上传需要的数据
-     *
      * @return
      */
     public String getXHServiceData() {
@@ -263,7 +256,6 @@ public class TextAndImageMixLayout extends LinearLayout
             JSONObject jsonObject = baseView.getOutputData();
             if (jsonObject != null)
                 jsonArray.put(jsonObject);
-//            Log.i("tzy", jsonArray.toString());
         }
         jsonArray.put(getUrlsJsonObj());
         return jsonArray.toString();
@@ -460,7 +452,6 @@ public class TextAndImageMixLayout extends LinearLayout
             if (view instanceof ImageShowView) {
                 Map<String, String> map = new HashMap<>();
                 String path = ((ImageShowView) view).getImageUrl();
-//                Log.i("tzy", "getImageMapArray() path:" + path + "    url:" + imageMap.get(path));
                 map.put("path", path);
                 map.put("url", imageMap.get(path));
                 arrayList.add(map);
@@ -479,18 +470,20 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param content
      */
     public void addVideo(String coverImageUrl, String videoUrl, boolean ifAddText, CharSequence content) {
-        addVideo(coverImageUrl,null, videoUrl,"", ifAddText, content);;
+        addVideo(coverImageUrl,null,null, videoUrl,"", ifAddText, content);;
     }
 
     /**
      * 添加视频
      * @param coverImageUrl
+     * @param chooseImageUrl
+     * @param oldCoverImageUrl
      * @param videoUrl
      * @param idStr
      * @param ifAddText
      * @param content
      */
-    public void addVideo(String coverImageUrl,String chooseImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
+    public void addVideo(String coverImageUrl,String chooseImageUrl,String oldCoverImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
         if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
             Tools.showToast(getContext(),"文件已损坏");
             return;
@@ -539,9 +532,11 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setEnableEdit(true);
         view.setSecondEdit(isSecondEdit);
         view.setVideoData(coverImageUrl, videoUrl);
+        view.setOldCoverImageUrl(oldCoverImageUrl);
         if(!TextUtils.isEmpty(chooseImageUrl)){
             view.setChooseCoverImageUrl(chooseImageUrl);
         }
+
         view.setIdStr(idStr);
         view.setmOnRemoveCallback(this);
         view.setmOnClickImageListener(this);

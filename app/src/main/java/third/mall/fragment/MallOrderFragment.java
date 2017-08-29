@@ -54,11 +54,10 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 	private MallCommon common;
 	private Handler handler;
 	private String icon_but;
-	private String url;
 
 	public static Fragment getIntanse(OrderBean orderBean, String icon_but){
 		MallOrderFragment fragment = new MallOrderFragment();
-		return (MallOrderFragment) setArgumentsToFragment(fragment, orderBean,icon_but);
+		return setArgumentsToFragment(fragment, orderBean,icon_but);
 	}
 	/** 将储块信息存板到Argument中 */
 	public static Fragment setArgumentsToFragment(Fragment fragment, OrderBean orderBean,String icon_but) {
@@ -135,7 +134,7 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 		common=new MallCommon(mAct);
 		order_list = (DownRefreshList) view.findViewById(R.id.order_list);
 		view.findViewById(R.id.shoppingcat_go).setOnClickListener(this);
-		listData = new ArrayList<Map<String, String>>();
+		listData = new ArrayList<>();
 		if(Integer.parseInt(id)>1){
 			adapter = new AdapterMyOrderItemNew(mAct, order_list, listData, R.layout.a_mall_myorder_item_2, null, null,Integer.parseInt(id));
 			
@@ -196,7 +195,7 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 		else
 			currentPage++;
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size()==0);
-		url =MallStringManager.mall_api_listOrder_v2+"?status="+id+"&pn="+currentPage+"&"+common.setStatistic(icon_but);
+		String url = MallStringManager.mall_api_listOrder_v3 + "?type=" + id + "&pn=" + currentPage + "&" + common.setStatistic(icon_but);
 		MallReqInternet.in().doGet(url, new MallInternetCallback(mAct) {
 
 			@Override

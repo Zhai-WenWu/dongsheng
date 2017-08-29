@@ -39,6 +39,7 @@ import acore.widget.PopWindowDialog;
 import acore.widget.UploadFailPopWindowDialog;
 import acore.widget.UploadNetChangeWindowDialog;
 import acore.widget.UploadSuccessPopWindowDialog;
+import amodule.dish.activity.DetailDish;
 import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
@@ -218,7 +219,6 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.i("FRJ","className:::"+className);
 		if(XHApplication.in()==null){
 			Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -351,14 +351,14 @@ public class BaseActivity extends Activity {
 	public void startActivity(Intent intent) {
 		super.startActivity(intent);
 		// 设置切换动画，从右边进入，左边退出
-		overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+			overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
 
 	@Override
 	public void startActivityForResult(Intent intent, int requestCode) {
 		super.startActivityForResult(intent, requestCode);
 		// 设置切换动画，从右边进入，左边退出
-		overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+			overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
 
 	@Override

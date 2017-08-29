@@ -42,6 +42,7 @@ import third.video.VideoPlayerController;
  */
 public class DetailDish extends BaseAppCompatActivity {
     public static String tongjiId = "a_menu_detail_normal430";//统计标示
+    public static String DishName="amodule.dish.activity.DetailDish";
     private final int LOAD_DISH = 1;
     private final int LOAD_DISH_OVER = 2;
 
@@ -58,14 +59,18 @@ public class DetailDish extends BaseAppCompatActivity {
     private boolean contiunRefresh = true;
     private String lastPermission = "";
 
-    private long startTime= 0;
+    public static long startTime= 0;
     private String data_type="";
     private String module_type="";
+    private int height;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        overridePendingTransition(R.anim.activity_open,0);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         super.onCreate(savedInstanceState);
         //处理广告
         Bundle bundle = getIntent().getExtras();
+        startTime= System.currentTimeMillis();
         // 正常调用
         if (bundle != null) {
             code = bundle.getString("code");
@@ -93,9 +98,10 @@ public class DetailDish extends BaseAppCompatActivity {
         },5 * 60 * 1000);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        Log.i("zyj","activity:::"+(System.currentTimeMillis()-startTime));
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        startTime= System.currentTimeMillis();
+
     }
 
     @Override
@@ -125,6 +131,7 @@ public class DetailDish extends BaseAppCompatActivity {
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
             }
         });
+
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +161,6 @@ public class DetailDish extends BaseAppCompatActivity {
                             lastPermission = obj.toString();
                     }
                     permissionMap = StringManager.getFirstMap(obj);
-//                    Log.i("tzy","permissionMap = " + permissionMap.toString());
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
@@ -223,7 +229,7 @@ public class DetailDish extends BaseAppCompatActivity {
             return;
         }
         requestWeb(data);
-        dishActivityViewControl.analyzeDishInfoData(data,permissionMap,false);
+        dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
 
     }
 
@@ -247,6 +253,7 @@ public class DetailDish extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         Log.i("DetailDishActivity","onResume() colse_level:" + Main.colse_level);
+        Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
         Rect outRect = new Rect();
@@ -292,4 +299,16 @@ public class DetailDish extends BaseAppCompatActivity {
             AppCommon.openUrl(this,url,true);
         }
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
+    }
+
+//    @Override
+//    public void finish() {
+//        super.finish();
+//        overridePendingTransition(0, R.anim.activity_close);
+//    }
 }

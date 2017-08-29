@@ -197,7 +197,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("tzy", "contentLayout click");
                 editTitle.clearFocus();
                 mixLayout.getCurrentEditText().getRichText().requestFocus();
                 ToolsDevice.keyboardControl(true, EditParentActivity.this, mixLayout.getCurrentEditText().getRichText());
@@ -637,7 +636,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         String content = mixLayout.getXHServiceData();
         Log.i("articleUpload", "saveDraft() content:" + content);
         uploadArticleData.setContent(content);
-//        Log.i("tzy", "content = " + content);
         uploadArticleData.setVideoArray(mixLayout.getVideoArrayMap());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());
         Log.i("articleUpload", "saveDraft() imgs:" + uploadArticleData.getImgs());

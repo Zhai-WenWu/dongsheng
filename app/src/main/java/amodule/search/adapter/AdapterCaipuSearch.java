@@ -560,7 +560,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
     private View createAdView(int pos) {
-        Log.i("tzy", "searchAD position = " + pos);
         View view = null;
         if (pos == 0) {
             if (adDdata.get(0) != null)

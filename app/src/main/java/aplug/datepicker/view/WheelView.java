@@ -129,10 +129,10 @@ public class WheelView extends View {
 	private boolean isCyclic = false;
 
 	/** 实例化OnWheelChangedListener */
-	private List<OnWheelChangedListener> changingListeners = new LinkedList<OnWheelChangedListener>();
+	private List<OnWheelChangedListener> changingListeners = new LinkedList<>();
 
 	/** 实例化OnWheelScrollListener */
-	private List<OnWheelScrollListener> scrollingListeners = new LinkedList<OnWheelScrollListener>();
+	private List<OnWheelScrollListener> scrollingListeners = new LinkedList<>();
 
 	/**
 	 * 3个参数构造函数

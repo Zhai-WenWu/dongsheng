@@ -27,7 +27,6 @@ import com.bumptech.glide.request.target.Target;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xianghatest.R;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,12 +47,12 @@ import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
+import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * Created by Administrator on 2016/9/21.
  */
-
 public class DishHeaderViewNew extends LinearLayout {
     private Context context;
     private Activity activity;
@@ -117,6 +116,7 @@ public class DishHeaderViewNew extends LinearLayout {
         //处理简介
         //头部加载view
         this.addView(videoViewGroup);
+//        INVisibiHeaderView();
     }
 
     /**
@@ -370,10 +370,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
                     int currentS = Math.round(currentTime / 1000f);
                     int durationS = Math.round(totalTime / 1000f);
-                    Log.i("tzy","currentS = " + currentS + " ; durationS = " + durationS);
-                    Log.i("tzy","limitTime = " + limitTime);
-                    Log.i("tzy","progress = " + progress);
-                    Log.i("tzy","======================================");
                     if (currentS >= 0 && durationS >= 0) {
                         if (isHaspause) {
                             mVideoPlayerController.onPause();
@@ -476,5 +472,19 @@ public class DishHeaderViewNew extends LinearLayout {
          * @param mVideoPlayerController
          */
         public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage);
+    }
+
+    /**
+     * 展示view
+     */
+    public void showHeaderView(){
+        this.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 不显示view
+     */
+    public void INVisibiHeaderView(){
+        this.setVisibility(INVISIBLE);
     }
 }

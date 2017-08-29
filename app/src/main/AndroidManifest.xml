@@ -39,6 +39,25 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- umeng dplus -->
 
+
+    <!-- 百度AD -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!-- 以下为可选权限 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS"/>
+    <!-- 百度AD end -->
+
+
     <!-- 登录 and 分享 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -341,7 +360,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/myself_hint_off"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name="amodule.dish.activity.ListDish"
             android:configChanges="orientation|keyboardHidden"
@@ -500,6 +518,7 @@
         <!--answer start-->
         <activity android:name="amodule.answer.activity.AskEditActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
@@ -508,7 +527,7 @@
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name="amodule.answer.activity.QAReportActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
@@ -940,7 +959,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="aplug.feedback.activity.ShowImage"
             android:configChanges="orientation|keyboardHidden"
@@ -963,9 +982,16 @@
         <activity
             android:name="aplug.web.FullScreenWeb"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="aplug.web.ShowTemplateWeb"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
 
 
 
@@ -1139,6 +1165,38 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="third.mall.activity.PublishEvalutionSingleActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name="third.mall.activity.PublishEvalutionMultiActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"
+            />
+        <activity
+            android:name="third.mall.activity.EvalutionListActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name="third.mall.activity.EvalutionSuccessActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"
+            />
         <!-- mall end -->
         <!-- ad start -->
         <activity
@@ -1428,7 +1486,6 @@
         <meta-data
             android:name="xh.basic.internet.img.module.DiskCacheModule"
             android:value="GlideModule"/>
-
 
         <activity android:name="amodule.comment.activity.PublishCommentActivity">
         </activity>

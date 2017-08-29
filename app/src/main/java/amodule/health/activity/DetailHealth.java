@@ -48,8 +48,8 @@ public class DetailHealth extends BaseActivity {
 	private LinearLayout layout_yichi, layout_jichi;
 	private ScrollviewDish scrollView;
 
-	private ArrayList<ArrayList<Map<String, String>>> yichiInfo = new ArrayList<ArrayList<Map<String, String>>>();
-	private ArrayList<ArrayList<Map<String, String>>> jichiInfo = new ArrayList<ArrayList<Map<String, String>>>();
+	private ArrayList<ArrayList<Map<String, String>>> yichiInfo = new ArrayList<>();
+	private ArrayList<ArrayList<Map<String, String>>> jichiInfo = new ArrayList<>();
 	
 	private String name = "", code = "", datatype = "";
 	private int ico_id;
@@ -157,7 +157,7 @@ public class DetailHealth extends BaseActivity {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {
-					ArrayList<Map<String, String>> classify = null;
+					ArrayList<Map<String, String>> classify;
 					name = UtilString.getListMapByJson(returnObj).get(0).get("name");
 					if(name != null){
 						((TextView)findViewById(R.id.title)).setText(name + "宜吃忌吃");
@@ -184,7 +184,7 @@ public class DetailHealth extends BaseActivity {
 					String data = UtilString.getListMapByJson(returnObj).get(0).get("data");
 					classify = UtilString.getListMapByJson(data);
 					for (int i = 0; i < classify.size(); i++) {
-						ArrayList<Map<String, String>> ingres = null;
+						ArrayList<Map<String, String>> ingres;
 						ingres = UtilString.getListMapByJson(classify.get(i).get("classify"));
 						for (int j = 0; j < ingres.size(); j++) {
 							ArrayList<Map<String, String>> ingre = UtilString.getListMapByJson(ingres.get(j).get("ingre"));
@@ -252,7 +252,7 @@ public class DetailHealth extends BaseActivity {
 							intent.putExtra("name", ingre.get("name"));
 							intent.putExtra("code", ingre.get("code"));
 							startActivity(intent);
-						};
+						}
 					} });
 		}
 	}
@@ -267,7 +267,7 @@ public class DetailHealth extends BaseActivity {
 			scrollView.smoothScrollTo(0, detail_tv.getHeight() - dp_15);
 			break;
 		case R.id.health_detail_btn_jichi:
-			int yichiHeight = ((LinearLayout)findViewById(R.id.layout_detail_yichi)).getHeight();
+			int yichiHeight = findViewById(R.id.layout_detail_yichi).getHeight();
 			scrollView.smoothScrollTo(0, detail_tv.getHeight() + yichiHeight - dp_15);
 			break;
 		case R.id.health_detail_btn_caipu:

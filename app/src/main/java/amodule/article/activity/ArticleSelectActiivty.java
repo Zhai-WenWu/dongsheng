@@ -233,7 +233,6 @@ public class ArticleSelectActiivty extends BaseActivity implements View.OnClickL
     }
 
     private void upload(){
-//        Log.i("tzy","content = " + uploadArticleData.getContent());
         uploadArticleData.setClassCode(checkCode);
         uploadArticleData.setIsOriginal(isCheck);
         uploadArticleData.setRepAddress(String.valueOf(reprintLink.getText()));

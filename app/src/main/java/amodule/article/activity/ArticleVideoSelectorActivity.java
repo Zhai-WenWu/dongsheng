@@ -3,20 +3,19 @@ package amodule.article.activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,7 +54,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private RelativeLayout mGridViewLayout;
     private ArticleVideoSelectorAdapter mAdapter;
 
-    private PopupWindow mCategoryPopup;
     private ListView mFolderListView;
     private ArticleVideoFolderAdapter mCategoryAdapter;
     private ArrayList<String> hadSelectedVideos = new ArrayList<>();
@@ -64,7 +62,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private String mTag;
 
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
-    private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
+    private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +142,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                         mCategoryText.setVisibility(View.GONE);
                         mCancelBtn.setVisibility(View.GONE);
                         mBackImg.setVisibility(View.VISIBLE);
-                        mCategoryPopup.dismiss();
+                        closeCategoryList();
                     }
                 }, 100);
             }
@@ -165,6 +163,8 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         mGridViewLayout = (RelativeLayout) findViewById(R.id.grid_layout);
         mVideoEmptyView = (RelativeLayout) findViewById(R.id.video_emptyview);
 
+        mFolderListView = (ListView) findViewById(R.id.category_list);
+        mFolderListView.setAdapter(mCategoryAdapter);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<String> formats = new ArrayList<String>();
+                ArrayList<String> formats = new ArrayList<>();
                 formats.add("mov");
                 formats.add("mp4");
                 ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMediasLimitFormats(formats);
@@ -200,7 +200,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                             String parentName = parentFile.getName();
                             List<Map<String, String>> childs;
                             if (!mVideoParentFiles.containsKey(parentName)) {
-                                childs = new ArrayList<Map<String, String>>();
+                                childs = new ArrayList<>();
                                 childs.add(map);
                                 mVideoParentFiles.put(parentName, childs);
                             } else {
@@ -217,7 +217,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
     /**
      * 数据加载完成
-     * @param datas
+     * @param datas 数据
      */
     private void onDataReady(final ArrayList<Map<String, String>> datas) {
         ArticleVideoSelectorActivity.this.runOnUiThread(new Runnable() {
@@ -254,6 +254,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                 }
                 mAdapter.setData(datas);
                 mVideoRecyclerView.setAdapter(mAdapter);
+                mCategoryAdapter.setData(mVideoParentFiles);
             }
         });
     }
@@ -262,16 +263,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         String ret = null;
         if (BaseEditActivity.TAG.equals(mTag)) {
             if (millis < 3*1000) {
-                ret = "不能短于3秒";
+                ret = "视频时长不能小于3秒";
                 XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频小于3s");
             } else if (millis > 1000*60) {
-                ret = "不能长于60s";
+                ret = "视频时长不能超过60s";
                 XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频超过60s");
             }
         } else {
-            if (millis < 1*1000)
+            if (millis < 1000)
                 ret = "不能短于1秒";
-            else if (millis > 1*1000*60*60)
+            else if (millis > 1000 * 60 * 60)
                 ret = "不能长于1小时";
         }
         return ret;
@@ -309,8 +310,6 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                     Tools.showToast(this, "本地没有视频哦");
                     return;
                 }
-                if (mCategoryPopup == null)
-                    createPopupFolderList();
                 showCategoryPopup(true);
                 break;
         }
@@ -321,38 +320,72 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
      * @param fromCategory
      */
     private void showCategoryPopup(boolean fromCategory) {
-        if (mCategoryPopup == null)
+        if (mFolderListView == null)
             return;
         if (fromCategory)
             mCategoryAdapter.resetSelected();
-        if(mCategoryPopup.isShowing())
-            mCategoryPopup.dismiss();
+        if(mFolderListView.getVisibility() == View.VISIBLE)
+            closeCategoryList();
         else {
-            getWindow().setFormat(PixelFormat.UNKNOWN);
-            mCategoryPopup.showAtLocation(mGridViewLayout, Gravity.BOTTOM, 0, 0);
+            openCategoryList();
         }
     }
 
-    /** 初始化相册列表的PopuWindow */
-    private void createPopupFolderList(){
-        mCategoryPopup = new PopupWindow(this);
-        View mView = LayoutInflater.from(this).inflate(R.layout.user_country_list, null);
-        mView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mFolderListView = (ListView) mView.findViewById(R.id.country_list);
-        mCategoryAdapter.setData(mVideoParentFiles);
-        mFolderListView.setAdapter(mCategoryAdapter);
-        mCategoryPopup.setContentView(mView);
-        mCategoryPopup.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.common_bg)));
-        mCategoryPopup.setWidth(mGridViewLayout.getWidth());
-        mCategoryPopup.setHeight(mGridViewLayout.getHeight());
-        mCategoryPopup.setAnimationStyle(R.style.PopupAnimation);
-        mCategoryPopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+    private boolean mIsOpenAnim = false;
+    /**打开相册列表*/
+    private void openCategoryList(){
+        if (mFolderListView.getVisibility() == View.VISIBLE || mIsOpenAnim)
+            return;
+        excuteAnim(true);
+    }
+
+    private boolean mIsCloseAnim = false;
+    /**关闭相册列表*/
+    private void closeCategoryList() {
+        if (mFolderListView.getVisibility() != View.VISIBLE || mIsCloseAnim)
+            return;
+        excuteAnim(false);
+    }
+
+    private void excuteAnim(final boolean isOpen) {
+        AnimationSet animSet = new AnimationSet(true);
+        animSet.setDuration(200);
+        animSet.setRepeatCount(0);
+        animSet.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onDismiss() {
-                getWindow().setFormat(PixelFormat.TRANSLUCENT);
+            public void onAnimationStart(Animation animation) {
+                if (isOpen) {
+                    getWindow().setFormat(PixelFormat.UNKNOWN);
+                    mFolderListView.setVisibility(View.VISIBLE);
+                    mIsOpenAnim = true;
+                } else
+                    mIsCloseAnim = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (isOpen)
+                    mIsOpenAnim = false;
+                else {
+                    getWindow().setFormat(PixelFormat.TRANSLUCENT);
+                    mFolderListView.setVisibility(View.GONE);
+                    mIsCloseAnim = false;
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
             }
         });
+        Animation scaleAnim = new ScaleAnimation(isOpen ? 0.5f : 1.0f, isOpen ? 1.0f : 0.5f, isOpen ? 0.5f : 1.0f, isOpen ? 1.0f : 0.5f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        Animation alphaAnim = new AlphaAnimation(isOpen ? 0.0f : 1.0f, isOpen ? 1.0f : 0.0f);
+        animSet.addAnimation(scaleAnim);
+        animSet.addAnimation(alphaAnim);
+        mFolderListView.clearAnimation();
+        mFolderListView.startAnimation(animSet);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -369,9 +402,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        if(mCategoryPopup != null && mCategoryPopup.isShowing())
-            mCategoryPopup.dismiss();
-        else{
+        if(mFolderListView != null && mFolderListView.getVisibility() == View.VISIBLE) {
+            mFolderListView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mTitle.setText("香哈视频");
+                    mCategoryText.setVisibility(View.VISIBLE);
+                }
+            }, 100);
+            closeCategoryList();
+        }else{
             setResult(RESULT_CANCELED);
             super.onBackPressed();
         }

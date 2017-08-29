@@ -68,7 +68,7 @@ public class ActivityList extends BaseActivity {
 		list_activity_text = (TextView) findViewById(R.id.list_activity_text);
 		list_acticity.setDivider(null);
 		list_acticity.paddingBottom = 0;
-		dataActicity = new ArrayList<Map<String, String>>();
+		dataActicity = new ArrayList<>();
 		adapterActicity = new AdapterActivity(this, list_acticity, dataActicity, 
 				R.layout.a_xh_item_activity, 
 				new String[] { "name", "img","time" ,"allClick"}, 
@@ -138,7 +138,7 @@ public class ActivityList extends BaseActivity {
 					ArrayList<Map<String, String>> listMap = UtilString.getListMapByJson(returnObj);
 					for (int i = 0; i < listMap.size(); i++) {
 						loadCount++;
-						Map<String, String> map = new HashMap<String, String>();
+						Map<String, String> map = new HashMap<>();
 						map.put("name", listMap.get(i).get("name"));
 						map.put("type", listMap.get(i).get("type"));
 						map.put("img", listMap.get(i).get("img"));

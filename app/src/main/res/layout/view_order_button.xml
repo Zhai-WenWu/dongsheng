@@ -13,12 +13,11 @@
         android:layout_width="@dimen/dp_65"
         android:layout_height="@dimen/dp_25"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginLeft="@dimen/dp_10"
         android:gravity="center"
         android:singleLine="true"
         android:text="确定收货"
         android:textColor="#ffffff"
-        android:textSize="@dimen/sp_12" />
+        android:textSize="@dimen/dp_12" />
 
 </RelativeLayout>

@@ -85,8 +85,8 @@ public class DetailIngre extends BaseActivity {
 	private TextView[]  tv_tags=new TextView[2];
 	
 	private Intent intent_feek ;
-	private Map<String, String> ingreMap = new HashMap<String, String>();
-	private Map<String, String> tabooMap = new HashMap<String, String>();//相克临时数据集合
+	private Map<String, String> ingreMap = new HashMap<>();
+	private Map<String, String> tabooMap = new HashMap<>();//相克临时数据集合
 	public String code = "", ingre = "", page = "0";
 	private boolean info_loadOver = false, taboo_loadOver = false;
 	
@@ -267,11 +267,11 @@ public class DetailIngre extends BaseActivity {
 	 */
 	private void getIngerInfo(final String type) {
 		//有数据不请求网络
-		if(type == "info"&&info_loadOver&&ingreMap.size()>0){
+		if("info".equals(type)&&info_loadOver&&ingreMap.size()>0){
 			setIngerInfo(ingreMap);
 			return;
 		}
-		if(type == "taboo"&&taboo_loadOver&&tabooMap.size()>0){
+		if("taboo".equals(type)&&taboo_loadOver&&tabooMap.size()>0){
 			setIngerXiangkeYida(UtilString.getListMapByJson(tabooMap.get("taboo")));
 			return;
 		}
@@ -282,11 +282,11 @@ public class DetailIngre extends BaseActivity {
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {
 					ingreMap = UtilString.getListMapByJson(returnObj).get(0);
-					if (type == "info" && !info_loadOver) {
+					if ("info".equals(type) && !info_loadOver) {
 						setIngerInfo(ingreMap);
 						info_loadOver = true;
 					}
-					if (type == "taboo" && !taboo_loadOver) {
+					if ("taboo".equals(type) && !taboo_loadOver) {
 						setIngerXiangkeYida(UtilString.getListMapByJson(ingreMap.get("taboo")));
 						tabooMap=ingreMap;
 						taboo_loadOver = true;
@@ -345,7 +345,7 @@ public class DetailIngre extends BaseActivity {
 //				float size = Tools.getDimenSp(this, R.dimen.sp_18);
 				text.setPadding(0, 0, 0, Tools.getDimen(this, R.dimen.dp_7_5));
 				text.setTextSize(Tools.getDimenSp(this, R.dimen.sp_18));
-				text.setText(Html.fromHtml(infos.get(i).get("").toString()));
+				text.setText(Html.fromHtml(infos.get(i).get("")));
 				text.setTextColor(Color.parseColor("#000000"));
 				layout.addView(text);
 				// 内容
@@ -355,7 +355,7 @@ public class DetailIngre extends BaseActivity {
 
 				text.setTextSize(Tools.getDimenSp(this, R.dimen.sp_16));
 				text.setTextColor(Color.parseColor("#555555"));
-				text.setText(infos.get(i + 1).get("").toString());
+				text.setText(infos.get(i + 1).get(""));
 				layout.addView(text);
 			}
 			// 列表加载
@@ -384,7 +384,7 @@ public class DetailIngre extends BaseActivity {
 						intent.putExtra("pinyin", ingre.get("pinyin"));
 						startActivity(intent);
 						XHClick.mapStat(DetailIngre.this, tongjiId, "功效与作用", "热量表的点击");
-					};
+					}
 				} });
 			}
 			if (calorie.getChildCount() > 1) {
@@ -525,7 +525,7 @@ public class DetailIngre extends BaseActivity {
 			Tools.showToast(this, "正在加载数据,请稍后...");
 			return;
 		}
-		String type = "", title = "", content = "", imgUrl = "", clickUrl = StringManager.wwwUrl;
+		String type, title = "", content = "", imgUrl, clickUrl = StringManager.wwwUrl;
 		type = BarShare.IMG_TYPE_WEB;
 		imgUrl = ingreMap.get("img");
 		switch (viewPager.getCurrentItem()) {

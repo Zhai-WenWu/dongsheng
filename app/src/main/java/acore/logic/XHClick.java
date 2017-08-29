@@ -77,6 +77,9 @@ public class XHClick {
     private static long viewPageStopTime;//viewpage 子tab的页面停留时间(结束的时间戳)
 //	private static String itemName = "";//viewpager 子tab的页面名称.(名称用拼音表示)
 
+    /**评价按钮*/
+    public static final String comcomment_icon = "comcomment_icon";
+
 
     /**
      * 开启viewpager的页面开启时间
@@ -611,7 +614,6 @@ public class XHClick {
         String param;
         try {
             param = "from=" + URLEncoder.encode(from, "utf-8") + "&link=" + link + "&type=" + type;
-            Log.i("tzy", "param = " + param);
             ReqInternet.in().doPost(actionUrl, param, new InternetCallback(XHApplication.in()) {
 
                 @Override

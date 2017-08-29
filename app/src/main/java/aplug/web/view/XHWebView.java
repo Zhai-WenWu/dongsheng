@@ -1,6 +1,7 @@
 package aplug.web.view;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
@@ -80,5 +81,19 @@ public class XHWebView extends WebView {
 
 	public void setOnWebNumChangeCallback(OnWebNumChangeCallback onWebNumChangeCallback) {
 		this.onWebNumChangeCallback = onWebNumChangeCallback;
+	}
+
+	private String mBackData;
+	public void setBackData (String loadUrl) {
+		mBackData = loadUrl;
+	}
+
+	public boolean handleBackSelf () {
+		return !TextUtils.isEmpty(mBackData);
+	}
+
+	public void handleBack () {
+		loadUrl(mBackData);
+		mBackData = null;
 	}
 }

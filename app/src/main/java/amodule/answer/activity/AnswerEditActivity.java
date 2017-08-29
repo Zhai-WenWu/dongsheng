@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xianghatest.R;
 
@@ -54,7 +55,7 @@ public class AnswerEditActivity extends BaseEditActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
+                onLocalDataReady(mSQLite.queryFirstData());
             }
         }).start();
     }
@@ -65,15 +66,12 @@ public class AnswerEditActivity extends BaseEditActivity {
             public void run() {
                 loadManager.hideProgressBar();
                 if (model != null) {
-                    mModel = model;
-                    mEditText.setText(model.getmText());
-                    String imgsStr = model.getmImgs();
-                    if (!TextUtils.isEmpty(imgsStr)) {
-                        ArrayList<Map<String, String>> imgs = StringManager.getListMapByJson(imgsStr);
-                        if (imgs != null && !imgs.isEmpty()) {
-                            for (Map<String, String> img : imgs)
-                                mImgController.addData(img);
-                        }
+                    mModel.setmId(model.getmId());
+                    mModel.setmDishCode(model.getmDishCode());
+                    if (!TextUtils.isEmpty(mDishCode) && mDishCode.equals(model.getmDishCode())) {
+                        mModel = model;
+                        mEditText.setText(model.getmText());
+                        initImgControllerData(model);
                     }
                 }
             }
@@ -98,6 +96,8 @@ public class AnswerEditActivity extends BaseEditActivity {
     @Override
     protected void onEditTextChanged(CharSequence s, int start, int before, int count) {
         mCountText.setText(s.length() + "/2000");
+        if (s.length() >= 2000)
+            Toast.makeText(this, "不能继续输入", Toast.LENGTH_SHORT).show();
     }
 
 }

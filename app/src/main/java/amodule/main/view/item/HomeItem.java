@@ -104,17 +104,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
         mHomeItemBottomView.setVisibility(View.GONE);
 
         mTimeTagContainer = (LinearLayout) findViewById(R.id.time_tag_container);
-        if (mTimeTagContainer != null)
-            mTimeTagContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mRefreshCallBack != null)
-                        mRefreshCallBack.viewOnClick(true);
-                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
-                        XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
-                }
-            });
-        addDefaultListener();
+
     }
 
     private void addDefaultListener() {
@@ -145,18 +135,8 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                         mCallback.callback(bitmap);
                     return;
                 }
-                ImageView img = null;
-                if (v.getTag(TAG_ID).equals(url))
-                    img = v;
-                if (img != null && bitmap != null) {
-                    // 图片圆角和宽高适应auther_userImg
-                    if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
-                        v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
-                    } else {
-                        v.setScaleType(mScaleType);
-                        UtilImage.setImgViewByWH(v, bitmap, mImgWidth, mImgHeight, mImgZoom);
-                    }
+                if (bitmap != null) {
+                    v.setImageBitmap(bitmap);
                 }
             }
         };
@@ -223,7 +203,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 intent.putExtra("product_code",map.get("product_code"));
             } else if(mTransferUrl.contains("nousInfo.app")){
                 c = ShowWeb.class;
-                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
+                intent.putExtra("url",StringManager.api_nouseInfo);
                 intent.putExtra("code",map.get("code"));
             }
             if (c != null) {
@@ -256,6 +236,19 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
     @Override
     public void setData(Map<String, String> dataMap, int position) {
         super.setData(dataMap, position);
+        //设置监听
+        if (mTimeTagContainer != null)
+            mTimeTagContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mRefreshCallBack != null)
+                        mRefreshCallBack.viewOnClick(true);
+                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
+                        XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
+                }
+            });
+        addDefaultListener();
+        //设置数据
         if (mDataMap != null) {
             initData();
             //统计---只展示一次，isShow 2已经显示
@@ -337,6 +330,11 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
             }
             if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
                 mAdTag.setVisibility(View.VISIBLE);
+            else if (mAdTag != null)
+                mAdTag.setVisibility(View.GONE);
+        } else {
+            if (mAdTag != null)
+                mAdTag.setVisibility(View.GONE);
         }
         if (mDataMap.containsKey("type")) {
             mType = mDataMap.get("type");
@@ -347,21 +345,19 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
     }
 
     protected void resetView() {
-        if (viewIsVisible(mAdTag))
-            mAdTag.setVisibility(View.GONE);
-        if (viewIsVisible(mTimeTagContainer))
+        if (mTimeTagContainer != null)
             mTimeTagContainer.setVisibility(View.GONE);
-        if (viewIsVisible(mUserName))
+        if (mUserName != null)
             mUserName.setVisibility(View.GONE);
-        if (viewIsVisible(mUserGourmet))
+        if (mUserGourmet != null)
             mUserGourmet.setVisibility(View.GONE);
-        if (viewIsVisible(mNameGourmet))
+        if (mNameGourmet != null)
             mNameGourmet.setVisibility(View.GONE);
-        if (viewIsVisible(mTopTag))
+        if (mTopTag != null)
             mTopTag.setVisibility(View.GONE);
-        if (viewIsVisible(mDot))
+        if (mDot != null)
             mDot.setVisibility(View.GONE);
-        if (viewIsVisible(mTopTxt))
+        if (mTopTxt != null)
             mTopTxt.setVisibility(View.GONE);
         if (mLineTop != null) {
             mLineTop.setVisibility(mPosition > 0 ? View.VISIBLE : View.GONE);
@@ -471,10 +467,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
      * @return
      */
     public String getModleViewType(){
-        if(!TextUtils.isEmpty(viewType)&& HomeFragment.MODULETOPTYPE.equals(viewType)){
-            return "top";
-        }
-        return MainHome.recommedType_statictus;
+        return isTopTypeView() ? "top" : MainHome.recommedType_statictus;
     }
 
     /**
@@ -482,10 +475,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
      * @return
      */
     public boolean isTopTypeView(){
-        if(!TextUtils.isEmpty(viewType)&& HomeFragment.MODULETOPTYPE.equals(viewType)){
-            return true;
-        }
-        return false;
+        return !TextUtils.isEmpty(viewType) && HomeFragment.MODULETOPTYPE.equals(viewType);
     }
 
     /**

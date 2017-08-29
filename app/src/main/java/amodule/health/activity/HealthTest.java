@@ -50,7 +50,7 @@ public class HealthTest extends BaseActivity {
 	private HealthTestAdapter adapter;
 	// 上传使用的参数
 	private Map<String, String> mapParams;
-	private ArrayList<Map<String, String>> testList = new ArrayList<Map<String, String>>();
+	private ArrayList<Map<String, String>> testList = new ArrayList<>();
 
 	private static final int ONREFREUSH = 1;
 	private int screenWidth = 0, screenHight = 0;
@@ -102,12 +102,11 @@ public class HealthTest extends BaseActivity {
 		if (!answer_map.equals(""))
 			mapParams = UtilString.getMapByString(answer_map,",", "=");
 		else
-			mapParams = new LinkedHashMap<String, String>();
+			mapParams = new LinkedHashMap<>();
 		// 数据加载
 		String json = UtilFile.getFromAssets(HealthTest.this, FileManager.file_healthQuestion);
 		if (!json.equals("")) {
 			ArrayList<Map<String, String>> list = UtilString.getListMapByJson(json);
-			json = null;
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, String> map = list.get(i);
 				ArrayList<Map<String, String>> listQuestion = UtilString.getListMapByJson(map.get("question"));
@@ -161,7 +160,7 @@ public class HealthTest extends BaseActivity {
 				new SetDataView.ClickFunc[] { new SetDataView.ClickFunc() {
 					@Override
 					public void click(int index, View view) {
-						String answer = "";
+						String answer;
 						if (index == 0)
 							answer = sex_answer.getText().toString();
 						else {
@@ -415,7 +414,7 @@ public class HealthTest extends BaseActivity {
 				if(isAuto && !TextUtils.isEmpty(crowd)){
 					return;
 				}
-				LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+				LinkedHashMap<String, String> map = new LinkedHashMap<>();
 				map.put("testQue[0]", "0:" + mapParams.get("0"));
 				Iterator<Map.Entry<String, String>> it = mapParams.entrySet().iterator();
 				int i = 1;

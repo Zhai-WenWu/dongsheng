@@ -47,11 +47,11 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewpager;
 	private myPagerAdapter adapter;
-	private ArrayList<OrderBean> listBean = new ArrayList<OrderBean>();
-	private static Map<String, MallOrderFragment> fragmentMap = new HashMap<String, MallOrderFragment>();// fragment集合
+	private ArrayList<OrderBean> listBean = new ArrayList<>();
+	private static Map<String, MallOrderFragment> fragmentMap = new HashMap<>();// fragment集合
 	public boolean isRefresh = false;
-	public ArrayList<String> ids = new ArrayList<String>();// 临时数据集合
-	private ArrayList<String> list_statistic= new ArrayList<String>();
+	public ArrayList<String> ids = new ArrayList<>();// 临时数据集合
+	private ArrayList<String> list_statistic= new ArrayList<>();
 	private String icon_but="";
 	private CommonBottomView mCommonBottomView;
 	private LayoutScroll scrollLayout;
@@ -288,6 +288,15 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 						if (Integer.parseInt(id) == 0) {// 全部
 							fragment.refresh();
 						} else {// 其他
+							fragment.listData.remove(Integer.parseInt(position));
+							fragment.adapter.notifyDataSetChanged();
+						}
+						isRefresh = true;
+						ids.add(id);
+					}else if(resultCode == OrderStateActivity.result_comment_success){//评价成功
+						if (Integer.parseInt(id) == 0) {// 全部
+							fragment.refresh();
+						} else if(Integer.parseInt(id) == 5){// 待评价
 							fragment.listData.remove(Integer.parseInt(position));
 							fragment.adapter.notifyDataSetChanged();
 						}

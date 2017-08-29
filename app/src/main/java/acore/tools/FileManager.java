@@ -53,6 +53,8 @@ public class FileManager extends UtilFile{
 	public static final String file_location = "location";
 	public static final String file_ad = "ad";
 	public static final String file_config = "config";
+	//随机推广
+	public static final String file_randPromotionConfig = "randPromotionConfig";
 	//搜索默认页，热搜词
 	public static final String file_hotwords = "hotWords";
 	//菜谱模板
@@ -343,4 +345,20 @@ public class FileManager extends UtilFile{
 			e.printStackTrace();
 		}
 	}
+
+    /**
+     * 异步保存文件，子线程中
+     * @param filePath 文件路径
+     * @param content 内容
+     * @param append 是否可以追加
+     */
+	public static void scynSaveFile(final String filePath,final String content,final boolean append){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				saveFileToCompletePath(filePath,content,append);
+			}
+		}).start();
+	}
+
 }

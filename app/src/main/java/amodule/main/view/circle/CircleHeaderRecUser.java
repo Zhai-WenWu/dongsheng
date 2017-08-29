@@ -47,7 +47,7 @@ public class CircleHeaderRecUser extends LinearLayout {
 	public CircleHeaderRecUser(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		setOrientation(VERTICAL);
-		setBackgroundColor(Color.parseColor("#F1EEE4"));
+		setBackgroundColor(Color.parseColor(getResources().getString(R.color.common_bg)));
 	}
 
 	public void setData(ArrayList<Map<String, String>> list) {

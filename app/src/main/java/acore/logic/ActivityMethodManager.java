@@ -110,12 +110,17 @@ public class ActivityMethodManager {
                     Main.allMain.setCurrentTabByClass(MainHomePageNew.class);
                 }
                 colse_level = 1000;
-            } else
+            } else {
                 mAct.finish();
+            }
         }
         //电商是3，登录界面是4，其他页面是5，加次判断是为了解决从首页发视频菜谱，跳到上传列表，通过colseLevel关闭发视频菜谱页面，饼跳到菜谱列表页面
-        else if (colse_level != 6 || level < 4)
+        else if (colse_level != 6 || level < 4) {
             colse_level = 1000;
+        }
+
+        /*随机广告*/
+        randPromotion();
     }
 
     public void onPause() {
@@ -184,7 +189,11 @@ public class ActivityMethodManager {
         }
         mHomeWatcher.startWatch();
     }
-
+/*随机广告推广的问题*/
+    private  void randPromotion() {
+        // TODO: 8/29/17
+        mAct.getComponentName().getClassName() ;
+    }
     /** 网络方法上传单图 */
     public static final int UPLOAD_SINGLE = 1;
     /** 发菜谱上传图片 */

@@ -268,7 +268,7 @@ public class MallCommon {
 	 */
 	public static void getDsInfo(final Activity context,final LoadManager loadManager){
 		
-		MallReqInternet.in().doGet(MallStringManager.mall_dsInfo, new MallInternetCallback(context) {
+		MallReqInternet.in().doGet(MallStringManager.mall_dsInfo_v3, new MallInternetCallback(context) {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

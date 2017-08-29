@@ -241,12 +241,19 @@ public class FileToolsCammer {
         if(TextUtils.isEmpty(videoPath)) return null;
         String imgPath = null;
         //如果有辞视频，但是没有次视频的封面图
-        if(new File(videoPath).exists()) {
+        File videoFile = new File(videoPath);
+        if(videoFile.exists()) {
             String bitmapName = StringManager.toMD5(videoPath,false);
             imgPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
-            if(!new File(imgPath).exists()) {
+            File imageFile = new File(imgPath);
+            if(!imageFile.exists()){
                 Bitmap bitmap = ToolsCammer.getFrameAtTime(videoPath);
                 FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
+                //还有点问题，待测试
+//            }else if(imageFile.lastModified() < videoFile.lastModified()){
+//                FileManager.delDirectoryOrFile(imgPath);
+//                Bitmap bitmap = ToolsCammer.getFrameAtTime(videoPath);
+//                FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
             }
         }
         return imgPath;

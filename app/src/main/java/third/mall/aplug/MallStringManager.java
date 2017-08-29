@@ -1,16 +1,14 @@
 package third.mall.aplug;
 
-import android.text.TextUtils;
-
 import xh.basic.tool.UtilString;
 
 public class MallStringManager extends UtilString {
 
     public final static String defaultDomain = ".ds.xiangha.com";
-    //	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
+//    	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
     public static String apiAPI = "api";
     public static String appm = "m";
-    public static String httpData = "https://";
+    public static String httpData = "http://";
 
     public static String apiTitle = httpData + apiAPI;
     public static String appWebTitle = httpData + appm;
@@ -25,6 +23,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_api_register = mall_apiUrl + "/v1/customer/register";
     public final static String mall_api_home = mall_apiUrl + "/v1/home";
     public final static String mall_api_product_info = mall_apiUrl + "/v1/product/info";
+    public final static String mall_api_product_info_v3 = mall_apiUrl + "/v3/product/info";
     public final static String mall_api_computeOrderAmt = mall_apiUrl + "/v1/order/computeOrderAmt";
     public final static String mall_api_createOrder = mall_apiUrl + "/v1/order/createOrder";
     public final static String mall_api_getShippingAddress = mall_apiUrl + "/v1/customer/getShippingAddress";
@@ -56,7 +55,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_web_classify = mall_web_apiUrl + "/v1/classify/classifyInfo";
 
     //获取dsToken
-    public final static String mall_getDsToken = "https://oauth.xiangha.com/ds/getDsToken";
+    public final static String mall_getDsToken = httpData + "oauth.xiangha.com/ds/getDsToken";
     //购物车
     public final static String mall_getCartProductNum = mall_apiUrl + "/v1/cart/getCartProductNum";
     public final static String mall_getCartInfo = mall_apiUrl + "/v1/cart/getCartInfo";
@@ -88,6 +87,13 @@ public class MallStringManager extends UtilString {
     public final static String mall_getHotRecommend = mall_apiUrl + "/v1/product/getHotRecommend";
     //sign
     public final static String mall_getToken = mall_apiUrl + "/v2/sign/getToken";
+    //详情页改版&评论
+    public final static String mall_toComment = mall_apiUrl + "/v3/order/toComment";
+    public final static String mall_addComment = mall_apiUrl + "/v3/comment/addComment";
+    public final static String mall_addMuiltComment = mall_apiUrl + "/v3/comment/addMuiltComment";
+    public final static String mall_api_listOrder_v3 = mall_apiUrl + "/v3/order/listOrder";
+    public final static String mall_dsInfo_v3 = mall_apiUrl + "/v3/home/dsInfo";
+    public final static String mall_api_getTemplate = mall_apiUrl + "/v3/template/getTemplate";
 
     /**
      * 替换url
