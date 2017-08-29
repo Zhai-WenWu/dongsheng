@@ -52,7 +52,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private TieZiSearchResultView tieziView;
     private View secondLevelView;
     private EditText edSearch;
-    private int limitSearchType;
     private ImageView iv_history;
     private ImageView clear_global;
     private ImageView search_speeach;
@@ -74,7 +73,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
     public void init(BaseActivity activity, String searchWord, int searchType) {
         mActivity = activity;
-        limitSearchType = searchType;
+        this.searchType = searchType;
         initView();
 
         if (!TextUtils.isEmpty(searchWord)) {
@@ -102,7 +101,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         initHayouView();
         initTieZiView();
         setHintInfo();
-        initTitle();
         setListener();
         showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
         edSearch.requestFocus();
@@ -171,14 +169,13 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
             @Override
             public void toSearch(String searchKey, int searchType) {
-                searchType = limitSearchType;
                 setSearchMsg(searchKey, searchType);
                 search(false);
             }
 
         };
 
-        defaultView.init(mActivity, defaultViewCallback, limitSearchType);
+        defaultView.init(mActivity, defaultViewCallback, searchType);
     }
 
     private void clearEditViewFocus(boolean isClearFocus) {
@@ -199,16 +196,9 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         edSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-
-                if (SearchConstant.SEARCH_CAIPU != limitSearchType
-                        || secondLevelView != null) {
+                if ( secondLevelView != null) {
                     setHintInfo();
-
-                    if (hasFocus && !TextUtils.isEmpty(searchKey)) {
-                        showClearBtn(true);
-                    } else {
-                        showClearBtn(false);
-                    }
+                    showClearBtn(hasFocus && !TextUtils.isEmpty(searchKey));
                     return;
                 }
                 resetEdHint();
@@ -255,7 +245,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                             return true;
                         }
                         searchKey = str;
-                        searchType = limitSearchType;
                         search();
                         return true;
                     default:
@@ -295,14 +284,13 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                     showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
                 } else {
                     searchKey = temp;
-                    if (SearchConstant.SEARCH_CAIPU != limitSearchType) {
-                        searchType = limitSearchType;
-                        search();
-                    } else {
+//                    if (SearchConstant.SEARCH_CAIPU != searchType) {
+//                        search();
+//                    } else {
                         showSpeciView(SearchConstant.VIEW_MATCH_WORDS);
                         matchwordsView.getMatchWords(searchKey);
 //                        XHClick.track(matchwordsView.getContext(), "浏览搜索输入页");
-                    }
+//                    }
                 }
             }
         });
@@ -334,6 +322,8 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             return;
         }
 
+        edSearch.clearFocus();
+
         DataOperate.saveSearchWord(key);
         switch (type) {
             case SearchConstant.SEARCH_CAIPU:
@@ -360,25 +350,11 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                 break;
         }
         Log.i("tzy","搜索");
-        if (SearchConstant.SEARCH_CAIPU == limitSearchType) {
+        if (SearchConstant.SEARCH_CAIPU == searchType) {
             clearEditViewFocus(true);
         }
         XHClick.track(mActivity, "浏览搜索结果页");
     }
-
-
-    private void initTitle() {
-//        if (Tools.isShowTitle()) {
-//            int dp_46 = Tools.getDimen(context, R.dimen.dp_46);
-//            int height = dp_46 + Tools.getStatusBarHeight(context);
-//
-//            LinearLayout bar_title = (LinearLayout) findViewById(R.id.all_title_rela);
-//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-//            bar_title.setLayoutParams(layout);
-//            bar_title.setPadding(0, Tools.getStatusBarHeight(context), 0, 0);
-//        }
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -396,12 +372,12 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                     mActivity.loadManager.hideProgressBar();
                     return;
                 }
-                setSearchMsg(str, limitSearchType);
+                setSearchMsg(str, searchType);
                 search();
                 break;
             // 清除搜索词
             case R.id.btn_ed_clear_global:
-                setSearchMsg("", limitSearchType);
+                setSearchMsg("", searchType);
                 findViewById(R.id.btn_ed_clear_global).setVisibility(View.GONE);
                 clearEditViewFocus(true);
                 if (secondLevelView != null) {
@@ -465,9 +441,9 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     }
 
     private void setHintInfo() {
-        if (SearchConstant.SEARCH_HAYOU == limitSearchType) {
+        if (SearchConstant.SEARCH_HAYOU == searchType) {
             edSearch.setHint("搜哈友");
-        } else if (SearchConstant.SEARCH_MEISHITIE == limitSearchType) {
+        } else if (SearchConstant.SEARCH_MEISHITIE == searchType) {
             edSearch.setHint("搜贴子");
         } else if (secondLevelView instanceof CaidanResultView) {
             edSearch.setHint("搜菜单");
