@@ -548,9 +548,12 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         imageviews = new ImageView[views.size()];
         for (int i = 0; i < views.size(); i++) {
             ImageView iv = new ImageView(this);
-            int dp_2 = Tools.getDimen(this, R.dimen.dp_2);
-            iv.setPadding(dp_2, 0, dp_2, 0);
+            int dp_2_5 = Tools.getDimen(this, R.dimen.dp_2_5);
+            int dp_12 = Tools.getDimen(this, R.dimen.dp_12);
+            iv.setPadding(dp_2_5, 0, dp_2_5, 0);
+            LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams(dp_12,dp_12);
             imageviews[i] = iv;
+            imageviews[i].setLayoutParams(layoutParams);
             imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_white);
             if (i == 0) {
                 imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_active);
