@@ -33,9 +33,9 @@ import acore.tools.FileManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
-import amodule.answer.activity.BaseEditActivity;
 import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -810,6 +810,11 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void goPay(String url, String params, final String type) {
+
+        if(!ToolsDevice.isNetworkAvailable(mAct)){
+            Tools.showToast(mAct,"网络异常，请检查网络");
+            return;
+        }
 //		Tools.showToast(mAct,"url:"+url);
 //		Log.i("FRJ","goPay() url: " + url + "  params:" + params + "  tpye:" + type);
         PayCallback.setPayCallBack(new PayCallback.OnPayCallback() {
