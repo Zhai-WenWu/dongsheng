@@ -96,7 +96,7 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
             public void run() {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
-        },5 * 60 * 1000);
+        },15 * 60 * 1000);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Log.i("zyj","activity:::"+(System.currentTimeMillis()-startTime));
