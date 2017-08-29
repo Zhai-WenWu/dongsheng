@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -45,6 +46,7 @@ public class PlayVideo extends BaseAppCompatActivity {
             finish();
             return;
         }
+        Log.d("tzy", "url = " + url);
         initActivity(name,2,0,0,R.layout.a_other_play_video);
         init();
     }

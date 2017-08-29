@@ -857,6 +857,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         if (GSYVideoManager.instance().getMediaPlayer() != null && mHadPlay) {
             try {
                 int time = seekBar.getProgress() * getDuration() / 100;
+                Log.d(TAG, "onStopTrackingTouch :: time = "  + time);
                 if(mCurrentState == CURRENT_STATE_AUTO_COMPLETE){
                     setSeekOnStart(time);
                     mStartButton.performClick();

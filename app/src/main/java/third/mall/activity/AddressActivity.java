@@ -112,15 +112,6 @@ public class AddressActivity extends BaseActivity implements OnClickListener{
 				else address_type="1";
 			}
 		});
-//		sb_address.setOnChangedListener(new OnChangedListener() {
-//			
-//			@Override
-//			public void OnChanged(ToggleButton toggle, boolean checkState) {
-//				if(checkState)address_type="2";
-//				else address_type="1";
-//				sb_address.getState(checkState);
-//			}
-//		});
 		editTextJubge();
 	}
 	private void initData() {
@@ -155,59 +146,26 @@ public class AddressActivity extends BaseActivity implements OnClickListener{
 	 * 设置监听
 	 */
 	private void setListener() {
+		TextWatcher baseTextWatcher = new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+			}
+			@Override
+			public void afterTextChanged(Editable s) {
+				editTextJubge();
+			}
+		};
+
 		//名称监听
-		consignee_edit.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
-			}
-			@Override
-			public void afterTextChanged(Editable s) {
-				editTextJubge();
-			}
-		});
+		consignee_edit.addTextChangedListener(baseTextWatcher);
 		//电话号码
-		number_edit.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
-			}
-			@Override
-			public void afterTextChanged(Editable s) {
-				editTextJubge();
-			}
-		});
+		number_edit.addTextChangedListener(baseTextWatcher);
 		//详细地址
-		address_explian_edit.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
-			}
-			@Override
-			public void afterTextChanged(Editable s) {
-				editTextJubge();
-			}
-		});
-		address_edit.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-			@Override
-			public void afterTextChanged(Editable s) {
-				editTextJubge();
-			}
-		});
+		address_explian_edit.addTextChangedListener(baseTextWatcher);
+		address_edit.addTextChangedListener(baseTextWatcher);
 	}
 
 	@Override
