@@ -28,6 +28,7 @@ import acore.logic.LoginManager;
 import acore.logic.PayCallback;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
@@ -879,6 +880,7 @@ public class JsAppCommon extends JsBase {
                     if (mOnPayFinishListener != null) {
                         mOnPayFinishListener.onPayFinish(isOk, data);
                     }
+                    XHActivityManager.getInstance().refreshActivity();
                 }
             });
         }

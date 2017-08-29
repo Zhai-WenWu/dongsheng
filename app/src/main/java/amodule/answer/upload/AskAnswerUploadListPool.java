@@ -134,7 +134,7 @@ public class AskAnswerUploadListPool extends UploadListPool {
             tailItemDatas.add(tailItemData);
             uploadPoolData.setTailDataList(tailItemDatas);
         } else {
-            Toast.makeText(XHApplication.in(), "uploadArticleData 从数据库中没有获取到数据", Toast.LENGTH_SHORT).show();
+            Toast.makeText(XHApplication.in(), "没有获取到数据", Toast.LENGTH_SHORT).show();
         }
 
         return model;

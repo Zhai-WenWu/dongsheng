@@ -73,6 +73,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private String mQADetailUrl;//问答详情页的url
 
     private boolean mIsResuming;
+    private boolean mIsFromPause;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,6 +272,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     protected void onResume() {
         super.onResume();
         mIsResuming = false;
+        if (mIsFromPause && loadManager != null && loadManager.isShowingProgressBar())
+            loadManager.hideProgressBar();
     }
 
     @Override
@@ -340,6 +343,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     protected void onPause() {
         super.onPause();
         mIsResuming = false;
+        mIsFromPause = true;
     }
 
     @Override
@@ -444,7 +448,10 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     if (mIsAskMore) {
                         if (flag) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
-                            XHActivityManager.getInstance().refreshActivity();
+                            if (mFromHome)
+                                startQADetail();
+                            else
+                                XHActivityManager.getInstance().refreshActivity();
                             finish();
                         }
                     } else {
