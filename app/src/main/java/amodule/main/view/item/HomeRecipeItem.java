@@ -42,6 +42,8 @@ public class HomeRecipeItem extends HomeItem {
     private boolean mIsVideo;
     private boolean mIsVip;
 
+    private int mVideoParamsH = (ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40)) * 9 / 16;
+
     public HomeRecipeItem(Context context) {
         this(context, null);
     }
@@ -77,7 +79,7 @@ public class HomeRecipeItem extends HomeItem {
             @Override
             public void onClick(View v) {
                 //视频列表下点击视频图片部分直接播放，其他部分则跳转到视频菜谱详情页
-                if (v == mVideoContainer && !TextUtils.isEmpty(mType) && mType.equals("2") && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType()) && !mIsVip) { //表示当前tab是视频菜谱
+                if (v == mVideoContainer && "2".equals(mType) && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType()) && !mIsVip) { //表示当前tab是视频菜谱
                     if (mVideoClickCallBack != null) {
                         mVideoClickCallBack.videoOnClick(mPosition);
                         XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
@@ -88,8 +90,7 @@ public class HomeRecipeItem extends HomeItem {
                 }
             }
         };
-        if (mVideoContainer != null)
-            mVideoContainer.setOnClickListener(clickListener);
+        mVideoContainer.setOnClickListener(clickListener);
     }
 
     @Override
@@ -127,86 +128,60 @@ public class HomeRecipeItem extends HomeItem {
         }
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
         if (mIsVideo) {
-            int fixedH = 9, fixedW = 16;
-            int w = ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40);
-            int h = w * fixedH / fixedW;
-            containerParams.height = h;
+            containerParams.height = mVideoParamsH;
         }
         String type = null;
         if (mModuleBean != null)
             type = mModuleBean.getType();
         containerParams.topMargin = getResources().getDimensionPixelSize(MainHome.recommedType.equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
         if (!TextUtils.isEmpty(type)) {
-            if ("day".equals(type)) {
-                if (mPosition == 0)
-                    containerParams.topMargin = 0;
-                if (mDataMap.containsKey("pastRecommed") && !TextUtils.isEmpty(mDataMap.get("pastRecommed"))) {
-                    if (mLineTop != null)
+            switch (type) {
+                case "day":
+                    if (!TextUtils.isEmpty(mDataMap.get("pastRecommed"))) {
                         mLineTop.setVisibility(View.GONE);
-                    if (mRecommendLine != null)
                         mRecommendLine.setVisibility(View.VISIBLE);
-                    if (mRecommendTag != null)
                         mRecommendTag.setVisibility(View.VISIBLE);
-                }
-            } else if ("video".equals(type) && mPosition == 0)
+                    }
+                    break;
+                case "video":
+                    break;
+            }
+            if (mPosition == 0)
                 containerParams.topMargin = 0;
-
         }
-        mContainer.setLayoutParams(containerParams);
 
-        if (mDataMap.containsKey("isSole")) {
-            String isSole = mDataMap.get("isSole");
-            if (!TextUtils.isEmpty(isSole) && "2".equals(isSole) && mSole != null)
-                mSole.setVisibility(View.VISIBLE);
-        }
-        if (mVIP != null && !mIsAd && "2".equals(mDataMap.get("isVip"))) {
+        mSole.setVisibility("2".equals(mDataMap.get("isSole")) ? View.VISIBLE : View.GONE);
+
+        if (!mIsAd && "2".equals(mDataMap.get("isVip"))) {
             mIsVip = true;
             mVIP.setVisibility(View.VISIBLE);
         }
-        if (mDataMap.containsKey("styleData")) {
-            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(mDataMap.get("styleData"));
-            if (datas != null && datas.size() > 0) {
-                Map<String, String> imgMap = datas.get(0);
-                if (imgMap != null && imgMap.size() > 0) {
-                    String imgUrl = imgMap.get("url");
-                    if (!TextUtils.isEmpty(imgUrl)) {
-                        if (mContainer != null)
-                            mContainer.setVisibility(View.VISIBLE);
-                        if (mIsAd) {
-                            int[] size = new int[2];
-                            getADImgSize(size, mDataMap.get("style"));
-                            if (size[0] > 0 && size[1] > 0) {
-                                containerParams.width = size[0];
-                                containerParams.height = size[1];
-                            }
-                            mContainer.requestLayout();
-                            mContainer.invalidate();
-                        }
-                        loadImage(imgUrl, mImg);
+        Map<String, String> imgMap = StringManager.getFirstMap(mDataMap.get("styleData"));
+        if (imgMap.size() > 0) {
+            String imgUrl = imgMap.get("url");
+            if (!TextUtils.isEmpty(imgUrl)) {
+                mContainer.setVisibility(View.VISIBLE);
+                if (mIsAd) {
+                    int[] size = new int[2];
+                    getADImgSize(size, mDataMap.get("style"));
+                    if (size[0] > 0 && size[1] > 0) {
+                        containerParams.width = size[0];
+                        containerParams.height = size[1];
                     }
+                    mLayerView.setVisibility(View.VISIBLE);
                 }
+                loadImage(imgUrl, mImg);
             }
         }
-        if (mIsVideo && mPlayImg != null)
-            mPlayImg.setVisibility(View.VISIBLE);
-        String desc = "";
-        if (mIsAd && mDataMap.containsKey("content")) {
-            desc = mDataMap.get("content");
-        }
-        String title = "";
-        if (mDataMap.containsKey("name")) {
-            title = mDataMap.get("name");
-        }
-        String titleText = !mIsAd ? title : desc;
+        mContainer.setLayoutParams(containerParams);
+        mPlayImg.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        String title = mIsAd ? mDataMap.get("content") : mDataMap.get("name");
         if (MainHome.recommedType.equals(type)) {
-            if (!TextUtils.isEmpty(titleText) && mTitleTop != null) {
-
-                mTitleTop.setText(titleText);
-                mTitleTop.setVisibility(View.VISIBLE);
-            }
-        } else if (!TextUtils.isEmpty(titleText) && mTitle != null) {
-            mTitle.setText(titleText);
-            mTitle.setVisibility(View.VISIBLE);
+            mTitleTop.setText(title);
+            mTitleTop.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
+        } else {
+            mTitle.setText(title);
+            mTitle.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -219,37 +194,19 @@ public class HomeRecipeItem extends HomeItem {
         containerParams.height = getResources().getDimensionPixelSize(R.dimen.dp_190);
         containerParams.width = MarginLayoutParams.MATCH_PARENT;
         mContainer.setLayoutParams(containerParams);
-        mContainer.requestLayout();
-        mContainer.invalidate();
     }
 
     @Override
     protected void resetView() {
         super.resetView();
-        if (viewIsVisible(mTitleTop))
-            mTitleTop.setVisibility(View.GONE);
-        if (viewIsVisible(mTitle))
-            mTitle.setVisibility(View.GONE);
-        if (viewIsVisible(mVideoTime))
-            mVideoTime.setVisibility(View.GONE);
-        if (viewIsVisible(mImg))
-            mImg.setVisibility(View.GONE);
-        if (viewIsVisible(mVIP))
-            mVIP.setVisibility(View.GONE);
-        if (viewIsVisible(mSole))
-            mSole.setVisibility(View.GONE);
-        if (viewIsVisible(mPlayImg))
-            mPlayImg.setVisibility(View.GONE);
-        if (viewIsVisible(mRecommendTag))
-            mRecommendTag.setVisibility(View.GONE);
-        if (viewIsVisible(mRecommendLine))
-            mRecommendLine.setVisibility(View.GONE);
-        if (viewIsVisible(mVideoContainer))
-            mVideoContainer.setVisibility(View.GONE);
-        if (viewIsVisible(mLayerView))
-            mLayerView.setVisibility(View.GONE);
-        if (viewIsVisible(mContainer))
-            mContainer.setVisibility(View.GONE);
+        mVideoTime.setVisibility(View.GONE);
+        mImg.setVisibility(View.GONE);
+        mVIP.setVisibility(View.GONE);
+        mRecommendTag.setVisibility(View.GONE);
+        mRecommendLine.setVisibility(View.GONE);
+        mVideoContainer.setVisibility(View.GONE);
+        mLayerView.setVisibility(View.GONE);
+        mContainer.setVisibility(View.GONE);
     }
 
     /**

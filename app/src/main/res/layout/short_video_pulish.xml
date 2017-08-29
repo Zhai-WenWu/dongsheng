@@ -16,6 +16,7 @@
             layout="@layout/a_common_post_new_title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_45"/>
+
     </RelativeLayout>
 
     <RelativeLayout

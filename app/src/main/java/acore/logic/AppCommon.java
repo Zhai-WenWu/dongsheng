@@ -82,6 +82,8 @@ public class AppCommon {
 
     private static int fiallNum = 0;
 
+    public static boolean hasArbitration;
+
     /**
      * 获取公用数据消息
      */
@@ -97,6 +99,8 @@ public class AppCommon {
                         feekbackMessage = Integer.parseInt(alertArr[2]);
                         if (alertArr.length >= 5) {
                             myQAMessage = Integer.parseInt(alertArr[3]) + Integer.parseInt(alertArr[4]);
+                            if (alertArr.length >= 6)
+                                hasArbitration = "2".equals(alertArr[5]);
                         }
                         try {
                             // 所有消息数
@@ -289,6 +293,25 @@ public class AppCommon {
             intentLink.setData(content_url);
             act.startActivity(intentLink);
             return;
+
+        }else if(url.indexOf("nativeWeb.app")==0){//外链 或者是打开某个app
+            String temp = url.substring(url.indexOf("?") + 1, url.length());
+            LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
+            // other app
+            String protocolUrl = map_link.get("protocolurl");
+            // browser
+            String browserUrl = map_link.get("browserurl");
+            String  packageName = map_link.get("package");
+            Intent intentLink = new Intent();
+            intentLink.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse(browserUrl);
+            if (Tools.isPkgInstalled(packageName,XHApplication.in())) {
+                content_url = Uri.parse(protocolUrl);
+            }
+            intentLink.setData(content_url);
+            act.startActivity(intentLink);
+            return;
+            
         }
         //解析生成 intent
         intent = parseURL(XHApplication.in(), bundle, url);
@@ -388,6 +411,7 @@ public class AppCommon {
 						bundle.putString(key, value);
 					} else {
 						String[] parameter = urls[1].split("&");
+
                         for (String p : parameter) {
                             String[] value = p.split("=");
                             if (value.length == 2) {
@@ -881,56 +905,56 @@ public class AppCommon {
         return data;
     }
 
-	public static Map<String,Integer> createCount = new HashMap<>();
+    public static Map<String,Integer> createCount = new HashMap<>();
 
-	/**
-	 * @param context
-	 * @param loadManager
-	 * @param rl
+    /**
+     * @param context
+     * @param loadManager
+     * @param rl
      * @param url
      */
-	public static void createWeb(Activity context , LoadManager loadManager, RelativeLayout rl, String url,
-								 @NonNull String type, int maxCount){
-		try{
-			//添加限制
-			if(createCount == null){
-				createCount = new HashMap<>();
-			}
-			int currentCount = 0;
-			String key = type + url;
-			if(createCount.containsKey(key)){
-				currentCount = createCount.get(key);
-			}
-			if(maxCount == -1 || currentCount >= maxCount){
-				return;
-			}
-			currentCount++;
-			createCount.put(key,currentCount);
-			//请求web
-			String cookieKey = "";
-			String newUrl = url.replace("http://","");
-			String host = newUrl.substring(newUrl.indexOf("."),newUrl.indexOf("/") > -1 ? newUrl.indexOf("/") : newUrl.length());
-			String[] strArray = host.split(":");
-			if(strArray.length > 1){
-				host = strArray[0];
-			}
-			WebviewManager webviewManager = new WebviewManager(context,loadManager,false);
-			XHWebView webView = webviewManager.createWebView(0);
-			Map<String,String> header=ReqInternet.in().getHeader(context);
-			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-			String[] cookie = cookieStr.split(";");
-			CookieManager cookieManager = CookieManager.getInstance();
-			for (int i = 0; i < cookie.length; i++) {
-				cookieManager.setCookie(url, cookie[i]);
-			}
-			cookieManager.setCookie(url, "xhWebStat=1");
-			CookieSyncManager.getInstance().sync();
-			rl.addView(webView,0,0);
-			webView.loadUrl(url);
-		}catch (Exception e){
+    public static void createWeb(Activity context , LoadManager loadManager, RelativeLayout rl, String url,
+                                 @NonNull String type, int maxCount){
+        try{
+            //添加限制
+            if(createCount == null){
+                createCount = new HashMap<>();
+            }
+            int currentCount = 0;
+            String key = type + url;
+            if(createCount.containsKey(key)){
+                currentCount = createCount.get(key);
+            }
+            if(maxCount == -1 || currentCount >= maxCount){
+                return;
+            }
+            currentCount++;
+            createCount.put(key,currentCount);
+            //请求web
+            String cookieKey = "";
+            String newUrl = url.replace("http://","");
+            String host = newUrl.substring(newUrl.indexOf("."),newUrl.indexOf("/") > -1 ? newUrl.indexOf("/") : newUrl.length());
+            String[] strArray = host.split(":");
+            if(strArray.length > 1){
+                host = strArray[0];
+            }
+            WebviewManager webviewManager = new WebviewManager(context,loadManager,false);
+            XHWebView webView = webviewManager.createWebView(0);
+            Map<String,String> header=ReqInternet.in().getHeader(context);
+            String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+            String[] cookie = cookieStr.split(";");
+            CookieManager cookieManager = CookieManager.getInstance();
+            for (int i = 0; i < cookie.length; i++) {
+                cookieManager.setCookie(url, cookie[i]);
+            }
+            cookieManager.setCookie(url, "xhWebStat=1");
+            CookieSyncManager.getInstance().sync();
+            rl.addView(webView,0,0);
+            webView.loadUrl(url);
+        }catch (Exception e){
 
-		}
-	}
+        }
+    }
 
     public static boolean setVip(final Activity act, ImageView vipView, String data){
         return setVip(act,vipView,data,"","");
@@ -987,7 +1011,7 @@ public class AppCommon {
     }
 
     public static void onAdHintClick(final Activity act, final XHAllAdControl xhAllAdControl, final int index, final String listIndex){
-       onAdHintClick(act,xhAllAdControl,index,listIndex,"","");
+        onAdHintClick(act,xhAllAdControl,index,listIndex,"","");
     }
 
     public static void setAdHintClick(final Activity act, View adHintView, final XHAllAdControl xhAllAdControl, final int index, final String listIndex,
