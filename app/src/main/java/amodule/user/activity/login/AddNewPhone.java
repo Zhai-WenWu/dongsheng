@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import com.xianghatest.R;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
@@ -21,7 +23,6 @@ import amodule.user.view.SpeechaIdentifyInputView;
 /**
  * Created by ：fei_teng on 2017/2/22 21:31.
  */
-
 public class AddNewPhone extends BaseLoginActivity implements View.OnClickListener {
 
     private IdentifyInputView login_identify;
@@ -98,28 +99,35 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
 
         login_identify.init("请输入4位验证码",
                 new IdentifyInputView.IdentifyInputViewCallback() {
+
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        if(isFirst && millisUntilFinished >= 20 * 1000){
+                            final String zoneCode = phone_info.getZoneCode();
+                            if ("86".equals(zoneCode)) {
+                                isFirst = false;
+                                speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                                speechaIdentifyInputView.setState(true);
+                            }
+                        }
+                    }
+
                     @Override
                     public void onCountDownEnd() {
                         refreshNextStepBtnStat();
                         final String zoneCode = phone_info.getZoneCode();
                         if ("86".equals(zoneCode)) {
-                            if (isFirst) {
-                                isFirst = false;
-                                speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                            }
                             speechaIdentifyInputView.setState(true);
                         }
                     }
 
                     @Override
                     public void onInputDataChanged() {
-
                         refreshNextStepBtnStat();
                     }
 
                     @Override
                     public void onCliclSendIdentify() {
-
                         final String newZoneCode = phone_info.getZoneCode();
                         final String newPhoneNum = phone_info.getPhoneNum();
                         if (TextUtils.isEmpty(newZoneCode) || TextUtils.isEmpty(newPhoneNum)) {
@@ -131,7 +139,7 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
                         String error_type = LoginCheck.checkPhoneFormatWell(AddNewPhone.this, newZoneCode, newPhoneNum);
                         if (LoginCheck.WELL_TYPE.equals(error_type)) {
                             if (newZoneCode.equals(zoneCode) && newPhoneNum.equals(phoneNum)) {
-                                Toast.makeText(AddNewPhone.this, "你已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddNewPhone.this, "您已经绑定这个手机号了", Toast.LENGTH_SHORT).show();
                                 login_identify.setOnBtnClickState(true);
                                 dataStatics("失败原因：已经绑定这个手机号");
                                 return;
@@ -261,6 +269,17 @@ public class AddNewPhone extends BaseLoginActivity implements View.OnClickListen
         } else {
             dataStatics("新手机号页，点返回");
             finish();
+        }
+    }
+
+    @Override
+    protected void onCountrySelected(String country_code) {
+        super.onCountrySelected(country_code);
+        phone_info.setZoneCode("+" + country_code);
+        if(!"86".equals(country_code)){
+            speechaIdentifyInputView.setVisibility(View.GONE);
+            speechaIdentifyInputView.setState(false);
+            isFirst = true;
         }
     }
 

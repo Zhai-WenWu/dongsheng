@@ -93,7 +93,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                boolean hasText = s.length() > 0;
+                boolean hasText = StringManager.isHasChar(String.valueOf(s));
                 sendComment.setEnabled(hasText);
                 sendComment.setTextColor(Color.parseColor(hasText?"#333333":"#CCCCCC"));
             }
@@ -198,7 +198,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
             return;
         }
         String text = editText.getText().toString();
-        if (TextUtils.isEmpty(text)) {
+        if (!StringManager.isHasChar(text)) {
             return;
         }
 

@@ -29,9 +29,9 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
-import amodule.answer.adapter.AskAnswerUploadAdapter;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.answer.window.FloatingWindow;
 import amodule.dish.view.CommonDialog;
@@ -44,7 +44,6 @@ import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import aplug.web.FullScreenWeb;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.XhDialog;
 
@@ -69,7 +68,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     private ArrayList<Map<String, String>> mArrayList = new ArrayList<>();
     private AskAnswerUploadAdapter mAdapter;
     private int mDraftId;
-    private String mTitleText;
     private String mTimesStamp;
     private String mCoverPath;
     private String mFinalVideoPath;
@@ -170,8 +168,9 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                         getIsTip();
                     }
                     Main.colse_level = 1;
-                    if (FullScreenWeb.isAlive)
-                        FullScreenWeb.isReload = true;
+                    Intent intent = new Intent();
+                    intent.putExtra("loadSucc", true);
+                    setResult(RESULT_OK, intent);
                     AskAnswerUploadListActivity.this.finish();
                 }
             }
@@ -184,17 +183,16 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             return;
         }
 
-        mTitleText = mUploadPoolData.getTitle();
         mArrayList = mUploadPoolData.getListData();
         mAdapter = new AskAnswerUploadAdapter(this);
-        if (!TextUtils.isEmpty(mTitleText)) {
-            mTitle.setText(mTitleText.length() > 7 ? mTitleText.substring(0, 6) + "..." : mTitleText);
-        }
+        mTitle.setText(AskAnswerModel.TYPE_ANSWER_AGAIN.equals(model.getmType()) ? "追答" : "我答");
 
         boolean isAutoUpload = getIntent().getBooleanExtra("isAutoUpload", false);
         if (isAutoUpload) {
             if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
                 allStartOrPause(true);
+            } else if ("null".equals(ToolsDevice.getNetWorkType(this))) {
+                allStartOrPause(false);
             } else {
                 allStartOrPause(false);
                 hintNetWork();
@@ -227,7 +225,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             @Override
             public void uploadOver(boolean flag, String responseStr) {
                 refreshUploadView();
-                mIsStopUpload = !flag;
+                mIsStopUpload = true;
             }
         };
     }
@@ -290,6 +288,8 @@ public class AskAnswerUploadListActivity extends BaseActivity {
             public void onClick(View v) {
                 if ("wifi".equals(ToolsDevice.getNetWorkType(AskAnswerUploadListActivity.this))) {
                     allStartOrPause(true);
+                } else if ("null".equals(ToolsDevice.getNetWorkType(AskAnswerUploadListActivity.this))) {
+                    Toast.makeText(AskAnswerUploadListActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
                 } else {
                     hintNetWork();
                 }
@@ -316,10 +316,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (goBack())
-                    return;
-                else
-                    finish();
+                onBackPressed();
             }
         });
 
@@ -364,19 +361,13 @@ public class AskAnswerUploadListActivity extends BaseActivity {
         dialog.show();
     }
 
-    private boolean goBack() {
-        if (!mIsStopUpload) {
-            showCancelDialog();
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void onBackPressed() {
-        if (goBack())
-            return;
         super.onBackPressed();
+        if (mListPool != null) {
+            allStartOrPause(false);
+            mListPool.cancelUpload();
+        }
     }
 
     private void getIsTip() {

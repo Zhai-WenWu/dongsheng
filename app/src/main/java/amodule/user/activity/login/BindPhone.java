@@ -2,6 +2,7 @@ package amodule.user.activity.login;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,6 +11,7 @@ import com.xianghatest.R;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import amodule.user.view.IdentifyInputView;
@@ -21,7 +23,6 @@ import amodule.user.view.SpeechaIdentifyInputView;
 /**
  * Created by ：fei_teng on 2017/2/21 16:40.
  */
-
 public class BindPhone extends BaseLoginActivity implements View.OnClickListener {
 
     private TextView tv_top_right;
@@ -92,15 +93,24 @@ public class BindPhone extends BaseLoginActivity implements View.OnClickListener
             }
         });
 
-        login_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback() {
+        login_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback(){
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(isFirst && millisUntilFinished >= 20 * 1000){
+                    final String zoneCode = phone_info.getZoneCode();
+                    if ("86".equals(zoneCode)) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                        speechaIdentifyInputView.setState(true);
+                    }
+                }
+            }
+
             @Override
             public void onCountDownEnd() {
                 final String zoneCode = phone_info.getZoneCode();
                 if ("86".equals(zoneCode)) {
-                    if (isFirst) {
-                        isFirst = false;
-                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                    }
                     speechaIdentifyInputView.setState(true);
                 }
             }

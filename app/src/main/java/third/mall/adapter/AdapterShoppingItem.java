@@ -55,9 +55,9 @@ public class AdapterShoppingItem extends MallAdapterSimple {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final Map<String, String> map = (Map<String, String>) data.get(position);
+		final Map<String, String> map = data.get(position);
 		// 缓存视图
-		ViewCache viewCache = null;
+		ViewCache viewCache;
 		if (convertView == null) {
 			viewCache = new ViewCache();
 			convertView = LayoutInflater.from(context).inflate(R.layout.a_mall_shopping_listview_item, parent, false);
@@ -336,6 +336,6 @@ public class AdapterShoppingItem extends MallAdapterSimple {
 		 * @param data---当前商家的全部商品
 		 * @param position
 		 */
-		public abstract void setProudctChooseAndchange(ArrayList<Map<String, String>> data, int position);
+		void setProudctChooseAndchange(ArrayList<Map<String, String>> data, int position);
 	}
 }

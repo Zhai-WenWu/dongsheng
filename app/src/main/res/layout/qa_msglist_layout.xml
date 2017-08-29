@@ -27,9 +27,9 @@
             android:layout_height="@dimen/dp_45"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            app:pstsIndicatorColor="#FFFFFE"
+            app:pstsIndicatorColor="#00FFFFFE"
             app:pstsIndicatorWidthFollowText="false"
-            app:pstsTabBackground="@color/common_top_bg"
+            app:pstsTabBackground="@android:color/transparent"
             app:pstsTabPaddingLeftRight="@dimen/dp_12.5"
             app:pstsTabTextColor="@color/circle_tab_text_color"
             app:pstsTabTextSize="@dimen/sp_16" />

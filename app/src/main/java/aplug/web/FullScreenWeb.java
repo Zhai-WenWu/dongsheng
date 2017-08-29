@@ -1,5 +1,6 @@
 package aplug.web;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +11,8 @@ import com.xianghatest.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
+import acore.override.helper.XHActivityManager;
+import acore.tools.ToolsDevice;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -17,7 +20,7 @@ import aplug.web.tools.WebviewManager;
 /**
  * 全屏weview
  */
-public class FullScreenWeb extends WebActivity {
+public class FullScreenWeb extends WebActivity implements XHActivityManager.RefreshCallBack {
 
     private JsAppCommon jsAppCommon;
     protected String url = "";
@@ -27,16 +30,15 @@ public class FullScreenWeb extends WebActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
 
-    public static boolean isAlive = false;
-    public static boolean isReload = false;
+    private boolean mNeedReload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
-        isAlive = true;
 //        ToolsDevice.modifyStateTextColor(this);
+        XHActivityManager.getInstance().addActivity(this);
         initActivity("",0,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用
@@ -82,13 +84,14 @@ public class FullScreenWeb extends WebActivity {
             XHClick.saveStatictisFile("FullScreenWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
+        XHActivityManager.getInstance().removeActivity(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (isReload) {
-            isReload = false;
+        if (mNeedReload) {
+            mNeedReload = false;
             reloadData();
         }
     }
@@ -96,10 +99,15 @@ public class FullScreenWeb extends WebActivity {
     @Override
     public void finish() {
         super.finish();
-        isAlive = false;
     }
 
     public void reloadData() {
         loadData();
     }
+
+    @Override
+    public void refreshCallBack() {
+        mNeedReload = true;
+    }
+
 }

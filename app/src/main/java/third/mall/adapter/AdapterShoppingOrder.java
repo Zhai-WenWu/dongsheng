@@ -56,7 +56,7 @@ public class AdapterShoppingOrder extends AdapterSimple {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Map<String, String> map = (Map<String, String>) data.get(position);
 		// 缓存视图
-		ViewCache viewCache = null;
+		ViewCache viewCache;
 		if (convertView == null) {
 			viewCache = new ViewCache();
 			convertView = LayoutInflater.from(context).inflate(R.layout.a_mall_shop_order_item, parent, false);
@@ -188,7 +188,7 @@ public class AdapterShoppingOrder extends AdapterSimple {
 		 * 处理当前商品状态
 		 */
 		private void setFavorableAmt() {
-			ArrayList<Map<String, String>> change_list=new ArrayList<Map<String,String>>();
+			ArrayList<Map<String, String>> change_list=new ArrayList<>();
 			if(coupon_list.size()>0){
 				for (int i = 0,size=coupon_list.size(); i < size; i++) {
 					if(Float.parseFloat(coupon_list.get(i).get("order_amt_reach"))<=Float.parseFloat(product_amt)){
@@ -260,14 +260,12 @@ public class AdapterShoppingOrder extends AdapterSimple {
 		 * @param shop_name
 		 */
 		private void setShopLogo(String shop_name) {
-			if (shop_name.contains("香哈")) {
-				shoporder_commod_merchant_iv.setBackgroundResource(R.drawable.mall_myorder_myself);
-			} else {
-				shoporder_commod_merchant_iv.setBackgroundResource(R.drawable.mall_buycommod_commod_merchant_iv);
-			}
+			shoporder_commod_merchant_iv.setBackgroundResource(
+					shop_name.contains("香哈") ? R.drawable.mall_myorder_myself : R.drawable.mall_buycommod_commod_merchant_iv
+			);
 		}
 	}
 	public interface OrderChangeCallBack{
-		public void setChangeData(String shop_code,String code,String before_amt,String now_amt);
+		void setChangeData(String shop_code,String code,String before_amt,String now_amt);
 	}
 }

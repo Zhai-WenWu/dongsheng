@@ -2,7 +2,6 @@ package amodule.main.Tools;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,6 @@ public class CacheControler {
      * @param callback 回调
      */
     public synchronized void loadCacheData(@NonNull OnLoadCallback callback){
-        Log.i("tzy","status = " + status);
         if(status != DEFAULT_STATUS)
             return;
         status = LOAD_PREPARE;
@@ -76,7 +74,6 @@ public class CacheControler {
     /** 获取缓存数据 */
     public String getCacheData() {
         String cacheDataStr = FileManager.readFile(getCacheFilePath());
-        Log.i("tzy","cacheDataStr = " + cacheDataStr);
         return cacheDataStr;
     }
 
@@ -86,9 +83,7 @@ public class CacheControler {
             @Override
             public void run() {
                 String cacheDataStr = StringManager.getJsonByArrayList(cacheData).toString();
-                Log.i("tzy","cacheDataStr = " + cacheDataStr);
                 String cacheFilePath = getCacheFilePath();
-                Log.i("tzy","cacheFilePath = " + cacheFilePath);
                 FileManager.saveFileToCompletePath(cacheFilePath, cacheDataStr, false);
             }
         }).start();

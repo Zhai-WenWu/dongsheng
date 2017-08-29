@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -32,7 +33,7 @@ public class HomeNous extends BaseActivity {
 
 	private Myadapter pagerAdapter;
 	private ArrayList<Map<String, String>> topList;
-	private ArrayList<FragmentNous> fragmentNousList = new ArrayList<FragmentNous>();
+	private ArrayList<FragmentNous> fragmentNousList = new ArrayList<>();
 
 	private String type = "";
 	private PagerSlidingTabStrip tabs;
@@ -123,15 +124,15 @@ public class HomeNous extends BaseActivity {
 
 
 	private void initData() {
-		topList = new ArrayList<Map<String, String>>();
-		Map<String, String> topMap = new HashMap<String, String>();
+		topList = new ArrayList<>();
+		Map<String, String> topMap = new HashMap<>();
 		topMap.put("name", "头条");
 		topMap.put("pinyin", "");
 		topList.add(topMap);
 		String nousNavStr = AppCommon.getAppData(this, "nousNav");
 		ArrayList<Map<String, String>> list = StringManager.getListMapByJson(nousNavStr);
 		if (list.size() > 0) {
-			Map<String, String> map = null;
+			Map<String, String> map;
 			for (int i = 0; i < list.size(); i++) {
 				map = list.get(i);
 				map.put("name", map.get("name"));
@@ -199,15 +200,20 @@ public class HomeNous extends BaseActivity {
 		pagerAdapter.notifyDataSetChanged();
 		tabs.notifyDataSetChanged();
 
-		if (type != "" && type != null) {
-			if (type.equals("ys")) {
-				viewpager.setCurrentItem(1);
-			} else if (type.equals("jq")) {
-				viewpager.setCurrentItem(2);
-			} else if (type.equals("jx")) {
-				viewpager.setCurrentItem(3);
-			} else if (type.equals("zt")) {
-				viewpager.setCurrentItem(4);
+		if (!TextUtils.isEmpty(type)) {
+			switch (type) {
+				case "ys":
+					viewpager.setCurrentItem(1);
+					break;
+				case "jq":
+					viewpager.setCurrentItem(2);
+					break;
+				case "jx":
+					viewpager.setCurrentItem(3);
+					break;
+				case "zt":
+					viewpager.setCurrentItem(4);
+					break;
 			}
 		}
 		View view = tabs.getmTabsContainer().getChildAt(0);

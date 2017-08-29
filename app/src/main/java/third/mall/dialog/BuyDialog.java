@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
@@ -99,7 +100,7 @@ public class BuyDialog extends SimpleDialog {
                 if(productNum>1){
                     --productNum;
                     item_commod_num.setText(String.valueOf(productNum));
-
+                    XHClick.mapStat(mContext, "a_mail_goods", "立即购买", "减号点击量");
                 }else{
                     Tools.showToast(context,"最少购买一个");
                 }
@@ -111,6 +112,7 @@ public class BuyDialog extends SimpleDialog {
             public void onClick(View v) {
                 Log.i("zyj","maxSaleNum::"+maxSaleNum+":::"+saleableNum);
                 if(saleableNum>0&&saleableNum<=productNum){
+                    XHClick.mapStat(mContext, "a_mail_goods", "立即购买", "加号点击量");
                     Tools.showToast(context,"最多购买"+productNum+"个");
                     return;
                 }
@@ -126,6 +128,7 @@ public class BuyDialog extends SimpleDialog {
         findViewById(R.id.next_order).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(mContext, "a_mail_goods", "立即购买", "下一步");
                 setRequestOrder(getOrderInfo());
             }
         });
@@ -271,7 +274,7 @@ public class BuyDialog extends SimpleDialog {
      * 关闭dialog
      */
     public void closeDialog() {
-
+        XHClick.mapStat(mContext, "a_mail_goods", "立即购买", "关闭");
         TranslateAnimation animation = new TranslateAnimation(0, 0, 0, height);
         animation.setDuration(500);
         animation.setAnimationListener(new Animation.AnimationListener() {

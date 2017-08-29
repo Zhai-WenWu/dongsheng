@@ -93,7 +93,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_addMuiltComment = mall_apiUrl + "/v3/comment/addMuiltComment";
     public final static String mall_api_listOrder_v3 = mall_apiUrl + "/v3/order/listOrder";
     public final static String mall_dsInfo_v3 = mall_apiUrl + "/v3/home/dsInfo";
-    public final static String mall_api_getTemplate = mall_apiUrl + "/V3/template/getTemplate";
+    public final static String mall_api_getTemplate = mall_apiUrl + "/v3/template/getTemplate";
 
     /**
      * 替换url

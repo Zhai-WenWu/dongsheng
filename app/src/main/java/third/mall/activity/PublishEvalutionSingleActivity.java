@@ -42,7 +42,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     public static final String STATISTICS_RETURN_ID = "a_comcoment_return";
     public static final String STATISTICS_PUBLISH_ID = "a_comcoment_result";
     /** 传参 key */
-    public static final String EXTRAS_ORDER_ID = "orderi_d";
+    public static final String EXTRAS_ORDER_ID = "order_id";
     public static final String EXTRAS_PRODUCT_CODE = "product_code";
     public static final String EXTRAS_PRODUCT_IMAGE = "product_img";
     public static final String EXTRAS_SCORE = "score";
@@ -55,10 +55,10 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
     private static final int maxTextCount = 500;
 
-    private ImageView commodityImage;
-    private ImageView selectImage;
+    private LinearLayout selectImage;
     private ImageView shareToCircleImage;
     private TextView scoreDescText;
+    private TextView selectImageText;
     private TextView contentLengthText;
     private TextView publishButton;
     private ProperRatingBar ratingBar;
@@ -66,7 +66,6 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
 
     private EvalutionImageLayout imagesLayout;
     private RelativeLayout shareLayout;
-    private LinearLayout contentLayout;
 
     EvalutionUploadControl uploadControl;
 
@@ -119,20 +118,22 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
-                    Intent intent = new Intent(PublishEvalutionSingleActivity.this,EvalutionSuccessActivity.class);
-                    intent.putExtra(EvalutionSuccessActivity.EXTRAS_ID,id);
-                    intent.putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position);
-                    intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(PublishEvalutionSingleActivity.this));
-                    intent.putExtra("url","http://m.xiangha.com");
-                    startActivityForResult(intent,OrderStateActivity.request_order);
+
+                    startActivityForResult(
+                            new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
+                                    .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
+                                    .putExtra(EvalutionSuccessActivity.EXTRAS_POSITION,position),
+                            OrderStateActivity.request_order
+                    );
                 }else{
-                    setResult(RESULT_OK);
+                    status = OrderStateActivity.result_comment_success;
                     PublishEvalutionSingleActivity.this.finish();
                 }
             }
 
             @Override
-            public void onFailed() {
+            public void onFailed(String msg) {
+                Tools.showToast(PublishEvalutionSingleActivity.this,msg);
                 XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"提交失败","");
                 cancelUploadingDialog();
             }
@@ -143,23 +144,23 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
         publishButton = (TextView) findViewById(R.id.rightText);
         publishButton.setText("发布");
         publishButton.setVisibility(View.VISIBLE);
-        commodityImage = (ImageView) findViewById(R.id.commodity_image);
-        selectImage = (ImageView) findViewById(R.id.select_image);
+        ImageView commodityImage = (ImageView) findViewById(R.id.commodity_image);
+        selectImage = (LinearLayout) findViewById(R.id.select_image);
         shareToCircleImage = (ImageView) findViewById(R.id.share_image);
         scoreDescText = (TextView) findViewById(R.id.evalution_desc);
+        selectImageText = (TextView) findViewById(R.id.select_image_text);
         contentLengthText = (TextView) findViewById(R.id.content_length_text);
         contentEdit = (EditText) findViewById(R.id.content_edit);
         contentEdit.setHint(getResources().getString(R.string.publish_evalution_desc_hint));
         ratingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
         imagesLayout = (EvalutionImageLayout) findViewById(R.id.images);
         shareLayout = (RelativeLayout) findViewById(R.id.share_to_circle);
-        contentLayout = (LinearLayout) findViewById(R.id.content_layout);
 
         int itemIwdth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_100)) / 3;
         int imageWidth = itemIwdth - Tools.getDimen(this,R.dimen.dp_12_5);
         if(imageWidth < Tools.getDimen(this,R.dimen.dp_75)){
             imagesLayout.setViewSize(itemIwdth);
-            selectImage.setLayoutParams(new LinearLayout.LayoutParams(imageWidth,imageWidth));
+            selectImage.setLayoutParams(new LinearLayout.LayoutParams(imageWidth, imageWidth));
         }
         int starItemWidth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_198)) / 5;
         int defaultWidth = Tools.getDimen(this,R.dimen.dp_32);
@@ -205,7 +206,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 int currentLength = s.toString().length();
                 int value = currentLength - maxTextCount;
                 if (value > 0) {
-                    contentEdit.setText(s.subSequence(0, s.length() - value));
+//                    contentEdit.setText(s.subSequence(0, s.length() - value));
                     contentEdit.setSelection(contentEdit.getText().length());
                     Tools.showToast(PublishEvalutionSingleActivity.this, "内容最多" + maxTextCount + "字");
                     ToolsDevice.keyboardControl(false, PublishEvalutionSingleActivity.this, contentEdit);
@@ -234,13 +235,13 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
             @Override
             public void onChildViewAdded(View parent, View child) {
                 updateShareLayoutVisibility();
-                updateSelectImageVisibility();
+                updateSelectImageStatus();
             }
 
             @Override
             public void onChildViewRemoved(View parent, View child) {
                 updateShareLayoutVisibility();
-                updateSelectImageVisibility();
+                updateSelectImageStatus();
                 //移除上传图片
                 if (child != null && child.getTag(R.id.image_path) != null) {
                     uploadControl.delUploadImage(child.getTag(R.id.image_path).toString());
@@ -256,7 +257,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     private void updateShareLayoutVisibility() {
         if (canShareToCircle()) {
             if(shareLayout.getVisibility() == View.GONE){
-                selectImage.setSelected(true);
+                shareToCircleImage.setSelected(true);
                 shareToCircleImage.setBackgroundResource(R.drawable.evalution_can_share_selected);
             }
             shareLayout.setVisibility(View.VISIBLE);
@@ -268,17 +269,25 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     /**
      * 是否可以分享到美食圈
      *
-     * @return
+     * @return 是否显示分享到美食圈
      */
     private boolean canShareToCircle() {
+        /*4星以上 && 去头尾空格内容长度 > 0 && 图片 1 张以上*/
         return ratingBar.getRating() >= 4
-                && contentEdit.getText().length() > 0
+                && contentEdit.getText().toString().trim().length() > 0
                 && imagesLayout.getChildCount() > 0;
     }
 
     /** 更新图片选择显示状态 */
-    private void updateSelectImageVisibility() {
-        selectImage.setVisibility(imagesLayout.getChildCount() == 3 ? View.GONE : View.VISIBLE);
+    private void updateSelectImageStatus() {
+        int imagesCount =  imagesLayout.getChildCount();
+        selectImage.setVisibility(imagesCount == MAX_IMAGE ? View.GONE : View.VISIBLE);
+        if(imagesCount > 0 && imagesCount <= 3){
+            StringBuffer stringBuilder = new StringBuffer().append(imagesCount).append("/3");
+            selectImageText.setText(stringBuilder.toString());
+        }else{
+            selectImageText.setText("添加图片");
+        }
     }
 
     /** 更新文字长度提示 */
@@ -314,7 +323,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     /**
      * 更新上传数据
      *
-     * @param images
+     * @param images 新选取的数组
      */
     private void updateUploadImages(ArrayList<String> images) {
         //对比新增数据
@@ -345,6 +354,10 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
 
     /** 发布评论 */
     private void publishEvalution() {
+        if(!ToolsDevice.isNetworkAvailable(this)){
+            Tools.showToast(this,"网络异常，请检查网络");
+            return;
+        }
         uploadControl.setScore(ratingBar.getRating())
                 .setContent(contentEdit.getText().toString().trim())
                 .setCanShare(canShareToCircle())
@@ -373,6 +386,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
             Intent intent = new Intent();
             intent.putExtra("code", String.valueOf(id));
             intent.putExtra("position", String.valueOf(position));
+            intent.putExtra("order_id",orderID);
             setResult(status, intent);
         }
         super.finish();

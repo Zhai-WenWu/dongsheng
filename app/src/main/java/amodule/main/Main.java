@@ -65,7 +65,6 @@ import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
-import amodule.dish.tools.DishMouldControl;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
@@ -79,7 +78,6 @@ import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
-import aplug.web.ShowTemplateWeb;
 import third.ad.control.AdControlHomeDish;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
@@ -201,7 +199,6 @@ public class Main extends Activity implements OnClickListener {
                 PushManager.tongjiPush();
                 isShowWelcomeDialog = false;
 
-                DishMouldControl.reqDishMould(null);
                 OffDishToFavoriteControl.addCollection(Main.this);
 
                 PageStatisticsUtils.getPageInfo(getApplicationContext());
@@ -237,6 +234,7 @@ public class Main extends Activity implements OnClickListener {
                         case AskAnswerModel.TYPE_ANSWER:
                             msg = "你有一个回答尚未发布，是否继续？";
                             tempC = AnswerEditActivity.class;
+                            break;
                         case AskAnswerModel.TYPE_ANSWER_AGAIN:
                             msg = "你有一个回答尚未发布，是否继续？";
                             tempC = AnswerEditActivity.class;
@@ -245,6 +243,7 @@ public class Main extends Activity implements OnClickListener {
                         case AskAnswerModel.TYPE_ASK:
                             msg = "你有一个问题尚未发布，是否继续？";
                             tempC = AskEditActivity.class;
+                            break;
                         case AskAnswerModel.TYPE_ASK_AGAIN:
                             msg = "你有一个问题尚未发布，是否继续？";
                             tempC = AskEditActivity.class;
@@ -802,11 +801,6 @@ public class Main extends Activity implements OnClickListener {
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
-                    Intent intent = new Intent(this,ShowTemplateWeb.class);
-                    intent.putExtra(ShowTemplateWeb.ORIGINDATA,new String[]{"<{code}>"});
-                    intent.putExtra(ShowTemplateWeb.NOWDATA,new String[]{"94888485"});
-                    intent.putExtra(ShowTemplateWeb.REQUESTMETHOD,"XhDish");
-                    this.startActivity(intent);
                 }
                 // 当软件所在页面正式你要刷新的页面,就直接刷新,不在跳了
 //				if (tabHost.getCurrentTab() == i && i == 2) {

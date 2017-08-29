@@ -52,8 +52,8 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     /**监听网络改变对调接口*/
     public interface ConnectionChangeListener{
-        public void disconnect();
-        public void wifi();
-        public void mobile();
+        void disconnect();
+        void wifi();
+        void mobile();
     }
 }

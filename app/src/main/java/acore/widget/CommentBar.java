@@ -129,6 +129,10 @@ public class CommentBar extends RelativeLayout {
         commentEdittext.setHint(hintText);
     }
 
+    public void resetEdit(){
+        commentEdittext.setText("");
+    }
+
     /** 点击发布 */
     private void publishComment() {
         if (onPublishCommentCallback != null

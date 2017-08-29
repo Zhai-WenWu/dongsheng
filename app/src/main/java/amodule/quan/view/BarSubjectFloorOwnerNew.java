@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;

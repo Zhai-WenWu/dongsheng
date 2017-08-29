@@ -1,9 +1,6 @@
 package aplug.web;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,15 +11,15 @@ import com.xianghatest.R;
 
 import acore.override.activity.base.WebActivity;
 import aplug.web.tools.JSAction;
+import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
 
 /**
  * 展示模版url
  */
 public class ShowTemplateWeb extends WebActivity{
-    public static final String ORIGINDATA ="originData";//替换原始数据的集合key
-    public static final String NOWDATA ="nowData";//替换后数据的集合的key
-    public static final String REQUESTMETHOD ="requestmethod";//替换后数据的集合的key
+    public static final String REQUEST_METHOD ="requestmethod";//替换后数据的集合的key
+    public static final String NOW_DATA_ARR ="nowData";//替换后数据的集合的key
     protected String requestmethod = "";
     private String[] originData, nowData;
 
@@ -31,13 +28,13 @@ public class ShowTemplateWeb extends WebActivity{
     protected RelativeLayout shareLayout;
     protected RelativeLayout favLayout,homeLayout;
     protected TextView favoriteNousTextView,title;
-    private TemplateWebView templateWebView;
+    protected TemplateWebView templateWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initExtras();
-        initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_template_webview);
+        initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, getLayoutId());
         initUI();
         loadManager.setLoading(new View.OnClickListener() {
             @Override
@@ -47,23 +44,34 @@ public class ShowTemplateWeb extends WebActivity{
         });
     }
 
+    protected int getLayoutId(){
+        return R.layout.xh_template_webview;
+    }
+
     /**
      * 获取外部的参数
      */
-    private void initExtras(){
+    protected void initExtras(){
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用
         if (bundle != null) {
-            requestmethod = bundle.getString(REQUESTMETHOD);
-            originData=bundle.getStringArray(ORIGINDATA);
-            nowData=bundle.getStringArray(NOWDATA);
+            requestmethod = bundle.getString(REQUEST_METHOD);
+            originData= XHTemplateManager.TEMPLATE_MATCHING.get(requestmethod);
+            nowData=bundle.getStringArray(NOW_DATA_ARR);
+            //最终方案，需要模版替换兼容
+            if(nowData == null && originData != null){
+                nowData = new String[originData.length];
+                for(int index = 0 ;index < nowData.length;index ++){
+                    nowData[index] = bundle.getString(originData[index]);
+                }
+            }
             JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
         }
     }
     /**
      * 初始化ui
      */
-    private void initUI() {
+    protected void initUI() {
         initTitleView();
         initWeb();
     }
@@ -84,7 +92,7 @@ public class ShowTemplateWeb extends WebActivity{
     /**
      * web初始化
      */
-    private void initWeb(){
+    protected void initWeb(){
         templateWebView= (TemplateWebView) findViewById(R.id.TemplateWebView);
         templateWebView.initBaseData(this,loadManager);
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {

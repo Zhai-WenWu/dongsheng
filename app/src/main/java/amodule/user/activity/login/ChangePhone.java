@@ -88,13 +88,20 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
 
         login_identify.init("验证码", new IdentifyInputView.IdentifyInputViewCallback() {
             @Override
+            public void onTick(long millisUntilFinished) {
+                if(isFirst && millisUntilFinished >= 20 * 1000){
+                    if("86".equals(zoneCode)) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                        speechaIdentifyInputView.setState(true);
+                    }
+                }
+            }
+
+            @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnState();
                 if("86".equals(zoneCode)) {
-                    if (isFirst) {
-                        isFirst = false;
-                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                    }
                     speechaIdentifyInputView.setState(true);
                 }
             }

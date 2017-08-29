@@ -1,4 +1,4 @@
-/**
+/*
  * @author Jerry
  * 2013-1-22 下午3:00:33
  * Copyright: Copyright (c) xiangha.com 2011
@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -43,6 +45,7 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
+import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
@@ -53,9 +56,9 @@ import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.quan.db.CircleData;
 import amodule.quan.db.CircleSqlite;
-import amodule.user.activity.ChangeUrl;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
@@ -84,6 +87,8 @@ public class AppCommon {
 
     private static int fiallNum = 0;
 
+    public static boolean hasArbitration;
+
     /**
      * 获取公用数据消息
      */
@@ -99,6 +104,8 @@ public class AppCommon {
                         feekbackMessage = Integer.parseInt(alertArr[2]);
                         if (alertArr.length >= 5) {
                             myQAMessage = Integer.parseInt(alertArr[3]) + Integer.parseInt(alertArr[4]);
+                            if (alertArr.length >= 6)
+                                hasArbitration = "2".equals(alertArr[5]);
                         }
                         try {
                             // 所有消息数
@@ -147,7 +154,7 @@ public class AppCommon {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         ArrayList<Map<String, String>> list = getListMapByJson(returnObj);
                         final Map<String, String> map = list.get(0);
-                        if (url.indexOf("&type=part") > -1) {
+                        if (url.contains("&type=part")) {
                             callback.loaded(flag, "part", map);
                         } else {
                             callback.loaded(flag, "newData", map);
@@ -239,7 +246,7 @@ public class AppCommon {
             e.printStackTrace();
         }
         Bundle bundle = new Bundle();
-        Intent intent = null;
+        Intent intent;
         try {
             // 开启url，同时识别是否是原生的
             bundle.putString("url", url);
@@ -247,7 +254,7 @@ public class AppCommon {
             e.printStackTrace();
         }
         //下载apk---直接中断
-        if (url.indexOf("download.app") > -1) {
+        if (url.contains("download.app")) {
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
             String downUrl = map_link.get("url");
@@ -278,19 +285,9 @@ public class AppCommon {
                 e.printStackTrace();
             }
             return;
-        }else if(url.indexOf("fullScreen=2") > -1){
-            Intent it = new Intent(act, FullScreenWeb.class);
-            it.putExtra("url",StringManager.replaceUrl(url));
-            act.startActivity(it);
-            return;
-        }
-        else if (url.indexOf("ChangeUrl.app") > -1) {
-            Intent it = new Intent(act, ChangeUrl.class);
-            act.startActivity(it);
-            return;
-        } else if (url.indexOf("MyRebate.app") > -1) { //我的返现页面
-            return;
-        } else if (url.indexOf("GoodsList.app") > -1) { //返现商品列表
+        } else if (url.contains("MyRebate.app")//我的返现页面
+                        || url.contains("GoodsList.app")//返现商品列表
+                ){
             return;
         } else if(url.indexOf("link.app")==0){//外链
             String temp = url.substring(url.indexOf("?") + 1, url.length());
@@ -303,7 +300,26 @@ public class AppCommon {
             act.startActivity(intentLink);
             return;
 
+        }else if(url.indexOf("nativeWeb.app")==0){//外链 或者是打开某个app
+            String temp = url.substring(url.indexOf("?") + 1, url.length());
+            LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
+            // other app
+            String protocolUrl = map_link.get("protocolurl");
+            // browser
+            String browserUrl = map_link.get("browserurl");
+            String  packageName = map_link.get("package");
+            Intent intentLink = new Intent();
+            intentLink.setAction("android.intent.action.VIEW");
+            Uri content_url = Uri.parse(browserUrl);
+            if (Tools.isPkgInstalled(packageName,XHApplication.in())) {
+                content_url = Uri.parse(protocolUrl);
+            }
+            intentLink.setData(content_url);
+            act.startActivity(intentLink);
+            return;
+            
         }
+        //解析生成 intent
         intent = parseURL(XHApplication.in(), bundle, url);
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
         if (intent == null) {
@@ -313,7 +329,10 @@ public class AppCommon {
                     act.finish();
                 return;
             }
-            if (act instanceof WebActivity) {
+            if(url.contains("fullScreen=2")){//兼容老版本开启 FullScreenWeb
+                intent = new Intent(act, FullScreenWeb.class);
+                intent.putExtra("url",StringManager.replaceUrl(url));
+            }else if (act instanceof WebActivity) {
                 final WebActivity allAct = (WebActivity) act;
                 boolean isSelfLoad = allAct.selfLoadUrl(url, openThis);
                 if (!isSelfLoad && !url.contains(".app")) {
@@ -324,7 +343,7 @@ public class AppCommon {
                 intent = new Intent(act, ShowWeb.class);
                 intent.putExtras(bundle);
             }
-        }else if(url.indexOf("nousInfo") > -1){
+        }else if(url.contains("nousInfo")){
             String code = intent.getStringExtra("code");
             AppCommon.openUrl(act, StringManager.api_nouseInfo + code, true);
             intent = null;
@@ -343,7 +362,7 @@ public class AppCommon {
 	 * @return
 	 */
 	public static Intent parseURL(Context act, Bundle bundle, String url) {
-		if (url.indexOf("stat=1") > -1) {
+		if (url.contains("stat=1")) {
 			//服务端做统计用的
 			ReqInternet.in().doGet(StringManager.api_setAppUrl + "?url=" + url, new InternetCallback(XHApplication.in()) {
 				@Override
@@ -355,7 +374,7 @@ public class AppCommon {
 		Intent intent = null;
 		LogManager.print("d", "parseURL:" + url);
 		//特殊处理体质
-		if (url.indexOf("tizhitest.app") > -1) {
+		if (url.contains("tizhitest.app")) {
 			String result = isHealthTest();
 			if (result.equals("")) {
 				intent = new Intent(act, HealthTest.class);
@@ -367,12 +386,12 @@ public class AppCommon {
 			return intent;
 		}
 		//开浏览器
-		if (url.indexOf("internet.app") > -1) {
+		if (url.contains("internet.app")) {
 			String[] urls = url.split("=");
 			intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urls[1]));
 			return intent;
 		}
-		if (url.indexOf("ingreInfo.app?type=tizhi") > -1 || url.indexOf("ingreInfo.app?type=jieqi") > -1) {
+		if (url.contains("ingreInfo.app?type=tizhi") || url.contains("ingreInfo.app?type=jieqi")) {
 			url = url.replace("ingreInfo.app", "jiankang.app");
 		}
 		//常规解析
@@ -398,6 +417,7 @@ public class AppCommon {
 						bundle.putString(key, value);
 					} else {
 						String[] parameter = urls[1].split("&");
+
                         for (String p : parameter) {
                             String[] value = p.split("=");
                             if (value.length == 2) {
@@ -406,7 +426,7 @@ public class AppCommon {
                         }
 					}
 				}
-				if(url.indexOf("MyDishNew.app")  > -1 || url.indexOf("MySubject.app") > -1){
+				if(url.contains("MyDishNew.app")|| url.contains("MySubject.app")){
 					if(LoginManager.isLogin()){
 						bundle = new Bundle();
 						bundle.putString("code",LoginManager.userInfo.get("code"));
@@ -414,7 +434,7 @@ public class AppCommon {
 						Intent it = new Intent(act, LoginByAccout.class);
 						return it;
 					}
-					if(url.indexOf("MyDishNew.app")  > -1){
+					if(url.contains("MyDishNew.app")){
 						bundle.putInt("index",1);
 					}else{
 						bundle.putInt("index",0);
@@ -891,56 +911,56 @@ public class AppCommon {
         return data;
     }
 
-	public static Map<String,Integer> createCount = new HashMap<>();
+    public static Map<String,Integer> createCount = new HashMap<>();
 
-	/**
-	 * @param context
-	 * @param loadManager
-	 * @param rl
+    /**
+     * @param context
+     * @param loadManager
+     * @param rl
      * @param url
      */
-	public static void createWeb(Activity context , LoadManager loadManager, RelativeLayout rl, String url,
-								 @NonNull String type, int maxCount){
-		try{
-			//添加限制
-			if(createCount == null){
-				createCount = new HashMap<>();
-			}
-			int currentCount = 0;
-			String key = type + url;
-			if(createCount.containsKey(key)){
-				currentCount = createCount.get(key);
-			}
-			if(maxCount == -1 || currentCount >= maxCount){
-				return;
-			}
-			currentCount++;
-			createCount.put(key,currentCount);
-			//请求web
-			String cookieKey = "";
-			String newUrl = url.replace("http://","");
-			String host = newUrl.substring(newUrl.indexOf("."),newUrl.indexOf("/") > -1 ? newUrl.indexOf("/") : newUrl.length());
-			String[] strArray = host.split(":");
-			if(strArray.length > 1){
-				host = strArray[0];
-			}
-			WebviewManager webviewManager = new WebviewManager(context,loadManager,false);
-			XHWebView webView = webviewManager.createWebView(0);
-			Map<String,String> header=ReqInternet.in().getHeader(context);
-			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-			String[] cookie = cookieStr.split(";");
-			CookieManager cookieManager = CookieManager.getInstance();
-			for (int i = 0; i < cookie.length; i++) {
-				cookieManager.setCookie(url, cookie[i]);
-			}
-			cookieManager.setCookie(url, "xhWebStat=1");
-			CookieSyncManager.getInstance().sync();
-			rl.addView(webView,0,0);
-			webView.loadUrl(url);
-		}catch (Exception e){
+    public static void createWeb(Activity context , LoadManager loadManager, RelativeLayout rl, String url,
+                                 @NonNull String type, int maxCount){
+        try{
+            //添加限制
+            if(createCount == null){
+                createCount = new HashMap<>();
+            }
+            int currentCount = 0;
+            String key = type + url;
+            if(createCount.containsKey(key)){
+                currentCount = createCount.get(key);
+            }
+            if(maxCount == -1 || currentCount >= maxCount){
+                return;
+            }
+            currentCount++;
+            createCount.put(key,currentCount);
+            //请求web
+            String cookieKey = "";
+            String newUrl = url.replace("http://","");
+            String host = newUrl.substring(newUrl.indexOf("."),newUrl.indexOf("/") > -1 ? newUrl.indexOf("/") : newUrl.length());
+            String[] strArray = host.split(":");
+            if(strArray.length > 1){
+                host = strArray[0];
+            }
+            WebviewManager webviewManager = new WebviewManager(context,loadManager,false);
+            XHWebView webView = webviewManager.createWebView(0);
+            Map<String,String> header=ReqInternet.in().getHeader(context);
+            String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+            String[] cookie = cookieStr.split(";");
+            CookieManager cookieManager = CookieManager.getInstance();
+            for (int i = 0; i < cookie.length; i++) {
+                cookieManager.setCookie(url, cookie[i]);
+            }
+            cookieManager.setCookie(url, "xhWebStat=1");
+            CookieSyncManager.getInstance().sync();
+            rl.addView(webView,0,0);
+            webView.loadUrl(url);
+        }catch (Exception e){
 
-		}
-	}
+        }
+    }
 
     public static boolean setVip(final Activity act, ImageView vipView, String data){
         return setVip(act,vipView,data,"","");
@@ -997,7 +1017,7 @@ public class AppCommon {
     }
 
     public static void onAdHintClick(final Activity act, final XHAllAdControl xhAllAdControl, final int index, final String listIndex){
-       onAdHintClick(act,xhAllAdControl,index,listIndex,"","");
+        onAdHintClick(act,xhAllAdControl,index,listIndex,"","");
     }
 
     public static void setAdHintClick(final Activity act, View adHintView, final XHAllAdControl xhAllAdControl, final int index, final String listIndex,
@@ -1028,6 +1048,39 @@ public class AppCommon {
                 bottomDialog.cancel();
             }
         }).setBottomButtonColor("#59bdff").show();
+    }
+
+
+    /**
+     * 保存随机推广
+     * @param context 上下文
+     */
+    public static void saveRandPromotionData(final Context context){
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LinkedHashMap<String,String> params = new LinkedHashMap<>();
+                params.put("classifyId","1");
+                params.put("system","2");
+                ReqEncyptInternet.in().doEncypt(StringManager.API_RAND_PROMOTION, params,
+                        new InternetCallback(context) {
+                            @Override
+                            public void loaded(int flag, String url, final Object msg) {
+                                if(flag >= ReqEncyptInternet.REQ_OK_STRING){
+                                    FileManager.scynSaveFile(FileManager.file_randPromotionConfig , msg.toString() , false);
+                                }
+                            }
+                        });
+            }
+        },30*1000);//延时30s
+    }
+
+    /**
+     * 获取随机推广数据
+     * @return 随机推广数据
+     */
+    public static String loadRandPromotionData(){
+        return FileManager.readFile(FileManager.file_randPromotionConfig);
     }
 
 }

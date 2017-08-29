@@ -28,7 +28,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.answer.activity.AskEditActivity;
-import amodule.answer.activity.QAMsgListActivity;
 import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;

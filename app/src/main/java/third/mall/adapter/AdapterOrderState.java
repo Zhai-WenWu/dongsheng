@@ -69,7 +69,7 @@ public class AdapterOrderState extends MallAdapterSimple {
 		final Map<String, String> map = (Map<String, String>) data.get(position);
 
 		// 缓存视图
-		ViewCache viewCache = null;
+		ViewCache viewCache;
 		if (convertView == null) {
 			viewCache = new ViewCache();
 			convertView = LayoutInflater.from(context).inflate(R.layout.a_mall_order_item, parent, false);
@@ -151,7 +151,7 @@ public class AdapterOrderState extends MallAdapterSimple {
 				buycommod_commod_price_fav.setText("- ¥" + map.get("coupon_amt"));
 			}else buycommod_commod_price_fav_rela.setVisibility(View.GONE);
 			//优惠券
-			if(map.containsKey("discount_amt")&&!TextUtils.isEmpty(map.get("discount_amt"))&&Float.parseFloat(map.get("discount_amt").toString())>0){
+			if(map.containsKey("discount_amt")&&!TextUtils.isEmpty(map.get("discount_amt"))&&Float.parseFloat(map.get("discount_amt"))>0){
 				fav_ticket_rela.setVisibility(View.VISIBLE);
 				buycommod_commod_price_fav_ticket.setText("- ¥" + map.get("discount_amt"));
 			}else fav_ticket_rela.setVisibility(View.GONE);
@@ -159,7 +159,7 @@ public class AdapterOrderState extends MallAdapterSimple {
 			listMapByJson = UtilString.getListMapByJson(map.get("order_product"));
 			listMapByJson_order = UtilString.getListMapByJson(map.get("order_shop"));
 			
-			/***************************处理用户留言，和联系商家start****************************************8 */
+			/* *************************处理用户留言，和联系商家start****************************************8 */
 			if(map.containsKey("remark")&&!TextUtils.isEmpty(map.get("remark"))){
 				rela_remark.setVisibility(View.VISIBLE);
 				text_remark.setText("备注："+map.get("remark"));
@@ -177,7 +177,7 @@ public class AdapterOrderState extends MallAdapterSimple {
 //					showDialog(listMapByJson_order.get(0).get("shop_tel"));
 				}
 			});
-			/***************************处理用户留言，和联系商家end****************************************8 */
+			/* *************************处理用户留言，和联系商家end****************************************8 */
 			
 			setName(listMapByJson_order.get(0).get("shop_name"), buycommod_commod_merchant_iv, buycommod_commod_merchant_name);
 			if (listMapByJson.size() > 0) {
@@ -251,38 +251,6 @@ public class AdapterOrderState extends MallAdapterSimple {
 			}
 		}
 		/**
-		 * 弹出对话框
-		 * @param des
-		 */
-//		private void showDialog(final String des){
-//			final Dialog dialog= new Dialog(context,R.style.dialog);
-//			dialog.setContentView(R.layout.a_mall_alipa_dialog);
-//			Window window=dialog.getWindow();
-//			window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-//			TextView dialog_message= (TextView) window.findViewById(R.id.dialog_message);
-//			dialog_message.setText(des);
-//			TextView dialog_cancel= (TextView) window.findViewById(R.id.dialog_cancel);
-//			TextView dialog_sure= (TextView) window.findViewById(R.id.dialog_sure);
-//			dialog_cancel.setText("取消");
-//			dialog_sure.setText("确定");
-//			dialog_cancel.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					dialog.cancel();
-//				}
-//			});
-//			dialog_sure.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					toTel(des);
-//					dialog.cancel();
-//				}
-//			});
-//			dialog.show();
-//		}
-		/**
 		 * 打电话
 		 */
 		private void toTel(String number){
@@ -295,13 +263,13 @@ public class AdapterOrderState extends MallAdapterSimple {
 	/**
 	 * 横向滑动
 	 * 
-	 * @param listview
-	 * @param list_img
+	 * @param listview 横向listview
+	 * @param list_img 数据
 	 */
 	private void setListView(HorizontalListView listview, ArrayList<String> list_img) {
-		ArrayList<Map<String, String>> list_data = new ArrayList<Map<String, String>>();
+		ArrayList<Map<String, String>> list_data = new ArrayList<>();
 		for (int i = 0; i < list_img.size(); i++) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new HashMap<>();
 			map.put("img", list_img.get(i));
 			list_data.add(map);
 		}
@@ -311,11 +279,9 @@ public class AdapterOrderState extends MallAdapterSimple {
 
 	private void setName(String name, ImageView view, TextView tv) {
 		tv.setText(name);
-		if ("香哈".equals(name) || "香哈自营".equals(name)) {
-			view.setBackgroundResource(R.drawable.mall_myorder_myself);
-		} else {
-			view.setBackgroundResource(R.drawable.mall_buycommod_commod_merchant_iv);
-		}
-
+		boolean isSelfMarket = "香哈".equals(name) || "香哈自营".equals(name);
+		view.setBackgroundResource(
+				isSelfMarket ? R.drawable.mall_myorder_myself : R.drawable.mall_buycommod_commod_merchant_iv
+		);
 	}
 }

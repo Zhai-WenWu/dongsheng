@@ -7,7 +7,6 @@
         android:id="@+id/user_next_step_btn"
         style="@style/login_big_btn"
         android:layout_below="@+id/rl_user_login_password"
-        android:layout_marginBottom="@dimen/dp_17"
         android:background="@drawable/bg_next_step_gray"
         android:textColor="@color/c_white_bg_title"
         android:textStyle="bold"

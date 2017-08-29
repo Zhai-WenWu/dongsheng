@@ -28,7 +28,6 @@ import acore.logic.AppCommon;
 import acore.logic.load.AutoLoadMore;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;

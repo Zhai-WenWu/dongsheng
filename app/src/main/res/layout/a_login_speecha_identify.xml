@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_27"
-        android:text="收不到短信,试试"
+        android:text="收不到短信？手机号是否正确或试试"
         android:textSize="@dimen/sp_13"
         android:textColor="#737272"
         />
@@ -25,6 +25,5 @@
         android:textSize="@dimen/sp_13"
         android:textColor="#ff533c"
         />
-
 
 </LinearLayout>

@@ -24,7 +24,6 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.override.activity.base.BaseFragmentActivity;
 import acore.override.data.UploadData;
 import acore.override.helper.UploadHelper.UploadCallback;
 import acore.tools.StringManager;

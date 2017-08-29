@@ -44,9 +44,9 @@ public class AdapterShoppingItemNew extends BaseAdapter{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ProductBean bean = (ProductBean) list.get(position);
+		ProductBean bean = list.get(position);
 		// 缓存视图
-		ViewCache viewCache = null;
+		ViewCache viewCache;
 		if (convertView == null) {
 			viewCache = new ViewCache(new MallShopProductView(context));
 			convertView= viewCache.view;

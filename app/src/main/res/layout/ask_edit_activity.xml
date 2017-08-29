@@ -14,16 +14,15 @@
     <EditText
         android:id="@+id/edittext"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_196"
+        android:layout_height="@dimen/dp_235"
         android:layout_below="@+id/title_rela"
         android:background="@null"
         android:gravity="top|left"
         android:paddingTop="@dimen/dp_16"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
-        android:paddingBottom="@dimen/dp_20"
         android:textSize="@dimen/sp_16"
-        android:hint="1、答案发布后，若作者在72小时内没有回答，将以香豆形式全额退款至您的钱包。\n2、若您的提问被人偷听，偷听的分成金额将以香豆形式进入您的钱包。"
+        android:hint="@string/qa_ask_eidt_hint"
         android:maxLength="100"
         android:textColorHint="#d4d4d4"
         android:lineSpacingExtra="@dimen/dp_6"/>
@@ -56,12 +55,13 @@
             android:layout_toLeftOf="@+id/img_select_btn"
             android:layout_alignParentBottom="true">
         </LinearLayout>
+
         <ImageView
             android:id="@+id/img_select_btn"
             android:layout_width="@dimen/dp_21"
             android:layout_height="@dimen/dp_16"
             android:layout_toLeftOf="@+id/video_select_btn"
-            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:src="@drawable/ask_img_icon"
             android:scaleType="fitXY"/>
         <ImageView
@@ -70,7 +70,7 @@
             android:layout_height="@dimen/dp_16"
             android:layout_toLeftOf="@+id/count_text"
             android:layout_marginLeft="@dimen/dp_15"
-            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:src="@drawable/ask_video_icon"
             android:scaleType="fitXY"/>
 
@@ -82,8 +82,9 @@
             android:textSize="@dimen/sp_16"
             android:textColor="#d4d4d4"
             android:text="0/100"
-            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
     <View
@@ -130,8 +131,7 @@
         android:layout_height="@dimen/dp_46"
         android:layout_below="@+id/line2"
         android:paddingRight="@dimen/dp_20"
-        android:layout_alignLeft="@+id/anonymity_container"
-        android:layout_alignStart="@+id/anonymity_container">
+        android:layout_marginLeft="@dimen/dp_20">
 
         <TextView
             android:layout_width="wrap_content"

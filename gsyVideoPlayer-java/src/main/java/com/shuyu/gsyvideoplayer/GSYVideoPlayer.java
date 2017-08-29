@@ -824,7 +824,13 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     }
 
-
+//    public static final int CURRENT_STATE_NORMAL = 0; //正常
+//    public static final int CURRENT_STATE_PREPAREING = 1; //准备中
+//    public static final int CURRENT_STATE_PLAYING = 2; //播放中
+//    public static final int CURRENT_STATE_PLAYING_BUFFERING_START = 3; //开始缓冲
+//    public static final int CURRENT_STATE_PAUSE = 5; //暂停
+//    public static final int CURRENT_STATE_AUTO_COMPLETE = 6; //自动播放结束
+//    public static final int CURRENT_STATE_ERROR = 7; //错误状态
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
     }
@@ -851,7 +857,13 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         if (GSYVideoManager.instance().getMediaPlayer() != null && mHadPlay) {
             try {
                 int time = seekBar.getProgress() * getDuration() / 100;
-                GSYVideoManager.instance().getMediaPlayer().seekTo(time);
+                Log.d(TAG, "onStopTrackingTouch :: time = "  + time);
+                if(mCurrentState == CURRENT_STATE_AUTO_COMPLETE){
+                    setSeekOnStart(time);
+                    mStartButton.performClick();
+                }else{
+                    GSYVideoManager.instance().getMediaPlayer().seekTo(time);
+                }
             } catch (Exception e) {
                 Debuger.printfWarning(e.toString());
             }
@@ -1191,10 +1203,12 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
 
     protected void resetProgressAndTime() {
-        mProgressBar.setProgress(0);
-        mProgressBar.setSecondaryProgress(0);
-        mCurrentTimeTextView.setText(CommonUtil.stringForTime(0));
-        mTotalTimeTextView.setText(CommonUtil.stringForTime(0));
+        if(!(mSeekOnStart > 0)){
+            mProgressBar.setProgress(0);
+            mProgressBar.setSecondaryProgress(0);
+            mCurrentTimeTextView.setText(CommonUtil.stringForTime(0));
+            mTotalTimeTextView.setText(CommonUtil.stringForTime(0));
+        }
     }
 
 

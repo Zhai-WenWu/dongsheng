@@ -26,6 +26,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
@@ -34,7 +35,6 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.user.activity.FriendHome;
-import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.adapter.AdapterUserVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -106,7 +106,7 @@ public class UserHomeVideo extends TabContentView {
                 if (LoginManager.isBindMobilePhone())
                     mAct.startActivity(new Intent(mAct, VideoEditActivity.class));
                 else
-                    mAct.startActivity(new Intent(mAct, BindPhoneNum.class));
+                    BaseLoginActivity.gotoBindPhoneNum(mAct);
             }
         });
         theListView = (DownRefreshList) view.findViewById(R.id.list_myself_subject);

@@ -83,7 +83,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private TextView mTitle;
     private ImageView rightButton;
     private RelativeLayout dredgeVipLayout;
-    private RelativeLayout allTitleRela;
     private RelativeLayout allTitleRelaPort;
     private TextView dredgeVipImmediately;
     private PtrClassicFrameLayout refreshLayout;
@@ -112,6 +111,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private boolean isKeyboradShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
+    private boolean isOnce = true;
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
@@ -205,7 +205,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
-        allTitleRela = (RelativeLayout) findViewById(R.id.relativeLayout_global);
+        RelativeLayout allTitleRela = (RelativeLayout) findViewById(R.id.relativeLayout_global);
         allTitleRelaPort = (RelativeLayout) findViewById(R.id.all_title_rela_transparent);
         initTitle(allTitleRela);
         //初始化listview
@@ -515,10 +515,12 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             @Override
             public void loaded(int flag, String url, Object object) {
                 //没有数据直接退出
-                if(TextUtils.isEmpty((String) object)){
+                if(TextUtils.isEmpty((String) object) && isOnce){
                     VideoDetailActivity.this.finish();
                     return;
                 }
+                //加载过一次后
+                isOnce = false;
                 //无论如何都刷新用户数据
                 if (!onlyUser)
                     mHaederLayout.setUserData(StringManager.getFirstMap(object));

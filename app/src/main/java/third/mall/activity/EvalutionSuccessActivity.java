@@ -11,7 +11,8 @@ import com.xianghatest.R;
 import acore.logic.XHClick;
 import acore.tools.PageStatisticsUtils;
 import amodule.main.Main;
-import aplug.web.ShowWeb;
+import aplug.web.ShowTemplateWeb;
+import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.XHWebView;
 
 import static third.mall.override.MallBaseActivity.PAGE_FROM;
@@ -23,7 +24,7 @@ import static third.mall.override.MallBaseActivity.PAGE_FROM_TWO;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class EvalutionSuccessActivity extends ShowWeb {
+public class EvalutionSuccessActivity extends ShowTemplateWeb {
     public static final String EXTRAS_POSITION = "position";
     public static final String EXTRAS_ID = "id";
 
@@ -32,17 +33,16 @@ public class EvalutionSuccessActivity extends ShowWeb {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent  = getIntent();
+        intent.putExtra(EvalutionSuccessActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT);
+        setIntent(intent);
         super.onCreate(savedInstanceState);
-        String from = getIntent().getStringExtra(PAGE_FROM);
-        String two = getIntent().getStringExtra(PAGE_FROM_TWO);
-        if(!TextUtils.isEmpty(from)){
-            PageStatisticsUtils.onPageChange(TextUtils.isEmpty(two) ? from : from + "-" + two,this);
-        }
     }
 
     @Override
     protected void initTitleView() {
         super.initTitleView();
+        title.setText("评价成功");
         ImageView close = (ImageView) findViewById(R.id.leftClose);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class EvalutionSuccessActivity extends ShowWeb {
     @Override
     protected void initWeb() {
         super.initWeb();
-        webview.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
+        templateWebView.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
             @Override
             public void onChange(int num) {
                 findViewById(R.id.leftImgBtn).setVisibility(num > 1 ? View.VISIBLE : View.GONE);

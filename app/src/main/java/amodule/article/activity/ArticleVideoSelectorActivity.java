@@ -62,7 +62,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
     private String mTag;
 
     /**String:VideoParentPath, List<Map<String, String>>:VideoParentPath下的视频列表*/
-    private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<String, List<Map<String, String>>>();
+    private Map<String, List<Map<String, String>>> mVideoParentFiles = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,7 +187,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<String> formats = new ArrayList<String>();
+                ArrayList<String> formats = new ArrayList<>();
                 formats.add("mov");
                 formats.add("mp4");
                 ArrayList<Map<String, String>> videos = FileToolsCammer.getLocalMediasLimitFormats(formats);
@@ -200,7 +200,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
                             String parentName = parentFile.getName();
                             List<Map<String, String>> childs;
                             if (!mVideoParentFiles.containsKey(parentName)) {
-                                childs = new ArrayList<Map<String, String>>();
+                                childs = new ArrayList<>();
                                 childs.add(map);
                                 mVideoParentFiles.put(parentName, childs);
                             } else {
@@ -217,7 +217,7 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
 
     /**
      * 数据加载完成
-     * @param datas
+     * @param datas 数据
      */
     private void onDataReady(final ArrayList<Map<String, String>> datas) {
         ArticleVideoSelectorActivity.this.runOnUiThread(new Runnable() {
@@ -263,16 +263,16 @@ public class ArticleVideoSelectorActivity extends BaseActivity implements View.O
         String ret = null;
         if (BaseEditActivity.TAG.equals(mTag)) {
             if (millis < 3*1000) {
-                ret = "不能短于3秒";
+                ret = "视频时长不能小于3秒";
                 XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频小于3s");
             } else if (millis > 1000*60) {
-                ret = "不能长于60s";
+                ret = "视频时长不能超过60s";
                 XHClick.mapStat(this, mTjId, "点击视频按钮", "选择视频超过60s");
             }
         } else {
-            if (millis < 1*1000)
+            if (millis < 1000)
                 ret = "不能短于1秒";
-            else if (millis > 1*1000*60*60)
+            else if (millis > 1000 * 60 * 60)
                 ret = "不能长于1小时";
         }
         return ret;

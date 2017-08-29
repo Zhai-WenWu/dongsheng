@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -473,7 +472,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 				} else {
 					// 判断选择数量问题
 					if (mDefaultCount == resultList.size()) {
-						Tools.showToast(this, "最多只能选" + mDefaultCount + "张图片", Gravity.CENTER);
+						Tools.showToast(this, "最多选" + mDefaultCount + "张图片", Gravity.CENTER);
 						return;
 					}
 					onImageSelected(image.path);
@@ -671,8 +670,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 				if (BaseEditActivity.TAG.equals(mTag)) {
 					XHClick.mapStat(this, mTjId, "点击图片按钮", (resultList.size() < 3 ? "只" : "") + "选择" + resultList.size() + "张图（点击完成）");
 				}
+				commit();
 			}
-			commit();
 			break;
 		}
 	}

@@ -6,7 +6,7 @@ import android.os.Bundle;
  * Created by ：fei_teng on 2017/3/14 17:14.
  */
 
-public class BindePoneFromWeb extends BindPhoneNum {
+public class BindePoneFromWeb extends LostSecret {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

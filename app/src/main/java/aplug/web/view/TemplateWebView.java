@@ -137,6 +137,7 @@ public class TemplateWebView extends XHWebView{
                             @Override
                             public void run() {
                                 if (TemplateWebView.this.getProgress() < 90) {
+                                    if(loadManager!=null)
                                     loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
                                 }
                             }

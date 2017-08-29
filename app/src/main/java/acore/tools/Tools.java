@@ -6,6 +6,8 @@ import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -909,4 +911,26 @@ public class Tools {
         ClipData clip = ClipData.newPlainText("simple text copy", str);
         manager.setPrimaryClip(clip);
     }
+    /*获取Context所在进程的名称
+
+    pkgName 包名
+    *
+    * */
+    public static boolean isPkgInstalled(String pkgName,Context context) {
+        PackageInfo packageInfo = null;
+        try {
+
+            packageInfo = context.getPackageManager().getPackageInfo(pkgName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        if (packageInfo == null) {
+
+            return false;
+        } else {
+            return true;
+        }
+        }
 }

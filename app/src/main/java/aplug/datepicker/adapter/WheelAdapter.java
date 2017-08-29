@@ -6,14 +6,14 @@ public interface WheelAdapter {
 	 * 得到items的数�?
 	 * @return item的数�?
 	 */
-	public int getItemsCount();
+	int getItemsCount();
 	
 	/**
 	 * 通过index得到对应的item
 	 * @param index item的index
 	 * @return item或�?�null
 	 */
-	public String getItem(int index);
+	String getItem(int index);
 	
 	
 	/**
@@ -21,6 +21,6 @@ public interface WheelAdapter {
 	 * 若返�?-1，则将使用默认滚轮宽�?
 	 * @return
 	 */
-	public int getMaximumLength();
+	int getMaximumLength();
 
 }

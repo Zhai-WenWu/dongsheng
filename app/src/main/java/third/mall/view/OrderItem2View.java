@@ -73,7 +73,7 @@ public class OrderItem2View extends ViewItemBase {
 	private ListView listview_item_2;
 	private RelativeLayout rela_mall_order_2,myorder_explian_iv_2_rela;
 	private LinearLayout myorder_button_linear;
-	private int id;
+//	private int id;
 	private InterfaceCallBack callBack;
 	private String url= "";
 	private String mall_stat_statistic;
@@ -136,9 +136,6 @@ public class OrderItem2View extends ViewItemBase {
 		myorder_price_text_number_2.setText(map.get("order_amt"));
 		final ArrayList<Map<String, String>> listMapByJson_product = UtilString.getListMapByJson(map.get("order_product"));
 
-		//TODO ceshi
-		map.put("comment_statuts",(Tools.getRandom(0,100) % 2 == 0) ?"1" :"2");
-
 		if(map.containsKey("shop_code")){
 			order_logistics_back.setVisibility(View.VISIBLE );
 			setShopOnClick(order_logistics_back, map);
@@ -177,7 +174,7 @@ public class OrderItem2View extends ViewItemBase {
 			}
 		});
 		String satus = map.get("order_status");
-		String comment_status = map.get("comment_statuts");
+		String comment_status = map.get("comment_status");
 		myorder_merchant_state_2.setText(map.get("order_status_desc"));// 描述
 		MallButtonView buttonView = new MallButtonView(activity);
 		myorder_button_linear.removeAllViews();
@@ -223,7 +220,7 @@ public class OrderItem2View extends ViewItemBase {
 					} else {
 						myorder_state_linear_2.setVisibility(View.GONE);
 						map.put("order_status", "5");
-						map.put("comment_statuts","1");
+						map.put("comment_status","1");
 						map.put("order_status_desc", "已完成");
 						myorder_merchant_state_2.setText("完成");
 						myorder_merchant_state_2.setTextColor(Color.parseColor("#333333"));
@@ -248,7 +245,7 @@ public class OrderItem2View extends ViewItemBase {
 							@Override
 							public void sucessCallBack() {
                                 //去评价
-                                gotoComment(map,listMapByJson_product,position);
+                                gotoComment(map,listMapByJson_product,position,id);
 							}
 						}));
 					}
@@ -280,7 +277,7 @@ public class OrderItem2View extends ViewItemBase {
 					@Override
 					public void sucessCallBack() {
 						//去评价
-                        gotoComment(map,listMapByJson_product,position);
+                        gotoComment(map,listMapByJson_product,position,id);
 					}
 				}));
 			}
@@ -353,7 +350,7 @@ public class OrderItem2View extends ViewItemBase {
 				}
 			}, map, buttonView.list_state_payment,url,mall_stat_statistic));
 		}
-		setListener(map, position);// 监听
+		setListener(map, position,id);// 监听
 	}
 
 	private void setShopOnClick(View view,final Map<String, String> map){
@@ -371,7 +368,7 @@ public class OrderItem2View extends ViewItemBase {
 	}
 
 	/** 设置监听 */
-	private void setListener(final Map<String, String> map, final int position) {
+	private void setListener(final Map<String, String> map, final int position,final int id) {
 		// 全部点击去到订单详情页面
 		rela_mall_order_2.setOnClickListener(new OnClickListener() {
 
@@ -417,17 +414,17 @@ public class OrderItem2View extends ViewItemBase {
 		});
 	}
 
-	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray, final int position){
+	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray, final int position,final int id){
 		if(0 == id){
 			XHClick.mapStat(getContext(),XHClick.comcomment_icon,"我的订单-【全部】的评价按钮","");
-		}else if(4 == id){
+		}else if(5 == id){
 			XHClick.mapStat(getContext(),XHClick.comcomment_icon,"我的订单-【待评价】的评价按钮","");
 		}
         //去评价
         if(productArray.size() == 1){
-            gotoCommentSingle(orderMap , productArray.get(0) , position);
+            gotoCommentSingle(orderMap , productArray.get(0) , position,id);
         }else if(productArray.size() > 1){
-            gotoCommentMulti(orderMap, position);
+            gotoCommentMulti(orderMap, position,id);
         }
     }
 
@@ -436,7 +433,7 @@ public class OrderItem2View extends ViewItemBase {
      * @param map
      * @param position
      */
-	private void gotoCommentMulti(final Map<String, String> map, final int position ){
+	private void gotoCommentMulti(final Map<String, String> map, final int position ,int id){
 		Intent intent = new Intent(activity, PublishEvalutionMultiActivity.class);
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ORDER_ID, map.get("order_id"));
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_POSITION, position);
@@ -451,7 +448,7 @@ public class OrderItem2View extends ViewItemBase {
      * @param productMap
      * @param position
      */
-	private void gotoCommentSingle(final Map<String, String> orderMap,Map<String, String> productMap, final int position){
+	private void gotoCommentSingle(final Map<String, String> orderMap,Map<String, String> productMap, final int position,int id){
 		Intent intent = new Intent(activity, PublishEvalutionSingleActivity.class);
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ORDER_ID,orderMap.get("order_id"));
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,productMap.get("img"));

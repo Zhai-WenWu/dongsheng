@@ -527,7 +527,7 @@
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name="amodule.answer.activity.QAReportActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
@@ -852,21 +852,17 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"
+            />
+        <activity
+            android:name="amodule.user.activity.login.LoginByPassword"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.user.activity.login.LoginbyEmail"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.user.activity.login.LoginByPhoneIndentify"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.user.activity.login.RegisterByPhoneOne"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
@@ -897,12 +893,6 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.user.activity.login.BindPhone"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.user.activity.login.BindPhoneNum"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
@@ -992,6 +982,7 @@
         <activity
             android:name="aplug.web.FullScreenWeb"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
@@ -1000,7 +991,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
 
 
 
@@ -1189,6 +1180,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"
+            />
+        <activity
+            android:name="third.mall.activity.EvalutionListActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"
             />
         <activity
             android:name="third.mall.activity.EvalutionSuccessActivity"

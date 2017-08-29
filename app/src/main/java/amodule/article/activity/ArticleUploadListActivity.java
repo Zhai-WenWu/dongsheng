@@ -56,7 +56,6 @@ import xh.windowview.XhDialog;
 public class ArticleUploadListActivity extends BaseActivity {
     private ListView mListview;
     private int draftId;
-    private String dishName;
     private UploadListPool listPool;
     private UploadPoolData uploadPoolData = new UploadPoolData();
     private ArrayList<Map<String, String>> arrayList = new ArrayList<>();
@@ -78,8 +77,6 @@ public class ArticleUploadListActivity extends BaseActivity {
     private String finalVideoPath;
 
     private int dataType;
-
-    private boolean isSecondEdit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,12 +125,12 @@ public class ArticleUploadListActivity extends BaseActivity {
             finish();
             return;
         }
-        isSecondEdit = !TextUtils.isEmpty(articleData.getCode());
+        boolean isSecondEdit = !TextUtils.isEmpty(articleData.getCode());
 
         if (listPool instanceof ArticleUploadListPool) {
             ((ArticleUploadListPool)listPool).setIsSecondEdit(isSecondEdit);
         }
-        dishName = uploadPoolData.getTitle();
+        String dishName = uploadPoolData.getTitle();
         arrayList = uploadPoolData.getListData();
         if(!TextUtils.isEmpty(dishName)) {
             tv_title.setText(dishName.length() > 7 ? dishName.substring(0,6) + "..." : dishName);
@@ -176,11 +173,7 @@ public class ArticleUploadListActivity extends BaseActivity {
             public void uploadOver(boolean flag, String responseStr) {
                 Log.i("articleUpload","改变ui回调 uploadOver flag:" + flag + "   responseStr:" + responseStr);
                 refreshUploadView();
-                if (flag) {
-                    isStopUpload = false;
-                } else {
-                    isStopUpload = true;
-                }
+                isStopUpload = !flag;
 //                gotoFriendHome();
             }
         };

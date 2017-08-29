@@ -105,13 +105,20 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
 
         login_identify.init("请输入验证码", new IdentifyInputView.IdentifyInputViewCallback() {
             @Override
+            public void onTick(long millisUntilFinished) {
+                if(isFirst && millisUntilFinished >= 20 * 1000){
+                    if("86".equals(zoneCode)) {
+                        isFirst = false;
+                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
+                        speechaIdentifyInputView.setState(true);
+                    }
+                }
+            }
+
+            @Override
             public void onCountDownEnd() {
                 refreshNextStepBtnState();
                 if("86".equals(zoneCode)) {
-                    if (isFirst) {
-                        isFirst = false;
-                        speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                    }
                     speechaIdentifyInputView.setState(true);
                 }
             }
@@ -170,7 +177,6 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
         btn_next_step.init("下一步",  new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
-
                 if (ORIGIN_REGISTER.equals(origin)) {
                     XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "验证码页，点击下一步");
                 } else if (ORIGIN_BIND_PHONE_NUM.equals(origin)) {

@@ -1,32 +1,19 @@
 package amodule.dish.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
 
 import com.xianghatest.R;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,14 +23,12 @@ import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
-import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
-import amodule.dish.tools.ADDishContorl;
 import amodule.dish.view.DishActivityViewControlNew;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
@@ -51,10 +36,6 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.video.VideoPlayerController;
-import xh.basic.tool.UtilString;
-
-import static com.xianghatest.R.id.share_layout;
-import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 菜谱详情页：头部大图、视频，底部广告以下是原生，中间是h5
@@ -143,13 +124,14 @@ public class DetailDish extends BaseAppCompatActivity {
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);
         dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControlNew.DishViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
             }
         });
-        setCommonStyle();
+
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

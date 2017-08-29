@@ -57,7 +57,7 @@ public class BarDatePicker extends LinearLayout{
 		year.addScrollingListener(scrollListener);
 		
 		month=(WheelView) view.findViewById(R.id.month);
-		month.setAdapter(new WheelAdapterArray<String>(new String[]{"1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"},12));
+		month.setAdapter(new WheelAdapterArray<>(new String[]{"1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"},12));
 		month.addChangingListener(wheelChangedListener);
 		month.addScrollingListener(scrollListener);
 		

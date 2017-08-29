@@ -231,7 +231,7 @@ public class StringManager extends UtilString {
     public final static String api_monitoring = "http://stat.xiangha.com/s4.gif";
 
     //钱包会员
-    public final static String api_money = appWebUrl + "vip/wallet?fullScreen=2"; //我的钱包
+    public final static String api_money = appWebUrl + "vip/walletV1?fullScreen=2"; //我的钱包
     public final static String api_vip = appWebUrl + "vip/myvip?fullScreen=2"; //会员中心
     public final static String api_openVip = appWebUrl + "vip/myvip?payset=2&fullScreen=2"; //开通vip
 
@@ -246,6 +246,7 @@ public class StringManager extends UtilString {
     //菜谱详情页
     public final static String api_getDishInfoNew = apiUrl + urlSection.get("caipu6") + "info";
     public final static String api_getDishTopInfo = apiUrl + "main7/dish/topInfo";
+    public final static String api_getTemplate = apiUrl + "main7/template/layout";
     public final static String api_getDishMould = apiUrl + "main7/dish/layout";
     public final static String api_getDishTieInfo = apiUrl + "main7/dish/tieInfo";
     public final static String api_getDishLikeNumStatus = apiUrl + "main7/dish/likeNumStatus";
@@ -334,8 +335,7 @@ public class StringManager extends UtilString {
 
     public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
     public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
-    public final static String api_article = mUrl + "article/";//文章详情页m
-    public final static String api_Video = mUrl + "videoInfo/";//视频详情页m
+    public final static String api_article = mUrl + "articleVideo/getArticleSource/";//文章详情页m
 
     /*付费问答*/
     public final static String API_QA_ISTIP = apiUrl + "main7/qa/getIsTip";//获取是否弹窗提示
@@ -343,9 +343,12 @@ public class StringManager extends UtilString {
     public final static String API_QA_COMMITREPORT = apiUrl + "main7/qa/addReport";//提交问答举报
     public final static String API_QA_GETPRICE = apiUrl + "main7/qa/getQaPrice";//获取提问金额
     public final static String API_QA_QAADD = apiUrl + "main7/qa/qaAdd";//添加问答
-    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1");//获取问答消息列表顶部tab信息
-    public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement";//问答细则及责任声明
+    public final static String API_QA_QAMSGLIST = appWebUrl + "qa/myQa";//获取问答消息列表顶部tab信息
+    public final static String API_QA_QASTATEMENT = appWebUrl + "qa/agreement?fullScreen=2";//问答细则及责任声明
     public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet";//问答设置
+    public final static String API_QA_QAARBITRATION = appWebUrl + "qa/arbitrateList?fullScreen=2";//问答仲裁
+
+    public final static String API_RAND_PROMOTION = apiUrl + "main7/open/getRandPromotion";//随机推广
 
     //替换url
     public final static String replaceUrl(String url) {
@@ -468,5 +471,22 @@ public class StringManager extends UtilString {
             e.printStackTrace();
         }
         return jsonArray;
+    }
+
+    /**
+     * 查看字符是否有正常字符，除空格和换行
+     * @param content
+     * @return
+     */
+    public static boolean isHasChar(String content){
+        if(TextUtils.isEmpty(content))
+            return false;
+        content = content.replace(" ","");
+        if(content.length() == 0)
+            return false;
+        content = content.replace("\n","");
+        if(content.length() == 0)
+            return false;
+        return true;
     }
 }

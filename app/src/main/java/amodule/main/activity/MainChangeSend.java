@@ -24,6 +24,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseLoginActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
 import amodule.article.activity.edit.ArticleEidtActivity;
@@ -31,7 +32,6 @@ import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.DeviceUtilDialog;
 import amodule.quan.activity.upload.UploadSubjectNew;
-import amodule.user.activity.login.BindPhoneNum;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
@@ -202,9 +202,10 @@ public class MainChangeSend extends BaseActivity {
                 } else if (LoginManager.isBindMobilePhone()) {
                     finish();
                     startActivity(new Intent(this, ArticleEidtActivity.class));
-                } else
-                    startActivity(new Intent(this, BindPhoneNum.class));
+                } else {
+                    BaseLoginActivity.gotoBindPhoneNum(this);
 //                    showDialog("发文章", StringManager.api_applyArticlePower);
+                }
                 break;
             case "7":
                 if (!LoginManager.isLogin()) {
@@ -214,7 +215,7 @@ public class MainChangeSend extends BaseActivity {
                     finish();
                     startActivity(new Intent(this, VideoEditActivity.class));
                 } else
-                    startActivity(new Intent(this, BindPhoneNum.class));
+                    BaseLoginActivity.gotoBindPhoneNum(this);
 //                    showDialog("短视频", StringManager.api_applyVideoPower);
                 break;
         }

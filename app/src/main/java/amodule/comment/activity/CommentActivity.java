@@ -117,7 +117,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
 //                sendTv.setClickable(s.length() > 0);
-                sendTv.setTextColor(s.length() > 0 ? Color.parseColor("#333333") : Color.parseColor("#cccccc"));
+                sendTv.setTextColor(StringManager.isHasChar(String.valueOf(s)) ? Color.parseColor("#333333") : Color.parseColor("#cccccc"));
             }
         });
         downRefreshList = (DownRefreshList) findViewById(R.id.comment_listview);
@@ -656,7 +656,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.comment_send:
                 String content = commend_write_et.getText().toString();
-                if(content.length() > 0){
+                if(StringManager.isHasChar(content)){
                     sendData();
                 }
                 break;

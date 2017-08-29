@@ -1,16 +1,13 @@
 package third.mall.upload;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
@@ -28,8 +25,10 @@ import third.mall.bean.EvalutionBean;
 
 public class EvalutionUploadControl {
     private Context context;
-    private OnPublishCallback onPublishCallback;
+    /**评价数据体*/
     private EvalutionBean bean;
+    /**发布状态对调*/
+    private OnPublishCallback onPublishCallback;
 
     boolean isCanceled = false;
     boolean isPublishing = false;
@@ -52,10 +51,11 @@ public class EvalutionUploadControl {
 
     /**
      * 上传
-     *
-     * @param filePath
+     * @param filePath 文件路径
+     * @param isFirst   是否是第一次
+     * @param callBack 上传回调
      */
-    public void uploadImage(final String filePath, boolean isFirst, @NonNull final UploadListNetCallBack callBack) {
+    public void uploadImage(final String filePath, boolean isFirst, @Nullable final UploadListNetCallBack callBack) {
         if (TextUtils.isEmpty(filePath))
             return;
         if (isFirst) {
@@ -67,7 +67,7 @@ public class EvalutionUploadControl {
             uploadControl.start(new UploadListNetCallBack() {
                 @Override
                 public void onProgress(double progress, String uniqueId) {
-                    if (callBack != null)
+                    if (null != callBack)
                         callBack.onProgress(progress, uniqueId);
                 }
 
@@ -76,36 +76,35 @@ public class EvalutionUploadControl {
                     //成功更新url
                     bean.replaceImage(filePath, url);
                     //回调
-                    if (callBack != null)
+                    if (null != callBack)
                         callBack.onSuccess(url, uniqueId, jsonObject);
                     //如果处于发布中，再次调用发布方法
                     if (isPublishing && !isCanceled) {
-                        Log.i("tzy","upload.onSuccess :: isPublishing = " + isPublishing);
                         publishEvalution();
                     }
                 }
 
                 @Override
                 public void onFaild(String faild, String uniqueId) {
-                    if (callBack != null)
+                    if (null != callBack)
                         callBack.onFaild(faild, uniqueId);
 
                     //如果发布中图片上传失败，发布直接失败
                     if (isPublishing && onPublishCallback != null) {
                         isPublishing = false;
-                        onPublishCallback.onFailed();
+                        onPublishCallback.onFailed("图片上传失败");
                     }
                 }
 
                 @Override
                 public void onLastUploadOver(boolean flag, String responseStr) {
-                    if (callBack != null)
+                    if (null != callBack)
                         callBack.onLastUploadOver(flag, responseStr);
                 }
 
                 @Override
                 public void onProgressSpeed(String uniqueId, long speed) {
-                    if (callBack != null)
+                    if (null != callBack)
                         callBack.onProgressSpeed(uniqueId, speed);
                 }
             });
@@ -113,7 +112,8 @@ public class EvalutionUploadControl {
     }
 
     /**
-     * @param filePath
+     * 删除上传的图片
+     * @param filePath 文件路径
      */
     public void delUploadImage(String filePath) {
         if (!TextUtils.isEmpty(filePath)) {
@@ -128,7 +128,7 @@ public class EvalutionUploadControl {
         if (onPublishCallback != null)
             onPublishCallback.onStratPublish();
         if (isAllUploadOver()) {
-            //
+            //正式发布评价请求
             MallReqInternet.in().doPost(MallStringManager.mall_addComment,
                     combineParameter(),
                     new MallInternetCallback(context) {
@@ -142,14 +142,14 @@ public class EvalutionUploadControl {
                             } else {
 
                                 if (onPublishCallback != null)
-                                    onPublishCallback.onFailed();
+                                    onPublishCallback.onFailed("发布失败，请重试");
                             }
                         }
                     });
         } else {
             //上传未上传完成的的图片
             for (String imageUrl : bean.getImages()) {
-                if (!imageUrl.startsWith("http"))
+                if (!TextUtils.isEmpty(imageUrl) && !imageUrl.startsWith("http"))
                     uploadAgin(imageUrl);
             }
         }
@@ -158,7 +158,7 @@ public class EvalutionUploadControl {
     /**
      * 获取参数
      *
-     * @return
+     * @return 参数的map
      */
     public LinkedHashMap<String, String> combineParameter() {
         LinkedHashMap<String, String> uploadTextData = new LinkedHashMap<>();
@@ -172,33 +172,18 @@ public class EvalutionUploadControl {
         for (int i = 0; i < images.size(); i++) {
             uploadTextData.put("content[0][imgs][" + i + "]", images.get(i));
         }
-        Log.i("tzy", "combineParameter :: " + uploadTextData.toString());
         return uploadTextData;
     }
 
     /**
-     * 获取content字段内容
-     *
-     * @return
-     */
-//    public ArrayList<Map<String, String>> getCotnent() {
-//        ArrayList<Map<String, String>> contentArray = new ArrayList<>();
-//        Map<String, String> content = new HashMap<>();
-//        content.put("text", bean.getContent());
-//        content.put("imgs", bean.getImages().toString());
-//        contentArray.add(content);
-//        return contentArray;
-//    }
-
-    /**
      * 是否全部上传完成
      *
-     * @return
+     * @return 图片是否已经上传完成
      */
     private boolean isAllUploadOver() {
         ArrayList<String> images = bean.getImages();
         for (String imageUrl : images) {
-            if (!imageUrl.startsWith("http")) {
+            if (!TextUtils.isEmpty(imageUrl) && !imageUrl.startsWith("http")) {
                 return false;
             }
         }
@@ -208,8 +193,6 @@ public class EvalutionUploadControl {
     /**取消发布*/
     public void cancelUpload() {
         isPublishing = false;
-        Log.i("tzy","cancelUpload :: isPublishing = " + isPublishing);
-//        isCanceled = true;
         MallReqInternet.in().cancelRequset(
                 new StringBuffer(MallStringManager.mall_addComment)
                         .append(combineParameter().toString()
@@ -256,29 +239,15 @@ public class EvalutionUploadControl {
         /**发布成功*/
         void onSuccess(Object msg);
         /**发布失败*/
-        void onFailed();
+        void onFailed(String msg);
     }
 
     /**默认上传进度回调*/
     public static abstract class SimpleUploadListNetCallBack implements UploadListNetCallBack {
-        @Override
-        public void onProgress(double progress, String uniqueId) {
-        }
-
-        @Override
-        public void onLastUploadOver(boolean flag, String responseStr) {
-        }
-
-        @Override
-        public void onProgressSpeed(String uniqueId, long speed) {
-        }
-
-        @Override
-        public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
-        }
-
-        @Override
-        public void onFaild(String faild, String uniqueId) {
-        }
+        @Override public void onProgress(double progress, String uniqueId) { }
+        @Override public void onLastUploadOver(boolean flag, String responseStr) { }
+        @Override public void onProgressSpeed(String uniqueId, long speed) { }
+        @Override public void onSuccess(String url, String uniqueId, JSONObject jsonObject) { }
+        @Override public void onFaild(String faild, String uniqueId) { }
     }
 }

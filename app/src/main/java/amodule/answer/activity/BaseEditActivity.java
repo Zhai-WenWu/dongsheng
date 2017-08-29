@@ -28,6 +28,8 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.override.helper.XHActivityManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
@@ -57,6 +59,8 @@ public class BaseEditActivity extends BaseActivity {
 
     protected final int REQUEST_SELECT_IMAGE = 0x01;
     protected final int REQUEST_SELECT_VIDEO = 0x02;
+    public static final int REQUEST_CODE_Q = 0x03;
+    public static final int REQUEST_CODE_A = 0x04;
 
     protected String mQACode;
     protected String mAnswerCode;
@@ -85,8 +89,6 @@ public class BaseEditActivity extends BaseActivity {
     protected AskAnswerModel mModel;
     protected AskAnswerSQLite mSQLite;
 
-    private AskAnswerModel mFirstDB;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +113,6 @@ public class BaseEditActivity extends BaseActivity {
         }
         mModel = new AskAnswerModel();
         mSQLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
-        mFirstDB = mSQLite.queryFirstData();
     }
 
     protected void initView(String title, int contentResId) {
@@ -205,7 +206,7 @@ public class BaseEditActivity extends BaseActivity {
                         Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
                         intent.putExtra("draftId", (int)mModel.getmId());
                         intent.putExtra("isAutoUpload", true);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_A);
                         XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
                         break;
                     case R.id.back:
@@ -271,6 +272,22 @@ public class BaseEditActivity extends BaseActivity {
                 onPayFin(succ, data);
             }
         });
+    }
+
+    protected void initImgControllerData (AskAnswerModel model) {
+        if (model == null)
+            return;
+        ArrayList<Map<String, String>> imgsArr = StringManager.getListMapByJson(model.getmImgs());
+        if (!imgsArr.isEmpty()) {
+            for (Map<String, String> img : imgsArr)
+                mImgController.addData(img);
+        } else {
+            ArrayList<Map<String, String>> videosArr = StringManager.getListMapByJson(model.getmVideos());
+            if (!videosArr.isEmpty()) {
+                for (Map<String, String> img : videosArr)
+                    mImgController.addData(img);
+            }
+        }
     }
 
     protected void onPayFin(boolean succ, Object data){};
@@ -359,17 +376,17 @@ public class BaseEditActivity extends BaseActivity {
             return rowId;
         }
         Editable editable = mEditText.getText();
+        String text = editable == null ? "" : editable.toString();
         ArrayList<Map<String, String>> videoArrs = mImgController.getVideosArray();
         ArrayList<Map<String, String>> imgArrs = mImgController.getImgsArray();
-        long id = mModel.getmId();
-        if ((editable == null || TextUtils.isEmpty(editable.toString()) || editable.toString().trim().length() == 0) && mImgsContainer != null && mImgsContainer.getChildCount() <= 0) {
-            if (id > 0)
-                mSQLite.deleteData((int) id);
+        if (TextUtils.isEmpty(text.trim())
+                && mImgsContainer != null
+                && mImgsContainer.getChildCount() <= 0
+                && !TextUtils.isEmpty(mDishCode)
+                && !mDishCode.equals(mModel.getmDishCode())) {//没有内容，并且 非同一个菜谱，则不保存数据。
             return rowId;
         }
-        if (mFirstDB != null)
-            mModel.setmId(mFirstDB.getmId());
-        mModel.setmText(editable == null ? "" : editable.toString());
+        mModel.setmText(text);
         mModel.setmTitle(mQATitle == null ? "" : mQATitle);
         mModel.setmVideos(videoArrs);
         mModel.setmImgs(imgArrs);
@@ -381,8 +398,11 @@ public class BaseEditActivity extends BaseActivity {
         mModel.setmAuthorCode(mAuthorCode);
         mModel.setmSaveTime(String.valueOf(System.currentTimeMillis()));
         if (mModel.getmId() > 0) {
-            mSQLite.updateData((int) mModel.getmId(), mModel);
-            rowId = mModel.getmId();
+            if (!TextUtils.isEmpty(text.trim()) || (mImgsContainer != null && mImgsContainer.getChildCount() > 0)) {
+                mSQLite.updateData((int) mModel.getmId(), mModel);
+                rowId = mModel.getmId();
+            } else
+                mSQLite.deleteAll();
         } else {
             rowId = mSQLite.insertData(mModel);
             if (rowId > 0)
@@ -430,6 +450,13 @@ public class BaseEditActivity extends BaseActivity {
                         dataMap.put("video", videoPath);
                         mImgController.addData(dataMap);
                     }
+                    break;
+                case REQUEST_CODE_A:
+                    boolean loadSucc = data.getBooleanExtra("loadSucc", false);
+                    if (loadSucc) {
+                        XHActivityManager.getInstance().refreshActivity();
+                    }
+                    finish();
                     break;
             }
         }

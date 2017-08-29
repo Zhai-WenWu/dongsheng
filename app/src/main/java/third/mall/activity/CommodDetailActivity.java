@@ -60,6 +60,8 @@ import aplug.basic.SubBitmapTarget;
 import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
+import aplug.web.ShowTemplateWeb;
+import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallCommon;
@@ -76,6 +78,7 @@ import third.mall.widget.MyScrollView.ScrollViewInterface;
 import third.mall.widget.ScrollViewContainer;
 import third.mall.widget.ScrollViewContainer.ScrollviewContaninerInter;
 import third.share.BarShare;
+import third.share.ShareActivityDialog;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -89,7 +92,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
     private ViewPager viewpager;
     private ImageView[] imageviews;
-    private WebView explain_detail_webview;
     private Map<String, String> map;
     private String code;
     private MyScrollView mall_commod_scroll;
@@ -121,7 +123,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     private FavorableDialog favorableDialog;
     private int productNum = 1;//购买商品数量
     private BuyDialog buyDialog;
-    private TemplateWebView middle_templateWebView;
+    private TemplateWebView middle_templateWebView,foot_templateWebView;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -188,7 +190,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 titleState = state == 1 ? "1" : "2";
                 handleTitleState();
                 if (load_state) {
-                    explain_detail_webview.loadUrl(MallStringManager.replaceUrl(MallStringManager.mall_web_product_detail) + "?product_code=" + code);
+//                    foot_templateWebView.loadData();
+                    foot_templateWebView.loadData(XHTemplateManager.DSUNDERSCOREPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSUNDERSCOREPRODUCTINFO),new String[]{code});
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
                 }
             }
@@ -240,17 +243,22 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             public void onLoadStart() {
             }
         });
-        //底部webview
-        explain_detail_webview = (WebView) findViewById(R.id.explain_detail_webview);
-        explain_detail_webview.getSettings().setJavaScriptEnabled(true);// 执行角标文件
-        explain_detail_webview.setScrollBarStyle(0);// 滚动条风格，为0就是不给滚动条留空间，滚动条覆盖在网页上
-        explain_detail_webview.setHorizontalScrollBarEnabled(false);
-        explain_detail_webview.setVerticalScrollBarEnabled(true);
-        explain_detail_webview.getSettings().setDefaultTextEncodingName("UTF-8");
-        //兼容https,在部分版本上资源显示不全的问题
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            explain_detail_webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
+        foot_templateWebView= (TemplateWebView) findViewById(R.id.foot_templateWebView);
+        foot_templateWebView.initBaseData(this,loadManager);
+        foot_templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
+            @Override
+            public void onLoadFinish() {
+                load_state = false;
+                findViewById(R.id.widget_progress).setVisibility(View.GONE);
+                findViewById(R.id.foot_templateWebView).setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onLoadStart() {
+                load_state = true;
+                findViewById(R.id.widget_progress).setVisibility(View.VISIBLE);
+                findViewById(R.id.foot_templateWebView).setVisibility(View.GONE);
+            }
+        });
     }
 
     /**
@@ -312,28 +320,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 super.handleMessage(msg);
             }
         };
-        // webview 加载监听
-        explain_detail_webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                load_state = true;
-                findViewById(R.id.widget_progress).setVisibility(View.VISIBLE);
-                findViewById(R.id.explain_detail_but_linear).setVisibility(View.GONE);
-//                findViewById(R.id.explain_detail_linear).setVisibility(View.GONE);
-                findViewById(R.id.explain_detail_webview).setVisibility(View.GONE);
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                load_state = false;
-                findViewById(R.id.widget_progress).setVisibility(View.GONE);
-                findViewById(R.id.explain_detail_but_linear).setVisibility(View.VISIBLE);
-//                findViewById(R.id.explain_detail_linear).setVisibility(View.VISIBLE);
-                findViewById(R.id.explain_detail_webview).setVisibility(View.VISIBLE);
-                super.onPageFinished(view, url);
-            }
-        });
         loadManager.setLoading(new OnClickListener() {
 
             @Override
@@ -399,13 +385,15 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         setProductPrice();
         //设置领券
         setGetFavorable();
+        //设置好评度
+        setProductPraise();
 
         // 轮转图
         images = UtilString.getListMapByJson(map.get("resource"));
         initViewPager(images);
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
         mall_ScrollViewContainer.setState_two(false);
-        middle_templateWebView.loadData("XhDish",new String[]{"<{code}>"},new String[]{"94888485"});
+        middle_templateWebView.loadData(XHTemplateManager.DSPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSPRODUCTINFO),new String[]{code});
 
     }
 
@@ -517,6 +505,26 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     }
 
     /**
+     * 设置好评度
+     */
+    private void setProductPraise(){
+        String product_praise= map.get("product_praise");
+        if(!TextUtils.isEmpty(product_praise)&&!"0".equals(product_praise)) {
+            findViewById(R.id.scroe_linear).setVisibility(View.VISIBLE);
+            findViewById(R.id.scroe_line).setVisibility(View.VISIBLE);
+
+            findViewById(R.id.scroe_linear).setOnClickListener(this);
+            TextView title_good_scroe = (TextView) findViewById(R.id.title_good_scroe);
+            title_good_scroe.setText(map.get("product_praise"));
+            TextView title_buy = (TextView) findViewById(R.id.title_buy);
+            title_buy.setText(map.get("saled_num") + "人购买");
+        }else{
+            findViewById(R.id.scroe_linear).setVisibility(View.GONE);
+            findViewById(R.id.scroe_line).setVisibility(View.GONE);
+        }
+    }
+
+    /**
      * 初始化viewpager
      *
      * @param images
@@ -539,8 +547,11 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         for (int i = 0; i < views.size(); i++) {
             ImageView iv = new ImageView(this);
             int dp_2_5 = Tools.getDimen(this, R.dimen.dp_2_5);
+            int dp_12 = Tools.getDimen(this, R.dimen.dp_12);
             iv.setPadding(dp_2_5, 0, dp_2_5, 0);
+            LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams(dp_12,dp_12);
             imageviews[i] = iv;
+            imageviews[i].setLayoutParams(layoutParams);
             imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_white);
             if (i == 0) {
                 imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_active);
@@ -633,6 +644,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                     if (images.get(position).containsKey("type") && "1".equals(images.get(position).get("type"))) {
                         intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, StringManager.getFirstMap(images.get(position).get("video")).get("default_url"));
                         intent.setClass(CommodDetailActivity.this, VideoFullScreenActivity.class);
+                        XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "商品视频播放量", "");
                     } else {
                         intent.putExtra("url", images.get(position).get("img"));
                         intent.setClass(CommodDetailActivity.this, ShowImageActivity.class);
@@ -660,12 +672,14 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.service_mercat://客服
+                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "客服按钮");
                 Intent intentmark = new Intent(this, Feedback.class);
                 intentmark.putExtra("backData", map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:
                 if (LoginManager.isLogin()) {
+                    XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "立即购买");
                     if (buyDialog == null) {
                         buyDialog = new BuyDialog(this, map);
                         buyDialog.setBuyDialogCallBack(new BuyDialog.BuyDialogCallBack() {
@@ -725,20 +739,29 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 break;
             case R.id.title:
                 mall_ScrollViewContainer.setViewIndex("1");
+                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "顶部tab", "商品点击量");
                 break;
             case R.id.title_detail:
                 mall_ScrollViewContainer.setViewIndex("2");
+                XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "顶部tab", "详情点击量");
+                break;
+            case R.id.scroe_linear://评论列表
+                Intent intent= new Intent(this,EvalutionListActivity.class);
+                intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{code});
+                this.startActivity(intent);
                 break;
         }
     }
 
     private void doshare() {
-        barShare = new BarShare(this, "商品详情页", "");
-        String type = BarShare.IMG_TYPE_WEB;
-        String title = map.get("product_share_title");
+
+
+//        barShare = new BarShare(this, "商品详情页", "");
+//        String type = BarShare.IMG_TYPE_WEB;
+//        String title = map.get("product_share_title");
         String clickUrl = map.get("product_share_url");
-        String content = map.get("product_share_desc");
-        String imgUrl = map.get("buy_img");
+//        String content = map.get("product_share_desc");
+//        String imgUrl = map.get("buy_img");
         //分享添加路径统计
         Object msg = UtilFile.loadShared(this, FileManager.MALL_URI_STAT, FileManager.MALL_URI_STAT);
         ArrayList<Map<String, String>> list = UtilString.getListMapByJson(msg);
@@ -746,8 +769,18 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         if (list != null && list.size() > 0 && list.get(0).containsKey(url_temp)) {
             clickUrl += "&fr1=" + list.get(0).containsKey(url_temp) + "_share&fr1_msg=" + code;
         }
-        barShare.setShare(type, title, content, imgUrl, clickUrl);
-        barShare.openShare();
+//        barShare.setShare(type, title, content, imgUrl, clickUrl);
+        Intent intent = new Intent(this, ShareActivityDialog.class);
+        intent.putExtra("tongjiId", "a_mail_goods");
+        intent.putExtra("imgUrl", map.get("buy_img"));
+        intent.putExtra("clickUrl", clickUrl);
+        intent.putExtra("title", map.get("product_share_title"));
+        intent.putExtra("content", map.get("product_share_desc"));
+        intent.putExtra("type", BarShare.IMG_TYPE_WEB);
+        intent.putExtra("shareFrom", "商品详情页");
+        intent.putExtra("shareTwoContent","分享");
+        this.startActivity(intent);
+//        barShare.openShare();
     }
 
     /**

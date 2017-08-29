@@ -34,6 +34,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
+import amodule.answer.activity.BaseEditActivity;
 import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -51,6 +52,7 @@ import aplug.basic.ReqInternet;
 import aplug.imageselector.ImgWallActivity;
 import aplug.web.ShowWeb;
 import aplug.web.view.XHWebView;
+import third.mall.activity.EvalutionListActivity;
 import third.mall.activity.ShoppingActivity;
 import third.mall.alipay.MallAlipay;
 import third.mall.aplug.MallClickContorl;
@@ -937,6 +939,15 @@ public class JsAppCommon extends JsBase {
         mOnPayFinishListener = payFinishListener;
     }
 
+    /**
+     * h5跳转到回答/追答编辑页面
+     * @param dishId 菜谱code
+     * @param authorId 作者code
+     * @param qaId 问答code
+     * @param answerCode 回答code
+     * @param qaTitle 回答的问题
+     * @param isAnswerMore 是否是 追答
+     */
     @JavascriptInterface
     public void goAnswer(final String dishId, final String authorId, final String qaId, final String answerCode, final String qaTitle, final String isAnswerMore) {
         handler.post(new Runnable() {
@@ -956,6 +967,14 @@ public class JsAppCommon extends JsBase {
         });
     }
 
+    /**
+     * h5跳转到提问/追问编辑页面
+     * @param dishId 菜谱code
+     * @param authorId 作者code
+     * @param qaId 问答code
+     * @param answerCode 回答code
+     * @param isAskMore 是否是 追问
+     */
     @JavascriptInterface
     public void goAsk(final String dishId, final String authorId, final String qaId, final String answerCode, final String isAskMore) {
         handler.post(new Runnable() {
@@ -999,6 +1018,9 @@ public class JsAppCommon extends JsBase {
         });
 	}
 
+    /**
+     * h5页面的一些操作，可以关闭客户端的webview
+     */
     @JavascriptInterface
     public void closePayWeb() {
         handler.post(new Runnable() {
@@ -1042,8 +1064,8 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mAct instanceof ShowWeb) {
-                    ShowWeb showWeb = (ShowWeb) mAct;
+                if (mAct instanceof EvalutionListActivity) {
+                    EvalutionListActivity showWeb = (EvalutionListActivity) mAct;
                     showWeb.showCommentBar(userName, userCode);
                 }
             }
@@ -1077,12 +1099,24 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if(mAct instanceof ShowWeb){
+                if (mAct instanceof ShowWeb) {
                     ShowWeb showWeb = (ShowWeb) mAct;
                 }
             }
         });
     }
-
+    /**
+     * webview自己处理物理返回键
+     * @param loadUrl
+     */
+    @JavascriptInterface
+    public void handleBackSelf (final String loadUrl) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.setBackData(loadUrl);
+            }
+        });
+    }
 
 }

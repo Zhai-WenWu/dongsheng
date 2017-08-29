@@ -32,7 +32,6 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.adapter.AdapterListDish;
 import amodule.dish.db.DataOperate;
-import amodule.dish.tools.DishMouldControl;
 import amodule.user.activity.login.LoginByAccout;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -123,8 +122,6 @@ public class OfflineDishNew extends BaseActivity {
                                 XHClick.onEventValue(OfflineDishNew.this, "dishDownload315", "dishDownload", "清空" , -x);
                                 DataOperate.deleteBuyBurden(OfflineDishNew.this, "");
                                 Tools.showToast(getApplicationContext(), "清除成功");
-                                String path = DishMouldControl.getOffDishPath();
-                                FileManager.delDirectoryOrFile(path);
                                 arrayList.clear();
                                 adapter.notifyDataSetChanged();
                                 loadManager.hideProgressBar();
@@ -179,8 +176,6 @@ public class OfflineDishNew extends BaseActivity {
                                 //统计
                                 XHClick.onEventValue(OfflineDishNew.this, "dishDownload315", "dishDownload", "删除" , -1);
                                 DataOperate.deleteBuyBurden(OfflineDishNew.this,map.get("code"));
-                                String path = DishMouldControl.getOffDishPath() + map.get("code");
-                                FileManager.delDirectoryOrFile(path);
                                 arrayList.remove(newPositon);
                                 adapter.notifyDataSetChanged();
                                 if(arrayList.size()==0)

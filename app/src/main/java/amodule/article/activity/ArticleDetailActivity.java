@@ -70,8 +70,9 @@ public class ArticleDetailActivity extends BaseActivity {
     public static final String TYPE_VIDEO = "2";
 
     private ListView listView;
-    /** 头部view */
-    private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
+    private LinearLayout linearLayoutOne;
+    private LinearLayout linearLayoutTwo;
+    private LinearLayout linearLayoutThree;
     private TextView mTitle;
     private ImageView rightButton;
     private PtrClassicFrameLayout refreshLayout;
@@ -96,6 +97,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private boolean isAdShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
+    private boolean isOnce = true;
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
@@ -139,6 +141,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        if(mArticleCommentBar != null) mArticleCommentBar = null;
         //统计
         long nowTime = System.currentTimeMillis();
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
@@ -285,7 +288,8 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         //initListView
-        layout = new LinearLayout(this);
+        /* 头部view */
+        LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
         linearLayoutOne = new LinearLayout(this);
@@ -442,10 +446,12 @@ public class ArticleDetailActivity extends BaseActivity {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
                 //没有数据直接退出
-                if(TextUtils.isEmpty((String) object)){
+                if(TextUtils.isEmpty((String) object) && isOnce){
                     ArticleDetailActivity.this.finish();
                     return;
                 }
+                //解决刷新时没有数据问题
+                isOnce = false;
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     analysArticleData(onlyUser, StringManager.getFirstMap(object));
                 }
@@ -459,7 +465,7 @@ public class ArticleDetailActivity extends BaseActivity {
     /**
      * 解析文章数据
      *
-     * @param mapArticle
+     * @param mapArticle 文章数据
      */
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
         if (mapArticle.isEmpty()) return;
@@ -504,9 +510,9 @@ public class ArticleDetailActivity extends BaseActivity {
 
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         String htmlStr = mapArticle.get("html");
-        if (htmlStr.indexOf("&lt;") >= 0)
+        if (htmlStr.contains("&lt;"))
             htmlStr = htmlStr.replace("&lt;", "<");
-        if (htmlStr.indexOf("&gt;") >= 0)
+        if (htmlStr.contains("&gt;"))
             htmlStr = htmlStr.replace("&gt;", ">");
         webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), htmlStr, "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
@@ -671,7 +677,7 @@ public class ArticleDetailActivity extends BaseActivity {
     /**
      * 解析推荐数据
      *
-     * @param ArrayRelate
+     * @param ArrayRelate 推荐数据
      */
     private void analysRelateData(@NonNull ArrayList<Map<String, String>> ArrayRelate) {
         if (ArrayRelate.isEmpty()) return;

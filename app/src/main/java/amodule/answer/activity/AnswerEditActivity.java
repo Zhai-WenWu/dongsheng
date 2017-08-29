@@ -54,7 +54,7 @@ public class AnswerEditActivity extends BaseEditActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onLocalDataReady(mSQLite.queryData(mDishCode, mQAType));
+                onLocalDataReady(mSQLite.queryFirstData());
             }
         }).start();
     }
@@ -65,15 +65,12 @@ public class AnswerEditActivity extends BaseEditActivity {
             public void run() {
                 loadManager.hideProgressBar();
                 if (model != null) {
-                    mModel = model;
-                    mEditText.setText(model.getmText());
-                    String imgsStr = model.getmImgs();
-                    if (!TextUtils.isEmpty(imgsStr)) {
-                        ArrayList<Map<String, String>> imgs = StringManager.getListMapByJson(imgsStr);
-                        if (imgs != null && !imgs.isEmpty()) {
-                            for (Map<String, String> img : imgs)
-                                mImgController.addData(img);
-                        }
+                    mModel.setmId(model.getmId());
+                    mModel.setmDishCode(model.getmDishCode());
+                    if (!TextUtils.isEmpty(mDishCode) && mDishCode.equals(model.getmDishCode())) {
+                        mModel = model;
+                        mEditText.setText(model.getmText());
+                        initImgControllerData(model);
                     }
                 }
             }

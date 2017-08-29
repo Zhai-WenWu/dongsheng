@@ -1,4 +1,4 @@
-/**
+/*
  * 
  * @author intBird 20140213.
  * 
@@ -44,7 +44,7 @@ public class AdapterNousHome extends AdapterSimple {
 		@SuppressWarnings("unchecked")
 		Map<String, String> map = (Map<String, String>) data.get(position);
 		// 缓存视图
-		ViewHolder viewHolder = null;
+		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
 			convertView = LayoutInflater.from(act).inflate(R.layout.a_nous_item, parent, false);
