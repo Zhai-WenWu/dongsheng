@@ -16,6 +16,8 @@ import com.xianghatest.Welcome;
 import java.util.Map;
 
 import acore.tools.FileManager;
+import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.XHADView;
 import amodule.main.Main;
 import amodule.main.activity.MainHomePageNew;
@@ -189,11 +191,25 @@ public class ActivityMethodManager {
         }
         mHomeWatcher.startWatch();
     }
-/*随机广告推广的问题*/
+
+    /** 随机广告推广的问题 */
     private  void randPromotion() {
-        // TODO: 8/29/17
-        mAct.getComponentName().getClassName() ;
+        //获取 Acitivty 完整路径名
+        String classKey = mAct.getComponentName().getClassName();
+        //获取 config 中的 randPromotion 数据
+        Map<String,String> randProConfigMap = StringManager.getFirstMap(AppCommon.getConfigByLocal("randPromotion"));
+        if(randProConfigMap.containsKey("text")
+                && !TextUtils.isEmpty(randProConfigMap.get("text"))){
+            String text = randProConfigMap.get("text");
+            Map<String,String> randProMap = StringManager.getFirstMap(AppCommon.loadRandPromotionData());
+            if(randProMap.containsKey(classKey)
+                    && "2".equals(randProMap.get(classKey))){
+                //
+                Tools.inputToClipboard(mAct,text);
+            }
+        }
     }
+
     /** 网络方法上传单图 */
     public static final int UPLOAD_SINGLE = 1;
     /** 发菜谱上传图片 */
