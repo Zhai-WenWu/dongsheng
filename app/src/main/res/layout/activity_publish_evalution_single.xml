@@ -101,6 +101,7 @@
                     android:id="@+id/content_edit"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_257.5"
+                    android:maxLength="500"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"

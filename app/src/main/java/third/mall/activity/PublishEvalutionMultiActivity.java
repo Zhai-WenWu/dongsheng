@@ -162,13 +162,12 @@ public class PublishEvalutionMultiActivity extends BaseActivity {
 
     private LinkedHashMap<String,String> getParams(){
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("type", "6");
         params.put("order_id", order_id);
         Map<String,String> map;
         for(int index = 0 ; index < commodData.size() ; index ++){
             map = commodData.get(index);
             if("1".equals(map.get("status"))){
-                params.put("data[" + index + "][price_code]",map.get("product_code"));
+                params.put("data[" + index + "][product_code]",map.get("product_code"));
                 params.put("data[" + index + "][score]",map.get("score"));
             }
         }

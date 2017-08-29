@@ -29,7 +29,7 @@ public class EvalutionSuccessActivity extends ShowTemplateWeb {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent  = getIntent();
-        intent.putExtra(EvalutionListActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT);
+        intent.putExtra(EvalutionSuccessActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT);
         setIntent(intent);
         super.onCreate(savedInstanceState);
     }

@@ -115,7 +115,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 XHClick.mapStat(PublishEvalutionSingleActivity.this,STATISTICS_PUBLISH_ID,"成功提交","");
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
-                if(data.containsKey("is_has") && "2".equals(data.get("is_has"))){
+                if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
                     startActivityForResult(
                             new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
                                     .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
@@ -203,7 +203,7 @@ public class PublishEvalutionSingleActivity extends BaseActivity implements View
                 int currentLength = s.toString().length();
                 int value = currentLength - maxTextCount;
                 if (value > 0) {
-                    contentEdit.setText(s.subSequence(0, s.length() - value));
+//                    contentEdit.setText(s.subSequence(0, s.length() - value));
                     contentEdit.setSelection(contentEdit.getText().length());
                     Tools.showToast(PublishEvalutionSingleActivity.this, "内容最多" + maxTextCount + "字");
                     ToolsDevice.keyboardControl(false, PublishEvalutionSingleActivity.this, contentEdit);
