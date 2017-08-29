@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
+import com.mob.MobApplication;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -62,15 +63,13 @@ public class XHApplication extends Application {
         LogManager.printStartTime("zhangyujian","XhApplication::super.oncreate::");
         mAppApplication = this;
 
+        //初始化umeng推送
+        initUmengPush();
+
         String processName = Tools.getProcessName(this);
         Log.i("zhangyujian", "进程名字::" + processName);
         if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
             initData();
-            long umengstartTime = System.currentTimeMillis();
-            //初始化umeng推送
-            initUmengPush();
-            long umengendTime=System.currentTimeMillis();
-            Log.i("zhangyujian","initUmengPush::"+(umengendTime-umengstartTime));
         }
         LogManager.printStartTime("zhangyujian","XhApplication::oncreate::");
     }
