@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
@@ -44,6 +46,7 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
+import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
@@ -56,6 +59,7 @@ import amodule.quan.db.CircleData;
 import amodule.quan.db.CircleSqlite;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
@@ -1042,6 +1046,39 @@ public class AppCommon {
                 bottomDialog.cancel();
             }
         }).setBottomButtonColor("#59bdff").show();
+    }
+
+
+    /**
+     * 保存随机推广
+     * @param context 上下文
+     */
+    public static void saveRandPromotionData(final Context context){
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LinkedHashMap<String,String> params = new LinkedHashMap<>();
+                params.put("classifyId","1");
+                params.put("system","2");
+                ReqEncyptInternet.in().doEncypt(StringManager.API_RAND_PROMOTION, params,
+                        new InternetCallback(context) {
+                            @Override
+                            public void loaded(int flag, String url, final Object msg) {
+                                if(flag >= ReqEncyptInternet.REQ_OK_STRING){
+                                    FileManager.scynSaveFile(FileManager.file_randPromotionConfig , msg.toString() , false);
+                                }
+                            }
+                        });
+            }
+        },30*1000);//延时30s
+    }
+
+    /**
+     * 获取随机推广数据
+     * @return 随机推广数据
+     */
+    public static String loadRandPromotionData(){
+        return FileManager.readFile(FileManager.file_randPromotionConfig);
     }
 
 }

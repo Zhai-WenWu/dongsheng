@@ -348,6 +348,8 @@ public class StringManager extends UtilString {
     public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet";//问答设置
     public final static String API_QA_QAARBITRATION = appWebUrl + "qa/arbitrateList?fullScreen=2";//问答仲裁
 
+    public final static String API_RAND_PROMOTION = apiUrl + "main7/open/getRandPromotion";//随机推广
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {

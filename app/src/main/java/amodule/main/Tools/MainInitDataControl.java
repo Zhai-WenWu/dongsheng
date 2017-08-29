@@ -96,7 +96,6 @@ public class MainInitDataControl {
                 MobclickAgent.setDebugMode(true);
                 OnlineConfigAgent.getInstance().updateOnlineConfig(activity);
 
-
                 //待处理问题。
                 HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
@@ -178,6 +177,9 @@ public class MainInitDataControl {
                 PushAlarm.closeTimingWake(act);
             }
         });
+
+        //获取随机推广数据
+        AppCommon.saveRandPromotionData(act);
 
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initMainOnResume::时间::3::"+(endTime2-startTime));
