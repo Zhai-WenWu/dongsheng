@@ -90,7 +90,6 @@ public class FullScreenWeb extends WebActivity implements XHActivityManager.Refr
     @Override
     protected void onResume() {
         super.onResume();
-        ToolsDevice.keyboardControl(false, this, webview);
         if (mNeedReload) {
             mNeedReload = false;
             reloadData();
