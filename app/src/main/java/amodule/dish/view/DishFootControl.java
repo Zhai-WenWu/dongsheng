@@ -305,19 +305,23 @@ public class DishFootControl implements View.OnClickListener{
                 }
                 Intent showIntent = new Intent(mAct, UploadSubjectNew.class);
                 showIntent.putExtra("dishCode",code);
-                showIntent.putExtra("title",mDishName);
+//                showIntent.putExtra("title",mDishName);
                 showIntent.putExtra("skip", true);
                 showIntent.putExtra("cid", "1");
                 mAct.startActivity(showIntent);
                 XHClick.mapStat(mAct, tongjiId, "晒我做的这道菜", "晒我做的这道菜点击量");
                 break;
             case R.id.a_dish_detail_new_footer_hover_tv: //提问作者
+                if(!LoginManager.isLogin()){
+                    mAct.startActivity(new Intent(mAct,LoginByAccout.class));
+                    return;
+                }
                 if("2".equals(askStatus)){
                     Intent intentAsk= new Intent(mAct, AskEditActivity.class);
                     intentAsk.putExtra("code",code);
                     intentAsk.putExtra("authorCode",authorCode);
                     mAct.startActivity(intentAsk);
-                }else if("4".equals(askStatus)){
+                }else if("3".equals(askStatus)){
                     XHClick.mapStat(mAct, tongjiId, "底部浮动", "向作者提问点击量");
                     Tools.showToast(mAct,"已提醒作者");
                 }
@@ -352,6 +356,10 @@ public class DishFootControl implements View.OnClickListener{
                 break;
             case R.id.a_dish_detail_new_footer_hover_good_linear:
             case R.id.a_dish_detail_new_footer_hover_good_show: //展现点赞
+                if(!LoginManager.isLogin()){
+                    mAct.startActivity(new Intent(mAct,LoginByAccout.class));
+                    return;
+                }
                 hoverLayout.setVisibility(View.GONE);
                 goodLayoutParent.setVisibility(View.VISIBLE);
                 break;
