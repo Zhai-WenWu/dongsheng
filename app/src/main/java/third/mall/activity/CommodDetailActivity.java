@@ -63,6 +63,7 @@ import aplug.basic.LoadImage;
 import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
 import aplug.shortvideo.activity.VideoFullScreenActivity;
+import aplug.web.ShowTemplateWeb;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
 import third.mall.aplug.MallClickContorl;
@@ -547,8 +548,8 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
         imageviews = new ImageView[views.size()];
         for (int i = 0; i < views.size(); i++) {
             ImageView iv = new ImageView(this);
-            int dp_2_5 = Tools.getDimen(this, R.dimen.dp_2_5);
-            iv.setPadding(dp_2_5, 0, dp_2_5, 0);
+            int dp_2 = Tools.getDimen(this, R.dimen.dp_2);
+            iv.setPadding(dp_2, 0, dp_2, 0);
             imageviews[i] = iv;
             imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_white);
             if (i == 0) {
@@ -745,6 +746,7 @@ public class CommodDetailActivity extends BaseActivity implements OnClickListene
                 break;
             case R.id.scroe_linear://评论列表
                 Intent intent= new Intent(this,EvalutionListActivity.class);
+                intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{code});
                 this.startActivity(intent);
                 break;
         }

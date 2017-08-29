@@ -217,7 +217,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 intent.putExtra("product_code",map.get("product_code"));
             } else if(mTransferUrl.contains("nousInfo.app")){
                 c = ShowWeb.class;
-                intent.putExtra("url",StringManager.api_nouseInfo + map.get("code"));
+                intent.putExtra("url",StringManager.api_nouseInfo);
                 intent.putExtra("code",map.get("code"));
             }
             if (c != null) {
