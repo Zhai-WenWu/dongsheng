@@ -1,11 +1,11 @@
 package amodule.article.tools;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,6 +142,9 @@ public class ArticleAdContrler {
 
     public View getBigAdView(Map<String, String> dataMap) {
         if (dataMap == null || dataMap.isEmpty())
+            return null;
+        if(XHActivityManager.getInstance().getCurrentActivity().isFinishing()
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && XHActivityManager.getInstance().getCurrentActivity().isDestroyed()))
             return null;
         View adView = null;
         if ("1".equals(dataMap.get("isBigPic"))) {
