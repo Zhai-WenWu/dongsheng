@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import acore.override.XHApplication;
+import acore.tools.LogManager;
 import amodule.main.Main;
 
 /**
@@ -19,8 +18,7 @@ public class WelcomeStart extends Activity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        long endTime= System.currentTimeMillis();
-        Log.i("zhangyujian","WelcomeStart::oncreate:start:"+(endTime- XHApplication.in().startTime));
+        LogManager.printStartTime("zhangyujian","WelcomeStart::oncreate:start:");
 
         Intent intent = new Intent(this,Main.class);
         Bundle bundle = this.getIntent().getExtras();
@@ -31,14 +29,12 @@ public class WelcomeStart extends Activity{
             intent.setData(Uri.parse(this.getIntent().getData().toString()));
         }
         this.startActivity(intent);
-        long endTime1= System.currentTimeMillis();
-        Log.i("zhangyujian","WelcomeStart::oncreate::"+(endTime1- XHApplication.in().startTime));
+        LogManager.printStartTime("zhangyujian","WelcomeStart::oncreate:");
         finish();
     }
 
     @Override
     public void finish() {
-        long endTime= System.currentTimeMillis();
         super.finish();
     }
 }

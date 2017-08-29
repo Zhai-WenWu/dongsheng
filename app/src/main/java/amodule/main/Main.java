@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mob.MobSDK;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xianghatest.R;
@@ -140,8 +141,7 @@ public class Main extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
 
-        long endTime=System.currentTimeMillis();
-        Log.i("zhangyujian","main::oncreate::start::"+(endTime-XHApplication.in().startTime));
+        LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
         StatConfig.setDebugEnable(false);
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
@@ -176,8 +176,7 @@ public class Main extends Activity implements OnClickListener {
         welcomeDialog = LoginManager.isShowAd() ?
                 new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
-        long endTime1 = System.currentTimeMillis();
-        Log.i("zhangyujian", "main::oncreate::" + (endTime1 - XHApplication.in().startTime));
+        LogManager.printStartTime("zhangyujian","main::oncreate::");
     }
 
     /**
@@ -497,8 +496,7 @@ public class Main extends Activity implements OnClickListener {
     protected void onResume() {
         super.onResume();
         resumeTime = System.currentTimeMillis();
-        long endTime = System.currentTimeMillis();
-        Log.i("zhangyujian", "main::onResume::" + (endTime - XHApplication.in().startTime));
+        LogManager.printStartTime("zhangyujian","main::onResume::");
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
@@ -643,7 +641,7 @@ public class Main extends Activity implements OnClickListener {
                 ReqInternet.in().finish();
                 VersionOp.getInstance().onDesotry();
                 finish();
-                System.exit(1);
+//                System.exit(1);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
         } else {
@@ -920,6 +918,8 @@ public class Main extends Activity implements OnClickListener {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
             isInit = true;
+            //初始化短信
+            MobSDK.init(this, "10e22f093f255", "bb71787a9ec63116377a83c3ecac048a");
 //            mainInitDataControl.iniMainAfter(Main.this);
         }
         //此处可以进行分级处理:暂时无需要
