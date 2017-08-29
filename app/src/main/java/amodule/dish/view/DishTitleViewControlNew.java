@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +26,9 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PopWindowDialog;
 import amodule.dish.activity.upload.UploadDishActivity;
+import amodule.dish.db.DataOperate;
 import amodule.dish.tools.OffDishToFavoriteControl;
+import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import third.share.BarShare;
@@ -36,9 +39,7 @@ import xh.basic.internet.UtilInternet;
 import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
-import static com.xianghatest.R.id.back;
-import static com.xianghatest.R.id.fav_layout;
-import static com.xianghatest.R.id.share_layout;
+import static amodule.dish.tools.OffDishToFavoriteControl.getIsAutoOffDish;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -71,15 +72,18 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         this.detailDish= detailDish;
         //处理标题
         titleView = (TextView)detailDish.findViewById(R.id.title);
-        detailDish.findViewById(back).setOnClickListener(this);
-        detailDish.findViewById(fav_layout).setOnClickListener(this);
-        detailDish.findViewById(share_layout).setOnClickListener(this);
+        detailDish.findViewById(R.id.back).setOnClickListener(this);
+        detailDish.findViewById(R.id.fav_layout).setOnClickListener(this);
+        detailDish.findViewById(R.id.share_layout).setOnClickListener(this);
         detailDish.findViewById(R.id.more_layout).setOnClickListener(this);
-        detailDish.findViewById(fav_layout).setVisibility(View.GONE);
-        detailDish.findViewById(share_layout).setVisibility(View.INVISIBLE);
+        detailDish.findViewById(R.id.fav_layout).setVisibility(View.GONE);
+        detailDish.findViewById(R.id.leftClose).setVisibility(View.GONE);
+        detailDish.findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
         detailDish.findViewById(R.id.more_layout).setVisibility(View.INVISIBLE);
         favText = (TextView) detailDish.findViewById(R.id.tv_fav);
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
+        detailDish.findViewById(R.id.leftClose).setOnClickListener(this);
+        detailDish.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
     }
 
     public void reset(){
@@ -128,45 +132,39 @@ public class DishTitleViewControlNew implements View.OnClickListener{
             favText.setText("已收藏");
         }
         detailDish.findViewById(R.id.fav_layout).setVisibility(state != null ? View.GONE : View.VISIBLE);
-        //分享处理:视频菜谱审核前不显示分享按钮，审核成功后显示分享按钮
-//        if(state != null&&isHasVideo){
-//            if("6".equals(dishState) || TextUtils.isEmpty(dishState)){//视频菜谱，并且审核通过了
-//                detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
-//            }else{
-//                detailDish.findViewById(share_layout).setVisibility(View.GONE);
-//            }
-//        }else{
-//            detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
-//        }
-
         //编辑
         if(state != null){
             if(isHasVideo && ("6".equals(dishState) || TextUtils.isEmpty(dishState))){ //视频菜谱，并且审核通过了，则不允许编辑
                 detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
-                detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
+                detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
             }else{
                 detailDish.findViewById(R.id.more_layout).setVisibility(View.VISIBLE);
             }
         }else{
             detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
-            detailDish.findViewById(share_layout).setVisibility(View.VISIBLE);
+            detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
         }
 
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case back:
+            case R.id.back:
                 XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "返回点击量");
                 detailDish.finish();
                 break;
-            case fav_layout://收藏
+            case R.id.leftClose:
+                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "关闭点击量");
+                Main.colse_level = 1;
+                detailDish.finish();
+                break;
+            case R.id.fav_layout://收藏
                 if (detailDish != null)
                     XHClick.track(detailDish, "收藏菜谱");
                 XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
                 doFavorite();
                 break;
-            case share_layout:
+            case R.id.share_layout:
                 openShare();
                 break;
             case R.id.more_layout: //查看更多按钮

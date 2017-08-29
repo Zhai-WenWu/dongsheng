@@ -98,18 +98,6 @@ public class  DishActivityViewControlNew {
         Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
         initTitle();
-
-        View leftClose = mAct.findViewById(R.id.leftClose);
-        leftClose.setVisibility(View.VISIBLE);
-        leftClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(mAct, tongjiId, "顶部导航栏", "关闭点击量");
-                Main.colse_level = 1;
-                mAct.finish();
-            }
-        });
-
         templateWebView = (TemplateWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
         templateWebView.initBaseData(mAct,loadManager);
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
@@ -144,6 +132,7 @@ public class  DishActivityViewControlNew {
                 return dishJson;
             }
         });
+        Log.i("zyj","contorl:;initView");
         dishTitleViewControl.initView(mAct);
         dishTitleViewControl.setstate(state);
         //底部view
@@ -497,7 +486,15 @@ public class  DishActivityViewControlNew {
         }catch (Exception e){
             e.printStackTrace();
         }
-
         return data;
+    }
+
+    /**
+     * 刷新数据webview
+     */
+    public void refreshTemplateWebView(){
+        if(templateWebView!=null) {
+            templateWebView.refreshWebviewMethod("javascript:freshFollow()");
+        }
     }
 }

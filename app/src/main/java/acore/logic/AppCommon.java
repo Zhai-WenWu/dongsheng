@@ -42,6 +42,7 @@ import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
@@ -551,6 +552,7 @@ public class AppCommon {
                                 AppCommon.follwersNum = Integer.valueOf(returnObj.toString());
                                 if (succRun != null)
                                     succRun.run();
+                                XHActivityManager.getInstance().refreshActivity();
                             }
                         }
                     });

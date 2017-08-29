@@ -24,6 +24,7 @@ import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -40,7 +41,7 @@ import third.video.VideoPlayerController;
 /**
  * 菜谱详情页：头部大图、视频，底部广告以下是原生，中间是h5
  */
-public class DetailDish extends BaseAppCompatActivity {
+public class DetailDish extends BaseAppCompatActivity implements XHActivityManager.RefreshCallBack {
     public static String tongjiId = "a_menu_detail_normal430";//统计标示
     public static String DishName="amodule.dish.activity.DetailDish";
     private final int LOAD_DISH = 1;
@@ -101,6 +102,7 @@ public class DetailDish extends BaseAppCompatActivity {
         Log.i("zyj","activity:::"+(System.currentTimeMillis()-startTime));
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
+        XHActivityManager.getInstance().addActivity(this);
 
     }
 
@@ -273,6 +275,7 @@ public class DetailDish extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        XHActivityManager.getInstance().removeActivity(this);
         dishActivityViewControl.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
@@ -304,6 +307,13 @@ public class DetailDish extends BaseAppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
+    }
+
+    @Override
+    public void refreshCallBack() {
+        if(dishActivityViewControl!=null){
+            dishActivityViewControl.refreshTemplateWebView();
+        }
     }
 
 //    @Override

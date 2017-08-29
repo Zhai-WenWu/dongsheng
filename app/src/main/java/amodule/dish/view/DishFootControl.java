@@ -483,11 +483,11 @@ public class DishFootControl implements View.OnClickListener{
             case "2":
                 mHoverTv.setText("向作者提问");
                 break;
-            case "4":
+            case "3":
                 mHoverTv.setText("提醒作者开通问答");
                 break;
         }
-        if("2".equals(status)||"4".equals(status)){
+        if("2".equals(status)||"3".equals(status)){
             mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
         }else mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
     }

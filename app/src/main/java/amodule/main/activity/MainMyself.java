@@ -246,6 +246,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         showHintMyself();
     }
 
+    /**
+     *提示弹框
+     */
     private void showHintMyself(){
         Object myselftHint = FileManager.loadShared(this,"myselftHint","myselftHint");
         if(myselftHint == null || TextUtils.isEmpty(String.valueOf(myselftHint))) {

@@ -275,4 +275,12 @@ public class TemplateWebView extends XHWebView{
             }
         });
     }
+
+    /**
+     * 刷新
+     * @param dataUrl
+     */
+    public void refreshWebviewMethod(String dataUrl){
+        loadUrl(dataUrl);
+    }
 }
