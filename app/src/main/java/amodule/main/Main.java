@@ -221,6 +221,7 @@ public class Main extends Activity implements OnClickListener {
             Class tempC = null;
             if (model != null) {
                 intent = new Intent();
+                intent.putExtra("fromHome", true);
                 intent.putExtra("code", model.getmDishCode());
                 intent.putExtra("qaCode", model.getmQACode());
                 intent.putExtra("authorCode", model.getmAuthorCode());

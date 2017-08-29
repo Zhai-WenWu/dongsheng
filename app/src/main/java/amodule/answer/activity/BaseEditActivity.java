@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -36,6 +37,7 @@ import amodule.answer.model.AskAnswerModel;
 import amodule.answer.view.AskAnswerImgController;
 import amodule.answer.view.AskAnswerImgItemView;
 import amodule.article.activity.ArticleVideoSelectorActivity;
+import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
@@ -52,6 +54,8 @@ import aplug.web.view.XHWebView;
 public class BaseEditActivity extends BaseActivity {
 
     public static final String TAG = "BaseEditActivity";
+
+    protected boolean mFromHome;
 
     private Timer mTimer;
     private TimerTask mTimerTask;
@@ -98,6 +102,7 @@ public class BaseEditActivity extends BaseActivity {
     protected void initData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            mFromHome = bundle.getBoolean("fromHome", false);
             mQACode = bundle.getString("qaCode");
             mDishCode = bundle.getString("code");
             mAuthorCode = bundle.getString("authorCode");
@@ -455,6 +460,17 @@ public class BaseEditActivity extends BaseActivity {
                     boolean loadSucc = data.getBooleanExtra("loadSucc", false);
                     if (loadSucc) {
                         XHActivityManager.getInstance().refreshActivity();
+                    }
+                    if (mFromHome) {
+                        String response = data.getStringExtra("response");
+                        Map<String, String> map = StringManager.getFirstMap(response);
+                        if (!map.isEmpty()) {
+                            String appUrl = map.get("appUrl");
+                            if (!TextUtils.isEmpty(appUrl)) {
+                                Main.colse_level = 3;
+                                AppCommon.openUrl(this, appUrl, false);
+                            }
+                        }
                     }
                     finish();
                     break;
