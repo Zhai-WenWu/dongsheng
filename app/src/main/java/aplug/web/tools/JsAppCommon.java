@@ -2,8 +2,10 @@ package aplug.web.tools;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +31,7 @@ import acore.logic.PayCallback;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.helper.XHActivityManager;
+import acore.tools.Base64Utils;
 import acore.tools.FileManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
@@ -902,7 +905,8 @@ public class JsAppCommon extends JsBase {
                         jsonObject.put(entry.getKey(), entry.getValue());
                     }
                     String data= jsonObject.toString();
-                    data=data.replace("\"","\\\"");
+//                    data=data.replace("\"","\\\"");
+                    data= Uri.encode(data);
                     return data;
                 }catch (Exception e){
                     e.printStackTrace();
