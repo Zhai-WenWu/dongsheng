@@ -1,6 +1,8 @@
 package amodule.main.activity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -250,12 +252,15 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
      *提示弹框
      */
     private void showHintMyself(){
-        Object myselftHint = FileManager.loadShared(this,"myselftHint","myselftHint");
-        if(myselftHint == null || TextUtils.isEmpty(String.valueOf(myselftHint))) {
-            Intent intent = new Intent(this, HintMyselfDialog.class);
-            startActivity(intent);
-            FileManager.saveShared(this,"myselftHint","myselftHint","2");
-        }
+        int x = Integer.parseInt(DataOperate.buyBurden(this, "x"));
+        if (x > 0) {
+            Object myselftHint = FileManager.loadShared(this, "myselftHint", "myselftHint");
+            if (myselftHint == null || TextUtils.isEmpty(String.valueOf(myselftHint))) {
+                    Intent intent = new Intent(this, HintMyselfDialog.class);
+                    startActivity(intent);
+                    FileManager.saveShared(this, "myselftHint", "myselftHint", "2");
+                }
+            }
     }
 
     /**
