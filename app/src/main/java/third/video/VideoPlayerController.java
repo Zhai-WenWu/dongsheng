@@ -82,6 +82,7 @@ public class VideoPlayerController {
         videoPlayer = new StandardGSYVideoPlayer(context);
         //设置旋转
         orientationUtils = new OrientationUtils(context, videoPlayer);
+        orientationUtils.setEnable(false);
         videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override

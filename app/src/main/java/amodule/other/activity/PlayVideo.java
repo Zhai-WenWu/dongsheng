@@ -98,7 +98,7 @@ public class PlayVideo extends BaseAppCompatActivity {
 
         //设置旋转
         orientationUtils = new OrientationUtils(this, videoPlayer);
-
+        orientationUtils.setEnable(false);
         //设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
