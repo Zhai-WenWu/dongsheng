@@ -143,13 +143,14 @@ public class DetailDish extends BaseAppCompatActivity {
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);
         dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControlNew.DishViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
             }
         });
-        setCommonStyle();
+
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
