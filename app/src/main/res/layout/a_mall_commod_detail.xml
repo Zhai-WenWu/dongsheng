@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_6"
+                android:layout_marginRight="@dimen/dp_10"
                 android:background="@drawable/mall_product_detail_back"
                 android:clickable="true"
                 android:padding="@dimen/dp_2"
@@ -149,6 +149,7 @@
                         android:layout_height="wrap_content"
                         android:background="#fffffe"
                         android:paddingLeft="@dimen/dp_20"
+                        android:paddingRight="@dimen/dp_20"
                         android:paddingTop="@dimen/dp_18">
 
                         <RelativeLayout
@@ -168,7 +169,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
-                                    android:text="title"
                                     android:textColor="#333333"
                                     android:textSize="@dimen/sp_19"
                                     android:textStyle="normal"
@@ -226,22 +226,25 @@
                                 android:id="@+id/scroe_line"
                                 android:layout_width="@dimen/dp_0.5"
                                 android:layout_height="match_parent"
-                                android:paddingTop="@dimen/dp_2"
-                                android:paddingBottom="@dimen/dp_2"
+                                android:layout_marginTop="@dimen/dp_4"
+                                android:layout_marginBottom="@dimen/dp_4"
                                 android:layout_alignBottom="@+id/title_content_rela"
                                 android:layout_alignTop="@+id/title_content_rela"
                                 android:layout_toLeftOf="@+id/scroe_linear"
+                                android:visibility="gone"
                                 android:background="@drawable/mall_commod_detail_info_back"/>
 
 
                             <LinearLayout
                                 android:id="@+id/scroe_linear"
-                                android:layout_width="@dimen/dp_86"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/dp_14"
                                 android:layout_alignBottom="@+id/title_content_rela"
                                 android:layout_alignParentRight="true"
                                 android:layout_alignTop="@+id/title_content_rela"
                                 android:gravity="center"
+                                android:visibility="gone"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -276,7 +279,6 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/title_commod"
                             android:layout_marginTop="@dimen/dp_19"
-                            android:layout_marginRight="@dimen/dp_20"
                             android:background="@drawable/bg_round2_ef322e"
                             android:visibility="gone">
 
