@@ -1,6 +1,7 @@
 package acore.override;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.util.Log;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
-import com.mob.MobApplication;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -23,6 +23,7 @@ import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -34,7 +35,7 @@ import third.growingio.GrowingIOController;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
 
-public class XHApplication extends MobApplication {
+public class XHApplication extends Application {
     /**包名*/
     public static final String ONLINE_PACKAGE_NAME = "com.xiangha";
     private static XHApplication mAppApplication;
@@ -56,19 +57,22 @@ public class XHApplication extends MobApplication {
     @Override
     public void onCreate() {
         SophixManager.getInstance().queryAndLoadNewPatch();
-        Log.i("zhangyujian", "进程名字::" + Tools.getProcessName(this));
         startTime = System.currentTimeMillis();
         super.onCreate();
+        LogManager.printStartTime("zhangyujian","XhApplication::super.oncreate::");
         mAppApplication = this;
-        initUmengPush();
+
         String processName = Tools.getProcessName(this);
-        if (processName != null) {
-            if (processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
-                initData();
-            }
+        Log.i("zhangyujian", "进程名字::" + processName);
+        if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
+            initData();
+            long umengstartTime = System.currentTimeMillis();
+            //初始化umeng推送
+            initUmengPush();
+            long umengendTime=System.currentTimeMillis();
+            Log.i("zhangyujian","initUmengPush::"+(umengendTime-umengstartTime));
         }
-        long endTime=System.currentTimeMillis();
-        Log.i("zhangyujian","XhApplication::oncreate::"+(endTime-startTime));
+        LogManager.printStartTime("zhangyujian","XhApplication::oncreate::");
     }
 
     /**
@@ -139,7 +143,6 @@ public class XHApplication extends MobApplication {
             public void onActivityDestroyed(Activity activity) {
             }
         });
-
     }
 
 
@@ -178,9 +181,9 @@ public class XHApplication extends MobApplication {
                 CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
             }
         }).start();
-
     }
 
+    /** 初始化热修复 */
     private void initHotfix() {
         SophixManager.getInstance().setContext(this)
                 .setAppVersion(VersionOp.getVerName(this))
@@ -189,11 +192,13 @@ public class XHApplication extends MobApplication {
                 .setPatchLoadStatusStub(new PatchLoadStatusListener() {
                     @Override
                     public void onLoad(final int mode, final int code, final String info, final int handlePatchVersion) {
-                        String msg = new StringBuilder("").append("Mode:").append(mode)
-                                .append(" Code:").append(code)
-                                .append(" Info:").append(info)
-                                .append(" HandlePatchVersion:").append(handlePatchVersion).toString();
-                        Log.i("tzy_hot",msg);
+                        if(Tools.isDebug(mAppApplication)){
+                            String msg = new StringBuilder("").append("Mode:").append(mode)
+                                    .append(" Code:").append(code)
+                                    .append(" Info:").append(info)
+                                    .append(" HandlePatchVersion:").append(handlePatchVersion).toString();
+                            Log.i("tzy_hot",msg);
+                        }
                     }
                 }).initialize();
 

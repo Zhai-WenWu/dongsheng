@@ -32,8 +32,10 @@ public class LoadProgressManager {
 	private RelativeLayout mProgressBar;
 	private View mProgressShadow;
 	private TextView mLoadFailBtn;
+	private int topHeight;
 	
 	public LoadProgressManager(Context context , RelativeLayout layout){
+		topHeight = Tools.getStatusBarHeight(context) + Tools.getDimen(context,R.dimen.dp_45);
 		initProgress(context , layout);
 		initLoadFailLayout(context, layout);
 	}
@@ -82,6 +84,7 @@ public class LoadProgressManager {
 		mLoadFailLayout.addView(mLoadFailBtn);
 		
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		lp.setMargins(0,topHeight,0,0);
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mLoadFailLayout.setLayoutParams(lp);
 		mLoadFailLayout.setGravity(Gravity.CENTER);

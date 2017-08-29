@@ -1,5 +1,8 @@
 package acore.tools;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -7,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import aplug.basic.XHConf;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
@@ -87,6 +91,16 @@ public class LogManager extends UtilLog {
 					}
 				}
 			});
+		}
+	}
+
+	public static void printStartTime(String tag,String text){
+		if(XHApplication.in() != null && Tools.isDebug(XHApplication.in())){
+			if(TextUtils.isEmpty(tag)){
+				tag = XHConf.log_tag_default;
+			}
+			long endTime=System.currentTimeMillis();
+			Log.i(tag,text + (endTime - XHApplication.in().startTime));
 		}
 	}
 }

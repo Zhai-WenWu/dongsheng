@@ -63,6 +63,8 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
     public View getCustomTabView(ViewGroup parent, int position) {
         TabHolder tabHolder = new TabHolder(parent.getContext());
         tabHolder.setData(position);
+        if (tabHolder.mIsSelected)
+            mCurrentSelectedHolder = tabHolder;
         mTabViews.add(tabHolder.mTabView);
         return tabHolder.mTabView;
     }
@@ -77,10 +79,16 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
 
     }
 
+    private TabHolder mCurrentSelectedHolder;
+
     public void onPageSelected(int position) {
         if (mTabViews.isEmpty() || mTabViews.size() <= position || position < 0)
             return;
         TabHolder holder = (TabHolder) mTabViews.get(position).getTag();
+        if (mCurrentSelectedHolder != null && mCurrentSelectedHolder.mPosition != position) {
+            mCurrentSelectedHolder.mNumTextView.setVisibility(View.INVISIBLE);
+        }
+        mCurrentSelectedHolder = holder;
         if (holder.mNumTextView.getVisibility() == View.VISIBLE)
             holder.mNumTextView.setVisibility(View.INVISIBLE);
     }
@@ -89,6 +97,7 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
         public View mTabView;
         public TextView mNumTextView;
         public int mPosition;
+        public boolean mIsSelected;
 
         public TabHolder(Context context) {
             this.mTabView = LayoutInflater.from(context).inflate(R.layout.tab_strip_numlayout, null, false);
@@ -99,14 +108,17 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
         public void setData(int position) {
             mPosition = position;
             if (mDatas != null && mDatas.size() > position) {
-                String numStr = mDatas.get(position).getmMsgNum();
+                QAMsgModel model = mDatas.get(position);
+                String numStr = model.getmMsgNum();
                 try {
                     int num = Integer.parseInt(numStr);
                     if (num > 99) {
                         mNumTextView.setText(numStr + "+");
                     } else if (num > 0) {
                         mNumTextView.setText(numStr);
+                        mNumTextView.setVisibility(View.VISIBLE);
                     }
+                    mIsSelected = model.ismIsSelect();
                 } catch (Exception e) {
                     e.printStackTrace();
                     mNumTextView.setVisibility(View.INVISIBLE);

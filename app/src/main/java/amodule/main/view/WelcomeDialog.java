@@ -30,6 +30,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -90,6 +91,7 @@ public class WelcomeDialog extends Dialog {
         Main.isShowWelcomeDialog=true;//至当前dialog状态
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime)+"::::"+adShowTime);
+
         this.activity = act;
         this.mAdTime = adShowTime;
         this.dialogShowCallBack=callBack;
@@ -111,8 +113,7 @@ public class WelcomeDialog extends Dialog {
             }
         });
         if(dialogShowCallBack!=null)dialogShowCallBack.dialogOnCreate();
-        long endTime3=System.currentTimeMillis();
-        Log.i("zhangyujian","dialog::oncreate::"+(endTime3-XHApplication.in().startTime));
+        LogManager.printStartTime("zhangyujian","dialog::oncreate::");
     }
 
     private void layoutCallBack(){
@@ -440,12 +441,10 @@ public class WelcomeDialog extends Dialog {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
-            long endTime1=System.currentTimeMillis();
-            Log.i("zhangyujian","dialog::onWindowFocusChanged:222:"+(endTime1-XHApplication.in().startTime));
+            LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged222::");
             isInit = true;
             startCountDown(false);
-            long endTime2=System.currentTimeMillis();
-            Log.i("zhangyujian","dialog::onWindowFocusChanged:333:"+(endTime2-XHApplication.in().startTime));
+            LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged333::");
             //
             new Thread(new Runnable() {
                 @Override
@@ -454,8 +453,7 @@ public class WelcomeDialog extends Dialog {
                 }
             }).start();
 
-            long endTime=System.currentTimeMillis();
-            Log.i("zhangyujian","dialog::onWindowFocusChanged::"+(endTime-XHApplication.in().startTime));
+            LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged::");
         }
     }
 
