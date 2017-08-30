@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xianghatest.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
@@ -83,7 +84,8 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
             @Override
             public void onPrepared(String url, Object... objects) {
                 super.onPrepared(url, objects);
-                setNetworkCallback();
+                if(url.startsWith("http"))
+                    setNetworkCallback();
             }
 
             @Override
@@ -166,27 +168,37 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
                 }else{
                     onResume();
                 }
+                isNetworkDisconnect = false;
             }
 
             @Override
             public void mobileConnected() {
                 Log.i("tzy","mobileConnected");
-                if(view_Tip==null){
-                    initView(mContext);
-                    mPraentViewGroup.addView(view_Tip);
+                if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                    if(isNetworkDisconnect){
+                        removeTipView();
+                        if(view_Tip==null){
+                            initView(mContext);
+                            mPraentViewGroup.addView(view_Tip);
+                        }
+                        onPause();
+                    }
+                }else if(videoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                    removeTipView();
+                    onResume();
                 }
-                onPause();
+                isNetworkDisconnect = false;
             }
 
             @Override
             public void nothingConnected() {
                 Log.i("tzy","nothingConnected");
-                isNetworkDisconnect = true;
                 if(view_Tip==null){
                     initNoNetwork(mContext);
                     mPraentViewGroup.addView(view_Tip);
                 }
                 onPause();
+                isNetworkDisconnect = true;
             }
         });
     }

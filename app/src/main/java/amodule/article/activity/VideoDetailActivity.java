@@ -85,7 +85,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private RelativeLayout dredgeVipLayout;
     private RelativeLayout allTitleRelaPort;
     private TextView dredgeVipImmediately;
-    private PtrClassicFrameLayout refreshLayout;
+//    private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
     /** 头部view */
     private VideoAllHeaderView mHaederLayout;
@@ -289,8 +289,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     /** 初始化ListView */
     private void initListView() {
         //初始化刷新layout
-        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
-        refreshLayout.setHorizontalFadingEdgeEnabled(true);
+//        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
+//        refreshLayout.setHorizontalFadingEdgeEnabled(true);
         listView = (ListView) findViewById(R.id.listview);
         //initListView
         mHaederLayout = new VideoAllHeaderView(this);
@@ -379,12 +379,12 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 if (mVideoAdContorler != null) mVideoAdContorler.onListAdBind(index, view, s);
             }
         });
-        refreshLayout.setPtrHandler(new PtrDefaultHandler() {
-            @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                refreshData(false);
-            }
-        });
+//        refreshLayout.setPtrHandler(new PtrDefaultHandler() {
+//            @Override
+//            public void onRefreshBegin(PtrFrameLayout frame) {
+//                refreshData(false);
+//            }
+//        });
         listView.setAdapter(detailAdapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
@@ -487,7 +487,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
-                refreshLayout.refreshComplete();
+//                refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
                 //权限检测
                 if(permissionMap.isEmpty()

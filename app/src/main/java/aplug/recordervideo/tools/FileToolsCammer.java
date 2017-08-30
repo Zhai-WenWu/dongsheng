@@ -193,8 +193,7 @@ public class FileToolsCammer {
 
         map.put(RecorderVideoData.video_add_time,"" + file.lastModified());
         float longTime = ToolsCammer.getLongTime(videoPath);
-        String bitmapName = StringManager.toMD5(videoPath,false);
-        String bitmapPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
+        String bitmapPath = getImagePathByVideo(videoPath);
         if(!new File(bitmapPath).exists()){
             Bitmap bitmap = getBitmapByImgPath(videoPath);
             if(bitmap == null || bitmap.getWidth() / 16.0 * 9 != bitmap.getHeight()){
@@ -222,8 +221,7 @@ public class FileToolsCammer {
     public static Bitmap getBitmapByImgPath(String videoPath){
         if(TextUtils.isEmpty(videoPath)) return null;
         Bitmap bitmap = null;
-        String bitmapName = StringManager.toMD5(videoPath,false);
-        String imgPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
+        String imgPath = getImagePathByVideo(videoPath);
         if(new File(videoPath).exists()) {
             if (new File(imgPath).exists()) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
@@ -237,23 +235,36 @@ public class FileToolsCammer {
         return bitmap;
     }
 
+    public static String getImagePathByVideo(String videoPath){
+        if(TextUtils.isEmpty(videoPath)){
+            return "";
+        }
+        File video = new File(videoPath);
+        if(!video.exists()) return "";
+
+        String bitmapName = StringManager.toMD5(videoPath + video.lastModified(),false);
+        return getVideoCatchPath() + bitmapName + ".jpg";
+    }
+
+    public static String getVideoCatchPath(){
+        return FileManager.getSDDir() + VIDEO_CATCH;
+    }
+
     public static String getImgPath(String videoPath){
         if(TextUtils.isEmpty(videoPath)) return null;
         String imgPath = null;
         //如果有辞视频，但是没有次视频的封面图
         File videoFile = new File(videoPath);
         if(videoFile.exists()) {
-            String bitmapName = StringManager.toMD5(videoPath,false);
-            imgPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
+            imgPath = getImagePathByVideo(videoPath);
             File imageFile = new File(imgPath);
             if(!imageFile.exists()){
                 Bitmap bitmap = ToolsCammer.getFrameAtTime(videoPath);
                 FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
-                //还有点问题，待测试
-//            }else if(imageFile.lastModified() < videoFile.lastModified()){
-//                FileManager.delDirectoryOrFile(imgPath);
-//                Bitmap bitmap = ToolsCammer.getFrameAtTime(videoPath);
-//                FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
+            }else if(imageFile.lastModified() < videoFile.lastModified()){
+                FileManager.delDirectoryOrFile(imgPath);
+                Bitmap bitmap = ToolsCammer.getFrameAtTime(videoPath);
+                FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
             }
         }
         return imgPath;
@@ -384,8 +395,7 @@ public class FileToolsCammer {
         String imgPath = null;
         //如果有辞视频，但是没有次视频的封面图
         if(new File(videoPath).exists()) {
-            String bitmapName = StringManager.toMD5(videoPath,false);
-            imgPath = FileManager.getSDDir() + VIDEO_CATCH + bitmapName + ".jpg";
+            imgPath = getImagePathByVideo(videoPath);
             if(!new File(imgPath).exists()) {
                 Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
                 FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);

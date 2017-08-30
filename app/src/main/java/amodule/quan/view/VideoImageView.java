@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.xianghatest.R;
@@ -96,7 +97,8 @@ public class VideoImageView extends RelativeLayout{
                 @Override
                 public void onPrepared(String url, Object... objects) {
                     super.onPrepared(url, objects);
-                    setNetworkCallback();
+                    if(url.startsWith("http"))
+                        setNetworkCallback();
                 }
 
                 @Override
@@ -168,13 +170,25 @@ public class VideoImageView extends RelativeLayout{
                     tipLayout.setVisibility(GONE);
                 }
                 onResume();
+                isNetworkDisconnect = false;
             }
 
             @Override
             public void mobileConnected() {
-                initNormalTipLayout();
-                tipLayout.setVisibility(VISIBLE);
-                onPause();
+                if(!"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                    if(isNetworkDisconnect){
+                        initNormalTipLayout();
+                        tipLayout.setVisibility(VISIBLE);
+                        onPause();
+                    }
+                }else if(videoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                    if(null != tipLayout){
+                        tipLayout.setVisibility(GONE);
+                    }
+                    onResume();
+                }
+
+                isNetworkDisconnect = false;
             }
 
             @Override
