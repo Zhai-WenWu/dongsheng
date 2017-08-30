@@ -1253,6 +1253,13 @@
             android:theme="@style/common_trans_parent_theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
+            android:name="third.share.ShareImageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/common_trans_parent_theme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name="third.share.ShareActivityDialog"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
@@ -1387,7 +1394,7 @@
             <intent-filter>
 
                 <!-- 【必须】 请修改为当前APP包名 .PUSH_ACTION, 如demo的包名为：com.qq.xgdemo -->
-                <action android:name="com.xianghatest.PUSH_ACTION"/>
+                <action android:name="com.xiangha.PUSH_ACTION"/>
             </intent-filter>
         </service>
         <service
@@ -1397,17 +1404,17 @@
         <!-- 【必须】 【注意】authorities修改为 包名.AUTH_XGPUSH, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.android.tpush.XGPushProvider"
-            android:authorities="com.xianghatest.AUTH_XGPUSH"
+            android:authorities="com.xiangha.AUTH_XGPUSH"
             android:exported="true"/>
         <!-- 【必须】 【注意】authorities修改为 包名.TPUSH_PROVIDER, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.android.tpush.SettingsContentProvider"
-            android:authorities="com.xianghatest.TPUSH_PROVIDER"
+            android:authorities="com.xiangha.TPUSH_PROVIDER"
             android:exported="false"/>
         <!-- 【必须】 【注意】authorities修改为 包名.TENCENT.MID.V3, 如demo的包名为：com.qq.xgdemo -->
         <provider
             android:name="com.tencent.mid.api.MidProvider"
-            android:authorities="com.xianghatest.TENCENT.MID.V3"
+            android:authorities="com.xiangha.TENCENT.MID.V3"
             android:exported="true"/>
 
         <!-- 【可选】APP实现的Receiver，用于接收消息透传和操作结果的回调，请根据需要添加 -->
@@ -1492,8 +1499,8 @@
         <!--腾讯统计mta start-->
         <!--<provider-->
         <!--android:name="com.tencent.mid.api.MidProvider"-->
-        <!--android:authorities="com.xianghatest"-->
-        <!--android:exported="true" >-->
+        <!--android:authorities="xiangha"-->
+        <!-- android:exported="true" >-->
         <!--</provider>-->
         <!--appkey-->
         <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
