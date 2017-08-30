@@ -299,10 +299,6 @@ public class DishFootControl implements View.OnClickListener{
                 mAct.startActivity(intent);
                 break;
             case R.id.a_dish_detail_new_relevantTv: //晒我做的这道菜
-                if(!LoginManager.isLogin()){
-                    mAct.startActivity(new Intent(mAct,LoginByAccout.class));
-                    return;
-                }
                 Intent showIntent = new Intent(mAct, UploadSubjectNew.class);
                 showIntent.putExtra("dishCode",code);
 //                showIntent.putExtra("title",mDishName);
