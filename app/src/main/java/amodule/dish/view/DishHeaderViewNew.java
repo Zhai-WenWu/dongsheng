@@ -327,6 +327,7 @@ public class DishHeaderViewNew extends LinearLayout {
                     callBack.videoImageOnClick();
                 }
             });
+            mVideoPlayerController.hideFullScreen();
             //被点击回调
             mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                 @Override
