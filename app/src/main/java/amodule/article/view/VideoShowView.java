@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xianghatest.R;
 
@@ -20,14 +20,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import acore.tools.FileManager;
+import acore.tools.ImgManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import aplug.recordervideo.tools.FileToolsCammer;
 import aplug.recordervideo.tools.ToolsCammer;
 import xh.basic.tool.UtilImage;
-
-import static aplug.recordervideo.tools.FileToolsCammer.VIDEO_CATCH;
 
 /**
  * PackageName : amodule.article.view
@@ -41,13 +41,11 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
 
     private boolean enableEdit = false;
     private boolean isSecondEdit = false;
-    private String coverImageUrl,chooseCoverImageUrl,oldCoverImageUrl;
+    private String coverImageUrl,oldCoverImageUrl;
     private String videoUrl;
     private boolean isWrapContent = true;
     private int position;
     private String idStr = "";
-
-    private double imgWhB;
 
     public VideoShowView(Context context) {
         this(context, null);
@@ -100,8 +98,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         try {
             jsonObject.put("type", VIDEO);
             jsonObject.put("videosimageurl", coverImageUrl);
-            jsonObject.put("oldVideoSimageUrl", oldCoverImageUrl);
-            jsonObject.put("chooseCoverImageUrl", chooseCoverImageUrl);
+            jsonObject.put("oldCoverImageUrl", oldCoverImageUrl);
             jsonObject.put("videourl", videoUrl);
             if(!TextUtils.isEmpty(idStr))
                 jsonObject.put("id", idStr);
@@ -112,9 +109,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     }
 
     public void resetData(){
-        imgWhB = 0;
         coverImageUrl = "";
-        chooseCoverImageUrl = "";
         oldCoverImageUrl = "";
         videoUrl = "";
         defaultLayout.setVisibility(VISIBLE);
@@ -129,9 +124,13 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         resetData();
         defaultLayout.setVisibility(GONE);
         findViewById(R.id.image_layout).setVisibility(VISIBLE);
-        this.coverImageUrl = coverImageUrl;
+        if(videoUrl.startsWith("http")){
+            this.coverImageUrl = coverImageUrl;
+        }else{
+            this.coverImageUrl = FileToolsCammer.getImgPath(videoUrl);
+        }
         this.videoUrl = videoUrl;
-        setVideoImage(false,coverImageUrl);
+        setVideoImage(false,this.coverImageUrl);
     }
 
     /**
@@ -143,65 +142,14 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         LoadImage.with(getContext())
                 .load(imgUrl)
                 .build()
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(new SubBitmapTarget() {
                     @Override
                     public void onResourceReady(final Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                         if (bitmap != null) {
-                            if(isCut){ //需要剪切图片，按照比例16：9，并且保存起来
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        final int imageWidth = bitmap.getWidth();
-                                        final int imageHieght = bitmap.getHeight();
-                                        Bitmap newBitmap = bitmap;
-                                        if(imgWhB <= 0){
-                                            Bitmap bitmap = ToolsCammer.getFrameAtTime(videoUrl);
-                                            if(bitmap == null && !TextUtils.isEmpty(oldCoverImageUrl)){
-                                                bitmap = BitmapFactory.decodeFile(oldCoverImageUrl);
-                                            }
-                                            if(bitmap != null)imgWhB = bitmap.getWidth() * 1.0 / bitmap.getHeight();
-                                        }
-                                        Log.i("viewShowView","imgWhb:" + imgWhB);
-                                        if(imgWhB > 0 &&  imageHieght * imgWhB != imageWidth) {
-                                            int newImgW = imageWidth;
-                                            int newImgH = (int) (imageWidth / imgWhB);
-                                            if (newImgH > imageHieght) {
-                                                newImgH = imageHieght;
-                                                newImgW = (int) (imageHieght * imgWhB);
-                                                newBitmap = Bitmap.createBitmap(newBitmap, (imageWidth - newImgW) / 2, 0, newImgW, newImgH);
-                                            } else {
-                                                newBitmap = Bitmap.createBitmap(newBitmap, 0, (imageHieght - newImgH) / 2, newImgW, newImgH);
-                                            }
-                                        }
-
-//                                        if(imageWidth * 9 != imageHieght * 16){
-//                                            int newImgW = imageWidth;
-//                                            int newImgH = (int) (newImgW * 9.0 / 16);
-//                                            if (newImgH > imageHieght) {
-//                                                newImgH = imageHieght;
-//                                                newImgW = (int) (imageHieght * 16.0 / 9);
-//                                                newBitmap = Bitmap.createBitmap(newBitmap, (imageWidth - newImgW) / 2, 0, newImgW, newImgH);
-//                                            } else {
-//                                                newBitmap = Bitmap.createBitmap(newBitmap, 0, (imageHieght - newImgH) / 2, newImgW, newImgH);
-//                                            }
-//                                            chooseCoverImageUrl = FileManager.getSDDir() + VIDEO_CATCH + Tools.getMD5(imgUrl) + ".jpg";
-//                                            coverImageUrl = chooseCoverImageUrl;
-//                                            FileManager.saveImgToCompletePath(newBitmap, chooseCoverImageUrl, Bitmap.CompressFormat.JPEG);
-//                                        }
-                                        final Bitmap finalBitmap = newBitmap;
-                                        coverImage.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (isWrapContent) {
-                                                    int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                                                    UtilImage.setImgViewByWH(coverImage, finalBitmap, newWaith, 0, false);
-                                                }else {
-                                                    setImageToCoverImage(finalBitmap);
-                                                }
-                                            }
-                                        });
-                                    }
-                                }).start();
+                            if(isCut){
+                                handlerCutImage(bitmap,imgUrl);
                             }else {
                                 if (isWrapContent) {
                                     int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
@@ -213,6 +161,43 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                         }
                     }
                 });
+    }
+
+    public void handlerCutImage(final Bitmap bitmap, final String imgUrl){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap newBitmap = bitmap;
+                if(!videoUrl.startsWith("http") && !imgUrl.startsWith("http")){
+                    //需要裁剪，按照视频尺寸裁剪
+                    Bitmap bitmap = ToolsCammer.getFrameAtTime(videoUrl);
+                    if(bitmap == null && !TextUtils.isEmpty(coverImageUrl)){
+                        bitmap = BitmapFactory.decodeFile(coverImageUrl);
+                    }
+                    newBitmap = ImgManager.centerScaleBitmap(bitmap,newBitmap);
+
+                    //保存图片
+//                    oldCoverImageUrl = coverImageUrl;
+                    coverImageUrl = FileToolsCammer.getVideoCatchPath() + Tools.getMD5(imgUrl) + ".jpg";
+                    Log.i("tzy","handlerCutImage::coverImageUrl = " + coverImageUrl);
+                    Log.i("tzy","handlerCutImage::oldCoverImageUrl = " + oldCoverImageUrl);
+                    FileManager.saveImgToCompletePath(newBitmap, coverImageUrl, Bitmap.CompressFormat.JPEG);
+                }
+
+                final Bitmap finalBitmap = newBitmap;
+                coverImage.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isWrapContent) {
+                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+                            UtilImage.setImgViewByWH(coverImage, finalBitmap, newWaith, 0, false);
+                        }else {
+                            setImageToCoverImage(finalBitmap);
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     private void setImageToCoverImage(Bitmap bitmap){
@@ -253,35 +238,35 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 if(mOnChooseImageListener != null) mOnChooseImageListener.onClick(VideoShowView.this);
                 break;
             case R.id.video_delete_cover_img:
-                chooseCoverImageUrl = null;
-                coverImageUrl = oldCoverImageUrl;
+                Log.i("tzy","coverImageUrl = " + coverImageUrl);
+                Log.i("tzy","oldCoverImageUrl = " + oldCoverImageUrl);
+                this.coverImageUrl = oldCoverImageUrl;
+                oldCoverImageUrl = null;
                 findViewById(R.id.video_delete_cover_img).setVisibility(View.GONE);
-                setVideoImage(false,coverImageUrl);
+                setVideoImage(false,this.coverImageUrl);
+                Log.i("tzy","setVideoImage::coverImageUrl = " + coverImageUrl);
                 break;
 
         }
-    }
-
-    public void setOldCoverImageUrl(String url){
-        Log.i("viewShowView","setOldCoverImageUrl() url:" + url);
-        if(TextUtils.isEmpty(oldCoverImageUrl))
-            oldCoverImageUrl = url;
-        Log.i("viewShowView","setOldCoverImageUrl() oldCoverImageUrl:" + oldCoverImageUrl);
     }
 
     public String getCoverImageUrl() {
         return coverImageUrl;
     }
 
-    public void setChooseCoverImageUrl(String chooseCoverImageUrl) {
-        this.chooseCoverImageUrl = chooseCoverImageUrl;
-        setOldCoverImageUrl(coverImageUrl);
-        coverImageUrl = chooseCoverImageUrl;
-        findViewById(R.id.video_delete_cover_img).setVisibility(View.VISIBLE);
-        setVideoImage(true,chooseCoverImageUrl);
+    public String getoldCoverImageUrl(){
+        return oldCoverImageUrl;
     }
 
-
+    public void setNewCoverImageUrl(String newCoverImageUrl) {
+        this.oldCoverImageUrl = coverImageUrl;
+        this.coverImageUrl = newCoverImageUrl;
+        Log.i("tzy","setNewCoverImageUrl::newCoverImageUrl = " + newCoverImageUrl);
+        Log.i("tzy","setNewCoverImageUrl::coverImageUrl = " + coverImageUrl);
+        Log.i("tzy","setNewCoverImageUrl::oldCoverImageUrl = " + oldCoverImageUrl);
+        findViewById(R.id.video_delete_cover_img).setVisibility(View.VISIBLE);
+        setVideoImage(true,coverImageUrl);
+    }
 
     public void setCoverImageUrl(String coverImageUrl) {
         this.coverImageUrl = coverImageUrl;

@@ -508,7 +508,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
                 if (uploadArticleData != null) {
                     editTitle.setText(uploadArticleData.getTitle());
                     mixLayout.setSingleVideo(TYPE_VIDEO.equals(getType()));
-                    mixLayout.setXHServiceData(uploadArticleData.getContent());
+                    mixLayout.setXHServiceData(uploadArticleData.getContent(),!TextUtils.isEmpty(code));
 
                     mixLayout.post(new Runnable() {
                         @Override

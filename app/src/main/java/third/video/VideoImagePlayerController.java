@@ -18,6 +18,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xianghatest.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
@@ -76,7 +77,8 @@ public class VideoImagePlayerController {
             @Override
             public void onPrepared(String url, Object... objects) {
                 super.onPrepared(url, objects);
-                setNetworkCallback();
+                if(url.startsWith("http"))
+                    setNetworkCallback();
             }
 
             @Override
@@ -144,15 +146,25 @@ public class VideoImagePlayerController {
             public void wifiConnected() {
                 removeTipView();
                 onResume();
+                isNetworkDisconnect = false;
             }
 
             @Override
             public void mobileConnected() {
-                if(view_Tip==null){
-                    initView(mContext);
-                    mPraentViewGroup.addView(view_Tip);
+                if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                    if(isNetworkDisconnect){
+                        removeTipView();
+                        if(view_Tip==null){
+                            initView(mContext);
+                            mPraentViewGroup.addView(view_Tip);
+                        }
+                        onPause();
+                    }
+                }else if(videoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                    removeTipView();
+                    onResume();
                 }
-                onPause();
+                isNetworkDisconnect = false;
             }
 
             @Override
@@ -260,7 +272,7 @@ public class VideoImagePlayerController {
     }
 
     public void onResume() {
-        if (mHasVideoInfo && videoPlayer != null) {
+        if (mHasVideoInfo && videoPlayer != null && !isNetworkDisconnect) {
             videoPlayer.onVideoResume();
         }
     }

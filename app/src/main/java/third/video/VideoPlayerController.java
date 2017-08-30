@@ -102,7 +102,8 @@ public class VideoPlayerController {
             @Override
             public void onPrepared(String url, Object... objects) {
                 super.onPrepared(url, objects);
-                setNetworkCallback();
+                if(url.startsWith("http"))
+                    setNetworkCallback();
             }
 
             @Override
@@ -180,15 +181,25 @@ public class VideoPlayerController {
             public void wifiConnected() {
                 removeTipView();
                 onResume();
+                isNetworkDisconnect = false;
             }
 
             @Override
             public void mobileConnected() {
-                if(view_Tip==null){
-                    initView(mContext);
-                    mPraentViewGroup.addView(view_Tip);
+                if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                    if(isNetworkDisconnect){
+                        removeTipView();
+                        if(view_Tip==null){
+                            initView(mContext);
+                            mPraentViewGroup.addView(view_Tip);
+                        }
+                        onPause();
+                    }
+                }else if(videoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                    removeTipView();
+                    onResume();
                 }
-                onPause();
+                isNetworkDisconnect = false;
             }
 
             @Override
@@ -486,7 +497,7 @@ public class VideoPlayerController {
     }
 
     public void onResume() {
-        if(null != videoPlayer)
+        if(null != videoPlayer && !isNetworkDisconnect)
             videoPlayer.onVideoResume();
     }
 

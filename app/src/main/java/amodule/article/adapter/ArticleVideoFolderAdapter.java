@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xianghatest.R;
 
 import java.io.File;
@@ -159,6 +160,8 @@ public class ArticleVideoFolderAdapter extends BaseAdapter implements View.OnCli
             }
             Glide.with(itemView.getContext())
                     .load(new File(FileToolsCammer.getImgPath(videoPath)))
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .error(R.drawable.default_error)
                     .placeholder(R.drawable.mall_recommed_product_backgroup)
                     .centerCrop()
