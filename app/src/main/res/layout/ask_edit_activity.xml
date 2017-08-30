@@ -32,9 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_68"
         android:layout_below="@+id/edittext"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
-        android:paddingBottom="@dimen/dp_20">
+        android:padding="@dimen/dp_20">
 
         <TextView
             android:id="@+id/price_text"
@@ -42,7 +40,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp_16"
             android:textColor="#ff533c"
-            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:visibility="gone"/>
 
         <LinearLayout

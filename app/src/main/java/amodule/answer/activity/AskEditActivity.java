@@ -475,7 +475,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         if (succ) {
             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
             Tools.showToast(this, "支付成功");
-            startQADetail();
+            mWebView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startQADetail();
+                }
+            }, 500);
         } else {
             if (mIsAskMore)
                 XHClick.mapStat(this, getTjId(), "点击发布按钮", "未发布成功");
