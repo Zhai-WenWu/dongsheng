@@ -27,8 +27,8 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
-import acore.override.helper.XHActivityManager;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -98,6 +98,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
+                        cancelUploadingDialog();
                         mWebView.setVisibility(View.VISIBLE);
                         mWebView.loadUrl("javascript:goAppPay()");
                         XHClick.mapStat(AskEditActivity.this, getTjId(), "点击发布按钮", "吊起支付弹窗");
@@ -427,8 +428,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     public void onUploadOver(boolean flag, String response) {
         mIsStopUpload = true;
-        cancelUploadingDialog();
         if (!flag && !TextUtils.isEmpty(response)) {
+            cancelUploadingDialog();
             Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -448,10 +449,11 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     if (mIsAskMore) {
                         if (flag) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
+                            cancelUploadingDialog();
                             if (mFromHome)
                                 startQADetail();
                             else
-                                XHActivityManager.getInstance().refreshActivity();
+                                ObserverManager.getInstence().notify(StringManager.NOTIFY_REFRESH_H5, null, true);
                             finish();
                         }
                     } else {
@@ -475,12 +477,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         if (succ) {
             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
             Tools.showToast(this, "支付成功");
-            mWebView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startQADetail();
-                }
-            }, 500);
+            startQADetail();
         } else {
             if (mIsAskMore)
                 XHClick.mapStat(this, getTjId(), "点击发布按钮", "未发布成功");

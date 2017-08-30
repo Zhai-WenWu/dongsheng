@@ -108,7 +108,6 @@ public class ScrollViewContainer extends RelativeLayout {
             }
             requestLayout();
         }
-
     };
 
     public void setInterface(ScrollviewContaninerInter scrollviewinterface) {

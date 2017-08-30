@@ -169,7 +169,6 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                     }
                     Main.colse_level = 1;
                     Intent intent = new Intent();
-                    intent.putExtra("loadSucc", true);
                     intent.putExtra("response", response);
                     setResult(RESULT_OK, intent);
                     AskAnswerUploadListActivity.this.finish();

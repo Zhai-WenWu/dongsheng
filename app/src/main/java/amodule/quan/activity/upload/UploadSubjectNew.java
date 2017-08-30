@@ -234,13 +234,14 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 				upData.setTitle(title);
 				XHClick.onEventValue(this, "uploadQuanTitle", "uploadQuanTitle", "自带标题", title.length());
 				isHaveTitle = true;
-
-				if(!TextUtils.isEmpty(mDishCode)){
-					uploadSubjectBottomControl.setIsClear(false);
-					uploadSubjectBottomControl.setDishInfo(mDishCode,title);
-					uploadSubjectBottomControl.setIsFollowDish(false);
-				}
 			}
+			//晒我这道菜处理默认选择
+                      if(!TextUtils.isEmpty(mDishCode)&&bundle.containsKey("name")){
+                          String name = bundle.getString("name");
+                          uploadSubjectBottomControl.setIsClear(false);
+                          uploadSubjectBottomControl.setDishInfo(mDishCode,name);
+                          uploadSubjectBottomControl.setIsFollowDish(false);
+                      }
 			upData.setType(uploadType);
 			// 如果是回复贴则
 			if (SubjectData.TYPE_REPLY.equals(uploadType)) {

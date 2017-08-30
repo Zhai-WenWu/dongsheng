@@ -350,6 +350,12 @@ public class StringManager extends UtilString {
 
     public final static String API_RAND_PROMOTION = apiUrl + "main7/open/getRandPromotion";//随机推广
 
+
+    //用于通知的string
+    public static final String NOTIFY_REFRESH_H5 = "notify_refresh_h5";
+    public static final String NOTIFY_LOGIN = "notify_login";
+    public static final String NOTIFY_PAYFINISH = "notify_payfinish";
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,6 +19,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -33,6 +36,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
 import aplug.web.view.XHWebView;
+import third.mall.widget.ScrollViewContainer;
 import third.video.VideoPlayerController;
 
 import static amodule.dish.activity.DetailDish.startTime;
@@ -208,6 +212,7 @@ public class  DishActivityViewControlNew {
                                 int y = tempY - startY;
                                 if (wm_height > 0 && y > 0) {
                                     if (videoLayoutHeight + y <= wm_height * 2 / 3) {
+                                        mMoveLen = y;
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight + y);
                                         dishVidioLayout.setLayoutParams(layoutParams);
                                     }
@@ -216,12 +221,15 @@ public class  DishActivityViewControlNew {
                         }
                         break;
                     case MotionEvent.ACTION_CANCEL:
+                        Log.i("zyj","MotionEvent::ACTION_CANCEL");
                     case MotionEvent.ACTION_UP:
+                        Log.i("zyj","MotionEvent::ACTION_UP");
                         if (!isHasVideo) {
                             isRecored = false;
                             startY = 0;
-                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight);
-                            dishVidioLayout.setLayoutParams(layoutParams);
+                            if(mTimer!=null){
+                                mTimer.schedule(2);
+                            }
                         }
                         mFootControl.hindGoodLayout();
                         break;
@@ -243,6 +251,7 @@ public class  DishActivityViewControlNew {
         if(list.size() == 0) return;
         dishInfoMap = list.get(0);
         isHasVideo = "2".equals(dishInfoMap.get("type"));
+        if(!isHasVideo){mTimer = new MyTimer(handler);}
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         if(isHasVideo)tongjiId="a_menu_detail_video";
         dishTitleViewControl.setData(dishInfoMap,mDishCode,isHasVideo,dishInfoMap.get("dishState"),loadManager);
@@ -495,6 +504,69 @@ public class  DishActivityViewControlNew {
     public void refreshTemplateWebView(){
         if(templateWebView!=null) {
             templateWebView.refreshWebviewMethod("javascript:freshFollow()");
+        }
+    }
+    private int mMoveLen = 0;
+    private MyTimer mTimer;
+    private int tempHeight = -1;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (mMoveLen!=0){
+                mMoveLen= mMoveLen-3;
+            }else{
+                mTimer.cancel();
+            }
+            requestLayout();
+        }
+    };
+
+    /**
+     * 刷新布局
+     */
+    private void requestLayout(){
+        if(mMoveLen<=0){mMoveLen=0;}
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight+mMoveLen);
+        dishVidioLayout.setLayoutParams(layoutParams);
+    }
+    class MyTimer {
+        private Handler handler;
+        private Timer timer;
+        private MyTimer.MyTask mTask;
+
+        public MyTimer(Handler handler) {
+            this.handler = handler;
+            timer = new Timer();
+        }
+
+        public void schedule(long period) {
+            if (mTask != null) {
+                mTask.cancel();
+                mTask = null;
+            }
+            mTask = new MyTimer.MyTask(handler);
+            timer.schedule(mTask, 0, period);
+        }
+
+        public void cancel() {
+            if (mTask != null) {
+                mTask.cancel();
+                mTask = null;
+            }
+        }
+
+        class MyTask extends TimerTask {
+            private Handler handler;
+
+            public MyTask(Handler handler) {
+                this.handler = handler;
+            }
+
+            @Override
+            public void run() {
+                handler.obtainMessage().sendToTarget();
+            }
+
         }
     }
 }
