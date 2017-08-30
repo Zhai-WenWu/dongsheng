@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    <RelativeLayout
+        android:id="@+id/activityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <amodule.dish.view.XhScrollView
         android:id="@+id/a_dish_detail_new_scrollview"
         android:layout_width="match_parent"
@@ -37,7 +39,7 @@
         </LinearLayout>
 
     </amodule.dish.view.XhScrollView>
-
+    </RelativeLayout>
     <include
         android:id="@+id/a_dish_detail_new_title"
         layout="@layout/a_dish_detail_bar_title_new" />
