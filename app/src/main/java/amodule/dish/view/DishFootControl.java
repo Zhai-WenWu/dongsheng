@@ -328,6 +328,10 @@ public class DishFootControl implements View.OnClickListener{
 
                 break;
              case R.id.a_dish_detail_new_footer_hover_good: //有用
+                 if(!LoginManager.isLogin()){
+                     mAct.startActivity(new Intent(mAct,LoginByAccout.class));
+                     return;
+                 }
                  XHClick.mapStat(mAct, tongjiId, "底部浮动", "点赞按钮点击量");
                  boolean dishLikeGood =true;
                  if("3".equals(dishLikeStatus)) {//当前是点赞

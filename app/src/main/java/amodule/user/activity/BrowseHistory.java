@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;
+import acore.widget.NoScrollViewPager;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.user.view.HistoryDishView;
 import amodule.user.view.HistoryNousView;
@@ -27,7 +29,7 @@ import xh.windowview.XhDialog;
  */
 public class BrowseHistory extends BaseActivity implements View.OnClickListener {
 	private PagerSlidingTabStrip mTab;
-	private ViewPager mViewPager;
+	private NoScrollViewPager mViewPager;
 	private RelativeLayout barTitle;
 	private TextView rightText;
 	private int defaultIndex = 0;
@@ -48,6 +50,7 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 			}
 			isChoose = bundle.getBoolean("isChoose",false);
 		}
+		Log.i("zyj","isChoose::"+isChoose);
 		initView();
 //		initTitle();
 	}
@@ -56,17 +59,15 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText("浏览历史");
 
-
 		findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				onBackPressed();
 			}
 		});
-
 		barTitle = (RelativeLayout) findViewById(R.id.bar_title);
 		mTab = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-		mViewPager = (ViewPager) findViewById(R.id.viewpager);
+		mViewPager = (NoScrollViewPager) findViewById(R.id.viewpager);
 		viewList.add(new HistoryDishView(this,isChoose).onCreateView());
 		viewList.add(new HistorySubjectView(this).onCreateView());
 		viewList.add(new HistoryNousView(this).onCreateView());
@@ -97,6 +98,10 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 		}
 
 		mViewPager.setCurrentItem(defaultIndex);
+		if(isChoose){
+			mTab.setVisibility(View.GONE);
+			mViewPager.setNoScrollView(isChoose);
+		}
 	}
 
 	private void initTitle() {

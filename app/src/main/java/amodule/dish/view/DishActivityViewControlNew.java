@@ -280,7 +280,7 @@ public class  DishActivityViewControlNew {
     }
 
     private boolean saveHistory = false;
-    private void saveHistoryToDB(final String burden) {
+    public void saveHistoryToDB(final String burden) {
         if (!saveHistory) {
             saveHistory = true;
             new Thread(new Runnable() {
