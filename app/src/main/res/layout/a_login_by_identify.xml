@@ -85,7 +85,7 @@
             <TextView
                 android:id="@+id/tv_password"
                 style="@style/userLoginOtherText"
-                android:text="密码登陆" />
+                android:text="密码登录" />
 
             <View style="@style/userLoginOtherLine" />
 
