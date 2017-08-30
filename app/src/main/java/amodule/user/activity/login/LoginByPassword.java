@@ -124,7 +124,7 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
             case R.id.tv_register: //注册
                 register(this,phone_info.getZoneCode(),phone_info.getPhoneNum());
                 break;
-            case R.id.tv_identify: //验证码登陆
+            case R.id.tv_identify: //验证码登录
                 gotoLoginByIndetify(this,phone_info.getZoneCode(),phone_info.getPhoneNum());
                 break;
             case R.id.tv_lostsercet: //找回密码

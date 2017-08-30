@@ -174,7 +174,7 @@ public class DishFootControl implements View.OnClickListener{
                             Tools.showToast(mAct,"已点过赞");
                         }else {
                             XHClick.mapStat(mAct, tongjiId, "哈友相关作品", "点赞按钮点击量");
-                            if(!LoginManager.isLogin()){//未登陆，直接去登陆
+                            if(!LoginManager.isLogin()){//未登录，直接去登录
                                 Intent intent = new Intent(mAct, LoginByAccout.class);
                                 mAct.startActivity(intent);
                                 return;
