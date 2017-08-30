@@ -489,6 +489,11 @@ public class DishFootControl implements View.OnClickListener{
             }
         });
     }
+
+    /**
+     * 处理状态：1：不显示，2：向作者提问，3：提醒作者开通问答，4：未登陆状态
+     * @param status
+     */
     private void handlrAskStatus(String status){
         askStatus=status;
         switch (status){
@@ -499,7 +504,7 @@ public class DishFootControl implements View.OnClickListener{
                 mHoverTv.setText("提醒作者开通问答");
                 break;
         }
-        if("2".equals(status)||"3".equals(status)){
+        if("2".equals(status)||"3".equals(status)||"4".equals(status)){
             mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
         }else mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
     }
