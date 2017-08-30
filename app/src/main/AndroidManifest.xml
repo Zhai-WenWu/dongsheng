@@ -985,7 +985,7 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="aplug.web.ShowTemplateWeb"
             android:configChanges="orientation|keyboardHidden"
