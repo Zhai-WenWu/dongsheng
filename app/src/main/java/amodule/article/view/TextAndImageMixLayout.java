@@ -41,7 +41,6 @@ import aplug.shortvideo.activity.VideoFullScreenActivity;
 
 import static amodule.article.activity.edit.EditParentActivity.REQUEST_CHOOSE_VIDEO_COVER;
 import static aplug.basic.BreakPointUploadManager.TYPE_IMG;
-import static com.xianghatest.R.id.view;
 
 /**
  * PackageName : amodule.article.view
@@ -85,7 +84,7 @@ public class TextAndImageMixLayout extends LinearLayout
     }
 
     /** 设置上传需要数据 */
-    public void setXHServiceData(String content) {
+    public void setXHServiceData(String content,boolean isSecondEdit) {
         if (TextUtils.isEmpty(content)) return;
         content = Uri.decode(content);
         if (!"2".equals(type))
@@ -116,7 +115,13 @@ public class TextAndImageMixLayout extends LinearLayout
                     addImage(map.get("gifurl"),map.get("id"), isLast, "");
                     break;
                 case BaseView.VIDEO:
-                    addVideo(map.get("videosimageurl"),map.get("chooseCoverImageUrl"),map.get("oldVideoSimageUrl"), map.get("videourl"),map.get("id"), isLast, "");
+                        String oldImagePath = map.get("oldCoverImageUrl");
+                        String imagePath = map.get("videosimageurl");
+                    if(isSecondEdit || TextUtils.isEmpty(oldImagePath)){
+                        addVideo(imagePath,null, map.get("videourl"),map.get("id"), isLast, "");
+                    }else{
+                        addVideo(oldImagePath,imagePath, map.get("videourl"),map.get("id"), isLast, "");
+                    }
                     break;
                 case BaseView.URLS:
                     //do nothing
@@ -470,20 +475,19 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param content
      */
     public void addVideo(String coverImageUrl, String videoUrl, boolean ifAddText, CharSequence content) {
-        addVideo(coverImageUrl,null,null, videoUrl,"", ifAddText, content);;
+        addVideo(coverImageUrl,null, videoUrl,"", ifAddText, content);;
     }
 
     /**
      * 添加视频
      * @param coverImageUrl
      * @param chooseImageUrl
-     * @param oldCoverImageUrl
      * @param videoUrl
      * @param idStr
      * @param ifAddText
      * @param content
      */
-    public void addVideo(String coverImageUrl,String chooseImageUrl,String oldCoverImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
+    public void addVideo(String coverImageUrl,String chooseImageUrl, String videoUrl, String idStr, boolean ifAddText, CharSequence content) {
         if(TextUtils.isEmpty(coverImageUrl) || TextUtils.isEmpty(videoUrl)){
             Tools.showToast(getContext(),"文件已损坏");
             return;
@@ -532,9 +536,8 @@ public class TextAndImageMixLayout extends LinearLayout
         view.setEnableEdit(true);
         view.setSecondEdit(isSecondEdit);
         view.setVideoData(coverImageUrl, videoUrl);
-        view.setOldCoverImageUrl(oldCoverImageUrl);
         if(!TextUtils.isEmpty(chooseImageUrl)){
-            view.setChooseCoverImageUrl(chooseImageUrl);
+            view.setNewCoverImageUrl(chooseImageUrl);
         }
 
         view.setIdStr(idStr);
@@ -558,7 +561,7 @@ public class TextAndImageMixLayout extends LinearLayout
         if(mCurrentViewShowView != null){
             ArrayList<String> array = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);
             if(array != null && array.size() > 0) {
-                mCurrentViewShowView.setChooseCoverImageUrl(array.get(0));
+                mCurrentViewShowView.setNewCoverImageUrl(array.get(0));
             }
         }
     }
