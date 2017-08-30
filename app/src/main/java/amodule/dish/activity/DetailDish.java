@@ -321,4 +321,12 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
 //        super.finish();
 //        overridePendingTransition(0, R.anim.activity_close);
 //    }
+
+    /**
+     * 保持历史数据
+     */
+    public void saveHistoryData(String burden){
+        if(dishActivityViewControl!=null)
+            dishActivityViewControl.saveHistoryToDB(burden);
+    }
 }

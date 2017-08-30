@@ -41,6 +41,7 @@ import acore.tools.ToolsDevice;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
 import amodule.answer.activity.QAReportActivity;
+import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.db.DataOperate;
@@ -161,6 +162,16 @@ public class JsAppCommon extends JsBase {
                 }
             }
         });
+    }
+
+    /**
+     * 保持菜谱详情的浏览记录
+     * @param ingreStr
+     */
+    @JavascriptInterface
+    public void setIngreStr(String ingreStr) {
+        if (mAct != null && mAct instanceof DetailDish)
+            ((DetailDish)mAct).saveHistoryData(ingreStr);
     }
 
     /**
