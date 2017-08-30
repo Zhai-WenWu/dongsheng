@@ -550,7 +550,6 @@ public class  DishActivityViewControlNew {
 
         public void cancel() {
             if (mTask != null) {
-                Log.i("wyl","cancel：：：mTask.cancel()");
                 mTask.cancel();
                 mTask = null;
             }
