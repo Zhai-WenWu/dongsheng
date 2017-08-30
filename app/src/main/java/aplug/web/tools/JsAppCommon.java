@@ -31,9 +31,8 @@ import acore.logic.LoginManager;
 import acore.logic.PayCallback;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
-import acore.override.helper.XHActivityManager;
-import acore.tools.Base64Utils;
 import acore.tools.FileManager;
+import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -827,7 +826,7 @@ public class JsAppCommon extends JsBase {
     public void goPay(String url, String params, final String type) {
 
         if(!ToolsDevice.isNetworkAvailable(mAct)){
-            Tools.showToast(mAct,"网络异常，请检查网络");
+            onPayCallback(false, "网络异常，请检查网络");
             return;
         }
 //		Tools.showToast(mAct,"url:"+url);
@@ -900,7 +899,7 @@ public class JsAppCommon extends JsBase {
                     if (mOnPayFinishListener != null) {
                         mOnPayFinishListener.onPayFinish(isOk, data);
                     }
-                    XHActivityManager.getInstance().refreshActivity();
+                    ObserverManager.getInstence().notify(StringManager.NOTIFY_PAYFINISH, null, isOk);
                 }
             });
         }
