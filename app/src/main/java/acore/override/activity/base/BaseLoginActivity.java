@@ -177,7 +177,7 @@ public class BaseLoginActivity extends BaseActivity {
                     if (maps != null && maps.size() > 0) {
                         err_count_secret = 0;
                         LoginManager.loginSuccess(mAct, returnObj.toString());
-                        ObserverManager.getInstence().notify(StringManager.NOTIFY_LOGIN, null, true);
+                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, true);
                         callback.onSuccess();
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {
@@ -189,7 +189,7 @@ public class BaseLoginActivity extends BaseActivity {
                     } else {
                         onSercretError(loginType, zoneCode, phoneNum);
                         callback.onFalse(flag);
-                        ObserverManager.getInstence().notify(StringManager.NOTIFY_LOGIN, null, false);
+                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, false);
                     }
                 } else {
                     onSercretError(loginType, zoneCode, phoneNum);

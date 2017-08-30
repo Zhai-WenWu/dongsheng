@@ -899,7 +899,7 @@ public class JsAppCommon extends JsBase {
                     if (mOnPayFinishListener != null) {
                         mOnPayFinishListener.onPayFinish(isOk, data);
                     }
-                    ObserverManager.getInstence().notify(StringManager.NOTIFY_PAYFINISH, null, isOk);
+                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                 }
             });
         }
