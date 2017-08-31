@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,8 +18,8 @@ import com.xianghatest.R;
 
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,6 +68,7 @@ import third.mall.dialog.FavorableDialog;
 import third.mall.override.MallBaseActivity;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
+import third.share.ShareImageActivity;
 import xh.basic.tool.UtilFile;
 
 import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_KEY;
@@ -206,6 +206,7 @@ public class JsAppCommon extends JsBase {
                     Log.i("zhangyujian", "type::::" + type);
                     mBarShare = new BarShare(mAct, type, "");
                     mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
+                    mBarShare.setShare(BarShare.IMG_TYPE_WEB, "", "", img, "");
                     RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
                     if (shareLayout != null) {
                         shareLayout.setVisibility(View.VISIBLE);
@@ -228,6 +229,39 @@ public class JsAppCommon extends JsBase {
                     }
                 }
 //				}
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void initImageShare(final String content,final String imageUrl){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("tzy","content = " + content);
+                Log.i("tzy","imageUrl = " + imageUrl);
+                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+                if(shareLayout != null){
+                    shareLayout.setVisibility(View.VISIBLE);
+                    shareLayout.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ShareImageActivity.openShareImageActivity(mAct,content,imageUrl);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void openImageShare(final String content,final String imageUrl){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("tzy","content = " + content);
+                Log.i("tzy","imageUrl = " + imageUrl);
+                ShareImageActivity.openShareImageActivity(mAct,content,imageUrl);
             }
         });
     }
@@ -348,7 +382,7 @@ public class JsAppCommon extends JsBase {
                     jsonObject.put("content", map.get("content") + "");
                     jsonObject.put("title", map.get("title") + "");
                     jsonObject.put("img", map.get("img") + "");
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 break;
         }
@@ -405,7 +439,7 @@ public class JsAppCommon extends JsBase {
                                     if (url.contains("&fr")) {
                                         String openurls = url.substring(0, url.indexOf("&fr"));
                                         MallClickContorl.getInstance().setStatisticUrl(openurls, null, url.substring(url.indexOf("&fr") + 1, url.length()), mAct, true);
-                                        ;
+
                                         String mall_stat = (String) UtilFile.loadShared(mAct, FileManager.MALL_STAT, FileManager.MALL_STAT);
 
                                     }
@@ -520,7 +554,7 @@ public class JsAppCommon extends JsBase {
                 Intent intent = new Intent();
                 intent.setClass(mAct, UploadDishActivity.class);
                 intent.putExtra("state", UploadDishActivity.UPLOAD_DISH_ACTIVITY);
-                if (name != "" && name != null) {
+                if (!TextUtils.isEmpty(name)) {
                     intent.putExtra("name", name);
                 }
                 mAct.startActivity(intent);
@@ -679,8 +713,7 @@ public class JsAppCommon extends JsBase {
             public void run() {
                 //统计
                 Intent it = new Intent(mAct, PlayVideo.class);
-                String urlTemp = url;
-                it.putExtra("url", urlTemp);
+                it.putExtra("url", url);
                 it.putExtra("name", name);
                 it.putExtra("img", img);
                 mAct.startActivity(it);
@@ -703,9 +736,7 @@ public class JsAppCommon extends JsBase {
                     return;
                 }
                 ArrayList<String> data = new ArrayList<>();
-                for (String url : imageUrls) {
-                    data.add(url);
-                }
+                Collections.addAll(data, imageUrls);
                 Intent intent = new Intent(mAct, ImgWallActivity.class);
                 intent.putStringArrayListExtra("images", data);
                 intent.putExtra("index", index);
@@ -723,12 +754,12 @@ public class JsAppCommon extends JsBase {
                 if (imgArr == null || stepArr == null) {
                     return;
                 }
-                ArrayList<Map<String, String>> listMaps = new ArrayList<Map<String, String>>();
+                ArrayList<Map<String, String>> listMaps = new ArrayList<>();
                 int sizeImg = imgArr.length;
                 int sizeText = stepArr.length;
                 int size = sizeText > sizeImg ? sizeText : sizeImg;
                 for (int i = 0; i < size; i++) {
-                    Map<String, String> map = new HashMap<String, String>();
+                    Map<String, String> map = new HashMap<>();
                     if (i < sizeImg) map.put("img", imgArr[i]);
                     if (i < sizeText) map.put("info", stepArr[i]);
                     listMaps.add(map);

@@ -25,14 +25,15 @@ import acore.tools.ToolsDevice;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
- * Created by Administrator on 2016/8/5.
+ * PackageName : third.share.ShareImageActivity
+ * Created by MrTrying on 2016/8/5 20:45.
+ * E_mail : ztanzeyu@gmail.com
  */
 public class ShareImageActivity extends Activity{
     public static final String EXTRA_CONTENT = "content";
     public static final String EXTRA_IMAGE= "img";
     private ArrayList<Map<String,String>> mData = new ArrayList<>();
     private String[] mNames ;
-    private int[] mLogos ;
     private String[] mSharePlatforms ;
     private String mContent,mImgUrl;
 
@@ -57,43 +58,14 @@ public class ShareImageActivity extends Activity{
             try{
                 mContent = bundle.getString(EXTRA_CONTENT);
                 mImgUrl = bundle.getString(EXTRA_IMAGE);
-            }catch(Exception e){}
+            }catch(Exception ignored){}
         }
-        init();
-    }
-
-    private void init() {
         initData();
-        GridView sahre_gridview= (GridView) findViewById(R.id.sahre_gridview);
-        SimpleAdapter adapter = new SimpleAdapter(this, mData,
-                R.layout.share_item_new,
-                new String[]{"img","name"},
-                new int[]{R.id.share_logo,R.id.share_name});
-        sahre_gridview.setAdapter(adapter);
-        sahre_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                XHClick.mapStat(ShareImageActivity.this, tongjiId, "分享", mNames[position]);
-                new ShareImage(ShareImageActivity.this).share(mSharePlatforms[position],mImgUrl,mContent);
-                ShareImageActivity.this.finish();
-            }
-        });
-        findViewById(R.id.activity_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCloseThis(v);
-            }
-        });
-        findViewById(R.id.share_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCloseThis(v);
-            }
-        });
+        initView();
     }
 
     private void initData(){
+        int[] mLogos;
         if(ToolsDevice.isAppInPhone(this, "com.tencent.mm") == 0){
             mNames = new String[]{"QQ好友","QQ空间","新浪微博","短信"};
             mLogos = new int[]{
@@ -113,17 +85,39 @@ public class ShareImageActivity extends Activity{
                     ShareTools.SINA_NAME,ShareImage.SHORT_MESSAGE};
         }
 
-        int mapSize = mNames.length;
-        for(int i = 0; i < mapSize; i ++){
-            Map<String,String> map = new HashMap<String,String>();
+        for(int i = 0; i < mNames.length; i ++){
+            Map<String,String> map = new HashMap<>();
             map.put("name", mNames[i]);
             map.put("img", "" + mLogos[i]);
             mData.add(map);
         }
     }
 
-    public void onCloseThis(View v){
-        this.finish();
+    private void initView() {
+        GridView sahre_gridview= (GridView) findViewById(R.id.sahre_gridview);
+        SimpleAdapter adapter = new SimpleAdapter(this, mData,
+                R.layout.share_item_new,
+                new String[]{"img","name"},
+                new int[]{R.id.share_logo,R.id.share_name});
+        sahre_gridview.setAdapter(adapter);
+        sahre_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                XHClick.mapStat(ShareImageActivity.this, tongjiId, "分享", mNames[position]);
+                new ShareImage(ShareImageActivity.this).share(mSharePlatforms[position],mImgUrl,mContent);
+                ShareImageActivity.this.finish();
+            }
+        });
+
+        View.OnClickListener closeClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        };
+        findViewById(R.id.activity_layout).setOnClickListener(closeClick);
+        findViewById(R.id.share_close).setOnClickListener(closeClick);
     }
+
 
 }
