@@ -1,6 +1,7 @@
 package aplug.web.tools;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,14 +40,14 @@ public class XHTemplateManager {
      * 检查全部更新
      */
     public void CheckUpdataAllTemplate(){
-        if(templateNum<=0||templateNum>=templates.length) {
+        if(templateNum<=0) {
             templateNum = 0;
+        }else if(templateNum>=templates.length){
+            templateNum=-1;
+            return;
         }
         String requestMethod=templates[templateNum];
-        if(TextUtils.isEmpty(requestMethod)){
-            ++templateNum;
-            CheckUpdataAllTemplate();
-        }else{
+        if(!TextUtils.isEmpty(requestMethod)){
             getSingleTemplate(requestMethod, new TemplateWebViewControl.MouldCallBack() {
                 @Override
                 public void load(boolean isSuccess, String data, String requestMothed, String version) {
@@ -54,6 +55,9 @@ public class XHTemplateManager {
                     CheckUpdataAllTemplate();
                 }
             });
+        }else{
+            templateNum=-1;
+            return;
         }
     }
 

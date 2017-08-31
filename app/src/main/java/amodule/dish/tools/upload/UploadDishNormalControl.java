@@ -39,7 +39,6 @@ import xh.windowview.XhDialog;
 /**
  * Created by Fang Ruijiao on 2016/10/25.
  */
-
 public class UploadDishNormalControl extends UploadDishParrentControl implements View.OnClickListener{
 
     /** 发菜谱页面统计ID */

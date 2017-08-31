@@ -79,6 +79,7 @@ import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
+import aplug.web.tools.XHTemplateManager;
 import third.ad.control.AdControlHomeDish;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
@@ -921,6 +922,7 @@ public class Main extends Activity implements OnClickListener {
             long start = System.currentTimeMillis();
             MobSDK.init(this.getApplicationContext(),"10e22f093f255","bb71787a9ec63116377a83c3ecac048a");
             long end = System.currentTimeMillis();
+            new XHTemplateManager().CheckUpdataAllTemplate();
             Log.i("zhangyujian","草泥马onWindowFocusChanged time = " + (end - start));
 //            mainInitDataControl.iniMainAfter(Main.this);
         }

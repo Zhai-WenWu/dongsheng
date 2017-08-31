@@ -171,6 +171,10 @@ public class TemplateWebView extends XHWebView{
                     timer.cancel();
                     timer.purge();
                 }
+                // 获取焦点已让webview能打开键盘，评论页输入框不在webview，所以不获取焦点
+                if (url.indexOf("subjectComment.php") == -1) {
+                    view.requestFocus();
+                }
                 // 读取cookie的sessionId
                 CookieManager cookieManager = CookieManager.getInstance();
                 Map<String, String> map = UtilString.getMapByString(cookieManager.getCookie(url), ";", "=");
