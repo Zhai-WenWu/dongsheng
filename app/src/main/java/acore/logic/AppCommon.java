@@ -46,7 +46,6 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
