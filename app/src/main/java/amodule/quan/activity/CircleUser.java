@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import third.share.BarShare;
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 import acore.logic.XHClick;

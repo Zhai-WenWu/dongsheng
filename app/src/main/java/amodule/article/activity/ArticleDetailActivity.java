@@ -57,7 +57,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
-import third.share.ShareActivityDialog;
+import third.share.activity.ShareActivityDialog;
 import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;

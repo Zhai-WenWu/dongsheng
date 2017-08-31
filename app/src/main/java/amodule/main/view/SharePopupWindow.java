@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.tools.ToolsDevice;
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 
 /**
  * Created by sll on 2017/4/28.

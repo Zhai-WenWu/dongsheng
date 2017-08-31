@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,20 +25,18 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PopWindowDialog;
 import amodule.dish.activity.upload.UploadDishActivity;
-import amodule.dish.db.DataOperate;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import third.share.BarShare;
-import third.share.ShareActivityDialog;
-import third.share.ShareTools;
+import third.share.activity.ShareActivityDialog;
+import third.share.tools.ShareTools;
 import third.video.VideoPlayerController;
 import xh.basic.internet.UtilInternet;
 import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
-import static amodule.dish.tools.OffDishToFavoriteControl.getIsAutoOffDish;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**

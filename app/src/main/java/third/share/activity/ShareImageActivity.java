@@ -1,5 +1,13 @@
 
-package third.share;
+/*
+ * Copyright (c) 2017. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
+package third.share.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,10 +28,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.tools.ToolsDevice;
+import third.share.tools.ShareImage;
+import third.share.tools.ShareTools;
 
 
 /**
- * PackageName : third.share.ShareImageActivity
+ * PackageName : third.share.activity.ShareImageActivity
  * Created by MrTrying on 2016/8/5 20:45.
  * E_mail : ztanzeyu@gmail.com
  */

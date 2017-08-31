@@ -43,7 +43,7 @@ import amodule.quan.tool.UploadSubjectControl;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.share.BarShare;
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 
 /**
  * 圈子首页 该界面 launchMode 为 singleTask

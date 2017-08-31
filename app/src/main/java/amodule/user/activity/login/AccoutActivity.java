@@ -32,7 +32,7 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 import third.push.xg.XGPushServer;
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 import xh.windowview.XhDialog;
 
 /**

@@ -1,10 +1,17 @@
-package third.share;
+/*
+ * Copyright (c) 2017. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
+package third.share.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -21,8 +28,9 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.ToolsDevice;
 import amodule.quan.activity.QuanReport;
+import third.share.tools.ShareTools;
 
-import static third.share.ShareTools.mParent;
+import static third.share.tools.ShareTools.mParent;
 
 /**
  * 分享弹框：

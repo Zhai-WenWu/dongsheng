@@ -9,7 +9,7 @@ import acore.tools.Tools;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import third.push.xg.XGPushServer;
-import third.share.ShareImageActivity;
+import third.share.activity.ShareImageActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 import acore.logic.LoginManager;

@@ -12,6 +12,8 @@ import java.util.Map;
 
 import acore.tools.FileManager;
 import amodule.main.view.SharePopupWindow;
+import third.share.activity.ShareNewActivity;
+import third.share.tools.ShareTools;
 
 public class BarShare {
 	
@@ -63,7 +65,7 @@ public class BarShare {
 	}
 	
 	public void openShare(){
-		Intent intent = new Intent(mContext,ShareActivityBottom.class);
+		Intent intent = new Intent(mContext,ShareNewActivity.class);
 		intent.putExtra("type", mType);
 		intent.putExtra("title", mTitle);
 		intent.putExtra("clickUrl", mClickUrl);
@@ -75,7 +77,7 @@ public class BarShare {
 	}
 
 	public void openSharePopup() {
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, String> dataMap = new HashMap<>();
 		dataMap.put("type", mType);
 		dataMap.put("title", mTitle);
 		dataMap.put("clickUrl", mClickUrl);
@@ -84,17 +86,5 @@ public class BarShare {
 		dataMap.put("from", mFrom);
 		dataMap.put("parent", mParent);
 		new SharePopupWindow((Activity) mContext, dataMap).showShare();
-	}
-
-	public void openShareNewActivity() {
-		Intent intent = new Intent(mContext,ShareNewActivity.class);
-		intent.putExtra("type", mType);
-		intent.putExtra("title", mTitle);
-		intent.putExtra("clickUrl", mClickUrl);
-		intent.putExtra("content", mContent);
-		intent.putExtra("imgUrl", mImgUrl);
-		intent.putExtra("from", mFrom);
-		intent.putExtra("parent", mParent);
-		mContext.startActivity(intent);
 	}
 }

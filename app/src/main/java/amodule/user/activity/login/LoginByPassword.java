@@ -19,7 +19,7 @@ import acore.tools.ToolsDevice;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SecretInputView;
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 import xh.windowview.XhDialog;
 
 /**

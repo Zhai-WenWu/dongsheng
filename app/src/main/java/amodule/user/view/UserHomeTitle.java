@@ -33,7 +33,7 @@ import amodule.user.activity.login.UserSetting;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import aplug.imageselector.ShowImageActivity;
-import third.share.ShareActivityDialog;
+import third.share.activity.ShareActivityDialog;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 

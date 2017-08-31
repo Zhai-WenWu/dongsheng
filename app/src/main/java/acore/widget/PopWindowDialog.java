@@ -24,7 +24,7 @@ import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 
 public class PopWindowDialog {
 	private Context mContext;

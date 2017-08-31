@@ -22,9 +22,7 @@ import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SpeechaIdentifyInputView;
-import third.share.ShareTools;
-import xh.basic.internet.UtilInternet;
-import xh.windowview.XhDialog;
+import third.share.tools.ShareTools;
 
 
 /**

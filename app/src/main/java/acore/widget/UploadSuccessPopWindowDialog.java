@@ -24,7 +24,7 @@ import java.util.Map;
 
 import acore.override.XHApplication;
 import acore.tools.ToolsDevice;
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 
 /**
  * Created by ：fei_teng on 2016/11/7 21:07.

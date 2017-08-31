@@ -6,7 +6,7 @@
           android:versionName="4.2.8.1">
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="21"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -1246,28 +1246,21 @@
         <!-- *************************************** END-umeng *************************************** -->
         <!-- ***************Mob分享*************** -->
         <activity
-            android:name="third.share.ShareActivityBottom"
+            android:name="third.share.activity.ShareNewActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/common_trans_parent_theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="third.share.ShareNewActivity"
+            android:name="third.share.activity.ShareImageActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/common_trans_parent_theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="third.share.ShareImageActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/common_trans_parent_theme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="third.share.ShareActivityDialog"
+            android:name="third.share.activity.ShareActivityDialog"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

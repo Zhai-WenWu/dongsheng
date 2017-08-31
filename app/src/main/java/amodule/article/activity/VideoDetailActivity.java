@@ -58,11 +58,8 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
-import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import cn.srain.cube.views.ptr.PtrDefaultHandler;
-import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.share.BarShare;
-import third.share.ShareActivityDialog;
+import third.share.activity.ShareActivityDialog;
 import third.video.VideoPlayerController;
 import xh.windowview.XhDialog;
 

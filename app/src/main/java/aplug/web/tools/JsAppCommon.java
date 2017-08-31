@@ -68,7 +68,8 @@ import third.mall.dialog.FavorableDialog;
 import third.mall.override.MallBaseActivity;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
-import third.share.ShareImageActivity;
+import third.share.BarShareImage;
+import third.share.activity.ShareImageActivity;
 import xh.basic.tool.UtilFile;
 
 import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_KEY;
@@ -1108,7 +1109,7 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (mBarShare != null) {
-                    mBarShare.openShareNewActivity();
+                    mBarShare.openShare();
                 }
             }
         });
@@ -1150,7 +1151,7 @@ public class JsAppCommon extends JsBase {
                     shareLayout.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ShareImageActivity.openShareImageActivity(mAct,imageUrl);
+                            new BarShareImage(mAct,imageUrl).openShareImage();
                         }
                     });
                 }
@@ -1163,7 +1164,7 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                ShareImageActivity.openShareImageActivity(mAct,imageUrl);
+                new BarShareImage(mAct,imageUrl).openShareImage();
             }
         });
     }

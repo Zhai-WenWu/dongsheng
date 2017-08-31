@@ -3,7 +3,7 @@ package amodule.quan.tool;
 import java.util.HashMap;
 import java.util.Map;
 
-import third.share.ShareTools;
+import third.share.tools.ShareTools;
 import acore.tools.StringManager;
 import android.content.Context;
 import android.view.View;
