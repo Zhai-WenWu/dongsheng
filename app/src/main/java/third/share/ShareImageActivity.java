@@ -19,10 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.XHClick;
 import acore.tools.ToolsDevice;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * PackageName : third.share.ShareImageActivity
@@ -32,7 +30,6 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 public class ShareImageActivity extends Activity{
     public static final String EXTRA_IMAGE= "img";
     private ArrayList<Map<String,String>> mData = new ArrayList<>();
-    private String[] mNames ;
     private String[] mSharePlatforms ;
     private String mImgUrl;
 
@@ -61,6 +58,7 @@ public class ShareImageActivity extends Activity{
 
     private void initData(){
         int[] mLogos;
+        String[] mNames;
         if(ToolsDevice.isAppInPhone(this, "com.tencent.mm") == 0){
             mNames = new String[]{"QQ好友","QQ空间","新浪微博","短信"};
             mLogos = new int[]{
@@ -98,9 +96,8 @@ public class ShareImageActivity extends Activity{
         sahre_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                XHClick.mapStat(ShareImageActivity.this, tongjiId, "分享", mNames[position]);
                 new ShareImage(ShareImageActivity.this).share(mSharePlatforms[position],mImgUrl);
-                ShareImageActivity.this.finish();
+                onBackPressed();
             }
         });
 

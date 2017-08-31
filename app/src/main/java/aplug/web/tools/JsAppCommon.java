@@ -232,35 +232,6 @@ public class JsAppCommon extends JsBase {
         });
     }
 
-    @JavascriptInterface
-    public void initImageShare(final String imageUrl){
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                if(shareLayout != null){
-                    shareLayout.setVisibility(View.VISIBLE);
-                    shareLayout.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ShareImageActivity.openShareImageActivity(mAct,imageUrl);
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    @JavascriptInterface
-    public void openImageShare(final String imageUrl){
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                ShareImageActivity.openShareImageActivity(mAct,imageUrl);
-            }
-        });
-    }
-
     /**
      * 设置统计类型
      */
@@ -1119,8 +1090,8 @@ public class JsAppCommon extends JsBase {
                 }
             }
         });
-        
     }
+
     /**
      * 直接打开一个中间显示的分享页面
      * title：        分享标题
@@ -1164,6 +1135,35 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 mWebView.setBackData(loadUrl);
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void initImageShare(final String imageUrl){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+                if(shareLayout != null){
+                    shareLayout.setVisibility(View.VISIBLE);
+                    shareLayout.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ShareImageActivity.openShareImageActivity(mAct,imageUrl);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void openImageShare(final String imageUrl){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ShareImageActivity.openShareImageActivity(mAct,imageUrl);
             }
         });
     }

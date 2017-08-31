@@ -6,7 +6,10 @@ import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.Tools;
+import aplug.imageselector.ImageSelectorActivity;
+import aplug.imageselector.constant.ImageSelectorConstant;
 import third.push.xg.XGPushServer;
+import third.share.ShareImageActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 import acore.logic.LoginManager;
@@ -15,7 +18,9 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -37,11 +42,10 @@ import com.xianghatest.R;
  */
 public class MyManagerInfo extends BaseActivity {
     public static final String GrowingIOOrder = "//growingioopen";
-    private TableLayout table;
+    public static final String SHAREIMAGE = "//shareimage";
+    public final int REQUEST_SELECT_IMAGE = 0x1;
     private EditText otherUser_code;
-    private Button otherUser_login;
 
-    private AdapterSimple adapter;
     private List<Map<String, String>> list;
     private String userCode = "";
 
@@ -49,7 +53,7 @@ public class MyManagerInfo extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("马甲账号", 2, 0, R.layout.c_view_bar_title, R.layout.a_my_manager);
-        list = new ArrayList<Map<String, String>>();
+        list = new ArrayList<>();
         getData();
     }
 
@@ -65,8 +69,8 @@ public class MyManagerInfo extends BaseActivity {
     }
 
     private void initUI() {
-        table = (TableLayout) findViewById(R.id.tl_manager);
-        adapter = new AdapterSimple(table, list,
+        TableLayout table = (TableLayout) findViewById(R.id.tl_manager);
+        AdapterSimple adapter = new AdapterSimple(table, list,
                 R.layout.a_my_item_manager,
                 new String[]{"nickName", "mns"},
                 new int[]{R.id.tv_name, R.id.tv_infoNumber});
@@ -82,7 +86,7 @@ public class MyManagerInfo extends BaseActivity {
                     }
                 }});
         otherUser_code = (EditText) findViewById(R.id.otherUser_code);
-        otherUser_login = (Button) findViewById(R.id.otherUser_login);
+        Button otherUser_login = (Button) findViewById(R.id.otherUser_login);
         otherUser_login.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +120,30 @@ public class MyManagerInfo extends BaseActivity {
                 otherUser_code.setText("");
                 Tools.showToast(MyManagerInfo.this,isOpen?"GrowingIO随即模式":"GrowingIO强制开启模式");
                 return true;
-            default:return false;
+            case SHAREIMAGE:
+                startActivityForResult(new Intent(this, ImageSelectorActivity.class)
+                                .putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE,ImageSelectorConstant.MODE_SINGLE)
+                        ,REQUEST_SELECT_IMAGE);
+                otherUser_code.setText("");
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case REQUEST_SELECT_IMAGE:
+                if(resultCode == RESULT_OK && data != null){
+                    ArrayList<String> imageArr = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);
+                    Log.i("tzy","" + imageArr.toString());
+                    if(imageArr != null && imageArr.size() > 0)
+                        ShareImageActivity.openShareImageActivity(this,imageArr.get(0));
+                }
+                break;
+            default:break;
         }
     }
 

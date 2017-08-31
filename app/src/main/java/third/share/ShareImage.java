@@ -59,9 +59,9 @@ public class ShareImage {
         }
 
         Platform platform = getPlatform(type);
-        if (platform == null) {
+        if (platform == null)
             return;
-        }
+
         platform.setPlatformActionListener(paListener); // 设置分享事件回调
         // 执行图文分享
         platform.share(sp);
@@ -80,30 +80,28 @@ public class ShareImage {
         }
     }
 
+    /** 平台回调监听 */
     PlatformActionListener paListener = new PlatformActionListener() {
-
         @Override
         public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-            Message msg = shareHandler.obtainMessage();
-            msg.what = SHARE_OK;
-            msg.obj = platform.getName();
-            shareHandler.sendMessage(msg);
+            sendMessage(platform.getName(),SHARE_OK);
         }
 
         @Override
-        public void onError(Platform plf, int arg1, Throwable arg2) {
+        public void onError(Platform platform, int arg1, Throwable arg2) {
+            sendMessage(platform.getName(),SHARE_ERROR);
             arg2.printStackTrace();
-            Message msg = shareHandler.obtainMessage();
-            msg.what = SHARE_ERROR;
-            msg.obj = plf.getName();
-            shareHandler.sendMessage(msg);
         }
 
         @Override
-        public void onCancel(Platform plf, int arg1) {
+        public void onCancel(Platform platform, int arg1) {
+            sendMessage(platform.getName(),SHARE_CANCLE);
+        }
+
+        private void sendMessage(String name,int status){
             Message msg = shareHandler.obtainMessage();
-            msg.what = SHARE_CANCLE;
-            msg.obj = plf.getName();
+            msg.what = status;
+            msg.obj = name;
             shareHandler.sendMessage(msg);
         }
     };
@@ -133,27 +131,20 @@ public class ShareImage {
     });
 
     public String[] getPlatformParam(String name) {
-        String[] pf = new String[2];
         if (QQ_NAME.equals(name)) {
-            pf[0] = "QQ";
-            pf[1] = "1";
+            return new String[]{"QQ","1"};
         } else if (QQ_ZONE.equals(name)) {
-            pf[0] = "QQ空间";
-            pf[1] = "2";
+            return new String[]{"QQ空间","2"};
         } else if (WEI_XIN.equals(name)) {
-            pf[0] = "微信";
-            pf[1] = "3";
+            return new String[]{"微信","3"};
         } else if (WEI_QUAN.equals(name)) {
-            pf[0] = "微信朋友圈";
-            pf[1] = "4";
+            return new String[]{"微信朋友圈","4"};
         } else if (SINA_NAME.equals(name)) {
-            pf[0] = "新浪";
-            pf[1] = "5";
+            return new String[]{"新浪","5"};
         } else if (SHORT_MESSAGE.equals(name)) {
-            pf[0] = "短信";
-            pf[1] = "6";
+            return new String[]{"短信","6"};
         }
-        return pf;
+        return new String[]{"",""};
     }
 
 }
