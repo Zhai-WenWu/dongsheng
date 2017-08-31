@@ -453,7 +453,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             if (mFromHome)
                                 startQADetail();
                             else
-                                ObserverManager.getInstence().notify(StringManager.NOTIFY_REFRESH_H5, null, true);
+                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_REFRESH_H5, null, true);
                             finish();
                         }
                     } else {

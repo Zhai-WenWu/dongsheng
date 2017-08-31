@@ -11,6 +11,11 @@ import java.util.HashMap;
 
 public class ObserverManager {
 
+    //用于通知的string
+    public static final String NOTIFY_REFRESH_H5 = "notify_refresh_h5";
+    public static final String NOTIFY_LOGIN = "notify_login";
+    public static final String NOTIFY_PAYFINISH = "notify_payfinish";
+
     private static Object mLockObj = new Object();
     private static ObserverManager mObserverManager;
     private HashMap<String, ArrayList<IObserver>> mObservers;

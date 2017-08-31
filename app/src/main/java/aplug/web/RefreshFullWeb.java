@@ -16,7 +16,7 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObserverManager.getInstence().registerObserver(StringManager.NOTIFY_REFRESH_H5, this);
+        ObserverManager.getInstence().registerObserver(ObserverManager.NOTIFY_REFRESH_H5, this);
     }
 
     @Override
@@ -56,9 +56,9 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
         if (TextUtils.isEmpty(name) || data == null)
             return;
         switch (name) {
-            case StringManager.NOTIFY_LOGIN:
-            case StringManager.NOTIFY_REFRESH_H5:
-            case StringManager.NOTIFY_PAYFINISH:
+            case ObserverManager.NOTIFY_LOGIN:
+            case ObserverManager.NOTIFY_REFRESH_H5:
+            case ObserverManager.NOTIFY_PAYFINISH:
                 if (data instanceof Boolean) {
                     mRefresh = (boolean) data;
                 }

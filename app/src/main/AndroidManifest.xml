@@ -987,6 +987,13 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
+            android:name="aplug.web.RefreshFullWeb"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name="aplug.web.ShowTemplateWeb"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
