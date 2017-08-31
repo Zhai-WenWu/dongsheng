@@ -30,18 +30,14 @@ import static amodule.dish.activity.DetailDish.tongjiId;
  * E_mail : ztanzeyu@gmail.com
  */
 public class ShareImageActivity extends Activity{
-    public static final String EXTRA_CONTENT = "content";
     public static final String EXTRA_IMAGE= "img";
     private ArrayList<Map<String,String>> mData = new ArrayList<>();
     private String[] mNames ;
     private String[] mSharePlatforms ;
-    private String mContent,mImgUrl;
+    private String mImgUrl;
 
-    public static void openShareImageActivity(Context context,String content,@NonNull String imageUrl){
+    public static void openShareImageActivity(Context context,@NonNull String imageUrl){
         Intent intent = new Intent(context,ShareImageActivity.class);
-        if(!TextUtils.isEmpty(content)){
-            intent.putExtra(EXTRA_CONTENT,content);
-        }
         if(!TextUtils.isEmpty(imageUrl)){
             intent.putExtra(EXTRA_IMAGE,imageUrl);
         }
@@ -56,7 +52,6 @@ public class ShareImageActivity extends Activity{
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             try{
-                mContent = bundle.getString(EXTRA_CONTENT);
                 mImgUrl = bundle.getString(EXTRA_IMAGE);
             }catch(Exception ignored){}
         }
@@ -104,7 +99,7 @@ public class ShareImageActivity extends Activity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 XHClick.mapStat(ShareImageActivity.this, tongjiId, "分享", mNames[position]);
-                new ShareImage(ShareImageActivity.this).share(mSharePlatforms[position],mImgUrl,mContent);
+                new ShareImage(ShareImageActivity.this).share(mSharePlatforms[position],mImgUrl);
                 ShareImageActivity.this.finish();
             }
         });

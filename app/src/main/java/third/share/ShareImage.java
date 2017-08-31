@@ -4,11 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
+import java.io.File;
 import java.util.HashMap;
 
-import acore.logic.XHClick;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import cn.sharesdk.framework.Platform;
@@ -45,14 +44,16 @@ public class ShareImage {
         this.mContext = context;
     }
 
-    public void share(String type, String imageUrl, String content) {
+    public void share(String type, String imageUrl) {
         Platform.ShareParams sp = new Platform.ShareParams();
-        if (QQ_ZONE.equals(type) || WEI_QUAN.equals(type) || SINA_NAME.equals(type)) {
-            if (!TextUtils.isEmpty(content)) {
-                sp.setText(content);
-            }
+        if(imageUrl.startsWith("http")){
+            sp.setImageUrl(imageUrl);
+        }else if(new File(imageUrl).exists()){
+            sp.setImagePath(imageUrl);
+        }else{
+            Tools.showToast(mContext,"图片链接有误");
+            return;
         }
-        sp.setImageUrl(imageUrl);
         if (WEI_QUAN.equals(type) || WEI_XIN.equals(type)) {
             sp.setShareType(Platform.SHARE_IMAGE);
         }
@@ -118,7 +119,7 @@ public class ShareImage {
                     Tools.showToast(mContext, pf[0] + "分享成功");
                     break;
                 case SHARE_ERROR:
-                    if (("微信".equals(pf[0]) || pf[0].indexOf("微信") > -1) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0) {
+                    if (("微信".equals(pf[0]) || pf[0].contains("微信")) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0) {
                         Tools.showToast(mContext, "未检测到相关应用");
                     } else
                         Tools.showToast(mContext, pf[0] + "分享失败");

@@ -233,7 +233,7 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void initImageShare(final String content,final String imageUrl){
+    public void initImageShare(final String imageUrl){
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -243,7 +243,7 @@ public class JsAppCommon extends JsBase {
                     shareLayout.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ShareImageActivity.openShareImageActivity(mAct,content,imageUrl);
+                            ShareImageActivity.openShareImageActivity(mAct,imageUrl);
                         }
                     });
                 }
@@ -252,11 +252,11 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void openImageShare(final String content,final String imageUrl){
+    public void openImageShare(final String imageUrl){
         handler.post(new Runnable() {
             @Override
             public void run() {
-                ShareImageActivity.openShareImageActivity(mAct,content,imageUrl);
+                ShareImageActivity.openShareImageActivity(mAct,imageUrl);
             }
         });
     }
