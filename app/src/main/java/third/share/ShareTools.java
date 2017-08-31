@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.xianghatest.R;
@@ -69,17 +70,9 @@ public class ShareTools {
 		mClickUrl = clickUrl + "";
 		mFrom = from + "";
 		mParent = parent + "";
-		if (platform == LINK_COPY) {
+		if (platform == LINK_COPY && !TextUtils.isEmpty(clickUrl)) {
 			XHClick.onEvent(mContext, "a_share_click", "拷贝");
-			if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB){
-				android.content.ClipboardManager cmb = (android.content.ClipboardManager) mContext
-						.getSystemService(Context.CLIPBOARD_SERVICE);
-				cmb.setText(clickUrl);
-			}else{
-				android.text.ClipboardManager cmd = (android.text.ClipboardManager)mContext
-						.getSystemService(Context.CLIPBOARD_SERVICE);
-				cmd.setText(clickUrl);
-			}
+			Tools.inputToClipboard(mContext,clickUrl);
 			Toast.makeText(mContext, "链接已复制", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -121,15 +114,17 @@ public class ShareTools {
 		// oks.setNotification(R.drawable.ic_launcher,
 		// getString(R.string.app_name));
 		// title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-		oks.setTitle(title);
-		oks.setTitleUrl(clickUrl);
+		if(!TextUtils.isEmpty(title))
+			oks.setTitle(title);
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText(content);
+		if(!TextUtils.isEmpty(content))
+			oks.setText(content);
 		// imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 		oks.setImagePath(imgPath); // 确保SDcard下面存在此张图片
 		oks.setImageUrl(imgUrl);
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl(clickUrl);
+		if(!TextUtils.isEmpty(clickUrl))
+			oks.setUrl(clickUrl);
 		
 		oks.setCallback(new PlatformActionListener() {
 

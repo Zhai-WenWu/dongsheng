@@ -206,7 +206,6 @@ public class JsAppCommon extends JsBase {
                     Log.i("zhangyujian", "type::::" + type);
                     mBarShare = new BarShare(mAct, type, "");
                     mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
-                    mBarShare.setShare(BarShare.IMG_TYPE_WEB, "", "", img, "");
                     RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
                     if (shareLayout != null) {
                         shareLayout.setVisibility(View.VISIBLE);
@@ -238,8 +237,6 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.i("tzy","content = " + content);
-                Log.i("tzy","imageUrl = " + imageUrl);
                 RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
                 if(shareLayout != null){
                     shareLayout.setVisibility(View.VISIBLE);
@@ -259,8 +256,6 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.i("tzy","content = " + content);
-                Log.i("tzy","imageUrl = " + imageUrl);
                 ShareImageActivity.openShareImageActivity(mAct,content,imageUrl);
             }
         });
