@@ -106,7 +106,6 @@ public class TemplateWebView extends XHWebView{
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
 
-
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
         settings.setJavaScriptEnabled(true);
@@ -117,6 +116,8 @@ public class TemplateWebView extends XHWebView{
         //兼容https,在部分版本上资源显示不全的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
+        this.setVerticalScrollBarEnabled(false);
+        this.setHorizontalScrollBarEnabled(false);
     }
     /**
      * 设置WebViewClient
