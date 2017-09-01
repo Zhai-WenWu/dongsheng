@@ -45,17 +45,19 @@ import xh.basic.tool.UtilString;
  */
 @SuppressLint("ClickableViewAccessibility")
 public class Feedback extends BaseActivity implements OnClickListener {
+    public static final String DEFAULT_CONTENT = "您好，我是香哈小秘书，有什么建议、问题，可以随时给我说哦！活动、获奖通知也将在这里通知。";
     private static final int FEEDBACK_UPLOADIMG = 4000;
     public static Handler handler = null;
     private DownRefreshList feekback_list;
-    private EditText feebback_reply_content, keyboradEdit;
+    private EditText feebback_reply_content;
 
     private ArrayList<Map<String, String>> contentList = null;
     private AdapterFeedback adapter;
     private String timePage = "";
     private String Token = "";
     private String mImageUrl = "";
-    private static String feekback_text = "", feekUrl = "", from = "";
+    private String feekback_text = "", feekUrl = "";
+    private int from;
     private boolean LoadOver = false, addHeaderOver = false;
 
     private String backData;
@@ -66,9 +68,9 @@ public class Feedback extends BaseActivity implements OnClickListener {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             feekUrl = bundle.getString("feekUrl");
-            from = bundle.getString("from");
+            from = bundle.getInt(EXTRA_FROM,from);
             backData = bundle.getString("backData");
-            doTongJi();//统计
+            doTongJi(from);//统计
         }
         Log.i("FeedbackFuntion", "backData:" + backData);
         Token = XGPushServer.getXGToken(this);
@@ -116,15 +118,9 @@ public class Feedback extends BaseActivity implements OnClickListener {
     private void init() {
         AppCommon.feekbackMessage = 0;
         MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, null);
-        feekback_list = (DownRefreshList) findViewById(R.id.feebback_reply_list);
-        findViewById(R.id.feekback_img_choice).setOnClickListener(this);
-        findViewById(R.id.feebback_send).setOnClickListener(this);
         feebback_reply_content = (EditText) findViewById(R.id.feebback_reply_content);
-        keyboradEdit = (EditText) findViewById(R.id.feekback_keyboard_view);
-        contentList = new ArrayList<>();
-        adapter = new AdapterFeedback(Feedback.this, feekback_list, contentList, 0, null, null);
-        loadEvent();
-//		 getFeekbackInfo(false);
+        EditText keyboradEdit = (EditText) findViewById(R.id.feekback_keyboard_view);
+        feekback_list = (DownRefreshList) findViewById(R.id.feebback_reply_list);
         feekback_list.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -136,6 +132,12 @@ public class Feedback extends BaseActivity implements OnClickListener {
                 return false;
             }
         });
+        findViewById(R.id.feekback_img_choice).setOnClickListener(this);
+        findViewById(R.id.feebback_send).setOnClickListener(this);
+        contentList = new ArrayList<>();
+        adapter = new AdapterFeedback(Feedback.this, feekback_list, contentList, 0, null, null);
+
+        loadEvent();
     }
 
     private void loadEvent() {
@@ -150,10 +152,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
                 @Override
                 public void onClick(View v) {
                     // 刷新页面
-                    if (contentList.size() == 0)
-                        getFeekbackInfo(true);
-                    else
-                        getFeekbackInfo(false);
+                    getFeekbackInfo(contentList.size() == 0);
                 }
             });
             LoadOver = true;
@@ -168,12 +167,10 @@ public class Feedback extends BaseActivity implements OnClickListener {
     private void getFeekbackInfo(final boolean isForward) {
         feekback_list.bigDownText = "下拉加载上一页";
         feekback_list.bigReleaseText = "松开加载上一页";
-        String params;
-//		Token = "6d9c4cc747fefc8942fc975557cf68fa643b27a8";
-        if (isForward) {
-            params = "?token=" + Token;
-        } else
-            params = "?token=" + Token + "&timePage=" + timePage;
+        String params = new StringBuffer()
+                .append("?token=").append(Token)
+                .append((isForward ? "" :  "&timePage=" + timePage))
+                .toString();
         ReqInternet.in().doGet(StringManager.api_getDialogInfo + params, new InternetCallback(this) {
 
             @Override
@@ -216,7 +213,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
                         mapReturn.put("progress_text", "hide");
                         mapReturn.put("author", "1");
                         mapReturn.put("type", "1");
-                        mapReturn.put("content", "您好，我是香哈小秘书，有什么建议、问题，可以随时给我说哦！活动、获奖通知也将在这里通知。");
+                        mapReturn.put("content", DEFAULT_CONTENT);
                         mapReturn.put("timeShow", "hide");
                         contentList.add(0, mapReturn);
                         addHeaderOver = true;
@@ -224,7 +221,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
                     adapter.notifyDataSetChanged();
                     feekback_list.setVisibility(View.VISIBLE);
                     if (isForward)
-                        feekback_list.setSelection(adapter.getCount() - 1);
+                        feekback_list.setSelection(isForward?adapter.getCount() - 1:1);
                     else
                         feekback_list.setSelection(1);
                 }
@@ -278,10 +275,9 @@ public class Feedback extends BaseActivity implements OnClickListener {
 
     // 发送反馈img
     private void sendFeekImg(final String imgUrl) {
-//		String param = "token="+Token+ "&content= &uploadImg_img_0=" + imgUrl;
         String addTime = Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0);
         String timeShow = Tools.getAssignTime("HH:mm", 0);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("author", "2");
         map.put("timeShow", timeShow);
         map.put("addTime", addTime);
@@ -292,7 +288,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
         contentList.add(map);
         adapter.notifyDataSetChanged();
         feekback_list.setSelection(adapter.getCount() - 1);
-        LinkedHashMap<String, String> fileMap = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> fileMap = new LinkedHashMap<>();
         fileMap.put("token", Token);
         fileMap.put("content", "");
         fileMap.put("uploadImg_img_0", imgUrl);
@@ -358,23 +354,40 @@ public class Feedback extends BaseActivity implements OnClickListener {
 
     /**
      * 统计反馈的来源
-     * 1 从首页   2 从菜谱   3 从个人
+     * @param from 来源
      */
-    private void doTongJi() {
-        if (from != null && !from.equals("")) {
-            if (from.equals("1")) {
+    private void doTongJi(int from) {
+        switch (from) {
+            case FROM_HOME:
                 XHClick.onEvent(Feedback.this, "appClick", "反馈从首页");
-            } else if (from.equals("2")) {
+                break;
+            case FROM_DISH:
                 XHClick.onEvent(Feedback.this, "appClick", "反馈从菜谱");
-            } else if (from.equals("3")) {
+                break;
+            case FROM_USER:
                 XHClick.onEvent(Feedback.this, "appClick", "反馈从个人");
-            } else if (from.equals("4")) {
+                break;
+            case FROM_COMMOD:
                 XHClick.onEvent(Feedback.this, "appClick", "反馈从商品");
-            } else if (from.equals("5")) {
+                break;
+            case FROM_FIND_CIRCLE:
                 XHClick.onEvent(Feedback.this, "appClick", "反馈从发现圈子");
-            }
+                break;
         }
     }
+
+    public final static String EXTRA_FROM = "from";
+
+    /** 首页 */
+    public final static int FROM_HOME = 0x1;
+    /** 菜谱 */
+    public final static int FROM_DISH = 0x2;
+    /** 个人 */
+    public final static int FROM_USER = 0x3;
+    /** 商品 */
+    public final static int FROM_COMMOD = 0x4;
+    /** 发现圈子 */
+    public final static int FROM_FIND_CIRCLE = 0x5;
 
     public final static int MSG_IMG_UPLOAD = 1;
     public final static int MSG_FROM_NOTIFY = 2;

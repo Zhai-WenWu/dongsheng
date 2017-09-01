@@ -37,11 +37,12 @@ import aplug.imageselector.ShowImageActivity;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilLog;
 
+import static aplug.feedback.activity.Feedback.DEFAULT_CONTENT;
+
 @SuppressLint("InflateParams")
 public class AdapterFeedback extends AdapterSimple {
 	private Feedback mAct;
 	private List<Map<String, String>> mData;
-	private ViewHolder viewHolder = null;
 
 	@SuppressWarnings("unchecked")
 	public AdapterFeedback(Feedback feekback, View parent, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
@@ -54,6 +55,7 @@ public class AdapterFeedback extends AdapterSimple {
 	@SuppressLint("RtlHardcoded")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
 			convertView = LayoutInflater.from(mAct).inflate(R.layout.a_xh_item_feedback, null);
@@ -76,8 +78,9 @@ public class AdapterFeedback extends AdapterSimple {
 			viewHolder.feekback_admin_activity_content = (TextView) convertView.findViewById(R.id.feekback_admin_activity_content);
 			viewHolder.feekback_admin_activity_img = (ImageView) convertView.findViewById(R.id.feekback_admin_activity_img);
 			convertView.setTag(viewHolder);
-		} else
+		} else{
 			viewHolder = (ViewHolder) convertView.getTag();
+		}
 		//用户头像设置
 		setViewImage(viewHolder.feekback_user_ico, LoginManager.userInfo.get("img") != null ? LoginManager.userInfo.get("img") : "hide");
 		viewHolder.feekback_user_ico.setOnClickListener(new OnClickListener() {
@@ -128,20 +131,19 @@ public class AdapterFeedback extends AdapterSimple {
 				}else{
 					viewHolder.feekback_admin_reply_img.setVisibility(View.GONE);
 				}
-				if(map.get("content").equals("您好，我是香哈小秘书，有什么建议、问题，可以随时给我说哦！活动、获奖通知也将在这里通知。")){
+				if(map.get("content").equals(DEFAULT_CONTENT)){
 					viewHolder.feekback_admin_layout.setPadding(viewHolder.feekback_admin_layout.getPaddingLeft(), 
 																										Tools.getDimen(mAct, R.dimen.dp_10), 
 																										viewHolder.feekback_admin_layout.getPaddingRight(), 
-																			
 																										0);
 				}
 				if (viewHolder.feekback_admin_reply_content.getLineCount() == 1)
 					viewHolder.feekback_admin_reply_content.setGravity(Gravity.CENTER_VERTICAL);
 				else
 					viewHolder.feekback_admin_reply_content.setGravity(Gravity.LEFT);
-				if(map.containsKey("url") && !map.get("url").equals("")){
-					viewHolder.feekback_admin_reply_content.setTextIsSelectable(false);
-				}
+//				if(map.containsKey("url") && !map.get("url").equals("")){
+//					viewHolder.feekback_admin_reply_content.setTextIsSelectable(false);
+//				}
 				viewHolder.feekback_admin_reply_activity.setVisibility(View.GONE);
 				viewHolder.feekback_admin_reply.setVisibility(View.VISIBLE);
 				view = viewHolder.feekback_admin_reply;
