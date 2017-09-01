@@ -222,10 +222,35 @@ public class AppCommon {
         if (!url.startsWith(XH_PROTOCOL) && !url.startsWith("http")
                 && (!url.contains(".app") && !url.contains("circleHome"))
                 ) return;
-        // 去掉协议头
-        url = url.startsWith(XH_PROTOCOL) ? url.substring(XH_PROTOCOL.length()) : url;
-        //兼容旧版本 xiangha://welcome?url=xxx   (encode)
-        url = url.startsWith("url=") ? url.substring("url=".length()) : url;
+
+        // 如果识别到外部开启链接，则解析
+        if (url.startsWith(XH_PROTOCOL)) {
+            String tmpUrl = url.substring(XH_PROTOCOL.length());
+            if (!TextUtils.isEmpty(tmpUrl)) {
+                try {
+                    tmpUrl = URLDecoder.decode(tmpUrl, "utf-8");
+                    if (tmpUrl.startsWith("url=")) {
+                        tmpUrl = tmpUrl.substring("url=".length());
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                if (TextUtils.isEmpty(tmpUrl)) {
+                    url = StringManager.wwwUrl;
+                } else {
+                    url = tmpUrl;
+                }
+                //按#分割，urls【1】是表示外部吊起的平台例如360
+                String[] urls = tmpUrl.split("#");
+                if (!TextUtils.isEmpty(url) && urls.length > 1) {
+                    //不会有.app了，变成包名加类名啦
+                    int indexs = url.indexOf(".app");
+                    String data = url.substring(0, indexs + (".app".length()));
+                    XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
+                }
+            }
+        }
+
 
         Bundle bundle = new Bundle();
         Intent intent = null;
@@ -304,12 +329,7 @@ public class AppCommon {
         }
 
         //解析生成 intent
-        // 把所有的value 全部进行decode
-        try {
-            intent = parseURL(XHApplication.in(), bundle, URLDecoder.decode(url, "utf-8"));
-        } catch (UnsupportedEncodingException e) {
-            LogManager.reportError("URLDecoder异常", e);
-        }
+        intent = parseURL(XHApplication.in(), bundle, url);
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
         if (intent == null) {
             bundle.putString("url", StringManager.replaceUrl(url));
