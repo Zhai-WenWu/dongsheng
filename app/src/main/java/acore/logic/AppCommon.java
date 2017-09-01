@@ -115,7 +115,7 @@ public class AppCommon {
                             int c = (new Random()).nextInt(9) + 1;
                             LoadManager.tok = c + "" + (tok + 54321) * c;
                         } catch (Exception e) {
-                            LogManager.reportError("获取心跳消息", e);
+                            LogManager.reportError("获取新消息", e);
                         }
                     }
                     if (callback != null) callback.loaded(flag, url, "加载成功");
