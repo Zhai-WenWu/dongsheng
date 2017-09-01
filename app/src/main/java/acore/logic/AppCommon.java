@@ -214,7 +214,6 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
-        url = "xiangha://welcome?RefreshFullWeb.app?url=http%3A%2F%2Fappweb.ixiangha.com%3A8801%2Fqa%2FqaInfo%3FqaCode%3D1402";
         Log.i("FRJ", "openUrl() url:" + url);
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
