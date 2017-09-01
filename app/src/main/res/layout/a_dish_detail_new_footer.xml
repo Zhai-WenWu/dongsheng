@@ -4,20 +4,14 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-    <View
-        android:id="@+id/a_dish_detail_new_line0"
-        style="@style/lineView"
-        android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginRight="@dimen/dp_20"/>
+
 
     <LinearLayout
         android:id="@+id/a_dish_detail_new_tieshi_ad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/a_dish_detail_new_line0"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_16"
         android:orientation="vertical"/>
 
     <RelativeLayout
