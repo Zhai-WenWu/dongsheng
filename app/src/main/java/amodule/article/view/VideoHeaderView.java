@@ -154,8 +154,8 @@ public class VideoHeaderView extends RelativeLayout {
             videoData.put("url", url);
             setSelfVideo(videoData,detailPermissionMap);
 
-                //设置全屏播放时的横竖屏状态
-                mVideoPlayerController.setPortrait(VideoPlayerController.isPortraitVideo(videoW,videoH));
+            //设置全屏播放时的横竖屏状态
+            mVideoPlayerController.setPortrait(VideoPlayerController.isPortraitVideo(videoW,videoH));
         } catch (Exception e) {
             Toast.makeText(getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
         }
