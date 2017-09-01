@@ -136,7 +136,6 @@ public class  DishActivityViewControlNew {
                 return dishJson;
             }
         });
-        Log.i("zyj","contorl:;initView");
         dishTitleViewControl.initView(mAct);
         dishTitleViewControl.setstate(state);
         //底部view
@@ -504,6 +503,15 @@ public class  DishActivityViewControlNew {
     public void refreshTemplateWebView(){
         if(templateWebView!=null) {
             templateWebView.refreshWebviewMethod("javascript:freshFollow()");
+        }
+    }
+
+    /**
+     * 刷线数据状态
+     */
+    public void refreshAskStatus(){
+        if(mFootControl!=null){
+            mFootControl.handlerAskStatus();
         }
     }
     private int mMoveLen = 0;

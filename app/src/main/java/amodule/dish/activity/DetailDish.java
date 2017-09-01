@@ -313,6 +313,7 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
     public void refreshCallBack() {
         if(dishActivityViewControl!=null){
             dishActivityViewControl.refreshTemplateWebView();
+            dishActivityViewControl.refreshAskStatus();
         }
     }
 

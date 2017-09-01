@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
-import acore.tools.StringManager;
 
 /**
  * 全屏weview,只提供再次回来后自动刷新功能
@@ -16,7 +15,7 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObserverManager.getInstence().registerObserver(ObserverManager.NOTIFY_REFRESH_H5, this);
+        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_REFRESH_H5, ObserverManager.NOTIFY_PAYFINISH);
     }
 
     @Override
@@ -57,12 +56,22 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
             return;
         switch (name) {
             case ObserverManager.NOTIFY_LOGIN:
-            case ObserverManager.NOTIFY_REFRESH_H5:
-            case ObserverManager.NOTIFY_PAYFINISH:
-                if (data instanceof Boolean) {
-                    mRefresh = (boolean) data;
-                }
+                resetRefreShstatus(data);
                 break;
+            case ObserverManager.NOTIFY_REFRESH_H5:
+                resetRefreShstatus(data);
+                break;
+            case ObserverManager.NOTIFY_PAYFINISH:
+                resetRefreShstatus(data);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void resetRefreShstatus(Object data){
+        if (data instanceof Boolean) {
+            mRefresh = (boolean) data;
         }
     }
 }
