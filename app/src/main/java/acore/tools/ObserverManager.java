@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by sll on 2017/8/30.
+ * 通知管理器
+ * 使用多个功能多key结构
+ * 外部使用：注册不同key，对应key的数据变化进行通知
  */
-
 public class ObserverManager {
 
     //用于通知的string

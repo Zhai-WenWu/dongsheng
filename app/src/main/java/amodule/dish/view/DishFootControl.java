@@ -413,7 +413,6 @@ public class DishFootControl implements View.OnClickListener{
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback(mAct) {
             @Override
             public void loaded(int i, String s, Object o) {
-                Log.i("zyj","api_getDishLikeHate::"+o);
                 if(i >= ReqInternet.REQ_OK_STRING){
                     ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
                     if(arrayList.size() > 0){
@@ -469,6 +468,15 @@ public class DishFootControl implements View.OnClickListener{
         mAct.findViewById(R.id.a_dish_detail_new_footer).setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 重新刷新当前状态
+     */
+    public void handlerAskStatus(){
+        setRequestAskButtonStatus();
+    }
+    /**
+     * 处理当前用户状态。
+     */
     private void setRequestAskButtonStatus(){
         LinkedHashMap<String,String> map = new LinkedHashMap<>();
         map.put("code",code);
