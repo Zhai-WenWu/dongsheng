@@ -205,6 +205,7 @@ public class AppCommon {
         FileManager.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_indexData);
     }
 
+    public static final String XH_PROTOCOL = "xiangha://welcome?";
     /**
      * 打开url 如果url能打开原生页面就开原生
      * 如果不能就开webview，如果openThis为true,或已打开的webview太多，则直接使用WebView打开Url
@@ -214,57 +215,20 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
-        url = "xiangha://welcome?RefreshFullWeb.app?url=http%3A%2F%2Fappweb.ixiangha.com%3A8801%2Fqa%2FqaInfo%3FqaCode%3D1402";
         Log.i("FRJ", "openUrl() url:" + url);
+
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
-        if (!url.startsWith("xiangha://welcome?") && !url.startsWith("http")
+        if (!url.startsWith(XH_PROTOCOL) && !url.startsWith("http")
                 && (!url.contains(".app") && !url.contains("circleHome"))
                 ) return;
-        // 如果识别到外部开启链接，则解析
-        if (url.startsWith("xiangha://welcome?")) {
-            //按#分割，urls【1】是表示外部吊起的平台例如360
-
-            String[] urls = url.replace("xiangha://welcome?", "").split("#");
-            if (urls.length > 0) {
-                String tmpStr = urls[0];
-                if (!TextUtils.isEmpty(tmpStr) && urls.length > 1) {
-//                    //不会有.app了，变成包名加类名啦
-                    int indexs = tmpStr.indexOf(".app");
-                    String data = tmpStr.substring(0, indexs + 4); //+4是为了加上.app4个字符 // RefreshFullWeb.app
-                    XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
-                }
-            }
-
-        }
-//        try {
-//            if (url.indexOf() == 0) {
-//                //按#分割，urls【1】是表示外部吊起的平台例如360
-//                String[] urls = url.replace("xiangha://welcome?", "").split("#");//RefreshFullWeb.app?url=http%3A%2F%2Fappweb.ixiangha.com%3A8801%2Fqa%2FqaInfo%3FqaCode%3D1402
-//                if (urls.length > 0) {
-//                    url = StringManager.wwwUrl;
-////                    try {
-////                        url = URLDecoder.decode(urls[0], "utf-8");
-////                        if (url.contains("url=")) {
-////                            url = url.substring(url.indexOf("url=") + 4);
-////                        }
-////                    } catch (UnsupportedEncodingException e) {
-////                        LogManager.reportError("URLDecoder异常", e);
-////                    }
-//                }
-////                if (!TextUtils.isEmpty(url) && urls.length > 1) {
-////                    //不会有.app了，变成包名加类名啦
-////                    int indexs = url.indexOf(".app");
-////                    String data = url.substring(0, indexs + 4); //+4是为了加上.app4个字符 // RefreshFullWeb.app
-////                    XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
-////                }
-//            }
-////        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        // 去掉协议头
+        url = url.startsWith(XH_PROTOCOL) ? url.substring(XH_PROTOCOL.length()) : url;
+        //兼容旧版本 xiangha://welcome?url=xxx   (encode)
+        url = url.startsWith("url=") ? url.substring("url=".length()) : url;
 
         Bundle bundle = new Bundle();
-        Intent intent;
+        Intent intent = null;
         try {
             // 开启url，同时识别是否是原生的
             bundle.putString("url", url);
@@ -338,11 +302,14 @@ public class AppCommon {
             return;
 
         }
-//        url                       url = "RefreshFullWeb.app?url=http%3A%2F%2Fappweb.ixiangha.com%3A8801%2Fqa%2FqaInfo%3FqaCode%3D1402";
 
         //解析生成 intent
         // 把所有的value 全部进行decode
-        intent = parseURL(XHApplication.in(), bundle, url);
+        try {
+            intent = parseURL(XHApplication.in(), bundle, URLDecoder.decode(url, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            LogManager.reportError("URLDecoder异常", e);
+        }
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
         if (intent == null) {
             bundle.putString("url", StringManager.replaceUrl(url));
