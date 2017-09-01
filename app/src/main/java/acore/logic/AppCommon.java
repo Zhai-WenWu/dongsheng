@@ -224,33 +224,37 @@ public class AppCommon {
                 ) return;
 
         // 如果识别到外部开启链接，则解析
-        if (url.startsWith(XH_PROTOCOL)) {
+        if (url.startsWith(XH_PROTOCOL) && url.length() > XH_PROTOCOL.length()) {
             String tmpUrl = url.substring(XH_PROTOCOL.length());
-            if (!TextUtils.isEmpty(tmpUrl)) {
-                try {
-                    tmpUrl = URLDecoder.decode(tmpUrl, "utf-8");
-                    if (tmpUrl.startsWith("url=")) {
-                        tmpUrl = tmpUrl.substring("url=".length());
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+            try {
+                tmpUrl = URLDecoder.decode(tmpUrl, "utf-8");
+                if (tmpUrl.startsWith("url=")) {
+                    tmpUrl = tmpUrl.substring("url=".length());
                 }
-                if (TextUtils.isEmpty(tmpUrl)) {
-                    url = StringManager.wwwUrl;
-                } else {
-                    url = tmpUrl;
-                }
-                //按#分割，urls【1】是表示外部吊起的平台例如360
-                String[] urls = tmpUrl.split("#");
-                if (!TextUtils.isEmpty(url) && urls.length > 1) {
-                    //不会有.app了，变成包名加类名啦
-                    int indexs = url.indexOf(".app");
-                    String data = url.substring(0, indexs + (".app".length()));
-                    XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
-                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return;
             }
+            if (TextUtils.isEmpty(tmpUrl)) {
+                url = StringManager.wwwUrl;
+            } else {
+                url = tmpUrl;
+            }
+
         }
 
+        //按#分割，urls【1】是表示外部吊起的平台例如360
+        if (url.contains("#")) {
+            String[] urls = url.split("#");
+            if (!TextUtils.isEmpty(url) && urls.length > 1) {
+                //不会有.app了，变成包名加类名啦
+                int indexs = url.indexOf(".app");
+                String data = url.substring(0, indexs + (".app".length()));
+                XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
+            }
+            if (!TextUtils.isEmpty(urls[0]))
+                url = urls[0];
+        }
 
         Bundle bundle = new Bundle();
         Intent intent = null;
