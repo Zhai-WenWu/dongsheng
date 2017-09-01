@@ -639,8 +639,12 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     if (images.get(position).containsKey("type") && "1".equals(images.get(position).get("type"))) {
-                        intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, StringManager.getFirstMap(images.get(position).get("video")).get("default_url"));
-                        intent.setClass(CommodDetailActivity.this, VideoFullScreenActivity.class);
+                        Map<String,String> videoMap= StringManager.getFirstMap(StringManager.getFirstMap(images.get(position).get("video")).get("video_url"));
+                        if(videoMap.containsKey("default_url")) {
+                            String default_url= videoMap.get("default_url");
+                            intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, default_url);
+                            intent.setClass(CommodDetailActivity.this, VideoFullScreenActivity.class);
+                        }
                         XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "商品视频播放量", "");
                     } else {
                         intent.putExtra("url", images.get(position).get("img"));
