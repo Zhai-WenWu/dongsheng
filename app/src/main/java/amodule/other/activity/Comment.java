@@ -40,7 +40,7 @@ public class Comment extends BaseActivity implements OnClickListener{
 			break;
 		case R.id.ll_feekback:
 			Intent intent_feekback = new Intent(this, Feedback.class);
-			intent_feekback.putExtra("from", "3");
+			intent_feekback.putExtra(Feedback.EXTRA_FROM,Feedback.FROM_USER);
 			startActivity(intent_feekback);
 			break;
 		}

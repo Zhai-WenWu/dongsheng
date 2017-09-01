@@ -13,6 +13,7 @@
         android:layout_marginBottom="@dimen/dp_43"
         android:background="#E8E8E8"
         android:paddingLeft="0dp"
+        android:descendantFocusability="beforeDescendants"
         android:paddingRight="0dp"
         android:visibility="gone">
     </acore.widget.DownRefreshList>
