@@ -11,52 +11,75 @@ import java.util.HashMap;
 
 public class ObserverManager {
 
-    //用于通知的string
+    //用于通知的tag
     public static final String NOTIFY_REFRESH_H5 = "notify_refresh_h5";
     public static final String NOTIFY_LOGIN = "notify_login";
     public static final String NOTIFY_PAYFINISH = "notify_payfinish";
 
-    private static Object mLockObj = new Object();
-    private static ObserverManager mObserverManager;
+    private static volatile ObserverManager mObserverManager;
     private HashMap<String, ArrayList<IObserver>> mObservers;
 
     private ObserverManager() {
-        mObservers = new HashMap<String, ArrayList<IObserver>>();
+        mObservers = new HashMap<>();
     }
 
     public static ObserverManager getInstence() {
-        synchronized (mLockObj) {
-            if (mObserverManager == null)
+        synchronized (ObserverManager.class) {
+            if (mObserverManager == null){
                 mObserverManager = new ObserverManager();
-            return mObserverManager;
-        }
-    }
-
-    public void registerObserver(String name, IObserver observer) {
-        synchronized (mLockObj) {
-            if (TextUtils.isEmpty(name) || observer == null)
-                return;
-            ArrayList<IObserver> observers;
-            if (!mObservers.containsKey(name)) {
-                observers = new ArrayList<IObserver>();
-                mObservers.put(name, observers);
-            } else {
-                observers = mObservers.get(name);
             }
-            if (!observers.contains(observer))
-                observers.add(observer);
+        }
+        return mObserverManager;
+    }
+
+    /**
+     * 注册观察者
+     * @param observer
+     * @param names tag数组
+     */
+    public void registerObserver(IObserver observer,String... names) {
+        synchronized (ObserverManager.class) {
+            if (names == null || observer == null)
+                return;
+            for(String name : names){
+                if(TextUtils.isEmpty(name)){
+                    continue;
+                }
+                ArrayList<IObserver> observers;
+                if (!mObservers.containsKey(name)) {
+                    observers = new ArrayList<>();
+                    mObservers.put(name, observers);
+                } else {
+                    observers = mObservers.get(name);
+                }
+                if (!observers.contains(observer))
+                    observers.add(observer);
+            }
         }
     }
 
-    public void unRegisterObserver(String name) {
-        synchronized (mLockObj) {
-            if (!TextUtils.isEmpty(name))
-                mObservers.remove(name);
+    /**
+     * 反注册 by tag
+     * @param names
+     */
+    public void unRegisterObserver(String... names) {
+        synchronized (ObserverManager.class) {
+            if(names == null){
+                return;
+            }
+            for(String name:names){
+                if (!TextUtils.isEmpty(name))
+                    mObservers.remove(name);
+            }
         }
     }
 
+    /**
+     * 反注册 by observer
+     * @param observer
+     */
     public void unRegisterObserver(IObserver observer) {
-        synchronized (mLockObj) {
+        synchronized (ObserverManager.class) {
             for (String name : mObservers.keySet()) {
                 ArrayList<IObserver> observers = mObservers.get(name);
                 observers.remove(observer);
@@ -64,8 +87,14 @@ public class ObserverManager {
         }
     }
 
+    /**
+     * 通知
+     * @param name 事件对应的tag
+     * @param sender
+     * @param data
+     */
     public void notify(String name, Object sender, Object data) {
-        synchronized (mLockObj) {
+        synchronized (ObserverManager.class) {
             if (mObservers.containsKey(name)) {
                 for (IObserver observer : mObservers.get(name)) {
                     observer.notify(name, sender, data);
