@@ -59,7 +59,7 @@ public class DishFootControl implements View.OnClickListener{
 
     private String code,mDishName,authorCode;
 
-    private String dishLikeStatus = "1";//当前点击状态。0-无操作，1-反对，2-赞同
+    private String dishLikeStatus = "3";//当前点击状态。3-无操作，1-反对，2-赞同
 
 
     //处理底部浮动view
@@ -232,7 +232,7 @@ public class DishFootControl implements View.OnClickListener{
         if(arrayList.size() > 0){
             Map<String,String> map = arrayList.get(0);
             mHoverNum.setText(map.get("num"));
-            //点赞/点踩的状态(1:无，2:点踩，3:点赞)
+            //点赞/点踩的状态(1:点踩，2:点赞，3:无)
             dishLikeStatus=map.get("status");
         }else{
             mHoverNum.setText("0");
@@ -330,12 +330,12 @@ public class DishFootControl implements View.OnClickListener{
                  }
                  XHClick.mapStat(mAct, tongjiId, "底部浮动", "点赞按钮点击量");
                  boolean dishLikeGood =true;
-                 if("3".equals(dishLikeStatus)) {//当前是点赞
+                 if("2".equals(dishLikeStatus)) {//当前是点赞
                      dishLikeGood = false;
-                     handlerDishLikeState("1");
+                     handlerDishLikeState("3");
                  }else{
                      dishLikeGood =true;//去点赞
-                     handlerDishLikeState("3");
+                     handlerDishLikeState("2");
                  }
                  onChangeLikeState(dishLikeGood,true);
                  hindGoodLayout();
@@ -343,13 +343,13 @@ public class DishFootControl implements View.OnClickListener{
              case R.id.a_dish_detail_new_footer_hover_trample: //没用
                  XHClick.mapStat(mAct, tongjiId, "底部浮动", "点踩按钮点击量");
                  boolean dishLikeHover =true;
-                 if(TextUtils.isEmpty(dishLikeStatus)||!"2".equals(dishLikeStatus)) {//当前是点赞或没有操作
+                 if(TextUtils.isEmpty(dishLikeStatus)||!"1".equals(dishLikeStatus)) {//当前是点赞或没有操作
                      dishLikeHover = false;
-                     handlerDishLikeState("2");
+                     handlerDishLikeState("1");
                      onChangeLikeState(dishLikeHover,false);
                  }else {
-                     dishLikeStatus="1";
-                     handlerDishLikeState("1");
+                     dishLikeStatus="3";
+                     handlerDishLikeState("3");
                  }
                  hindGoodLayout();
 
@@ -385,16 +385,16 @@ public class DishFootControl implements View.OnClickListener{
      * 处理点赞点踩状态变化
      */
     private void handlerDishLikeState(String dishStatus){
-        if("3".equals(dishStatus)){//点赞
+        if("2".equals(dishStatus)){//点赞
             mGoodImg.setImageResource(R.drawable.i_good_activity);
             mNoLikeImg.setImageResource(R.drawable.i_not_good);
             hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan_good);
 
-        }else if("2".equals(dishStatus)){//点踩
+        }else if("1".equals(dishStatus)){//点踩
             mNoLikeImg.setImageResource(R.drawable.i_not_good_activity);
             mGoodImg.setImageResource(R.drawable.i_good_black);
             hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan_nolike);
-        }else if("1".equals(dishStatus)){
+        }else if("3".equals(dishStatus)){
             mGoodImg.setImageResource(R.drawable.i_good_black);
             mNoLikeImg.setImageResource(R.drawable.i_not_good);
             hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan);
@@ -419,15 +419,15 @@ public class DishFootControl implements View.OnClickListener{
                         mHoverNum.setText(arrayList.get(0).get("num"));
                     }
                     if(isLike){//点赞
-                        dishLikeStatus="3";//点赞
+                        dishLikeStatus="2";//点赞
                     }else{//取消点赞
-                        if("3".equals(dishLikeStatus)){
-                            if(isGoodButton)dishLikeStatus="1";//点赞
-                            else dishLikeStatus="2";//点踩
-                        }else if("2".equals(dishLikeStatus)){
-                            dishLikeStatus="1";//点踩
+                        if("2".equals(dishLikeStatus)){
+                            if(isGoodButton)dishLikeStatus="3";//点赞
+                            else dishLikeStatus="1";//点踩
                         }else if("1".equals(dishLikeStatus)){
-                            dishLikeStatus="2";//点踩
+                            dishLikeStatus="3";//点踩
+                        }else if("3".equals(dishLikeStatus)){
+                            dishLikeStatus="1";//点踩
                         }
                     }
                 }
