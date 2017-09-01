@@ -648,6 +648,6 @@ public class VideoPlayerController {
         if(videoW <= 0 || videoH <= 0)
             return false;
         //视频比例大于3：4则为竖屏视频
-        return videoW/videoH <= 3/4;
+        return videoW/videoH <= 3/4f;
     }
 }

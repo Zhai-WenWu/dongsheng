@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f9fffffe"
+    android:background="@color/transparent"
     >
 
     <LinearLayout
@@ -143,9 +143,8 @@
         android:id="@+id/line_1"
         android:layout_width="match_parent"
         android:layout_height="20px"
-        android:background="@android:color/transparent"
+        android:background="@drawable/bg_line_shadow"
         android:scaleType="fitXY"
-        android:src="@drawable/bg_line_shadow"
         android:visibility="visible"
         />
 

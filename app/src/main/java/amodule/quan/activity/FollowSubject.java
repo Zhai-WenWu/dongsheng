@@ -45,6 +45,10 @@ public class FollowSubject extends BaseActivity {
             Tools.showToast(this,"菜谱code为空");
             this.finish();
         }
+        //处理title字数
+        if(!TextUtils.isEmpty(title)&&title.length()>12){
+            title=title.substring(0,12);
+        }
         init();
     }
 

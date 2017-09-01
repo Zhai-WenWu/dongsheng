@@ -34,7 +34,6 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
     private TextView tvIdentify;
     private TextView tvLostsercet,tv_agreenment;
     private ImageView imageQq, imageWeixin, imageWeibo, imageMailbox;
-    private ImageView top_left_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,6 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
     }
 
     private void initView() {
-        top_left_view = (ImageView) findViewById(R.id.top_left_view);
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
         ll_secret = (SecretInputView) findViewById(R.id.ll_secret);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
@@ -61,7 +59,7 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
         imageWeibo = (ImageView) findViewById(R.id.iv_weibo);
         imageMailbox = (ImageView) findViewById(R.id.iv_mailbox);
 
-        top_left_view.setOnClickListener(this);
+        findViewById(R.id.top_left_view).setOnClickListener(this);
         tvRegister.setOnClickListener(this);
         tvIdentify.setOnClickListener(this);
         tvLostsercet.setOnClickListener(this);
@@ -149,7 +147,7 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
                 break;
             case R.id.top_left_view:
                 XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "点击返回", "");
-                backToForward();
+                onBackPressed();
                 break;
             case R.id.iv_mailbox:
                 gotoLoginByEmail(this);
