@@ -214,6 +214,7 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
+        url = "xiangha://welcome?RefreshFullWeb.app?url=http%3A%2F%2Fappweb.ixiangha.com%3A8801%2Fqa%2FqaInfo%3FqaCode%3D1402";
         Log.i("FRJ", "openUrl() url:" + url);
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
@@ -221,31 +222,47 @@ public class AppCommon {
                 && (!url.contains(".app") && !url.contains("circleHome"))
                 ) return;
         // 如果识别到外部开启链接，则解析
-        try {
-            if (url.indexOf("xiangha://welcome?") == 0) {
-                //按#分割，urls【1】是表示外部吊起的平台例如360
-                String[] urls = url.replace("xiangha://welcome?", "").split("#");
-                if (urls.length > 0) {
-                    url = StringManager.wwwUrl;
-                    try {
-                        url = URLDecoder.decode(urls[0], "utf-8");
-                        if (url.contains("url=")) {
-                            url = url.substring(url.indexOf("url=") + 4);
-                        }
-                    } catch (UnsupportedEncodingException e) {
-                        LogManager.reportError("URLDecoder异常", e);
-                    }
-                }
-                if (!TextUtils.isEmpty(url) && urls.length > 1) {
-                    //不会有.app了，变成包名加类名啦
-                    int indexs = url.indexOf(".app");
-                    String data = url.substring(0, indexs + 4); //+4是为了加上.app4个字符
+        if (url.startsWith("xiangha://welcome?")) {
+            //按#分割，urls【1】是表示外部吊起的平台例如360
+
+            String[] urls = url.replace("xiangha://welcome?", "").split("#");
+            if (urls.length > 0) {
+                String tmpStr = urls[0];
+                if (!TextUtils.isEmpty(tmpStr) && urls.length > 1) {
+//                    //不会有.app了，变成包名加类名啦
+                    int indexs = tmpStr.indexOf(".app");
+                    String data = tmpStr.substring(0, indexs + 4); //+4是为了加上.app4个字符 // RefreshFullWeb.app
                     XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
         }
+//        try {
+//            if (url.indexOf() == 0) {
+//                //按#分割，urls【1】是表示外部吊起的平台例如360
+//                String[] urls = url.replace("xiangha://welcome?", "").split("#");//RefreshFullWeb.app?url=http%3A%2F%2Fappweb.ixiangha.com%3A8801%2Fqa%2FqaInfo%3FqaCode%3D1402
+//                if (urls.length > 0) {
+//                    url = StringManager.wwwUrl;
+////                    try {
+////                        url = URLDecoder.decode(urls[0], "utf-8");
+////                        if (url.contains("url=")) {
+////                            url = url.substring(url.indexOf("url=") + 4);
+////                        }
+////                    } catch (UnsupportedEncodingException e) {
+////                        LogManager.reportError("URLDecoder异常", e);
+////                    }
+//                }
+////                if (!TextUtils.isEmpty(url) && urls.length > 1) {
+////                    //不会有.app了，变成包名加类名啦
+////                    int indexs = url.indexOf(".app");
+////                    String data = url.substring(0, indexs + 4); //+4是为了加上.app4个字符 // RefreshFullWeb.app
+////                    XHClick.mapStat(XHApplication.in(), "a_from_other", urls[1], data);
+////                }
+//            }
+////        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
         Bundle bundle = new Bundle();
         Intent intent;
         try {
@@ -321,7 +338,10 @@ public class AppCommon {
             return;
 
         }
+//        url                       url = "RefreshFullWeb.app?url=http%3A%2F%2Fappweb.ixiangha.com%3A8801%2Fqa%2FqaInfo%3FqaCode%3D1402";
+
         //解析生成 intent
+        // 把所有的value 全部进行decode
         intent = parseURL(XHApplication.in(), bundle, url);
         LogManager.print(XHConf.log_tag_net, "d", "------------------解析网页url------------------\n" + url);
         if (intent == null) {
