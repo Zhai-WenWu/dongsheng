@@ -310,7 +310,7 @@ public class  ShowWeb extends WebActivity {
 //				public void onClick(View v) {
 //					Intent intent = new Intent(ShowWeb.this, Feedback.class);
 //					intent.putExtra("feekUrl", url);
-//					intent.putExtra("from", "4");
+//					intent.putExtra(Feedback.EXTRA_FROM, Feedback.FROM_COMMOD);
 //					ShowWeb.this.startActivity(intent);
 //				}
 //			});

@@ -71,7 +71,7 @@ public class CircleFind extends BaseActivity{
 			@Override
 			public void onClick(View v) {
 				Intent intent_feekback = new Intent(CircleFind.this, Feedback.class);
-				intent_feekback.putExtra("from", "5");
+				intent_feekback.putExtra(Feedback.EXTRA_FROM,Feedback.FROM_FIND_CIRCLE);
 				startActivity(intent_feekback);
 			}
 		});
