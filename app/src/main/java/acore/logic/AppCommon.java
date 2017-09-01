@@ -226,15 +226,10 @@ public class AppCommon {
         // 如果识别到外部开启链接，则解析
         if (url.startsWith(XH_PROTOCOL) && url.length() > XH_PROTOCOL.length()) {
             String tmpUrl = url.substring(XH_PROTOCOL.length());
-            try {
-                tmpUrl = URLDecoder.decode(tmpUrl, "utf-8");
+                tmpUrl = Uri.decode(tmpUrl);
                 if (tmpUrl.startsWith("url=")) {
                     tmpUrl = tmpUrl.substring("url=".length());
                 }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return;
-            }
             if (TextUtils.isEmpty(tmpUrl)) {
                 url = StringManager.wwwUrl;
             } else {
