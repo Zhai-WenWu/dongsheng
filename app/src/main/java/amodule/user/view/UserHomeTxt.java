@@ -91,7 +91,7 @@ public class UserHomeTxt extends TabContentView {
 			super.onResume("0");
 		} else
 			super.onResume(tag);
-		theListView.setSelection(1);
+		theListView.setSelection(datas.isEmpty() ? 0 : 1);
 	}
 
 	private void init() {
@@ -158,7 +158,7 @@ public class UserHomeTxt extends TabContentView {
 	public void initLoad() {
 		currentPage = 0;
 		isRefresh = true;
-		theListView.setVisibility(View.GONE);
+//		theListView.setVisibility(View.GONE);
 		if (theListView.getAdapter() == null) {
 			headView = new View(mAct);
 			setHeadViewHeight();

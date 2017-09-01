@@ -79,7 +79,7 @@ public class UserHomeSubject extends TabContentView {
 	@Override
 	public void onResume(String tag) {
 		super.onResume(tag);
-		theListView.setSelection(1);
+		theListView.setSelection(listDataMySb.isEmpty() ? 0 : 1);
 		if(subjectNum == null) {
 			mTabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
 			subjectNum = (TextView) mTabMainMyself.getChildAt(0).findViewById(R.id.tab_data);
@@ -118,7 +118,7 @@ public class UserHomeSubject extends TabContentView {
 	public void initLoad() {
 		currentPage = 0;
 		isRefresh = true;
-		theListView.setVisibility(View.GONE);
+//		theListView.setVisibility(View.GONE);
 		if (theListView.getAdapter() == null) {
 			headView = new View(mAct);
 			setHeadViewHeight();

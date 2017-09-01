@@ -16,6 +16,6 @@
         android:background="@android:color/transparent"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </RelativeLayout>

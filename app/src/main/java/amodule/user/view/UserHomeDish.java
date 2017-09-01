@@ -89,7 +89,7 @@ public class UserHomeDish extends TabContentView {
             super.onResume("0");
         } else
             super.onResume(tag);
-        theListView.setSelection(1);
+        theListView.setSelection(listDataMyDish.isEmpty() ? 0 : 1);
     }
 
     private void init() {
@@ -162,7 +162,7 @@ public class UserHomeDish extends TabContentView {
     @Override
     public void initLoad() {
         currentPage = 0;
-        if(isBlankSpace) theListView.setVisibility(View.GONE);
+//        if(isBlankSpace) theListView.setVisibility(View.GONE);
         if (theListView.getAdapter() == null) {
             headView = LayoutInflater.from(mAct).inflate(R.layout.a_user_home_dish_item, null);
             headLayout = headView.findViewById(R.id.a_user_home_head_layout);
