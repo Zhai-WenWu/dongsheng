@@ -18,6 +18,7 @@ import com.xianghatest.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observer;
 
 import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
@@ -26,6 +27,8 @@ import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -41,7 +44,7 @@ import third.video.VideoPlayerController;
 /**
  * 菜谱详情页：头部大图、视频，底部广告以下是原生，中间是h5
  */
-public class DetailDish extends BaseAppCompatActivity implements XHActivityManager.RefreshCallBack {
+public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public static String tongjiId = "a_menu_detail_normal430";//统计标示
     public static String DishName="amodule.dish.activity.DetailDish";
     private final int LOAD_DISH = 1;
@@ -102,8 +105,8 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
         Log.i("zyj","activity:::"+(System.currentTimeMillis()-startTime));
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        XHActivityManager.getInstance().addActivity(this);
-
+        //注册监听
+        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
     }
 
     @Override
@@ -133,13 +136,11 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
             }
         });
-
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadDishInfo();
                 loadOtherData();
-
             }
         });
     }
@@ -170,10 +171,8 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
                     }
                     if(permissionMap.containsKey("detail"))
                         detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
-
                 }
             }
-
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -275,12 +274,14 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        XHActivityManager.getInstance().removeActivity(this);
+        //反注册。
+        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
         dishActivityViewControl.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
         }
+
     }
 
     @Override
@@ -309,13 +310,13 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
         Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
     }
 
-    @Override
-    public void refreshCallBack() {
-        if(dishActivityViewControl!=null){
-            dishActivityViewControl.refreshTemplateWebView();
-            dishActivityViewControl.refreshAskStatus();
-        }
-    }
+//    @Override
+//    public void refreshCallBack() {
+//        if(dishActivityViewControl!=null){
+//
+//            dishActivityViewControl.refreshAskStatus();
+//        }
+//    }
 
 //    @Override
 //    public void finish() {
@@ -329,5 +330,35 @@ public class DetailDish extends BaseAppCompatActivity implements XHActivityManag
     public void saveHistoryData(String burden){
         if(dishActivityViewControl!=null)
             dishActivityViewControl.saveHistoryToDB(burden);
+    }
+
+    /**
+     * 监听回调
+     * @param name
+     * @param sender
+     * @param data
+     */
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        Log.i("zyj","name::::"+name);
+        switch (name){
+            case ObserverManager.NOTIFY_LOGIN://登陆
+                if(dishActivityViewControl!=null) {
+                    dishActivityViewControl.refreshTemplateWebView();
+                    dishActivityViewControl.refreshAskStatus();
+                    dishActivityViewControl.refreshQaWebView();
+                }
+                break;
+            case ObserverManager.NOTIFY_FOLLOW://关注
+                if(dishActivityViewControl!=null) {
+                    dishActivityViewControl.refreshTemplateWebView();
+                }
+                break;
+            case ObserverManager.NOTIFY_PAYFINISH://支付
+                if(dishActivityViewControl!=null) {
+                    dishActivityViewControl.refreshQaWebView();
+                }
+                break;
+        }
     }
 }

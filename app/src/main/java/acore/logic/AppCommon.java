@@ -45,6 +45,7 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -559,7 +560,8 @@ public class AppCommon {
                                 AppCommon.follwersNum = Integer.valueOf(returnObj.toString());
                                 if (succRun != null)
                                     succRun.run();
-                                XHActivityManager.getInstance().refreshActivity();
+                                //关注监听回调
+                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_FOLLOW,null,false);
                             }
                         }
                     });

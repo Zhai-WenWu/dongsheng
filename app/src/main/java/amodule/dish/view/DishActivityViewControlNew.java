@@ -498,11 +498,20 @@ public class  DishActivityViewControlNew {
     }
 
     /**
-     * 刷新数据webview
+     * 刷新数据webview关注
      */
     public void refreshTemplateWebView(){
         if(templateWebView!=null) {
             templateWebView.refreshWebviewMethod("javascript:freshFollow()");
+        }
+    }
+
+    /**
+     * 刷新webview的qa部分
+     */
+    public void refreshQaWebView(){
+        if(templateWebView!=null){
+            templateWebView.refreshWebviewMethod("javascript:freshQaList()");
         }
     }
 

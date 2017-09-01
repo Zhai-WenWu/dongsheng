@@ -179,7 +179,6 @@ public class BaseLoginActivity extends BaseActivity {
                         err_count_secret = 0;
                         LoginManager.loginSuccess(mAct, returnObj.toString());
                         ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, true);
-                        XHActivityManager.getInstance().refreshActivity();
                         callback.onSuccess();
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {
