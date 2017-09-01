@@ -36,8 +36,9 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
     private NextStepView btn_next_step;
     private PhoneNumInputView phone_info;
     private SpeechaIdentifyInputView speechaIdentifyInputView;
-    private TextView tv_password, tv_lostsercet, tv_help, tv_agreenment;
-    private ImageView imageQq, imageWeixin, imageWeibo, imageMailbox;
+    private TextView tv_lostsercet;
+    private TextView tv_help;
+    private ImageView imageMailbox;
     private String zoneCode;
     private String phoneNum;
 
@@ -59,8 +60,11 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
         Intent intent = getIntent();
         zoneCode = intent.getStringExtra(ZONE_CODE);
         phoneNum = intent.getStringExtra(PHONE_NUM);
+        if (TextUtils.isEmpty(zoneCode) || TextUtils.isEmpty(phoneNum)) {
+            zoneCode = lastLoginAccout.getAreaCode();
+            phoneNum = lastLoginAccout.getPhoneNum();
+        }
     }
-
 
     private void initView() {
         phone_info = (PhoneNumInputView) findViewById(R.id.phone_info);
@@ -68,23 +72,15 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
         login_identify = (IdentifyInputView) findViewById(R.id.login_identify);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
 
-        tv_password = (TextView) findViewById(R.id.tv_password);
-        tv_lostsercet = (TextView) findViewById(R.id.tv_lostsercet);
-        tv_help = (TextView) findViewById(R.id.tv_help);
-        tv_agreenment = (TextView) findViewById(R.id.tv_agreenment);
-        imageQq = (ImageView) findViewById(R.id.iv_qq);
-        imageWeixin = (ImageView) findViewById(R.id.iv_weixin);
-        imageWeibo = (ImageView) findViewById(R.id.iv_weibo);
-        imageMailbox = (ImageView) findViewById(R.id.iv_mailbox);
-
-        tv_password.setOnClickListener(this);
-        tv_lostsercet.setOnClickListener(this);
-        tv_help.setOnClickListener(this);
-        tv_agreenment.setOnClickListener(this);
-        imageMailbox.setOnClickListener(this);
-        imageWeixin.setOnClickListener(this);
-        imageQq.setOnClickListener(this);
-        imageWeibo.setOnClickListener(this);
+        findViewById(R.id.tv_lostsercet).setOnClickListener(this);
+        findViewById(R.id.tv_help).setOnClickListener(this);
+        findViewById(R.id.tv_agreenment).setOnClickListener(this);
+        findViewById(R.id.iv_mailbox).setOnClickListener(this);
+        findViewById(R.id.iv_weixin).setOnClickListener(this);
+        findViewById(R.id.iv_weibo).setOnClickListener(this);
+        findViewById(R.id.top_left_view).setOnClickListener(this);
+        findViewById(R.id.tv_password).setOnClickListener(this);
+        findViewById(R.id.iv_qq).setOnClickListener(this);
 
         speechaIdentifyInputView.setOnSpeechaClickListener(new View.OnClickListener() {
             @Override
@@ -227,7 +223,6 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
 
     }
 
-
     private void refreshNextStepBtnStat() {
         boolean canClickNextBtn;
         canClickNextBtn = !phone_info.isDataAbsence() && !login_identify.isIdentifyCodeEmpty();
@@ -237,6 +232,9 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.top_left_view:
+                onPressTopBar();
+                break;
             case R.id.tv_password: //密码登录
                 startActivity(new Intent(this, LoginByPassword.class));
                 break;
@@ -269,7 +267,6 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
                 break;
         }
     }
-
 
     @Override
     protected void onCountrySelected(String country_code) {
