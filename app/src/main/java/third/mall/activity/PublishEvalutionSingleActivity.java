@@ -49,7 +49,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     public static final String EXTRAS_POSITION = "position";
     public static final String EXTRAS_ID = "id";
     /** 默认值 */
-    public static final int DEFAULT_SCORE = 5;
+    public static final int DEFAULT_MAX_SCORE = 5;
     public static final int MAX_IMAGE = 3;
     /**  */
     private static final int SELECT_IMAE_REQUEST_CODE = 0x1;
@@ -75,7 +75,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     String image = "";
     int position = -1;
     int id = -1;
-    int score = DEFAULT_SCORE;
+    int score = DEFAULT_MAX_SCORE;
     int status;
 
     @Override
@@ -95,10 +95,15 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
             this.finish();
         image = intent.getStringExtra(EXTRAS_PRODUCT_IMAGE);
         //url规则中只能使用String类型，这里处理类型转换异常
+
         try{
-            score = Integer.parseInt(intent.getStringExtra(EXTRAS_SCORE));
+            String scoreStr = intent.getStringExtra(EXTRAS_SCORE);
+            if(!TextUtils.isEmpty(scoreStr) && scoreStr.length() == 1){
+                char scoreChar = scoreStr.charAt(0);
+                score = (scoreChar >= '1' && scoreChar <= '5') ? Integer.parseInt(scoreStr) : DEFAULT_MAX_SCORE;
+            }
         }catch (Exception ignore){
-            score = DEFAULT_SCORE;
+            score = DEFAULT_MAX_SCORE;
         }
         id = intent.getIntExtra(EXTRAS_ID,id);
         position = intent.getIntExtra(EXTRAS_POSITION,position);
