@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.activity.base.BaseFragmentActivity;
+import acore.tools.IObserver;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.answer.adapter.QAMsgPagerAdapter;
@@ -30,7 +32,7 @@ import aplug.web.view.XHWebView;
  * Created by sll on 2017/7/27.
  */
 
-public class QAMsgListActivity extends BaseFragmentActivity {
+public class QAMsgListActivity extends BaseFragmentActivity implements IObserver {
     private PagerSlidingTabStrip mTabStrip;
     private ViewPager mViewPager;
     private QAMsgPagerAdapter mPagerAdapter;
@@ -49,6 +51,7 @@ public class QAMsgListActivity extends BaseFragmentActivity {
         initData();
         addListener();
         getTabData();
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_UPLOADOVER);
     }
 
     private void initData() {
@@ -154,5 +157,29 @@ public class QAMsgListActivity extends BaseFragmentActivity {
         mPagerAdapter.setData(mModels);
         mViewPager.setCurrentItem(selectedPosition);
         mTabStrip.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mRefreshCurrFragment) {
+            mRefreshCurrFragment = false;
+            mPagerAdapter.getCurrentFragment().refreshFragment();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
+    }
+
+    private boolean mRefreshCurrFragment;
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (ObserverManager.NOTIFY_UPLOADOVER.equals(name) && data != null) {
+            if (data instanceof Boolean)
+                mRefreshCurrFragment = (boolean) data;
+        }
     }
 }

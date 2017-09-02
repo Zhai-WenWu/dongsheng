@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class ObserverManager {
 
     //用于通知的tag
-    public static final String NOTIFY_REFRESH_H5 = "notify_refresh_h5";
+    public static final String NOTIFY_UPLOADOVER = "notify_uploadover";
     public static final String NOTIFY_LOGIN = "notify_login";
     public static final String NOTIFY_FOLLOW = "notify_follow";
     public static final String NOTIFY_PAYFINISH = "notify_payfinish";

@@ -25,6 +25,7 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
 
     private ArrayList<View> mTabViews = new ArrayList<View>();
     private ArrayList<QAMsgModel> mDatas;
+    private ArrayList<QAMsgListFragment> mFragments;
 
     public QAMsgPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -46,7 +47,19 @@ public class QAMsgPagerAdapter extends FragmentStatePagerAdapter implements Page
     public Fragment getItem(int position) {
         if (mDatas == null || mDatas.isEmpty())
             return null;
-        return QAMsgListFragment.newInstance(mDatas.get(position));
+        if (mFragments == null)
+            mFragments = new ArrayList<QAMsgListFragment>();
+        if (mFragments.size() > position)
+            return mFragments.get(position);
+        else {
+            QAMsgListFragment fragment = QAMsgListFragment.newInstance(mDatas.get(position));
+            mFragments.add(fragment);
+            return fragment;
+        }
+    }
+
+    public QAMsgListFragment getCurrentFragment () {
+        return (QAMsgListFragment) getItem(mCurrentSelectedHolder == null ? 0 : mCurrentSelectedHolder.mPosition);
     }
 
     @Override

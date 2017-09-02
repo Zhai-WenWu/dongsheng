@@ -139,4 +139,8 @@ public class QAMsgListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
+    public void refreshFragment () {
+        loadUrl();
+    }
 }
