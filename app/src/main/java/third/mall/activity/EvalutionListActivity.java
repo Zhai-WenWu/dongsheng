@@ -119,8 +119,8 @@ public class EvalutionListActivity extends ShowTemplateWeb {
 
     public void showCommentBar(String userName,String callbackName){//dsShowCommentBarCallback
         this.callbackName = callbackName;
-        commentBar.setVisibility(View.VISIBLE);
         commentBar.setEditTextHint("回复 ：" + userName);
+        commentBar.show();
     }
 
     public void resetCommentBar(){

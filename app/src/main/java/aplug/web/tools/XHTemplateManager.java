@@ -22,7 +22,7 @@ public class XHTemplateManager {
         TEMPLATE_MATCHING.put(XHDISHLAYOUT , new String[]{"<{code}>"});//菜谱模板
         TEMPLATE_MATCHING.put(DSPRODUCTINFO , new String[]{"<{product_code}>"});//商品详情页
         TEMPLATE_MATCHING.put(DSUNDERSCOREPRODUCTINFO , new String[]{"<{product_code}>"});//商品详情页介绍
-        TEMPLATE_MATCHING.put(DSCOMMENTLIST , new String[]{"<{product_code}>"});//评价列表
+        TEMPLATE_MATCHING.put(DSCOMMENTLIST , new String[]{"<{product_code}>","<{comment_id}>","<{from}>"});//评价列表
     }
 
     public static long starttime;

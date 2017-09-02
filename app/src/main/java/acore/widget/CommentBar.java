@@ -153,6 +153,12 @@ public class CommentBar extends RelativeLayout {
         }
     }
 
+    public void show(){
+        setVisibility(VISIBLE);
+        commentEdittext.requestFocus();
+        ToolsDevice.keyboardControl(true, getContext(), commentEdittext);
+    }
+
     public void hide(){
         setVisibility(GONE);
         ToolsDevice.keyboardControl(false, getContext(), commentEdittext);
