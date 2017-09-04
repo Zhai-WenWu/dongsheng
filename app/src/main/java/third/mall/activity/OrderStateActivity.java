@@ -654,10 +654,10 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					});
 					setEvalutionViewLayout(view_comment.findViewById(R.id.textview));
 					order_status_linear.addView(view_comment);
-				}else if("2".equals(map.get("comment_status"))){
-					View view_commented = buttonView.createViewCommented();
-					setEvalutionViewLayout(view_commented.findViewById(R.id.textview));
-					order_status_linear.addView(view_commented);
+//				}else if("2".equals(map.get("comment_status"))){
+//					View view_commented = buttonView.createViewCommented();
+//					setEvalutionViewLayout(view_commented.findViewById(R.id.textview));
+//					order_status_linear.addView(view_commented);
 				}
 				break;
 			case 6://已取消
@@ -763,10 +763,10 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	/**改变评价按钮状态*/
 	private void updateEvalutionStatus(){
 		order_status_linear.removeViewAt(order_status_linear.getChildCount() - 1);
-		MallButtonView buttonView= new MallButtonView(this);
-		View view_commented = buttonView.createViewCommented();
-		setEvalutionViewLayout(view_commented.findViewById(R.id.textview));
-		order_status_linear.addView(view_commented);
+//		MallButtonView buttonView= new MallButtonView(this);
+//		View view_commented = buttonView.createViewCommented();
+//		setEvalutionViewLayout(view_commented.findViewById(R.id.textview));
+//		order_status_linear.addView(view_commented);
 	}
 
 	@Override

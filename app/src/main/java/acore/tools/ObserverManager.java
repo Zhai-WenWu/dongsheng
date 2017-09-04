@@ -17,6 +17,7 @@ public class ObserverManager {
     public static final String NOTIFY_LOGIN = "notify_login";
     public static final String NOTIFY_FOLLOW = "notify_follow";
     public static final String NOTIFY_PAYFINISH = "notify_payfinish";
+    public static final String NOTIFY_SHARE = "notify_share";
 
     private static volatile ObserverManager mObserverManager;
     private HashMap<String, ArrayList<IObserver>> mObservers;

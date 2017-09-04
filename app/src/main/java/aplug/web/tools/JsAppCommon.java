@@ -150,19 +150,6 @@ public class JsAppCommon extends JsBase {
         });
     }
 
-    //打开分享
-    @JavascriptInterface
-    public void openShare() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mBarShare != null) {
-                    mBarShare.openShare();
-                }
-            }
-        });
-    }
-
     /**
      * 保持菜谱详情的浏览记录
      * @param ingreStr
@@ -186,6 +173,19 @@ public class JsAppCommon extends JsBase {
         JSAction.backAction = backAction;
     }
 
+    //打开分享
+    @JavascriptInterface
+    public void openShare() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mBarShare != null) {
+                    mBarShare.openShare();
+                }
+            }
+        });
+    }
+
     /**
      * 初始化分享按钮,并添加分享按钮.
      * title：        分享标题
@@ -200,6 +200,9 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                if(mAct instanceof ShowWeb){
+                    ((ShowWeb)mAct).shareCallback = callback;
+                }
 //				barShare.setShare(BarShare.IMG_TYPE_WEB, am.get("title"), content, am.get("img"), zhishiurl);
 //				if (act.barShare == null) {//由于二级页面也会吊起分享,但是分享内容不同,所以不加判断.防止分享内容改不了
                 if (title != "" && content != "" && img != "" && url != "" && type != "") {
@@ -228,6 +231,67 @@ public class JsAppCommon extends JsBase {
                     }
                 }
 //				}
+            }
+        });
+    }
+
+    /**
+     * 直接打开一个中间显示的分享页面
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享类型
+     * callback:    回调统计
+     */
+    @JavascriptInterface
+    public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
+        initShare(title, content, img, url, type, callback);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mBarShare != null) {
+                    mBarShare.openShare();
+                }
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void initImageShare(final String imageUrl,final String callback){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(mAct instanceof ShowWeb){
+                    ((ShowWeb)mAct).shareCallback = callback;
+                }
+                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+                if(shareLayout != null){
+                    shareLayout.setVisibility(View.VISIBLE);
+                    shareLayout.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new BarShareImage(mAct,imageUrl).openShareImage();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void openImageShare(final String imageUrl,final String callback){
+        initImageShare(imageUrl,callback);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+                if(shareLayout != null){
+                    shareLayout.performClick();
+                }else{
+                    //若为null则直接分享，以免说这是bug
+                    new BarShareImage(mAct,imageUrl).openShareImage();
+                }
             }
         });
     }
@@ -1092,28 +1156,6 @@ public class JsAppCommon extends JsBase {
         });
     }
 
-    /**
-     * 直接打开一个中间显示的分享页面
-     * title：        分享标题
-     * content：  分享内容
-     * img：          分享图片
-     * url:	   分享链接地址
-     * type：        分享类型
-     * callback:    回调统计
-     */
-    @JavascriptInterface
-    public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
-        initShare(title, content, img, url, type, callback);
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mBarShare != null) {
-                    mBarShare.openShare();
-                }
-            }
-        });
-    }
-
     @JavascriptInterface
     public void initMallCloseBtn(){
         handler.post(new Runnable() {
@@ -1139,33 +1181,6 @@ public class JsAppCommon extends JsBase {
         });
     }
 
-    @JavascriptInterface
-    public void initImageShare(final String imageUrl){
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                if(shareLayout != null){
-                    shareLayout.setVisibility(View.VISIBLE);
-                    shareLayout.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new BarShareImage(mAct,imageUrl).openShareImage();
-                        }
-                    });
-                }
-            }
-        });
-    }
 
-    @JavascriptInterface
-    public void openImageShare(final String imageUrl){
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                new BarShareImage(mAct,imageUrl).openShareImage();
-            }
-        });
-    }
 
 }

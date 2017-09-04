@@ -1,6 +1,7 @@
 package third.mall.upload;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -8,6 +9,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.TimerTask;
 
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
@@ -156,6 +158,13 @@ public class EvalutionUploadControl {
                     uploadAgin(imageUrl);
             }
         }
+        //设置30延时取消
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                cancelUpload();
+            }
+        },30 * 1000);
     }
 
     /**

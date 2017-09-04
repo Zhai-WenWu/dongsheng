@@ -160,7 +160,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
         imagesLayout = (EvalutionImageLayout) findViewById(R.id.images);
         shareLayout = (RelativeLayout) findViewById(R.id.share_to_circle);
 
-        int itemIwdth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_100)) / 3;
+        int itemIwdth = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this,R.dimen.dp_103)) / 3;
         int imageWidth = itemIwdth - Tools.getDimen(this,R.dimen.dp_12_5);
         if(imageWidth < Tools.getDimen(this,R.dimen.dp_75)){
             imagesLayout.setViewSize(itemIwdth);
@@ -208,9 +208,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
             @Override
             public void afterTextChanged(Editable s) {
                 int currentLength = s.toString().length();
-                int value = currentLength - maxTextCount;
-                if (value > 0) {
-//                    contentEdit.setText(s.subSequence(0, s.length() - value));
+                if (currentLength >= maxTextCount) {
                     contentEdit.setSelection(contentEdit.getText().length());
                     Tools.showToast(PublishEvalutionSingleActivity.this, "内容最多" + maxTextCount + "字");
                     ToolsDevice.keyboardControl(false, PublishEvalutionSingleActivity.this, contentEdit);

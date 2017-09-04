@@ -27,9 +27,11 @@ import com.xiangha.R;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.ImgManager;
+import acore.tools.ObserverManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import cn.sharesdk.framework.Platform;
@@ -232,20 +234,30 @@ public class ShareTools {
 				starEvent("a_share_success", mParent,mFrom);
 				XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
 				Tools.showToast(mContext, pf[0] + "分享成功");
+				notifyShareResult(pf[0],"2");
 				break;
 			case SHARE_ERROR:
 				if(("微信".equals(pf[0]) || pf[0].indexOf("微信") > -1) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0){
 					Tools.showToast(mContext, "未检测到相关应用");
 				}else
 					Tools.showToast(mContext, pf[0] + "分享失败");
+				notifyShareResult(pf[0],"1");
 				break;
 			case SHARE_CANCLE:
 				Tools.showToast(mContext, pf[0] + "取消分享");
+				notifyShareResult(pf[0],"1");
 				break;
 			}
 			return false;
 		}
 	});
+
+	public void notifyShareResult(String platform,String success){
+		Map<String,String> data = new HashMap<>();
+		data.put("platform",platform);
+		data.put("status",success);
+		ObserverManager.getInstence().notify(ObserverManager.NOTIFY_SHARE,this,data);
+	}
 	
 	public String[] getPlatform(String name){
     	String[] pf = new String[2];
