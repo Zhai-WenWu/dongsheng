@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class ToggleButton extends View {
 	/**

@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Timer;
 import java.util.TimerTask;

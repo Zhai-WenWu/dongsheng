@@ -9,7 +9,7 @@ import amodule.user.view.FollowView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class AdapterCircleFind extends AdapterSimple{
 

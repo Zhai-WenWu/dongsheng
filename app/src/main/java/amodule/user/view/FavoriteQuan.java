@@ -12,7 +12,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;

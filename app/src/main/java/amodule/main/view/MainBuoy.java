@@ -29,7 +29,7 @@ import aplug.basic.ReqInternet;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class MainBuoy {
 	private Main mAct;

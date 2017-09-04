@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.VideoView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import acore.override.activity.base.BaseAppCompatActivity;

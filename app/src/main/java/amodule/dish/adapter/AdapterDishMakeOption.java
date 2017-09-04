@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,7 @@ import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 import xh.windowview.XhDialog;
 
-import static com.xianghatest.R.id.iv_makes_back2;
+import static com.xiangha.R.id.iv_makes_back2;
 
 /**
  * @author xiaanming

@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;

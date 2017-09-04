@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

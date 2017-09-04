@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * Created by sll on 2017/4/28.

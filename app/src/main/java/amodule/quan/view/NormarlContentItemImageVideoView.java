@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;

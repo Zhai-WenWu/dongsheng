@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +35,7 @@ import acore.tools.Tools;
 import amodule.user.activity.FriendHome;
 import xh.basic.tool.UtilString;
 
-import static com.xianghatest.R.id.follow_rela;
+import static com.xiangha.R.id.follow_rela;
 
 /**
  * 推荐好友

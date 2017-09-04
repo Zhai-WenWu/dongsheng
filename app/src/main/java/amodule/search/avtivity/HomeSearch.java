@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.ChannelUtil;

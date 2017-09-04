@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.override.XHApplication;

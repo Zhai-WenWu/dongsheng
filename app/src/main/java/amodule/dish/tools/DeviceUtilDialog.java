@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 import android.view.View;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.tools.Tools;

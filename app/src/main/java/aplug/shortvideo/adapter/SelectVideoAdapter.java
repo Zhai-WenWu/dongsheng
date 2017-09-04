@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;

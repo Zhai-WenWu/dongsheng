@@ -23,7 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

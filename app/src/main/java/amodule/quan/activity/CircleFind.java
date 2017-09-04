@@ -22,7 +22,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 /**
  * 发现圈子
  * @author FangRuijiao

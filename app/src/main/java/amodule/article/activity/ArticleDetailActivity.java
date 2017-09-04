@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

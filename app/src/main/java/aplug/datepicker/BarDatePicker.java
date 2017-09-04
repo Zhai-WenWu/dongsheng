@@ -16,7 +16,7 @@ import aplug.datepicker.listener.OnWheelChangedListener;
 import aplug.datepicker.listener.OnWheelScrollListener;
 import aplug.datepicker.view.WheelView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 @SuppressLint("ClickableViewAccessibility")
 public class BarDatePicker extends LinearLayout{

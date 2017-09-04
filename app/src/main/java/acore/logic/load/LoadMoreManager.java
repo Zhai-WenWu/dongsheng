@@ -6,7 +6,7 @@ import android.view.Gravity;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.HashMap;
 import java.util.Map;

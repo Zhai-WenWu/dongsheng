@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.xiangha.emojiutil.EmojiUtil;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;

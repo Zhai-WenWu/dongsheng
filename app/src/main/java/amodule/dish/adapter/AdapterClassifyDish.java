@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;

@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

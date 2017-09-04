@@ -9,7 +9,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;

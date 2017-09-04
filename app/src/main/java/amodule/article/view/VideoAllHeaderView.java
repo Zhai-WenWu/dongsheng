@@ -5,7 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Map;
 

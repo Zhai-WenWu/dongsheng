@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import junit.framework.Assert;
 

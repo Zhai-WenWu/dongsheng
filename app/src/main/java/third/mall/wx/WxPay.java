@@ -7,7 +7,7 @@ import com.tencent.mm.sdk.constants.Build;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.xianghatest.wxapi.WXPayEntryActivity;
+import com.xiangha.wxapi.WXPayEntryActivity;
 
 import java.util.ArrayList;
 import java.util.Comparator;

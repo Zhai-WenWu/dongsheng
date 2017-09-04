@@ -1,6 +1,6 @@
 package third.push.model;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * PackageName : third.push.model

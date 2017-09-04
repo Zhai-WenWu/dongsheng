@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import com.tencent.mm.sdk.constants.Build;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.xianghatest.wxapi.WXPayEntryActivity;
+import com.xiangha.wxapi.WXPayEntryActivity;
 /**
  * 支付方式的选择和操作
  * @author Administrator

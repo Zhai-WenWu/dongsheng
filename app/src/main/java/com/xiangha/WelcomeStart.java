@@ -1,4 +1,4 @@
-package com.xianghatest;
+package com.xiangha;
 
 import android.app.Activity;
 import android.content.Intent;

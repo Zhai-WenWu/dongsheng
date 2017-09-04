@@ -11,12 +11,11 @@ import android.util.Log;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
-import com.mob.MobApplication;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Map;
 

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.XHClick;
 import amodule.main.Main;

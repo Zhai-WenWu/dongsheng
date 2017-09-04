@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Map;
 

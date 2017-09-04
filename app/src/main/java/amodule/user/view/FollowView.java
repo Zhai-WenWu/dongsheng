@@ -16,7 +16,7 @@ import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * 关注控件

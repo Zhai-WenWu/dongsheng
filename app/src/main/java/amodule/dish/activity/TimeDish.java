@@ -10,7 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;

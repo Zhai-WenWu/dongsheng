@@ -19,7 +19,6 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -36,7 +35,7 @@ import aplug.basic.LoadImage;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import core.xiangha.emj.tools.EmjParseMsgUtil;
 import core.xiangha.emj.view.EditTextShow;

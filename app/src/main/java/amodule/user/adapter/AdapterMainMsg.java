@@ -25,7 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import aplug.basic.SubBitmapTarget;
 

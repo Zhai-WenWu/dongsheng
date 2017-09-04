@@ -11,7 +11,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Map;
 

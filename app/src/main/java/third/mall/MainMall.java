@@ -10,7 +10,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Map;
 

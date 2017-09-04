@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.xianghatest"
+          package="com.xiangha"
           android:versionCode="127"
           android:versionName="4.2.8.1">
 
@@ -217,14 +217,14 @@
         android:theme="@style/AppBaseTheme"
         tools:replace="android:name,android:icon,android:label,android:theme,android:allowBackup">
         <activity
-            android:name="com.xianghatest.LoadResActivity"
+            android:name="com.xiangha.LoadResActivity"
             android:alwaysRetainTaskState="false"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:process=":mini"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.xianghatest.WelcomeStart"
+            android:name="com.xiangha.WelcomeStart"
             android:label="@string/conf_appName"
             android:screenOrientation="portrait"
             android:theme="@style/AppWelcomeTheme"
@@ -259,7 +259,7 @@
         <!-- <activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" /> -->
         <!-- main start -->
         <activity
-            android:name="com.xianghatest.Welcome"
+            android:name="com.xiangha.Welcome"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
@@ -1290,13 +1290,13 @@
         </activity>
         <!-- 微信分享回调 -->
         <activity
-            android:name="com.xianghatest.wxapi.WXEntryActivity"
+            android:name="com.xiangha.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-            android:name="com.xianghatest.wxapi.WXPayEntryActivity"
+            android:name="com.xiangha.wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

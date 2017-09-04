@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * Created by ：fei_teng on 2017/2/17 17:49.

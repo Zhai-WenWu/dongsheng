@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Scroller;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import cn.srain.cube.views.ptr.indicator.PtrIndicator;
 import cn.srain.cube.views.ptr.util.PtrCLog;

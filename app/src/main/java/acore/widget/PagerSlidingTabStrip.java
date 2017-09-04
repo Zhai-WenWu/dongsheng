@@ -46,7 +46,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private static final String TAG = "PagerSlidingTabStrip";

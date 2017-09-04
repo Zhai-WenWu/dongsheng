@@ -8,7 +8,7 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * Created by ：airfly on 2016/10/25 14:42.

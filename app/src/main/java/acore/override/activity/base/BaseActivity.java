@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.util.Util;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.dialogManager.GoodCommentManager;
 import acore.logic.ActivityMethodManager;

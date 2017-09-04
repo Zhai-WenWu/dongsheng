@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +23,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 
 import java.util.ArrayList;

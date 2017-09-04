@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.XHClick;
 import amodule.quan.activity.CircleHome;

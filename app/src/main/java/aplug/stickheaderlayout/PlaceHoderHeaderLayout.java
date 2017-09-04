@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.load.AutoLoadMore.OnListScrollListener;
 

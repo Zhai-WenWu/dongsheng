@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
-import static com.xianghatest.R.id.v_no_data_search;
+import static com.xiangha.R.id.v_no_data_search;
 
 /**
  * Created by ：airfly on 2016/10/14 15:21.

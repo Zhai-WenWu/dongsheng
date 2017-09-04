@@ -27,7 +27,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.JSAction;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class ChooseDish extends BaseActivity{
 	private int mMaxChooseNum = 5;

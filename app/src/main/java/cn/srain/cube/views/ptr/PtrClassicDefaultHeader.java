@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.srain.cube.views.ptr.indicator.PtrIndicator;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class PtrClassicDefaultHeader extends FrameLayout implements PtrUIHandler {
 

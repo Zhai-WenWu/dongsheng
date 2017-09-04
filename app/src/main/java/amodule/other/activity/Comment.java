@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;

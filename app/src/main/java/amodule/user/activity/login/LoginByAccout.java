@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;

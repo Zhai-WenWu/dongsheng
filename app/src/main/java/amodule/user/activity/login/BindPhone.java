@@ -2,16 +2,14 @@ package amodule.user.activity.login;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.override.activity.base.BaseLoginActivity;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import amodule.user.view.IdentifyInputView;

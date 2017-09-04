@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

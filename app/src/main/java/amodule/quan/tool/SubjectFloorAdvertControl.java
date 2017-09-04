@@ -2,7 +2,7 @@ package amodule.quan.tool;
 
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import amodule.quan.view.BarSubjectFloorOwnerNew;

@@ -5,8 +5,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.xianghatest.BuildConfig;
-import com.xianghatest.R;
+import com.xiangha.BuildConfig;
+import com.xiangha.R;
 
 
 

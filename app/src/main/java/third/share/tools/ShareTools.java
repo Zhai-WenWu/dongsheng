@@ -22,7 +22,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.io.File;
 import java.io.InputStream;

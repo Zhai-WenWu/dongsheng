@@ -31,7 +31,7 @@ import android.widget.TextView;
 import com.mob.MobSDK;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,7 +90,7 @@ import xh.basic.tool.UtilLog;
 import xh.windowview.XhDialog;
 
 import static acore.tools.Tools.getApiSurTime;
-import static com.xianghatest.R.id.iv_itemIsFine;
+import static com.xiangha.R.id.iv_itemIsFine;
 
 
 @SuppressWarnings("deprecation")

@@ -27,7 +27,7 @@ import third.push.model.XGNotification;
  */
 @SuppressLint({ "NewApi", "SimpleDateFormat" })
 public class XGMessageReceiver extends XGPushBaseReceiver {
-	private Intent intent = new Intent("com.xianghatest.activity.UPDATE_LISTVIEW");
+	private Intent intent = new Intent("com.xiangha.activity.UPDATE_LISTVIEW");
 	public static final String LogTag = "TPushReceiver";
 	private boolean isShow = false ;//发布是改成false
 

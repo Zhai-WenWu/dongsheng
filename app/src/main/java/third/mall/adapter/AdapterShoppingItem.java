@@ -31,7 +31,7 @@ import aplug.basic.ReqInternet;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * 购物车adapter二级

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * Created by xiangha-zhangyujian on 2017/6/14

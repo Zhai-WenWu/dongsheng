@@ -21,7 +21,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 @SuppressLint("ResourceAsColor")
 public class FansAndFollwers extends BaseActivity implements OnClickListener {

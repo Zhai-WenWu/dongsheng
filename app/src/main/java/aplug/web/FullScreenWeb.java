@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;

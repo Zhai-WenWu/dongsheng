@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class NousAdapter extends AdapterSimple {
 	public Activity mAct;

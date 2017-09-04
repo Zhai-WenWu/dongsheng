@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.override.XHApplication;
 

@@ -13,19 +13,17 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observer;
 
 import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;

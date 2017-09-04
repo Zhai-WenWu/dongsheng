@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.ad.AdsShow;
 
 import static amodule.main.Main.allMain;
-import static com.xianghatest.R.id.return_top;
+import static com.xiangha.R.id.return_top;
 
 /**
  * PackageName : amodule.main.view.circle

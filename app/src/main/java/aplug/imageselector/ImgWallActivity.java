@@ -30,7 +30,7 @@ import aplug.imageselector.constant.ImageSelectorConstant;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * Title:ImgWallActivity.java Copyright: Copyright (c) 2014~2017

@@ -7,9 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.tools.StringManager;

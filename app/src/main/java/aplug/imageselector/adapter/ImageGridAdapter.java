@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import aplug.imageselector.bean.Image;
 
 import com.bumptech.glide.Glide;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * 图片Adapter

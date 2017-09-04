@@ -25,7 +25,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +47,6 @@ import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilString;
 
-import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**

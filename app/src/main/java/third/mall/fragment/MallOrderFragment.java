@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;

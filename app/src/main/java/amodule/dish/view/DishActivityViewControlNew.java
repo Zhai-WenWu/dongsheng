@@ -13,7 +13,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONObject;
 
@@ -29,14 +29,12 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.main.Main;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
 import aplug.web.view.XHWebView;
-import third.mall.widget.ScrollViewContainer;
 import third.video.VideoPlayerController;
 
 import static amodule.dish.activity.DetailDish.startTime;

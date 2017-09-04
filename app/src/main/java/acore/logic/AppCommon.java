@@ -27,9 +27,8 @@ import android.widget.RelativeLayout;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
-import com.xianghatest.R;
+import com.xiangha.R;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +41,6 @@ import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
