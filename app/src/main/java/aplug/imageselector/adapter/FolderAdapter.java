@@ -14,7 +14,7 @@ import android.widget.TextView;
 import aplug.imageselector.bean.Folder;
 
 import com.bumptech.glide.Glide;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * 文件夹Adapter

@@ -1,4 +1,4 @@
-package com.xianghatest;
+package com.xiangha;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;

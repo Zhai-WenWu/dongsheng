@@ -14,9 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.xianghatest.R;
-
-import static com.baidu.location.b.k.ca;
+import com.xiangha.R;
 
 /**
  * Created by dao on 2017/2/19.

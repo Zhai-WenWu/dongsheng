@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;

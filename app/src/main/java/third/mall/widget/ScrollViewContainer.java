@@ -12,12 +12,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 
 /**

@@ -1,4 +1,4 @@
-package com.xianghatest;
+package com.xiangha;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

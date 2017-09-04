@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ta.utdid2.android.utils.StringUtils;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -800,7 +800,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
     public static boolean checkPermission(Context context,String permission){
         PackageManager pm = context.getPackageManager();
         boolean permission_state = (PackageManager.PERMISSION_GRANTED ==
-                pm.checkPermission(permission, "com.xianghatest"));
+                pm.checkPermission(permission, "com.xiangha"));
         return permission_state;
     }
 

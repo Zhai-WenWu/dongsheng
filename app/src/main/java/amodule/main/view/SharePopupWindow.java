@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -3,7 +3,7 @@ package third.fanli;
 import android.os.Bundle;
 import android.view.View;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.logic.AppCommon;
 import acore.override.activity.base.BaseFragmentActivity;

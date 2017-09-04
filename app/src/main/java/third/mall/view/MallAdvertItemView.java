@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class MallAdvertItemView extends ViewItemBase{
 

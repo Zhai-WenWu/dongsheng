@@ -16,7 +16,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.Tools;

@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONObject;
 
@@ -25,7 +25,6 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.login.AccountInfoBean;
 import acore.logic.login.LoginCheck;
-import acore.override.helper.XHActivityManager;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;

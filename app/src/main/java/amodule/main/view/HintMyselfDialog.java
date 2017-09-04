@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;
 import amodule.user.activity.MyFavorite;

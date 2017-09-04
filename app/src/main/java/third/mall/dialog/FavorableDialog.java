@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.ListView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;

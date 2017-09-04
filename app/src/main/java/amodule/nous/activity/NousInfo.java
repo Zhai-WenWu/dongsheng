@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONObject;
 

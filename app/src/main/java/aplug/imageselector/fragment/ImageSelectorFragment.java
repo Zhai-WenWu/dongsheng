@@ -40,7 +40,7 @@ import aplug.imageselector.bean.Image;
 import aplug.imageselector.constant.ImageSelectorConstant;
 
 import com.bumptech.glide.Glide;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 /**
  * @author Eva

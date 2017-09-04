@@ -9,7 +9,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import aplug.shortvideo.media.DeviceUtils;
 

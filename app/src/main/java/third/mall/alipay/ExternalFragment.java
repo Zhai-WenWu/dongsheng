@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class ExternalFragment extends Fragment {
 

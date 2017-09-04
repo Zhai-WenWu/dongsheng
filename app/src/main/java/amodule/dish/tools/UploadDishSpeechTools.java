@@ -3,7 +3,7 @@ package amodule.dish.tools;
 import android.content.Context;
 import android.widget.EditText;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import third.speech.SpeechIflytek;
 import third.speech.SpeechIflytek.OnSpeechIflytekListener;

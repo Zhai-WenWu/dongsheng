@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

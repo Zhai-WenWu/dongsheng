@@ -2,7 +2,7 @@ package acore.widget.multifunction;
 
 import android.content.Context;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;

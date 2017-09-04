@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -35,7 +35,6 @@ import aplug.web.ShowWeb;
 import third.ad.control.AdControlParent;
 import third.ad.scrollerAd.XHScrollerAdParent;
 import third.mall.activity.CommodDetailActivity;
-import xh.basic.tool.UtilImage;
 
 /**
  * 首页内容列表的父Item

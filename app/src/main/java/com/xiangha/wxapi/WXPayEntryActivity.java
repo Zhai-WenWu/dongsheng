@@ -1,4 +1,4 @@
-package com.xianghatest.wxapi;
+package com.xiangha.wxapi;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,7 +31,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(com.xianghatest.R.layout.a_mall_wx_pay_result);
+		setContentView(com.xiangha.R.layout.a_mall_wx_pay_result);
 		
 		api = WXAPIFactory.createWXAPI(this, app_id);
         api.handleIntent(getIntent(), this);

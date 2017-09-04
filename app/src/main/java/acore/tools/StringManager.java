@@ -64,7 +64,7 @@ public class StringManager extends UtilString {
 
     public final static String appID = "1";
     //第三方下载链接（应用宝）
-    public final static String third_downLoadUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xianghatest";
+    public final static String third_downLoadUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xiangha";
     //崩溃
     public final static String api_uploadCrashLog = "http://crash.xiangha.com/report";
     //统计

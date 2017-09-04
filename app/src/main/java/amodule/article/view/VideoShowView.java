@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

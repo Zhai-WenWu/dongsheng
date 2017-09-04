@@ -22,7 +22,7 @@ import android.graphics.drawable.Drawable;
 
 import aplug.basic.LoadImage;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class ImgManager extends UtilImage {
 

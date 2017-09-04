@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONObject;
 

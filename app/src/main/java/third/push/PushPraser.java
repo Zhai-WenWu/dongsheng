@@ -4,7 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -107,8 +107,8 @@ public class PushPraser {
 								if (mContext != null) {
 									ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
-									//获取当前activity类名判断是否为com.xianghatest.Feekback
-									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xianghatest.Feekback"))
+									//获取当前activity类名判断是否为com.xiangha.Feekback
+									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 								} else {
 									AppCommon.feekbackMessage++;

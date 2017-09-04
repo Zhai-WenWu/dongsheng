@@ -9,11 +9,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.xianghatest.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,11 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import aplug.web.tools.XHTemplateManager;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
 import third.mall.aplug.MallInternetCallback;

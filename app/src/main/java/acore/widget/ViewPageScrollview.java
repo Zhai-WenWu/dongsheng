@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 public class ViewPageScrollview extends ScrollView {
 

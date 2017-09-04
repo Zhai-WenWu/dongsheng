@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 @SuppressLint("ResourceAsColor")
 public class AdapterActivity extends AdapterSimple {

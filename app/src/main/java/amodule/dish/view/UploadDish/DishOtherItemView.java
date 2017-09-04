@@ -19,7 +19,7 @@ import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;

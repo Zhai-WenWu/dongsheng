@@ -14,7 +14,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;

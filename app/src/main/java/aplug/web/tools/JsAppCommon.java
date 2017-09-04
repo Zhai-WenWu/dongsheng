@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import org.json.JSONObject;
 
@@ -69,7 +69,6 @@ import third.mall.override.MallBaseActivity;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
 import third.share.BarShareImage;
-import third.share.activity.ShareImageActivity;
 import xh.basic.tool.UtilFile;
 
 import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_KEY;

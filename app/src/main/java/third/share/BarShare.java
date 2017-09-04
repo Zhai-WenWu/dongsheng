@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.HashMap;
 import java.util.Map;
