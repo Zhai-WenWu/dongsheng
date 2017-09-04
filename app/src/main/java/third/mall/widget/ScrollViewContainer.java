@@ -81,7 +81,6 @@ public class ScrollViewContainer extends RelativeLayout {
 
         @Override
         public void handleMessage(Message msg) {
-            Log.i("zyj","mMoveLen::"+mMoveLen+"::state:"+state);
             if (mMoveLen != 0) {
                 if (state == AUTO_UP) {
                     mMoveLen -= SPEED;
@@ -157,7 +156,6 @@ public class ScrollViewContainer extends RelativeLayout {
                 if (canPullUp && mCurrentViewIndex == 0 && mEvents == 0) {
                     mMoveLen += (ev.getY() - mLastY);
                     scrollviewinterface.changeTitleState(true);
-                    System.out.println("mMoveLen:111:" + mMoveLen);
                     // 防止上下越界
                     if (mMoveLen > 0) {
                         mMoveLen = 0;
@@ -173,7 +171,6 @@ public class ScrollViewContainer extends RelativeLayout {
                     }
                 } else if (canPullDown && mCurrentViewIndex == 1 && mEvents == 0) {
                     mMoveLen += (ev.getY() - mLastY);
-                    System.out.println("mMoveLen:2222:" + mMoveLen);
                     // 防止上下越界
                     if (mMoveLen < -mViewHeight) {
                         mMoveLen = -mViewHeight;
@@ -230,12 +227,12 @@ public class ScrollViewContainer extends RelativeLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         try {
-            int dp_50 = (int) context.getResources().getDimension(R.dimen.dp_50);
+            int dp_49 = (int) context.getResources().getDimension(R.dimen.dp_49);
             topView.layout(0, (int) mMoveLen, mViewWidth,
                     topView.getMeasuredHeight() + (int) mMoveLen);
             bottomView.layout(0, topView.getMeasuredHeight() + (int) mMoveLen,
                     mViewWidth, topView.getMeasuredHeight() + (int) mMoveLen
-                            + bottomView.getMeasuredHeight() + dp_50);
+                            + bottomView.getMeasuredHeight() + dp_49);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -367,7 +364,7 @@ public class ScrollViewContainer extends RelativeLayout {
                     if (vt == null) vt = VelocityTracker.obtain();
                     mMoveLen = -ToolsDevice.getWindowPx(context).heightPixels;
                     state = AUTO_DOWN;
-                    mTimer.schedule(2);
+                    mTimer.schedule(1);
                 }
                 break;
             case "2"://滚动到第二视图
@@ -377,7 +374,7 @@ public class ScrollViewContainer extends RelativeLayout {
                         mMoveLen=-OneViewheight;
                     }else mMoveLen = -1;
                     state = AUTO_UP;
-                    mTimer.schedule(2);
+                    mTimer.schedule(1);
                 }
                 break;
         }
