@@ -120,7 +120,7 @@
 
                 <TextView
                     android:id="@+id/content_length_text"
-                    android:layout_width="@dimen/dp_60"
+                    android:layout_width="@dimen/dp_63"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/content_edit"
                     android:layout_alignParentRight="true"
