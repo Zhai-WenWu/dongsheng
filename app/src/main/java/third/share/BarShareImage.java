@@ -11,6 +11,8 @@ package third.share;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import third.share.activity.ShareImageActivity;
 
 /**
@@ -27,6 +29,9 @@ public class BarShareImage {
     public BarShareImage(Context context, @NonNull String imageUrl){
         this.mContext = context;
         this.imageUrl = imageUrl;
+        if(context instanceof IObserver){
+            ObserverManager.getInstence().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
+        }
     }
 
     public void openShareImage(){

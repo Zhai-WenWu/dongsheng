@@ -15,7 +15,9 @@ import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
+import acore.tools.ObserverManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import cn.sharesdk.framework.Platform;
@@ -93,16 +95,20 @@ public class ShareImage {
         @Override
         public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
             sendMessage(platform.getName(),SHARE_OK);
+            notifyShareResult(platform.getName(),"2");
         }
 
         @Override
         public void onError(Platform platform, int arg1, Throwable arg2) {
+            notifyShareResult(platform.getName(),"1");
             sendMessage(platform.getName(),SHARE_ERROR);
             arg2.printStackTrace();
+
         }
 
         @Override
         public void onCancel(Platform platform, int arg1) {
+            notifyShareResult(platform.getName(),"1");
             sendMessage(platform.getName(),SHARE_CANCLE);
         }
 
@@ -113,6 +119,13 @@ public class ShareImage {
             shareHandler.sendMessage(msg);
         }
     };
+
+    public void notifyShareResult(String platform,String success){
+        Map<String,String> data = new HashMap<>();
+        data.put("platform",platform);
+        data.put("status",success);
+        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_SHARE,this,data);
+    }
 
     public Handler shareHandler = new Handler(new Handler.Callback() {
         @Override

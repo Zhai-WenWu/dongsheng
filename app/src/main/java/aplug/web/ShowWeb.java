@@ -28,6 +28,8 @@ import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -51,7 +53,7 @@ import static third.mall.override.MallBaseActivity.PAGE_FROM_TWO;
  *
  * @author Jerry
  */
-public class  ShowWeb extends WebActivity {
+public class  ShowWeb extends WebActivity implements IObserver {
 	protected String url = "", htmlData = "";
 	protected Button rightBtn;
 	protected ImageView favoriteNousImageView;
@@ -69,6 +71,7 @@ public class  ShowWeb extends WebActivity {
 	private String code="";//code--首页使用功能
 	private String module_type="";
 	private String userCode = "";
+	public String shareCallback = "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -378,6 +381,20 @@ public class  ShowWeb extends WebActivity {
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("ShowWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
+		ObserverManager.getInstence().unRegisterObserver(this);
         super.onDestroy();
     }
+
+	@Override
+	public void notify(String name, Object sender, Object data) {
+		switch (name){
+			case ObserverManager.NOTIFY_SHARE:
+				if(!TextUtils.isEmpty(shareCallback) && data != null){
+					Map<String,String> dataMap = (Map<String, String>) data;
+					webview.loadUrl("Javascript:"+shareCallback+"(\""+dataMap.get("status")+"\"”)");
+				}
+				Tools.showToast(this,"NOTIFY_SHARE");
+				break;
+		}
+	}
 }
