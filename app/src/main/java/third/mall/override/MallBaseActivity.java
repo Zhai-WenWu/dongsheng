@@ -7,7 +7,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.PageStatisticsUtils;
 
 /**
- * Created by Fang Ruijiao on 2017/8/23.
+ * 基础类：用于统计
  */
 
 public class MallBaseActivity extends BaseActivity{

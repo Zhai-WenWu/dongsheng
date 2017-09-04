@@ -52,6 +52,7 @@ import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.other.activity.PlayVideo;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -188,7 +189,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 titleState = state == 1 ? "1" : "2";
                 handleTitleState();
                 if (load_state) {
-//                    foot_templateWebView.loadData();
                     foot_templateWebView.loadData(XHTemplateManager.DSUNDERSCOREPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSUNDERSCOREPRODUCTINFO),new String[]{code});
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
                 }
@@ -356,15 +356,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        if (MallCommon.num_shopcat > 0) {
-            mall_news_num.setVisibility(View.VISIBLE);
-            if (MallCommon.num_shopcat > 99)
-                mall_news_num.setText("99+");
-            else
-                mall_news_num.setText("" + MallCommon.num_shopcat);
-        } else {
-            mall_news_num.setVisibility(View.GONE);
-        }
+        setShopcatNum();
     }
 
     /**
@@ -642,8 +634,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                         Map<String,String> videoMap= StringManager.getFirstMap(StringManager.getFirstMap(images.get(position).get("video")).get("video_url"));
                         if(videoMap.containsKey("default_url")) {
                             String default_url= videoMap.get("default_url");
-                            intent.putExtra(VideoFullScreenActivity.EXTRA_VIDEO_URL, default_url);
-                            intent.setClass(CommodDetailActivity.this, VideoFullScreenActivity.class);
+                            intent.putExtra("url", default_url);
+                            intent.setClass(CommodDetailActivity.this, PlayVideo.class);
                         }
                         XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "商品视频播放量", "");
                     } else {
@@ -832,7 +824,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         MallCommon.num_shopcat++;
 
         setShopcatNum();
-        ScaleAnimation scale_text = new ScaleAnimation(1f, 1.1f, 1f, 1.1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        ScaleAnimation scale_text = new ScaleAnimation(0.8f, 1f, 0.8f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         scale_text.setDuration(700);
         if (MallCommon.num_shopcat < 9)
             mall_news_num.startAnimation(scale_text);
