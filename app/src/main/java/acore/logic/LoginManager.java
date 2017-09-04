@@ -351,6 +351,14 @@ public class LoginManager {
         return true;
     }
 
+    public static boolean isVIP(){
+        if(userInfo != null && userInfo.containsKey("vip")){
+            Map<String,String> vipMap = StringManager.getFirstMap(userInfo.get("vip"));
+            return "2".equals(vipMap.get("isVip"));
+        }
+        return false;
+    }
+
     public static boolean isBindMobilePhone(){
         return userInfo != null
                 && userInfo.containsKey("tel")

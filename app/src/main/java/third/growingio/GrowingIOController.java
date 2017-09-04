@@ -10,11 +10,11 @@ import com.growingio.android.sdk.collection.GrowingIO;
 
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
-import acore.tools.Tools;
 
 /**
  * PackageName : third.growingio
@@ -124,22 +124,8 @@ public class GrowingIOController {
             return true;
         }
         //正常判断
-        final String key = "GrowingIO";
-        String value = FileManager.loadShared(context, FileManager.xmlFile_appInfo, key).toString();
-        boolean isInited = !TextUtils.isEmpty(value);
-        //已经初始化过
-        if (isInited) {
-            if ("true".equals(value)) {
-                return true;
-            } else if ("false".equals(value)) {
-                return false;
-            }
-            //未初始化过
-        } else {
-            int random = Tools.getRandom(0, 50);
-            boolean isGrowingIOUser = random == 0;//1/50的机率
-            FileManager.saveShared(context, FileManager.xmlFile_appInfo, key, String.valueOf(isGrowingIOUser));
-            return isGrowingIOUser;
+        if(LoginManager.isLogin() && LoginManager.isVIP()){
+            return true;
         }
         return false;
     }
