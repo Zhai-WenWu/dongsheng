@@ -386,7 +386,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
         mall_ScrollViewContainer.setState_two(false);
         middle_templateWebView.loadData(XHTemplateManager.DSPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSPRODUCTINFO),new String[]{code});
-        middle_templateWebView.setVisibility(View.GONE);
     }
 
     /**
