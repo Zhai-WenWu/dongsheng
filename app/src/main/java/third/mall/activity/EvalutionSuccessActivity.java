@@ -2,21 +2,16 @@ package third.mall.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.xianghatest.R;
 
 import acore.logic.XHClick;
-import acore.tools.PageStatisticsUtils;
 import amodule.main.Main;
 import aplug.web.ShowTemplateWeb;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.XHWebView;
-
-import static third.mall.override.MallBaseActivity.PAGE_FROM;
-import static third.mall.override.MallBaseActivity.PAGE_FROM_TWO;
 
 /**
  * PackageName : third.mall.activity

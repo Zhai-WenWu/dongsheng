@@ -32,6 +32,7 @@ public class EvalutionUploadControl {
 
     boolean isCanceled = false;
     boolean isPublishing = false;
+    volatile boolean isRequesting = false;
     protected boolean instantlyUpload = false;
 
     public EvalutionUploadControl(Context context) {
@@ -123,17 +124,19 @@ public class EvalutionUploadControl {
     }
 
     /** 发布 */
-    public void publishEvalution() {
+    public synchronized void publishEvalution() {
         isPublishing = true;
         if (onPublishCallback != null)
             onPublishCallback.onStratPublish();
-        if (isAllUploadOver()) {
+        if (isAllUploadOver() && !isRequesting) {
+            isRequesting = true;
             //正式发布评价请求
             MallReqInternet.in().doPost(MallStringManager.mall_addComment,
                     combineParameter(),
                     new MallInternetCallback(context) {
                         @Override
                         public void loadstat(int flag, String url, Object msg, Object... stat) {
+                            isRequesting = false;
                             isPublishing = false;
                             if (flag >= MallReqInternet.REQ_OK_STRING) {
 
@@ -183,7 +186,7 @@ public class EvalutionUploadControl {
     private boolean isAllUploadOver() {
         ArrayList<String> images = bean.getImages();
         for (String imageUrl : images) {
-            if (!TextUtils.isEmpty(imageUrl) && !imageUrl.startsWith("http")) {
+            if (TextUtils.isEmpty(imageUrl) || !imageUrl.startsWith("http")) {
                 return false;
             }
         }

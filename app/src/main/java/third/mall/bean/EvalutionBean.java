@@ -68,11 +68,12 @@ public class EvalutionBean {
     }
 
     public void replaceImage(String oldUrl,String newUrl){
-        if(images.contains(oldUrl) && images.indexOf(oldUrl) < images.size()
-                && images.contains(newUrl)){
-            images.set(images.indexOf(oldUrl),newUrl);
-        }else{
-            addImage(newUrl);
+        if(!images.contains(newUrl)){
+            if(images.contains(oldUrl)){
+                images.set(images.indexOf(oldUrl),newUrl);
+            }else{
+                addImage(newUrl);
+            }
         }
     }
 
