@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -302,7 +303,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
      */
     @SuppressLint("HandlerLeak")
     private void initData() {
-
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -675,7 +675,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             case R.id.service_mercat://客服
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "客服按钮");
                 Intent intentmark = new Intent(this, Feedback.class);
-                intentmark.putExtra("backData", map.get("m_url"));
+                intentmark.putExtra("backData",map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:

@@ -336,16 +336,12 @@
                     android:id="@+id/foot_templateWebView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_45"
                     android:layout_marginBottom="@dimen/dp_49"
                     android:visibility="gone">
                 </aplug.web.view.TemplateWebView>
 
-                <WebView
-                    android:id="@+id/explain_detail_webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_49"
-                    android:visibility="gone"/>
+
             </RelativeLayout>
         </ScrollView>
     </third.mall.widget.ScrollViewContainer>

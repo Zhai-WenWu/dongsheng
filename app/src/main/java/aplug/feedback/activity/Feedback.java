@@ -321,8 +321,11 @@ public class Feedback extends BaseActivity implements OnClickListener {
             contentList.add(map);
             adapter.notifyDataSetChanged();
             feekback_list.setSelection(adapter.getCount() - 1);
-            String param = "token=" + Token + "&content=" + feektext;
-            ReqInternet.in().doPost(StringManager.api_sendDialog, param, new InternetCallback(this) {
+            LinkedHashMap<String,String> mapparams= new LinkedHashMap<>();
+            mapparams.put("token",Token);
+            mapparams.put("content",feektext);
+
+            ReqInternet.in().doPost(StringManager.api_sendDialog, mapparams, new InternetCallback(this) {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
                     if (flag >= UtilInternet.REQ_OK_STRING) {
