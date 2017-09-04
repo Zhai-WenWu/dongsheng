@@ -278,6 +278,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
      * 展示购物车数量
      */
     private void setShopcatNum() {
+        Log.i("zyj","MallCommon.num_shopcat::"+MallCommon.num_shopcat);
         if (MallCommon.num_shopcat > 0) {
             if (MallCommon.num_shopcat > 9) {
                 mall_news_num.setVisibility(View.GONE);
@@ -356,6 +357,9 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     protected void onResume() {
         super.onResume();
         setShopcatNum();
+//        if(LoginManager.isLogin()){
+//            MallCommon.getShoppingNum(this,mall_news_num,mall_news_num_two);
+//        }
     }
 
     /**
@@ -382,7 +386,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
         mall_ScrollViewContainer.setState_two(false);
         middle_templateWebView.loadData(XHTemplateManager.DSPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSPRODUCTINFO),new String[]{code});
-
+        middle_templateWebView.setVisibility(View.GONE);
     }
 
     /**
@@ -666,7 +670,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             case R.id.service_mercat://客服
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "客服按钮");
                 Intent intentmark = new Intent(this, Feedback.class);
-                intentmark.putExtra("backData",map.get("m_url"));
+                intentmark.putExtra("feekUrl",map.get("m_url"));
                 this.startActivity(intentmark);
                 break;
             case R.id.commod_buy:
