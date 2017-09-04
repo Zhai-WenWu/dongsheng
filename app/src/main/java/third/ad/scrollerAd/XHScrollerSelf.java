@@ -71,7 +71,7 @@ public class XHScrollerSelf extends XHScrollerAdParent{
             public void run() {
                 if(map_link!=null&&!TextUtils.isEmpty(map_link.get("name"))) {
                     map_link.put("type",XHScrollerAdParent.ADKEY_BANNER);
-                    Map<String,String> map = new HashMap<>();
+                    final Map<String,String> map = new HashMap<>();
                     map.put("title", map_link.get("name"));
                     map.put("desc",  map_link.get("subhead"));
                     map.put("adType",map_link.get("adType"));
@@ -95,12 +95,28 @@ public class XHScrollerSelf extends XHScrollerAdParent{
                         map.put("appSearchImg", imgUrl3);
                         map.put("iconUrl", imgUrl);
                         map.put("type",XHScrollerAdParent.ADKEY_BANNER);
-                        xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);
+                        //主线程中处理
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);
+                            }
+                        });
                     }else {
-                        xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
+                            }
+                        });
                     }
                 }else {
-                    xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
+                        }
+                    });
                 }
             }
         }).start();
