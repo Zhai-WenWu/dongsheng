@@ -44,6 +44,8 @@ public class ActivityMethodManager {
         this.mAct = mAct;
         //用于标记umeng推送记录数据
         PushAgent.getInstance(mAct).onAppStart();
+        /*随机广告*/
+        randPromotion();
     }
 
     public void onResume(int level) {
@@ -121,8 +123,6 @@ public class ActivityMethodManager {
             colse_level = 1000;
         }
 
-        /*随机广告*/
-        randPromotion();
     }
 
     public void onPause() {
