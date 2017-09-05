@@ -2,26 +2,26 @@ package amodule.answer.activity;
 
 
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.dialogManager.PushManager;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
-import acore.widget.PagerSlidingTabStrip;
-import amodule.answer.adapter.QAMsgPagerAdapter;
-import amodule.answer.model.QAMsgModel;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;
@@ -33,62 +33,36 @@ import aplug.web.view.XHWebView;
  */
 
 public class QAMsgListActivity extends BaseFragmentActivity implements IObserver {
-    private PagerSlidingTabStrip mTabStrip;
-    private ViewPager mViewPager;
-    private QAMsgPagerAdapter mPagerAdapter;
+
+    private LinearLayout mTabContainer;
     private ImageView mBackImg;
     private XHWebView mWebView;
     private WebviewManager mWebViewManager;
     private JsAppCommon mJsCommon;
 
-    private ArrayList<QAMsgModel> mModels;
+    private int mCurrSelectedPos = -1;
+
+    private ArrayList<Map<String, String>> mDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("", 2, 0, 0, R.layout.qa_msglist_layout);
         initView();
-        initData();
         addListener();
         getTabData();
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_UPLOADOVER);
     }
 
-    private void initData() {
-        mPagerAdapter = new QAMsgPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(5);
-        mTabStrip.setViewPager(mViewPager);
-    }
-
     private void initView() {
         mBackImg = (ImageView) findViewById(R.id.back_img);
-        mTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tab);
-        mTabStrip.setIndicatorHeight(0);
+        mTabContainer = (LinearLayout) findViewById(R.id.tab_container);
         mWebViewManager = new WebviewManager(this, loadManager, true);
         mWebView = mWebViewManager.createWebView(R.id.XHWebview);
         mWebViewManager.setJSObj(mWebView, mJsCommon = new JsAppCommon(this, mWebView, loadManager, null));
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
     }
 
     private void addListener() {
-        mTabStrip.setListener();
-        mTabStrip.setmDelegatePageListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mPagerAdapter.onPageSelected(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         mBackImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +76,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                 QAMsgListActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        onTabDataReady(data);
+                        onTabDataReady(mTabContainer != null && mTabContainer.getChildCount() > 0, data);
                     }
                 });
             }
@@ -124,39 +98,107 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
             cookieManager.setCookie(cookieKey, cookie[i]);
         }
         CookieSyncManager.getInstance().sync();
-        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST));
+        mWebView.setVisibility(View.VISIBLE);
+       loadMsgList(false);
     }
 
-    private void onTabDataReady(Object data) {
+    private void onTabDataReady(boolean refNum, Object data) {
         loadManager.hideProgressBar();
         if (data == null || TextUtils.isEmpty(data.toString())) {
             finish();
             return;
         }
-        if (mModels == null)
-            mModels = new ArrayList<QAMsgModel>();
-        if (!mModels.isEmpty())
-            mModels.clear();
-        int selectedPosition = 0;
         ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(data);
+        mDatas = datas;
         for (int i = 0; i < datas.size(); i ++) {
             Map<String, String> map = datas.get(i);
             if (map == null || map.isEmpty())
                 continue;
-            QAMsgModel model = new QAMsgModel();
+            String msgNum = map.get("msgNum");
+            if (refNum) {
+                setMsgNum(msgNum, i);
+                continue;
+            }
+            String title = map.get("title");
             boolean isSelect = map.get("isSelect") == "2";
-            if (isSelect)
-                selectedPosition = i;
-            model.setmPosition(i);
-            model.setmType(map.get("type"));
-            model.setmTitle(map.get("title"));
-            model.setmIsSelect(isSelect);
-            model.setmMsgNum(map.get("msgNum"));
-            mModels.add(model);
+            if (!TextUtils.isEmpty(title)) {
+                View tabView = LayoutInflater.from(this).inflate(R.layout.tab_strip_numlayout, null, false);
+                TextView tab = (TextView) tabView.findViewById(R.id.psts_tab_title);
+                tab.setText(title);
+                final int pos = i;
+                tabView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setSelection(pos);
+                        loadMsgList(true);
+                    }
+                });
+                mTabContainer.addView(tabView);
+                if (isSelect) {
+                    setSelection(i);
+                }
+                setMsgNum(msgNum, i);
+            }
         }
-        mPagerAdapter.setData(mModels);
-        mViewPager.setCurrentItem(selectedPosition);
-        mTabStrip.notifyDataSetChanged();
+    }
+
+    /**
+     * 设置消息气泡
+     * @param numStr
+     * @param position
+     */
+    private void setMsgNum (String numStr, int position) {
+        try {
+            TextView numView = (TextView) mTabContainer.getChildAt(position).findViewById(R.id.num);
+            int num = Integer.parseInt(numStr);
+            if (num > 99) {
+                numView.setText(numStr + "+");
+            } else if (num > 0) {
+                numView.setText(numStr);
+                numView.setVisibility(View.VISIBLE);
+            } else {
+                numView.setVisibility(View.INVISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置选中的tab
+     * @param position 要选中的位置
+     */
+    private void setSelection(int position) {
+        if (mCurrSelectedPos == position)
+            return;
+        else {
+            if (mCurrSelectedPos > -1) {
+                View oldSelectView = mTabContainer.getChildAt(mCurrSelectedPos);
+                oldSelectView.setSelected(false);
+                TextView tvNum = (TextView) oldSelectView.findViewById(R.id.num);
+                if (tvNum.getVisibility() == View.VISIBLE)
+                    tvNum.setVisibility(View.INVISIBLE);
+            }
+            mCurrSelectedPos = position;
+            View currSelectedView = mTabContainer.getChildAt(mCurrSelectedPos);
+            currSelectedView.setSelected(true);
+            currSelectedView.findViewById(R.id.num).setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * 加载消息列表
+     * @param isRef
+     */
+    private void loadMsgList (final boolean isRef) {
+        if (mWebView == null)
+            return;
+        loadManager.setLoading(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1") + (isRef ? "&type=" + mDatas.get(mCurrSelectedPos).get("type"): "")));
+            }
+        });
     }
 
     @Override
@@ -164,7 +206,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         super.onResume();
         if (mRefreshCurrFragment) {
             mRefreshCurrFragment = false;
-            mPagerAdapter.getCurrentFragment().refreshFragment();
+            loadMsgList(true);
         }
     }
 

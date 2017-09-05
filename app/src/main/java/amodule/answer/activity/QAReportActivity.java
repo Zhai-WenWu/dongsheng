@@ -235,6 +235,7 @@ public class QAReportActivity extends BaseActivity {
             if (mapBlack != null && !mapBlack.isEmpty()) {
                 String key = mapBlack.get("key");
                 String text = mapBlack.get("text");
+                String isDef = mapBlack.get("isDefault");//是否拉黑 1.否， 2.是
                 if (!TextUtils.isEmpty(text)) {
                     if (mBlackText != null) {
                         mBlackText.setText(text);
@@ -242,8 +243,10 @@ public class QAReportActivity extends BaseActivity {
                     }
                     if (mBlackListContainer != null)
                         mBlackListContainer.setVisibility(View.VISIBLE);
-                    if (mBlackListSwitchBtn != null)
+                    if (mBlackListSwitchBtn != null) {
                         mBlackListSwitchBtn.setTag(key);
+                        mBlackListSwitchBtn.setSelected("2".equals(isDef));
+                    }
                 }
             }
             String moreReason = map.get("adminList");
