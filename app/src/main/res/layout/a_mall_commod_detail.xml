@@ -457,7 +457,6 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/dp_14"
                     android:minHeight="@dimen/dp_14"
-                    android:paddingBottom="@dimen/dp_1"
                     android:background="@drawable/tv_circle_red_20"
                     android:layout_marginRight="@dimen/dp_19"
                     android:gravity="center"
