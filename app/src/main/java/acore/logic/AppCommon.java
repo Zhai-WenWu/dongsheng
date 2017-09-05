@@ -214,7 +214,8 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
-//        url="xiangha://welcome?nativeWeb.app?protocolurl=weixin%3a%2f%2fdl%2fbusiness%2f%3fticket%3dt9fa6d8aff8a37f139803a0552b5a65bf%23wechat_redirect&browserurl=http%3a%2f%2fm.xiangha.com%2fjumpWX%2fopen%2fxiangha";
+//      xiangha://welcome?
+// nativeWeb.app?protocolurl=weixin%3a%2f%2fdl%2fbusiness%2f%3fticket%3dt9fa6d8aff8a37f139803a0552b5a65bf%23wechat_redirect&browserurl=http%3a%2f%2fm.xiangha.com%2fjumpWX%2fopen%2fxiangha
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
         if (!url.startsWith(XH_PROTOCOL) && !url.startsWith("http")
@@ -224,7 +225,7 @@ public class AppCommon {
         // 如果识别到外部开启链接，则解析
         if (url.startsWith(XH_PROTOCOL) && url.length() > XH_PROTOCOL.length()) {
             String tmpUrl = url.substring(XH_PROTOCOL.length());
-            tmpUrl = Uri.decode(tmpUrl);
+//            tmpUrl = Uri.decode(tmpUrl);
             if (tmpUrl.startsWith("url=")) {
                     tmpUrl = tmpUrl.substring("url=".length());
                 }
@@ -233,7 +234,6 @@ public class AppCommon {
             } else {
                 url = tmpUrl;
             }
-
         }
 
         //按#分割，urls【1】是表示外部吊起的平台例如360
@@ -261,11 +261,12 @@ public class AppCommon {
         if (url.contains("download.app")) {
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
-            String downUrl = map_link.get("url");
+            String downUrl = Uri.decode(map_link.get("url"));
+            String appName = Uri.decode(map_link.get("appname"));
             try {
                 final DownLoad downLoad = new DownLoad(XHApplication.in());
-                downLoad.setNotifaction("开始下载", map_link.get("appname") + ".apk", "正在下载", R.drawable.ic_launcher, false);
-                downLoad.starDownLoad(downUrl, FileManager.getCameraDir(), map_link.get("appname"), true, new DownloadCallBack() {
+                downLoad.setNotifaction("开始下载", appName + ".apk", "正在下载", R.drawable.ic_launcher, false);
+                downLoad.starDownLoad(downUrl, FileManager.getCameraDir(), appName, true, new DownloadCallBack() {
                     @Override
                     public void starDown() {
                         super.starDown();
@@ -297,7 +298,7 @@ public class AppCommon {
         } else if (url.indexOf("link.app") == 0) {//外链
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
-            String openUrl = map_link.get("url");
+            String openUrl = Uri.decode(map_link.get("url"));
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
             Uri content_url = Uri.parse(openUrl);
@@ -426,7 +427,7 @@ public class AppCommon {
                         urls[1] = urls[1] + "?" + urls[2];
                         String key = urls[1].substring(0, urls[1].indexOf("="));
                         String value = urls[1].substring(urls[1].indexOf("=") + 1, urls[1].length());
-                        bundle.putString(key, value);
+                        bundle.putString(Uri.decode(key), Uri.decode(value));
                     } else {
                         String[] parameter = urls[1].split("&");
 
@@ -1091,7 +1092,7 @@ public class AppCommon {
                             }
                         });
             }
-        }, 30 * 1000);//延时30s
+        }, 5 * 1000);//延时5s
     }
 
     /**
