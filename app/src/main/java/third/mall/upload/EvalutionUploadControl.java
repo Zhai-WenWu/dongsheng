@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.TimerTask;
 
+import acore.tools.Tools;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
@@ -127,6 +128,18 @@ public class EvalutionUploadControl {
 
     /** 发布 */
     public synchronized void publishEvalution() {
+        if(!isPublishing){
+            //设置30延时取消
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(isRequesting && isPublishing){
+                        cancelUpload();
+                        Tools.showToast(context,"发布失败，请重试");
+                    }
+                }
+            },30 * 1000);
+        }
         isPublishing = true;
         if (onPublishCallback != null)
             onPublishCallback.onStratPublish();
@@ -158,13 +171,7 @@ public class EvalutionUploadControl {
                     uploadAgin(imageUrl);
             }
         }
-        //设置30延时取消
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cancelUpload();
-            }
-        },30 * 1000);
+
     }
 
     /**
@@ -205,6 +212,7 @@ public class EvalutionUploadControl {
     /**取消发布*/
     public void cancelUpload() {
         isPublishing = false;
+        isRequesting = false;
         MallReqInternet.in().cancelRequset(
                 new StringBuffer(MallStringManager.mall_addComment)
                         .append(combineParameter().toString()

@@ -20,6 +20,7 @@ import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.window.UploadingDialog;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
 import third.mall.aplug.MallInternetCallback;
@@ -177,13 +178,15 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case REQUEST_CODE_NEED_REFRESH:
-                if(resultCode == OrderStateActivity.result_comment_success){
+                if(resultCode == OrderStateActivity.result_comment_success
+                        || resultCode == OrderStateActivity.result_comment_part_success){
                     status = resultCode;
                     refersh();
                 }
                 break;
             case OrderStateActivity.request_order:
-                if (resultCode == OrderStateActivity.result_comment_success) {
+                if (resultCode == OrderStateActivity.result_comment_success
+                        || resultCode == OrderStateActivity.result_comment_part_success) {
                     status = resultCode;
                 }
                 break;
@@ -209,15 +212,13 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
         super.finish();
     }
 
-    private Dialog mUploadingDialog;
-
+    private UploadingDialog mUploadingDialog;
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
         if (mUploadingDialog == null) {
-            mUploadingDialog = new Dialog(this, R.style.dialog);
-            mUploadingDialog.setContentView(R.layout.ask_upload_dialoglayout);
-//            mUploadingDialog.setCancelable(false);
+            mUploadingDialog = new UploadingDialog(this);
+            mUploadingDialog.setContentView();
             mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {

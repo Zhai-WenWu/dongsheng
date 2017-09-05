@@ -98,14 +98,15 @@ public class EvalutionListActivity extends ShowTemplateWeb {
             @Override
             public void show() {
                 Log.i("tzy","show");
-                int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
-                Rect r = new Rect();
-                rl.getWindowVisibleDisplayFrame(r);
-                int screenHeight = rl.getRootView().getHeight();
-                heightDifference = screenHeight - (r.bottom - r.top);
-                boolean isKeyboradShow = heightDifference > 200;
-                heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
-                editControlerLayout.setPadding(0, 0, 0, heightDifference);
+//                if(heightDifference == -1){
+                    int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+//                    Rect r = new Rect();
+//                    rl.getWindowVisibleDisplayFrame(r);
+//                    int screenHeight = rl.getRootView().getHeight();
+//                    heightDifference = screenHeight - (r.bottom - r.top);
+//                    heightDifference = heightDifference > 200 ? heightDifference - heightDiff : 0;
+//                }
+                editControlerLayout.setPadding(0, 0, 0, heightDiff);
             }
 
             @Override

@@ -60,6 +60,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	public static final int result_cancel= 2002;
 	public static final int result_sure= 2003;
 	public static final int result_comment_success = 2004;
+	public static final int result_comment_part_success = 2005;
 
 	private String order_id;
 	private String order_satus;
@@ -714,7 +715,11 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray){
 		XHClick.mapStat(this,XHClick.comcomment_icon,"订单详情-评价按钮","");
 		if(productArray.size() == 1){
-			gotoCommentSingle(orderMap , StringManager.getFirstMap(productArray.get(0).get("info")));
+			Map<String, String> productMap = StringManager.getFirstMap(productArray.get(0).get("info"));
+			if(TextUtils.isEmpty(productMap.get("img"))){
+				productMap.put("img",productArray.get(0).get("img"));
+			}
+			gotoCommentSingle(orderMap , productMap);
 		}else if(productArray.size() > 1){
 			gotoCommentMulti(orderMap);
 		}

@@ -51,13 +51,14 @@ public class AdapterMyOrderItemNew extends AdapterSimple{
 		public ViewHolder(OrderItem2View view){
 			this.view= view;
 		}
-		public void setData( Map<String, String> map,int position){
+		public void setData(final Map<String, String> map,int position){
 			view.setData(map, position, id);
 			view.setUrl(url,mall_stat_statistic);
 			view.setInterfaceCallBack(new InterfaceCallBack() {
 				@Override
 				public void delItem(int position) {
-					
+					data.remove(map);
+					notifyDataSetChanged();
 				}
 			});
 		}

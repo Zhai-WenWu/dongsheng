@@ -18,11 +18,11 @@
         android:layout_height="match_parent"
         android:visibility="visible">
 
+    </RelativeLayout>
         <acore.widget.CommentBar
             android:id="@+id/comment_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_alignParentBottom="true"/>
-    </RelativeLayout>
 </RelativeLayout>

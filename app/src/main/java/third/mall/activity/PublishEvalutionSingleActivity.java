@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,8 +26,11 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ProperRatingBar;
+import amodule.answer.window.UploadingDialog;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
+import third.mall.aplug.MallReqInternet;
+import third.mall.aplug.MallStringManager;
 import third.mall.override.MallBaseActivity;
 import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.EvalutionImageLayout;
@@ -122,7 +126,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
-
+                    status = OrderStateActivity.result_comment_success;
                     startActivityForResult(
                             new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
                                     .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
@@ -130,7 +134,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                             OrderStateActivity.request_order
                     );
                 }else{
-                    status = OrderStateActivity.result_comment_success;
+                    status = OrderStateActivity.result_comment_part_success;
                     PublishEvalutionSingleActivity.this.finish();
                 }
             }
@@ -215,6 +219,14 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 }
                 updateShareLayoutVisibility();
                 updateContentLengthText();
+            }
+        });
+        contentEdit.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
 
@@ -422,15 +434,13 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 .show();
     }
 
-    private Dialog mUploadingDialog;
-
+    private UploadingDialog mUploadingDialog;
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
         if (mUploadingDialog == null) {
-            mUploadingDialog = new Dialog(this, R.style.dialog);
-            mUploadingDialog.setContentView(R.layout.ask_upload_dialoglayout);
-//            mUploadingDialog.setCancelable(false);
+            mUploadingDialog = new UploadingDialog(this);
+            mUploadingDialog.setContentView();
             mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -438,14 +448,13 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 }
             });
         }
-
         mUploadingDialog.show();
     }
 
-    private boolean cancelUploadingDialog() {
+    private void cancelUploadingDialog() {
         if (mUploadingDialog == null || !mUploadingDialog.isShowing())
-            return false;
+            return;
         mUploadingDialog.cancel();
-        return true;
     }
+
 }
