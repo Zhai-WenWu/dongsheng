@@ -214,8 +214,7 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
-        Log.i("FRJ", "openUrl() url:" + url);
-
+//        url="xiangha://welcome?nativeWeb.app?protocolurl=weixin%3a%2f%2fdl%2fbusiness%2f%3fticket%3dt9fa6d8aff8a37f139803a0552b5a65bf%23wechat_redirect&browserurl=http%3a%2f%2fm.xiangha.com%2fjumpWX%2fopen%2fxiangha";
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
         if (!url.startsWith(XH_PROTOCOL) && !url.startsWith("http")
@@ -225,8 +224,8 @@ public class AppCommon {
         // 如果识别到外部开启链接，则解析
         if (url.startsWith(XH_PROTOCOL) && url.length() > XH_PROTOCOL.length()) {
             String tmpUrl = url.substring(XH_PROTOCOL.length());
-                tmpUrl = Uri.decode(tmpUrl);
-                if (tmpUrl.startsWith("url=")) {
+            tmpUrl = Uri.decode(tmpUrl);
+            if (tmpUrl.startsWith("url=")) {
                     tmpUrl = tmpUrl.substring("url=".length());
                 }
             if (TextUtils.isEmpty(tmpUrl)) {
@@ -314,6 +313,11 @@ public class AppCommon {
             // browser
             String browserUrl = map_link.get("browserurl");
             String packageName = map_link.get("package");
+            //
+            protocolUrl=Uri.decode(protocolUrl);
+            browserUrl=Uri.decode(browserUrl);
+            packageName=Uri.decode(packageName);
+
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
             Uri content_url = Uri.parse(browserUrl);

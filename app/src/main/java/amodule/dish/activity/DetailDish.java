@@ -338,7 +338,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     @Override
     public void notify(String name, Object sender, Object data) {
-        Log.i("zyj","name::::"+name);
         switch (name){
             case ObserverManager.NOTIFY_LOGIN://登陆
                 if(dishActivityViewControl!=null) {
