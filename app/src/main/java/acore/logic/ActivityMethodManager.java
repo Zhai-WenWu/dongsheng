@@ -198,14 +198,15 @@ public class ActivityMethodManager {
         String classKey = mAct.getComponentName().getClassName();
         //获取 config 中的 randPromotion 数据
         Map<String,String> randProConfigMap = StringManager.getFirstMap(AppCommon.getConfigByLocal("randPromotion"));
-        if(randProConfigMap.containsKey("text")
-                && !TextUtils.isEmpty(randProConfigMap.get("text"))){
-            String text = randProConfigMap.get("text");
+        if(randProConfigMap.containsKey(classKey)
+                && "2".equals(randProConfigMap.get(classKey))){
+            //数据
             Map<String,String> randProMap = StringManager.getFirstMap(AppCommon.loadRandPromotionData());
-            if(randProMap.containsKey(classKey)
-                    && "2".equals(randProMap.get(classKey))){
-                //
-                Tools.inputToClipboard(mAct,text);
+            if(randProMap.containsKey("text")
+                    && !TextUtils.isEmpty(randProMap.get("text"))){
+                //写如剪切板
+                Tools.inputToClipboard(mAct,randProMap.get("text"));
+                Log.i("tzy",randProMap.get("text"));
             }
         }
     }

@@ -48,9 +48,8 @@
                 android:layout_width="@dimen/dp_13"
                 android:layout_height="@dimen/dp_13"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_7.5"
+                android:layout_marginLeft="@dimen/dp_2.5"
                 android:layout_toRightOf="@+id/myorder_merchant_name_2"
-                android:paddingTop="@dimen/dp_1"
                 android:src="@drawable/z_find_home_ico_go"/>
 
             <TextView
@@ -58,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_12"
                 android:layout_toLeftOf="@+id/myorder_merchant_state_2"
                 android:text="查看物流"
                 android:textColor="@color/common_text"
@@ -79,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0.5"
                 android:layout_alignParentBottom="true"
-                android:background="#e1e2e4"/>
+                android:background="#e7e7e7"/>
         </RelativeLayout>
         <!-- 商品 -->
 
@@ -189,7 +188,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dp_0.5"
                 android:layout_alignParentTop="true"
-                android:background="#e1e2e4"/>
+                android:background="#e7e7e7"/>
 
             <TextView
                 android:id="@+id/myorder_price_text_2"

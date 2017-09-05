@@ -1,6 +1,8 @@
 package third.ad.scrollerAd;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -96,14 +98,14 @@ public class XHScrollerSelf extends XHScrollerAdParent{
                         map.put("iconUrl", imgUrl);
                         map.put("type",XHScrollerAdParent.ADKEY_BANNER);
                         //主线程中处理
-                        activity.runOnUiThread(new Runnable() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);
                             }
                         });
                     }else {
-                        activity.runOnUiThread(new Runnable() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
@@ -111,7 +113,7 @@ public class XHScrollerSelf extends XHScrollerAdParent{
                         });
                     }
                 }else {
-                    activity.runOnUiThread(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);

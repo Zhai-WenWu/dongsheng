@@ -23,9 +23,11 @@
 
             <ImageView
                 android:id="@+id/a_dish_detail_new_footer_hover_good_show"
-                android:layout_width="@dimen/dp_37"
-                android:layout_height="@dimen/dp_31.5"
-                android:padding="@dimen/dp_7"
+                android:layout_width="@dimen/dp_23"
+                android:layout_height="@dimen/dp_17.5"
+                android:layout_marginTop="@dimen/dp_7"
+                android:layout_marginBottom="@dimen/dp_7"
+                android:layout_marginRight="@dimen/dp_1.5"
                 android:src="@drawable/i_dish_detail_zan" />
 
             <TextView
@@ -58,8 +60,9 @@
                 android:id="@+id/a_dish_detail_new_footer_hover_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_6"
                 android:gravity="center"
                 android:text="向作者提问"
                 android:textColor="@color/comment_color"

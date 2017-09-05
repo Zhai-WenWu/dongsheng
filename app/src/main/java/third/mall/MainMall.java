@@ -3,6 +3,7 @@ package third.mall;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
@@ -136,6 +137,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.i("zyj","ma::::MallCommon.num_shopcat::"+MallCommon.num_shopcat);
 		if(MallCommon.num_shopcat>0){
 			Main.setNewMsgNum(1,MallCommon.num_shopcat);
 			if(MallCommon.num_shopcat>9){

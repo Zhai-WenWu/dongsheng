@@ -296,7 +296,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     private void updateContentLengthText() {
         int contentLength = contentEdit.getText().length();
         contentLengthText.setText(contentLength + "/" + maxTextCount);
-        contentLengthText.setTextColor(getResources().getColor(contentLength == maxTextCount ? R.color.comment_color : R.color.common_super_tint_text));
+        contentLengthText.setTextColor(getResources().getColor(contentLength == maxTextCount ? R.color.comment_color : R.color.evalution_hint_text));
     }
 
     @Override
