@@ -7,7 +7,7 @@
 
     <string name="ad_hint_text">广告</string>
     <!-- 公共配置部分 -->
-    <string name="conf_appName">香哈test</string>
+    <string name="conf_appName">香哈菜谱</string>
     <!-- debug start-->
     <string name="conf_isDebug">true</string>
     <!-- debug end -->
