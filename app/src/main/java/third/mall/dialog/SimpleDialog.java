@@ -36,14 +36,14 @@ public class SimpleDialog extends Dialog implements android.view.View.OnClickLis
 		/* 无标题栏 */
 		this.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-		Window dialogWindow = activity.getWindow();
+//		Window dialogWindow = activity.getWindow();
+//
+//		/* 设置为全屏 */
+//		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//		lp.width = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+//		lp.height = WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
-		/* 设置为全屏 */
-		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-		lp.width = WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		lp.height = WindowManager.LayoutParams.FLAG_FULLSCREEN;
-
-		this.getWindow().setGravity(Gravity.BOTTOM);
+//		this.getWindow().setGravity(Gravity.BOTTOM);
 
 		// view
 		this.view = this.getLayoutInflater().inflate(layoutID, null);
