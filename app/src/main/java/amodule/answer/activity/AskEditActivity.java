@@ -440,6 +440,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             try {
                 int t = Integer.parseInt(type);
                 if (t > 200 && !TextUtils.isEmpty(msg)) {// >200表示失败，
+                    cancelUploadingDialog();
                     showPriceChangeDialog(msg);
                     onPriceDataReady(true, map);
                 } else {// <=200表示成功，吊起支付弹窗
