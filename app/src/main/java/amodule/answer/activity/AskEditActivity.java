@@ -171,7 +171,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (!mIsAskMore && LoginManager.isLogin())
+                if (!mLoadPrice && !mIsAskMore && LoginManager.isLogin())
                     getPriceData();
                 else
                     loadManager.hideProgressBar();
@@ -209,6 +209,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             this.finish();
             return;
         }
+        if (mLoadPrice)
+            return;
         loadManager.showProgressBar();
         mLoadPrice = true;
         String params = "code=" + mDishCode + "&authorCode=" + mAuthorCode + "&type=" + mType;
