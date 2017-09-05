@@ -425,8 +425,9 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="@dimen/dp_25"
-                    android:layout_height="@dimen/dp_18"
+                    android:layout_width="@dimen/dp_23"
+                    android:layout_height="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_4"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
                     android:src="@drawable/product_shop"/>
