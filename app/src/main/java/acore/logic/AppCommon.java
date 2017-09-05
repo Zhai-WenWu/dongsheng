@@ -1082,7 +1082,7 @@ public class AppCommon {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
                                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                                    FileManager.scynSaveFile(FileManager.file_randPromotionConfig, msg.toString(), false);
+                                    FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, msg.toString(), false);
                                 }
                             }
                         });
@@ -1096,7 +1096,7 @@ public class AppCommon {
      * @return 随机推广数据
      */
     public static String loadRandPromotionData() {
-        return FileManager.readFile(FileManager.file_randPromotionConfig);
+        return FileManager.readFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig);
     }
 
 }

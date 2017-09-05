@@ -3,6 +3,7 @@ package third.mall.activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -89,27 +90,27 @@ public class EvalutionListActivity extends ShowTemplateWeb {
             @Override
             public void onPublishComment(String content) {
                 if(templateWebView != null)
-                    templateWebView.loadUrl("Javascript:"+callbackName+"(\""+content+"\")");
+                    templateWebView.loadUrl("javascript:"+callbackName+"(\""+content+"\")");
                 resetCommentBar();
             }
         });
         setOnKeyBoardListener(new OnKeyBoardListener() {
             @Override
             public void show() {
-                if(heightDifference != -1){
-                    int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
-                    Rect r = new Rect();
-                    rl.getWindowVisibleDisplayFrame(r);
-                    int screenHeight = rl.getRootView().getHeight();
-                    heightDifference = screenHeight - (r.bottom - r.top);
-                    boolean isKeyboradShow = heightDifference > 200;
-                    heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
-                }
+                Log.i("tzy","show");
+                int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
+                Rect r = new Rect();
+                rl.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rl.getRootView().getHeight();
+                heightDifference = screenHeight - (r.bottom - r.top);
+                boolean isKeyboradShow = heightDifference > 200;
+                heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
                 editControlerLayout.setPadding(0, 0, 0, heightDifference);
             }
 
             @Override
             public void hint() {
+                Log.i("tzy","hint");
                 editControlerLayout.setPadding(0, 0, 0, 0);
             }
         });

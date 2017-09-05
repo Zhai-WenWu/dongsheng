@@ -253,9 +253,9 @@ public class MallButtonView {
 
 	/**
 	 * post请求----
-	 * @param map
 	 * @param actionUrl
 	 * @param param
+	 * @param callback
 	 */
 	private void postRequest(final String actionUrl,final String param,final InterfaceViewCallback callback) {
 		

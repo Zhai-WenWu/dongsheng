@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -391,7 +392,8 @@ public class  ShowWeb extends WebActivity implements IObserver {
 			case ObserverManager.NOTIFY_SHARE:
 				if(!TextUtils.isEmpty(shareCallback) && data != null){
 					Map<String,String> dataMap = (Map<String, String>) data;
-					webview.loadUrl("Javascript:"+shareCallback+"(\""+dataMap.get("status")+"\"”)");
+					webview.loadUrl("javascript:"+shareCallback+"(\""+dataMap.get("status")+"\")");
+					Log.i("tzy","javascript:"+shareCallback+"(\""+dataMap.get("status")+"\")");
 				}
 				Tools.showToast(this,"NOTIFY_SHARE");
 				break;

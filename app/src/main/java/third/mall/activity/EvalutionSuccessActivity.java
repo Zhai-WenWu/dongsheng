@@ -32,6 +32,7 @@ public class EvalutionSuccessActivity extends ShowTemplateWeb {
         intent.putExtra(EvalutionSuccessActivity.REQUEST_METHOD, XHTemplateManager.DSSUCCESSCOMMENT);
         setIntent(intent);
         super.onCreate(savedInstanceState);
+        level = 6;
     }
 
     @Override
