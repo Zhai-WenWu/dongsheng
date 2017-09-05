@@ -414,7 +414,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     /** 显示确认返回dialog */
     private void showSureBackDialog() {
         final XhDialog dialog = new XhDialog(this);
-        dialog.setMessage("是否取消发布")
+        dialog.setTitle("是否取消发布")
                 .setCanselButton("是", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
