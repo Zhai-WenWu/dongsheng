@@ -201,13 +201,24 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         });
     }
 
+    private boolean mIsFromPause;
     @Override
     protected void onResume() {
         super.onResume();
+        if (mIsFromPause) {
+            mIsFromPause = false;
+            loadManager.hideProgressBar();
+        }
         if (mRefreshCurrFragment) {
             mRefreshCurrFragment = false;
             loadMsgList(true);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsFromPause = true;
     }
 
     @Override
