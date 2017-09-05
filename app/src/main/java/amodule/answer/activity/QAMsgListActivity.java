@@ -110,6 +110,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         }
         ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(data);
         mDatas = datas;
+        int defSelectPos = 0;
         for (int i = 0; i < datas.size(); i ++) {
             Map<String, String> map = datas.get(i);
             if (map == null || map.isEmpty())
@@ -121,6 +122,8 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
             }
             String title = map.get("title");
             boolean isSelect = map.get("isSelect") == "2";
+            if (isSelect)
+                defSelectPos = i;
             if (!TextUtils.isEmpty(title)) {
                 View tabView = LayoutInflater.from(this).inflate(R.layout.tab_strip_numlayout, null, false);
                 TextView tab = (TextView) tabView.findViewById(R.id.psts_tab_title);
@@ -134,12 +137,12 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                     }
                 });
                 mTabContainer.addView(tabView);
-                if (isSelect) {
-                    setSelection(i);
-                }
                 setMsgNum(msgNum, i);
             }
         }
+        if (mTabContainer.getChildCount() == 0)
+            return;
+        setSelection(defSelectPos);
     }
 
     /**
