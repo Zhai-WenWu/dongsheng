@@ -21,30 +21,51 @@
             android:scaleType="centerInside"
             android:src="@drawable/calssify_health_back" />
 
-        <acore.widget.PagerSlidingTabStrip
-            android:id="@+id/tab"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_45"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            app:pstsIndicatorColor="#00FFFFFE"
-            app:pstsIndicatorWidthFollowText="false"
-            app:pstsTabBackground="@android:color/transparent"
-            app:pstsTabPaddingLeftRight="@dimen/dp_12.5"
-            app:pstsTabTextColor="@color/circle_tab_text_color"
-            app:pstsTabTextSize="@dimen/sp_16" />
+        <LinearLayout
+            android:id="@+id/tab_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!--<include android:id="@+id/qa_q"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                layout="@layout/tab_strip_numlayout"/>
+
+            <include android:id="@+id/qa_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                layout="@layout/tab_strip_numlayout"/>-->
+        </LinearLayout>
+
+
+
+        <!--<acore.widget.PagerSlidingTabStrip-->
+            <!--android:id="@+id/tab"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="@dimen/dp_45"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--app:pstsIndicatorColor="#00FFFFFE"-->
+            <!--app:pstsIndicatorWidthFollowText="false"-->
+            <!--app:pstsTabBackground="@android:color/transparent"-->
+            <!--app:pstsTabPaddingLeftRight="@dimen/dp_12.5"-->
+            <!--app:pstsTabTextColor="@color/circle_tab_text_color"-->
+            <!--app:pstsTabTextSize="@dimen/sp_16" />-->
 
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/bar_title" />
+    <!--<android.support.v4.view.ViewPager-->
+        <!--android:id="@+id/viewpager"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/bar_title" />-->
 
     <aplug.web.view.XHWebView
         android:id="@+id/XHWebview"
         style="@style/layout"
+        android:layout_below="@+id/bar_title"
         android:background="@android:color/transparent"
         android:scrollbars="none"
         android:visibility="gone"/>

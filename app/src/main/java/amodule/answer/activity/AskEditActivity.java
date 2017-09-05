@@ -34,6 +34,7 @@ import acore.tools.ToolsDevice;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.answer.window.FloatingWindow;
+import amodule.answer.window.UploadingDialog;
 import amodule.dish.view.CommonDialog;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
@@ -388,14 +389,13 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         }
     }
 
-    private Dialog mUploadingDialog;
+    private UploadingDialog mUploadingDialog;
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
         if (mUploadingDialog == null) {
-            mUploadingDialog = new Dialog(this, R.style.dialog);
-            mUploadingDialog.setContentView(R.layout.ask_upload_dialoglayout);
-            mUploadingDialog.setCancelable(true);
+            mUploadingDialog = new UploadingDialog(this);
+            mUploadingDialog.setContentView();
             mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {

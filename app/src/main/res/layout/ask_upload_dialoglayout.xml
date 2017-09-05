@@ -10,11 +10,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="@dimen/dp_15"
-        android:paddingBottom="@dimen/dp_15"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
-        android:background="@drawable/bg_round3_white">
+        android:paddingTop="@dimen/dp_32"
+        android:paddingBottom="@dimen/dp_32"
+        android:paddingLeft="@dimen/dp_49"
+        android:paddingRight="@dimen/dp_49"
+        android:background="@drawable/bg_round8_white">
 
         <ProgressBar
             android:id="@+id/progressBar"
