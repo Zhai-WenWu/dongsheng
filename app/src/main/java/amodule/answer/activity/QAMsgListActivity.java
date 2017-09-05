@@ -142,7 +142,8 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         }
         if (mTabContainer.getChildCount() == 0)
             return;
-        setSelection(defSelectPos);
+        if (!refNum)
+            setSelection(defSelectPos);
     }
 
     /**
