@@ -107,7 +107,7 @@
                         app:pstsTabColumn="5"
                         app:pstsTabTextColor="@color/tab_text_color"
                         app:pstsTabTextSize="@dimen/sp_14"
-                        app:pstsUnderlineColor="#DFDFDF"
+                        app:pstsUnderlineColor="#e1e1e1"
                         app:pstsUnderlineHeight="@dimen/dp_0.5"/>
                 </RelativeLayout>
 

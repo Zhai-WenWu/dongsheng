@@ -1,12 +1,12 @@
 package third.mall.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -29,8 +29,6 @@ import acore.widget.ProperRatingBar;
 import amodule.answer.window.UploadingDialog;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
-import third.mall.aplug.MallReqInternet;
-import third.mall.aplug.MallStringManager;
 import third.mall.override.MallBaseActivity;
 import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.EvalutionImageLayout;
@@ -342,14 +340,18 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     private void updateUploadImages(ArrayList<String> images) {
         //对比新增数据
         for (String imagePath : images) {
-            if (!imagesLayout.getImageArray().contains(imagePath))
-                uploadControl.uploadImage(imagePath);//上传
+            if (!imagesLayout.getImageArray().contains(imagePath)){
+                uploadControl.uploadImage(imagePath);
+                uploadControl.uploadAgin(imagePath);//上传
+            }
         }
+        Log.i("tzy","images = " + uploadControl.bean.images.toString());
         //对比旧的移除数据
-        for (String imagePath : imagesLayout.getImageArray()) {
-            if (!images.contains(imagePath))
-                uploadControl.delUploadImage(imagePath);//移除上传
-        }
+//        for (String imagePath : imagesLayout.getImageArray()) {
+//            if (!images.contains(imagePath))
+//                uploadControl.delUploadImage(imagePath);//移除上传
+//        }
+//        Log.i("tzy","images = " + uploadControl.bean.images.toString());
     }
 
     @Override

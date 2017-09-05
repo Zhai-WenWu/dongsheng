@@ -32,12 +32,6 @@ public class PlayVideo extends BaseAppCompatActivity {
     private StandardGSYVideoPlayer videoPlayer;
     OrientationUtils orientationUtils;
 
-
-
-    private boolean isTransition;
-
-    private Transition transition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,10 +137,12 @@ public class PlayVideo extends BaseAppCompatActivity {
         videoPlayer.onVideoResume();
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //释放所有
+        videoPlayer.setStandardVideoAllCallBack(null);
+        GSYVideoPlayer.releaseAllVideos();
         if (orientationUtils != null)
             orientationUtils.releaseListener();
     }
@@ -158,36 +154,7 @@ public class PlayVideo extends BaseAppCompatActivity {
             videoPlayer.getFullscreenButton().performClick();
             return;
         }
-        //释放所有
-        videoPlayer.setStandardVideoAllCallBack(null);
-        GSYVideoPlayer.releaseAllVideos();
-        if (isTransition && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            super.onBackPressed();
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
-                }
-            }, 500);
-        }
+        super.onBackPressed();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private boolean addTransitionListener() {
-        transition = getWindow().getSharedElementEnterTransition();
-        if (transition != null) {
-            transition.addListener(new OnTransitionListener(){
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    super.onTransitionEnd(transition);
-                    videoPlayer.startPlayLogic();
-                    transition.removeListener(this);
-                }
-            });
-            return true;
-        }
-        return false;
-    }
 }
