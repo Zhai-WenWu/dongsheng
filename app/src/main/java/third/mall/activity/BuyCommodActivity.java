@@ -192,7 +192,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 			case R.id.buycommod_consignee_rela:
 				Intent intent = new Intent(this, AddressActivity.class);
 				intent.putExtra("address_id", address_id);
-				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(this));
 				this.startActivityForResult(intent, OK_ADDRESS);
 				break;
 		}

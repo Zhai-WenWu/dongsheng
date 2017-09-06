@@ -59,6 +59,7 @@ import static acore.tools.ToolsDevice.getWindowPx;
 public class XHClick {
     public static final int CIRCULATION_TIME = 30000;
     public static int HOME_STATICTIS_TIME = 10 * 1000;
+    public static int PAGE_STATICTIS_TIME = 10 * 60 * 1000;//页面停留时间修改
     public static final int NOTIFY_A = 1;
     public static final int NOTIFY_B = 2;
     public static final int NOTIFY_C = 3;
@@ -71,13 +72,17 @@ public class XHClick {
     private static Handler handler;//s2
     private static Runnable runnable;
     private static Handler handlerStatictis;//s6统计
+    private static Handler handlerPageStatictis;//s7统计
     private static Runnable runnableStatictis;
+    private static Runnable runnablePageStatictis;
 
     private static long viewPageStartTime;//viewpage 子tab的页面停留时间(开始的时间戳)
     private static long viewPageStopTime;//viewpage 子tab的页面停留时间(结束的时间戳)
 //	private static String itemName = "";//viewpager 子tab的页面名称.(名称用拼音表示)
 
-    /**评价按钮*/
+    /**
+     * 评价按钮
+     */
     public static final String comcomment_icon = "comcomment_icon";
 
 
@@ -445,6 +450,19 @@ public class XHClick {
             }
         };
         handlerStatictis.postDelayed(runnableStatictis, HOME_STATICTIS_TIME);
+        //********页面时间统计
+        handlerPageStatictis = new Handler(Looper.getMainLooper());
+        runnablePageStatictis = new Runnable() {
+            @Override
+            public void run() {
+                //循环统计feed流数据
+                loopHandlerStatictis();
+                //循环倒计时--10分钟统计
+                handlerPageStatictis.postDelayed(runnablePageStatictis, PAGE_STATICTIS_TIME);
+            }
+        };
+        handlerPageStatictis.postDelayed(runnablePageStatictis, PAGE_STATICTIS_TIME);
+
     }
 
     /**
@@ -454,6 +472,7 @@ public class XHClick {
      */
     public static void finishToSendPath(Context allActivity) {
         newHomeStatictis(true, null);
+        handlerPageStatic();
         registerUserUseTimeSuperProperty(allActivity);
         stopTime = System.currentTimeMillis();
         double liveTime = (stopTime - startTime) / 1000.0;
@@ -492,6 +511,7 @@ public class XHClick {
      */
     public static void HomeKeyListener(Context allActivity) {
         newHomeStatictis(true, null);
+        handlerPageStatic();
         stopTime = System.currentTimeMillis();
         double liveTime = (stopTime - startTime) / 1000.0;
         //设置只保留一位小数
@@ -863,8 +883,8 @@ public class XHClick {
      * 轮训统计首页请求数据
      */
     private static void loopHandlerStatictis() {
-        ArrayList<String> data= StatictisSQLiteDataBase.getInstance().selectAllData();
-        if (data!=null&&data.size()>0) {
+        ArrayList<String> data = StatictisSQLiteDataBase.getInstance().selectAllData();
+        if (data != null && data.size() > 0) {
             newHomeStatictis(true, null);
         }
     }
@@ -880,13 +900,13 @@ public class XHClick {
             String url = StringManager.API_STATISTIC_S6;
             String baseData = getStatictisParams();
             LinkedHashMap<String, String> map = new LinkedHashMap<>();
-            if (isResetData&&(data==null||data.size()<=0)) {
+            if (isResetData && (data == null || data.size() <= 0)) {
                 data = StatictisSQLiteDataBase.getInstance().selectAllData();
                 StatictisSQLiteDataBase.getInstance().deleteAllData();
             }
             Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
             JSONObject jsonObject = MapToJson(baseMap);
-            if (data!=null&&data.size()>0) {
+            if (data != null && data.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
                 int lenght = data.size();
                 for (int i = 0; i < lenght; i++) {
@@ -898,15 +918,15 @@ public class XHClick {
             } else {
                 return;
             }
-            LinkedHashMap<String,String> map1= new LinkedHashMap<>();
-            map1.put("log_json",jsonObject.toString());
-            Log.i("wyl","log_json::::"+jsonObject.toString());
+            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
+            map1.put("log_json", jsonObject.toString());
+            Log.i("wyl", "log_json::::" + jsonObject.toString());
 
             ReqInternet.in().doPost(url, map1, new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Log.i("wyl","上传数据s6");
+                        Log.i("wyl", "上传数据s6");
                     } else {
 
                     }
@@ -998,11 +1018,11 @@ public class XHClick {
 //            Log.i("zhangyujian","加载数据：：："+params);
             //默认插入数据
             StatictisSQLiteDataBase.getInstance().insterData(params);
-            Log.i("wyl","位置：::"+StatictisSQLiteDataBase.getInstance().getDataNum());
+            Log.i("wyl", "位置：::" + StatictisSQLiteDataBase.getInstance().getDataNum());
             if (StatictisSQLiteDataBase.getInstance().getDataNum() >= 500) {
-                    //获取全部数据
-                final ArrayList<String> list= StatictisSQLiteDataBase.getInstance().selectAllData();
-                    //删除全部数据
+                //获取全部数据
+                final ArrayList<String> list = StatictisSQLiteDataBase.getInstance().selectAllData();
+                //删除全部数据
                 StatictisSQLiteDataBase.getInstance().deleteAllData();
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
@@ -1015,6 +1035,67 @@ public class XHClick {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 上传页面统计
+     */
+    public synchronized static void handlerPageStatic() {
+        try {
+            String url = StringManager.API_STATISTIC_S7;
+            String baseData = getStatictisParams();
+            ArrayList<String> data = StatictisSQLiteDataBase.getInstance().selectPageAllData();
+            StatictisSQLiteDataBase.getInstance().deleteAllData();
+
+            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
+            JSONObject jsonObject = MapToJson(baseMap);
+            if (data != null && data.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                int lenght = data.size();
+                for (int i = 0; i < lenght; i++) {
+                    if (!TextUtils.isEmpty(data.get(i))) {
+                        jsonArray.put(MapToJson(UtilString.getMapByString(data.get(i), "&", "=")));
+                    }
+                }
+                jsonObject.put("log_data", jsonArray);
+            } else {
+                return;
+            }
+            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
+            map1.put("log_json", jsonObject.toString());
+            Log.i("wyl", "log_json::::" + jsonObject.toString());
+
+            ReqInternet.in().doPost(url, map1, new InternetCallback(XHApplication.in()) {
+                @Override
+                public void loaded(int flag, String url, Object object) {
+                    if (flag >= ReqInternet.REQ_OK_STRING) {
+                        Log.i("wyl", "上传数据s7");
+                    } else {
+
+                    }
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * page停留时间统计。
+     * @param page_title
+     * @param stop_time
+     */
+    public synchronized static void savePageStatictis(String page_title,String stop_time){
+        //对数据进行存储
+        long time = System.currentTimeMillis();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String app_time = formatter.format(time);
+        String params = "";
+        params += "app_time=" + app_time;
+        params += "&page_title=" + page_title;
+        params += "&stop_time=" + stop_time;
+        StatictisSQLiteDataBase.getInstance().insterPageData(params);
     }
 
     /**

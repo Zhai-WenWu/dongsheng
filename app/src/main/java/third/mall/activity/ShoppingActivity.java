@@ -358,7 +358,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 				setStatisticIndex();
 				Intent intent= new Intent(ShoppingActivity.this,CommodDetailActivity.class);
 				intent.putExtra("product_code", list_none.get(position).get("code"));
-				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(ShoppingActivity.this));
+				intent.putExtra(MallBaseActivity.PAGE_FROM, nowFrom);
 				intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"购物车");
 				ShoppingActivity.this.startActivity(intent);
 			}
@@ -398,7 +398,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 					XHClick.mapStat(ShoppingActivity.this, "a_mail_shopping_cart","你可能喜欢","点击商品");
 					Intent intent = new Intent(ShoppingActivity.this, CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
-					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(ShoppingActivity.this));
+					intent.putExtra(MallBaseActivity.PAGE_FROM, nowFrom);
 					intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "你可能喜欢");
 					startActivity(intent);
 				}
@@ -627,7 +627,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 						intent.putExtra("msg_order", msg.toString());
 						intent.putExtra("order_info", setListUseToJson().toString());
 						intent.putExtra("url", MallStringManager.mall_checkoutOrder_v2);
-						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(ShoppingActivity.this));
+						intent.putExtra(MallBaseActivity.PAGE_FROM, nowFrom);
 						if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
 							intent.putExtra("stat", (String) stat[0]);
 						}

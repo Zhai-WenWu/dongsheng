@@ -24,15 +24,18 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	private ActivityMethodManager mActMagager;
 
 	private long resumeTime;
+	public String dsFrom="";
+	public String nowFrom="";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActMagager = new ActivityMethodManager(this);
-		String from = getIntent().getStringExtra("from");
-		if(!TextUtils.isEmpty(from)){
-			PageStatisticsUtils.onPageChange(from,this);
+		dsFrom = getIntent().getStringExtra(MallBaseActivity.PAGE_FROM);
+		if(!TextUtils.isEmpty(dsFrom)){
+			PageStatisticsUtils.getInstance().onPageChange(dsFrom,this);
 		}
+		handlerFrom();
 	}
 	
 	@Override
@@ -82,7 +85,7 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	@Override
 	protected void onPause() {
 		super.onPause();
-		PageStatisticsUtils.onPausePage(this,resumeTime,System.currentTimeMillis());
+		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
 		mActMagager.onPause();
 		//用完即回收
 		if(MallCommon.interfaceMall!=null)
@@ -117,5 +120,15 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	protected void onDestroy() {
 		super.onDestroy();
 		mActMagager.onDestroy();
+	}
+	/**
+	 *处理当前from
+	 */
+	public void handlerFrom(){
+		String pageName= PageStatisticsUtils.getInstance().getPageName(this);
+		nowFrom=TextUtils.isEmpty(dsFrom)?pageName:dsFrom+MallBaseActivity.PAGE_LOGO+pageName;
+	}
+	public String getNowFrom(){
+		return nowFrom;
 	}
 }

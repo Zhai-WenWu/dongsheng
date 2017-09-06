@@ -44,7 +44,7 @@ import xh.basic.tool.UtilString;
  * @author yu
  *
  */
-public class MallPayActivity extends BaseActivity implements OnClickListener{
+public class MallPayActivity extends MallBaseActivity implements OnClickListener{
 
 	private String payment_order_id;
 	private String payment_order_amt;
@@ -81,7 +81,7 @@ public class MallPayActivity extends BaseActivity implements OnClickListener{
 								Toast.LENGTH_SHORT).show();
 						Intent intent =new Intent(MallPayActivity.this,PaySuccedActvity.class);
 						intent.putExtra("amt", listMapByJson.get(0).get("amt"));
-						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(MallPayActivity.this));
+						intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 						MallPayActivity.this.startActivity(intent);
 					} else {
 						// 判断resultStatus 为非“9000”则代表可能支付失败

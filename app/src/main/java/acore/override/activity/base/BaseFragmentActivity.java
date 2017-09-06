@@ -195,7 +195,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		PageStatisticsUtils.onPausePage(this,resumeTime,System.currentTimeMillis());
+		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
 		mActMagager.onPause();
 	}
 	

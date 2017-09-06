@@ -28,7 +28,7 @@ import third.mall.aplug.MallStringManager;
 import third.mall.override.MallBaseActivity;
 
 /**
- * 发布评价
+ * 商品发布评价
  */
 public class PublishEvalutionMultiActivity extends MallBaseActivity {
     public static final int REQUEST_CODE_NEED_REFRESH = 0x2;

@@ -65,7 +65,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 				Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(this, PaySuccedActvity.class);
 				intent.putExtra("amt", "");
-				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(this));
 				this.startActivity(intent);
 
 			} else {
@@ -74,7 +74,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler{
 					intent.setClass(this, OrderStateActivity.class);
 					intent.putExtra("order_id", MallCommon.payment_order_id);
 					intent.putExtra("order_satus", "payment_order");
-					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(this));
 					this.startActivity(intent);
 				}
 			}

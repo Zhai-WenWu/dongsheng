@@ -121,7 +121,7 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 					}
 					if(ListData.size()<=0&& state_del){
 						Intent intent = new Intent(MallAddressChangeActivity.this,AddressActivity.class);
-						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(MallAddressChangeActivity.this));
+						intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(MallAddressChangeActivity.this));
 						intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "选择收货地址，地址为空");
 						MallAddressChangeActivity.this.startActivityForResult(intent, ShoppingOrderActivity.OK_ADDRESS);
 					}
@@ -161,7 +161,7 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 		case R.id.add_address:
 			setStatisticIndex();
 			Intent intent = new Intent(this,AddressActivity.class);
-			intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+			intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(this));
 			intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "添加地址");
 			this.startActivityForResult(intent, ShoppingOrderActivity.OK_ADDRESS);
 			break;

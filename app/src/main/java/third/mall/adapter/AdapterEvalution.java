@@ -107,7 +107,9 @@ public class AdapterEvalution<T extends Map<String,String>> extends BaseAdapter{
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_CODE,data.get("product_code"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,data.get("product_img"));
                         intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_SCORE,data.get("score"));
-                        intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(activity));
+                        if(activity instanceof MallBaseActivity) {
+                            intent.putExtra(MallBaseActivity.PAGE_FROM, ((MallBaseActivity) activity).nowFrom);
+                        }
 
                         activity.startActivityForResult(intent,PublishEvalutionMultiActivity.REQUEST_CODE_NEED_REFRESH);
                     }

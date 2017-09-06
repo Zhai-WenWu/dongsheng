@@ -269,7 +269,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		PageStatisticsUtils.onPausePage(this,resumeTime,System.currentTimeMillis());
+		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
 		if(mAds != null){
 			for(AdsShow ad : mAds){
 				ad.onPauseAd();

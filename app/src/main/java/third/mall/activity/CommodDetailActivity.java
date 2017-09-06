@@ -49,6 +49,7 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.other.activity.PlayVideo;
@@ -697,7 +698,10 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "购物车");
                 if (LoginManager.isLogin()) {
                     MallClickContorl.getInstance().setStatisticUrl(actionUrl, null, mall_stat_statistic, this);
-                    this.startActivity(new Intent(this, ShoppingActivity.class));
+                    Intent intent_shop= new Intent(this,ShoppingActivity.class);
+                    intent_shop.putExtra(MallBaseActivity.PAGE_FROM, nowFrom);
+                    this.startActivity(intent_shop);
+
                 } else {
                     Intent intent_user = new Intent(this, LoginByAccout.class);
                     startActivity(intent_user);

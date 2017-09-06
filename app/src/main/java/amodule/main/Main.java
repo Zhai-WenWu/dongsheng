@@ -135,8 +135,6 @@ public class Main extends Activity implements OnClickListener {
     private boolean isInit=false;//是否已经进行初始化
     private WelcomeDialog welcomeDialog;//dialog,显示
 
-    private long resumeTime;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,8 +198,8 @@ public class Main extends Activity implements OnClickListener {
                 isShowWelcomeDialog = false;
 
                 OffDishToFavoriteControl.addCollection(Main.this);
-
-                PageStatisticsUtils.getPageInfo(getApplicationContext());
+                //初始化电商页面统计
+                PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
 
                 if (showQAUploading())
                     return;
@@ -495,7 +493,6 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        resumeTime = System.currentTimeMillis();
         LogManager.printStartTime("zhangyujian","main::onResume::");
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
@@ -560,7 +557,6 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onStop() {
         super.onStop();
-        PageStatisticsUtils.onPausePage(this,resumeTime,System.currentTimeMillis());
         if (!Tools.isAppOnForeground()) {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
@@ -800,6 +796,7 @@ public class Main extends Activity implements OnClickListener {
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
+                    XHClick.handlerPageStatic();
                 }
                 // 当软件所在页面正式你要刷新的页面,就直接刷新,不在跳了
 //				if (tabHost.getCurrentTab() == i && i == 2) {

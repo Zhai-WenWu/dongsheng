@@ -443,7 +443,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					setStatisticIndex();
 					Intent intent = new Intent(OrderStateActivity.this,CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
-					intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
+					intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 					OrderStateActivity.this.startActivity(intent);
 				}
 			});
@@ -488,7 +488,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 								Log.i("去购物车3", "去购物车3");
 								Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
-								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
+								intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 								intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"再次购买-取消订单" );
 								OrderStateActivity.this.startActivity(intent);
 							}
@@ -535,7 +535,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 							public void sucessCallBack() {
 								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 								Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
-								intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
+								intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 								intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"默认" );
 								OrderStateActivity.this.startActivity(intent);
 							}
@@ -701,7 +701,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	/** 去购物车 */
 	private void goShopping(String info){
 		Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
-		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(OrderStateActivity.this));
+		intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 		intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,info );
 		OrderStateActivity.this.startActivity(intent);
 	}
@@ -729,7 +729,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ORDER_ID, map.get("order_id"));
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_POSITION, position);
 		intent.putExtra(PublishEvalutionMultiActivity.EXTRAS_ID, code);
-		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+		intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 		startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 
@@ -745,7 +745,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_PRODUCT_IMAGE,productMap.get("img"));
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_POSITION, position);
 		intent.putExtra(PublishEvalutionSingleActivity.EXTRAS_ID, code);
-		intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+		intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 		startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 

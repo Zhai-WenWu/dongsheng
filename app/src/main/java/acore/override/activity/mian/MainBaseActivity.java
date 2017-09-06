@@ -19,6 +19,7 @@ import acore.logic.ActivityMethodManager;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.PageStatisticsUtils;
 import amodule.main.Main;
 import third.ad.AdsShow;
 import third.mall.aplug.MallCommon;
@@ -29,7 +30,7 @@ public class MainBaseActivity extends AppCompatActivity {
 	public LoadManager loadManager;
 	private ActivityMethodManager mActMagager;
 	public AdsShow[] mAds;
-
+	private long resumeTime;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,6 +80,7 @@ public class MainBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		resumeTime = System.currentTimeMillis();
 		if(XHApplication.in()==null){
 			Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());    
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);    
@@ -100,6 +102,7 @@ public class MainBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
 		if(mAds != null){
 			for(AdsShow ad : mAds){
 				ad.onPauseAd();
@@ -131,5 +134,11 @@ public class MainBaseActivity extends AppCompatActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		mActMagager.onDestroy();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
 	}
 }

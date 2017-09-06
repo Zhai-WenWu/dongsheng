@@ -182,7 +182,7 @@ public class BuyDialog extends SimpleDialog {
                         intent.putExtra("msg_order", msg.toString());
                         intent.putExtra("order_info", orderInfo);
                         intent.putExtra("url", MallStringManager.mall_checkoutOrder_v2);
-                        intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(context));
+                        intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(context));
                         if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
                             intent.putExtra("stat", (String) stat[0]);
                         }

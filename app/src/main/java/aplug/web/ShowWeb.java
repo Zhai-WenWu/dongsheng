@@ -114,9 +114,9 @@ public class  ShowWeb extends WebActivity implements IObserver {
 			String from = getIntent().getStringExtra(PAGE_FROM);
 			String two = getIntent().getStringExtra(PAGE_FROM_TWO);
 			if(!TextUtils.isEmpty(from)){
-				PageStatisticsUtils.onPageChange(from ,two);
+				PageStatisticsUtils.getInstance().onPageChange(from ,two);
 			}else if(!TextUtils.isEmpty(url) && url.contains("m.ds.mamaweiyang")){
-				PageStatisticsUtils.onPageChange(XHActivityManager.getInstance().getCurrentActivity(),url);
+				PageStatisticsUtils.getInstance().onPageChange(XHActivityManager.getInstance().getCurrentActivity(),url);
 			}
 		}
 	}
@@ -300,7 +300,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ShowWeb.this, ShoppingActivity.class);
-					intent.putExtra(PAGE_FROM, PageStatisticsUtils.getPageName(ShowWeb.this));
+					intent.putExtra(PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(ShowWeb.this));
                     startActivity(intent);
                     finish();
                 }

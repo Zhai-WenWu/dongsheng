@@ -351,13 +351,13 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
 				setStatisticIndex();
 				Intent intent = new Intent(this, AddressActivity.class);
 				intent.putExtra("now_address_id", address_id);
-				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+				intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 				this.startActivityForResult(intent, OK_ADDRESS);
 			}else{
 				setStatisticIndex();
 				Intent intent = new Intent(this, MallAddressChangeActivity.class);
 				intent.putExtra("now_address_id", address_id);
-				intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getPageName(this));
+				intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 				this.startActivityForResult(intent, OK_ADDRESS);
 			}
 			break;
