@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -130,9 +131,10 @@ public class HistoryDishView extends HistoryView {
     @Override
     protected AdapterSimple getAdapter() {
         mAdapter = new AdapterSimple(mListView, mData,
-                R.layout.a_history_dish_item_list,
-                new String[]{"name", "burdens", "isFine", /*"isMakeImg",*/ "allClick", "exclusive"},
-                new int[]{R.id.tv_itemDishName, R.id.tv_itemBurden, R.id.iv_itemIsFine, /*R.id.tv_item_make,*/ R.id.allclick, R.id.tag_exclusive});
+                R.layout.c_search_result_caipu_item,
+                new String[]{"img","name", "burdens", "isFine", "nickName", "allClick", "exclusive"},
+                new int[]{R.id.iv_caipuCover,R.id.tv_caipu_name, R.id.tv_caipu_decrip, R.id.iv_itemIsFine,
+                        R.id.tv_caipu_origin, R.id.tv_caipu_observed, R.id.iv_itemIsSolo});
         mAdapter.urlKey = "imgShow";
         mAdapter.videoImgId = R.id.itemImg1;
         mAdapter.playImgWH = Tools.getDimen(mContext, R.dimen.dp_34);
@@ -143,16 +145,17 @@ public class HistoryDishView extends HistoryView {
                 if (view == null || data == null) return false;
                 int id = view.getId();
                 switch (id) {
-                    case R.id.tv_itemDishName:
-                    case R.id.tv_item_make:
-                    case R.id.allclick:
+                    case R.id.tv_caipu_origin:
+                    case R.id.tv_caipu_name:
+                    case R.id.tv_caipu_decrip:
+                    case R.id.tv_caipu_observed:
                         int textMaxWidth = ToolsDevice.getWindowPx(mContext).widthPixels
                                 - ToolsDevice.dp2px(mContext, 2 * 15 + 120 + 4 + 15 + 15);
                         ((TextView) view).setMaxWidth(textMaxWidth);
                         return false;
-                    case R.id.tag_exclusive:
+                    case R.id.iv_itemIsSolo:
                         RelativeLayout layout = (RelativeLayout) view.getParent();
-                        layout.setVisibility("2".equals(data.toString()) ? View.VISIBLE : View.GONE);
+                        layout.setVisibility(View.GONE);
                         return true;
                 }
                 return false;

@@ -25,7 +25,6 @@
             android:paddingLeft="@dimen/dp_7"
             android:paddingRight="@dimen/dp_7"
             android:textColor="#FFFFFF"
-            android:textScaleX="0.8"
             android:textSize="@dimen/sp_9" />
     </RelativeLayout>
 

@@ -21,6 +21,7 @@ import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import amodule.main.Main;
 import aplug.basic.ReqInternet;
+import third.mall.MainMall;
 import third.mall.adapter.AdapterShopRecommed;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallInternetCallback;
@@ -109,6 +110,8 @@ public class PaySuccedActvity extends MallBaseActivity implements OnClickListene
 			MallPayActivity.mall_state=true;
 			Main.colse_level=3;
 			PaySuccedActvity.this.finish();
+			//切换到商城首页
+			Main.allMain.setCurrentTabByClass(MainMall.class);
 			break;
 		case R.id.back_tv:
 			Main.colse_level=3;

@@ -249,6 +249,7 @@ public class StringManager extends UtilString {
     public final static String api_getTemplate = apiUrl + "main7/template/layout";
     public final static String api_getDishMould = apiUrl + "main7/dish/layout";
     public final static String api_getDishTieInfo = apiUrl + "main7/dish/tieInfo";
+    public final static String api_getDishstatusValue = apiUrl + "main7/Dish/statusValue";
     public final static String api_getDishLikeNumStatus = apiUrl + "main7/dish/likeNumStatus";
     public final static String api_getDishLikeHate = apiUrl + "main7/dish/likeHate";
     public final static String api_addCollection = apiUrl + "main7/dish/addCollection";

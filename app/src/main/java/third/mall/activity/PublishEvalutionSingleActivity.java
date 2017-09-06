@@ -376,7 +376,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
         }
         uploadControl.setScore(ratingBar.getRating())
                 .setContent(contentEdit.getText().toString().trim())
-                .setCanShare(canShareToCircle())
+                .setCanShare(shareToCircleImage.isSelected())
                 .publishEvalution();
     }
 

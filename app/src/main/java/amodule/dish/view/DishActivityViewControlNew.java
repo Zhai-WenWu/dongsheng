@@ -18,6 +18,7 @@ import com.xiangha.R;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -76,7 +77,6 @@ public class  DishActivityViewControlNew {
     private DishFootControl mFootControl;
 
     private DishViewCallBack callBack;
-    private String dishJson = "";
     private int titleHeight;//标题高度
     private boolean isLoadWebViewData=false;//是否webview加载过数据
     private boolean isHeaderLoadCallBack=false;//是否执行header的callback
@@ -129,12 +129,7 @@ public class  DishActivityViewControlNew {
         setGlideViewListener();
 
         //处理标题导航栏
-        dishTitleViewControl= new DishTitleViewControlNew(mAct, new DishTitleViewControlNew.OnDishTitleControlListener() {
-            @Override
-            public String getOffDishJson() {
-                return dishJson;
-            }
-        });
+        dishTitleViewControl= new DishTitleViewControlNew(mAct);
         dishTitleViewControl.initView(mAct);
         dishTitleViewControl.setstate(state);
         //底部view
@@ -243,8 +238,8 @@ public class  DishActivityViewControlNew {
      * @param permissionMap
      */
     public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
-        Log.i("zyj","analyzeDishInfoData::"+(System.currentTimeMillis()-startTime));
-        dishJson = dishInfo;
+        Log.i("zyj","analyzeDishInfoData::" + (System.currentTimeMillis() - startTime));
+        saveDishInfo(dishInfo);
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
         dishInfoMap = list.get(0);
@@ -259,15 +254,18 @@ public class  DishActivityViewControlNew {
         if(isHasVideo)tongjiId="a_menu_detail_video";
         dishTitleViewControl.setData(dishInfoMap,mDishCode,isHasVideo,dishInfoMap.get("dishState"),loadManager);
 
-        Map<String, String> customer = StringManager.getFirstMap(dishInfoMap.get("customer"));
-        if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
-                && customer.get("code").equals(LoginManager.userInfo.get("code"))) {
-            state = "";
-            dishTitleViewControl.setstate(state);
+        String authorCode = dishInfoMap.get("customerCode");
+        if (!TextUtils.isEmpty(authorCode)){
+            mFootControl.setAuthorCode(authorCode);
+            if(LoginManager.userInfo != null
+                    && authorCode.equals(LoginManager.userInfo.get("code"))) {
+                state = "";
+                dishTitleViewControl.setstate(state);
+            }
         }
-        if(customer != null&& !TextUtils.isEmpty(customer.get("code")) ){
-        mFootControl.setAuthorCode(customer.get("code"));}
+
         dishTitleViewControl.setViewState();
+
         //头部view
         setDishHeaderViewCallBack();
         dishHeaderView.setData(list,permissionMap);
@@ -305,45 +303,60 @@ public class  DishActivityViewControlNew {
             mScrollView.setVisibility(View.VISIBLE);
         }
     }
-    private boolean saveHistory = false;
-    public void saveHistoryToDB(final String burden) {
-        if (!saveHistory) {
-            saveHistory = true;
+
+    private boolean saveDishInfo = false;
+    private boolean isSaveApiData = false;
+    private boolean isSaveJsData = false;
+
+    public Map<String, String> needSaveDishInfo = new HashMap<>();
+
+    public void saveDishInfo(String dishJson){
+        saveDishInfo = true;
+        Map<String,String> dishMap = StringManager.getFirstMap(dishJson);
+        needSaveDishInfo.put("name", dishMap.get("name"));
+        needSaveDishInfo.put("img", dishMap.get("img"));
+        needSaveDishInfo.put("code", dishMap.get("code"));
+        needSaveDishInfo.put("hasVideo", dishMap.get("type"));
+        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+        saveHistoryToDB();
+    }
+
+    public void saveApiData(String dataStr){
+        isSaveApiData = true;
+        Map<String,String> apiDataMap = StringManager.getFirstMap(dataStr);
+        needSaveDishInfo.put("isFine", apiDataMap.get("isFine"));
+        needSaveDishInfo.put("isMakeImg", apiDataMap.get("isMakeImg"));
+        needSaveDishInfo.put("isFav", apiDataMap.get("isFav"));
+        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+        saveHistoryToDB();
+    }
+
+    public void savaJsAdata(String burdens,String allClick,String favorites,String nickName){
+        isSaveJsData = true;
+        needSaveDishInfo.put("burdens",burdens);
+        needSaveDishInfo.put("allClick",allClick);
+        needSaveDishInfo.put("nickName",nickName);
+        needSaveDishInfo.put("favorites",favorites);
+        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+        saveHistoryToDB();
+    }
+
+    /**保存数据到数据库*/
+    public synchronized void saveHistoryToDB() {
+        if (saveDishInfo && isSaveApiData && isSaveJsData) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONObject jsonObject = handlerJSONData(burden);
                     HistoryData data = new HistoryData();
                     data.setBrowseTime(currentTimeMillis());
                     data.setCode(mDishCode);
-                    data.setDataJson(jsonObject.toString());
+                    data.setDataJson(StringManager.getJsonByMap(needSaveDishInfo).toString());
                     BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
                     sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
                 }
             }).start();
         }
     }
-    private JSONObject handlerJSONData(String burdens) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            ArrayList<Map<String, String>> dishInfoArray = getListMapByJson(dishJson);
-            if (dishInfoArray.size() > 0) {
-                Map<String, String> dishInfo = dishInfoArray.get(0);
-                jsonObject.put("name", dishInfo.get("name"));
-                jsonObject.put("img", dishInfo.get("img"));
-                jsonObject.put("code", mDishCode);
-                jsonObject.put("isFine", dishInfo.get("isFine"));
-                jsonObject.put("favorites", dishInfo.get("favorites"));
-                jsonObject.put("allClick", dishInfo.get("allClick"));
-                jsonObject.put("exclusive", dishInfo.get("exclusive"));
-                jsonObject.put("hasVideo", dishInfo.get("type"));
-                jsonObject.put("isMakeImg", dishInfo.get("isMakeImg"));
-                jsonObject.put("burdens", burdens);
-            }
-        } catch (Exception e) { }
-        return jsonObject;
-    }
-
 
     public void analyzeUserShowDishInfoData(String dishJson){
         mFootControl.initUserDish(dishJson);

@@ -72,7 +72,6 @@
         android:ellipsize="end"
         android:lineSpacingExtra="@dimen/dp_5"
         android:maxLines="2"
-        android:textScaleX="1.0"
         android:textColor="#676767"
         android:text="小明滚滚出去，小明滚滚出去小明滚滚出去小明滚滚出去小明滚滚出去小明滚滚出去小明滚滚出去小明滚滚出去"
         android:textSize="@dimen/sp_15" />

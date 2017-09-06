@@ -152,12 +152,15 @@ public class JsAppCommon extends JsBase {
 
     /**
      * 保持菜谱详情的浏览记录
-     * @param ingreStr
+     * @param burden
+     * @param allClick
+     * @param favrites
+     * @param nickName
      */
     @JavascriptInterface
-    public void setIngreStr(String ingreStr) {
+    public void setIngreStr(String burden,String allClick,String favrites,String nickName) {
         if (mAct != null && mAct instanceof DetailDish)
-            ((DetailDish)mAct).saveHistoryData(ingreStr);
+            ((DetailDish)mAct).savaJsAdata(burden,allClick,favrites,nickName);
     }
 
     /**

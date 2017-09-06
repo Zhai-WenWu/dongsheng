@@ -106,7 +106,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 mSelectedImages.add(image);
             }
         }
-        if(mSelectedImages.size() > 0){
+        if(mSelectedImages.size() >= 0){
             notifyDataSetChanged();
         }
     }

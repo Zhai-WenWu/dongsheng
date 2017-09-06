@@ -114,9 +114,12 @@ public class VideoHeaderView extends RelativeLayout {
      * @param videoH
      */
     public void setViewSize(int videoW,int videoH){
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
-        setLayoutParams(params);
-        requestLayout();
+        if(videoW > 0 && videoH > 0){
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
+            setLayoutParams(params);
+            requestLayout();
+        }
     }
 
     public void setData(Map<String, String> data, DishHeaderViewNew.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
