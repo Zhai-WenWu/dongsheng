@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/title_layout"
-                    android:paddingBottom="@dimen/dp_94">
+                    android:paddingBottom="@dimen/dp_35">
                 </android.support.v4.view.ViewPager>
             </RelativeLayout>
         </acore.widget.LayoutScroll>
