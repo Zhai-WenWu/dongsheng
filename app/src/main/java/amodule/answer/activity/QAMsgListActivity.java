@@ -176,6 +176,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         if (mCurrSelectedPos == position)
             return;
         else {
+            boolean isInit = mCurrSelectedPos == -1;
             if (mCurrSelectedPos > -1) {
                 View oldSelectView = mTabContainer.getChildAt(mCurrSelectedPos);
                 oldSelectView.setSelected(false);
@@ -186,7 +187,8 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
             mCurrSelectedPos = position;
             View currSelectedView = mTabContainer.getChildAt(mCurrSelectedPos);
             currSelectedView.setSelected(true);
-            currSelectedView.findViewById(R.id.num).setVisibility(View.INVISIBLE);
+            if (!isInit)
+                currSelectedView.findViewById(R.id.num).setVisibility(View.INVISIBLE);
         }
     }
 
