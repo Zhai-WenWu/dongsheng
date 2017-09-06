@@ -57,7 +57,7 @@ public class  DishActivityViewControlNew {
     private int wm_height;//屏幕高度
     private int adBarHeight = 0;//广告所用bar高度
     //广告所用bar高度;图片/视频高度
-    private int statusBarHeight = 0,videoLayoutHeight;
+    private int statusBarHeight = 0,headerLayoutHeight;
     private int startY;
 
     private String state;
@@ -122,8 +122,8 @@ public class  DishActivityViewControlNew {
         handlerDishWebviewData();
         //头部view处理
         dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
-        videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
-        dishHeaderView.initView(mAct,videoLayoutHeight);
+        headerLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
+        dishHeaderView.initView(mAct,headerLayoutHeight);
 
         mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
         setGlideViewListener();
@@ -209,9 +209,9 @@ public class  DishActivityViewControlNew {
                             } else if (firstItemIndex == 0) {
                                 int y = tempY - startY;
                                 if (wm_height > 0 && y > 0) {
-                                    if (videoLayoutHeight + y <= wm_height * 2 / 3) {
+                                    if (headerLayoutHeight + y <= wm_height * 2 / 3) {
                                         mMoveLen = y;
-                                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight + y);
+                                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, headerLayoutHeight + y);
                                         dishVidioLayout.setLayoutParams(layoutParams);
                                     }
                                 }
@@ -249,7 +249,12 @@ public class  DishActivityViewControlNew {
         if(list.size() == 0) return;
         dishInfoMap = list.get(0);
         isHasVideo = "2".equals(dishInfoMap.get("type"));
-        if(!isHasVideo){mTimer = new MyTimer(handler);}
+        if(!isHasVideo){
+            mTimer = new MyTimer(handler);
+            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels;
+        }else{
+            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight ;
+        }
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         if(isHasVideo)tongjiId="a_menu_detail_video";
         dishTitleViewControl.setData(dishInfoMap,mDishCode,isHasVideo,dishInfoMap.get("dishState"),loadManager);
@@ -559,7 +564,7 @@ public class  DishActivityViewControlNew {
             return;
         }
         if(mMoveLen<=0){mMoveLen=0;}
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight+mMoveLen);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, headerLayoutHeight+mMoveLen);
         dishVidioLayout.setLayoutParams(layoutParams);
     }
     class MyTimer {
