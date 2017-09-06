@@ -512,7 +512,7 @@ public class Main extends Activity implements OnClickListener {
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
-            finish();
+            System.exit(0);
         }
         if (!isForeground) {
             long newHomebackTime = System.currentTimeMillis();
