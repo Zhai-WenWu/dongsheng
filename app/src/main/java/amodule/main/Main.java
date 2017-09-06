@@ -141,7 +141,8 @@ public class Main extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
@@ -395,7 +396,7 @@ public class Main extends Activity implements OnClickListener {
 
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
 
-        initTitle();
+//        initTitle();
 
         //实例化有用到mRootLayout，必须按着顺序执行
         mBuoy = new MainBuoy(this);
