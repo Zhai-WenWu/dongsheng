@@ -256,6 +256,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         }
 //        int x = Integer.parseInt(DataOperate.buyBurden(this, "x"));
         Object olddishdata = FileManager.loadShared(this, "olddishdata", "olddishdata");
+        if(olddishdata!=null){
+            Log.i("wyl","数据：：：：：00000：：："+olddishdata);
+        }
 
         if (olddishdata!=null&&!TextUtils.isEmpty(String.valueOf(olddishdata))&&"2".equals(String.valueOf(olddishdata))) {
             Intent intent = new Intent(this, HintMyselfDialog.class);

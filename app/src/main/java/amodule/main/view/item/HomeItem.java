@@ -181,7 +181,8 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
                 XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
             }
-            if(mTransferUrl.contains("dishInfo.app")){
+            if(mTransferUrl.contains("dishInfo.app")&&!TextUtils.isEmpty(mDataMap.get("type"))
+                    &&!"2".equals(mDataMap.get("type"))){
                 mTransferUrl+="&img="+mDataMap.get("img");
             }
             String params = mTransferUrl.substring(mTransferUrl.indexOf("?") + 1, mTransferUrl.length());
