@@ -119,11 +119,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * 初始化当前状态
      */
     public void setViewState(){
-        //收藏
-        if (dishInfoMap.get("isFav").equals("2")) {
-            favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
-            favText.setText("已收藏");
-        }
         detailDish.findViewById(R.id.fav_layout).setVisibility(state != null ? View.GONE : View.VISIBLE);
         //编辑
         if(state != null){
@@ -138,6 +133,14 @@ public class DishTitleViewControlNew implements View.OnClickListener{
             detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
         }
 
+    }
+
+    //收藏
+    public void setFavStatus(String isFav){
+        if ("2".equals(isFav)) {
+            favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
+            favText.setText("已收藏");
+        }
     }
     @Override
     public void onClick(View v) {

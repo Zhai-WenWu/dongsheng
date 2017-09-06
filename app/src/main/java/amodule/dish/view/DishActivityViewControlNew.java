@@ -41,7 +41,6 @@ import third.video.VideoPlayerController;
 import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.dish.activity.DetailDish.tongjiId;
 import static java.lang.System.currentTimeMillis;
-import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 菜谱界面的总控制类
@@ -327,6 +326,7 @@ public class  DishActivityViewControlNew {
         needSaveDishInfo.put("isFine", apiDataMap.get("isFine"));
         needSaveDishInfo.put("isMakeImg", apiDataMap.get("isMakeImg"));
         needSaveDishInfo.put("isFav", apiDataMap.get("isFav"));
+        dishTitleViewControl.setFavStatus(apiDataMap.get("isFav"));
         Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         saveHistoryToDB();
     }
