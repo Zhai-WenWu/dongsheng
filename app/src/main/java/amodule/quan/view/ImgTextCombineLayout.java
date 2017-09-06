@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.widget.TextViewShow;
+import amodule.article.activity.ArticleSelectActivity;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 import acore.tools.Tools;
@@ -39,6 +40,7 @@ import com.xiangha.R;
 
 import core.xiangha.emj.tools.EmjParseMsgUtil;
 import core.xiangha.emj.view.EditTextShow;
+import xh.windowview.XhDialog;
 
 /**
  * 图文混排控件
@@ -413,34 +415,22 @@ public class ImgTextCombineLayout extends RelativeLayout {
 	 * 展示删除dialog
 	 */
 	private void showDialog() {
-		final Dialog dialog = new Dialog(context, R.style.dialog);
-		dialog.setContentView(R.layout.a_mall_alipa_dialog);
-		Window window = dialog.getWindow();
-		window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-		TextView dialog_message = (TextView) window.findViewById(R.id.dialog_message);
-		dialog_message.setText("确认要删除这张图片吗？");
-		dialog_message.setTextColor(Color.parseColor("#333333"));
-		TextView dialog_cancel = (TextView) window.findViewById(R.id.dialog_cancel);
-		TextView dialog_sure = (TextView) window.findViewById(R.id.dialog_sure);
-		dialog_sure.setTextColor(Color.parseColor("#333333"));
-		dialog_cancel.setText("取消");
-		dialog_sure.setText("确定");
-		dialog_cancel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-			}
-		});
-		dialog_sure.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				imgTextCallBack.onDelete(ImgTextCombineLayout.this);
-				dialog.cancel();
-			}
-		});
-		dialog.show();
+		final XhDialog xhDialog = new XhDialog(context);
+		xhDialog.setTitle("确认要删除这张图片吗？")
+				.setCanselButton("取消", new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						xhDialog.cancel();
+					}
+				}).setSureButton("确定", new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						imgTextCallBack.onDelete(ImgTextCombineLayout.this);
+						xhDialog.cancel();
+					}
+				}).setSureButtonTextColor("#333333")
+				.setCancelButtonTextColor("#333333")
+				.show();
 	}
 
 	/**
