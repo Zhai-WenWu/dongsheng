@@ -79,6 +79,7 @@ public class  DishActivityViewControlNew {
     private String dishJson = "";
     private int titleHeight;//标题高度
     private boolean isLoadWebViewData=false;//是否webview加载过数据
+    private boolean isHeaderLoadCallBack=false;//是否执行header的callback
 
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
@@ -262,10 +263,20 @@ public class  DishActivityViewControlNew {
         if(customer != null&& !TextUtils.isEmpty(customer.get("code")) ){
         mFootControl.setAuthorCode(customer.get("code"));}
         dishTitleViewControl.setViewState();
-
-
         //头部view
-        dishHeaderView.setData(list, new DishHeaderViewNew.DishHeaderVideoCallBack() {
+        setDishHeaderViewCallBack();
+        dishHeaderView.setData(list,permissionMap);
+        mFootControl.setDishInfo(dishInfoMap.get("name"));
+        mScrollView.setVisibility(View.VISIBLE);
+    }
+
+    private void setDishHeaderViewCallBack(){
+        if(dishHeaderView==null)return;
+        if(isHeaderLoadCallBack){
+            return;
+        }
+        isHeaderLoadCallBack=true;
+        dishHeaderView.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
             @Override
             public void videoImageOnClick() {
                 String color = Tools.getColorStr(mAct, R.color.common_top_bg);
@@ -280,11 +291,15 @@ public class  DishActivityViewControlNew {
                 setViewOneState();
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
-        },permissionMap);
-        mFootControl.setDishInfo(dishInfoMap.get("name"));
-        mScrollView.setVisibility(View.VISIBLE);
+        });
     }
-
+    public void setDishOneView(String img){
+        if(!TextUtils.isEmpty(img)){
+            setDishHeaderViewCallBack();
+            dishHeaderView.setImg(img);
+            mScrollView.setVisibility(View.VISIBLE);
+        }
+    }
     private boolean saveHistory = false;
     public void saveHistoryToDB(final String burden) {
         if (!saveHistory) {
@@ -540,6 +555,9 @@ public class  DishActivityViewControlNew {
      * 刷新布局
      */
     private void requestLayout(){
+        if(dishVidioLayout==null){
+            return;
+        }
         if(mMoveLen<=0){mMoveLen=0;}
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight+mMoveLen);
         dishVidioLayout.setLayoutParams(layoutParams);

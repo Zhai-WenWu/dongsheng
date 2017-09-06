@@ -68,6 +68,7 @@ public class DishHeaderViewNew extends LinearLayout {
     private boolean isOnResuming = false;//默认自动播放
 
     private int distance;
+    private boolean isLoadImg=false;
 
     public DishHeaderViewNew(Context context) {
         super(context);
@@ -119,12 +120,9 @@ public class DishHeaderViewNew extends LinearLayout {
     }
 
     /**
-     * 设置数据
-     *
-     * @param list
-     * @param permissionMap
+     * 设置当前header的callback回调
      */
-    public void setData(ArrayList<Map<String, String>> list, DishHeaderVideoCallBack callBacks, Map<String, String> permissionMap) {
+    public void setDishCallBack(DishHeaderVideoCallBack callBacks){
         if (callBacks == null) {
             callBack = new DishHeaderVideoCallBack() {
                 @Override
@@ -136,6 +134,14 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             };
         } else this.callBack = callBacks;
+    }
+    /**
+     * 设置数据
+     *
+     * @param list
+     * @param permissionMap
+     */
+    public void setData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         Map<String, String> videoMap = list.get(0);
         String title = videoMap.get("title");
         try {
@@ -146,8 +152,11 @@ public class DishHeaderViewNew extends LinearLayout {
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
                     Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
-            } else
-                setImg(img);
+            } else {
+                if(!isLoadImg) {
+                    setImg(img);
+                }
+            }
         } catch (Exception e) {
             Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
         }
@@ -393,7 +402,9 @@ public class DishHeaderViewNew extends LinearLayout {
      * 展示顶图view,是大图还是视频
      * @param img          》图片链接
      */
-    private void setImg(final String img) {
+    public void setImg(final String img) {
+        Log.i("zyj","img:___:::"+img);
+        isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         final ImageViewVideo imvv = new ImageViewVideo(activity);
@@ -422,7 +433,9 @@ public class DishHeaderViewNew extends LinearLayout {
                 activity.startActivity(intent);
             }
         });
-        callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
+        if(callBack!=null) {
+            callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
+        }
     }
 
     public void setLoginStatus(){
@@ -455,7 +468,6 @@ public class DishHeaderViewNew extends LinearLayout {
     public View getVideoView(){
         return videoViewGroup;
     }
-
 
     /**
      * video回调
