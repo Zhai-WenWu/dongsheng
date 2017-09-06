@@ -1,28 +1,13 @@
 package amodule.quan.view;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import acore.widget.TextViewShow;
-import amodule.article.activity.ArticleSelectActivity;
-import xh.basic.tool.UtilImage;
-import xh.basic.tool.UtilString;
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -30,17 +15,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import aplug.basic.SubBitmapTarget;
-import aplug.basic.LoadImage;
-
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.widget.TextViewShow;
+import amodule.dish.view.CommonDialog;
+import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
 import core.xiangha.emj.tools.EmjParseMsgUtil;
 import core.xiangha.emj.view.EditTextShow;
-import xh.windowview.XhDialog;
+import xh.basic.tool.UtilImage;
+import xh.basic.tool.UtilString;
 
 /**
  * 图文混排控件
@@ -415,22 +409,24 @@ public class ImgTextCombineLayout extends RelativeLayout {
 	 * 展示删除dialog
 	 */
 	private void showDialog() {
-		final XhDialog xhDialog = new XhDialog(context);
-		xhDialog.setTitle("确认要删除这张图片吗？")
-				.setCanselButton("取消", new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						xhDialog.cancel();
-					}
-				}).setSureButton("确定", new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						imgTextCallBack.onDelete(ImgTextCombineLayout.this);
-						xhDialog.cancel();
-					}
-				}).setSureButtonTextColor("#333333")
-				.setCancelButtonTextColor("#333333")
-				.show();
+		String btnMsg1 = "确定";
+		String btnMsg2 = "取消";
+
+		final CommonDialog dialog = new CommonDialog(context);
+		dialog.setMessage("确认要删除这张图片吗？").setSureButton(btnMsg1, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+				imgTextCallBack.onDelete(ImgTextCombineLayout.this);
+			}
+		});
+		dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+			}
+		});
+		dialog.show();
 	}
 
 	/**
