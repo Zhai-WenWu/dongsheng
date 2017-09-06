@@ -48,6 +48,7 @@ public class FollowSubject extends BaseActivity {
         //处理title字数
         if(!TextUtils.isEmpty(title)&&title.length()>12){
             title=title.substring(0,12);
+            title+="...";
         }
         init();
     }
