@@ -57,12 +57,8 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
 
-
-    private OnDishTitleControlListener mListener;
-
-    public DishTitleViewControlNew(Context context,OnDishTitleControlListener listener){
+    public DishTitleViewControlNew(Context context){
         this.context= context;
-        mListener = listener;
     }
 
     public void initView(Activity detailDish) {
@@ -341,79 +337,5 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         }
     }
 
-
-    public interface OnDishTitleControlListener{
-        public String getOffDishJson();
-    }
-
-//    /**
-//     * 离线菜谱
-//     */
-//    private void doBuyBurden() {
-//        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
-//        if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() == 0) {
-//            //若已经下载的离线数量还没到达离线菜谱的上线
-//            if (AppCommon.buyBurdenNum >= DataOperate.getDownDishLimit(detailDish.getApplicationContext())) {
-//                // 到达极限值，提示再下载要删除一部分了。
-//                if (AppCommon.buyBurdenNum == DataOperate.getDownDishLimit(detailDish.getApplicationContext()) && LoginManager.isLogin()) {
-//                    new AlertDialog.Builder(detailDish)
-//                            .setIcon(android.R.drawable.ic_dialog_alert)
-//                            .setTitle("等级不足")
-//                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,您的等级提升后可下载更多")
-//                            .setPositiveButton("查看等级", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    if (LoginManager.isLogin()) {
-//                                        String url = StringManager.api_getCustomerRank + "?code=" + LoginManager.userInfo.get("code");
-//                                        AppCommon.openUrl(detailDish, url, true);
-//                                    } else {
-//                                        detailDish.startActivity(new Intent(detailDish, LoginByAccout.class));
-//                                    }
-//                                }
-//                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Intent intent = new Intent(detailDish, OfflineDish.class);
-//                            detailDish.startActivity(intent);
-//                            detailDish.finish();
-//                        }
-//                    }).create().show();
-//                }else {// 提示登录可以下载更多菜谱。
-//                    new AlertDialog.Builder(detailDish)
-//                            .setIcon(android.R.drawable.ic_dialog_alert).setTitle("是否保存")
-//                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,想要下载更多菜谱请登录")
-//                            .setPositiveButton("登录", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    Intent intent = new Intent(detailDish, LoginByAccout.class);
-//                                    detailDish.startActivity(intent);
-//                                }
-//                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Intent intent = new Intent(detailDish, OfflineDish.class);
-//                            detailDish.startActivity(intent);
-//                            detailDish.finish();
-//                        }
-//                    }).create().show();
-//                }
-//            } else {
-//                String dishJson = mListener.getOffDishJson();
-//                Log.i("DetailDish","dishJson:" + dishJson);
-//                if(TextUtils.isEmpty(dishJson)){
-//                    Tools.showToast(detailDish.getApplicationContext(), "离线失败");
-//                }else {
-//                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
-//                    mDishWebView.saveDishData();
-//                    offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
-//                    offText.setText("已下载");
-//                    Tools.showToast(detailDish.getApplicationContext(), "已成功下载到离线清单中");
-//                }
-//            }
-//        } else {
-//            Intent intent = new Intent(detailDish, OfflineDish.class);
-//            detailDish.startActivity(intent);
-//        }
-//    }
 }
 

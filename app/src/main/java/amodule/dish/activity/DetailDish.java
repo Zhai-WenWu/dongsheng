@@ -218,6 +218,15 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 }
             }
         });
+
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(DetailDish.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING){
+                    saveApiData(o.toString());
+                }
+            }
+        });
     }
 
     /**
@@ -235,7 +244,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         requestWeb(data);
         dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
     }
-
 
     private void requestWeb(String dishJson) {
         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
@@ -312,11 +320,17 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
 
     /**
-     * 保持历史数据
+     * 保存来自Api的数据
+     * @param dataStr
      */
-    public void saveHistoryData(String burden){
-        if(dishActivityViewControl!=null)
-            dishActivityViewControl.saveHistoryToDB(burden);
+    public void saveApiData(String dataStr){
+        if(dishActivityViewControl != null)
+            dishActivityViewControl.saveApiData(dataStr);
+    }
+
+    public void savaJsAdata(String burden,String allClick,String favrites,String nickName){
+        if(dishActivityViewControl != null)
+            dishActivityViewControl.savaJsAdata(burden,allClick,favrites,nickName);
     }
 
     /**
