@@ -236,6 +236,7 @@ public class DishFootControl implements View.OnClickListener{
         }else{
             mHoverNum.setText("0");
         }
+        handlerDishLikeState(dishLikeStatus);
     }
 
      private void setGotoFriendHome(View view, final String userCode){
