@@ -1,5 +1,6 @@
 package amodule.dish.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,6 +19,7 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.dish.view.ImageMoreAdView;
 import amodule.dish.view.ImageMoreCommenView;
 import amodule.dish.view.ImageMoreView;
@@ -44,7 +46,8 @@ public class MoreImageShow extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.a_moreimge_show);
+        initActivity("",3,0,0,R.layout.a_moreimge_show);
+        Tools.setStatusBarColor(this, Color.parseColor("#000000"));
         Bundle bundleObject = getIntent().getExtras();
         mList = (List<Map<String,String>>)bundleObject.getSerializable("data");
         pageNum = bundleObject.getInt("index");
