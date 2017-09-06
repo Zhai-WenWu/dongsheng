@@ -46,7 +46,7 @@
             android:layout_width="@dimen/dp_13"
             android:layout_height="@dimen/dp_13"
             android:layout_toRightOf="@+id/shopping_logo_tv"
-            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginLeft="@dimen/dp_2.5"
             android:paddingTop="@dimen/dp_1"
             android:layout_centerVertical="true"
             android:src="@drawable/z_find_home_ico_go" />

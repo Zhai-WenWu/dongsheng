@@ -124,6 +124,7 @@
                 android:layout_weight="1" >
 
                 <View
+                    android:id="@+id/line_top"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_0.5"
                     android:layout_alignParentTop="true"
@@ -133,12 +134,15 @@
                     android:id="@+id/item_commod_num"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_below="@+id/line_top"
+                    android:layout_above="@+id/line_bottom"
                     android:gravity="center"
                     android:text="1"
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_13" />
 
                 <View
+                    android:id="@+id/line_bottom"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_0.5"
                     android:layout_alignParentBottom="true"

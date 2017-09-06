@@ -85,11 +85,14 @@
                     android:layout_alignParentLeft="true"
                     android:layout_weight="1"
                     android:background="@drawable/mall_buycommod_number_back_left"
-                    android:padding="@dimen/dp_8" >
+                    android:paddingBottom="@dimen/dp_6"
+                    android:paddingLeft="@dimen/dp_7.5"
+                    android:paddingRight="@dimen/dp_7.5"
+                    android:paddingTop="@dimen/dp_6" >
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dp_1"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:background="@drawable/mall_buycommod_commod_explian_data_cut_iv" />
                 </RelativeLayout>
@@ -97,9 +100,10 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" >
+                    android:layout_weight="1">
 
                     <View
+                        android:id="@+id/line_top"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_0.5"
                         android:layout_alignParentTop="true"
@@ -109,12 +113,15 @@
                         android:id="@+id/shopping_item_commod_num"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_below="@+id/line_top"
+                        android:layout_above="@+id/line_bottom"
                         android:gravity="center"
                         android:text="1"
                         android:textColor="#333333"
                         android:textSize="@dimen/sp_13" />
 
                     <View
+                        android:id="@+id/line_bottom"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_0.5"
                         android:layout_alignParentBottom="true"
@@ -128,14 +135,15 @@
                     android:layout_alignParentRight="true"
                     android:layout_weight="1"
                     android:background="@drawable/mall_buycommod_number_back_right"
-                    android:paddingBottom="@dimen/dp_6"
-                    android:paddingLeft="@dimen/dp_7.5"
-                    android:paddingRight="@dimen/dp_7.5"
-                    android:paddingTop="@dimen/dp_6" >
+                    android:paddingBottom="@dimen/dp_7.5"
+                    android:paddingLeft="@dimen/dp_8"
+                    android:paddingRight="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_7.5" >
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:background="@drawable/mall_buycommod_commod_explian_data_add_iv" />
                 </RelativeLayout>
             </LinearLayout>
