@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -250,15 +251,17 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
      *提示弹框
      */
     private void showHintMyself(){
-        int x = Integer.parseInt(DataOperate.buyBurden(this, "x"));
-        if (x > 0) {
-            Object myselftHint = FileManager.loadShared(this, "myselftHint", "myselftHint");
-            if (myselftHint == null || TextUtils.isEmpty(String.valueOf(myselftHint))) {
-                    Intent intent = new Intent(this, HintMyselfDialog.class);
-                    startActivity(intent);
-                    FileManager.saveShared(this, "myselftHint", "myselftHint", "2");
-                }
-            }
+        if(!LoginManager.isLogin()){
+            return;
+        }
+//        int x = Integer.parseInt(DataOperate.buyBurden(this, "x"));
+        Object olddishdata = FileManager.loadShared(this, "olddishdata", "olddishdata");
+
+        if (olddishdata!=null&&!TextUtils.isEmpty(String.valueOf(olddishdata))&&"2".equals(String.valueOf(olddishdata))) {
+            Intent intent = new Intent(this, HintMyselfDialog.class);
+            startActivity(intent);
+            FileManager.saveShared(this, "olddishdata", "olddishdata", "1");
+        }
     }
 
     /**

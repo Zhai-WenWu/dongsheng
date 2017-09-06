@@ -11,7 +11,6 @@ import acore.override.activity.base.BaseActivity;
 import amodule.user.activity.MyFavorite;
 
 /**
- * Created by Fang Ruijiao on 2017/8/1.
  */
 public class HintMyselfDialog extends BaseActivity {
     @Override

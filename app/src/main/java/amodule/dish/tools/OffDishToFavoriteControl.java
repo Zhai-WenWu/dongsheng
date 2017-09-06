@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.override.activity.base.BaseActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
@@ -160,7 +162,10 @@ public class OffDishToFavoriteControl {
      * @param context
      */
     public static void addCollection(Context context) {
-         ShowBuySqlite oldDishSqlite = new ShowBuySqlite(context);
+        if(!LoginManager.isLogin()){
+            return;
+        }
+        final ShowBuySqlite oldDishSqlite = new ShowBuySqlite(context);
         int oldDishCount = oldDishSqlite.selectCount();
         if (oldDishCount <= 0) return;
         ArrayList<String> codes = oldDishSqlite.getAllCodes();
@@ -170,27 +175,15 @@ public class OffDishToFavoriteControl {
         for (String code : codes) {
             params.append(code);
             params.append(",");
+            Log.i("wyl","离线数据：：："+code);
         }
         ReqEncyptInternet.in().doEncypt(StringManager.api_addCollection, params.toString(), new InternetCallback(context) {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING){
-                    Object offToFavHint = FileManager.loadShared(context,"offToFavHint","offToFavHint");
-                    if(offToFavHint == null || TextUtils.isEmpty(String.valueOf(offToFavHint))) {
-                        final XhDialog xhDialog = new XhDialog(context);
-                        xhDialog.setTitle("离线菜谱已全部放入“我的收藏”中，点击查看~")
-                                .setSureButton("确定", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        xhDialog.cancel();
-                                        Intent intent = new Intent(context, MyFavorite.class);
-                                        context.startActivity(intent);
-                                    }
-                                }).show();
-                        FileManager.saveShared(context,"offToFavHint","offToFavHint","2");
-                        //删除全部离线数据
-
-                    }
+                    //删除全部离线数据
+                    oldDishSqlite.deleteAll();
+                    FileManager.saveShared(context,"olddishdata","olddishdata","2");
                 }
             }
         });
