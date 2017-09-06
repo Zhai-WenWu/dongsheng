@@ -121,7 +121,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                 continue;
             }
             String title = map.get("title");
-            boolean isSelect = map.get("isSelect") == "2";
+            boolean isSelect = "2".equals(map.get("isSelect"));
             if (isSelect)
                 defSelectPos = i;
             if (!TextUtils.isEmpty(title)) {
