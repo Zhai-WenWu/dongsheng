@@ -503,6 +503,8 @@ public class ArticleDetailActivity extends BaseActivity {
                     return false;
                 }
             });
+            webView.setHorizontalScrollBarEnabled(false);//水平不显示
+            webView.setVerticalScrollBarEnabled(false); //垂直不显示
         }
         if (linearLayoutTwo.getChildCount() == 0)
             linearLayoutTwo.addView(webView);

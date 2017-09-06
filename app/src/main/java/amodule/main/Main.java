@@ -512,7 +512,7 @@ public class Main extends Activity implements OnClickListener {
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
-            System.exit(0);
+            finish();
         }
         if (!isForeground) {
             long newHomebackTime = System.currentTimeMillis();
@@ -653,7 +653,6 @@ public class Main extends Activity implements OnClickListener {
                 ReqInternet.in().finish();
                 VersionOp.getInstance().onDesotry();
                 finish();
-//                System.exit(1);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
         } else {
