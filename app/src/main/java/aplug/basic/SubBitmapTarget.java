@@ -1,6 +1,5 @@
 package aplug.basic;
 
-
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import xh.basic.internet.img.BitmapTarget;
