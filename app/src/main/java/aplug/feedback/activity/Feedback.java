@@ -235,10 +235,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.feebback_send:
-                if (feekUrl != null && !feekUrl.equals("")) {
-                    sendFeekback(feekUrl);
-                    feekUrl = "";
-                }
+                onSendMsgBefore();
                 feekback_text = feebback_reply_content.getText().toString();
                 sendFeekback(feekback_text);
                 feebback_reply_content.setText("");
@@ -246,6 +243,16 @@ public class Feedback extends BaseActivity implements OnClickListener {
             case R.id.feekback_img_choice:
                 chooseImg();
                 break;
+        }
+    }
+
+    /**
+     * 当发送消息出去的时候，先发送反馈链接。
+     */
+    private void onSendMsgBefore() {
+        if (feekUrl != null && !feekUrl.equals("")) {
+            sendFeekback(feekUrl);
+            feekUrl = "";
         }
     }
 
@@ -265,6 +272,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
             if (array.size() > 0) {
                 mImageUrl = array.get(0);
                 if (!TextUtils.isEmpty(mImageUrl)) {
+                    onSendMsgBefore();
                     sendFeekImg(mImageUrl);
                 } else {
                     Tools.showToast(this, "选择图片有误，请重新选择");
