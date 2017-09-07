@@ -33,6 +33,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.upload.AskAnswerUploadListPool;
+import amodule.answer.view.AskAnswerImgController;
 import amodule.answer.window.FloatingWindow;
 import amodule.answer.window.UploadingDialog;
 import amodule.dish.view.CommonDialog;
@@ -111,6 +112,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             public void onClick(View v) {
                 AppCommon.openUrl(AskEditActivity.this, StringManager.API_QA_QASTATEMENT, false);
                 XHClick.mapStat(AskEditActivity.this, "a_ask_publish", "点击【查看问答细则及责任声明】", "");
+            }
+        });
+        mImgController.setOnItemClickDelListener(new AskAnswerImgController.OnItemClickDelListener() {
+            @Override
+            public void onItemClickDel(Map<String, String> dataMap) {
+                XHClick.mapStat(AskEditActivity.this, getTjId(), "删除图片", "");
             }
         });
     }

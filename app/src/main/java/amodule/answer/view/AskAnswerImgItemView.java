@@ -38,13 +38,11 @@ public class AskAnswerImgItemView extends RelativeLayout {
     private int mPosition;
 
     public AskAnswerImgItemView(Context context) {
-        super(context);
-        initView(context);
+        this(context, null);
     }
 
     public AskAnswerImgItemView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView(context);
+        this(context, attrs, 0);
     }
 
     public AskAnswerImgItemView(Context context, AttributeSet attrs, int defStyleAttr) {

@@ -265,12 +265,7 @@ public class BaseEditActivity extends BaseActivity {
 
             }
         });
-        mImgController.setOnDelListener(new AskAnswerImgController.OnDelListener() {
-            @Override
-            public void onDel(Map<String, String> dataMap) {
-                XHClick.mapStat(BaseEditActivity.this, getTjId(), "删除图片", "");
-            }
-        });
+
         mJsAppCommon.setOnPayFinishListener(new JsAppCommon.OnPayFinishListener() {
             @Override
             public void onPayFinish(boolean succ, Object data) {

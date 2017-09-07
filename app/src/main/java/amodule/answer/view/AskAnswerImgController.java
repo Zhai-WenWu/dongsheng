@@ -92,6 +92,11 @@ public class AskAnswerImgController {
         itemView.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mOnItemClickDelListener != null) {
+                    remove(dataMap, itemView);
+                    mOnItemClickDelListener.onItemClickDel(dataMap);
+                    return;
+                }
                 if (itemView.isVideo()) {
                     if (mOnVideoClickListener != null)
                         mOnVideoClickListener.onClick(itemView);
@@ -120,6 +125,15 @@ public class AskAnswerImgController {
 
     public interface OnDelListener {
         void onDel(Map<String, String> dataMap);
+    }
+
+    public interface OnItemClickDelListener {
+        void onItemClickDel(Map<String, String> dataMap);
+    }
+
+    private OnItemClickDelListener mOnItemClickDelListener;
+    public void setOnItemClickDelListener(OnItemClickDelListener itemClickDelListener) {
+        mOnItemClickDelListener = itemClickDelListener;
     }
 
     private OnDelListener mOnDelListener;
