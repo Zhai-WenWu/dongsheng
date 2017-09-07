@@ -1083,6 +1083,9 @@ public class AppCommon {
             @Override
             public void run() {
                 String url = StringManager.getFirstMap(getConfigByLocal("randpromotionurl")).get("url");
+                if(TextUtils.isEmpty(url)){
+                    return;
+                }
                 ReqEncyptInternet.in().doEncypt(url, "",
                         new InternetCallback(context) {
                             @Override

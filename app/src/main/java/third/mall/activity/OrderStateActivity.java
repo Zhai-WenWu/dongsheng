@@ -371,14 +371,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 			if(map.containsKey("payment_type_desc")&&map.containsKey("order_timing_info")){
 				if(!TextUtils.isEmpty(map.get("payment_type_desc"))||!TextUtils.isEmpty(map.get("order_timing_info"))){
 					buycommod_order_number_text.setVisibility(View.VISIBLE);
-					copy_order_number_text.setVisibility(View.VISIBLE);
-					copy_order_number_text.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Tools.inputToClipboard(OrderStateActivity.this,map.get("order_id"));
-							Tools.showToast(OrderStateActivity.this,"复制成功");
-						}
-					});
+                    setCopyText(map.get("order_id"));
 					if(!TextUtils.isEmpty(map.get("payment_type_desc"))){
 						data+="\n支付方式："+map.get("payment_type_desc");
 					}
@@ -399,9 +392,25 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		}else if("payment_order".equals(order_satus)){
 			data+=map.get("payment_order_id");
 			data+="\n下单时间："+map.get("create_time");
+            setCopyText(map.get("payment_order_id"));
 		}
 		buycommod_order_number_text.setText(data);
 	}
+
+	private void setCopyText(final String text){
+        if(TextUtils.isEmpty(text)){
+            copy_order_number_text.setVisibility(View.GONE);
+            return;
+        }
+        copy_order_number_text.setVisibility(View.VISIBLE);
+        copy_order_number_text.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tools.inputToClipboard(OrderStateActivity.this,text);
+                Tools.showToast(OrderStateActivity.this,"复制成功");
+            }
+        });
+    }
 
 	/**
 	 * 设置状态

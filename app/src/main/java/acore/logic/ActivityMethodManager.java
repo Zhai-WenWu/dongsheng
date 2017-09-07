@@ -49,8 +49,8 @@ public class ActivityMethodManager {
     }
 
     public void onResume(int level) {
-        Log.i("FRJ", "level:" + level);
-        Log.i("FRJ", "colse_level:" + colse_level);
+        //Log.i("FRJ", "level:" + level);
+        //Log.i("FRJ", "colse_level:" + colse_level);
         XHADView adScrollView = XHADView.getInstence(mAct);
         if (adScrollView != null) {
             adScrollView.refreshContext(mAct);

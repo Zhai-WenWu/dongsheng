@@ -16,7 +16,7 @@ import amodule.article.activity.VideoDetailActivity;
 import amodule.article.db.UploadVideoSQLite;
 
 /**
- * Created by Fang Ruijiao on 2017/5/28.
+ * Created by XiangHa on 2017/5/28.
  */
 
 public class VideoEditActivity extends EditParentActivity{

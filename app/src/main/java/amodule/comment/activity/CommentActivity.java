@@ -48,7 +48,7 @@ import xh.windowview.XhDialog;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
- * Created by Fang Ruijiao on 2017/5/25.
+ * Created by XiangHa on 2017/5/25.
  */
 public class CommentActivity extends BaseActivity implements View.OnClickListener {
     private DownRefreshList downRefreshList;
@@ -379,7 +379,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 public void loaded(int flag, String url, Object returnObj) {}
             });
         }
-        Log.i("FRJ","newsId:" + newsId);
+        //Log.i("FRJ","newsId:" + newsId);
         gotoCommentId = getIntent().getStringExtra("commentId");
         gotoReplayId = getIntent().getStringExtra("replayId");
         String fromType = getIntent().getStringExtra("from");

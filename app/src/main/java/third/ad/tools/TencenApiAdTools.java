@@ -32,7 +32,7 @@ import xh.basic.tool.UtilFile;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
- * Created by Fang Ruijiao on 2016/12/6.
+ * Created by XiangHa on 2016/12/6.
  */
 public class TencenApiAdTools {
 

@@ -37,7 +37,7 @@ import xh.basic.tool.UtilString;
 import xh.windowview.XhDialog;
 
 /**
- * Created by Fang Ruijiao on 2016/10/25.
+ * Created by XiangHa on 2016/10/25.
  */
 public class UploadDishNormalControl extends UploadDishParrentControl implements View.OnClickListener{
 

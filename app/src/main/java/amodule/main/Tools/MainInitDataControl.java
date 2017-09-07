@@ -258,7 +258,7 @@ public class MainInitDataControl {
                 // 245版32以后，数据库字段更新
                 String verName = VersionOp.getVerName(context);
                 verName = verName.replace(".", "");
-                // Log.i("FRJ","verName: " + verName);
+                // //Log.i("FRJ","verName: " + verName);
                 if (Integer.parseInt(verName) <= 245) {
                     try {
                         UploadDishSqlite sqlite = new UploadDishSqlite(context);
@@ -267,7 +267,7 @@ public class MainInitDataControl {
                     } catch (Exception e) {
                         UploadDishSqlite sqlite = new UploadDishSqlite(context);
                         sqlite.deleteDatabase(context);
-                        // Log.i("FRJ","----------isDelete: " + isDelete);
+                        // //Log.i("FRJ","----------isDelete: " + isDelete);
                         e.printStackTrace();
                     }
                 }

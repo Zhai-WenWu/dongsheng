@@ -45,7 +45,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 /**
  * 菜谱详情页底部view的控制器
  * 菜谱底部原生所有内容：相关美食帖、广告、发帖入口、点赞点踩、提问入口
- * Created by Fang Ruijiao on 2017/7/13.
+ * Created by XiangHa on 2017/7/13.
  */
 public class DishFootControl implements View.OnClickListener{
 

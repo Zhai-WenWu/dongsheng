@@ -150,7 +150,7 @@ public class BannerAd extends AdParent{
 			if(mListener != null) mListener.onShowAd();
 //			String name = mData.get("name");
 //			String content = mData.get("subhead");
-//			Log.i("FRJ","name:" + name + ";content:" + content);
+//			//Log.i("FRJ","name:" + name + ";content:" + content);
 //			nameAndContentAllIsNull = true;
 //			mCurrentImgView = mImgView;
 //			if(!TextUtils.isEmpty(name)){
@@ -185,7 +185,7 @@ public class BannerAd extends AdParent{
 					@Override
 					public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
 						int imgViewWidth = mImgViewSingle.getWidth() > 0 ? mImgViewSingle.getWidth() : ToolsDevice.getWindowPx(mAct).widthPixels - marginLeft - marginRight;
-//								Log.i("FRJ","imgViewWidth:" + imgViewWidth);
+//								//Log.i("FRJ","imgViewWidth:" + imgViewWidth);
 						int imgHeight = imgViewWidth * bitmap.getHeight() / bitmap.getWidth();
 						mImgViewSingle.setScaleType(ImageView.ScaleType.FIT_XY);
 						UtilImage.setImgViewByWH(mImgViewSingle, bitmap, imgViewWidth, imgHeight, true);

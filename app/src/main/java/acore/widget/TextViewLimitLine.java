@@ -11,7 +11,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 
 /**
- * Created by Fang Ruijiao on 2016/9/22.
+ * Created by XiangHa on 2016/9/22.
  */
 public class TextViewLimitLine extends TextView implements View.OnClickListener{
 

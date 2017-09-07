@@ -70,10 +70,10 @@ public class GestureListener extends SimpleOnGestureListener implements OnTouchL
         	isStopMove = true;
         }
 	    if(isStopMove) {  
-//	    	Log.i("FRJ","x1 = " + x1 + "  x2 = " + x2);
-//	    	Log.i("FRJ","y1 = " + y1 + "  y2 = " + y2);
-//	    	Log.i("FRJ","x1 - x2 = " + (x1-x2));
-//	    	Log.i("FRJ","y1- y2 = " +(y1- y2));
+//	    	//Log.i("FRJ","x1 = " + x1 + "  x2 = " + x2);
+//	    	//Log.i("FRJ","y1 = " + y1 + "  y2 = " + y2);
+//	    	//Log.i("FRJ","x1 - x2 = " + (x1-x2));
+//	    	//Log.i("FRJ","y1- y2 = " +(y1- y2));
 	       if(Math.abs(y1-y2) < distance_Y){
 				 //当手指离开的时候  
 				if(x1 - x2 > distance_X) {  

@@ -124,7 +124,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		if(resultCode == RESULT_OK && data != null){
 			switch (requestCode){
 				case UP_SUBJECT_CHOOSE_IMG:
-					Log.i("FRJ","isFirst:" + isFirst + "   isCanBackOnNoChoose:" + isCanBackOnNoChoose);
+					//Log.i("FRJ","isFirst:" + isFirst + "   isCanBackOnNoChoose:" + isCanBackOnNoChoose);
 					ArrayList<String> array = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);//ArrayList<String>
 					int size = array.size();
 					XHClick.onEventValue(this, "uploadQuanImg", "uploadQuanImg", "新贴图片", size);

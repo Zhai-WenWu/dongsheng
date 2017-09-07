@@ -63,7 +63,7 @@ public class ImgManager extends UtilImage {
         BitmapFactory.decodeFile(path, options);
         int wi = options.outWidth;
         int hei = options.outHeight;
-        // Log.i("FRJ","wi:" + wi + "  hei:" + hei);
+        // //Log.i("FRJ","wi:" + wi + "  hei:" + hei);
         return !(wi / hei >= scale || hei / wi >= scale);
     }
 

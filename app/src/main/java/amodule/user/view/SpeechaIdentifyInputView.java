@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 /**
- * Created by Fang Ruijiao on 2017/6/22.
+ * Created by XiangHa on 2017/6/22.
  */
 
 public class SpeechaIdentifyInputView extends RelativeLayout implements View.OnClickListener {

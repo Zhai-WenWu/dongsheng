@@ -12,7 +12,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Created by Fang Ruijiao on 2016/8/25.
+ * Created by XiangHa on 2016/8/25.
  */
 
 public class ChannelUtil {

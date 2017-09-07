@@ -1,7 +1,7 @@
 package acore.logic;
 
 /**
- * Created by Fang Ruijiao on 2017/3/23.
+ * Created by XiangHa on 2017/3/23.
  */
 
 public class PayCallback {

@@ -13,7 +13,7 @@ import acore.tools.Tools;
 
 /**
  * 图片预览单个view
-// * Created by Fang Ruijiao on 2016/8/16.
+// * Created by XiangHa on 2016/8/16.
  */
 public abstract class ImageMoreView implements View.OnClickListener {
 
@@ -79,7 +79,7 @@ public abstract class ImageMoreView implements View.OnClickListener {
         int textCount = tv.getText().length();
         int line = (textCount + num - 1) / num;
         int tvHeight = line * (tv_distance + tv_pad) + Tools.getDimen(context, R.dimen.dp_28) + Tools.getDimen(context, R.dimen.dp_16) ;
-//        Log.i("FRJ","getTvHeight:" + tvHeight);
+//        //Log.i("FRJ","getTvHeight:" + tvHeight);
         return tvHeight;
     }
 
@@ -94,9 +94,9 @@ public abstract class ImageMoreView implements View.OnClickListener {
 //                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) scrollView.getLayoutParams();
 ////                //文字的高度 + scrollView的padding + 内容文字框上面的数字提示高度
 //                int tvHeight = tv.getHeight() + Tools.getDimen(mAct, R.dimen.dp_28) + Tools.getDimen(mAct, R.dimen.dp_16) + Tools.getDimen(mAct,R.dimen.dp_5);
-////                Log.i("FRJ","tvContent:" + tv.getText());
-////                Log.i("FRJ","tvHeight:" + tvHeight);
-////                Log.i("FRJ","maxHeight:" + maxHeight);
+////                //Log.i("FRJ","tvContent:" + tv.getText());
+////                //Log.i("FRJ","tvHeight:" + tvHeight);
+////                //Log.i("FRJ","maxHeight:" + maxHeight);
 //                if(tvHeight > maxHeight){
 //                    params.height = maxHeight;
 //                }

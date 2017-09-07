@@ -34,7 +34,7 @@ import third.ad.tools.TencenApiAdTools;
 import xh.basic.tool.UtilImage;
 
 /**
- * Created by Fang Ruijiao on 2016/12/6.
+ * Created by XiangHa on 2016/12/6.
  */
 public class TencenApiAd extends AdParent{
     private Activity mAct;

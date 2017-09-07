@@ -21,7 +21,7 @@ import aplug.basic.ReqInternet;
 
 /**
  * 跟帖列表
- * Created by Fang Ruijiao on 2017/7/19.
+ * Created by XiangHa on 2017/7/19.
  */
 public class FollowSubject extends BaseActivity {
 

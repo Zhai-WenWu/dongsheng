@@ -7,7 +7,7 @@ import acore.override.XHApplication;
 import acore.tools.FileManager;
 
 /**
- * Created by Fang Ruijiao on 2017/5/4.
+ * Created by XiangHa on 2017/5/4.
  */
 public class DialogControler {
 

@@ -21,7 +21,7 @@ import java.util.List;
 import acore.override.XHApplication;
 
 /**
- * Created by Fang Ruijiao on 2016/10/11.
+ * Created by XiangHa on 2016/10/11.
  */
 
 public class ToolsCammer {
@@ -129,7 +129,7 @@ public class ToolsCammer {
             mediaPlayer = null;
             return longTime;
         } catch (Exception e) {
-//            Log.i("FRJ","getLongYime()");
+//            //Log.i("FRJ","getLongYime()");
             e.printStackTrace();
         }
         return 0;

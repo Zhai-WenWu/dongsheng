@@ -1,7 +1,7 @@
 package acore.dialogManager;
 
 /**
- * Created by Fang Ruijiao on 2017/5/4.
+ * Created by XiangHa on 2017/5/4.
  */
 
 public abstract class DialogManagerParent {

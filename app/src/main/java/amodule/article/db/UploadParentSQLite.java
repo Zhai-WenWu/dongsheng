@@ -14,7 +14,7 @@ import amodule.dish.db.UploadDishData;
 
 
 /**
- * Created by Fang Ruijiao on 2017/5/22.
+ * Created by XiangHa on 2017/5/22.
  */
 public class UploadParentSQLite extends SQLiteOpenHelper {
 

@@ -34,7 +34,7 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * 图片预览单个view
- * Created by Fang Ruijiao on 2016/8/10.
+ * Created by XiangHa on 2016/8/10.
  */
 public class ImageMoreCommenView extends ImageMoreView implements View.OnClickListener {
 

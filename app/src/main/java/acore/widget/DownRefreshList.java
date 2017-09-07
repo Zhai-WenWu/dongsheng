@@ -146,7 +146,7 @@ public class DownRefreshList extends ListView implements OnScrollListener {
 				isRecored = true;
 
 			}
-//			Log.i("FRJ", "在down时候记录当前位置‘");
+//			//Log.i("FRJ", "在down时候记录当前位置‘");
 			break;
 		case MotionEvent.ACTION_UP:// 手松开 对应松开刷新状态
 
@@ -169,12 +169,12 @@ public class DownRefreshList extends ListView implements OnScrollListener {
 
 			isRecored = false;// 手松开，则无论怎样，可以重新记录startY,因为只要手松开就认为一次刷新已完成
 			isBack = false;
-//			Log.i("FRJ", "由松开刷新状态，到done状态");
+//			//Log.i("FRJ", "由松开刷新状态，到done状态");
 
 			break;
 
 		case MotionEvent.ACTION_MOVE:// 手拖动，拖动过程中不断地实时记录当前位置
-//			Log.i("FRJ", "在move时候记录下位置");
+//			//Log.i("FRJ", "在move时候记录下位置");
 			int tempY = (int) event.getY();
 			if (!isRecored && firstItemIndex == 0) {// 如果首item索引为0，且尚未记录startY,则在拖动时记录之，并执行isRecored
 													// = true;

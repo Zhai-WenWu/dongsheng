@@ -247,7 +247,7 @@ public class LoginManager {
         ReqInternet.in().doGet(StringManager.api_getUserPowers, new InternetCallback(mAct) {
             @Override
             public void loaded(int flag, String s, Object o) {
-                Log.i("FRJ","getUserPowers()" + flag + "    o:" + o);
+                //Log.i("FRJ","getUserPowers()" + flag + "    o:" + o);
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
                     if (arrayList.size() > 0) {
@@ -258,7 +258,7 @@ public class LoginManager {
                             MainChangeSend.sendMap = null;
                         }
                         String adBlock = arrayList.get(0).get("adBlock");
-                        Log.i("FRJ","getUserPowers adBlock:" + adBlock);
+                        //Log.i("FRJ","getUserPowers adBlock:" + adBlock);
                         if(!TextUtils.isEmpty(adBlock) && "2".equals(adBlock)){
                             mIsShowAd = false;
                         }else{
@@ -334,18 +334,18 @@ public class LoginManager {
             isLoadFile = true;
             mIsShowAd = getIsShowAd();
         }
-//        Log.i("FRJ","isShowAd():" + mIsShowAd);
+//        //Log.i("FRJ","isShowAd():" + mIsShowAd);
         return mIsShowAd;
     }
 
     private static synchronized void setIsShowAd(){
-//        Log.i("FRJ","setIsShowAd():" + mIsShowAd);
+//        //Log.i("FRJ","setIsShowAd():" + mIsShowAd);
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd",mIsShowAd?"2":"1");
     }
 
     private static boolean getIsShowAd(){
         Object data = FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd");
-//        Log.i("FRJ","getIsShowAd():" + data);
+//        //Log.i("FRJ","getIsShowAd():" + data);
         if(data != null && "1".equals(String.valueOf(data)))
             return false;
         return true;

@@ -21,7 +21,7 @@ import acore.tools.Tools;
 import xh.windowview.XhDialog;
 
 /**
- * Created by Fang Ruijiao on 2017/5/3.
+ * Created by XiangHa on 2017/5/3.
  * 当用户关闭推送通知时，定时（时间间隔：每天只弹框1次，第二次弹框的间隔时间要大于24小时）弹框提醒用户开启，共默认弹2次
  * 内容均可在线参数控制
  */
@@ -37,7 +37,7 @@ public class PushManager extends DialogManagerParent {
     public void isShow(OnDialogManagerCallback callback) {
         boolean isShowNot = isNotificationEnabled();
         boolean isShowDia = isShowPushDialog();
-        Log.i("FRJ","isShowNot:" + isShowNot + "    isShowDia:" + isShowDia);
+        //Log.i("FRJ","isShowNot:" + isShowNot + "    isShowDia:" + isShowDia);
         if(!isShowNot && isShowDia){
             callback.onShow();
         }else{
@@ -138,7 +138,7 @@ public class PushManager extends DialogManagerParent {
 
     public static boolean isGoAppSetting(){
         String brand = android.os.Build.BRAND;
-        Log.i("FRJ","brand:" + brand);
+        //Log.i("FRJ","brand:" + brand);
         if(TextUtils.isEmpty(brand) || brand.contains("Lenovo"))
             return false;
         return true;

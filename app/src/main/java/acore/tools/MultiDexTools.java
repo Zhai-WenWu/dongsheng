@@ -133,7 +133,7 @@ public class MultiDexTools {
         try {
             return pm.getPackageInfo(context.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.i("FRJ",e.getLocalizedMessage());
+            //Log.i("FRJ",e.getLocalizedMessage());
         }
         return  new PackageInfo();
     }

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Comparator;
 
 /**
- * Created by Fang Ruijiao on 2016/10/21.
+ * Created by XiangHa on 2016/10/21.
  */
 
 public class SortFile implements Comparator<File> {

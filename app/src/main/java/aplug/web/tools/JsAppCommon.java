@@ -894,7 +894,7 @@ public class JsAppCommon extends JsBase {
             return;
         }
 //		Tools.showToast(mAct,"url:"+url);
-//		Log.i("FRJ","goPay() url: " + url + "  params:" + params + "  tpye:" + type);
+//		//Log.i("FRJ","goPay() url: " + url + "  params:" + params + "  tpye:" + type);
         PayCallback.setPayCallBack(new PayCallback.OnPayCallback() {
             @Override
             public void onPay(boolean isOk, Object data) {
@@ -903,12 +903,12 @@ public class JsAppCommon extends JsBase {
         });
         params += "&userCode=" + LoginManager.userInfo.get("code");
         url = StringManager.apiUrl + url;
-        Log.i("FRJ", "goPay() url: " + url + "  params:" + params + "  tpye:" + type);
+        //Log.i("FRJ", "goPay() url: " + url + "  params:" + params + "  tpye:" + type);
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(mAct) {
             @Override
             public void loaded(int i, String s, Object data) {
 
-                Log.i("FRJ", "string = " + s + "  data = " + data);
+                //Log.i("FRJ", "string = " + s + "  data = " + data);
 
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     if ("1".equals(type)) { //支付宝支付
@@ -948,17 +948,17 @@ public class JsAppCommon extends JsBase {
 
     public void onPayCallback(final boolean isOk, final Object data) {
 //		Tools.showToast(mAct,"onPayCallback() isOk:" + isOk);
-//		Log.i("FRJ","onPayCallback() isOk:" + isOk + "  data: " + data);
+//		//Log.i("FRJ","onPayCallback() isOk:" + isOk + "  data: " + data);
         if (mAct != null && mWebView != null) {
             mWebView.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("FRJ", "onPayCallback() isOk:" + isOk + "  data: " + data);
+                    //Log.i("FRJ", "onPayCallback() isOk:" + isOk + "  data: " + data);
 //					StringManager.getListMapByJson(data);
                     String newData = String.valueOf(data);
 
                     String mm = "Javascript:onPayCallback(" + isOk + ",\"" + newData + "\")";
-                    Log.i("FRJ", "onPayCallback() mm:" + mm);
+                    //Log.i("FRJ", "onPayCallback() mm:" + mm);
                     mWebView.loadUrl("Javascript:onPayCallback(" + isOk + ",\"" + newData + "\")");
                     if (mOnPayFinishListener != null) {
                         mOnPayFinishListener.onPayFinish(isOk, data);

@@ -355,7 +355,7 @@ public class CircleMainFragment extends Fragment {
                 if(isLoadAd){
                     index_size=0;
                     mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
-                    Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
+                    //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
                     mAdapter.notifyDataSetChanged();
                     index_size=mListData.size();
                 }else{

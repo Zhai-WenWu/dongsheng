@@ -24,7 +24,7 @@ import xh.windowview.XhDialog;
 
 /**
  * 通过账号密码登录
- * Created by Fang Ruijiao on 2017/8/14.
+ * Created by XiangHa on 2017/8/14.
  */
 public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnClickListener{
     private PhoneNumInputView phone_info;
