@@ -158,9 +158,14 @@ public class JsAppCommon extends JsBase {
      * @param nickName
      */
     @JavascriptInterface
-    public void setIngreStr(String burden,String allClick,String favrites,String nickName) {
-        if (mAct != null && mAct instanceof DetailDish)
-            ((DetailDish)mAct).savaJsAdata(burden,allClick,favrites,nickName);
+    public void setIngreStr(final String burden,final String allClick,final String favrites,final String nickName) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+            if (mAct != null && mAct instanceof DetailDish)
+                ((DetailDish)mAct).savaJsAdata(burden,allClick,favrites,nickName);
+            }
+        });
     }
 
     /**
