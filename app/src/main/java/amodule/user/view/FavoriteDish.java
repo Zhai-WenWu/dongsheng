@@ -109,6 +109,7 @@ public class FavoriteDish {
 					Intent intent = new Intent(mAct, DetailDish.class);
 					intent.putExtra("name", listDataMyFav.get(position - 1).get("name"));
 					intent.putExtra("code", listDataMyFav.get(position - 1).get("code"));
+					intent.putExtra("img", listDataMyFav.get(position - 1).get("img"));
 					mAct.startActivity(intent);
 				}
 			}

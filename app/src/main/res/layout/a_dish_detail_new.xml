@@ -23,12 +23,13 @@
             <amodule.dish.view.DishHeaderViewNew
                 android:id="@+id/a_dish_detail_new_headview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/dp_100"/>
 
             <aplug.web.view.TemplateWebView
                 android:id="@+id/a_dish_detail_new_web"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
             <include
                 android:id="@+id/a_dish_detail_new_footer"

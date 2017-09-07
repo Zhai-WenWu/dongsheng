@@ -329,6 +329,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 Intent intent = new Intent(mActivity, DetailDish.class);
                 intent.putExtra("code", caipuMap.get("code"));
                 intent.putExtra("name", caipuMap.get("name"));
+                if(!"2".equals(caipuMap.get("hasVideo"))){
+                    intent.putExtra("img", caipuMap.get("img"));
+                }
                 mActivity.startActivity(intent);
             }
         });

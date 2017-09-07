@@ -124,6 +124,7 @@ public class AdapterUserDish extends AdapterSimple {
                     Bundle bundle = new Bundle();
                     bundle.putString("code", mapInfo.get("code"));
                     bundle.putString("name", mapInfo.get("name"));
+                    bundle.putString("img", mapInfo.get("img"));
                     if (LoginManager.userInfo.get("code") != null && LoginManager.userInfo.get("code").equals(mapInfo.get("userCode")))
                         bundle.putString("state", mapInfo.get("dishState"));
                     intent.putExtras(bundle);
@@ -146,6 +147,7 @@ public class AdapterUserDish extends AdapterSimple {
                     Bundle bundle = new Bundle();
                     bundle.putString("code", mapInfo.get("code"));
                     bundle.putString("name", mapInfo.get("name"));
+                    bundle.putString("img", mapInfo.get("img"));
                     if (LoginManager.userInfo.get("code") != null && LoginManager.userInfo.get("code").equals(mapInfo.get("userCode")))
                         bundle.putString("state", mapInfo.get("dishState"));
                     intent.putExtras(bundle);

@@ -20,6 +20,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.xiangha.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
@@ -49,7 +51,7 @@ public class VideoPlayerController {
     private boolean mHasVideoInfo = false;
     private int mVideoInfoRequestNumber = 0;
     protected ViewGroup mPraentViewGroup = null;
-    private StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
+    public StatisticsPlayCountCallback mStatisticsPlayCountCallback = null;
     protected OnPlayingCompletionListener onPlayingCompletionListener = null;
     protected String mImgUrl = "";
     protected String mVideoUrl = "";
@@ -61,7 +63,7 @@ public class VideoPlayerController {
     public int autoRetryCount = 0;
     public boolean isPortrait = false;
 
-    protected StandardGSYVideoPlayer videoPlayer;
+    public StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
 
     public VideoPlayerController(Context context) {
@@ -74,12 +76,15 @@ public class VideoPlayerController {
      * @param viewGroup---布局容器
      * @param imgUrl---图片路径
      */
-    public VideoPlayerController(final Activity context, ViewGroup viewGroup, String imgUrl) {
+    public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl) {
+        this(context,viewGroup,imgUrl,GSYVideoType.SCREEN_TYPE_DEFAULT);
+    }
+    public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl,int type) {
         this.mContext = context;
         this.mPraentViewGroup = viewGroup;
         this.mImgUrl = imgUrl;
-
         videoPlayer = new StandardGSYVideoPlayer(context);
+        videoPlayer.setType(type);
         //设置旋转
         orientationUtils = new OrientationUtils(context, videoPlayer);
         orientationUtils.setEnable(false);
@@ -105,6 +110,8 @@ public class VideoPlayerController {
                 super.onPrepared(url, objects);
                 if(url.startsWith("http"))
                     setNetworkCallback();
+                GSYVideoManager.instance().setCurrentVideoWidth(viewGroup.getWidth());
+                GSYVideoManager.instance().setCurrentVideoHeight(viewGroup.getHeight());
             }
 
             @Override
@@ -132,6 +139,7 @@ public class VideoPlayerController {
         videoPlayer.setIsTouchWiget(false);
         videoPlayer.setIsTouchWigetFull(true);
 
+
 //        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
 //            @Override
 //            public boolean onError() {
@@ -152,6 +160,7 @@ public class VideoPlayerController {
             mPraentViewGroup.removeAllViews();
         }
         mPraentViewGroup.addView(videoPlayer);
+
         if (!TextUtils.isEmpty(imgUrl)) {
             if(view_Tip==null){
                 initView(mContext);
@@ -500,6 +509,8 @@ public class VideoPlayerController {
     public void onResume() {
         if(null != videoPlayer && !isNetworkDisconnect)
             videoPlayer.onVideoResume();
+        Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
+        Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
     }
 
     public void onPause() {

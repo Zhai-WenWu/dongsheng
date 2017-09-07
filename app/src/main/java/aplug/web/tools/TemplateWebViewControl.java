@@ -26,6 +26,7 @@ import third.mall.aplug.MallStringManager;
  * 严谨外部使用
  */
 public class TemplateWebViewControl {
+    private boolean isCallBack = false;//是否已经回调
     /**
      * 处理模版数据
      * 存储数据，的key是通过当前url获取出来
@@ -33,6 +34,7 @@ public class TemplateWebViewControl {
      * @param requestMethod
      */
     public void handleXHMouldData(final String requestMethod) {
+        isCallBack=false;
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
@@ -40,6 +42,11 @@ public class TemplateWebViewControl {
         mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
         mapParams.put("requestMethod",requestMethod);
         String url = StringManager.api_getTemplate;
+        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
+            isCallBack = true;
+            mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
+        }
+
         ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, final Object msg) {
@@ -53,11 +60,16 @@ public class TemplateWebViewControl {
      * @param requestMethod
      */
     private void handlerDsMouldData(final String requestMethod) {
+        isCallBack=false;
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
         final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
         String version= versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign);
         String url = MallStringManager.mall_api_getTemplate+"?request_method="+requestMethod+"&version_sign="+version;
+        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
+            isCallBack = true;
+            mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
+        }
         MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loadstat(int flag, final String url, final Object msg, Object... stat) {
@@ -87,19 +99,23 @@ public class TemplateWebViewControl {
                     File file = FileManager.saveFileToCompletePath(path, data, false);
                     if (file != null)
                         FileManager.saveShared(XHApplication.in(), requestMethod, "versionSign", String.valueOf(versionSign));
-                    if (mouldCallBack != null)
+                    if (mouldCallBack != null&&!isCallBack) {
                         mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
+                    }
                 } else {//无数据标示已经是最新版本。
-                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
+                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr)&&!isCallBack) {
                         mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
+                    }
                 }
             } else {
-                if (mouldCallBack != null && !TextUtils.isEmpty(readStr))
+                if (mouldCallBack != null && !TextUtils.isEmpty(readStr)&&!isCallBack) {
                     mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
+                }
             }
         } else {
-            if (mouldCallBack != null)
+            if (mouldCallBack != null) {
                 mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
+            }
         }
     }
 
