@@ -235,20 +235,20 @@ public class Main extends Activity implements OnClickListener {
                 if (!TextUtils.isEmpty(qaType)) {
                     switch (qaType) {
                         case AskAnswerModel.TYPE_ANSWER:
-                            msg = "你有一个回答尚未发布，是否继续？";
+                            msg = "您有一个回答尚未发布，是否继续？";
                             tempC = AnswerEditActivity.class;
                             break;
                         case AskAnswerModel.TYPE_ANSWER_AGAIN:
-                            msg = "你有一个回答尚未发布，是否继续？";
+                            msg = "您有一个回答尚未发布，是否继续？";
                             tempC = AnswerEditActivity.class;
                             isAnswerAgain = true;
                             break;
                         case AskAnswerModel.TYPE_ASK:
-                            msg = "你有一个问题尚未发布，是否继续？";
+                            msg = "您有一个问题尚未发布，是否继续？";
                             tempC = AskEditActivity.class;
                             break;
                         case AskAnswerModel.TYPE_ASK_AGAIN:
-                            msg = "你有一个问题尚未发布，是否继续？";
+                            msg = "您有一个问题尚未发布，是否继续？";
                             tempC = AskEditActivity.class;
                             isAskAgain = true;
                             break;
