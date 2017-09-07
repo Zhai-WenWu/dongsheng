@@ -350,7 +350,8 @@ public class ArticleDetailActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (page >= 1) requestRelateData();
+//                        if (page >= 1)
+//                            requestRelateData();
                     }
                 }, new AutoLoadMore.OnListScrollListener() {
                     int srceenHeight = ToolsDevice.getWindowPx(ArticleDetailActivity.this).heightPixels;
