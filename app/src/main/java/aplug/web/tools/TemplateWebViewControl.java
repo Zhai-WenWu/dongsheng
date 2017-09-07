@@ -43,7 +43,6 @@ public class TemplateWebViewControl {
         mapParams.put("requestMethod",requestMethod);
         String url = StringManager.api_getTemplate;
         if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
-            Log.i("wyl","本地数据回调::"+requestMethod);
             isCallBack = true;
             mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
         }
@@ -69,7 +68,6 @@ public class TemplateWebViewControl {
         String url = MallStringManager.mall_api_getTemplate+"?request_method="+requestMethod+"&version_sign="+version;
         if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
             isCallBack = true;
-            Log.i("wyl","本地数据回调::"+requestMethod);
             mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
         }
         MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
@@ -102,24 +100,20 @@ public class TemplateWebViewControl {
                     if (file != null)
                         FileManager.saveShared(XHApplication.in(), requestMethod, "versionSign", String.valueOf(versionSign));
                     if (mouldCallBack != null&&!isCallBack) {
-                        Log.i("wyl","网络数据回调:1:"+requestMethod);
                         mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
                     }
                 } else {//无数据标示已经是最新版本。
                     if (mouldCallBack != null && !TextUtils.isEmpty(readStr)&&!isCallBack) {
-                        Log.i("wyl","网络数据回调:2:"+requestMethod);
                         mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
                     }
                 }
             } else {
                 if (mouldCallBack != null && !TextUtils.isEmpty(readStr)&&!isCallBack) {
-                    Log.i("wyl","网络数据回调:3:"+requestMethod);
                     mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
                 }
             }
         } else {
             if (mouldCallBack != null) {
-                Log.i("wyl","网络数据回调:4:"+requestMethod);
                 mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
             }
         }

@@ -267,8 +267,9 @@ public class TemplateWebView extends XHWebView{
                 if(isSuccess){
                     if(originData!=null&&originData.length>0&&nowData!=null&&nowData.length>0) {
                         int lenght= originData.length;
+                        int nowLenght=nowData.length;
                         for(int i=0;i<lenght;i++) {
-                            data = data.replace(originData[i], nowData[i]);
+                            data = data.replace(originData[i], i<nowLenght?nowData[i]:"");
                         }
                     }
                     final String html = data;
