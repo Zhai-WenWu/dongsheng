@@ -125,31 +125,10 @@ public class TemplateWebView extends XHWebView{
      */
     private void setWebViewClient() {
         this.setWebViewClient(new WebViewClient() {
-            private Timer timer;
-            private Handler handler = new Handler();
 
             @Override
             public void onPageStarted(final WebView view, String url, Bitmap favicon) {
-                timer = new Timer();
-                TimerTask tt = new TimerTask() {
-
-                    @Override
-                    public void run() {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (TemplateWebView.this.getProgress() < 90) {
-                                    if(loadManager!=null)
-                                    loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
-                                }
-                            }
-                        });
-                    }
-                };
-                timer.schedule(tt, XHConf.net_timeout);
-                if (!ERROR_HTML_URL.equals(url)) {
-                    TemplateWebView.this.setUrl(url);
-                }
+                Log.i("zyj","onPageStarted::");
                 if (onWebviewStateCallBack != null) {
                     onWebviewStateCallBack.onLoadStart();
                 }
@@ -159,6 +138,7 @@ public class TemplateWebView extends XHWebView{
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                Log.i("zyj","onPageFinished::");
                 if (JSAction.loadAction.length() > 0) {
                     view.loadUrl("javascript:" + JSAction.loadAction + ";");
                     JSAction.loadAction = "";
@@ -169,10 +149,6 @@ public class TemplateWebView extends XHWebView{
                 }
                 if(loadManager!=null)
                 loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
-                if (timer != null) {
-                    timer.cancel();
-                    timer.purge();
-                }
                 // 获取焦点已让webview能打开键盘，评论页输入框不在webview，所以不获取焦点
                 if (url.indexOf("subjectComment.php") == -1) {
                     view.requestFocus();
