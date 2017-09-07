@@ -321,9 +321,9 @@ public class AppCommon {
 
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
-            Uri content_url = Uri.parse(browserUrl);
-            if (Tools.isPkgInstalled(packageName, XHApplication.in())) {
-                content_url = Uri.parse(protocolUrl);
+            Uri content_url = Uri.parse(protocolUrl);
+            if (!TextUtils.isEmpty(packageName) && !Tools.isPkgInstalled(packageName, XHApplication.in())){
+                content_url = Uri.parse(browserUrl);
             }
             intentLink.setData(content_url);
             act.startActivity(intentLink);
