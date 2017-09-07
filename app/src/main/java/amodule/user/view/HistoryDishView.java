@@ -99,6 +99,7 @@ public class HistoryDishView extends HistoryView {
                 }else {
                     Intent intent = new Intent(mContext, DetailDish.class);
                     intent.putExtra("code", mData.get(position).get("code"));
+                    intent.putExtra("img", mData.get(position).get("img"));
                     mContext.startActivity(intent);
                 }
             }
