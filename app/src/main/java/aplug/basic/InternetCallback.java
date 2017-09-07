@@ -227,7 +227,7 @@ public abstract class InternetCallback extends InterCallback {
 		String location = getLocation();
 		cookie += "geo=" + location + ";";
 		header.put("Cookie", cookie);
-        if((url.contains("main7")||url.contains("Main7"))&&!TextUtils.isEmpty(encryptparams)){
+        if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7"))&&!TextUtils.isEmpty(encryptparams)){
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }

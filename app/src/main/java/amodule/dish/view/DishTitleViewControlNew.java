@@ -272,6 +272,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
 
     public void setNickName(String name){
         this.nickName= name;
+        if(!TextUtils.isEmpty(name)){
+            titleView.setText(name);
+            titleView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

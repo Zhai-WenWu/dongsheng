@@ -81,6 +81,12 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                 });
             }
         });
+        mWebViewManager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
+            @Override
+            public void onLoadFinish() {
+                mWebView.postInvalidateDelayed(200);
+            }
+        });
 
     }
 
@@ -199,10 +205,15 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
     private void loadMsgList (final boolean isRef) {
         if (mWebView == null)
             return;
-        loadManager.setLoading(new View.OnClickListener() {
+        mWebView.post(new Runnable() {
             @Override
-            public void onClick(View v) {
-                mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1") + (isRef ? "&type=" + mDatas.get(mCurrSelectedPos).get("type"): "")));
+            public void run() {
+                loadManager.setLoading(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1") + (isRef ? "&type=" + mDatas.get(mCurrSelectedPos).get("type"): "")));
+                    }
+                });
             }
         });
     }
