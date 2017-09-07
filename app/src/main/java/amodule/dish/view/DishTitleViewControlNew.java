@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private boolean isHasVideo;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
+    private String nickName = "";
 
     public DishTitleViewControlNew(Context context){
         this.context= context;
@@ -208,23 +210,20 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "分享点击量");
 
         boolean isAuthor = false;
-        String nickName = "",code = "";
-        ArrayList<Map<String, String>> cusArray = getListMapByJson(dishInfoMap.get("customer"));
-        if(cusArray.size()>0) {
-            Map<String, String> cusMap = getListMapByJson(dishInfoMap.get("customer")).get(0);
-            code = cusMap.get("code");
-            nickName = cusMap.get("nickName");
+        String code = "",userCode="";
+        code=dishInfoMap.get("code");
+        userCode=dishInfoMap.get("customerCode");
             //登录并是自己的菜谱贴
-            if (LoginManager.isLogin() && !TextUtils.isEmpty(code) && code.equals(LoginManager.userInfo.get("code"))) {
+        if (LoginManager.isLogin() && !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))) {
                 isAuthor = true;
-            }
         }
+        Log.i("zyj","nickName::"+nickName);
         Map<String, String> mapData = getShareData(isAuthor);
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
         intent.putExtra("tongjiId", tongjiId);
         intent.putExtra("isHasReport", !isAuthor);
         intent.putExtra("nickName", nickName);
-        intent.putExtra("code", code);
+        intent.putExtra("code", userCode);
         intent.putExtra("imgUrl", mapData.get("mImgUrl"));
         intent.putExtra("clickUrl", mapData.get("mClickUrl"));
         intent.putExtra("title", mapData.get("mTitle"));
@@ -272,6 +271,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         return map;
     }
 
+    public void setNickName(String name){
+        this.nickName= name;
+    }
 
     /**
      * 收藏

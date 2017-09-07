@@ -338,6 +338,9 @@ public class  DishActivityViewControlNew {
         needSaveDishInfo.put("nickName",nickName);
         needSaveDishInfo.put("favorites",favorites);
         Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+        if(dishTitleViewControl!=null){
+            dishTitleViewControl.setNickName(nickName);
+        }
         saveHistoryToDB();
     }
 
