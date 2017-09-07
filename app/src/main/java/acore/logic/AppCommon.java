@@ -1091,7 +1091,7 @@ public class AppCommon {
                                     if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                                         String dataStr = msg.toString();
                                         if(!TextUtils.isEmpty(dataStr)){
-                                            dataStr = dataStr.replace("adConfCallback(","").replace(")","");
+                                            dataStr = dataStr.replace("adConfCallback('","").replace("')","");
                                             byte[] dataByte = Base64Utils.decode(dataStr);
                                             dataStr = new String(dataByte);
                                             ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);
