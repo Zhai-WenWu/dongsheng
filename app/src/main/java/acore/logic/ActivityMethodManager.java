@@ -201,12 +201,11 @@ public class ActivityMethodManager {
         if(randProConfigMap.containsKey(classKey)
                 && "2".equals(randProConfigMap.get(classKey))){
             //数据
-            Map<String,String> randProMap = StringManager.getFirstMap(AppCommon.loadRandPromotionData());
-            if(randProMap.containsKey("text")
-                    && !TextUtils.isEmpty(randProMap.get("text"))){
+            String text = AppCommon.loadRandPromotionData();
+            if(!TextUtils.isEmpty(text)){
                 //写如剪切板
-                Tools.inputToClipboard(mAct,randProMap.get("text"));
-                Log.i("tzy",randProMap.get("text"));
+                Tools.inputToClipboard(mAct,text);
+                Log.i("tzy","inputToClipboard :: text = " + text);
             }
         }
     }

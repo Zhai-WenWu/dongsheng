@@ -1082,14 +1082,11 @@ public class AppCommon {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 String url = StringManager.getFirstMap(getConfigByLocal("randpromotionurl")).get("url");
                 ReqEncyptInternet.in().doEncypt(url, "",
                         new InternetCallback(context) {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
-//                                4. 生成数组（字典）
-
                                 try {
                                     if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                                         String dataStr = msg.toString();
@@ -1098,6 +1095,7 @@ public class AppCommon {
                                             byte[] dataByte = Base64Utils.decode(dataStr);
                                             dataStr = new String(dataByte);
                                             ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);
+                                            Log.i("tzy","dataArr = " + dataArr.toString());
                                             int totalWeight=0;
                                             String text = "";
                                             for (Map<String,String> dict: dataArr)
@@ -1143,12 +1141,5 @@ public class AppCommon {
     public static String loadRandPromotionData() {
         return FileManager.readFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig);
     }
-
-    public ArrayList<Map<String,String>> getRandPromotion(){
-        ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(loadRandPromotionData());
-        //TODO
-        return dataArr;
-    }
-
 
 }

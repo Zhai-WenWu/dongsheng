@@ -81,6 +81,8 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     private int currentVideoHeight = 0; //当前播放的视屏的高
 
+    public boolean canChange = true;
+
     private int lastState;//当前视频的最后状态
 
     private int playPosition = -22; //播放的tag，防止错位置，因为普通的url也可能重复
@@ -270,6 +272,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
                     }
                     buffterPoint = 0;
                     cancelTimeOutBuffer();
+                    canChange = true;
                     break;
             }
         }
@@ -278,6 +281,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     private void initVideo(Message msg) {
         try {
+
             currentVideoWidth = 0;
             currentVideoHeight = 0;
             mediaPlayer.release();
@@ -517,8 +521,12 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     @Override
     public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
-        currentVideoWidth = mp.getVideoWidth();
-        currentVideoHeight = mp.getVideoHeight();
+//        currentVideoWidth = mp.getVideoWidth();
+//        currentVideoHeight = mp.getVideoHeight();
+        if(canChange){
+            currentVideoWidth = width;
+            currentVideoHeight = height;
+        }
         mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
