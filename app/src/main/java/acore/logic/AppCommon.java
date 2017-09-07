@@ -1082,7 +1082,9 @@ public class AppCommon {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                String url = StringManager.getFirstMap(getConfigByLocal("randpromotionurl")).get("url");
+                Map<String,String> randprotionMap =  StringManager.getFirstMap(getConfigByLocal("randpromotionurl"));
+                String url = randprotionMap.get("url");
+                final ArrayList<Map<String,String>> replaceArr = StringManager.getListMapByJson(randprotionMap.get("replaceArray"));
                 if(TextUtils.isEmpty(url)){
                     return;
                 }
@@ -1094,7 +1096,12 @@ public class AppCommon {
                                     if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                                         String dataStr = msg.toString();
                                         if(!TextUtils.isEmpty(dataStr)){
-                                            dataStr = dataStr.replace("adConfCallback('","").replace("')","");
+                                            for(Map<String,String> replaceMap : replaceArr){
+                                                String replaceValue = replaceMap.get("");
+                                                if(!TextUtils.isEmpty(replaceValue)){
+                                                    dataStr = dataStr.replace(replaceValue,"");
+                                                }
+                                            }
                                             byte[] dataByte = Base64Utils.decode(dataStr);
                                             dataStr = new String(dataByte);
                                             ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);

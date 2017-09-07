@@ -201,7 +201,7 @@ public class ActivityMethodManager {
         if(randProConfigMap.containsKey(classKey)
                 && "2".equals(randProConfigMap.get(classKey))){
             //数据
-            String text = AppCommon.loadRandPromotionData();
+            String text = AppCommon.loadRandPromotionData().trim();
             if(!TextUtils.isEmpty(text)){
                 //写如剪切板
                 Tools.inputToClipboard(mAct,text);
