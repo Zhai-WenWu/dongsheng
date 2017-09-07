@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
@@ -49,7 +48,7 @@ public class MainChangeSend extends BaseActivity {
 
     private ImageView closeImage;
     private GridView mGridView;
-    private List<Map<String, String>> list;
+    private List<Map<String, String>> tagDatas = new ArrayList<>();
 
     public static Map<String, String> sendMap;
     public static Map<String, String> dishVideoMap;
@@ -68,41 +67,36 @@ public class MainChangeSend extends BaseActivity {
         closeImage = (ImageView) findViewById(R.id.close_image);
         mGridView = (GridView) findViewById(R.id.change_send_gridview);
         initData();
-        AdapterSimple adapter = new AdapterSimple(mGridView, list,
+        AdapterSimple adapter = new AdapterSimple(mGridView, tagDatas,
                 R.layout.a_mian_change_send_item,
-                new String[]{"name", "img"}, new int[]{R.id.change_send_gridview_item_name, R.id.change_send_gridview_item_iv}
+                new String[]{"name", "img"},
+                new int[]{R.id.change_send_gridview_item_name, R.id.change_send_gridview_item_iv}
         );
         mGridView.setAdapter(adapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                onClick(list.get(position).get("tag"));
+                onClick(tagDatas.get(position).get("tag"));
             }
         });
     }
 
     private void initData() {
-        int itemNum = 0;
-        list = new ArrayList<>();
         if (LoginManager.isShowsendsubjectButton()) {
             addButton("1", R.drawable.pulish_subject, "晒美食");
-            itemNum++;
         }
         if (LoginManager.isShowsendDishButton()) {
             addButton("2", R.drawable.send_dish, "写菜谱");
-            itemNum++;
         }
         //删除true
         addButton("6", R.drawable.pulish_article, "发文章");
-        itemNum++;
         addButton("7", R.drawable.pulish_video, "短视频");
-        itemNum++;
 //        if (LoginManager.isShowShortVideoButton()) {
 //            addButton("3", R.drawable.pulish_video, "小视频");
 //            itemNum++;
 //        }
 
-        mGridView.setNumColumns(itemNum > 3 ? 4 : itemNum);
+        mGridView.setNumColumns(tagDatas.size() > 3 ? 4 : tagDatas.size());
     }
 
     private void addButton(String tag, int img, String name) {
@@ -110,7 +104,7 @@ public class MainChangeSend extends BaseActivity {
         uploadVideoDishMap.put("tag", tag);
         uploadVideoDishMap.put("img", "ico" + img);
         uploadVideoDishMap.put("name", name);
-        list.add(uploadVideoDishMap);
+        tagDatas.add(uploadVideoDishMap);
     }
 
     @Override
@@ -139,12 +133,10 @@ public class MainChangeSend extends BaseActivity {
                 if (LoginManager.isLogin()) {
                     XHClick.mapStat(this, "uploadDish", "uploadDish", "从导航发", 1);
                     XHClick.mapStat(this, "a_post_button", "发菜谱", "");
-                    Intent dishIntent = new Intent(this, UploadDishActivity.class);
-                    this.startActivity(dishIntent);
+                    startActivity(new Intent(this, UploadDishActivity.class));
                     XHClick.track(this, "发菜谱");
                 } else {
-                    Intent intent = new Intent(this, LoginByAccout.class);
-                    startActivity(intent);
+                    gotoLogin();
                 }
                 break;
 //            case "3": //小视频
@@ -198,48 +190,30 @@ public class MainChangeSend extends BaseActivity {
             case "6":
                 if (!LoginManager.isLogin()) {
                     finish();
-                    startActivity(new Intent(this, LoginByAccout.class));
+                    gotoLogin();
                 } else if (LoginManager.isBindMobilePhone()) {
                     finish();
                     startActivity(new Intent(this, ArticleEidtActivity.class));
                 } else {
                     BaseLoginActivity.gotoBindPhoneNum(this);
-//                    showDialog("发文章", StringManager.api_applyArticlePower);
                 }
                 break;
             case "7":
                 if (!LoginManager.isLogin()) {
                     finish();
-                    startActivity(new Intent(this, LoginByAccout.class));
+                    gotoLogin();
                 } else if (LoginManager.isBindMobilePhone()) {
                     finish();
                     startActivity(new Intent(this, VideoEditActivity.class));
                 } else
                     BaseLoginActivity.gotoBindPhoneNum(this);
-//                    showDialog("短视频", StringManager.api_applyVideoPower);
                 break;
         }
     }
 
-    private void showDialog(String text, final String url) {
-        final XhDialog dialog = new XhDialog(this);
-        dialog.setTitle("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
-                .setSureButton("是", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AppCommon.openUrl(MainChangeSend.this, url, true);
-                        dialog.cancel();
-                        finish();
-                    }
-                })
-                .setCanselButton("否", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                        finish();
-                    }
-                })
-                .show();
+    /**去登录*/
+    private void gotoLogin(){
+        startActivity(new Intent(this, LoginByAccout.class));
     }
 
     public void onCloseThis(View v) {
@@ -250,7 +224,6 @@ public class MainChangeSend extends BaseActivity {
         closeImage.startAnimation(scale_to_nothing);
         finish();
     }
-
 
     @Override
     public void onBackPressed() {

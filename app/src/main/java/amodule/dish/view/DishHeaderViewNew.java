@@ -307,7 +307,7 @@ public class DishHeaderViewNew extends LinearLayout {
         if (!TextUtils.isEmpty(videoUrl) && videoUrl.startsWith("http")) {
             dishVidioLayout.setPadding(0, distance, 0, 0);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
-
+            mVideoPlayerController.showFullScrren();
             if(permissionMap != null && permissionMap.containsKey("video")){
 
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
@@ -335,7 +335,7 @@ public class DishHeaderViewNew extends LinearLayout {
                     callBack.videoImageOnClick();
                 }
             });
-            mVideoPlayerController.hideFullScreen();
+
             //被点击回调
             mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                 @Override
@@ -359,6 +359,7 @@ public class DishHeaderViewNew extends LinearLayout {
             Log.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
+            mVideoPlayerController.hideFullScreen();
             vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
