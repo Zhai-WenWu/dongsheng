@@ -83,6 +83,7 @@ public class VideoPlayerController {
         //设置旋转
         orientationUtils = new OrientationUtils(context, videoPlayer);
         orientationUtils.setEnable(false);
+        videoPlayer.getTitleTextView().setVisibility(View.GONE);
         videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -538,6 +539,12 @@ public class VideoPlayerController {
     public void hideFullScreen(){
         if(null != videoPlayer && null != videoPlayer.getFullscreenButton()){
             videoPlayer.getFullscreenButton().setVisibility(View.GONE);
+        }
+    }
+
+    public void showFullScrren(){
+        if(null != videoPlayer && null != videoPlayer.getFullscreenButton()){
+            videoPlayer.getFullscreenButton().setVisibility(View.VISIBLE);
         }
     }
 

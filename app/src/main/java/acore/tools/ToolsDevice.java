@@ -149,7 +149,7 @@ public class ToolsDevice {
             // initial_memory = Integer.valueOf(arrayOfString[1]).intValue() *
             // 1024;// 获得系统总内存，单位是KB，乘以1024转换为Byte
             // 获得系统总内存，单位是KB，除以1024转换为M
-            initial_memory = Integer.valueOf(arrayOfString[1]).intValue() / 1024;
+            initial_memory = Integer.valueOf(arrayOfString[1]) >> 10;
             localBufferedReader.close();
 
         } catch (IOException e) {
@@ -304,8 +304,8 @@ public class ToolsDevice {
         ConnectivityManager mgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] info = mgr.getAllNetworkInfo();
         if (info != null) {
-            for (int i = 0; i < info.length; i++) {
-                if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+            for (NetworkInfo anInfo : info) {
+                if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
                     return true;
                 }
             }
@@ -337,7 +337,7 @@ public class ToolsDevice {
     public static String getUserApp(Context context, String userCode) {
         String time = (String) UtilFile.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_upFavorTime);
         String currentTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        if (time != "" && (Long.valueOf(currentTime) - Long.valueOf(time) < 7)) {
+        if ("".equals(time) && (Long.valueOf(currentTime) - Long.valueOf(time) < 7)) {
             return "";
         }
         //存储启动时间
@@ -372,25 +372,9 @@ public class ToolsDevice {
         return jsonArray.toString();
     }
 
-//    public static String getIp() {
-//        try {
-//            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();en.hasMoreElements();) {
-//                NetworkInterface intf = en.nextElement();
-//                for (Enumeration<InetAddress> ipAddr = intf.getInetAddresses(); ipAddr.hasMoreElements();) {
-//                    InetAddress inetAddress = ipAddr.nextElement();
-//                    // ipv4地址
-//                    if (!inetAddress.isLoopbackAddress() && InetAddressUtils.isIPv4Address(inetAddress.getHostAddress())) {
-//                        return inetAddress.getHostAddress();
-//                    }
-//                }
-//            }
-//        } catch (Exception ex) {
-//        }
-//        return "";
-//    }
-
     //根据Wifi信息获取本地Mac
     public static String getMacAddressFromWifiInfo(Context context){
+        if(context == null) return "";
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = wifi.getConnectionInfo();
         return info.getMacAddress();
@@ -429,7 +413,7 @@ public class ToolsDevice {
             return;
         }
         String appList = getUserApp(context, userCode);
-        if (appList != "") {
+        if (!TextUtils.isEmpty(appList)) {
             uploadService(appList, StringManager.api_uploadFavorLog, new InternetCallback(XHApplication.in()) {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
@@ -440,7 +424,7 @@ public class ToolsDevice {
     }
 
     public static void uploadService(String jsonArray, String url, InternetCallback internetCallback) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("content", jsonArray);
         ReqInternet.in().doPost(url, map, internetCallback);
     }
@@ -589,12 +573,15 @@ public class ToolsDevice {
         TelephonyManager telManager = (TelephonyManager)con.getSystemService(Context.TELEPHONY_SERVICE);
         String operator = telManager.getSimOperator();
         if (operator != null) {
-            if (operator.equals("46000") || operator.equals("46002") || operator.equals("46007")) {//中国移动
-                return 1;
-            } else if (operator.equals("46001")) {//中国联通
-                return 2;
-            } else if (operator.equals("46003")) {//中国电信
-                return 3;
+            switch (operator) {
+                case "46000":
+                case "46002":
+                case "46007": //中国移动
+                    return 1;
+                case "46001": //中国联通
+                    return 2;
+                case "46003": //中国电信
+                    return 3;
             }
         }
         return 0;
@@ -685,7 +672,7 @@ public class ToolsDevice {
                 meizuFlags.setInt(lp, value);
                 window.setAttributes(lp);
                 result = true;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         }

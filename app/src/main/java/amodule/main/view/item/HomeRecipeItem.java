@@ -136,6 +136,8 @@ public class HomeRecipeItem extends HomeItem {
         if (!TextUtils.isEmpty(type)) {
             switch (type) {
                 case "day":
+                    if (mPosition == 0)
+                        containerParams.topMargin = 0;
                     if (!TextUtils.isEmpty(mDataMap.get("pastRecommed"))) {
                         mLineTop.setVisibility(View.GONE);
                         mRecommendLine.setVisibility(View.VISIBLE);
@@ -143,10 +145,10 @@ public class HomeRecipeItem extends HomeItem {
                     }
                     break;
                 case "video":
+                    if (mPosition == 0)
+                        containerParams.topMargin = 0;
                     break;
             }
-            if (mPosition == 0)
-                containerParams.topMargin = 0;
         }
 
         mSole.setVisibility("2".equals(mDataMap.get("isSole")) ? View.VISIBLE : View.GONE);

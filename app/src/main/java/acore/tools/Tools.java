@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -95,8 +94,7 @@ public class Tools {
     public static String getAssignTime(String formatStr, long overTime) {
         java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(formatStr);
         java.util.Date curDate = new java.util.Date(System.currentTimeMillis() + overTime);
-        String str = formatter.format(curDate);
-        return str;
+        return formatter.format(curDate);
     }
 
     /**
@@ -108,7 +106,7 @@ public class Tools {
      */
     public static String getFormatedDateTime(String pattern, long dateTime) {
         SimpleDateFormat sDateFormat = new SimpleDateFormat(pattern);
-        return sDateFormat.format(new Date(dateTime + 0));
+        return sDateFormat.format(new Date(dateTime));
     }
 
     // 处理文本首段缩进
@@ -117,9 +115,9 @@ public class Tools {
         StringBuilder text = new StringBuilder();
         for (int i = 0; i < infos.length; i++)
             if (i == infos.length - 1)
-                text.append("\t\t\t\t" + infos[i]);
+                text.append("\t\t\t\t").append(infos[i]);
             else
-                text.append("\t\t\t\t" + infos[i] + "\n");
+                text.append("\t\t\t\t").append(infos[i]).append("\n");
         return text;
     }
 
@@ -155,8 +153,7 @@ public class Tools {
         try {
             JSONArray array = new JSONArray();
             int length = strs.length;
-            for (int i = 0; i < length; i++) {
-                String name = strs[i];
+            for (String name : strs) {
                 JSONObject stoneObject = new JSONObject();
                 stoneObject.put("", name);
                 array.put(stoneObject);
@@ -274,9 +271,7 @@ public class Tools {
 
     public static String map2Json(Map<String, String> map) {
         JSONObject jsonObject = new JSONObject();
-        Iterator<Entry<String, String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Entry<String, String> entry = it.next();
+        for (Entry<String, String> entry : map.entrySet()) {
             try {
                 String value = "";
                 if (entry.getValue() != null && !entry.getValue().equals("null"))
@@ -304,7 +299,7 @@ public class Tools {
      * @param returnObj 需要弹出的内容,如果是空的内容,就不弹.
      */
     public static void showToast(Context context, String returnObj, int gravity) {
-        if (context != null && returnObj != "" && returnObj != null && !"[]".equals(returnObj)) {
+        if (context != null && !TextUtils.isEmpty(returnObj) && !"[]".equals(returnObj)) {
             Toast toast = Toast.makeText(context, returnObj, Toast.LENGTH_SHORT);
             if (gravity != -1)
                 toast.setGravity(gravity, 0, 0);
@@ -317,9 +312,7 @@ public class Tools {
         for (Map<String, String> map : data) {
             JSONObject jsonObject = new JSONObject();
             try {
-                Iterator<Entry<String, String>> it = map.entrySet().iterator();
-                while (it.hasNext()) {
-                    Entry<String, String> entry = it.next();
+                for (Entry<String, String> entry : map.entrySet()) {
                     jsonObject.put(entry.getKey(), entry.getValue());
                 }
             } catch (JSONException e) {
@@ -332,38 +325,7 @@ public class Tools {
 
     public static String list2Json(List<Map<String, String>> data) {
         //添加JS回调代码
-        JSONArray jsonArray = list2JsonArray(data);
-        return jsonArray.toString();
-    }
-
-    /**
-     * 获取当前时间(24小时制)
-     *
-     * @return
-     */
-    public static int getNowHourEr() {
-        String[] time = Tools.getAssignTime("HH:mm:ss", 0).split(":");
-        int hour = Integer.parseInt(time[0]);
-        // 根据当前小时得到数组下标
-//		int flag = hour/2 + hour % 2;
-        if (hour == 24)
-            hour = 0;
-        return hour;
-    }
-
-    /**
-     * 获取当前时间(12小时制)
-     *
-     * @return
-     */
-    public static int getNowHour() {
-        String[] time = Tools.getAssignTime("HH:mm:ss", 0).split(":");
-        int hour = Integer.parseInt(time[0]);
-        // 根据当前小时得到数组下标
-        int flag = hour / 2 + hour % 2;
-        if (flag == 12)
-            flag = 0;
-        return flag;
+        return list2JsonArray(data).toString();
     }
 
     /**
@@ -379,7 +341,7 @@ public class Tools {
 //		}
         availMemory = ToolsDevice.getTotalMemory();//获取系统总内存
         int parseInt = 0;
-        if (availMemory != "") {
+        if (!TextUtils.isEmpty(availMemory)) {
             parseInt = Integer.parseInt(availMemory);
         }
 //		String curCpuFreq = CpuManager.getCurCpuFreq();
@@ -401,8 +363,7 @@ public class Tools {
     }
 
     public static int getRandom(int star, int end) {
-        int va = (int) (star + (Math.random() * (end + 1 - star)));
-        return va;
+        return (int) (star + (Math.random() * (end + 1 - star)));
     }
 
     /**
@@ -472,7 +433,7 @@ public class Tools {
             }
             data = null;
             str = new String(os.toByteArray());
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         } finally {
             try {
@@ -490,10 +451,8 @@ public class Tools {
     }
 
     public static String getColorStr(Context context, int resId) {
-        String color = context.getResources().getString(resId);
-        return color;
+        return context.getResources().getString(resId);
     }
-
 
     /**
      * //透明状态栏
@@ -666,12 +625,9 @@ public class Tools {
         }
         final String packageName = context.getPackageName();
         ActivityManager.RunningAppProcessInfo processInfo = appProcesses.get(0);
-        if (processInfo != null
+        return processInfo != null
                 && processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-                && processInfo.processName.equals(packageName)) {
-            return true;
-        }
-        return false;
+                && processInfo.processName.equals(packageName);
     }
 
 
@@ -774,8 +730,8 @@ public class Tools {
 //        int waith = wm.getDefaultDisplay().getWidth();
 //        int tv_waith = waith - margin;
         int tv_pad = ToolView.dip2px(context, 1.0f);
-        int num = (tvWidth + tv_pad) / (tvSize + tv_pad);
-        return num;
+        /* 判断是否等于0 */
+        return tvSize + tv_pad > 0 ? (tvWidth + tv_pad) / (tvSize + tv_pad) : 0;
     }
 
     /**
@@ -926,11 +882,6 @@ public class Tools {
             packageInfo = null;
             e.printStackTrace();
         }
-        if (packageInfo == null) {
-
-            return false;
-        } else {
-            return true;
-        }
+        return packageInfo != null;
         }
 }
