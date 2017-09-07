@@ -407,7 +407,7 @@ public class DishHeaderViewNew extends LinearLayout {
         Log.i("zyj","img:___:::"+img);
         isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
-        int waith = ToolsDevice.getWindowPx(activity).widthPixels;
+        int waith = ToolsDevice.getWindowPx(activity).widthPixels *5/6;
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         RelativeLayout.LayoutParams params_rela = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,waith);
         final ImageViewVideo imvv = new ImageViewVideo(activity);

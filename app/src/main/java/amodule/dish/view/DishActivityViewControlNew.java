@@ -245,7 +245,7 @@ public class  DishActivityViewControlNew {
         isHasVideo = "2".equals(dishInfoMap.get("type"));
         if(!isHasVideo){
             mTimer = new MyTimer(handler);
-            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels;
+            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels *5/6;
         }else{
             headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight ;
         }
