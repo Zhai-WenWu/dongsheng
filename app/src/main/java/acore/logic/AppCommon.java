@@ -322,7 +322,7 @@ public class AppCommon {
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
             Uri content_url = Uri.parse(protocolUrl);
-            if (!TextUtils.isEmpty(packageName) && !Tools.isPkgInstalled(packageName, XHApplication.in())){
+            if (!TextUtils.isEmpty(packageName) && ToolsDevice.isAppInPhone(XHApplication.in(),packageName)!=0){
                 content_url = Uri.parse(browserUrl);
             }
             intentLink.setData(content_url);
