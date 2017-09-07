@@ -337,7 +337,7 @@ public class ToolsDevice {
     public static String getUserApp(Context context, String userCode) {
         String time = (String) UtilFile.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_upFavorTime);
         String currentTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        if ("".equals(time) && (Long.valueOf(currentTime) - Long.valueOf(time) < 7)) {
+        if (!"".equals(time)&&!TextUtils.isEmpty(currentTime) && (Long.valueOf(currentTime) - Long.valueOf(time) < 7)) {
             return "";
         }
         //存储启动时间
