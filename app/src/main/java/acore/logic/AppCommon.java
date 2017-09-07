@@ -29,6 +29,8 @@ import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
 import com.xiangha.R;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +43,7 @@ import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.Base64Utils;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
@@ -1079,16 +1082,53 @@ public class AppCommon {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                params.put("classifyId", "1");
-                params.put("system", "2");
-                ReqEncyptInternet.in().doEncypt(StringManager.API_RAND_PROMOTION, params,
+
+                String url = StringManager.getFirstMap(getConfigByLocal("randpromotionurl")).get("url");
+                ReqEncyptInternet.in().doEncypt(url, "",
                         new InternetCallback(context) {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
-                                if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                                    FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, msg.toString(), false);
+//                                4. 生成数组（字典）
+
+                                try {
+                                    if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                                        String dataStr = msg.toString();
+                                        if(!TextUtils.isEmpty(dataStr)){
+                                            dataStr = dataStr.replace("adConfCallback(","").replace(")","");
+                                            byte[] dataByte = Base64Utils.decode(dataStr);
+                                            dataStr = new String(dataByte);
+                                            ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);
+                                            int totalWeight=0;
+                                            String text = "";
+                                            for (Map<String,String> dict: dataArr)
+                                            {
+                                                totalWeight += Integer.parseInt(dict.get("weight")); //[dict["weight"] intValue];
+                                            }
+                                            if (totalWeight < 1) {
+                                                return ;
+                                            }
+                                            java.util.Random r = new java.util.Random();
+                                            int randomWeight = r.nextInt() % totalWeight;
+                                            int tempWeight = 0;
+                                            for (Map<String,String> dict : dataArr)
+                                            {
+                                                int weight = Integer.parseInt(dict.get("weight"));
+                                                if (randomWeight < tempWeight + weight) {
+                                                    text =  dict.get("sign") + dict.get("text") + dict.get("sign");
+                                                    break;
+                                                }
+                                            }
+
+                                            Log.i("GYL", "loaded: " + text);
+
+                                            FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
+
                             }
                         });
             }
@@ -1103,5 +1143,12 @@ public class AppCommon {
     public static String loadRandPromotionData() {
         return FileManager.readFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig);
     }
+
+    public ArrayList<Map<String,String>> getRandPromotion(){
+        ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(loadRandPromotionData());
+        //TODO
+        return dataArr;
+    }
+
 
 }

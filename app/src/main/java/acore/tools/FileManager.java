@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Environment;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -347,12 +348,27 @@ public class FileManager extends UtilFile{
 	}
 
     /**
-     * 异步保存文件，子线程中
-     * @param filePath 文件路径
-     * @param content 内容
-     * @param append 是否可以追加
-     */
+	 * 异步保存文件，子线程中
+	 * @param filePath 文件路径
+	 * @param content 内容
+	 * @param append 是否可以追加
+	 */
 	public static void scynSaveFile(final String filePath,final String content,final boolean append){
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				saveFileToCompletePath(filePath,content,append);
+			}
+		}).start();
+	}
+
+	/**
+	 * 异步保存文件，子线程中
+	 * @param filePath 文件路径
+	 * @param content 内容
+	 * @param append 是否可以追加
+	 */
+	public static void scynSaveFile(final String filePath, final InputStream content, final boolean append){
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
