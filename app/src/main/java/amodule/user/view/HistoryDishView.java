@@ -74,6 +74,11 @@ public class HistoryDishView extends HistoryView {
     @Override
     protected void initView() {
         noDataText.setText("暂无浏览记录哦，快去逛逛吧~");
+        if(mIsChoose){
+            noDataBtn.setVisibility(View.GONE);
+        }else{
+            noDataBtn.setVisibility(View.VISIBLE);
+        }
         noDataBtn.setText("去逛逛");
         noDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override

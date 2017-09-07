@@ -217,7 +217,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         if (LoginManager.isLogin() && !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))) {
                 isAuthor = true;
         }
-        Log.i("zyj","nickName::"+nickName);
         Map<String, String> mapData = getShareData(isAuthor);
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
         intent.putExtra("tongjiId", tongjiId);
