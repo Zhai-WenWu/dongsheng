@@ -47,6 +47,9 @@ public class SearchFavoriteDish extends SearchFavorite{
 				Intent intent = new Intent(mAct, DetailDish.class);
 				intent.putExtra("code", ingre.get("code"));
 				intent.putExtra("name", ingre.get("name"));
+				if(!"2".equals(ingre.get("hasVideo"))){
+					intent.putExtra("img", ingre.get("img"));
+				}
 				mAct.startActivity(intent);
 			}
 		});
@@ -71,6 +74,9 @@ public class SearchFavoriteDish extends SearchFavorite{
 				Intent intent = new Intent(mAct, DetailDish.class);
 				intent.putExtra("code", ingre.get("code"));
 				intent.putExtra("name", ingre.get("name"));
+				if(!"2".equals(ingre.get("hasVideo"))){
+					intent.putExtra("img", ingre.get("img"));
+				}
 				mAct.startActivity(intent);
 			}
 		}});

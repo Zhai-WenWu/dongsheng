@@ -84,7 +84,7 @@ public class CommentBar extends RelativeLayout {
             @Override
             public void afterTextChanged(Editable s) {
                 int currentLength = s.length();
-                boolean hasText = currentLength > 0;
+                boolean hasText = s.toString().trim().length() > 0;
                 sendComment.setEnabled(hasText);
                 sendComment.setTextColor(Color.parseColor(hasText ? "#333333" : "#CCCCCC"));
 
@@ -140,7 +140,7 @@ public class CommentBar extends RelativeLayout {
 
         String content = commentEdittext.getText().toString();
         if (content.replace(" ", "").replace("\n", "").length() <= 0) {
-            Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+            Tools.showToast(getContext(), "");
             return;
         }
         if (minLength >= 0 && content.length() < minLength) {
