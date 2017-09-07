@@ -29,7 +29,7 @@ import third.ad.tools.AdPlayIdConfig;
 
 /**
  * 图片预览页面
- * Created by Fang Ruijiao on 2016/8/10.
+ * Created by XiangHa on 2016/8/10.
  */
 public class MoreImageShow extends BaseActivity{
     public static final String[] AD_IDS = new String[]{AdPlayIdConfig.DISH_TIESHI};

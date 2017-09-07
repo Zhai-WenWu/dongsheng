@@ -19,7 +19,7 @@ import aplug.recordervideo.db.RecorderVideoData;
 import aplug.recordervideo.view.RecorderVideoPreviewView;
 
 /**
- * Created by Fang Ruijiao on 2016/10/14.
+ * Created by XiangHa on 2016/10/14.
  */
 public class AdapterChooseVideo extends RecyclerView.Adapter<AdapterChooseVideo.ViewHolder>{
 

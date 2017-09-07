@@ -14,7 +14,7 @@ import com.xiangha.R;
 import acore.logic.XHClick;
 
 /**
- * Created by Fang Ruijiao on 2017/2/24.
+ * Created by XiangHa on 2017/2/24.
  */
 public class XhNewDialog {
 

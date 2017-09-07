@@ -38,7 +38,7 @@ import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
 /**
- * Created by Fang Ruijiao on 2016/9/19.
+ * Created by XiangHa on 2016/9/19.
  */
 public class UserHomeTitle {
 

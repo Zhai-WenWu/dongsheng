@@ -66,7 +66,7 @@ import xh.basic.tool.UtilString;
 import xh.windowview.XhDialog;
 
 /**
- * Created by Fang Ruijiao on 2016/10/25.
+ * Created by XiangHa on 2016/10/25.
  */
 public class UploadDishVideoControl extends UploadDishParrentControl implements View.OnClickListener{
     private ListView mListView;

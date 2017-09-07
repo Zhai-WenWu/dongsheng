@@ -29,7 +29,7 @@
 //import aplug.basic.SubBitmapTarget;
 //
 ///**
-// * Created by Fang Ruijiao on 2017/2/13.
+// * Created by XiangHa on 2017/2/13.
 // */
 //
 //public class GdtVideoAd extends AdParent{
@@ -190,7 +190,7 @@
 //             */
 //            @Override
 //            public void onADLoaded(List<NativeMediaADData> ads) {
-//                Log.i("FRJ","onADLoaded size:" + ads.size());
+//                //Log.i("FRJ","onADLoaded size:" + ads.size());
 //                Toast.makeText(mCon,"加载了数据数：" + ads.size(),Toast.LENGTH_SHORT).show();
 //                if (ads.size() > 0) {
 //                    mAdData = ads.get(0);
@@ -207,7 +207,7 @@
 //             */
 //            @Override
 //            public void onNoAD(int i) {
-//                Log.i("FRJ","onNoAD");
+//                //Log.i("FRJ","onNoAD");
 //                setLoadAdDataState(false);
 //            }
 //
@@ -217,7 +217,7 @@
 //             */
 //            @Override
 //            public void onADStatusChanged(NativeMediaADData nativeMediaADData) {
-//                Log.i("FRJ","onADStatusChanged");
+//                //Log.i("FRJ","onADStatusChanged");
 //            }
 //
 //            /**
@@ -227,7 +227,7 @@
 //             */
 //            @Override
 //            public void onADError(NativeMediaADData nativeMediaADData, int i) {
-//                Log.i("FRJ","onADError");
+//                //Log.i("FRJ","onADError");
 //                mVideoAdListener.onNoAd();
 //            }
 //
@@ -237,7 +237,7 @@
 //             */
 //            @Override
 //            public void onADVideoLoaded(NativeMediaADData nativeMediaADData) {
-//                Log.i("FRJ","onADVideoLoaded");
+//                //Log.i("FRJ","onADVideoLoaded");
 //                mLayoutParent.setVisibility(View.VISIBLE);
 //            }
 //
@@ -247,7 +247,7 @@
 //             */
 //            @Override
 //            public void onADExposure(NativeMediaADData nativeMediaADData) {
-//                Log.i("FRJ","onADExposure");
+//                //Log.i("FRJ","onADExposure");
 //            }
 //
 //            /**
@@ -256,7 +256,7 @@
 //             */
 //            @Override
 //            public void onADClicked(NativeMediaADData nativeMediaADData) {
-//                Log.i("FRJ","onADClicked");
+//                //Log.i("FRJ","onADClicked");
 //            }
 //        });
 //        final Handler handler = new Handler(){

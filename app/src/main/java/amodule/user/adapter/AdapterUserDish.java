@@ -27,7 +27,7 @@ import amodule.dish.db.UploadDishData;
 import xh.windowview.XhDialog;
 
 /**
- * Created by Fang Ruijiao on 2016/9/21.
+ * Created by XiangHa on 2016/9/21.
  */
 public class AdapterUserDish extends AdapterSimple {
     private List<Map<String,String>> data;

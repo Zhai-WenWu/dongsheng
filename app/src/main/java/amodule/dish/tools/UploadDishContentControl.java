@@ -18,7 +18,7 @@ import acore.tools.Tools;
 import acore.widget.EditTextNoEmoji;
 
 /**
- * Created by Fang Ruijiao on 2016/10/25.
+ * Created by XiangHa on 2016/10/25.
  */
 
 public class UploadDishContentControl {

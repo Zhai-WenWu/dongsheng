@@ -31,7 +31,7 @@ import xh.basic.tool.UtilString;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
- * Created by Fang Ruijiao on 2016/8/30.
+ * Created by XiangHa on 2016/8/30.
  */
 public class AdeazAdTools {
     //广告id list
@@ -170,8 +170,8 @@ public class AdeazAdTools {
             if(listReturn != null && listReturn.size() > 0) {
                 Map<String, String> clickMap = listReturn.get(0);
                 for(String key : clickMap.keySet()){
-    //                Log.i("FRJ","key:" + key);
-    //                Log.i("FRJ","values:" + clickMap.get(key));
+    //                //Log.i("FRJ","key:" + key);
+    //                //Log.i("FRJ","values:" + clickMap.get(key));
                     final long delay = Integer.parseInt(key) * 1000;
                     final ArrayList<Map<String, String>> clickArray = UtilString.getListMapByJson(clickMap.get(key));
                     if(clickArray != null && clickArray.size() > 0){

@@ -16,7 +16,7 @@ import amodule.user.activity.BrowseHistory;
 import third.location.LocationSys;
 
 /**
- * Created by Fang Ruijiao on 2017/7/19.
+ * Created by XiangHa on 2017/7/19.
  */
 public class UploadSubjectBottomControl implements View.OnClickListener{
     private Activity mAct;

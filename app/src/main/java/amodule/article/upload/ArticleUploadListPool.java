@@ -41,7 +41,7 @@ import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 
 /**
- * Created by Fang Ruijiao on 2017/5/23.
+ * Created by XiangHa on 2017/5/23.
  */
 
 public class ArticleUploadListPool extends UploadListPool {

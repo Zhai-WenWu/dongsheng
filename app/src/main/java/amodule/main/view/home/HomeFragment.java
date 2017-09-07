@@ -156,7 +156,7 @@ public class HomeFragment extends BaseHomeFragment{
 
     public AdControlParent getAdControl(){
         String type = homeModuleBean.getType(); //当前页的type
-        Log.i("FRJ","type:" + type);
+        //Log.i("FRJ","type:" + type);
         if(TextUtils.isEmpty(type)){
             return null;
         }
@@ -418,7 +418,7 @@ public class HomeFragment extends BaseHomeFragment{
             public void loaded(int flag, String url, Object object) {
                 int loadCount = 0;
                 if(flag>=ReqInternet.REQ_OK_STRING){
-                    Log.i("FRJ","获取  服务端   数据回来了-------------");
+                    //Log.i("FRJ","获取  服务端   数据回来了-------------");
                     boolean isRecom=isRecom();//是否是推荐
 
                     if(isRecom && cacheControler.getStatus() == LOAD_OVER){

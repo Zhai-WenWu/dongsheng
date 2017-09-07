@@ -203,7 +203,7 @@ public class AdConfigTools {
 //		map.put("channel", channel);
 //		map.put("bannerId", bannerId);
 //		map.put("event", event);
-//		Log.i("FRJ","普通广告位统计:" + "adType=" + adType +"&id=" + adPlayId + "&channel="+ channel +
+//		//Log.i("FRJ","普通广告位统计:" + "adType=" + adType +"&id=" + adPlayId + "&channel="+ channel +
 //						"&bannerId=" + bannerId + "&event=" + event);
 		ReqInternet.in().doGet(StringManager.api_monitoring_5 + "?adType=" + adType +"&id=" + adPlayId + "&channel="+ channel +
 				"&bannerId=" + bannerId + "&event=" + event,new InternetCallback(XHApplication.in()) {
@@ -235,7 +235,7 @@ public class AdConfigTools {
 			onClickSite = "overall";
 		}
 
-//		Log.i("FRJ", "美食圈列表广告统计:" + url + "?adType=圈子广告位" + "&adid=" + map.get("showAdid") + "&cid=" + map.get("showCid") +
+//		//Log.i("FRJ", "美食圈列表广告统计:" + url + "?adType=圈子广告位" + "&adid=" + map.get("showAdid") + "&cid=" + map.get("showCid") +
 //				"&mid=" + map.get("showMid") + "site=" + map.get("showSite") + "&event=" + event + "&clickSite=" + onClickSite);
 //		String param="monitoringData="+getJsonParam(map, onClickIndex);
 		ReqInternet.in().doGet(url + "?adType=圈子广告位" + "&adid=" + map.get("showAdid") + "&cid=" + map.get("showCid") +

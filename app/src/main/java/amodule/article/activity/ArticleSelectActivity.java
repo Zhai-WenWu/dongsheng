@@ -52,7 +52,7 @@ import xh.windowview.XhDialog;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 
 /**
- * Created by Fang Ruijiao on 2017/5/22.
+ * Created by XiangHa on 2017/5/22.
  * 文章或视频发布选择分类
  */
 public class ArticleSelectActivity extends BaseActivity implements View.OnClickListener{

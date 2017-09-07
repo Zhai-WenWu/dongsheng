@@ -35,7 +35,7 @@ import amodule.user.activity.FriendHome;
 import aplug.basic.LoadImage;
 
 /**
- * Created by Fang Ruijiao on 2017/5/25.
+ * Created by XiangHa on 2017/5/25.
  */
 
 public class ViewCommentItem extends LinearLayout {

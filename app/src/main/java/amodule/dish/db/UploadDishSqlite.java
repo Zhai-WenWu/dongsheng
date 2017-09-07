@@ -22,19 +22,19 @@ public class UploadDishSqlite extends SQLiteOpenHelper {
         //4->添加了了一个线上菜谱code列  5->添加了活动id，7-》添加了准备时间，难度，口味，烹饪时间
         //8-》添加了避免重复上传的uploadTimeCode  9->>添加了菜谱类型1-普通菜谱，2-视频菜谱
         super(context, TB_NAME, null, 10);
-//		Log.i("FRJ", "UploadDishSqlite--UploadDishSqlite():");
+//		//Log.i("FRJ", "UploadDishSqlite--UploadDishSqlite():");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_SQL);
-//		Log.i("FRJ", "UploadDishSqlite--onCreate():");
+//		//Log.i("FRJ", "UploadDishSqlite--onCreate():");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // db.execSQL("ALTER TABLE tb_student ADD COLUMN other STRING");
-//		Log.i("FRJ", "UploadDishSqlite--onUpgrade():"+oldVersion + "   ;" + newVersion);
+//		//Log.i("FRJ", "UploadDishSqlite--onUpgrade():"+oldVersion + "   ;" + newVersion);
 //		需要升级
         if (oldVersion < newVersion) {
             try {

@@ -25,7 +25,7 @@ import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 /**
- * Created by Fang Ruijiao on 2017/8/14.
+ * Created by XiangHa on 2017/8/14.
  */
 
 public class ThirdLoginBaseActivity extends BaseLoginActivity {

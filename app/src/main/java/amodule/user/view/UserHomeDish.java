@@ -357,7 +357,7 @@ public class UserHomeDish extends TabContentView {
         ArrayList<Map<String, String>> listDrafts = sqlite.getAllDataInDB();
         for (int i = 0; i < listDrafts.size(); i++) {
             Map<String, String> map = listDrafts.get(i);
-            Log.i("FRJ","loadFormLocal map.get(draft:" + map.get("draft"));
+            //Log.i("FRJ","loadFormLocal map.get(draft:" + map.get("draft"));
 //			if (map!=null && (map.get("draft").equals(UploadDishData.UPLOAD_ING) || map.get("draft").equals(UploadDishData.UPLOAD_FAIL))){
             if (map != null && (map.get("draft").equals(UploadDishData.UPLOAD_ING) || map.get("draft").equals(UploadDishData.UPLOAD_FAIL) || map.get("draft").equals(UploadDishData.UPLOAD_PAUSE))) {
 //				"name", "allClick","isFine","isGood","isExclusive","nickName",

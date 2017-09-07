@@ -240,7 +240,7 @@ public class BaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		resumeTime = System.currentTimeMillis();
-		Log.i("FRJ","className:::"+className);
+		//Log.i("FRJ","className:::"+className);
 		if(XHApplication.in()==null){
 			Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

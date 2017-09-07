@@ -26,7 +26,7 @@ import aplug.basic.ReqInternet;
 
 /**
  * 倒流弹框
- * Created by Fang Ruijiao on 2017/3/9.
+ * Created by XiangHa on 2017/3/9.
  */
 public class GuideManager extends DialogManagerParent {
     public Activity mAct;

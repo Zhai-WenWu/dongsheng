@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 /**
- * Created by Fang Ruijiao on 2017/7/12.
+ * Created by XiangHa on 2017/7/12.
  */
 
 public class XhScrollView extends ScrollView {

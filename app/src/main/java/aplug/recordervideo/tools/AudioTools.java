@@ -4,7 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 /**
- * Created by Fang Ruijiao on 2016/10/12.
+ * Created by XiangHa on 2016/10/12.
  */
 public class AudioTools {
     public static void play(Context con, final OnPlayAudioListener listener,int resid){

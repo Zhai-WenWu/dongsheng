@@ -23,7 +23,7 @@ import aplug.recordervideo.tools.SortComparator;
 import aplug.recordervideo.tools.ToolsCammer;
 
 /**
- * Created by Fang Ruijiao on 2016/10/11.
+ * Created by XiangHa on 2016/10/11.
  */
 
 public abstract class MediaRecorderBase implements SurfaceHolder.Callback,Camera.PreviewCallback,IMediaRecorder {
@@ -237,7 +237,7 @@ public abstract class MediaRecorderBase implements SurfaceHolder.Callback,Camera
                 for (Camera.Size size : list) {
                     if (size.height / 9.0 * 16 == size.width) {
                         recorderSizes.add(size);
-                        Log.i("FRJ","16:9 sizeW H:" + size.width + "  " + size.height);
+                        //Log.i("FRJ","16:9 sizeW H:" + size.width + "  " + size.height);
                     }
                 }
                 Collections.sort(recorderSizes, comp);
@@ -249,8 +249,8 @@ public abstract class MediaRecorderBase implements SurfaceHolder.Callback,Camera
             Camera.Size size = previewlist.get(0);
             previewW = size.width;
             previewH = size.height;
-//            Log.i("FRJ","previewW:" + previewW);
-//            Log.i("FRJ","previewH:" + previewH);
+//            //Log.i("FRJ","previewW:" + previewW);
+//            //Log.i("FRJ","previewH:" + previewH);
             // 设置surfaceView分辨率
             mSurfaceHolder.setFixedSize(previewW, previewH);
             mParameters.setPreviewSize(previewW, previewH);
