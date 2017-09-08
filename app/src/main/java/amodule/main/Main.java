@@ -141,8 +141,7 @@ public class Main extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        setContentView(R.layout.xh_main);
 
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
@@ -389,14 +388,11 @@ public class Main extends Activity implements OnClickListener {
      */
     @SuppressLint("HandlerLeak")
     private void initUI() {
-        setContentView(R.layout.xh_main);
 
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
 
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
-
-//        initTitle();
 
         //实例化有用到mRootLayout，必须按着顺序执行
         mBuoy = new MainBuoy(this);
@@ -414,13 +410,6 @@ public class Main extends Activity implements OnClickListener {
         changeSendLayout.getLayoutParams().width = btn_width;
         btn_changeSend.getLayoutParams().width = btn_width;
         btn_changeSend.setPadding(padding + cha+dp_3, dp_3, padding - cha+dp_3, dp_3);
-    }
-
-    private void initTitle() {
-        if(Tools.isShowTitle()) {
-            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_all_rela);
-            bar_title.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Tools.getStatusBarHeight(this)));
-        }
     }
 
     /**
