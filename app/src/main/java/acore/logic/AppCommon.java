@@ -1088,6 +1088,8 @@ public class AppCommon {
                 if(TextUtils.isEmpty(url)){
                     return;
                 }
+                url = url + "?rand=" + Math.abs(new Random().nextInt());
+                Log.i("tzy","url = " + url);
                 ReqEncyptInternet.in().doEncypt(url, "",
                         new InternetCallback(context) {
                             @Override
