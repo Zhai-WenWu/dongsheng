@@ -306,7 +306,9 @@ public class AppCommon {
             intentLink.setAction("android.intent.action.VIEW");
             Uri content_url = Uri.parse(openUrl);
             intentLink.setData(content_url);
-            act.startActivity(intentLink);
+            try{
+                act.startActivity(intentLink);
+            }catch (Exception ignored){}
             return;
 
         } else if (url.indexOf("nativeWeb.app") == 0) {//外链 或者是打开某个app
@@ -325,11 +327,15 @@ public class AppCommon {
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
             Uri content_url = Uri.parse(protocolUrl);
-            if (!TextUtils.isEmpty(packageName) && ToolsDevice.isAppInPhone(XHApplication.in(),packageName)!=0){
+            //不为 null 且已经安装app
+            if (!TextUtils.isEmpty(packageName)
+                    && ToolsDevice.isAppInPhone(XHApplication.in(),packageName) == 0){
                 content_url = Uri.parse(browserUrl);
             }
             intentLink.setData(content_url);
-            act.startActivity(intentLink);
+            try{
+                act.startActivity(intentLink);
+            }catch (Exception ignored){}
             return;
 
         }

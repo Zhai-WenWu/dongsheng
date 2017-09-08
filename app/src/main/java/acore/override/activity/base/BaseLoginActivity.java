@@ -426,10 +426,15 @@ public class BaseLoginActivity extends BaseActivity {
                 }
             }
         };
-        //注册事件回调
-        SMSSDK.registerEventHandler(eventHandler);
-        //请求验证码
-        SMSSDK.getVerificationCode(countyrCode, phone_number);
+        try{
+            //注册事件回调
+            SMSSDK.registerEventHandler(eventHandler);
+            //请求验证码
+            SMSSDK.getVerificationCode(countyrCode, phone_number);
+        }catch (Exception ignored){
+            //SMSSDK暂时有bug会导致崩溃
+            return false;
+        }
         return true;
     }
 
