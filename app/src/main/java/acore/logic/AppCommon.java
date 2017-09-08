@@ -314,9 +314,9 @@ public class AppCommon {
         } else if (url.indexOf("nativeWeb.app") == 0) {//外链 或者是打开某个app
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
-            // other app
+            // other app---协议链接
             String protocolUrl = map_link.get("protocolurl");
-            // browser
+            // browser---浏览器链接
             String browserUrl = map_link.get("browserurl");
             String packageName = map_link.get("package");
             //
@@ -327,7 +327,7 @@ public class AppCommon {
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
             Uri content_url = Uri.parse(protocolUrl);
-            //不为 null 且已经安装app
+            //不为 null 且未安装app
             if (!TextUtils.isEmpty(packageName)
                     && ToolsDevice.isAppInPhone(XHApplication.in(),packageName) == 0){
                 content_url = Uri.parse(browserUrl);

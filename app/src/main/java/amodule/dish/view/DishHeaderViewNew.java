@@ -155,10 +155,12 @@ public class DishHeaderViewNew extends LinearLayout {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
                     Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
             } else {
-//                if(!isLoadImg) {
-//                    setImg(img);
-//                }
-                handlerImage(img);
+                if(isLoadImg) {
+                    handlerImage(img);
+                }else{
+                    setImg(img);
+                }
+
             }
         } catch (Exception e) {
             Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
@@ -407,7 +409,7 @@ public class DishHeaderViewNew extends LinearLayout {
      * @param img          》图片链接
      */
     public void setImg(final String img) {
-        Log.i("zyj","img:___:::"+img);
+        Log.i("wyl","img:___:::"+img);
         isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
         int waith = ToolsDevice.getWindowPx(activity).widthPixels *5/6;
