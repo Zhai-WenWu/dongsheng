@@ -245,8 +245,8 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
     private void showItemGrop() {
 
-        //如果是四位数或者是管理员，就显示‘后台’和端口切换
-        if (VersionOp.getVerName(this).length() > 5 || LoginManager.isManager()) {
+        //如果 是debug 或者 是管理员，就显示‘后台’和端口切换
+        if (Tools.isDebug(this) || LoginManager.isManager()) {
             ll_internal_used.setVisibility(View.VISIBLE);
         } else {
             ll_internal_used.setVisibility(View.GONE);
