@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,6 +46,7 @@ import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
+import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
@@ -153,9 +155,10 @@ public class DishHeaderViewNew extends LinearLayout {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
                     Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
             } else {
-                if(!isLoadImg) {
-                    setImg(img);
-                }
+//                if(!isLoadImg) {
+//                    setImg(img);
+//                }
+                handlerImage(img);
             }
         } catch (Exception e) {
             Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
@@ -502,5 +505,32 @@ public class DishHeaderViewNew extends LinearLayout {
      */
     public void INVisibiHeaderView(){
         this.setVisibility(INVISIBLE);
+    }
+
+    private void handlerImage(String url){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        ImageView imageView = new ImageView(getContext());
+        imageView.setLayoutParams(params);
+        dishVidioLayout.addView(imageView);
+        Log.i("wyl","处理图片：：："+url);
+        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(getContext())
+                .load(url)
+                .setSaveType(FileManager.save_cache)
+                .build();
+        if (bitmapRequest != null) {
+            bitmapRequest.into(getTarget(imageView));
+        }
+    }
+    public SubBitmapTarget getTarget(final ImageView v) {
+        return new SubBitmapTarget() {
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                if (v != null && bitmap != null) {
+                    // 图片圆角和宽高适应
+                    v.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    UtilImage.setImgViewByWH(v, bitmap, 0, 0, false);
+                }
+            }
+        };
     }
 }
