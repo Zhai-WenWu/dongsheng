@@ -1189,6 +1189,13 @@ public class JsAppCommon extends JsBase {
         });
     }
 
-
+    /**
+     * 获取网络状态
+     * @return
+     */
+    @JavascriptInterface
+    public String getNetType() {
+        return ToolsDevice.getNetWorkSimpleType(mAct);
+    }
 
 }
