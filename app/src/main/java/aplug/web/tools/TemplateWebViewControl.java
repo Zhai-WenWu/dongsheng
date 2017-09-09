@@ -46,7 +46,6 @@ public class TemplateWebViewControl {
             isCallBack = true;
             mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
         }
-
         ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, final Object msg) {
@@ -99,21 +98,21 @@ public class TemplateWebViewControl {
                     File file = FileManager.saveFileToCompletePath(path, data, false);
                     if (file != null)
                         FileManager.saveShared(XHApplication.in(), requestMethod, "versionSign", String.valueOf(versionSign));
-                    if (mouldCallBack != null&&!isCallBack) {
+                    if (mouldCallBack != null && !isCallBack) {
                         mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
                     }
                 } else {//无数据标示已经是最新版本。
-                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr)&&!isCallBack) {
+                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
                         mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
                     }
                 }
             } else {
-                if (mouldCallBack != null && !TextUtils.isEmpty(readStr)&&!isCallBack) {
+                if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
                     mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
                 }
             }
         } else {
-            if (mouldCallBack != null) {
+            if (mouldCallBack != null && !isCallBack) {
                 mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
             }
         }
