@@ -84,8 +84,8 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	private TextView tv_status;
 	private LinearLayout order_status_linear;
 	View viewpay ;
-	private int code;
-	private int position;
+	private int code = -1;
+	private int position = -1;
 	private int state_now;//当前状态
 	private String url_statistic;
 	private String mall_stat_statistic;
@@ -785,10 +785,14 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 
 	@Override
 	public void finish() {
-		Intent intent= new Intent();
-		intent.putExtra("code", String.valueOf(code));
-		intent.putExtra("position", String.valueOf(position));
-		setResult(state_now, intent);
+		if(code != -1 && position != -1){
+			Intent intent= new Intent();
+			intent.putExtra("code", String.valueOf(code));
+			intent.putExtra("position", String.valueOf(position));
+			setResult(state_now, intent);
+		}else{
+			setResult(state_now);
+		}
 		super.finish();
 	}
 

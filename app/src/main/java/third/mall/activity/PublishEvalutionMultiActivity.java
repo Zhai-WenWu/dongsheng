@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -41,7 +42,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
 
     private PtrClassicFrameLayout refershLayout;
     private ListView commodList;
-
+    private TextView rightText;
     private AdapterEvalution adapter;
 
     private List<Map<String, String>> commodData = new ArrayList<>();
@@ -72,7 +73,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
         refershLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         commodList = (ListView) findViewById(R.id.commod_list);
 
-        TextView rightText = (TextView) findViewById(R.id.rightText);
+        rightText = (TextView) findViewById(R.id.rightText);
         rightText.setText("发布");
         rightText.setVisibility(View.VISIBLE);
         rightText.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +130,8 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                             List<Map<String, String>> datas = StringManager.getListMapByJson(msg);
                             commodData.addAll(datas);
                             adapter.notifyDataSetChanged();
+
+                            setPulishStatus();
                         }
                         loadManager.changeMoreBtn(flag,commodData.size(),0,2,false);
                         commodList.setVisibility(commodData.size() > 0 ? View.VISIBLE : View.GONE);
@@ -136,7 +139,24 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                 });
     }
 
+    private void setPulishStatus(){
+        boolean canPulish = false;
+        Map<String,String> map;
+        for(int index = 0 ; index < commodData.size() ; index ++){
+            map = commodData.get(index);
+            if("1".equals(map.get("status"))){
+                canPulish = true;
+                break;
+            }
+        }
+        rightText.setVisibility(canPulish?View.VISIBLE:View.GONE);
+    }
+
     private void publishMutilEvalution() {
+        if(getParams().size() <= 1){
+            //参数有问题
+            return;
+        }
         showUploadingDialog();
         MallReqInternet.in().doPost(MallStringManager.mall_addMuiltComment,
                 getParams(),
@@ -147,6 +167,9 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                         if (flag >= MallReqInternet.REQ_OK_STRING) {
                             Map<String, String> data = StringManager.getFirstMap(msg);
                             if (data.containsKey("status") && "2".equals(data.get("status"))) {
+                                if(id == -1 && position == -1){
+                                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_COMMENT_SUCCESS,"",order_id);
+                                }
                                 startActivityForResult(
                                         new Intent(PublishEvalutionMultiActivity.this, EvalutionSuccessActivity.class)
                                                 .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)

@@ -27,6 +27,8 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
@@ -46,7 +48,7 @@ import xh.basic.tool.UtilString;
  * 我的订单页面
  * @author yujian
  */
-public class MyOrderActivity extends MallOrderBaseActivity implements OnClickListener {
+public class MyOrderActivity extends MallOrderBaseActivity implements OnClickListener,IObserver {
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewpager;
 	private myPagerAdapter adapter;
@@ -167,6 +169,9 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 	}
 
 	private void initData() {
+		//注册评价成功通知
+		ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_COMMENT_SUCCESS);
+
 		viewpager.addOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
@@ -319,9 +324,48 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 	}
 
 	@Override
+	public void notify(String name, Object sender, Object data) {
+		if(ObserverManager.NOTIFY_COMMENT_SUCCESS.equals(name)){
+			int currentItem = viewpager.getCurrentItem();
+			MallOrderFragment fragment;
+			if(currentItem == 0){
+				fragment = fragmentMap.get("0");
+				if(fragment != null){
+					fragment.refresh();
+					isRefresh = true;
+					ids.add("0");
+				}
+			}else if(currentItem == 4){
+				fragment = fragmentMap.get("5");
+				if(fragment != null
+						&& fragment.listData != null
+						&& !fragment.listData.isEmpty()
+						&& fragment.adapter != null
+						&& !TextUtils.isEmpty((String)data)){
+					for(Map<String,String> map : fragment.listData){
+						if(data.equals(map.get("order_id"))){
+							fragment.listData.remove(map);
+							fragment.adapter.notifyDataSetChanged();
+							isRefresh = true;
+							ids.add("5");
+							break;
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
 	}
 
+	@Override
+	protected void onDestroy() {
+		ObserverManager.getInstence().unRegisterObserver(this);
+		super.onDestroy();
+	}
 }

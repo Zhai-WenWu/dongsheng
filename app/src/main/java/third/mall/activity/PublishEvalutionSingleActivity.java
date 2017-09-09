@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -124,6 +125,9 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
+                    if(id == -1 && position == -1){
+                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_COMMENT_SUCCESS,"",orderID);
+                    }
                     status = OrderStateActivity.result_comment_success;
                     startActivityForResult(
                             new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
