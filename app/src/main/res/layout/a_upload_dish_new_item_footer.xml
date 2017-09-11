@@ -121,7 +121,6 @@
             android:paddingBottom="@dimen/dp_5"
             android:clickable="true"
             android:text="草稿箱"
-            android:onClick="onDeleteDish"
             android:textSize="@dimen/sp_13" />
     </LinearLayout>
 
