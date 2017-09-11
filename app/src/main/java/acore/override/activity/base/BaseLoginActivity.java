@@ -645,8 +645,11 @@ public class BaseLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (eventHandler != null)
-            SMSSDK.unregisterEventHandler(eventHandler);
+        try{
+            if (eventHandler != null){
+                SMSSDK.unregisterEventHandler(eventHandler);
+            }
+        }catch (Exception ignored){}
     }
 
     @Override

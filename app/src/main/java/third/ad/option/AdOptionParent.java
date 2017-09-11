@@ -31,7 +31,7 @@ public abstract class AdOptionParent {
     private final String[] AD_IDS;//广告ID的集合。
 
     protected XHAllAdControl xhAllAdControl;
-    protected ArrayList<Map<String, String>> adArray = new ArrayList<>();//广告数据的集合
+    protected volatile ArrayList<Map<String, String>> adArray = new ArrayList<>();//广告数据的集合
 
     protected int cunrrentIndex = 0;
     private String statisticKey = "";
@@ -73,7 +73,7 @@ public abstract class AdOptionParent {
         }
     }
 
-    public void getAdData(final Context context, final String statisticKey, final String controlTag, final String controlState) {
+    public synchronized void getAdData(final Context context, final String statisticKey, final String controlTag, final String controlState) {
         Log.i(tag_yu, "开始获取  广告  数据-------------:" + controlTag);
         this.statisticKey = statisticKey;
         this.controlTag = controlTag;
