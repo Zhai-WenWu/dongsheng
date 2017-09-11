@@ -73,61 +73,80 @@ public class TemplateWebViewControl {
         final String readStr = FileManager.readFile(path);
         final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "url");
         String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
-        String url = MallStringManager.mall_api_getTemplate + "?request_method=" + requestMethod + "&url=" + version;
+        String url = MallStringManager.mall_api_dsTemplate + "?request_method=" + requestMethod + "&url=" + version;
         if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
             isCallBack = true;
+            Log.i("wyl", "状态::111" );
             mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
         }
         MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loadstat(final int flag, final String url, final Object msg, Object... stat) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    Log.i("wyl", "msg::" + msg);
-                    Map<String, String> map = StringManager.getFirstMap(msg);
-                    if (map.containsKey("url") && !TextUtils.isEmpty(map.get("url"))) {
-                        final String dataUrl = map.get("url");
-                        final String finalDataUrl = Uri.decode(dataUrl);
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr);
+            }
+        });
+    }
+
+    /**
+     * 处理从七牛那请求数据
+     * @param flag
+     * @param url
+     * @param msg
+     * @param requestMethod
+     * @param path
+     * @param readStr
+     */
+    private void handlerAnalyzData(int flag, final String url, final Object msg, final String requestMethod, final String path, final String readStr){
+        if (flag >= ReqInternet.REQ_OK_STRING) {
+            Log.i("wyl", "msg::" + msg);
+            Map<String, String> map = StringManager.getFirstMap(msg);
+            if (map.containsKey("url") && !TextUtils.isEmpty(map.get("url"))) {
+                final String dataUrl = map.get("url");
+                final String finalDataUrl = Uri.decode(dataUrl);
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
                             @Override
-                            public void run() {
-                                ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
-                                    @Override
-                                    public void loaded(int flag, String url, Object msg) {
-                                        if(flag>=ReqInternet.REQ_OK_IS) {
-                                            try {
-                                                String data = readInfoStream((InputStream) msg);
-                                                if(!TextUtils.isEmpty(data)){
-                                                    File file = FileManager.saveFileToCompletePath(path, data, false);
-                                                    if (file != null)
-                                                        FileManager.saveShared(XHApplication.in(), requestMethod, "url", String.valueOf(dataUrl));
-                                                    if (mouldCallBack != null && !isCallBack) {
-                                                        mouldCallBack.load(true, data, requestMethod, String.valueOf(dataUrl));
-                                                    }
-                                                }else{
-                                                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                                        mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
-                                                    }
-                                                }
-                                            } catch (Exception e) {
-                                                if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                                    mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
-                                                }
+                            public void loaded(int flag, String url, Object msg) {
+                                Thread th = Thread.currentThread();
+                                Log.i("wyl", "当前线程：：" + th.getName() + "::" + th.getId());
+                                if (flag >= ReqInternet.REQ_OK_IS) {
+                                    try {
+                                        String data = readInfoStream((InputStream) msg);
+                                        if (!TextUtils.isEmpty(data)) {
+                                            File file = FileManager.saveFileToCompletePath(path, data, false);
+                                            if (file != null)
+                                                FileManager.saveShared(XHApplication.in(), requestMethod, "url", String.valueOf(dataUrl));
+                                            if (mouldCallBack != null && !isCallBack) {
+                                                Log.i("wyl", "状态::222" );
+                                                mouldCallBack.load(true, data, requestMethod, String.valueOf(dataUrl));
                                             }
-                                        }else{
+                                        } else {
                                             if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
+                                                Log.i("wyl", "状态::333" );
                                                 mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
                                             }
                                         }
-
+                                    } catch (Exception e) {
+                                        if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
+                                            Log.i("wyl", "状态::444" );
+                                            mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
+                                        }
                                     }
-                                });
+                                } else {
+                                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
+                                        Log.i("wyl", "状态::555" );
+                                        mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
+                                    }
+                                }
+
                             }
                         });
                     }
-                }
+                });
             }
-        });
-//
+        }
     }
 
     /**
@@ -205,6 +224,7 @@ public class TemplateWebViewControl {
             handleXHMouldData(requestMethod);
         }
     }
+
     public String readInfoStream(InputStream input) throws Exception {
         if (input == null) {
             throw new Exception("输入流为null");
@@ -217,7 +237,7 @@ public class TemplateWebViewControl {
             //一次性读取2048字节
             while ((readSize = input.read(bcache)) > 0) {
                 //将bcache中读取的input数据写入infoStream
-                infoStream.write(bcache,0,readSize);
+                infoStream.write(bcache, 0, readSize);
             }
         } catch (IOException e1) {
             throw new Exception("输入流读取异常");
