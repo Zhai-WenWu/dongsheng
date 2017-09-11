@@ -247,6 +247,7 @@ public class StringManager extends UtilString {
     public final static String api_getDishInfoNew = apiUrl + urlSection.get("caipu6") + "info";
     public final static String api_getDishTopInfo = apiUrl + "main7/dish/topInfo";
     public final static String api_getTemplate = apiUrl + "main7/template/layout";
+    public final static String api_getXhTemplate = apiUrl + "main7/template/xhLayout";
     public final static String api_getDishMould = apiUrl + "main7/dish/layout";
     public final static String api_getDishTieInfo = apiUrl + "main7/dish/tieInfo";
     public final static String api_getDishstatusValue = apiUrl + "main7/dish/statusValue";

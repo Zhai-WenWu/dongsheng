@@ -45,19 +45,20 @@ public class TemplateWebViewControl {
         isCallBack = false;
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
-        final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "versionSign");
+        final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
         LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
         mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
         mapParams.put("requestMethod", requestMethod);
-        String url = StringManager.api_getTemplate;
+        String url = StringManager.api_getXhTemplate;
         if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
             isCallBack = true;
+            Log.i("wyl", "状态:2:111" );
             mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
         }
         ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, final Object msg) {
-                AnalyzData(flag, url, msg, requestMethod, path, readStr, versionSign);
+                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr,"versionSign");
             }
         });
     }
@@ -71,9 +72,9 @@ public class TemplateWebViewControl {
         isCallBack = false;
         final String path = FileManager.getSDDir() + "long/" + requestMethod;
         final String readStr = FileManager.readFile(path);
-        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "url");
+        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
         String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
-        String url = MallStringManager.mall_api_dsTemplate + "?request_method=" + requestMethod + "&url=" + version;
+        String url = MallStringManager.mall_api_dsTemplate + "?request_method=" + requestMethod + "&version_sign=" + version;
         if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
             isCallBack = true;
             Log.i("wyl", "状态::111" );
@@ -82,7 +83,7 @@ public class TemplateWebViewControl {
         MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loadstat(final int flag, final String url, final Object msg, Object... stat) {
-                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr);
+                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr,"version_sign");
             }
         });
     }
@@ -92,53 +93,53 @@ public class TemplateWebViewControl {
      * @param flag
      * @param url
      * @param msg
-     * @param requestMethod
-     * @param path
-     * @param readStr
+     * @param requestMethod  模块名称
+     * @param path   文件保存路径
+     * @param readStr  文件内容
+     * @param versionKey 不同模版的key不同。
      */
-    private void handlerAnalyzData(int flag, final String url, final Object msg, final String requestMethod, final String path, final String readStr){
+    private void handlerAnalyzData(int flag, final String url, final Object msg, final String requestMethod, final String path, final String readStr,String versionKey){
         if (flag >= ReqInternet.REQ_OK_STRING) {
             Log.i("wyl", "msg::" + msg);
             Map<String, String> map = StringManager.getFirstMap(msg);
             if (map.containsKey("url") && !TextUtils.isEmpty(map.get("url"))) {
-                final String dataUrl = map.get("url");
+                String dataUrl = map.get("url");
+                final String version_sign=map.get(versionKey);
                 final String finalDataUrl = Uri.decode(dataUrl);
+                Log.i("wyl","finalDataUrl::;"+finalDataUrl);
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
                             @Override
                             public void loaded(int flag, String url, Object msg) {
-                                Thread th = Thread.currentThread();
-                                Log.i("wyl", "当前线程：：" + th.getName() + "::" + th.getId());
+                                Log.i("wyl", "状态:***"+flag );
                                 if (flag >= ReqInternet.REQ_OK_IS) {
                                     try {
                                         String data = readInfoStream((InputStream) msg);
                                         if (!TextUtils.isEmpty(data)) {
                                             File file = FileManager.saveFileToCompletePath(path, data, false);
                                             if (file != null)
-                                                FileManager.saveShared(XHApplication.in(), requestMethod, "url", String.valueOf(dataUrl));
+                                                FileManager.saveShared(XHApplication.in(), requestMethod, "version_sign", String.valueOf(version_sign));
                                             if (mouldCallBack != null && !isCallBack) {
                                                 Log.i("wyl", "状态::222" );
-                                                mouldCallBack.load(true, data, requestMethod, String.valueOf(dataUrl));
+                                                mouldCallBack.load(true, data, requestMethod, String.valueOf(version_sign));
                                             }
                                         } else {
                                             if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
                                                 Log.i("wyl", "状态::333" );
-                                                mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
+                                                mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                             }
                                         }
                                     } catch (Exception e) {
                                         if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
                                             Log.i("wyl", "状态::444" );
-                                            mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
+                                            mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                         }
                                     }
-                                } else {
-                                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                        Log.i("wyl", "状态::555" );
-                                        mouldCallBack.load(true, readStr, requestMethod, String.valueOf(dataUrl));
-                                    }
+                                } else if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
+                                    Log.i("wyl", "状态::555");
+                                    mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                 }
 
                             }
@@ -228,6 +229,7 @@ public class TemplateWebViewControl {
     public String readInfoStream(InputStream input) throws Exception {
         if (input == null) {
             throw new Exception("输入流为null");
+
         }
         //字节数组
         byte[] bcache = new byte[2048];

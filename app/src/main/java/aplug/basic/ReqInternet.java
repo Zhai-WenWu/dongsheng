@@ -88,4 +88,8 @@ public class ReqInternet extends UtilInternet {
         super.upLoadMP4(actionUrl, key, path, interCallback);
     }
 
+    @Override
+    public void getInputStream(String s, InterCallback interCallback) {
+        super.getInputStream(s, interCallback);
+    }
 }
