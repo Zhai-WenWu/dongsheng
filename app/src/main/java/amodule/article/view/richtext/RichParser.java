@@ -62,7 +62,8 @@ public class RichParser {
                 .replaceAll("<br><br></center>", "<br><br>&lt;/div&gt;")
                 .replaceAll("<br></center><br>", "<br><br>&lt;/div&gt;")
                 .replaceAll("<br></center>", "&lt;/div&gt;")
-                .replaceAll("</center><br>", "&lt;/div&gt;");
+                .replaceAll("</center><br>", "&lt;/div&gt;")
+                .replaceAll("</center>", "&lt;/div&gt;");
     }
 
     private static void withinHtml(StringBuilder out, Spanned text) {
