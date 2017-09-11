@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,15 +22,14 @@ import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 
 /**
- * Created by ：airfly on 2016/10/13 18:15.
+ * PackageName : amodule.search.db
+ * Created by MrTrying on 2016/10/13 18:15 11:37.
+ * E_mail : ztanzeyu@gmail.com
  */
 
 public class MatchWordsDbUtil {
 
-    /**
-     * 检查更新
-     * @param context
-     */
+    /** 检查更新 */
     public void checkUpdateMatchWordsDb(Context context) {
         String createTime = "-1";
         String createTimeStr = (String) FileManager.loadShared(context,
@@ -79,12 +77,18 @@ public class MatchWordsDbUtil {
     private void downloadMatchWords(final String url, final String createTime) {
         ReqInternet.in().getInputStream(url, new InternetCallback(XHApplication.in()) {
             @Override
-            public void loaded(int flag, String url, Object msg) {
+            public void loaded(int flag, String url, final Object msg) {
                 if (flag >= ReqInternet.REQ_OK_IS) {
-                    if(insertStreamToDb(XHApplication.in(), (InputStream) msg)){
-                        FileManager.saveShared(XHApplication.in(),
-                                FileManager.MATCH_WORDS,  FileManager.MATCH_WORDS_CREATE_TIME, createTime);
-                    }
+                    //在子线程中使用请求返回的 InputStream ，不然会发生异常
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(insertStreamToDb(XHApplication.in(), (InputStream) msg)){
+                                FileManager.saveShared(XHApplication.in(),
+                                        FileManager.MATCH_WORDS,  FileManager.MATCH_WORDS_CREATE_TIME, createTime);
+                            }
+                        }
+                    }).start();
                 }
             }
         });
@@ -92,14 +96,14 @@ public class MatchWordsDbUtil {
 
     /**
      * 存入数据库
-     * @param context
-     * @param in
+     * @param context 上下文
+     * @param in    请求返回的InputStream
      * @return
      */
     private boolean insertStreamToDb(Context context, InputStream in) {
         boolean flag = false;
         BufferedReader buf = null;
-        List<WordBean> data = new ArrayList<WordBean>();
+        List<WordBean> data = new ArrayList<>();
         try {
             buf = new BufferedReader(new InputStreamReader(in));
             String line = null;
