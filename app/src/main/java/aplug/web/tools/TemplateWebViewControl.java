@@ -112,25 +112,27 @@ public class TemplateWebViewControl {
                     public void run() {
                         ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
                             @Override
-                            public void loaded(int flag, String url, Object msg) {
+                            public void loaded(int flag, String url, final Object msg) {
                                 Log.i("wyl", "状态:***"+flag );
                                 if (flag >= ReqInternet.REQ_OK_IS) {
                                     try {
-                                        String data = readInfoStream((InputStream) msg);
-                                        if (!TextUtils.isEmpty(data)) {
-                                            File file = FileManager.saveFileToCompletePath(path, data, false);
-                                            if (file != null)
-                                                FileManager.saveShared(XHApplication.in(), requestMethod, "version_sign", String.valueOf(version_sign));
-                                            if (mouldCallBack != null && !isCallBack) {
-                                                Log.i("wyl", "状态::222" );
-                                                mouldCallBack.load(true, data, requestMethod, String.valueOf(version_sign));
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    final String data = readInfoStream((InputStream) msg);
+                                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            handler(data,path,requestMethod,readStr,version_sign);
+                                                        }
+                                                    });
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                        } else {
-                                            if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                                Log.i("wyl", "状态::333" );
-                                                mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
-                                            }
-                                        }
+                                        }).start();
+
                                     } catch (Exception e) {
                                         if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
                                             Log.i("wyl", "状态::444" );
@@ -146,6 +148,23 @@ public class TemplateWebViewControl {
                         });
                     }
                 });
+            }
+        }
+    }
+
+    private void handler(String data,String path,String requestMethod,String readStr,String version_sign){
+        if (!TextUtils.isEmpty(data)) {
+            File file = FileManager.saveFileToCompletePath(path, data, false);
+            if (file != null)
+                FileManager.saveShared(XHApplication.in(), requestMethod, "version_sign", String.valueOf(version_sign));
+            if (mouldCallBack != null && !isCallBack) {
+                Log.i("wyl", "状态::222" );
+                mouldCallBack.load(true, data, requestMethod, String.valueOf(version_sign));
+            }
+        } else {
+            if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
+                Log.i("wyl", "状态::333" );
+                mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
             }
         }
     }
@@ -250,11 +269,14 @@ public class TemplateWebViewControl {
             } catch (IOException e) {
                 throw new Exception("输入流关闭异常");
             }
+            try {
+                Log.i("wyl", "状态::return");
+                return infoStream.toString("utf-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new Exception("输出异常");
+            }
+
         }
-        try {
-            return infoStream.toString("utf-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new Exception("输出异常");
-        }
+
     }
 }
