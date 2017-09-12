@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -181,7 +182,9 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
                                 loginByThrid(LoginManager.LOGIN_WX, "微信号");
                                 break;
                         }
-                    }catch (Exception ignored){}
+                    }catch (Exception ignored){
+                        CrashReport.postCatchedException(ignored);
+                    }
                 } else
                     showUnbindThirdParty(typeKey);
             }

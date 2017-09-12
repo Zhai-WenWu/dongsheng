@@ -1306,7 +1306,11 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <!-- 微信分享回调 end -->
         <!-- ***********Mob分享 end*************** -->
-
+        <!--mobssms start-->
+        <!-- 通过AndroidManifest配置AppKey和AppSecret，如果你选择通过代码配置，则不需要配置以下meta-data -->
+        <meta-data android:name="Mob-AppKey" android:value="10e22f093f255"/>
+        <meta-data android:name="Mob-AppSecret" android:value="bb71787a9ec63116377a83c3ecac048a"/>
+        <!--mobssms end-->
 
         <!-- PUSH start -->
         <!-- umeng push -->
@@ -1515,12 +1519,6 @@
             android:name="InstallChannel"
             android:value="xiangha"/>
         <!--腾讯统计mta start-->
-
-        <!--mobssms start-->
-        <!-- 通过AndroidManifest配置AppKey和AppSecret，如果你选择通过代码配置，则不需要配置以下meta-data -->
-        <!--<meta-data android:name="Mob-AppKey" android:value="10e22f093f255"/>-->
-        <!--<meta-data android:name="Mob-AppSecret" android:value="bb71787a9ec63116377a83c3ecac048a"/>-->
-        <!--mobssms end-->
 
         <!--hotfix start-->
         <meta-data

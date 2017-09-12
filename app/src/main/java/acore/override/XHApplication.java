@@ -1,7 +1,6 @@
 package acore.override;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.util.Log;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
+import com.mob.MobApplication;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -35,7 +35,7 @@ import third.growingio.GrowingIOController;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
 
-public class XHApplication extends Application {
+public class XHApplication extends MobApplication {
     /**包名*/
     public static final String ONLINE_PACKAGE_NAME = "com.xiangha";
     private static XHApplication mAppApplication;
