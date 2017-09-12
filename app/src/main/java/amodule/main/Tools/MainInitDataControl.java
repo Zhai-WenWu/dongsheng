@@ -43,6 +43,7 @@ import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
 import aplug.service.alarm.PushAlarm;
 import aplug.service.base.ServiceManager;
+import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.TencenApiAdTools;
 import third.mall.aplug.MallCommon;
@@ -153,6 +154,13 @@ public class MainInitDataControl {
         long startTime= System.currentTimeMillis();
 
         TencenApiAdTools.getTencenApiAdTools().getLocation();
+
+        //初始化短信
+        long start = System.currentTimeMillis();
+        MobSDK.init(act.getApplication(),"10e22f093f255","bb71787a9ec63116377a83c3ecac048a");
+        long end = System.currentTimeMillis();
+        new XHTemplateManager().CheckUpdataAllTemplate();
+        Log.i("zhangyujian","草泥马onWindowFocusChanged time = " + (end - start));
 
         delayedExcute(new Runnable() {
             @Override

@@ -918,12 +918,6 @@ public class Main extends Activity implements OnClickListener {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
             isInit = true;
-            //初始化短信
-            long start = System.currentTimeMillis();
-            MobSDK.init(this.getApplicationContext(),"10e22f093f255","bb71787a9ec63116377a83c3ecac048a");
-            long end = System.currentTimeMillis();
-            new XHTemplateManager().CheckUpdataAllTemplate();
-            Log.i("zhangyujian","草泥马onWindowFocusChanged time = " + (end - start));
 //            mainInitDataControl.iniMainAfter(Main.this);
         }
         //此处可以进行分级处理:暂时无需要
