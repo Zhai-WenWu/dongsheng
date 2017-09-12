@@ -884,6 +884,14 @@ public class HomeFragment extends BaseHomeFragment{
             viewTop.setHomeModuleBean(homeModuleBean);
             viewTop.setData(map,position);
         }
+        if (viewTop != null) {
+            viewTop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((HomeItem)v).onClickEvent(v);
+                }
+            });
+        }
         return viewTop;
     }
     public boolean isScrollData() {
