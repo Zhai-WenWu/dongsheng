@@ -167,7 +167,6 @@ public class SelectAddressActivity extends MallBaseActivity implements OnClickLi
 		intent.setClass(SelectAddressActivity.this, AddressActivity.class);
 		intent.putExtra("addressName", select_tv.getText().toString());
 		intent.putExtra("addressCode", code);
-		intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 		SelectAddressActivity.this.setResult(AddressActivity.code_select, intent);
 		SelectAddressActivity.this.finish();
 	}

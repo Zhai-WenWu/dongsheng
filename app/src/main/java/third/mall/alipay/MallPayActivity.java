@@ -81,7 +81,6 @@ public class MallPayActivity extends MallBaseActivity implements OnClickListener
 								Toast.LENGTH_SHORT).show();
 						Intent intent =new Intent(MallPayActivity.this,PaySuccedActvity.class);
 						intent.putExtra("amt", listMapByJson.get(0).get("amt"));
-						intent.putExtra(MallBaseActivity.PAGE_FROM, getNowFrom());
 						MallPayActivity.this.startActivity(intent);
 					} else {
 						// 判断resultStatus 为非“9000”则代表可能支付失败
