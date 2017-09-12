@@ -155,12 +155,8 @@ public class MainInitDataControl {
 
         TencenApiAdTools.getTencenApiAdTools().getLocation();
 
-        //初始化短信
-        long start = System.currentTimeMillis();
-        MobSDK.init(act.getApplication(),"10e22f093f255","bb71787a9ec63116377a83c3ecac048a");
-        long end = System.currentTimeMillis();
+        //更模版
         new XHTemplateManager().CheckUpdataAllTemplate();
-        Log.i("zhangyujian","草泥马onWindowFocusChanged time = " + (end - start));
 
         delayedExcute(new Runnable() {
             @Override

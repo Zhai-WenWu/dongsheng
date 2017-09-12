@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -433,6 +434,7 @@ public class BaseLoginActivity extends BaseActivity {
             SMSSDK.getVerificationCode(countyrCode, phone_number);
         }catch (Exception ignored){
             //SMSSDK暂时有bug会导致崩溃
+            CrashReport.postCatchedException(ignored);
             return false;
         }
         return true;
@@ -649,7 +651,9 @@ public class BaseLoginActivity extends BaseActivity {
             if (eventHandler != null){
                 SMSSDK.unregisterEventHandler(eventHandler);
             }
-        }catch (Exception ignored){}
+        }catch (Exception ignored){
+            CrashReport.postCatchedException(ignored);
+        }
     }
 
     @Override
