@@ -217,8 +217,7 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
-//      xiangha://welcome?
-// nativeWeb.app?protocolurl=weixin%3a%2f%2fdl%2fbusiness%2f%3fticket%3dt9fa6d8aff8a37f139803a0552b5a65bf%23wechat_redirect&browserurl=http%3a%2f%2fm.xiangha.com%2fjumpWX%2fopen%2fxiangha
+        Log.d("tzy","openUrl::url = " + url);
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
         if (!url.startsWith(XH_PROTOCOL) && !url.startsWith("http")
