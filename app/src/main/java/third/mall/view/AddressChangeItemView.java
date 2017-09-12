@@ -74,7 +74,6 @@ public class AddressChangeItemView extends RelativeLayout implements OnClickList
 		case R.id.iv_address_edit://去编辑
 			Intent intent = new Intent(context,AddressActivity.class);
 			intent.putExtra("address_id", address_id);
-			intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(context));
 			context.startActivityForResult(intent, ShoppingOrderActivity.OK_ADDRESS);
 			break;
 		case R.id.iv_change_state:
