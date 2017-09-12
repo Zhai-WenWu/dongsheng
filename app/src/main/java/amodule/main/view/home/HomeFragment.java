@@ -225,22 +225,8 @@ public class HomeFragment extends BaseHomeFragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (homeModuleBean == null)
                     return;
-                if (isVideoList()) {//如果是视频列表，直接播放视频
-                    if (view instanceof HomeRecipeItem) {
-                        HomeRecipeItem recipeItem = (HomeRecipeItem)view;
-                        if (AdapterListView.type_tagImage.equals(adapterListView.getItemType(position)) && "2".equals(recipeItem.getType()) && recipeItem.getIsVideo() && !recipeItem.getIsVip()) {
-                            int firstVisiPosi = mListview.getFirstVisiblePosition();
-                            View parentView = mListview.getChildAt(position - firstVisiPosi);
-                            setVideoLayout(parentView, position - mHeaderCount);
-                            XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
-                        } else {
-                            recipeItem.onClickEvent(recipeItem);
-                        }
-                    }
-                } else {//否则按不同item进行跳转操作
-                    if (view instanceof HomeItem) {
-                        ((HomeItem)view).onClickEvent(view);
-                    }
+                if (view instanceof HomeItem) {
+                    ((HomeItem)view).onClickEvent(view);
                 }
             }
         });
