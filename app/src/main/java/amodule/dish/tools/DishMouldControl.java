@@ -19,7 +19,7 @@ import aplug.basic.ReqInternet;
 
 /**
  * 模板信息管理类
- * Created by Fang Ruijiao on 2017/7/20.
+ * Created by XiangHa on 2017/7/20.
  */
 public class DishMouldControl {
 

@@ -3,6 +3,7 @@ package acore.widget;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +110,10 @@ public class UploadSuccessPopWindowDialog {
         ((TextView) mView.findViewById(R.id.tv_info)).setText("我知道了");
         mLayoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 //        //设置window的type
-        mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
+            mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        else
+            mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
         mLayoutParams.format = PixelFormat.RGBA_8888;
         //设置浮动窗口不可聚焦
         mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;

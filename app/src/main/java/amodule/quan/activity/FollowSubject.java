@@ -21,7 +21,7 @@ import aplug.basic.ReqInternet;
 
 /**
  * 跟帖列表
- * Created by Fang Ruijiao on 2017/7/19.
+ * Created by XiangHa on 2017/7/19.
  */
 public class FollowSubject extends BaseActivity {
 
@@ -48,6 +48,7 @@ public class FollowSubject extends BaseActivity {
         //处理title字数
         if(!TextUtils.isEmpty(title)&&title.length()>12){
             title=title.substring(0,12);
+            title+="...";
         }
         init();
     }

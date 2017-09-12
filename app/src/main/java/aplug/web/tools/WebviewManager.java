@@ -128,6 +128,7 @@ public class WebviewManager {
         settings.setSavePassword(false);
         settings.setDefaultTextEncodingName("utf-8");
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+        settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -20,7 +20,7 @@ import amodule.quan.db.CircleData;
 import amodule.quan.db.CircleSqlite;
 
 /**
- * Created by Fang Ruijiao on 2016/8/26.
+ * Created by XiangHa on 2016/8/26.
  */
 
 public class UploadChooseCircle extends BaseActivity {

@@ -134,10 +134,15 @@ public class CircleHeaderRecUser extends LinearLayout {
 
 										@Override
 										public void onAnimationEnd(Animation animation) {
-											removeView(view);
-											if (getChildCount() == 0) {
-												setVisibility(GONE);
-											}
+											post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    removeView(view);
+                                                    if (getChildCount() == 0) {
+                                                        setVisibility(GONE);
+                                                    }
+                                                }
+                                            });
 										}
 
 										@Override

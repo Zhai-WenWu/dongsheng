@@ -237,7 +237,7 @@ public class MyMsgInformSetting extends BaseActivity{
 	private void doMsgShow() {
 		newMSG = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.newMSG);
 		boolean isNotifi = PushManager.isNotificationEnabled();
-		Log.i("FRJ","isNotifi:" + isNotifi + ";   newMSG:" + newMSG);
+		//Log.i("FRJ","isNotifi:" + isNotifi + ";   newMSG:" + newMSG);
 		//判断总开关是否已关闭
 		if (newMSG.equals("2")) { //2为关闭
 			msgInform_ll.setVisibility(View.GONE);

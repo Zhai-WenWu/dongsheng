@@ -25,7 +25,6 @@
             android:paddingLeft="@dimen/dp_7"
             android:paddingRight="@dimen/dp_7"
             android:textColor="#FFFFFF"
-            android:textScaleX="0.8"
             android:textSize="@dimen/sp_9" />
     </RelativeLayout>
 
@@ -90,8 +89,6 @@
                 android:autoLink="web"
 	            android:textColor="#737373"
                 android:text="content"
-                android:enabled="true"
-	            android:textIsSelectable="true"
 	            android:textSize="@dimen/sp_12"/>
         </RelativeLayout>
 
@@ -185,9 +182,7 @@
             android:background="@drawable/z_home_ico_comment_me"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/dp_5"
-            android:enabled="true"
             android:textColor="#000000"
-            android:textIsSelectable="true"
             android:textSize="@dimen/sp_12"
             android:visibility="gone" />
 

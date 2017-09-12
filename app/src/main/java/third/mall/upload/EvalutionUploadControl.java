@@ -7,10 +7,9 @@ import android.text.TextUtils;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.TimerTask;
 
+import acore.tools.Tools;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
@@ -28,7 +27,7 @@ import third.mall.bean.EvalutionBean;
 public class EvalutionUploadControl {
     private Context context;
     /**评价数据体*/
-    private EvalutionBean bean;
+    public EvalutionBean bean;
     /**发布状态对调*/
     private OnPublishCallback onPublishCallback;
 
@@ -43,11 +42,15 @@ public class EvalutionUploadControl {
     }
 
     public void uploadImage(final String filePath) {
-        uploadImage(filePath, true, new SimpleUploadListNetCallBack() {
+        uploadImage(true,filePath);
+    }
+
+    public void uploadImage(boolean isFirst,final String filePath){
+        uploadImage(filePath, isFirst, new SimpleUploadListNetCallBack() {
         });
     }
 
-    private void uploadAgin(final String filePath) {
+    public void uploadAgin(final String filePath) {
         uploadImage(filePath, false, new SimpleUploadListNetCallBack() {
         });
     }
@@ -127,6 +130,18 @@ public class EvalutionUploadControl {
 
     /** 发布 */
     public synchronized void publishEvalution() {
+        if(!isPublishing){
+            //设置30延时取消
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(isRequesting && isPublishing){
+                        cancelUpload();
+                        Tools.showToast(context,"发布失败，请重试");
+                    }
+                }
+            },30 * 1000);
+        }
         isPublishing = true;
         if (onPublishCallback != null)
             onPublishCallback.onStratPublish();
@@ -153,18 +168,13 @@ public class EvalutionUploadControl {
                     });
         } else {
             //上传未上传完成的的图片
-            for (String imageUrl : bean.getImages()) {
+
+            for (String imageUrl : bean.getImages().keySet()) {
                 if (!TextUtils.isEmpty(imageUrl) && !imageUrl.startsWith("http"))
                     uploadAgin(imageUrl);
             }
         }
-        //设置30延时取消
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cancelUpload();
-            }
-        },30 * 1000);
+
     }
 
     /**
@@ -180,9 +190,9 @@ public class EvalutionUploadControl {
         uploadTextData.put("order_id", bean.getOrderId());
         uploadTextData.put("is_quan", bean.isCanShare() ? "2" : "1");
         uploadTextData.put("content[0][text]", bean.getContent());
-        ArrayList<String> images = bean.getImages();
-        for (int i = 0; i < images.size(); i++) {
-            uploadTextData.put("content[0][imgs][" + i + "]", images.get(i));
+        int i = 0;
+        for (String imageUrl : bean.getImages().values()) {
+            uploadTextData.put("content[0][imgs][" + i++ + "]", imageUrl);
         }
         return uploadTextData;
     }
@@ -193,8 +203,7 @@ public class EvalutionUploadControl {
      * @return 图片是否已经上传完成
      */
     private boolean isAllUploadOver() {
-        ArrayList<String> images = bean.getImages();
-        for (String imageUrl : images) {
+        for (String imageUrl : bean.getImages().values()) {
             if (TextUtils.isEmpty(imageUrl) || !imageUrl.startsWith("http")) {
                 return false;
             }
@@ -205,6 +214,7 @@ public class EvalutionUploadControl {
     /**取消发布*/
     public void cancelUpload() {
         isPublishing = false;
+        isRequesting = false;
         MallReqInternet.in().cancelRequset(
                 new StringBuffer(MallStringManager.mall_addComment)
                         .append(combineParameter().toString()

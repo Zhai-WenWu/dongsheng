@@ -23,6 +23,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.xiangha.R;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 
@@ -114,9 +116,12 @@ public class VideoHeaderView extends RelativeLayout {
      * @param videoH
      */
     public void setViewSize(int videoW,int videoH){
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
-        setLayoutParams(params);
-        requestLayout();
+        if(videoW > 0 && videoH > 0){
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, ToolsDevice.getWindowPx(activity).widthPixels * videoH / videoW);
+            setLayoutParams(params);
+            requestLayout();
+        }
     }
 
     public void setData(Map<String, String> data, DishHeaderViewNew.DishHeaderVideoCallBack callBack, Map<String, String> detailPermissionMap) {
@@ -154,10 +159,17 @@ public class VideoHeaderView extends RelativeLayout {
             setSelfVideo(videoData,detailPermissionMap);
 
             //设置全屏播放时的横竖屏状态
-            mVideoPlayerController.setPortrait(VideoPlayerController.isPortraitVideo(videoW,videoH));
+            mVideoPlayerController.setPortrait(isPortraitVideo(videoW,videoH));
         } catch (Exception e) {
             Toast.makeText(getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public boolean isPortraitVideo(float videoW,float videoH){
+        if(videoW <= 0 || videoH <= 0)
+            return false;
+        //视频比例大于1：1则为竖屏视频
+        return videoW/videoH <= 1/1f;
     }
 
     private void initVideoAd() {
@@ -287,14 +299,16 @@ public class VideoHeaderView extends RelativeLayout {
     private boolean setSelfVideo(final Map<String, String> selfVideoMap, Map<String, String> permissionMap) {
         if (STATUS_TRANSCODED.equals(status))
             initVideoAd();
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_WIDTH);
         boolean isUrlVaild = false;
         String videoUrl = selfVideoMap.get("url");
         String img = selfVideoMap.get("videoImg");
         if (!TextUtils.isEmpty(videoUrl)
                 && videoUrl.startsWith("http")) {
-            if(null == mVideoPlayerController)
-                mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
-            else onDestroy();
+            if(null == mVideoPlayerController){
+                GSYVideoManager.instance().canChange = false;
+                mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img,GSYVideoType.SCREEN_MATCH_WIDTH);
+            }
 
             if(permissionMap != null && permissionMap.containsKey("video")){
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));

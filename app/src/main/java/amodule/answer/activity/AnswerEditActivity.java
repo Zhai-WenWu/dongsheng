@@ -9,7 +9,11 @@ import android.widget.Toast;
 
 import com.xiangha.R;
 
+import java.util.Map;
+
+import acore.logic.XHClick;
 import amodule.answer.model.AskAnswerModel;
+import amodule.answer.view.AskAnswerImgController;
 
 /**
  * Created by sll on 2017/7/18.
@@ -42,7 +46,17 @@ public class AnswerEditActivity extends BaseEditActivity {
             mQATitleTextView.setText(tempTitle);
             mAnswerContainer.setVisibility(View.VISIBLE);
         }
+        setListener();
         getLocalData();
+    }
+
+    private void setListener() {
+        mImgController.setOnDelListener(new AskAnswerImgController.OnDelListener() {
+            @Override
+            public void onDel(Map<String, String> dataMap) {
+                XHClick.mapStat(AnswerEditActivity.this, getTjId(), "删除图片", "");
+            }
+        });
     }
 
     private void getLocalData() {

@@ -120,7 +120,7 @@ public class MediaRecorderShortVideo extends MediaRecorderBaseShortNew implement
                 mMediaRecorder.setVideoEncodingBitRate(2 * 10000 * 100); //最终出来的视频比特率是2W多一点
             else
                 mMediaRecorder.setVideoEncodingBitRate(mProfile.videoBitRate);
-//            Log.i("FRJ","mProfile.videoBitRate:" + mProfile.videoBitRate);
+//            //Log.i("FRJ","mProfile.videoBitRate:" + mProfile.videoBitRate);
 
             //设置录制的视频帧率,设置最高25帧/s   -----部分手机不支持
 //            if(mProfile.videoFrameRate >= 25)
@@ -139,8 +139,8 @@ public class MediaRecorderShortVideo extends MediaRecorderBaseShortNew implement
                         break;
                     }
                 }
-                Log.i("FRJ", "recorderW:" + recorderW);
-                Log.i("FRJ", "recorderH:" + recorderH);
+                //Log.i("FRJ", "recorderW:" + recorderW);
+                //Log.i("FRJ", "recorderH:" + recorderH);
             }
             mMediaRecorder.setVideoSize(recorderW, recorderH);// 视频尺寸
 

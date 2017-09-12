@@ -1,12 +1,13 @@
 package third.mall.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,10 +22,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ProperRatingBar;
+import amodule.answer.window.UploadingDialog;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import third.mall.override.MallBaseActivity;
@@ -122,7 +125,10 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 cancelUploadingDialog();
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
-
+                    if(id == -1 && position == -1){
+                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_COMMENT_SUCCESS,"",orderID);
+                    }
+                    status = OrderStateActivity.result_comment_success;
                     startActivityForResult(
                             new Intent(PublishEvalutionSingleActivity.this, EvalutionSuccessActivity.class)
                                     .putExtra(EvalutionSuccessActivity.EXTRAS_ID,id)
@@ -130,7 +136,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                             OrderStateActivity.request_order
                     );
                 }else{
-                    status = OrderStateActivity.result_comment_success;
+                    status = OrderStateActivity.result_comment_part_success;
                     PublishEvalutionSingleActivity.this.finish();
                 }
             }
@@ -215,6 +221,14 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 }
                 updateShareLayoutVisibility();
                 updateContentLengthText();
+            }
+        });
+        contentEdit.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
 
@@ -330,14 +344,18 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     private void updateUploadImages(ArrayList<String> images) {
         //对比新增数据
         for (String imagePath : images) {
-            if (!imagesLayout.getImageArray().contains(imagePath))
-                uploadControl.uploadImage(imagePath);//上传
+            if (!imagesLayout.getImageArray().contains(imagePath)){
+                uploadControl.uploadImage(imagePath);
+                uploadControl.uploadAgin(imagePath);//上传
+            }
         }
+        Log.i("tzy","images = " + uploadControl.bean.images.toString());
         //对比旧的移除数据
-        for (String imagePath : imagesLayout.getImageArray()) {
-            if (!images.contains(imagePath))
-                uploadControl.delUploadImage(imagePath);//移除上传
-        }
+//        for (String imagePath : imagesLayout.getImageArray()) {
+//            if (!images.contains(imagePath))
+//                uploadControl.delUploadImage(imagePath);//移除上传
+//        }
+//        Log.i("tzy","images = " + uploadControl.bean.images.toString());
     }
 
     @Override
@@ -362,7 +380,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
         }
         uploadControl.setScore(ratingBar.getRating())
                 .setContent(contentEdit.getText().toString().trim())
-                .setCanShare(canShareToCircle())
+                .setCanShare(shareToCircleImage.isSelected())
                 .publishEvalution();
     }
 
@@ -400,7 +418,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     /** 显示确认返回dialog */
     private void showSureBackDialog() {
         final XhDialog dialog = new XhDialog(this);
-        dialog.setMessage("是否取消发布")
+        dialog.setTitle("是否取消发布")
                 .setCanselButton("是", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -422,15 +440,13 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 .show();
     }
 
-    private Dialog mUploadingDialog;
-
+    private UploadingDialog mUploadingDialog;
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
         if (mUploadingDialog == null) {
-            mUploadingDialog = new Dialog(this, R.style.dialog);
-            mUploadingDialog.setContentView(R.layout.ask_upload_dialoglayout);
-//            mUploadingDialog.setCancelable(false);
+            mUploadingDialog = new UploadingDialog(this);
+            mUploadingDialog.setContentView();
             mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -438,14 +454,13 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 }
             });
         }
-
         mUploadingDialog.show();
     }
 
-    private boolean cancelUploadingDialog() {
+    private void cancelUploadingDialog() {
         if (mUploadingDialog == null || !mUploadingDialog.isShowing())
-            return false;
+            return;
         mUploadingDialog.cancel();
-        return true;
     }
+
 }

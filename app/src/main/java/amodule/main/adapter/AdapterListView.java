@@ -76,16 +76,6 @@ public class AdapterListView extends BaseAdapter{
                 } else {
                     viewHolder = (ViewDishViewHolder) convertView.getTag();
                 }
-                if (type_tagImage.equals(itemType)) {
-                    viewHolder.view.setVideoClickCallBack(new HomeRecipeItem.VideoClickCallBack() {
-                        @Override
-                        public void videoOnClick(int position) {
-                            if (mVideoClickCallBack != null) {
-                                mVideoClickCallBack.videoOnClick(position);
-                            }
-                        }
-                    });
-                }
                 viewHolder.setData(map, position);
                 break;
             case type_levelImage://蒙版
@@ -246,10 +236,5 @@ public class AdapterListView extends BaseAdapter{
     private AdapterHome.ViewClickCallBack viewClickCallBack;
     public void setViewOnClickCallBack(AdapterHome.ViewClickCallBack viewClickCallBack){
         this.viewClickCallBack= viewClickCallBack;
-    }
-
-    private HomeRecipeItem.VideoClickCallBack mVideoClickCallBack;
-    public void setVideoClickCallBack (HomeRecipeItem.VideoClickCallBack clickCallBack) {
-        mVideoClickCallBack = clickCallBack;
     }
 }

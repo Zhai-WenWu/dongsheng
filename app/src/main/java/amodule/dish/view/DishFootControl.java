@@ -45,7 +45,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 /**
  * 菜谱详情页底部view的控制器
  * 菜谱底部原生所有内容：相关美食帖、广告、发帖入口、点赞点踩、提问入口
- * Created by Fang Ruijiao on 2017/7/13.
+ * Created by XiangHa on 2017/7/13.
  */
 public class DishFootControl implements View.OnClickListener{
 
@@ -236,6 +236,7 @@ public class DishFootControl implements View.OnClickListener{
         }else{
             mHoverNum.setText("0");
         }
+        handlerDishLikeState(dishLikeStatus);
     }
 
      private void setGotoFriendHome(View view, final String userCode){
@@ -328,28 +329,22 @@ public class DishFootControl implements View.OnClickListener{
                      return;
                  }
                  XHClick.mapStat(mAct, tongjiId, "底部浮动", "点赞按钮点击量");
-                 boolean dishLikeGood =true;
-                 if("2".equals(dishLikeStatus)) {//当前是点赞
-                     dishLikeGood = false;
-                     handlerDishLikeState("3");
-                 }else{
-                     dishLikeGood =true;//去点赞
-                     handlerDishLikeState("2");
-                 }
-                 onChangeLikeState(dishLikeGood,true);
+//                 if("2".equals(dishLikeStatus)) {//当前是点赞
+//                     handlerDishLikeState("3");
+//                 }else{
+//                     handlerDishLikeState("2");
+//                 }
+                 onChangeLikeState(true,true);
                  hindGoodLayout();
                 break;
              case R.id.a_dish_detail_new_footer_hover_trample: //没用
                  XHClick.mapStat(mAct, tongjiId, "底部浮动", "点踩按钮点击量");
-                 boolean dishLikeHover =true;
-                 if(TextUtils.isEmpty(dishLikeStatus)||!"1".equals(dishLikeStatus)) {//当前是点赞或没有操作
-                     dishLikeHover = false;
-                     handlerDishLikeState("1");
-                     onChangeLikeState(dishLikeHover,false);
-                 }else {
-                     dishLikeStatus="3";
-                     handlerDishLikeState("3");
-                 }
+//                 if("1".equals(dishLikeStatus)) {//当前是点赞
+//                     handlerDishLikeState("3");
+//                 }else{
+//                     handlerDishLikeState("1");
+//                 }
+                 onChangeLikeState(false,false);
                  hindGoodLayout();
 
                 break;
@@ -418,15 +413,16 @@ public class DishFootControl implements View.OnClickListener{
                         mHoverNum.setText(arrayList.get(0).get("num"));
                     }
                     if(isLike){//点赞
-                        dishLikeStatus="2";//点赞
-                    }else{//取消点赞
                         if("2".equals(dishLikeStatus)){
-                            if(isGoodButton)dishLikeStatus="3";//点赞
-                            else dishLikeStatus="1";//点踩
-                        }else if("1".equals(dishLikeStatus)){
-                            dishLikeStatus="3";//点踩
-                        }else if("3".equals(dishLikeStatus)){
-                            dishLikeStatus="1";//点踩
+                            dishLikeStatus="3";
+                        }else {
+                            dishLikeStatus="2";
+                        }
+                    }else{//取消点赞
+                        if("1".equals(dishLikeStatus)){
+                            dishLikeStatus="3";
+                        }else {
+                            dishLikeStatus="1";
                         }
                     }
                 }

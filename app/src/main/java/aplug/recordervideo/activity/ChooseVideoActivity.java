@@ -35,7 +35,7 @@ import xh.windowview.XhDialog;
 import static aplug.recordervideo.db.RecorderVideoSqlite.getInstans;
 
 /**
- * Created by Fang Ruijiao on 2016/10/14.
+ * Created by XiangHa on 2016/10/14.
  */
 public class ChooseVideoActivity extends BaseActivity implements View.OnClickListener{
     public static final int DATA_LOAD_OVER = 1;

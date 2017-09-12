@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ import third.mall.activity.CommodDetailActivity;
  * Created by sll on 2017/4/18.
  */
 
-public class HomeItem extends BaseItemView implements View.OnClickListener, BaseItemView.OnItemClickListener {
+public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickListener {
 
     //用户信息和置顶view
     private ImageView mTopTag;
@@ -106,10 +108,35 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
 
     }
 
-    private void addDefaultListener() {
+    private void addInnerListener() {
         if (mAdTag != null)
-            mAdTag.setOnClickListener(this);
-        setOnClickListener(this);
+            mAdTag.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickEvent(v);
+                }
+            });
+    }
+
+    /**
+     * 点击事件，由外界或者item内部的view点击事件调用，此写法是解决有些手机偶尔出现点击事件不响应的问题。
+     * @param v
+     */
+    public void onClickEvent(View v) {
+        if (mIsAd) {
+            if (v == mAdTag) {
+                onAdHintClick();
+            } else if (v == this) {
+                if (mAdControlParent != null) {
+                    mAdControlParent.onAdClick(mDataMap);
+                }
+            }
+            return;
+        }
+        if (!handleClickEvent(v)) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
+            onItemClick();
+        }
     }
 
     private ADImageLoadCallback mCallback;
@@ -138,29 +165,17 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                     v.setImageBitmap(bitmap);
                 }
             }
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable drawable) {
+                super.onLoadFailed(e, drawable);
+                CrashReport.postCatchedException(e);
+            }
         };
     }
 
     public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
         this.mRefreshCallBack = callBack;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mIsAd) {
-            if (v == mAdTag) {
-                onAdHintClick();
-            } else if (v == this) {
-                if (mAdControlParent != null) {
-                    mAdControlParent.onAdClick(mDataMap);
-                }
-            }
-            return;
-        }
-        if (!handleClickEvent(v)) {
-            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
-            onItemClick();
-        }
     }
 
     /**
@@ -181,7 +196,10 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
                 XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
             }
-
+            if(mTransferUrl.contains("dishInfo.app")&&!TextUtils.isEmpty(mDataMap.get("type"))
+                    &&!"2".equals(mDataMap.get("type"))){
+                mTransferUrl+="&img="+mDataMap.get("img");
+            }
             String params = mTransferUrl.substring(mTransferUrl.indexOf("?") + 1, mTransferUrl.length());
             Log.i("zhangyujian","mTransferUrl:::"+params);
             Map<String, String> map = StringManager.getMapByString(params, "&", "=");
@@ -246,7 +264,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                         XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
-        addDefaultListener();
+        addInnerListener();
         //设置数据
         if (mDataMap != null) {
             initData();

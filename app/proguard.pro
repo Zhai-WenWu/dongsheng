@@ -185,6 +185,18 @@
 -dontwarn com.mob.**
 -dontwarn cn.smssdk.**
 # mob短信 end
+
+#mob share
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
+-keep class **.R$* {*;}
+-keep class **.R{*;}
+-keep class com.mob.**{*;}
+-dontwarn com.mob.**
+-dontwarn cn.sharesdk.**
+-dontwarn **.R$*
+#mob share end
+
 #支付宝混淆 start
 -keep class com.alipay.android.app.IAlixPay{*;}
 -keep class com.alipay.android.app.IAlixPay$Stub{*;}

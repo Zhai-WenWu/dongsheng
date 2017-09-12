@@ -350,7 +350,8 @@ public class ArticleDetailActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (page >= 1) requestRelateData();
+//                        if (page >= 1)
+//                            requestRelateData();
                     }
                 }, new AutoLoadMore.OnListScrollListener() {
                     int srceenHeight = ToolsDevice.getWindowPx(ArticleDetailActivity.this).heightPixels;
@@ -503,6 +504,8 @@ public class ArticleDetailActivity extends BaseActivity {
                     return false;
                 }
             });
+            webView.setHorizontalScrollBarEnabled(false);//水平不显示
+            webView.setVerticalScrollBarEnabled(false); //垂直不显示
         }
         if (linearLayoutTwo.getChildCount() == 0)
             linearLayoutTwo.addView(webView);

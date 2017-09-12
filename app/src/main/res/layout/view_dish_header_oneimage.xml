@@ -11,13 +11,13 @@
     <RelativeLayout
         android:id="@+id/video_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#898989"/>
 
     <LinearLayout
         android:id="@+id/video_img_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -27,14 +27,14 @@
     <RelativeLayout
         android:id="@+id/video_dredge_vip_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"/>
 
     <include
         android:id="@+id/video_ad_layout"
         layout="@layout/ad_gdt_video"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"/>
 
 </RelativeLayout>

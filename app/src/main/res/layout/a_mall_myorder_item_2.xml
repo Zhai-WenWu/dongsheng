@@ -45,8 +45,8 @@
 
             <ImageView
                 android:id="@+id/order_logistics_back"
-                android:layout_width="@dimen/dp_13"
-                android:layout_height="@dimen/dp_13"
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_12"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_2.5"
                 android:layout_toRightOf="@+id/myorder_merchant_name_2"
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0.5"
                 android:layout_alignParentBottom="true"
-                android:background="#e7e7e7"/>
+                android:background="#e1e1e1"/>
         </RelativeLayout>
         <!-- 商品 -->
 
@@ -188,7 +188,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dp_0.5"
                 android:layout_alignParentTop="true"
-                android:background="#e7e7e7"/>
+                android:background="#e1e1e1"/>
 
             <TextView
                 android:id="@+id/myorder_price_text_2"

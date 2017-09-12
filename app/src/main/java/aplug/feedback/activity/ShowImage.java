@@ -19,7 +19,7 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 
 /**
- * Created by Fang Ruijiao on 2017/3/15.
+ * Created by XiangHa on 2017/3/15.
  */
 
 public class ShowImage extends BaseActivity {

@@ -9,6 +9,7 @@ package acore.override.activity.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,9 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -172,30 +174,44 @@ public class BaseActivity extends Activity {
 		rl = (RelativeLayout) findViewById(R.id.activityLayout);
 		if (rl != null) {
 			loadManager = new LoadManager(this,rl);
-			//设置压缩模式下键盘的监听
-			rl.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-				private int preHeight = 0;
-				@Override
-				public void onGlobalLayout() {
-					int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
-					if (preHeight == heightDiff) {
-						return;
-					}
-					preHeight = heightDiff;
-					if (heightDiff > (ToolsDevice.getWindowPx(BaseActivity.this).heightPixels / 4)) {
+		}
+		FrameLayout content = (FrameLayout) findViewById(android.R.id.content);
+		mChildOfContent = content.getChildAt(0);
+		frameLayoutParams = (FrameLayout.LayoutParams) mChildOfContent.getLayoutParams();
+		mChildOfContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				int usableHeightNow = computeUsableHeight();
+				if (usableHeightNow != usableHeightPrevious) {
+					int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight();
+					int heightDifference = usableHeightSansKeyboard - usableHeightNow;
+					if (heightDifference > (usableHeightSansKeyboard/4)) {
+						// keyboard probably just became visible
 						if (!keyBoard_visible) {
 							keyBoard_visible = true;
 							if(mOnKeyBoardListener != null)mOnKeyBoardListener.show();
 						}
 					} else {
+						// keyboard probably just became hidden
 						if (keyBoard_visible) {
 							keyBoard_visible = false;
 							if(mOnKeyBoardListener != null)mOnKeyBoardListener.hint();
 						}
 					}
+					mChildOfContent.requestLayout();
+					usableHeightPrevious = usableHeightNow;
 				}
-			});
-		}
+			}
+		});
+	}
+
+	public int usableHeightPrevious;
+	public View mChildOfContent;
+	public  FrameLayout.LayoutParams frameLayoutParams;
+	protected int computeUsableHeight() {
+		Rect r = new Rect();
+		mChildOfContent.getWindowVisibleDisplayFrame(r);
+		return (r.bottom - r.top);
 	}
 
 	private boolean  showStateColor(String name){
@@ -224,7 +240,7 @@ public class BaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		resumeTime = System.currentTimeMillis();
-		Log.i("FRJ","className:::"+className);
+		//Log.i("FRJ","className:::"+className);
 		if(XHApplication.in()==null){
 			Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

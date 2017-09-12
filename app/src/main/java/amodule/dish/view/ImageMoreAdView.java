@@ -26,7 +26,7 @@ import third.ad.scrollerAd.XHAllAdControl;
 
 /**
  * 图片预览单个view
- * Created by Fang Ruijiao on 2016/8/16.
+ * Created by XiangHa on 2016/8/16.
  */
 public class ImageMoreAdView extends ImageMoreView implements View.OnClickListener {
 

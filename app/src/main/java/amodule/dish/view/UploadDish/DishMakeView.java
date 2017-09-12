@@ -299,7 +299,7 @@ public class DishMakeView{
 
 				@Override
 				public void onClick(View v) {
-					Log.i("FRJ","delete Clcik");
+					//Log.i("FRJ","delete Clcik");
 					onDeleteStepView(v);
 				}
 			});

@@ -139,6 +139,7 @@ public class Main extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
+        setContentView(R.layout.xh_main);
 
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
@@ -231,20 +232,20 @@ public class Main extends Activity implements OnClickListener {
                 if (!TextUtils.isEmpty(qaType)) {
                     switch (qaType) {
                         case AskAnswerModel.TYPE_ANSWER:
-                            msg = "你有一个回答尚未发布，是否继续？";
+                            msg = "您有一个回答尚未发布，是否继续？";
                             tempC = AnswerEditActivity.class;
                             break;
                         case AskAnswerModel.TYPE_ANSWER_AGAIN:
-                            msg = "你有一个回答尚未发布，是否继续？";
+                            msg = "您有一个回答尚未发布，是否继续？";
                             tempC = AnswerEditActivity.class;
                             isAnswerAgain = true;
                             break;
                         case AskAnswerModel.TYPE_ASK:
-                            msg = "你有一个问题尚未发布，是否继续？";
+                            msg = "您有一个问题尚未发布，是否继续？";
                             tempC = AskEditActivity.class;
                             break;
                         case AskAnswerModel.TYPE_ASK_AGAIN:
-                            msg = "你有一个问题尚未发布，是否继续？";
+                            msg = "您有一个问题尚未发布，是否继续？";
                             tempC = AskEditActivity.class;
                             isAskAgain = true;
                             break;
@@ -385,12 +386,12 @@ public class Main extends Activity implements OnClickListener {
      */
     @SuppressLint("HandlerLeak")
     private void initUI() {
-        setContentView(R.layout.xh_main);
 
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
 
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
+
         //实例化有用到mRootLayout，必须按着顺序执行
         mBuoy = new MainBuoy(this);
         tabHost = (XiangHaTabHost) findViewById(R.id.xiangha_tabhost);
@@ -637,7 +638,6 @@ public class Main extends Activity implements OnClickListener {
                 ReqInternet.in().finish();
                 VersionOp.getInstance().onDesotry();
                 finish();
-//                System.exit(1);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
         } else {
@@ -915,12 +915,6 @@ public class Main extends Activity implements OnClickListener {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
             isInit = true;
-            //初始化短信
-            long start = System.currentTimeMillis();
-            MobSDK.init(this.getApplicationContext(),"10e22f093f255","bb71787a9ec63116377a83c3ecac048a");
-            long end = System.currentTimeMillis();
-            new XHTemplateManager().CheckUpdataAllTemplate();
-            Log.i("zhangyujian","草泥马onWindowFocusChanged time = " + (end - start));
 //            mainInitDataControl.iniMainAfter(Main.this);
         }
         //此处可以进行分级处理:暂时无需要

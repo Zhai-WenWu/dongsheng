@@ -20,7 +20,7 @@
     <dimen name="titleHeight_50">50dp</dimen>
     <dimen name="tabHeight_50">50dp</dimen>
     <!-- 美食圈bar上的消息数量通知 -->
-    <dimen name="bar_tab_marginright">15dp</dimen>
+    <dimen name="bar_tab_marginright">17dp</dimen>
 
     <dimen name="prb_symbolic_tick_default_text_size">15sp</dimen>
     <dimen name="prb_drawable_tick_default_spacing">1dp</dimen>

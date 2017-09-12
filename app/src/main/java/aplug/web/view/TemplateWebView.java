@@ -112,6 +112,7 @@ public class TemplateWebView extends XHWebView{
         settings.setSavePassword(false);
         settings.setDefaultTextEncodingName("utf-8");
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+        settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -124,31 +125,10 @@ public class TemplateWebView extends XHWebView{
      */
     private void setWebViewClient() {
         this.setWebViewClient(new WebViewClient() {
-            private Timer timer;
-            private Handler handler = new Handler();
 
             @Override
             public void onPageStarted(final WebView view, String url, Bitmap favicon) {
-                timer = new Timer();
-                TimerTask tt = new TimerTask() {
-
-                    @Override
-                    public void run() {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (TemplateWebView.this.getProgress() < 90) {
-                                    if(loadManager!=null)
-                                    loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
-                                }
-                            }
-                        });
-                    }
-                };
-                timer.schedule(tt, XHConf.net_timeout);
-                if (!ERROR_HTML_URL.equals(url)) {
-                    TemplateWebView.this.setUrl(url);
-                }
+                Log.i("zyj","onPageStarted::");
                 if (onWebviewStateCallBack != null) {
                     onWebviewStateCallBack.onLoadStart();
                 }
@@ -158,6 +138,7 @@ public class TemplateWebView extends XHWebView{
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                Log.i("zyj","onPageFinished::");
                 if (JSAction.loadAction.length() > 0) {
                     view.loadUrl("javascript:" + JSAction.loadAction + ";");
                     JSAction.loadAction = "";
@@ -168,14 +149,10 @@ public class TemplateWebView extends XHWebView{
                 }
                 if(loadManager!=null)
                 loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
-                if (timer != null) {
-                    timer.cancel();
-                    timer.purge();
-                }
-                // 获取焦点已让webview能打开键盘，评论页输入框不在webview，所以不获取焦点
-                if (url.indexOf("subjectComment.php") == -1) {
-                    view.requestFocus();
-                }
+//                // 获取焦点已让webview能打开键盘，评论页输入框不在webview，所以不获取焦点
+//                if (url.indexOf("subjectComment.php") == -1) {
+//                    view.requestFocus();
+//                }
                 // 读取cookie的sessionId
                 CookieManager cookieManager = CookieManager.getInstance();
                 Map<String, String> map = UtilString.getMapByString(cookieManager.getCookie(url), ";", "=");
@@ -266,8 +243,9 @@ public class TemplateWebView extends XHWebView{
                 if(isSuccess){
                     if(originData!=null&&originData.length>0&&nowData!=null&&nowData.length>0) {
                         int lenght= originData.length;
+                        int nowLenght=nowData.length;
                         for(int i=0;i<lenght;i++) {
-                            data = data.replace(originData[i], nowData[i]);
+                            data = data.replace(originData[i], i<nowLenght?nowData[i]:"");
                         }
                     }
                     final String html = data;

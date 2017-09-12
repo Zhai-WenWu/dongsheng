@@ -20,7 +20,7 @@ import amodule.main.Main;
 import amodule.user.activity.MyDraft;
 
 /**
- * Created by Fang Ruijiao on 2016/10/25.
+ * Created by XiangHa on 2016/10/25.
  */
 public class UploadDishActivity extends BaseActivity implements View.OnClickListener{
     /** 发菜谱页面统计ID */

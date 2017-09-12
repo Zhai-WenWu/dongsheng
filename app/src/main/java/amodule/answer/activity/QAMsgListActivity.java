@@ -81,6 +81,12 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                 });
             }
         });
+        mWebViewManager.setOnWebviewLoadFinish(new WebviewManager.OnWebviewLoadFinish() {
+            @Override
+            public void onLoadFinish() {
+                mWebView.postInvalidateDelayed(200);
+            }
+        });
 
     }
 
@@ -110,6 +116,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         }
         ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(data);
         mDatas = datas;
+        int defSelectPos = 0;
         for (int i = 0; i < datas.size(); i ++) {
             Map<String, String> map = datas.get(i);
             if (map == null || map.isEmpty())
@@ -120,7 +127,9 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                 continue;
             }
             String title = map.get("title");
-            boolean isSelect = map.get("isSelect") == "2";
+            boolean isSelect = "2".equals(map.get("isSelect"));
+            if (isSelect)
+                defSelectPos = i;
             if (!TextUtils.isEmpty(title)) {
                 View tabView = LayoutInflater.from(this).inflate(R.layout.tab_strip_numlayout, null, false);
                 TextView tab = (TextView) tabView.findViewById(R.id.psts_tab_title);
@@ -134,12 +143,13 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                     }
                 });
                 mTabContainer.addView(tabView);
-                if (isSelect) {
-                    setSelection(i);
-                }
                 setMsgNum(msgNum, i);
             }
         }
+        if (mTabContainer.getChildCount() == 0)
+            return;
+        if (!refNum)
+            setSelection(defSelectPos);
     }
 
     /**
@@ -172,6 +182,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         if (mCurrSelectedPos == position)
             return;
         else {
+            boolean isInit = mCurrSelectedPos == -1;
             if (mCurrSelectedPos > -1) {
                 View oldSelectView = mTabContainer.getChildAt(mCurrSelectedPos);
                 oldSelectView.setSelected(false);
@@ -182,7 +193,8 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
             mCurrSelectedPos = position;
             View currSelectedView = mTabContainer.getChildAt(mCurrSelectedPos);
             currSelectedView.setSelected(true);
-            currSelectedView.findViewById(R.id.num).setVisibility(View.INVISIBLE);
+            if (!isInit)
+                currSelectedView.findViewById(R.id.num).setVisibility(View.INVISIBLE);
         }
     }
 
@@ -193,10 +205,15 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
     private void loadMsgList (final boolean isRef) {
         if (mWebView == null)
             return;
-        loadManager.setLoading(new View.OnClickListener() {
+        mWebView.post(new Runnable() {
             @Override
-            public void onClick(View v) {
-                mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1") + (isRef ? "&type=" + mDatas.get(mCurrSelectedPos).get("type"): "")));
+            public void run() {
+                loadManager.setLoading(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1") + (isRef ? "&type=" + mDatas.get(mCurrSelectedPos).get("type"): "")));
+                    }
+                });
             }
         });
     }

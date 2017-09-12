@@ -23,7 +23,7 @@ import static amodule.quan.adapter.AdapterCircle.STYLE_FRIEND_RECOMMEND;
 import static amodule.quan.adapter.AdapterCircle.STYLE_ROB_SOFA;
 
 /**
- * Created by Fang Ruijiao on 2017/7/19.
+ * Created by XiangHa on 2017/7/19.
  */
 
 public class AdapterFollowSubject extends AdapterSimple {

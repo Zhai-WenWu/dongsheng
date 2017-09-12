@@ -9,7 +9,7 @@ import acore.logic.AppCommon;
 import acore.override.activity.base.BaseFragmentActivity;
 
 /**
- * Created by Fang Ruijiao on 2016/8/18.
+ * Created by XiangHa on 2016/8/18.
  */
 
 public class GoodsListActivity extends BaseFragmentActivity implements View.OnClickListener{
@@ -73,12 +73,12 @@ public class GoodsListActivity extends BaseFragmentActivity implements View.OnCl
 //                // 回调商品名称
 ////                if (data != null && data.hasExtra("goods_name")) {
 ////                    String name = data.getStringExtra("goods_name");
-////                    Log.i("FRJ","click name:" + name);
+////                    //Log.i("FRJ","click name:" + name);
 ////                }
 ////                // 回调商品id
 ////                if (data != null && data.hasExtra("goods_id")) {
 ////                    String id = data.getStringExtra("goods_id");
-////                    Log.i("FRJ","click id:" + id);
+////                    //Log.i("FRJ","click id:" + id);
 ////                }
 //            }
 //        });

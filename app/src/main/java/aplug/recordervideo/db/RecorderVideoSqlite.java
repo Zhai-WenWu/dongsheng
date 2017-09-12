@@ -14,7 +14,7 @@ import java.util.Map;
 import amodule.main.Main;
 
 /**
- * Created by Fang Ruijiao on 2016/11/15.
+ * Created by XiangHa on 2016/11/15.
  */
 public class RecorderVideoSqlite extends SQLiteOpenHelper {
 

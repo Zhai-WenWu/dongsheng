@@ -137,9 +137,9 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 
 	@SuppressLint("HandlerLeak")
 	private void initData() {
-		list_none=new ArrayList<Map<String,String>>();
-		list=new ArrayList<MerchantBean>();
-		adapter= new AdapterShoppingNew(this, list);
+		list_none =new ArrayList<Map<String,String>>();
+		list =new ArrayList<MerchantBean>();
+		adapter = new AdapterShoppingNew(this, list);
 		shopping_list.setDivider(null);
 
 		adapter.setInterface(new InterProudct() {

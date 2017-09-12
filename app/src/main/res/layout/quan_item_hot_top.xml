@@ -32,7 +32,6 @@
                 android:gravity="center"
                 android:text="公告"
                 android:textColor="@color/quan_text_red_color"
-                android:textScaleX="0"
                 android:textSize="@dimen/sp_10"/>
         </LinearLayout>
 

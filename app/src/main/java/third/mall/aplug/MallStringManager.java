@@ -8,7 +8,7 @@ public class MallStringManager extends UtilString {
 //    	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
     public static String apiAPI = "api";
     public static String appm = "m";
-    public static String httpData = "http://";
+    public static String httpData = "https://";
 
     public static String apiTitle = httpData + apiAPI;
     public static String appWebTitle = httpData + appm;
@@ -94,6 +94,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_api_listOrder_v3 = mall_apiUrl + "/v3/order/listOrder";
     public final static String mall_dsInfo_v3 = mall_apiUrl + "/v3/home/dsInfo";
     public final static String mall_api_getTemplate = mall_apiUrl + "/v3/template/getTemplate";
+    public final static String mall_api_dsTemplate = mall_apiUrl + "/v3/template/dsTemplate";
 
     /**
      * 替换url

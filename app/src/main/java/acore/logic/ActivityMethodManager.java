@@ -44,11 +44,13 @@ public class ActivityMethodManager {
         this.mAct = mAct;
         //用于标记umeng推送记录数据
         PushAgent.getInstance(mAct).onAppStart();
+        /*随机广告*/
+        randPromotion();
     }
 
     public void onResume(int level) {
-        Log.i("FRJ", "level:" + level);
-        Log.i("FRJ", "colse_level:" + colse_level);
+        //Log.i("FRJ", "level:" + level);
+        //Log.i("FRJ", "colse_level:" + colse_level);
         XHADView adScrollView = XHADView.getInstence(mAct);
         if (adScrollView != null) {
             adScrollView.refreshContext(mAct);
@@ -121,8 +123,6 @@ public class ActivityMethodManager {
             colse_level = 1000;
         }
 
-        /*随机广告*/
-        randPromotion();
     }
 
     public void onPause() {
@@ -201,12 +201,11 @@ public class ActivityMethodManager {
         if(randProConfigMap.containsKey(classKey)
                 && "2".equals(randProConfigMap.get(classKey))){
             //数据
-            Map<String,String> randProMap = StringManager.getFirstMap(AppCommon.loadRandPromotionData());
-            if(randProMap.containsKey("text")
-                    && !TextUtils.isEmpty(randProMap.get("text"))){
+            String text = AppCommon.loadRandPromotionData().trim();
+            if(!TextUtils.isEmpty(text)){
                 //写如剪切板
-                Tools.inputToClipboard(mAct,randProMap.get("text"));
-                Log.i("tzy",randProMap.get("text"));
+                Tools.inputToClipboard(mAct,text);
+                Log.i("tzy","inputToClipboard :: text = " + text);
             }
         }
     }

@@ -35,7 +35,7 @@ import static amodule.dish.tools.upload.UploadDishVideoControl.MAKE_VIDEO_MAX_S;
 import static amodule.dish.tools.upload.UploadDishVideoControl.MAKE_VIDEO_S_TEXT;
 
 /**
- * Created by Fang Ruijiao on 2016/10/25.
+ * Created by XiangHa on 2016/10/25.
  */
 public class AdapterDishNewMake extends AdapterSimple {
     private BaseActivity mAct;

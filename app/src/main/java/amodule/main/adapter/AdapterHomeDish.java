@@ -18,7 +18,7 @@ import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
 /**
- * Created by Fang Ruijiao on 2016/12/29.
+ * Created by XiangHa on 2016/12/29.
  */
 
 public class AdapterHomeDish extends AdapterSimple {

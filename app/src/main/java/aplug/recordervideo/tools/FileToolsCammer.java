@@ -39,7 +39,7 @@ import aplug.recordervideo.view.RecorderVideoPreviewView;
 import static aplug.recordervideo.db.RecorderVideoSqlite.getInstans;
 
 /**
- * Created by Fang Ruijiao on 2016/10/24.
+ * Created by XiangHa on 2016/10/24.
  */
 public class FileToolsCammer {
 
@@ -94,7 +94,7 @@ public class FileToolsCammer {
         if(isReload || getInstans().getDataSize() == 0) {
             ArrayList<Map<String, String>> olddArrayList = new ArrayList<>();
             selectFils(olddArrayList);
-//            Log.i("FRJ", "select size:" + olddArrayList.size());
+//            //Log.i("FRJ", "select size:" + olddArrayList.size());
             getInstans().resetAll(olddArrayList);
         }
     }

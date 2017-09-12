@@ -18,6 +18,7 @@ import com.xiangha.R;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,7 +41,6 @@ import third.video.VideoPlayerController;
 import static amodule.dish.activity.DetailDish.startTime;
 import static amodule.dish.activity.DetailDish.tongjiId;
 import static java.lang.System.currentTimeMillis;
-import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 菜谱界面的总控制类
@@ -57,7 +57,7 @@ public class  DishActivityViewControlNew {
     private int wm_height;//屏幕高度
     private int adBarHeight = 0;//广告所用bar高度
     //广告所用bar高度;图片/视频高度
-    private int statusBarHeight = 0,videoLayoutHeight;
+    private int statusBarHeight = 0,headerLayoutHeight;
     private int startY;
 
     private String state;
@@ -76,9 +76,9 @@ public class  DishActivityViewControlNew {
     private DishFootControl mFootControl;
 
     private DishViewCallBack callBack;
-    private String dishJson = "";
     private int titleHeight;//标题高度
     private boolean isLoadWebViewData=false;//是否webview加载过数据
+    private boolean isHeaderLoadCallBack=false;//是否执行header的callback
 
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
@@ -100,6 +100,16 @@ public class  DishActivityViewControlNew {
         Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
         initTitle();
+        //头部view处理
+        dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
+        headerLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
+        dishHeaderView.initView(mAct,headerLayoutHeight);
+
+        //处理标题导航栏
+        dishTitleViewControl= new DishTitleViewControlNew(mAct);
+        dishTitleViewControl.initView(mAct);
+        dishTitleViewControl.setstate(state);
+
         templateWebView = (TemplateWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
         templateWebView.initBaseData(mAct,loadManager);
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
@@ -112,32 +122,16 @@ public class  DishActivityViewControlNew {
                     }
                 },1*1000);
             }
-
             @Override
             public void onLoadStart() {
-
             }
         });
         handlerDishWebviewData();
-        //头部view处理
-        dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
-        videoLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
-        dishHeaderView.initView(mAct,videoLayoutHeight);
-
-        mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
-        setGlideViewListener();
-
-        //处理标题导航栏
-        dishTitleViewControl= new DishTitleViewControlNew(mAct, new DishTitleViewControlNew.OnDishTitleControlListener() {
-            @Override
-            public String getOffDishJson() {
-                return dishJson;
-            }
-        });
-        dishTitleViewControl.initView(mAct);
-        dishTitleViewControl.setstate(state);
         //底部view
         mFootControl = new DishFootControl(mAct,mDishCode);
+        mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
+        setGlideViewListener();
+        templateWebView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -161,6 +155,7 @@ public class  DishActivityViewControlNew {
             @Override
             public void onScroll(int scrollY) {
                 setViewOneState();
+                Log.i("wyl","30");
                 int[] location = new int[2];
                 int view_height = 0;
                 if (view_oneImage != null) {
@@ -179,6 +174,7 @@ public class  DishActivityViewControlNew {
 
             @Override
             public void scrollOritention(int scrollState) {
+                Log.i("wyl","31:::"+scrollState);
                 if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
 
                     bar_title_1.setVisibility(View.GONE);
@@ -208,9 +204,9 @@ public class  DishActivityViewControlNew {
                             } else if (firstItemIndex == 0) {
                                 int y = tempY - startY;
                                 if (wm_height > 0 && y > 0) {
-                                    if (videoLayoutHeight + y <= wm_height * 2 / 3) {
+                                    if (headerLayoutHeight + y <= wm_height * 2 / 3) {
                                         mMoveLen = y;
-                                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight + y);
+                                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, headerLayoutHeight + y);
                                         dishVidioLayout.setLayoutParams(layoutParams);
                                     }
                                 }
@@ -242,30 +238,48 @@ public class  DishActivityViewControlNew {
      * @param permissionMap
      */
     public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
-        Log.i("zyj","analyzeDishInfoData::"+(System.currentTimeMillis()-startTime));
-        dishJson = dishInfo;
+        Log.i("zyj","analyzeDishInfoData::" + (System.currentTimeMillis() - startTime));
+        saveDishInfo(dishInfo);
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
         dishInfoMap = list.get(0);
         isHasVideo = "2".equals(dishInfoMap.get("type"));
-        if(!isHasVideo){mTimer = new MyTimer(handler);}
+        if(!isHasVideo){
+            mTimer = new MyTimer(handler);
+            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels *5/6;
+        }else{
+            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight ;
+        }
         XHClick.track(mAct,isHasVideo?"浏览视频菜谱详情页":"浏览图文菜谱详情页");
         if(isHasVideo)tongjiId="a_menu_detail_video";
         dishTitleViewControl.setData(dishInfoMap,mDishCode,isHasVideo,dishInfoMap.get("dishState"),loadManager);
 
-        Map<String, String> customer = StringManager.getFirstMap(dishInfoMap.get("customer"));
-        if (customer != null&& !TextUtils.isEmpty(customer.get("code")) && LoginManager.userInfo != null
-                && customer.get("code").equals(LoginManager.userInfo.get("code"))) {
-            state = "";
-            dishTitleViewControl.setstate(state);
+        String authorCode = dishInfoMap.get("customerCode");
+        if (!TextUtils.isEmpty(authorCode)){
+            mFootControl.setAuthorCode(authorCode);
+            if(LoginManager.userInfo != null
+                    && authorCode.equals(LoginManager.userInfo.get("code"))) {
+                state = "";
+                dishTitleViewControl.setstate(state);
+            }
         }
-        if(customer != null&& !TextUtils.isEmpty(customer.get("code")) ){
-        mFootControl.setAuthorCode(customer.get("code"));}
+
         dishTitleViewControl.setViewState();
 
-
         //头部view
-        dishHeaderView.setData(list, new DishHeaderViewNew.DishHeaderVideoCallBack() {
+        setDishHeaderViewCallBack();
+        dishHeaderView.setData(list,permissionMap);
+        mFootControl.setDishInfo(dishInfoMap.get("name"));
+        mScrollView.setVisibility(View.VISIBLE);
+    }
+
+    private void setDishHeaderViewCallBack(){
+        if(dishHeaderView==null)return;
+        if(isHeaderLoadCallBack){
+            return;
+        }
+        isHeaderLoadCallBack=true;
+        dishHeaderView.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
             @Override
             public void videoImageOnClick() {
                 String color = Tools.getColorStr(mAct, R.color.common_top_bg);
@@ -280,50 +294,73 @@ public class  DishActivityViewControlNew {
                 setViewOneState();
                 dishTitleViewControl.setVideoContrl(mVideoPlayerController);
             }
-        },permissionMap);
-        mFootControl.setDishInfo(dishInfoMap.get("name"));
-        mScrollView.setVisibility(View.VISIBLE);
+        });
+    }
+    public void setDishOneView(String img){
+        if(!TextUtils.isEmpty(img)){
+            setDishHeaderViewCallBack();
+            dishHeaderView.setImg(img);
+            mScrollView.setVisibility(View.VISIBLE);
+        }
     }
 
-    private boolean saveHistory = false;
-    public void saveHistoryToDB(final String burden) {
-        if (!saveHistory) {
-            saveHistory = true;
+    private boolean saveDishInfo = false;
+    private boolean isSaveApiData = false;
+    private boolean isSaveJsData = false;
+
+    public Map<String, String> needSaveDishInfo = new HashMap<>();
+
+    public void saveDishInfo(String dishJson){
+        saveDishInfo = true;
+        Map<String,String> dishMap = StringManager.getFirstMap(dishJson);
+        needSaveDishInfo.put("name", dishMap.get("name"));
+        needSaveDishInfo.put("img", dishMap.get("img"));
+        needSaveDishInfo.put("code", dishMap.get("code"));
+        needSaveDishInfo.put("hasVideo", dishMap.get("type"));
+        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+        saveHistoryToDB();
+    }
+
+    public void saveApiData(String dataStr){
+        isSaveApiData = true;
+        Map<String,String> apiDataMap = StringManager.getFirstMap(dataStr);
+        needSaveDishInfo.put("isFine", apiDataMap.get("isFine"));
+        needSaveDishInfo.put("isMakeImg", apiDataMap.get("isMakeImg"));
+        needSaveDishInfo.put("isFav", apiDataMap.get("isFav"));
+        dishTitleViewControl.setFavStatus(apiDataMap.get("isFav"));
+        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+        saveHistoryToDB();
+    }
+
+    public void savaJsAdata(String burdens,String allClick,String favorites,String nickName){
+        isSaveJsData = true;
+        needSaveDishInfo.put("burdens",burdens);
+        needSaveDishInfo.put("allClick",allClick);
+        needSaveDishInfo.put("nickName",nickName);
+        needSaveDishInfo.put("favorites",favorites);
+        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+        if(dishTitleViewControl!=null){
+            dishTitleViewControl.setNickName(nickName);
+        }
+        saveHistoryToDB();
+    }
+
+    /**保存数据到数据库*/
+    public synchronized void saveHistoryToDB() {
+        if (saveDishInfo && isSaveApiData && isSaveJsData) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONObject jsonObject = handlerJSONData(burden);
                     HistoryData data = new HistoryData();
                     data.setBrowseTime(currentTimeMillis());
                     data.setCode(mDishCode);
-                    data.setDataJson(jsonObject.toString());
+                    data.setDataJson(StringManager.getJsonByMap(needSaveDishInfo).toString());
                     BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
                     sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
                 }
             }).start();
         }
     }
-    private JSONObject handlerJSONData(String burdens) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            ArrayList<Map<String, String>> dishInfoArray = getListMapByJson(dishJson);
-            if (dishInfoArray.size() > 0) {
-                Map<String, String> dishInfo = dishInfoArray.get(0);
-                jsonObject.put("name", dishInfo.get("name"));
-                jsonObject.put("img", dishInfo.get("img"));
-                jsonObject.put("code", mDishCode);
-                jsonObject.put("isFine", dishInfo.get("isFine"));
-                jsonObject.put("favorites", dishInfo.get("favorites"));
-                jsonObject.put("allClick", dishInfo.get("allClick"));
-                jsonObject.put("exclusive", dishInfo.get("exclusive"));
-                jsonObject.put("hasVideo", dishInfo.get("type"));
-                jsonObject.put("isMakeImg", dishInfo.get("isMakeImg"));
-                jsonObject.put("burdens", burdens);
-            }
-        } catch (Exception e) { }
-        return jsonObject;
-    }
-
 
     public void analyzeUserShowDishInfoData(String dishJson){
         mFootControl.initUserDish(dishJson);
@@ -428,6 +465,7 @@ public class  DishActivityViewControlNew {
      */
     public void handlerDishWebviewData(){
         if(!isLoadWebViewData) {
+            Log.i("wyl","24");
             Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
             templateWebView.loadData(XHTemplateManager.XHDISHLAYOUT,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT),new String[]{mDishCode});
             isLoadWebViewData = true;
@@ -540,8 +578,11 @@ public class  DishActivityViewControlNew {
      * 刷新布局
      */
     private void requestLayout(){
+        if(dishVidioLayout==null){
+            return;
+        }
         if(mMoveLen<=0){mMoveLen=0;}
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, videoLayoutHeight+mMoveLen);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, headerLayoutHeight+mMoveLen);
         dishVidioLayout.setLayoutParams(layoutParams);
     }
     class MyTimer {

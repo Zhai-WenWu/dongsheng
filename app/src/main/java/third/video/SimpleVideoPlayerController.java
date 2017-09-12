@@ -62,6 +62,8 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
         //设置旋转
         orientationUtils = new OrientationUtils(activity, videoPlayer);
         orientationUtils.setEnable(false);
+        orientationUtils.setRotateWithSystem(false);
+        videoPlayer.getTitleTextView().setVisibility(View.GONE);
         videoPlayer.setShowFullAnimation(true);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override

@@ -206,7 +206,7 @@
                 android:paddingRight="@dimen/dp_5"
                 android:text="12+"
                 android:textColor="@color/common_top_button_text"
-                android:textSize="@dimen/sp_10"
+                android:textSize="@dimen/sp_11"
                 android:visibility="gone"/>
 
             <TextView

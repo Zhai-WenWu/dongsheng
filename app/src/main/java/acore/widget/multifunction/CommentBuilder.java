@@ -7,7 +7,7 @@ import acore.widget.multifunction.base.StyleConfig;
 import acore.widget.multifunction.base.StyleConfigBuilder;
 
 /**
- * Created by Fang Ruijiao on 2017/5/25.
+ * Created by XiangHa on 2017/5/25.
  */
 
 public class CommentBuilder extends StyleConfigBuilder {

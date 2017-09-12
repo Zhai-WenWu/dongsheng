@@ -67,7 +67,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 	/**
 	 * 用map做评论的缓存，每一页加载时要生成所有回复框在缓存中 如果要刷新回复数据，要删除commentLayouts中对应楼的回复框以便重新生成。
 	 */
-	public Map<String, LinearLayout> commentLayouts = new HashMap<String, LinearLayout>();
+	public Map<String, LinearLayout> commentLayouts = new HashMap<>();
 	final int viewUser = 0;// 访问用户
 	final int viewReport = 1;// 举报楼层;
 	final int viewPing = 2;// 点评操作;
@@ -81,7 +81,8 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 	float sp_15;
 
 	@SuppressWarnings("unchecked")
-	public AdapterQuanShowSubject(Activity act, Handler handler, DownRefreshList parent, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to, String comentId) {
+	public AdapterQuanShowSubject(Activity act, Handler handler, DownRefreshList parent, List<? extends Map<String, ?>> data,
+								  int resource, String[] from, int[] to, String comentId) {
 		super(parent, data, resource, from, to);
 		mAct = act;
 		mHandler = handler;
@@ -132,7 +133,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 		TextViewShow tv_sub_content = (TextViewShow) view.findViewById(R.id.tv_sub_content);
 //		tv_sub_content.setIsStackOverflowError(AppCommon.isStackOverflowError);
 		ArrayList<Map<String, String>> contentList = UtilString.getListMapByJson(floorMap.get("content"));
-		final ArrayList<String> img_urls = new ArrayList<String>();
+		final ArrayList<String> img_urls = new ArrayList<>();
 		final LinearLayout linear_body_imgs = (LinearLayout) view.findViewById(R.id.linear_body_imgs);
 		tv_sub_content.setVisibility(View.GONE);
 		if (contentList.size() > 0) {
@@ -258,44 +259,28 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 				});
 		MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
 		multifunctionText.addStyle(builder.getContent(), builder.build());
-		if (LoginManager.isLogin() && LoginManager.userInfo.get("code").equals(subjectOwer)) {//楼主删除其他用户
-			textshow.setTypeOwer(1);
-			textshow.setText(multifunctionText);
-			textshow.setCopyText(builder.getContent());
-			textshow.setRightClicker("举报", new OnClickListener() {// 删除
-				@Override
-				public void onClick(View v) {
-					deletFloor(floorMap);
+		textshow.setText(multifunctionText);
+		textshow.setCopyText(builder.getContent());
+		if(LoginManager.isLogin()){
+			String comeCode = user.get("code");
+			String currentUserCode = LoginManager.userInfo.get("code");
+			if(currentUserCode.equals(subjectOwer) || currentUserCode.equals(comeCode)){
+				if(currentUserCode.equals(subjectOwer)){
+					textshow.setTypeOwer(1);
 				}
-			});
-			textshow.setUserClicker(new OnClickListener() {// 举报
-				@Override
-				public void onClick(View v) {
-					Map<String, String> data = new HashMap<>();
-					data.put("id", floorMap.get("id"));
-					data.put("num", floorMap.get("num"));
-					data.put("nickName", user.get("nickName"));
-					Message msg = mHandler.obtainMessage(ShowSubject.REPORT_LOU_CLICK, data);
-					mHandler.sendMessage(msg);
-				}
-			});
-		} else {//非楼主删除自己的
-			if (LoginManager.isLogin() && user.get("code").equals(LoginManager.userInfo.get("code"))) {
-				textshow.setText(multifunctionText);
-				textshow.setCopyText(builder.getContent());
+				//删除
 				textshow.setRightClicker("删除", new OnClickListener() {// 删除
 					@Override
 					public void onClick(View v) {
 						deletFloor(floorMap);
 					}
 				});
-			} else {
-				textshow.setText(multifunctionText);
-				textshow.setCopyText(builder.getContent());
+			}else{
+				//举报
 				textshow.setRightClicker("举报", new OnClickListener() {// 删除
 					@Override
 					public void onClick(View v) {
-						Map<String, String> data = new HashMap<String, String>();
+						Map<String, String> data = new HashMap<>();
 						data.put("id", floorMap.get("id"));
 						data.put("num", floorMap.get("num"));
 						data.put("nickName", user.get("nickName"));
@@ -305,6 +290,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 				});
 			}
 		}
+
 		setClickEvent(floorMap, user, textshow, viewPing, position);
 	}
 
@@ -366,7 +352,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 						mAct.startActivity(intent);
 						break;
 					case viewReport:
-						Map<String, String> data = new HashMap<String, String>();
+						Map<String, String> data = new HashMap<>();
 						data.put("id", floorMap.get("id"));
 						data.put("num", floorMap.get("num"));
 						data.put("nickName", user.get("nickName"));
@@ -374,7 +360,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 						mHandler.sendMessage(report);
 						break;
 					case viewPing:
-						Map<String, String> map = new HashMap<String, String>();
+						Map<String, String> map = new HashMap<>();
 						map.put("floorId", floorMap.get("id"));
 						map.put("floorNum", floorMap.get("num"));
 						map.put("code", user.get("code"));
@@ -510,38 +496,22 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 		final String comeCode = comeNameMap.get("code");
 		final String name = comeNameMap.get("nickName");
 
-		if (LoginManager.isLogin() && LoginManager.userInfo.get("code").equals(subjectOwer)) {//楼主随意删除举报
-//			tvContent.setmRightBtnName("举报");
-			tvContent.setRightClicker(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showDeleteDialog(comments, floorId, replayData);
-				}
-			});
-			tvContent.setUserClicker(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Map<String, String> data = new HashMap<String, String>();
-					data.put("id", replayData.get("id"));
-					data.put("num", floorNum);
-					data.put("nickName", name);
-					Message msg = mHandler.obtainMessage(ShowSubject.REPORT_LOUZHONGLOU_CLICK, data);
-					mHandler.sendMessage(msg);
-				}
-			});
-		} else {//不是楼主
-			if (LoginManager.isLogin() && comeCode.equals(LoginManager.userInfo.get("code"))) {
-				tvContent.setRightClicker(new OnClickListener() {
+		if(LoginManager.isLogin()){
+			String currentUserCode = LoginManager.userInfo.get("code");
+			if(currentUserCode.equals(subjectOwer) || currentUserCode.equals(comeCode)){
+				//删除
+				tvContent.setRightClicker("删除", new OnClickListener() {// 删除
 					@Override
 					public void onClick(View v) {
 						showDeleteDialog(comments, floorId, replayData);
 					}
 				});
-			} else {
-				tvContent.setRightClicker(new OnClickListener() {
+			}else{
+				//举报
+				tvContent.setRightClicker("举报",new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Map<String, String> data = new HashMap<String, String>();
+						Map<String, String> data = new HashMap<>();
 						data.put("id", replayData.get("id"));
 						data.put("num", floorNum);
 						data.put("nickName", name);
@@ -586,7 +556,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 
 	// 获取一个map
 	public Map<String, String> getHandlerDataMap(final String floorId, final String floorNum, final String comeName, final String comeCode, String louCengCode) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("floorId", floorId);
 		map.put("floorNum", floorNum);
 		map.put("code", comeCode);
@@ -597,9 +567,9 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 	}
 
 	private ArrayList<Map<String, String>> getReplayDataArray(String comeName, String comeCode) {
-		ArrayList<Map<String, String>> array = new ArrayList<Map<String, String>>();
-		Map<String, String> map1 = new HashMap<String, String>();
-		Map<String, String> map2 = new HashMap<String, String>();
+		ArrayList<Map<String, String>> array = new ArrayList<>();
+		Map<String, String> map1 = new HashMap<>();
+		Map<String, String> map2 = new HashMap<>();
 		JSONArray array1 = new JSONArray();
 		JSONObject stoneObject = new JSONObject();
 		try {

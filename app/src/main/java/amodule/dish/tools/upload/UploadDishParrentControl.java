@@ -21,7 +21,7 @@ import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishSpeechTools;
 
 /**
- * Created by Fang Ruijiao on 2016/10/25.
+ * Created by XiangHa on 2016/10/25.
  */
 public abstract class UploadDishParrentControl {
 

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 /**
- * Created by Fang Ruijiao on 2017/7/28.
+ * Created by XiangHa on 2017/7/28.
  */
 public class CheckDialog {
     private Dialog mDialog;

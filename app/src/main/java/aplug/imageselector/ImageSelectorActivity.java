@@ -364,12 +364,12 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			if (resultCode == Activity.RESULT_OK && data != null) {
 				ArrayList<String> currentArray = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);
 				// 设定默认选择
-				if (currentArray != null && currentArray.size() > 0) {
+				if (currentArray != null && currentArray.size() >= 0) {
 					mImageAdapter.setDefaultSelected(currentArray);
 					for (String path : currentArray) {
 						onImageSelected(path);
 					}
-					ArrayList<String> array = new ArrayList<String>();
+					ArrayList<String> array = new ArrayList<>();
 					array.addAll(resultList);
 					for (String path : array) {
 						if (!currentArray.contains(path)) {

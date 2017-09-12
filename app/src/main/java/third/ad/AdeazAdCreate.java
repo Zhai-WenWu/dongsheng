@@ -23,7 +23,7 @@ import aplug.basic.LoadImage;
 import third.ad.tools.AdeazAdTools;
 
 /**
- * Created by Fang Ruijiao on 2016/8/29.
+ * Created by XiangHa on 2016/8/29.
  */
 public class AdeazAdCreate extends AdParent {
 

@@ -5,7 +5,7 @@ import android.hardware.Camera;
 import java.util.Comparator;
 
 /**
- * Created by Fang Ruijiao on 2016/10/13.
+ * Created by XiangHa on 2016/10/13.
  */
 
 public class SortComparator implements Comparator {

@@ -15,6 +15,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,7 +78,8 @@ public class AdapterMainMsg extends AdapterSimple {
 
 	public class ViewCacheNormal {
 		final int viewUser = 0;// 访问用户
-		final int viewOther = 3;// 访问other;
+		final int viewImg = 1;// 访问图片
+		final int viewContent = 3;// 访问content;
 
 		LinearLayout item_root_view;
 		ImageView iv_item_user_img;
@@ -129,8 +132,9 @@ public class AdapterMainMsg extends AdapterSimple {
 
 			setClickEvent(map, iv_item_user_img, viewUser);
 			setClickEvent(map, tv_item_user_name, viewUser);
-			setClickEvent(map, item_root_view, map.get("msgType").equals("3") ? viewUser : viewOther);
-			setClickEvent(map, tv_item_content, map.get("msgType").equals("3") ? viewUser : viewOther);
+			setClickEvent(map, iv_item_sub_img, viewImg);
+			setClickEvent(map, item_root_view, map.get("msgType").equals("3") ? viewUser : viewContent);
+			setClickEvent(map, tv_item_content, map.get("msgType").equals("3") ? viewUser : viewContent);
 		}
 
 		/**
@@ -157,32 +161,38 @@ public class AdapterMainMsg extends AdapterSimple {
 				@Override
 				public void onClick(View v) {
 					switch (type) {
-					case viewUser:
-						if (!"2".equals(map.get("msgType"))) {
-							if(map.containsKey("customerUrl")){
-								AppCommon.openUrl(mAct,map.get("customerUrl"),true);
-							} else {
-								Intent intent1 = new Intent(mAct, FriendHome.class);
-								Bundle bundle = new Bundle();
-								bundle.putString("code", map.get("nickCode"));
-								if(map.get("msgType").equals("3"))
-									bundle.putString("newsId", map.get("id"));
-								intent1.putExtras(bundle);
-								mAct.startActivity(intent1);
+						case viewUser:
+							if (!"2".equals(map.get("msgType"))) {
+								if(map.containsKey("customerUrl")){
+									AppCommon.openUrl(mAct,map.get("customerUrl"),true);
+								} else {
+									Intent intent1 = new Intent(mAct, FriendHome.class);
+									Bundle bundle = new Bundle();
+									bundle.putString("code", map.get("nickCode"));
+									if(map.get("msgType").equals("3"))
+										bundle.putString("newsId", map.get("id"));
+									intent1.putExtras(bundle);
+									mAct.startActivity(intent1);
+								}
 							}
-						}
-						break;
-					case viewOther:
-						XHClick.track(view.getContext(), "点击消息列表页");
-						XHClick.mapStat(view.getContext(), "a_message", "点击其他用户消息", "");
-						String url;
-						if(map.get("state").equals("1"))
-							url = map.get("url")+ "&newsId=" + map.get("id");
-						else
-							url = map.get("url");
-						AppCommon.openUrl(mAct, url, true);
-//						mData.remove(map);
-						break;
+							break;
+						case viewContent:
+							XHClick.track(view.getContext(), "点击消息列表页");
+							XHClick.mapStat(view.getContext(), "a_message", "点击其他用户消息", "");
+							String url;
+							if(map.get("state").equals("1"))
+								url = map.get("url")+ "&newsId=" + map.get("id");
+							else
+								url = map.get("url");
+							AppCommon.openUrl(mAct, url, true);
+	//						mData.remove(map);
+							break;
+						case viewImg:
+							Log.i("tzy","clickImage");
+							if(!TextUtils.isEmpty(map.get("imgClickUrl"))){
+								AppCommon.openUrl(mAct,map.get("imgClickUrl"),true);
+							}
+							break;
 					}
 					// 点击后延迟1秒移除颜色值
 					new Handler().postDelayed(new Runnable() {

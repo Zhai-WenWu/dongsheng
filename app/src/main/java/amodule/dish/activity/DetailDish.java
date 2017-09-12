@@ -65,9 +65,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private String data_type="";
     private String module_type="";
     private int height;
+    private String img = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        overridePendingTransition(R.anim.activity_open,0);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         super.onCreate(savedInstanceState);
         //处理广告
@@ -81,6 +81,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             state = bundle.getString("state");
             data_type=bundle.getString("data_type");
             module_type=bundle.getString("module_type");
+            img=bundle.getString("img");
             //保存历史记录
             DataOperate.saveHistoryCode(code);
         }
@@ -134,6 +135,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
             }
         });
+        //优先处理：img
+        if(!TextUtils.isEmpty(img)) {
+            dishActivityViewControl.setDishOneView(img);
+        }
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,6 +218,15 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 }
             }
         });
+
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(DetailDish.this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING){
+                    saveApiData(o.toString());
+                }
+            }
+        });
     }
 
     /**
@@ -229,9 +243,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
         requestWeb(data);
         dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
-
     }
-
 
     private void requestWeb(String dishJson) {
         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
@@ -251,7 +263,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
     @Override
     protected void onResume() {
-        Log.i("DetailDishActivity","onResume() colse_level:" + Main.colse_level);
         Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
@@ -308,26 +319,18 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
     }
 
-//    @Override
-//    public void refreshCallBack() {
-//        if(dishActivityViewControl!=null){
-//
-//            dishActivityViewControl.refreshAskStatus();
-//        }
-//    }
-
-//    @Override
-//    public void finish() {
-//        super.finish();
-//        overridePendingTransition(0, R.anim.activity_close);
-//    }
-
     /**
-     * 保持历史数据
+     * 保存来自Api的数据
+     * @param dataStr
      */
-    public void saveHistoryData(String burden){
-        if(dishActivityViewControl!=null)
-            dishActivityViewControl.saveHistoryToDB(burden);
+    public void saveApiData(String dataStr){
+        if(dishActivityViewControl != null)
+            dishActivityViewControl.saveApiData(dataStr);
+    }
+
+    public void savaJsAdata(String burden,String allClick,String favrites,String nickName){
+        if(dishActivityViewControl != null)
+            dishActivityViewControl.savaJsAdata(burden,allClick,favrites,nickName);
     }
 
     /**
@@ -338,7 +341,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     @Override
     public void notify(String name, Object sender, Object data) {
-        Log.i("zyj","name::::"+name);
         switch (name){
             case ObserverManager.NOTIFY_LOGIN://登陆
                 if(dishActivityViewControl!=null) {
@@ -358,5 +360,13 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 }
                 break;
         }
+    }
+
+    /**
+     * 获取图片链接
+     * @return
+     */
+    public String getImg(){
+        return img;
     }
 }

@@ -1,8 +1,10 @@
 package third.mall.bean;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * PackageName : third.mall.bean
@@ -19,7 +21,7 @@ public class EvalutionBean {
     /**内容*/
     public String content;
     /**图片集合*/
-    public ArrayList<String> images = new ArrayList<>();
+    public LinkedHashMap<String,String> images = new LinkedHashMap <>();
     /**是否可以分享到朋友圈*/
     public boolean canShare = false;
 
@@ -55,26 +57,24 @@ public class EvalutionBean {
         this.content = content;
     }
 
-    public ArrayList<String> getImages() {
+    public LinkedHashMap <String,String> getImages() {
         return images;
     }
 
-    public void setImages(ArrayList<String> images) {
-        this.images = images;
-    }
-
     public void addImage(@NonNull String imageUrl){
-        images.add(imageUrl);
+        images.put(imageUrl,"");
+        Log.i("tzy","images = " + images.toString());
     }
 
     public void replaceImage(String oldUrl,String newUrl){
-        if(!images.contains(newUrl)){
-            if(images.contains(oldUrl)){
-                images.set(images.indexOf(oldUrl),newUrl);
+        if(!TextUtils.isEmpty(oldUrl) && !TextUtils.isEmpty(newUrl)){
+            if(images.containsKey(oldUrl)){
+                images.put(oldUrl,newUrl);
             }else{
-                addImage(newUrl);
+                addImage(oldUrl);
             }
         }
+        Log.i("tzy","images = " + images.toString());
     }
 
     public void removeImage(@NonNull String key){

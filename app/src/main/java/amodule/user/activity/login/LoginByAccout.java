@@ -90,7 +90,7 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
                 reqIdentifySpeecha(phoneNum, new BaseLoginCallback() {
                     @Override
                     public void onSuccess() {
-                        Log.i("FRJ", "reqIdentifySpeecha() onSuccess()");
+                        //Log.i("FRJ", "reqIdentifySpeecha() onSuccess()");
                         loadManager.hideProgressBar();
                         speechaIdentifyInputView.setState(false);
                         login_identify.setOnBtnClickState(false);
@@ -99,7 +99,7 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
 
                     @Override
                     public void onFalse(int flag) {
-                        Log.i("FRJ", "reqIdentifySpeecha() onFalse()");
+                        //Log.i("FRJ", "reqIdentifySpeecha() onFalse()");
                         loadManager.hideProgressBar();
                     }
                 });

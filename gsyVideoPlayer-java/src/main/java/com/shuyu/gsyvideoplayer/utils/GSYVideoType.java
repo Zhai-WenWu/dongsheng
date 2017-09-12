@@ -21,6 +21,7 @@ public class GSYVideoType {
     //全屏拉伸显示，使用这个属性时，surface_container建议使用FrameLayout
     public final static int SCREEN_MATCH_FULL = -4;
 
+    public final static int SCREEN_MATCH_WIDTH = 8;
 
     public final static int IJKPLAYER = 0;
 

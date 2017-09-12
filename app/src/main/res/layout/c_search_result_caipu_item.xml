@@ -31,6 +31,7 @@
             android:layout_marginTop="@dimen/dp_3"
             android:gravity="center"
             android:text="独家"
+            android:visibility="gone"
             android:textColor="@color/dish_gray_bg_list"
             android:textSize="@dimen/sp_10"
             tagTextView:backgroundColor="@color/dish_yellow_bg_title"
@@ -120,6 +121,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:lines="1"
+                    android:visibility="gone"
                     android:textColor="#b3b3b3"
                     android:textSize="@dimen/sp_10"/>
 

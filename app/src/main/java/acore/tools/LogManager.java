@@ -29,7 +29,7 @@ public class LogManager extends UtilLog {
 	 */
 	@SuppressWarnings("unchecked")
 	public static LinkedHashMap<String, String> getReportLog(String type,String status,String addTime,Object content){
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		map.put("type", type);
 		map.put("status", status);
 		map.put("addTime", addTime);

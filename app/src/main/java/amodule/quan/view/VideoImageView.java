@@ -82,9 +82,11 @@ public class VideoImageView extends RelativeLayout{
         //创建视频播放器
         if (videoPlayer == null) {
             videoPlayer = new StandardGSYVideoPlayer(context);
+            videoPlayer.getTitleTextView().setVisibility(View.GONE);
             videoPlayer.getFullscreenButton().setVisibility(GONE);
             orientationUtils = new OrientationUtils(context,videoPlayer);
             orientationUtils.setEnable(false);
+            orientationUtils.setRotateWithSystem(false);
             videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
                 @Override
                 public void onAutoComplete(String url, Object... objects) {

@@ -1,27 +1,13 @@
 package amodule.quan.view;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import acore.widget.TextViewShow;
-import xh.basic.tool.UtilImage;
-import xh.basic.tool.UtilString;
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -29,16 +15,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import aplug.basic.SubBitmapTarget;
-import aplug.basic.LoadImage;
-
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.widget.TextViewShow;
+import amodule.dish.view.CommonDialog;
+import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
 import core.xiangha.emj.tools.EmjParseMsgUtil;
 import core.xiangha.emj.view.EditTextShow;
+import xh.basic.tool.UtilImage;
+import xh.basic.tool.UtilString;
 
 /**
  * 图文混排控件
@@ -413,30 +409,20 @@ public class ImgTextCombineLayout extends RelativeLayout {
 	 * 展示删除dialog
 	 */
 	private void showDialog() {
-		final Dialog dialog = new Dialog(context, R.style.dialog);
-		dialog.setContentView(R.layout.a_mall_alipa_dialog);
-		Window window = dialog.getWindow();
-		window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-		TextView dialog_message = (TextView) window.findViewById(R.id.dialog_message);
-		dialog_message.setText("确认要删除这张图片吗？");
-		dialog_message.setTextColor(Color.parseColor("#333333"));
-		TextView dialog_cancel = (TextView) window.findViewById(R.id.dialog_cancel);
-		TextView dialog_sure = (TextView) window.findViewById(R.id.dialog_sure);
-		dialog_sure.setTextColor(Color.parseColor("#333333"));
-		dialog_cancel.setText("取消");
-		dialog_sure.setText("确定");
-		dialog_cancel.setOnClickListener(new OnClickListener() {
+		String btnMsg1 = "确定";
+		String btnMsg2 = "取消";
 
+		final CommonDialog dialog = new CommonDialog(context);
+		dialog.setMessage("确认要删除这张图片吗？").setSureButton(btnMsg1, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dialog.cancel();
+				imgTextCallBack.onDelete(ImgTextCombineLayout.this);
 			}
 		});
-		dialog_sure.setOnClickListener(new OnClickListener() {
-
+		dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				imgTextCallBack.onDelete(ImgTextCombineLayout.this);
 				dialog.cancel();
 			}
 		});

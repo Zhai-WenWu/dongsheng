@@ -159,16 +159,21 @@ public class AutoScrollADView extends LinearLayout {
 		set.addListener(new AnimatorListenerAdapter() {
 			@Override
 			public void onAnimationEnd(Animator animation) {//动画结束
-				mFirstView.setTranslationY(0);
-				mSecondView.setTranslationY(0);
-				View removedView = getChildAt(0);//获得第一个子布局
-				mPosition++;
-				//移除前一个view
-				removeView(removedView);
-				//设置显示的布局
-				mAdapter.setItem(removedView, (Map<String, String>) mAdapter.getItem(mPosition % mAdapter.getCount()));
-				//添加下一个view
-				addView(removedView);
+				post(new Runnable() {
+					@Override
+					public void run() {
+                        mFirstView.setTranslationY(0);
+                        mSecondView.setTranslationY(0);
+                        View removedView = getChildAt(0);//获得第一个子布局
+                        mPosition++;
+                        //移除前一个view
+						removeView(removedView);
+						//设置显示的布局
+						mAdapter.setItem(removedView, (Map<String, String>) mAdapter.getItem(mPosition % mAdapter.getCount()));
+						//添加下一个view
+						addView(removedView);
+					}
+				});
 			}
 		});
 		set.setDuration(mAnimDuration);//持续时间

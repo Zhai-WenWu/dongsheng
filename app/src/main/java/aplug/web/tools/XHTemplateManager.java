@@ -28,7 +28,7 @@ public class XHTemplateManager {
     public static long starttime;
     //模版更新集合
     private String[] templates=new String[]{XHDISHLAYOUT,DSPRODUCTINFO,DSUNDERSCOREPRODUCTINFO,DSSUCCESSCOMMENT,DSCOMMENTLIST};
-
+    private boolean isLoad= false;
     private int templateNum=-1;
     private TemplateWebViewControl templateWebViewControl;
     public XHTemplateManager(){
@@ -40,10 +40,14 @@ public class XHTemplateManager {
      * 检查全部更新
      */
     public void CheckUpdataAllTemplate(){
+        if(isLoad){
+            return;
+        }
         if(templateNum<=0) {
             templateNum = 0;
         }else if(templateNum>=templates.length){
             templateNum=-1;
+            isLoad=true;
             return;
         }
         String requestMethod=templates[templateNum];
@@ -57,6 +61,7 @@ public class XHTemplateManager {
             });
         }else{
             templateNum=-1;
+            isLoad=true;
             return;
         }
     }

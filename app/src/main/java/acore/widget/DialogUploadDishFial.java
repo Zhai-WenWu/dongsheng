@@ -20,7 +20,7 @@ import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
 /**
- * Created by Fang Ruijiao on 2016/10/31.
+ * Created by XiangHa on 2016/10/31.
  */
 
 public class DialogUploadDishFial {

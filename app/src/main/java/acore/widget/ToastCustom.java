@@ -2,6 +2,7 @@ package acore.widget;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -57,7 +58,10 @@ public class ToastCustom {
 			
 			layoutParams = new WindowManager.LayoutParams();
 	//        //设置window的type
-	        layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
+				layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+			else
+				layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
 	        layoutParams.format = PixelFormat.RGBA_8888;
 	        //设置浮动窗口不可聚焦
 	        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;

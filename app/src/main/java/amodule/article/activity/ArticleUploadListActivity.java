@@ -51,7 +51,7 @@ import xh.windowview.XhDialog;
 
 /**
  * 文章上传列表页
- * Created by Fang Ruijiao on 2017/5/23.
+ * Created by XiangHa on 2017/5/23.
  */
 public class ArticleUploadListActivity extends BaseActivity {
     private ListView mListview;

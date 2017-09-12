@@ -29,6 +29,8 @@ import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
 import com.xiangha.R;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +43,7 @@ import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.Base64Utils;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
@@ -214,8 +217,7 @@ public class AppCommon {
      * @param openThis
      */
     public static void openUrl(final Activity act, String url, Boolean openThis) {
-        Log.i("FRJ", "openUrl() url:" + url);
-
+        Log.d("tzy","openUrl::url = " + url);
         //url为null直接不处理
         if (TextUtils.isEmpty(url)) return;
         if (!url.startsWith(XH_PROTOCOL) && !url.startsWith("http")
@@ -225,8 +227,8 @@ public class AppCommon {
         // 如果识别到外部开启链接，则解析
         if (url.startsWith(XH_PROTOCOL) && url.length() > XH_PROTOCOL.length()) {
             String tmpUrl = url.substring(XH_PROTOCOL.length());
-                tmpUrl = Uri.decode(tmpUrl);
-                if (tmpUrl.startsWith("url=")) {
+//            tmpUrl = Uri.decode(tmpUrl);
+            if (tmpUrl.startsWith("url=")) {
                     tmpUrl = tmpUrl.substring("url=".length());
                 }
             if (TextUtils.isEmpty(tmpUrl)) {
@@ -234,7 +236,6 @@ public class AppCommon {
             } else {
                 url = tmpUrl;
             }
-
         }
 
         //按#分割，urls【1】是表示外部吊起的平台例如360
@@ -262,11 +263,12 @@ public class AppCommon {
         if (url.contains("download.app")) {
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
-            String downUrl = map_link.get("url");
+            String downUrl = Uri.decode(map_link.get("url"));
+            String appName = Uri.decode(map_link.get("appname"));
             try {
                 final DownLoad downLoad = new DownLoad(XHApplication.in());
-                downLoad.setNotifaction("开始下载", map_link.get("appname") + ".apk", "正在下载", R.drawable.ic_launcher, false);
-                downLoad.starDownLoad(downUrl, FileManager.getCameraDir(), map_link.get("appname"), true, new DownloadCallBack() {
+                downLoad.setNotifaction("开始下载", appName + ".apk", "正在下载", R.drawable.ic_launcher, false);
+                downLoad.starDownLoad(downUrl, FileManager.getCameraDir(), appName, true, new DownloadCallBack() {
                     @Override
                     public void starDown() {
                         super.starDown();
@@ -298,30 +300,41 @@ public class AppCommon {
         } else if (url.indexOf("link.app") == 0) {//外链
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
-            String openUrl = map_link.get("url");
+            String openUrl = Uri.decode(map_link.get("url"));
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
             Uri content_url = Uri.parse(openUrl);
             intentLink.setData(content_url);
-            act.startActivity(intentLink);
+            try{
+                act.startActivity(intentLink);
+            }catch (Exception ignored){}
             return;
 
         } else if (url.indexOf("nativeWeb.app") == 0) {//外链 或者是打开某个app
             String temp = url.substring(url.indexOf("?") + 1, url.length());
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
-            // other app
+            // other app---协议链接
             String protocolUrl = map_link.get("protocolurl");
-            // browser
+            // browser---浏览器链接
             String browserUrl = map_link.get("browserurl");
             String packageName = map_link.get("package");
+            //
+            protocolUrl=Uri.decode(protocolUrl);
+            browserUrl=Uri.decode(browserUrl);
+            packageName=Uri.decode(packageName);
+
             Intent intentLink = new Intent();
             intentLink.setAction("android.intent.action.VIEW");
-            Uri content_url = Uri.parse(browserUrl);
-            if (Tools.isPkgInstalled(packageName, XHApplication.in())) {
-                content_url = Uri.parse(protocolUrl);
+            Uri content_url = Uri.parse(protocolUrl);
+            //不为 null 且未安装app
+            if (!TextUtils.isEmpty(packageName)
+                    && ToolsDevice.isAppInPhone(XHApplication.in(),packageName) == 0){
+                content_url = Uri.parse(browserUrl);
             }
             intentLink.setData(content_url);
-            act.startActivity(intentLink);
+            try{
+                act.startActivity(intentLink);
+            }catch (Exception ignored){}
             return;
 
         }
@@ -422,7 +435,7 @@ public class AppCommon {
                         urls[1] = urls[1] + "?" + urls[2];
                         String key = urls[1].substring(0, urls[1].indexOf("="));
                         String value = urls[1].substring(urls[1].indexOf("=") + 1, urls[1].length());
-                        bundle.putString(key, value);
+                        bundle.putString(Uri.decode(key), Uri.decode(value));
                     } else {
                         String[] parameter = urls[1].split("&");
 
@@ -1074,20 +1087,67 @@ public class AppCommon {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                params.put("classifyId", "1");
-                params.put("system", "2");
-                ReqEncyptInternet.in().doEncypt(StringManager.API_RAND_PROMOTION, params,
+                Map<String,String> randprotionMap =  StringManager.getFirstMap(getConfigByLocal("randpromotionurl"));
+                String url = randprotionMap.get("url");
+                final ArrayList<Map<String,String>> replaceArr = StringManager.getListMapByJson(randprotionMap.get("replaceArray"));
+                if(TextUtils.isEmpty(url)){
+                    return;
+                }
+                url = url + "?rand=" + Math.abs(new Random().nextInt());
+                Log.i("tzy","url = " + url);
+                ReqEncyptInternet.in().doEncypt(url, "",
                         new InternetCallback(context) {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
-                                if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                                    FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, msg.toString(), false);
+                                try {
+                                    if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                                        String dataStr = msg.toString();
+                                        if(!TextUtils.isEmpty(dataStr)){
+                                            for(Map<String,String> replaceMap : replaceArr){
+                                                String replaceValue = replaceMap.get("");
+                                                if(!TextUtils.isEmpty(replaceValue)){
+                                                    dataStr = dataStr.replace(replaceValue,"");
+                                                }
+                                            }
+                                            byte[] dataByte = Base64Utils.decode(dataStr);
+                                            dataStr = new String(dataByte);
+                                            ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);
+                                            Log.i("tzy","dataArr = " + dataArr.toString());
+                                            int totalWeight=0;
+                                            String text = "";
+                                            for (Map<String,String> dict: dataArr)
+                                            {
+                                                totalWeight += Integer.parseInt(dict.get("weight")); //[dict["weight"] intValue];
+                                            }
+                                            if (totalWeight < 1) {
+                                                return ;
+                                            }
+                                            java.util.Random r = new java.util.Random();
+                                            int randomWeight = r.nextInt() % totalWeight;
+                                            int tempWeight = 0;
+                                            for (Map<String,String> dict : dataArr)
+                                            {
+                                                int weight = Integer.parseInt(dict.get("weight"));
+                                                if (randomWeight < tempWeight + weight) {
+                                                    text =  dict.get("sign") + dict.get("text") + dict.get("sign");
+                                                    break;
+                                                }
+                                            }
+
+                                            Log.i("GYL", "loaded: " + text);
+
+                                            FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
+
                             }
                         });
             }
-        }, 30 * 1000);//延时30s
+        }, 5 * 1000);//延时5s
     }
 
     /**

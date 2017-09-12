@@ -14,6 +14,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -68,6 +69,8 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
 public class HomeFragment extends BaseHomeFragment{
 
     public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
+
+    private final String mVideoType = "video";
 
     protected HomeModuleBean homeModuleBean;//数据的结构
     protected CacheControler cacheControler;
@@ -156,7 +159,7 @@ public class HomeFragment extends BaseHomeFragment{
 
     public AdControlParent getAdControl(){
         String type = homeModuleBean.getType(); //当前页的type
-        Log.i("FRJ","type:" + type);
+        //Log.i("FRJ","type:" + type);
         if(TextUtils.isEmpty(type)){
             return null;
         }
@@ -205,6 +208,7 @@ public class HomeFragment extends BaseHomeFragment{
         show_num_tv= (TextView) mView.findViewById(R.id.show_num_tv);
         homeHeaderDataNum.setVisibility(View.GONE);
         mListview = (ListView) mView.findViewById(R.id.v_scroll);
+        addItemClickListener();
         mListview.addHeaderView(layout);
         mHeaderCount++;
         returnTop = (ImageView) mView.findViewById(return_top);
@@ -213,6 +217,23 @@ public class HomeFragment extends BaseHomeFragment{
         isPrepared = true;
         preLoad();
         return mView;
+    }
+
+    private void addItemClickListener() {
+        mListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (homeModuleBean == null)
+                    return;
+                if (view instanceof HomeItem) {
+                    ((HomeItem)view).onClickEvent(view);
+                }
+            }
+        });
+    }
+
+    private boolean isVideoList() {
+        return homeModuleBean == null ? false : mVideoType.equals(homeModuleBean.getType());
     }
 
     /**
@@ -285,14 +306,6 @@ public class HomeFragment extends BaseHomeFragment{
             @Override
             public void viewOnClick(boolean isOnClick) {
                 refresh();
-            }
-        });
-        adapterListView.setVideoClickCallBack(new HomeRecipeItem.VideoClickCallBack() {
-            @Override
-            public void videoOnClick(int position) {
-                int firstVisiPosi = mListview.getFirstVisiblePosition();
-                View parentView = mListview.getChildAt(position-firstVisiPosi + mHeaderCount);
-                setVideoLayout(parentView,position);
             }
         });
         //处理推荐的置顶数据
@@ -418,7 +431,7 @@ public class HomeFragment extends BaseHomeFragment{
             public void loaded(int flag, String url, Object object) {
                 int loadCount = 0;
                 if(flag>=ReqInternet.REQ_OK_STRING){
-                    Log.i("FRJ","获取  服务端   数据回来了-------------");
+                    //Log.i("FRJ","获取  服务端   数据回来了-------------");
                     boolean isRecom=isRecom();//是否是推荐
 
                     if(isRecom && cacheControler.getStatus() == LOAD_OVER){
@@ -856,6 +869,14 @@ public class HomeFragment extends BaseHomeFragment{
             viewTop.setViewType(MODULETOPTYPE);
             viewTop.setHomeModuleBean(homeModuleBean);
             viewTop.setData(map,position);
+        }
+        if (viewTop != null) {
+            viewTop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((HomeItem)v).onClickEvent(v);
+                }
+            });
         }
         return viewTop;
     }

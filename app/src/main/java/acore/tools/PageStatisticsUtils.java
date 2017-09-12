@@ -14,6 +14,7 @@ import acore.logic.XHClick;
 /**
  * 页面统计类
  * ---单例模式
+ * Created by XiangHa on 2017/8/23.
  */
 public class PageStatisticsUtils {
 

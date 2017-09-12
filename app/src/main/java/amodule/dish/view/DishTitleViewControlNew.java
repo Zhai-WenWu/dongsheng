@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,13 +57,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
     private boolean isHasVideo;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
+    private String nickName = "";
 
-
-    private OnDishTitleControlListener mListener;
-
-    public DishTitleViewControlNew(Context context,OnDishTitleControlListener listener){
+    public DishTitleViewControlNew(Context context){
         this.context= context;
-        mListener = listener;
     }
 
     public void initView(Activity detailDish) {
@@ -123,11 +121,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * 初始化当前状态
      */
     public void setViewState(){
-        //收藏
-        if (dishInfoMap.get("isFav").equals("2")) {
-            favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
-            favText.setText("已收藏");
-        }
         detailDish.findViewById(R.id.fav_layout).setVisibility(state != null ? View.GONE : View.VISIBLE);
         //编辑
         if(state != null){
@@ -142,6 +135,14 @@ public class DishTitleViewControlNew implements View.OnClickListener{
             detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
         }
 
+    }
+
+    //收藏
+    public void setFavStatus(String isFav){
+        if ("2".equals(isFav)) {
+            favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
+            favText.setText("已收藏");
+        }
     }
     @Override
     public void onClick(View v) {
@@ -209,23 +210,19 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "分享点击量");
 
         boolean isAuthor = false;
-        String nickName = "",code = "";
-        ArrayList<Map<String, String>> cusArray = getListMapByJson(dishInfoMap.get("customer"));
-        if(cusArray.size()>0) {
-            Map<String, String> cusMap = getListMapByJson(dishInfoMap.get("customer")).get(0);
-            code = cusMap.get("code");
-            nickName = cusMap.get("nickName");
+        String code = "",userCode="";
+        code=dishInfoMap.get("code");
+        userCode=dishInfoMap.get("customerCode");
             //登录并是自己的菜谱贴
-            if (LoginManager.isLogin() && !TextUtils.isEmpty(code) && code.equals(LoginManager.userInfo.get("code"))) {
+        if (LoginManager.isLogin() && !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))) {
                 isAuthor = true;
-            }
         }
         Map<String, String> mapData = getShareData(isAuthor);
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
         intent.putExtra("tongjiId", tongjiId);
         intent.putExtra("isHasReport", !isAuthor);
         intent.putExtra("nickName", nickName);
-        intent.putExtra("code", code);
+        intent.putExtra("code", userCode);
         intent.putExtra("imgUrl", mapData.get("mImgUrl"));
         intent.putExtra("clickUrl", mapData.get("mClickUrl"));
         intent.putExtra("title", mapData.get("mTitle"));
@@ -273,6 +270,13 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         return map;
     }
 
+    public void setNickName(String name){
+        this.nickName= name;
+        if(!TextUtils.isEmpty(name)){
+            titleView.setText(name);
+            titleView.setVisibility(View.VISIBLE);
+        }
+    }
 
     /**
      * 收藏
@@ -341,79 +345,5 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         }
     }
 
-
-    public interface OnDishTitleControlListener{
-        public String getOffDishJson();
-    }
-
-//    /**
-//     * 离线菜谱
-//     */
-//    private void doBuyBurden() {
-//        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏点击量", "下载点击量");
-//        if (DataOperate.buyBurden(detailDish.getApplicationContext(), dishInfoMap.get("code")).length() == 0) {
-//            //若已经下载的离线数量还没到达离线菜谱的上线
-//            if (AppCommon.buyBurdenNum >= DataOperate.getDownDishLimit(detailDish.getApplicationContext())) {
-//                // 到达极限值，提示再下载要删除一部分了。
-//                if (AppCommon.buyBurdenNum == DataOperate.getDownDishLimit(detailDish.getApplicationContext()) && LoginManager.isLogin()) {
-//                    new AlertDialog.Builder(detailDish)
-//                            .setIcon(android.R.drawable.ic_dialog_alert)
-//                            .setTitle("等级不足")
-//                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,您的等级提升后可下载更多")
-//                            .setPositiveButton("查看等级", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    if (LoginManager.isLogin()) {
-//                                        String url = StringManager.api_getCustomerRank + "?code=" + LoginManager.userInfo.get("code");
-//                                        AppCommon.openUrl(detailDish, url, true);
-//                                    } else {
-//                                        detailDish.startActivity(new Intent(detailDish, LoginByAccout.class));
-//                                    }
-//                                }
-//                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Intent intent = new Intent(detailDish, OfflineDish.class);
-//                            detailDish.startActivity(intent);
-//                            detailDish.finish();
-//                        }
-//                    }).create().show();
-//                }else {// 提示登录可以下载更多菜谱。
-//                    new AlertDialog.Builder(detailDish)
-//                            .setIcon(android.R.drawable.ic_dialog_alert).setTitle("是否保存")
-//                            .setMessage("离线清单已达到" + DataOperate.getDownDishLimit(detailDish.getApplicationContext()) + "个,想要下载更多菜谱请登录")
-//                            .setPositiveButton("登录", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    Intent intent = new Intent(detailDish, LoginByAccout.class);
-//                                    detailDish.startActivity(intent);
-//                                }
-//                            }).setNegativeButton("整理清单", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            Intent intent = new Intent(detailDish, OfflineDish.class);
-//                            detailDish.startActivity(intent);
-//                            detailDish.finish();
-//                        }
-//                    }).create().show();
-//                }
-//            } else {
-//                String dishJson = mListener.getOffDishJson();
-//                Log.i("DetailDish","dishJson:" + dishJson);
-//                if(TextUtils.isEmpty(dishJson)){
-//                    Tools.showToast(detailDish.getApplicationContext(), "离线失败");
-//                }else {
-//                    DataOperate.saveBuyBurden(detailDish.getApplicationContext(), dishJson);
-//                    mDishWebView.saveDishData();
-//                    offImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_offline_active);
-//                    offText.setText("已下载");
-//                    Tools.showToast(detailDish.getApplicationContext(), "已成功下载到离线清单中");
-//                }
-//            }
-//        } else {
-//            Intent intent = new Intent(detailDish, OfflineDish.class);
-//            detailDish.startActivity(intent);
-//        }
-//    }
 }
 

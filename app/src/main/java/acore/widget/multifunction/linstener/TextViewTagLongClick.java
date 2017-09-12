@@ -37,7 +37,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 	private int typeOwer =0;
 	private OnClickListener mRightClicker;
 	private OnClickListener mUserClicker;//中间数据
-	private String mRightBtnName = "投诉";
+	private String mRightBtnName = "举报";
 	private String mCopyText="";
 
 	private int normBackColor,choseBackColor = Color.parseColor("#E3E3E3");

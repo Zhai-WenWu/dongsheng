@@ -199,6 +199,7 @@ public class ListDish extends BaseActivity {
                         }
                     }else{
                     intent.putExtra("code", arrayList.get(position).get("code"));
+                    intent.putExtra("img", arrayList.get(position).get("img"));
                     intent.putExtra("name", arrayList.get(position).get("name"));
                     startActivity(intent);
                     }

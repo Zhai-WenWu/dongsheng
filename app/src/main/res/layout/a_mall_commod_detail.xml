@@ -322,9 +322,9 @@
 
                 <ProgressBar
                     android:id="@+id/widget_progress"
-                    style="@android:style/Widget.ProgressBar.Inverse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@android:style/Widget.Holo.Light.ProgressBar"
+                    android:layout_width="@dimen/dp_33"
+                    android:layout_height="@dimen/dp_33"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/dp_120"
                     android:visibility="gone"/>

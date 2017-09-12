@@ -116,7 +116,7 @@ public class ReqEncryptCommon {
      * @return
      */
     public String getData(String params)  {
-        Log.i("FRJ","getData() params:" + params);
+        //Log.i("FRJ","getData() params:" + params);
         try {
             Map<String,String> map=null;
             if(!TextUtils.isEmpty(params)){
@@ -125,12 +125,12 @@ public class ReqEncryptCommon {
             JSONObject jsonObject = new JSONObject();
             if(map!=null){
                 for (Map.Entry<String, String> entry : map.entrySet()) {
-                    Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
+                    //Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
                     jsonObject.put(entry.getKey(),entry.getValue());
                }
             }
             jsonObject.put("sign",sign);
-            Log.i("FRJ","getData() jsonObject:" + jsonObject);
+            //Log.i("FRJ","getData() jsonObject:" + jsonObject);
             GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
             GY=GY.replace("-----END PUBLIC KEY-----","");
             byte[] data=jsonObject.toString().getBytes();
@@ -143,7 +143,7 @@ public class ReqEncryptCommon {
         }
     }
     public String getData(String params,String nowSign)  {
-        Log.i("FRJ","getData() params:" + params);
+        //Log.i("FRJ","getData() params:" + params);
         try {
             Map<String,String> map=null;
             if(!TextUtils.isEmpty(params)){
@@ -152,12 +152,12 @@ public class ReqEncryptCommon {
             JSONObject jsonObject = new JSONObject();
             if(map!=null){
                 for (Map.Entry<String, String> entry : map.entrySet()) {
-                    Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
+                    //Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
                     jsonObject.put(entry.getKey(),entry.getValue());
                 }
             }
             jsonObject.put("sign",nowSign);
-            Log.i("FRJ","getData() jsonObject:" + jsonObject);
+            //Log.i("FRJ","getData() jsonObject:" + jsonObject);
             GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
             GY=GY.replace("-----END PUBLIC KEY-----","");
             byte[] data=jsonObject.toString().getBytes();
@@ -180,12 +180,12 @@ public class ReqEncryptCommon {
             JSONObject jsonObject = new JSONObject();
             if(map!=null&&map.size()>0){
                 for (Map.Entry<String, String> entry : map.entrySet()) {
-                    Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
+                    //Log.i("FRJ","getData() Map entry:" + entry.getKey() + "   value:" + entry.getValue());
                     jsonObject.put(entry.getKey(),entry.getValue());
                 }
             }
             jsonObject.put("sign",sign);
-            Log.i("FRJ","getData() jsonObject:" + jsonObject);
+            //Log.i("FRJ","getData() jsonObject:" + jsonObject);
             GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
             GY=GY.replace("-----END PUBLIC KEY-----","");
             byte[] data=jsonObject.toString().getBytes();

@@ -9,8 +9,8 @@
         android:id="@+id/a_dish_detail_new_footer_hover_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/line_1"
-        android:background="#f9fffffe"
+        android:layout_below="@+id/line_linear"
+        android:background="#f9f9f9f9"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -76,8 +76,8 @@
         android:id="@+id/a_dish_detail_new_footer_hover_good_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/line_1"
-        android:background="#f9fffffe"
+        android:layout_below="@+id/line_linear"
+        android:background="#f9f9f9f9"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -141,6 +141,11 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:id="@+id/line_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <ImageView
         android:id="@+id/line_1"
         android:layout_width="match_parent"
@@ -149,6 +154,11 @@
         android:scaleType="fitXY"
         android:visibility="visible"
         />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#e9e9e9"/>
+    </LinearLayout>
 
     <View
         android:id="@+id/line_2"

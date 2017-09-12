@@ -1,9 +1,7 @@
 package third.mall.activity;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -56,7 +54,6 @@ public class EvalutionListActivity extends ShowTemplateWeb {
         super.onResume();
     }
 
-    protected int heightDifference = -1;
     protected void initCommentBar() {
         editControlerLayout = (RelativeLayout) findViewById(R.id.edit_controler_layout);
         editControlerLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -94,27 +91,23 @@ public class EvalutionListActivity extends ShowTemplateWeb {
                 resetCommentBar();
             }
         });
+
+        final int statusBarHeight = Tools.getStatusBarHeight(this);
         setOnKeyBoardListener(new OnKeyBoardListener() {
             @Override
             public void show() {
-                Log.i("tzy","show");
-                int heightDiff = rl.getRootView().getHeight() - rl.getHeight();
-                Rect r = new Rect();
-                rl.getWindowVisibleDisplayFrame(r);
-                int screenHeight = rl.getRootView().getHeight();
-                heightDifference = screenHeight - (r.bottom - r.top);
-                boolean isKeyboradShow = heightDifference > 200;
-                heightDifference = isKeyboradShow ? heightDifference - heightDiff : 0;
-                editControlerLayout.setPadding(0, 0, 0, heightDifference);
+                int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight();
+                int heightDifference = usableHeightSansKeyboard - computeUsableHeight();
+                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference;
             }
 
             @Override
             public void hint() {
-                Log.i("tzy","hint");
-                editControlerLayout.setPadding(0, 0, 0, 0);
+                frameLayoutParams.height = mChildOfContent.getRootView().getHeight() - statusBarHeight;
             }
         });
     }
+
 
     public void showCommentBar(String userName,String callbackName){//dsShowCommentBarCallback
         this.callbackName = callbackName;

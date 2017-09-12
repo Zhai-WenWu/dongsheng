@@ -120,6 +120,8 @@ public class AdapterFeedback extends AdapterSimple {
 			if (map.get("type").equals("1")) {
 				setViewText(viewHolder.feekback_admin_reply_title, map.get("title"));
 				setViewText(viewHolder.feekback_admin_reply_content, map.get("content"));
+				//设置长按复制
+				setCopyListener(viewHolder.feekback_admin_reply_content, map.get("content"));
 				if (map.containsKey("img") && !map.get("img").equals("hide") && !TextUtils.isEmpty(map.get("img"))){
 					setViewImage(viewHolder.feekback_admin_reply_img, map.get("img"));
 					viewHolder.feekback_admin_reply_img.setOnClickListener(new OnClickListener() {
@@ -180,6 +182,8 @@ public class AdapterFeedback extends AdapterSimple {
 			viewHolder.feekback_user_layout.setVisibility(View.VISIBLE);
 			viewHolder.feekback_admin_layout.setVisibility(View.GONE);
 			setViewText(viewHolder.feekback_user_reply_content, map.get("content"));
+			//设置长按复制
+			setCopyListener(viewHolder.feekback_user_reply_content, map.get("content"));
 			if (viewHolder.feekback_user_reply_content.getLineCount() == 1)
 				viewHolder.feekback_user_reply_content.setGravity(Gravity.CENTER_VERTICAL);
 			else
@@ -233,6 +237,19 @@ public class AdapterFeedback extends AdapterSimple {
 			}
 		});
 		return convertView;
+	}
+
+	private void setCopyListener(View view,final String content){
+		if(!TextUtils.isEmpty(content)){
+			view.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					Tools.inputToClipboard(mAct,content);
+					Tools.showToast(mAct,"复制成功");
+					return true;
+				}
+			});
+		}
 	}
 
 	private void showBigImg(String img){

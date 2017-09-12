@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -30,12 +31,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.shuyu.gsyvideoplayer.GSYTextureView;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.listener.StandardVideoAllCallBack;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.NetInfoModule;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
@@ -207,6 +210,64 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     protected void releaseNetWorkState() {
         super.releaseNetWorkState();
         destoryListener();
+    }
+
+    @Override
+    protected void addTextureView() {
+        if (mTextureViewContainer.getChildCount() > 0) {
+            mTextureViewContainer.removeAllViews();
+        }
+        mTextureView = null;
+        mTextureView = new GSYTextureView(getContext());
+        mTextureView.setSurfaceTextureListener(this);
+        mTextureView.setRotation(mRotate);
+
+        int widthParams = getTextureWidthParams();
+        int heightParams = getTextureHeightParams();
+        
+
+        if (mTextureViewContainer instanceof RelativeLayout) {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(widthParams, heightParams);
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+            mTextureViewContainer.addView(mTextureView, layoutParams);
+        } else if (mTextureViewContainer instanceof FrameLayout) {
+            LayoutParams layoutParams = new LayoutParams(widthParams, heightParams);
+            layoutParams.gravity = Gravity.CENTER;
+            mTextureViewContainer.addView(mTextureView, layoutParams);
+        }
+    }
+
+    public int type = GSYVideoType.SCREEN_TYPE_DEFAULT;
+    private int getTextureWidthParams() {
+        switch (type){
+            case GSYVideoType.SCREEN_TYPE_DEFAULT:
+            case GSYVideoType.SCREEN_MATCH_WIDTH:
+                return ViewGroup.LayoutParams.MATCH_PARENT;
+            default:
+                return ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+//        boolean typeChanged = (GSYVideoType.getShowType() != GSYVideoType.SCREEN_TYPE_DEFAULT);
+//        return (typeChanged) ? ViewGroup.LayoutParams.WRAP_CONTENT : ViewGroup.LayoutParams.MATCH_PARENT;
+    }
+
+    private int getTextureHeightParams() {
+        switch (type){
+            case GSYVideoType.SCREEN_TYPE_DEFAULT:
+                return ViewGroup.LayoutParams.MATCH_PARENT;
+            case GSYVideoType.SCREEN_MATCH_WIDTH:
+            default:
+                return ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+//        boolean typeChanged = (GSYVideoType.getShowType() != GSYVideoType.SCREEN_TYPE_DEFAULT);
+//        return (typeChanged) ? ViewGroup.LayoutParams.WRAP_CONTENT : ViewGroup.LayoutParams.MATCH_PARENT;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     /**

@@ -32,16 +32,10 @@ public class PlayVideo extends BaseAppCompatActivity {
     private StandardGSYVideoPlayer videoPlayer;
     OrientationUtils orientationUtils;
 
-
-
-    private boolean isTransition;
-
-    private Transition transition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             name = bundle.getString("name");
@@ -98,6 +92,7 @@ public class PlayVideo extends BaseAppCompatActivity {
         //设置旋转
         orientationUtils = new OrientationUtils(this, videoPlayer);
         orientationUtils.setEnable(false);
+        orientationUtils.setRotateWithSystem(false);
         //设置全屏按键功能,这是使用的是选择屏幕，而不是全屏
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,10 +138,12 @@ public class PlayVideo extends BaseAppCompatActivity {
         videoPlayer.onVideoResume();
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //释放所有
+        videoPlayer.setStandardVideoAllCallBack(null);
+        GSYVideoPlayer.releaseAllVideos();
         if (orientationUtils != null)
             orientationUtils.releaseListener();
     }
@@ -158,36 +155,7 @@ public class PlayVideo extends BaseAppCompatActivity {
             videoPlayer.getFullscreenButton().performClick();
             return;
         }
-        //释放所有
-        videoPlayer.setStandardVideoAllCallBack(null);
-        GSYVideoPlayer.releaseAllVideos();
-        if (isTransition && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            super.onBackPressed();
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out);
-                }
-            }, 500);
-        }
+        super.onBackPressed();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private boolean addTransitionListener() {
-        transition = getWindow().getSharedElementEnterTransition();
-        if (transition != null) {
-            transition.addListener(new OnTransitionListener(){
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    super.onTransitionEnd(transition);
-                    videoPlayer.startPlayLogic();
-                    transition.removeListener(this);
-                }
-            });
-            return true;
-        }
-        return false;
-    }
 }

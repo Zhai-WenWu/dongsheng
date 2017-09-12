@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -60,6 +62,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	public static final int result_cancel= 2002;
 	public static final int result_sure= 2003;
 	public static final int result_comment_success = 2004;
+	public static final int result_comment_part_success = 2005;
 
 	private String order_id;
 	private String order_satus;
@@ -83,8 +86,8 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	private TextView tv_status;
 	private LinearLayout order_status_linear;
 	View viewpay ;
-	private int code;
-	private int position;
+	private int code = -1;
+	private int position = -1;
 	private int state_now;//当前状态
 	private String url_statistic;
 	private String mall_stat_statistic;
@@ -159,6 +162,8 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					findViewById(R.id.buycommod_rela).setVisibility(View.VISIBLE);
 					findViewById(R.id.buycommod_consignee_rela).setVisibility(View.VISIBLE);
 					findViewById(R.id.price_bata_rela).setVisibility(View.VISIBLE);
+					remeasureGridView();
+					adapter.notifyDataSetChanged();
 					break;
 				}
 				super.handleMessage(msg);
@@ -370,14 +375,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 			if(map.containsKey("payment_type_desc")&&map.containsKey("order_timing_info")){
 				if(!TextUtils.isEmpty(map.get("payment_type_desc"))||!TextUtils.isEmpty(map.get("order_timing_info"))){
 					buycommod_order_number_text.setVisibility(View.VISIBLE);
-					copy_order_number_text.setVisibility(View.VISIBLE);
-					copy_order_number_text.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Tools.inputToClipboard(OrderStateActivity.this,map.get("order_id"));
-							Tools.showToast(OrderStateActivity.this,"复制成功");
-						}
-					});
+                    setCopyText(map.get("order_id"));
 					if(!TextUtils.isEmpty(map.get("payment_type_desc"))){
 						data+="\n支付方式："+map.get("payment_type_desc");
 					}
@@ -398,9 +396,25 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		}else if("payment_order".equals(order_satus)){
 			data+=map.get("payment_order_id");
 			data+="\n下单时间："+map.get("create_time");
+            setCopyText(map.get("payment_order_id"));
 		}
 		buycommod_order_number_text.setText(data);
 	}
+
+	private void setCopyText(final String text){
+        if(TextUtils.isEmpty(text)){
+            copy_order_number_text.setVisibility(View.GONE);
+            return;
+        }
+        copy_order_number_text.setVisibility(View.VISIBLE);
+        copy_order_number_text.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tools.inputToClipboard(OrderStateActivity.this,text);
+                Tools.showToast(OrderStateActivity.this,"复制成功");
+            }
+        });
+    }
 
 	/**
 	 * 设置状态
@@ -431,10 +445,14 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		});
 	}
 
+	boolean remeasure = false;
+	AdapterShopRecommed recommend;
+	GridView gridview;
+
 	private void setRecommendProduct(){
 		if(list_recommend.size()>0){
-			MyGridView gridview=(MyGridView) findViewById(R.id.gridview);
-			AdapterShopRecommed recommend= new AdapterShopRecommed(this,gridview, list_recommend, R.layout.a_mall_shop_recommend_item_grid, new String[]{}, new int[]{},"a_mail_order");
+			gridview =(GridView) findViewById(R.id.gridview);
+			recommend = new AdapterShopRecommed(this,gridview, list_recommend, R.layout.a_mall_shop_recommend_item_grid, new String[]{}, new int[]{},"a_mail_order");
 			gridview.setAdapter(recommend);
 			gridview.setOnItemClickListener(new OnItemClickListener() {
 				@Override
@@ -451,6 +469,31 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		}else{
 			findViewById(R.id.product_recomend_rela).setVisibility(View.GONE);
 		}
+	}
+
+	private void remeasureGridView(){
+		gridview.post(new Runnable() {
+			@Override
+			public void run() {
+				if(!remeasure){
+					remeasure = true;
+					int totalHeight = 0;
+					int length = recommend.getCount() / gridview.getNumColumns();
+					if(recommend.getCount() % gridview.getNumColumns() > 0){
+						length++;
+					}
+					for(int i = 0 ; i < length ; i ++){
+						View listItem = recommend.getView(i*gridview.getNumColumns(), null, gridview);
+						listItem.measure(0, 0);
+						totalHeight += listItem.getMeasuredHeight();
+					}
+
+					ViewGroup.LayoutParams params = gridview.getLayoutParams();
+					params.height = totalHeight + Tools.getDimen(OrderStateActivity.this,R.dimen.dp_40) + length * gridview.getVerticalSpacing();
+					gridview.setLayoutParams(params);
+				}
+			}
+		});
 	}
 	
 	private void setOrderStatus(int status,final Map<String,String> map){
@@ -714,7 +757,11 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	private void gotoComment(final Map<String, String> orderMap, ArrayList<Map<String, String>> productArray){
 		XHClick.mapStat(this,XHClick.comcomment_icon,"订单详情-评价按钮","");
 		if(productArray.size() == 1){
-			gotoCommentSingle(orderMap , StringManager.getFirstMap(productArray.get(0).get("info")));
+			Map<String, String> productMap = StringManager.getFirstMap(productArray.get(0).get("info"));
+			if(TextUtils.isEmpty(productMap.get("img"))){
+				productMap.put("img",productArray.get(0).get("img"));
+			}
+			gotoCommentSingle(orderMap , productMap);
 		}else if(productArray.size() > 1){
 			gotoCommentMulti(orderMap);
 		}
@@ -771,10 +818,14 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 
 	@Override
 	public void finish() {
-		Intent intent= new Intent();
-		intent.putExtra("code", String.valueOf(code));
-		intent.putExtra("position", String.valueOf(position));
-		setResult(state_now, intent);
+		if(code != -1 && position != -1){
+			Intent intent= new Intent();
+			intent.putExtra("code", String.valueOf(code));
+			intent.putExtra("position", String.valueOf(position));
+			setResult(state_now, intent);
+		}else{
+			setResult(state_now);
+		}
 		super.finish();
 	}
 

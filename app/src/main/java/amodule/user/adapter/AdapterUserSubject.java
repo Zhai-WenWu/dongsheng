@@ -20,7 +20,7 @@ import amodule.quan.view.NormarlContentItemImageVideoView;
 import xh.windowview.XhDialog;
 
 /**
- * Created by Fang Ruijiao on 2016/9/20.
+ * Created by XiangHa on 2016/9/20.
  */
 public class AdapterUserSubject extends AdapterSimple {
 
@@ -99,7 +99,7 @@ public class AdapterUserSubject extends AdapterSimple {
 
     boolean isShow = true;
     private boolean isShowTopHint(){
-//        Log.i("FRJ","isShowTopHint() isShow:" + isShow);
+//        //Log.i("FRJ","isShowTopHint() isShow:" + isShow);
         if(isShow){
             if(AppCommon.isVip(LoginManager.userInfo.get("vip"))){
                 isShow = false;
@@ -115,7 +115,7 @@ public class AdapterUserSubject extends AdapterSimple {
             }
         }
         if(isShow){
-//            Log.i("FRJ","saveShare");
+//            //Log.i("FRJ","saveShare");
             FileManager.saveShared(mContext,FileManager.xmlFile_appInfo,"topState",String.valueOf(System.currentTimeMillis()));
         }
         return isShow;
