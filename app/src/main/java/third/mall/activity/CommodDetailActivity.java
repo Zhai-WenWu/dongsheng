@@ -699,7 +699,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 if (LoginManager.isLogin()) {
                     MallClickContorl.getInstance().setStatisticUrl(actionUrl, null, mall_stat_statistic, this);
                     Intent intent_shop= new Intent(this,ShoppingActivity.class);
-                    intent_shop.putExtra(MallBaseActivity.PAGE_FROM, nowFrom);
                     this.startActivity(intent_shop);
 
                 } else {

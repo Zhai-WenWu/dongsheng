@@ -1197,4 +1197,15 @@ public class JsAppCommon extends JsBase {
         return ToolsDevice.getNetWorkSimpleType(mAct);
     }
 
+    /**
+     * 来源
+     * @param dsfrom
+     */
+    @JavascriptInterface
+    public void dsFrom(String dsfrom){
+        if(!TextUtils.isEmpty(dsfrom)){
+            MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?dsfrom:MallBaseActivity.PAGE_LOGO+dsfrom;
+        }
+    }
+
 }
