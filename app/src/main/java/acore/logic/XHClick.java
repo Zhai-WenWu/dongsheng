@@ -1095,6 +1095,7 @@ public class XHClick {
         params += "app_time=" + app_time;
         params += "&page_title=" + page_title;
         params += "&stop_time=" + stop_time;
+        params += "&event=stop" ;
         StatictisSQLiteDataBase.getInstance().insterPageData(params);
     }
 

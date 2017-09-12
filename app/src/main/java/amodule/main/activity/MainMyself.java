@@ -484,7 +484,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case R.id.ll_coupon:
                     XHClick.mapStat(this, tongjiId,"列表", "优惠券");
                     Intent intent_coupon = new Intent(this,MallMyFavorableActivity.class);
-                    intent_coupon.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(this));
                     startActivity(intent_coupon);
                     break;
             }
@@ -536,7 +535,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case "order":
                     XHClick.mapStat(this, tongjiId,"列表", "订单");
                     Intent intent_order = new Intent(this,MyOrderActivity.class);
-                    intent_order.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(this));
                     startActivity(intent_order);
                     break;
                 case "vip": //会员
