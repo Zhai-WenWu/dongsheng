@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="手机动态码登录"
+            android:text="手机号注册/登录"
             android:textColor="@color/c_black_text"
             android:textSize="@dimen/sp_26"
             android:textStyle="bold" />
