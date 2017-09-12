@@ -100,6 +100,16 @@ public class  DishActivityViewControlNew {
         Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
         initTitle();
+        //头部view处理
+        dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
+        headerLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
+        dishHeaderView.initView(mAct,headerLayoutHeight);
+
+        //处理标题导航栏
+        dishTitleViewControl= new DishTitleViewControlNew(mAct);
+        dishTitleViewControl.initView(mAct);
+        dishTitleViewControl.setstate(state);
+
         templateWebView = (TemplateWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
         templateWebView.initBaseData(mAct,loadManager);
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
@@ -112,27 +122,16 @@ public class  DishActivityViewControlNew {
                     }
                 },1*1000);
             }
-
             @Override
             public void onLoadStart() {
-
             }
         });
         handlerDishWebviewData();
-        //头部view处理
-        dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
-        headerLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
-        dishHeaderView.initView(mAct,headerLayoutHeight);
-
-        mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
-        setGlideViewListener();
-
-        //处理标题导航栏
-        dishTitleViewControl= new DishTitleViewControlNew(mAct);
-        dishTitleViewControl.initView(mAct);
-        dishTitleViewControl.setstate(state);
         //底部view
         mFootControl = new DishFootControl(mAct,mDishCode);
+        mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
+        setGlideViewListener();
+        templateWebView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -156,6 +155,7 @@ public class  DishActivityViewControlNew {
             @Override
             public void onScroll(int scrollY) {
                 setViewOneState();
+                Log.i("wyl","30");
                 int[] location = new int[2];
                 int view_height = 0;
                 if (view_oneImage != null) {
@@ -174,6 +174,7 @@ public class  DishActivityViewControlNew {
 
             @Override
             public void scrollOritention(int scrollState) {
+                Log.i("wyl","31:::"+scrollState);
                 if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
 
                     bar_title_1.setVisibility(View.GONE);
@@ -464,6 +465,7 @@ public class  DishActivityViewControlNew {
      */
     public void handlerDishWebviewData(){
         if(!isLoadWebViewData) {
+            Log.i("wyl","24");
             Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
             templateWebView.loadData(XHTemplateManager.XHDISHLAYOUT,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT),new String[]{mDishCode});
             isLoadWebViewData = true;

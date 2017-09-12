@@ -328,7 +328,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 isHaspause = false;
                 dredgeVipLayout.setVisibility(GONE);
             }
-
             DishVideoImageView dishVideoImageView = new DishVideoImageView(activity);
             dishVideoImageView.setData(img, selfVideoMap.get("duration"));
             mVideoPlayerController.setNewView(dishVideoImageView);
@@ -340,7 +339,6 @@ public class DishHeaderViewNew extends LinearLayout {
                     callBack.videoImageOnClick();
                 }
             });
-
             //被点击回调
             mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                 @Override
