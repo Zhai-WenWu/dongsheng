@@ -49,6 +49,15 @@
             android:textSize="@dimen/sp_26"
             android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#9c9c9c"
+            android:textSize="@dimen/sp_12"
+            android:paddingTop="@dimen/dp_2"
+            android:text="首次登录将自动为您注册"
+            android:layout_height="wrap_content"/>
+
         <amodule.user.view.PhoneNumInputView
             android:id="@+id/phone_info"
             android:layout_width="wrap_content"
@@ -80,26 +89,27 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_25"
             android:gravity="center"
-            android:orientation="horizontal">
+            >
 
             <TextView
                 android:id="@+id/tv_password"
                 style="@style/userLoginOtherText"
-                android:text="密码登录" />
+                android:text="密码登录"/>
 
-            <View style="@style/userLoginOtherLine" />
+            <View style="@style/userLoginOtherLine"/>
 
             <TextView
                 android:id="@+id/tv_lostsercet"
                 style="@style/userLoginOtherText"
-                android:text="忘记密码?" />
+                android:layout_height="match_parent"
+                android:text="忘记密码?"/>
 
-            <View style="@style/userLoginOtherLine" />
+            <View style="@style/userLoginOtherLine"/>
 
             <TextView
                 android:id="@+id/tv_help"
                 style="@style/userLoginOtherText"
-                android:text="遇到问题" />
+                android:text="遇到问题"/>
         </LinearLayout>
 
     </LinearLayout>

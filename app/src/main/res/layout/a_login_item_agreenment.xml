@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:maxLines="1"
-        android:text="登录即代表同意"
+        android:text="注册/登录即代表同意"
         android:textColor="#999898"
         android:textSize="@dimen/sp_12" />
 
