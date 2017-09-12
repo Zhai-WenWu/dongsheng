@@ -86,6 +86,7 @@ public class VideoImageView extends RelativeLayout{
             videoPlayer.getFullscreenButton().setVisibility(GONE);
             orientationUtils = new OrientationUtils(context,videoPlayer);
             orientationUtils.setEnable(false);
+            orientationUtils.setRotateWithSystem(false);
             videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
                 @Override
                 public void onAutoComplete(String url, Object... objects) {

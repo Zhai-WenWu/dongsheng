@@ -57,6 +57,7 @@ public class VideoImagePlayerController {
         //设置旋转
         orientationUtils = new OrientationUtils(context, videoPlayer);
         orientationUtils.setEnable(false);
+        orientationUtils.setRotateWithSystem(false);
         videoPlayer.setShowFullAnimation(true);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override

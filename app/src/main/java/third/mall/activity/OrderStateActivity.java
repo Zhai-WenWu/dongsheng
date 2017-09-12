@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -160,6 +162,8 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					findViewById(R.id.buycommod_rela).setVisibility(View.VISIBLE);
 					findViewById(R.id.buycommod_consignee_rela).setVisibility(View.VISIBLE);
 					findViewById(R.id.price_bata_rela).setVisibility(View.VISIBLE);
+					remeasureGridView();
+					adapter.notifyDataSetChanged();
 					break;
 				}
 				super.handleMessage(msg);
@@ -441,10 +445,14 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		});
 	}
 
+	boolean remeasure = false;
+	AdapterShopRecommed recommend;
+	GridView gridview;
+
 	private void setRecommendProduct(){
 		if(list_recommend.size()>0){
-			MyGridView gridview=(MyGridView) findViewById(R.id.gridview);
-			AdapterShopRecommed recommend= new AdapterShopRecommed(this,gridview, list_recommend, R.layout.a_mall_shop_recommend_item_grid, new String[]{}, new int[]{},"a_mail_order");
+			gridview =(GridView) findViewById(R.id.gridview);
+			recommend = new AdapterShopRecommed(this,gridview, list_recommend, R.layout.a_mall_shop_recommend_item_grid, new String[]{}, new int[]{},"a_mail_order");
 			gridview.setAdapter(recommend);
 			gridview.setOnItemClickListener(new OnItemClickListener() {
 				@Override
@@ -461,6 +469,31 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		}else{
 			findViewById(R.id.product_recomend_rela).setVisibility(View.GONE);
 		}
+	}
+
+	private void remeasureGridView(){
+		gridview.post(new Runnable() {
+			@Override
+			public void run() {
+				if(!remeasure){
+					remeasure = true;
+					int totalHeight = 0;
+					int length = recommend.getCount() / gridview.getNumColumns();
+					if(recommend.getCount() % gridview.getNumColumns() > 0){
+						length++;
+					}
+					for(int i = 0 ; i < length ; i ++){
+						View listItem = recommend.getView(i*gridview.getNumColumns(), null, gridview);
+						listItem.measure(0, 0);
+						totalHeight += listItem.getMeasuredHeight();
+					}
+
+					ViewGroup.LayoutParams params = gridview.getLayoutParams();
+					params.height = totalHeight + Tools.getDimen(OrderStateActivity.this,R.dimen.dp_40) + length * gridview.getVerticalSpacing();
+					gridview.setLayoutParams(params);
+				}
+			}
+		});
 	}
 	
 	private void setOrderStatus(int status,final Map<String,String> map){

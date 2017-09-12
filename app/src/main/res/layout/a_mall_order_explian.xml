@@ -238,7 +238,7 @@
                 android:layout_marginTop="@dimen/dp_14" />
 
             <include
-                layout="@layout/a_mall_shop_recommend"
+                layout="@layout/a_mall_shop_recommend_ori"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/order_pay" />

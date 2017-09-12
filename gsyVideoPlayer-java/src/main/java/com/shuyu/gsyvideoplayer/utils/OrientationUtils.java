@@ -42,74 +42,74 @@ public class OrientationUtils {
         orientationEventListener = new OrientationEventListener(activity) {
             @Override
             public void onOrientationChanged(int rotation) {
-                boolean autoRotateOn = (Settings.System.getInt(activity.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1);
-                if (!autoRotateOn && mRotateWithSystem) {
-                    //if (mIsLand == 0) {
-                        return;
-                    //}
-                }
-                // 设置竖屏
-                if (((rotation >= 0) && (rotation <= 30)) || (rotation >= 330)) {
-                    if (mClick) {
-                        if (mIsLand > 0 && !mClickLand) {
-                            return;
-                        } else {
-                            mClickPort = true;
-                            mClick = false;
-                            mIsLand = 0;
-                        }
-                    } else {
-                        if (mIsLand > 0) {
-                            screenType = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                            if (gsyVideoPlayer.isIfCurrentIsFullscreen()) {
-                                gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getShrinkImageRes());
-                            } else {
-                                gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getEnlargeImageRes());
-                            }
-                            mIsLand = 0;
-                            mClick = false;
-                        }
-                    }
-                }
-                // 设置横屏
-                else if (((rotation >= 230) && (rotation <= 310))) {
-                    if (mClick) {
-                        if (!(mIsLand == 1) && !mClickPort) {
-                            return;
-                        } else {
-                            mClickLand = true;
-                            mClick = false;
-                            mIsLand = 1;
-                        }
-                    } else {
-                        if (!(mIsLand == 1)) {
-                            screenType = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                            gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getShrinkImageRes());
-                            mIsLand = 1;
-                            mClick = false;
-                        }
-                    }
-                }
-                // 设置反向横屏
-                else if (rotation > 30 && rotation < 95) {
-                    if (mClick) {
-                        if (!(mIsLand == 2) && !mClickPort) {
-                            return;
-                        } else {
-                            mClickLand = true;
-                            mClick = false;
-                            mIsLand = 2;
-                        }
-                    } else if (!(mIsLand == 2)) {
-                        screenType = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-                        gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getShrinkImageRes());
-                        mIsLand = 2;
-                        mClick = false;
-                    }
-                }
+//                boolean autoRotateOn = (Settings.System.getInt(activity.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1);
+//                if (!autoRotateOn && mRotateWithSystem) {
+//                    //if (mIsLand == 0) {
+//                        return;
+//                    //}
+//                }
+//                // 设置竖屏
+//                if (((rotation >= 0) && (rotation <= 30)) || (rotation >= 330)) {
+//                    if (mClick) {
+//                        if (mIsLand > 0 && !mClickLand) {
+//                            return;
+//                        } else {
+//                            mClickPort = true;
+//                            mClick = false;
+//                            mIsLand = 0;
+//                        }
+//                    } else {
+//                        if (mIsLand > 0) {
+//                            screenType = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+//                            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                            if (gsyVideoPlayer.isIfCurrentIsFullscreen()) {
+//                                gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getShrinkImageRes());
+//                            } else {
+//                                gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getEnlargeImageRes());
+//                            }
+//                            mIsLand = 0;
+//                            mClick = false;
+//                        }
+//                    }
+//                }
+//                // 设置横屏
+//                else if (((rotation >= 230) && (rotation <= 310))) {
+//                    if (mClick) {
+//                        if (!(mIsLand == 1) && !mClickPort) {
+//                            return;
+//                        } else {
+//                            mClickLand = true;
+//                            mClick = false;
+//                            mIsLand = 1;
+//                        }
+//                    } else {
+//                        if (!(mIsLand == 1)) {
+//                            screenType = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+//                            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//                            gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getShrinkImageRes());
+//                            mIsLand = 1;
+//                            mClick = false;
+//                        }
+//                    }
+//                }
+//                // 设置反向横屏
+//                else if (rotation > 30 && rotation < 95) {
+//                    if (mClick) {
+//                        if (!(mIsLand == 2) && !mClickPort) {
+//                            return;
+//                        } else {
+//                            mClickLand = true;
+//                            mClick = false;
+//                            mIsLand = 2;
+//                        }
+//                    } else if (!(mIsLand == 2)) {
+//                        screenType = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+//                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+//                        gsyVideoPlayer.getFullscreenButton().setImageResource(gsyVideoPlayer.getShrinkImageRes());
+//                        mIsLand = 2;
+//                        mClick = false;
+//                    }
+//                }
             }
         };
         orientationEventListener.enable();
