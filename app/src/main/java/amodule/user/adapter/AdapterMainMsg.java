@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -188,7 +189,9 @@ public class AdapterMainMsg extends AdapterSimple {
 							break;
 						case viewImg:
 							Log.i("tzy","clickImage");
-							AppCommon.openUrl(mAct,map.get("imgClickUrl"),true);
+							if(!TextUtils.isEmpty(map.get("imgClickUrl"))){
+								AppCommon.openUrl(mAct,map.get("imgClickUrl"),true);
+							}
 							break;
 					}
 					// 点击后延迟1秒移除颜色值
