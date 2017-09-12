@@ -166,20 +166,22 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             public void onClick() {
                 String type = bindMap.get(typeKey);
                 if (TextUtils.isEmpty(type)) {
-                    switch (typeKey) {
-                        case "email":
-                        case "meizui":
-                            return;
-                        case "weibo":
-                            loginByThrid(LoginManager.LOGIN_WB, "微博号");
-                            break;
-                        case "qq":
-                            loginByThrid(LoginManager.LOGIN_QQ, "QQ号");
-                            break;
-                        case "weixin":
-                            loginByThrid(LoginManager.LOGIN_WX, "微信号");
-                            break;
-                    }
+                    try {
+                        switch (typeKey) {
+                            case "email":
+                            case "meizui":
+                                return;
+                            case "weibo":
+                                loginByThrid(LoginManager.LOGIN_WB, "微博号");
+                                break;
+                            case "qq":
+                                loginByThrid(LoginManager.LOGIN_QQ, "QQ号");
+                                break;
+                            case "weixin":
+                                loginByThrid(LoginManager.LOGIN_WX, "微信号");
+                                break;
+                        }
+                    }catch (Exception ignored){}
                 } else
                     showUnbindThirdParty(typeKey);
             }
