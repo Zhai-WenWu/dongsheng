@@ -197,9 +197,6 @@ public class AdapterOrderState extends MallAdapterSimple {
 						 MallClickContorl.getInstance().setStatisticUrl(url, null,mall_stat_statistic, context);
 						 Intent intent= new Intent(context,CommodDetailActivity.class);
 						 intent.putExtra("product_code", UtilString.getListMapByJson(listMapByJson.get(position).get("info")).get(0).get("product_code"));
-						if(context instanceof MallBaseActivity) {
-							intent.putExtra(MallBaseActivity.PAGE_FROM, ((MallBaseActivity) context).getNowFrom());
-						}
 						context.startActivity(intent);
 					}
 				});

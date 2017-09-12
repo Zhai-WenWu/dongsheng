@@ -195,10 +195,6 @@ public class OrderItemView extends ViewItemBase {
 							public void sucessCallBack() {
 								XHClick.mapStat(context, "a_mail_orders","按钮点击","再次购买");
 								Intent intent = new Intent(context, ShoppingActivity.class);
-								if(context instanceof MallOrderBaseActivity) {
-									intent.putExtra(MallBaseActivity.PAGE_FROM, context.getNowFrom());
-									intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "再次购买-未拆单");
-								}
 								context.startActivity(intent);
 							}
 						}, map, MallButtonView.list_state_payment,url,mall_stat_statistic);
@@ -271,10 +267,6 @@ public class OrderItemView extends ViewItemBase {
 					@Override
 					public void sucessCallBack() {
 						Intent intent= new Intent(context,ShoppingActivity.class);
-						if(context instanceof MallOrderBaseActivity) {
-							intent.putExtra(MallBaseActivity.PAGE_FROM, context.getNowFrom());
-							intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "其他状态");
-						}
 						context.startActivity(intent);
 					}
 				}, map, MallButtonView.list_state_payment,url,mall_stat_statistic);
@@ -432,10 +424,6 @@ public class OrderItemView extends ViewItemBase {
 		intent.putExtra("order_satus", "payment_order");
 		intent.putExtra("position", position);
 		intent.putExtra("code", id);
-		if(context instanceof MallOrderBaseActivity) {
-			intent.putExtra(MallBaseActivity.PAGE_FROM,context.getNowFrom());
-			intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, info);
-		}
 		context.startActivityForResult(intent, OrderStateActivity.request_order);
 	}
 

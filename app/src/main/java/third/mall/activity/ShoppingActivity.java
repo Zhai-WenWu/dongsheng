@@ -359,7 +359,6 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 				Intent intent= new Intent(ShoppingActivity.this,CommodDetailActivity.class);
 				intent.putExtra("product_code", list_none.get(position).get("code"));
 				intent.putExtra(MallBaseActivity.PAGE_FROM, nowFrom);
-				intent.putExtra(MallBaseActivity.PAGE_FROM_TWO,"购物车");
 				ShoppingActivity.this.startActivity(intent);
 			}
 		});
@@ -399,7 +398,6 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 					Intent intent = new Intent(ShoppingActivity.this, CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
 					intent.putExtra(MallBaseActivity.PAGE_FROM, nowFrom);
-					intent.putExtra(MallBaseActivity.PAGE_FROM_TWO, "你可能喜欢");
 					startActivity(intent);
 				}
 			});

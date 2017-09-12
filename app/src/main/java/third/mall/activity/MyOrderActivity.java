@@ -244,7 +244,6 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 		case R.id.feedbak_layout:
 			XHClick.mapStat(MyOrderActivity.this, "a_mail_orders","优惠券","");
 			Intent intent = new Intent(this,MallMyFavorableActivity.class);
-			intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(this));
 			this.startActivity(intent);
 			break;
 		}
