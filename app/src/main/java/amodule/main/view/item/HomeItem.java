@@ -43,7 +43,7 @@ import third.mall.activity.CommodDetailActivity;
  * Created by sll on 2017/4/18.
  */
 
-public class HomeItem extends BaseItemView implements View.OnClickListener, BaseItemView.OnItemClickListener {
+public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickListener {
 
     //用户信息和置顶view
     private ImageView mTopTag;
@@ -108,10 +108,35 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
 
     }
 
-    private void addDefaultListener() {
+    private void addInnerListener() {
         if (mAdTag != null)
-            mAdTag.setOnClickListener(this);
-        setOnClickListener(this);
+            mAdTag.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickEvent(v);
+                }
+            });
+    }
+
+    /**
+     * 点击事件，由外界或者item内部的view点击事件调用，此写法是解决有些手机偶尔出现点击事件不响应的问题。
+     * @param v
+     */
+    public void onClickEvent(View v) {
+        if (mIsAd) {
+            if (v == mAdTag) {
+                onAdHintClick();
+            } else if (v == this) {
+                if (mAdControlParent != null) {
+                    mAdControlParent.onAdClick(mDataMap);
+                }
+            }
+            return;
+        }
+        if (!handleClickEvent(v)) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
+            onItemClick();
+        }
     }
 
     private ADImageLoadCallback mCallback;
@@ -151,24 +176,6 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
 
     public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
         this.mRefreshCallBack = callBack;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mIsAd) {
-            if (v == mAdTag) {
-                onAdHintClick();
-            } else if (v == this) {
-                if (mAdControlParent != null) {
-                    mAdControlParent.onAdClick(mDataMap);
-                }
-            }
-            return;
-        }
-        if (!handleClickEvent(v)) {
-            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
-            onItemClick();
-        }
     }
 
     /**
@@ -257,7 +264,7 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                         XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
-        addDefaultListener();
+        addInnerListener();
         //设置数据
         if (mDataMap != null) {
             initData();

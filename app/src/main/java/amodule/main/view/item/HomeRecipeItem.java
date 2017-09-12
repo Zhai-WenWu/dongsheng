@@ -73,23 +73,16 @@ public class HomeRecipeItem extends HomeItem {
 
     }
 
-    private void addListener() {
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //视频列表下点击视频图片部分直接播放，其他部分则跳转到视频菜谱详情页
-                if (v == mVideoContainer && "2".equals(mType) && mIsVideo && mModuleBean != null && "video".equals(mModuleBean.getType()) && !mIsVip) { //表示当前tab是视频菜谱
-                    if (mVideoClickCallBack != null) {
-                        mVideoClickCallBack.videoOnClick(mPosition);
-                        XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
-                    }
-                } else {
-                    XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击文字信息进入详情");
-                    HomeRecipeItem.super.onClick(v);
-                }
-            }
-        };
-        mVideoContainer.setOnClickListener(clickListener);
+    public boolean getIsVip() {
+        return mIsVip;
+    }
+
+    public boolean getIsVideo() {
+        return mIsVideo;
+    }
+
+    public String getType() {
+        return mType;
     }
 
     @Override
@@ -97,9 +90,6 @@ public class HomeRecipeItem extends HomeItem {
         super.setData(dataMap, position);
         if (mDataMap == null)
             return;
-        //设置监听
-        addListener();
-
         if (mIsAd) {
             if (mLayerView != null)
                 mLayerView.setVisibility(View.VISIBLE);
@@ -208,18 +198,5 @@ public class HomeRecipeItem extends HomeItem {
         mVideoContainer.setVisibility(View.GONE);
         mLayerView.setVisibility(View.GONE);
         mContainer.setVisibility(View.GONE);
-    }
-
-    /**
-     * 视频view点击回调
-     */
-    public interface VideoClickCallBack {
-        public void videoOnClick(int position);
-    }
-
-    private VideoClickCallBack mVideoClickCallBack;
-
-    public void setVideoClickCallBack(VideoClickCallBack clickCallBack) {
-        mVideoClickCallBack = clickCallBack;
     }
 }

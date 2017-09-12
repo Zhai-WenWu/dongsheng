@@ -14,6 +14,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -68,6 +69,8 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
 public class HomeFragment extends BaseHomeFragment{
 
     public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
+
+    private final String mVideoType = "video";
 
     protected HomeModuleBean homeModuleBean;//数据的结构
     protected CacheControler cacheControler;
@@ -205,6 +208,7 @@ public class HomeFragment extends BaseHomeFragment{
         show_num_tv= (TextView) mView.findViewById(R.id.show_num_tv);
         homeHeaderDataNum.setVisibility(View.GONE);
         mListview = (ListView) mView.findViewById(R.id.v_scroll);
+        addItemClickListener();
         mListview.addHeaderView(layout);
         mHeaderCount++;
         returnTop = (ImageView) mView.findViewById(return_top);
@@ -213,6 +217,37 @@ public class HomeFragment extends BaseHomeFragment{
         isPrepared = true;
         preLoad();
         return mView;
+    }
+
+    private void addItemClickListener() {
+        mListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (homeModuleBean == null)
+                    return;
+                if (isVideoList()) {//如果是视频列表，直接播放视频
+                    if (view instanceof HomeRecipeItem) {
+                        HomeRecipeItem recipeItem = (HomeRecipeItem)view;
+                        if (AdapterListView.type_tagImage.equals(adapterListView.getItemType(position)) && "2".equals(recipeItem.getType()) && recipeItem.getIsVideo() && !recipeItem.getIsVip()) {
+                            int firstVisiPosi = mListview.getFirstVisiblePosition();
+                            View parentView = mListview.getChildAt(position - firstVisiPosi);
+                            setVideoLayout(parentView, position - mHeaderCount);
+                            XHClick.mapStat(getContext(), "a_video", "进入详情/列表播放", "点击视频直接播放");
+                        } else {
+                            recipeItem.onClickEvent(recipeItem);
+                        }
+                    }
+                } else {//否则按不同item进行跳转操作
+                    if (view instanceof HomeItem) {
+                        ((HomeItem)view).onClickEvent(view);
+                    }
+                }
+            }
+        });
+    }
+
+    private boolean isVideoList() {
+        return homeModuleBean == null ? false : mVideoType.equals(homeModuleBean.getType());
     }
 
     /**
@@ -285,14 +320,6 @@ public class HomeFragment extends BaseHomeFragment{
             @Override
             public void viewOnClick(boolean isOnClick) {
                 refresh();
-            }
-        });
-        adapterListView.setVideoClickCallBack(new HomeRecipeItem.VideoClickCallBack() {
-            @Override
-            public void videoOnClick(int position) {
-                int firstVisiPosi = mListview.getFirstVisiblePosition();
-                View parentView = mListview.getChildAt(position-firstVisiPosi + mHeaderCount);
-                setVideoLayout(parentView,position);
             }
         });
         //处理推荐的置顶数据
