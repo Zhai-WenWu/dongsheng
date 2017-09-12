@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -137,6 +139,12 @@ public class HomeItem extends BaseItemView implements View.OnClickListener, Base
                 if (bitmap != null) {
                     v.setImageBitmap(bitmap);
                 }
+            }
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable drawable) {
+                super.onLoadFailed(e, drawable);
+                CrashReport.postCatchedException(e);
             }
         };
     }
