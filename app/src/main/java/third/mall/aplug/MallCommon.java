@@ -57,6 +57,8 @@ public class MallCommon {
 	public static boolean click_state= false;
 	public static int num=0;
 	public static boolean isShowMallAdvert= true;
+
+	public static String statictisFrom = "";
 	public MallCommon(Context context) {
 		this.context = context.getApplicationContext();
 	}

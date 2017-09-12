@@ -25,17 +25,15 @@ public class MallOrderBaseActivity extends FragmentActivity{
 
 	private long resumeTime;
 	public String dsFrom="";
-	public String nowFrom="";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActMagager = new ActivityMethodManager(this);
 		dsFrom = getIntent().getStringExtra(MallBaseActivity.PAGE_FROM);
 		if(!TextUtils.isEmpty(dsFrom)){
-			PageStatisticsUtils.getInstance().onPageChange(dsFrom,this);
+			MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?dsFrom:MallBaseActivity.PAGE_LOGO+dsFrom;
 		}
-		handlerFrom();
 	}
 	
 	@Override
@@ -120,15 +118,5 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	protected void onDestroy() {
 		super.onDestroy();
 		mActMagager.onDestroy();
-	}
-	/**
-	 *处理当前from
-	 */
-	public void handlerFrom(){
-		String pageName= PageStatisticsUtils.getInstance().getPageName(this);
-		nowFrom=TextUtils.isEmpty(dsFrom)?pageName:dsFrom+MallBaseActivity.PAGE_LOGO+pageName;
-	}
-	public String getNowFrom(){
-		return nowFrom;
 	}
 }

@@ -36,7 +36,6 @@ import third.mall.aplug.MallStringManager;
 import third.mall.override.MallBaseActivity;
 import xh.basic.tool.UtilFile;
 
-import static third.mall.override.MallBaseActivity.PAGE_FROM;
 
 /**
  * 商城activity页面
@@ -178,7 +177,6 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 				XHClick.mapStat(this, "a_mall","购物车","");
 				Intent intent= new Intent(MainMall.this,ShoppingActivity.class);
 				intent=common.setStatistic("home_cart", intent);
-				intent.putExtra(PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(MainMall.this));
 				this.startActivity(intent);
 			}
 

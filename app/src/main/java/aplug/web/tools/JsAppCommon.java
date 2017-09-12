@@ -484,7 +484,6 @@ public class JsAppCommon extends JsBase {
                                 }
                             }
                             Intent intent = new Intent(mAct, ShoppingActivity.class);
-                            intent.putExtra(MallBaseActivity.PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(mAct));
                             mAct.startActivity(intent);
                         }
                     }

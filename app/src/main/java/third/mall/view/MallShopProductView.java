@@ -169,9 +169,6 @@ public class MallShopProductView extends ViewItemBase{
 				 XHClick.mapStat(context, "a_mail_shopping_cart","商品","");
 				 Intent intent= new Intent(context,CommodDetailActivity.class);
 				 intent.putExtra("product_code", bean_product.getCode());
-				if(context instanceof MallBaseActivity) {
-					intent.putExtra(MallBaseActivity.PAGE_FROM, ((MallBaseActivity) context).getNowFrom());
-				}
 				context.startActivity(intent);
 			}
 		});
@@ -183,9 +180,6 @@ public class MallShopProductView extends ViewItemBase{
 				 XHClick.mapStat(context, "a_mail_shopping_cart","商品","");
 				 Intent intent= new Intent(context,CommodDetailActivity.class);
 				 intent.putExtra("product_code", bean_product.getCode());
-				if(context instanceof MallBaseActivity) {
-					intent.putExtra(MallBaseActivity.PAGE_FROM, ((MallBaseActivity) context).getNowFrom());
-				}
 				 context.startActivity(intent);
 			}
 		});

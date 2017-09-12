@@ -46,8 +46,6 @@ import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallStringManager;
 import xh.basic.tool.UtilString;
 
-import static third.mall.override.MallBaseActivity.PAGE_FROM;
-import static third.mall.override.MallBaseActivity.PAGE_FROM_TWO;
 
 /**
  * 打开网页，bundle中传入url，当页面加载完会获取页面title来设置
@@ -111,13 +109,6 @@ public class  ShowWeb extends WebActivity implements IObserver {
 			module_type= bundle.getString("module_type");
 			JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
 
-			String from = getIntent().getStringExtra(PAGE_FROM);
-			String two = getIntent().getStringExtra(PAGE_FROM_TWO);
-			if(!TextUtils.isEmpty(from)){
-				PageStatisticsUtils.getInstance().onPageChange(from ,two);
-			}else if(!TextUtils.isEmpty(url) && url.contains("m.ds.mamaweiyang")){
-				PageStatisticsUtils.getInstance().onPageChange(XHActivityManager.getInstance().getCurrentActivity(),url);
-			}
 		}
 	}
 
@@ -300,7 +291,6 @@ public class  ShowWeb extends WebActivity implements IObserver {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ShowWeb.this, ShoppingActivity.class);
-					intent.putExtra(PAGE_FROM, PageStatisticsUtils.getInstance().getPageName(ShowWeb.this));
                     startActivity(intent);
                     finish();
                 }
