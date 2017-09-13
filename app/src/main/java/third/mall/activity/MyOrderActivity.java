@@ -286,6 +286,9 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 				String id = data.getExtras().getString("code");
 				if (!TextUtils.isEmpty(position) && !TextUtils.isEmpty(id)) {
 					MallOrderFragment fragment = fragmentMap.get(id);
+					if(fragment == null || Integer.parseInt(position) < 0){
+						return;
+					}
 					if (resultCode == OrderStateActivity.result_del) {// 删除订单
 						fragment.listData.remove(Integer.parseInt(position));
 						fragment.adapter.notifyDataSetChanged();
