@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.crashreport.BuglyLog;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
@@ -167,9 +169,15 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             }
 
             @Override
-            public void onLoadFailed(Exception e, Drawable drawable) {
+            public void onLoadFailed(final Exception e, Drawable drawable) {
                 super.onLoadFailed(e, drawable);
-                CrashReport.postCatchedException(e);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        BuglyLog.i("image", "url = " + url + "  netStatus = " + ToolsDevice.getNetWorkSimpleType(getContext()));
+                        CrashReport.postCatchedException(e);
+                    }
+                }).start();
             }
         };
     }
