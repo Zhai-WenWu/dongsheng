@@ -527,10 +527,8 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 						View view_repeat=buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 							@Override
 							public void sucessCallBack() {
-								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 								Log.i("去购物车3", "去购物车3");
-								Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
-								OrderStateActivity.this.startActivity(intent);
+								goShopping("再次购买");
 							}
 						}, map, MallButtonView.detail_state_payment,url_statistic,mall_stat_statistic);
 						setButtonViewLayout(view_repeat.findViewById(R.id.textview));
@@ -573,10 +571,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 						View view_repeat=buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 							@Override
 							public void sucessCallBack() {
-								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
-								Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
-                                                                   MallCommon.setStatictisFrom("再次购买");
-                                                                   OrderStateActivity.this.startActivity(intent);
+                                  goShopping("再次购买");
 							}
 						}, map, MallButtonView.detail_state_payment,url_statistic,mall_stat_statistic);
 						setButtonViewLayout(view_repeat.findViewById(R.id.textview));
@@ -641,7 +636,6 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 							
 							@Override
 							public void sucessCallBack() {
-								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 								goShopping("再次购买-已发货");
 							}
 						}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
@@ -676,7 +670,6 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 				View view_reqeat= buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 					@Override
 					public void sucessCallBack() {
-						XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 						goShopping("再次购买-已完成");
 					}
 				}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
@@ -704,7 +697,6 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 				View view_reqeat1= buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 					@Override
 					public void sucessCallBack() {
-						XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 						goShopping("再次购买-取消或退款");
 					}
 				}, map, MallButtonView.detail_state_order,url_statistic,mall_stat_statistic);
@@ -725,7 +717,6 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 				View view_reqeat2= buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 					@Override
 					public void sucessCallBack() {
-						XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 						goShopping("再次购买-订单超时");
 					}
 				}, map, MallButtonView.detail_state_payment,url_statistic,mall_stat_statistic);
@@ -737,8 +728,12 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		}
 	}
 
-	/** 去购物车 */
+	/**
+	 * 去购物车
+ 	 * @param info //TODO暂时没有使用
+	 */
 	private void goShopping(String info){
+		XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 		Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
 		OrderStateActivity.this.startActivity(intent);
 		MallCommon.setStatictisFrom("再次购买");

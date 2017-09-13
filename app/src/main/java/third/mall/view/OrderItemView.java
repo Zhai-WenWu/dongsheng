@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import third.mall.activity.MyOrderActivity;
 import third.mall.activity.OrderStateActivity;
 import third.mall.activity.ShoppingActivity;
 import third.mall.aplug.MallClickContorl;
+import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallStringManager;
 import third.mall.override.MallBaseActivity;
 import third.mall.override.MallOrderBaseActivity;
@@ -195,6 +197,7 @@ public class OrderItemView extends ViewItemBase {
 							public void sucessCallBack() {
 								XHClick.mapStat(context, "a_mail_orders","按钮点击","再次购买");
 								Intent intent = new Intent(context, ShoppingActivity.class);
+								MallCommon.setStatictisFrom("再次购买");
 								context.startActivity(intent);
 							}
 						}, map, MallButtonView.list_state_payment,url,mall_stat_statistic);
@@ -266,6 +269,7 @@ public class OrderItemView extends ViewItemBase {
 				View view_repeat=buttonView.createViewRepeatOrder(new InterfaceViewCallback() {
 					@Override
 					public void sucessCallBack() {
+						MallCommon.setStatictisFrom("再次购买");
 						Intent intent= new Intent(context,ShoppingActivity.class);
 						context.startActivity(intent);
 					}

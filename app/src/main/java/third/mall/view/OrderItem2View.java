@@ -2,6 +2,7 @@ package third.mall.view;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -233,10 +234,7 @@ public class OrderItem2View extends ViewItemBase {
 
 							@Override
 							public void sucessCallBack() {
-								Intent intent = new Intent(activity, ShoppingActivity.class);
-								activity.startActivity(intent);
-								MallCommon.setStatictisFrom("再次购买");
-								XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
+								goShopping("再次购买");
 							}
 						}, map, buttonView.list_state_order,url,mall_stat_statistic));
 						//评价
@@ -260,10 +258,7 @@ public class OrderItem2View extends ViewItemBase {
 
 				@Override
 				public void sucessCallBack() {
-					Intent intent = new Intent(activity, ShoppingActivity.class);
-					activity.startActivity(intent);
-					MallCommon.setStatictisFrom("再次购买");
-					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
+					goShopping("再次购买");
 				}
 			}, map, buttonView.list_state_order,url,mall_stat_statistic));
             //已评价
@@ -310,10 +305,7 @@ public class OrderItem2View extends ViewItemBase {
 
 				@Override
 				public void sucessCallBack() {
-					Intent intent = new Intent(activity,ShoppingActivity.class);
-					activity.startActivity(intent);
-					MallCommon.setStatictisFrom("再次购买");
-					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
+					goShopping("再次购买");
 				}
 			}, map, buttonView.list_state_order,url,mall_stat_statistic));
 		} else if (satus.equals("7")) {// 订单支付超时---订单已退款
@@ -339,10 +331,8 @@ public class OrderItem2View extends ViewItemBase {
 
 				@Override
 				public void sucessCallBack() {
-					Intent intent = new Intent(activity, ShoppingActivity.class);
-					activity.startActivity(intent);
-					MallCommon.setStatictisFrom("再次购买");
-					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
+					Log.i("tzy","sucessCallBack:: 删除订单");
+					goShopping("再次购买");
 				}
 			}, map, buttonView.list_state_payment,url,mall_stat_statistic));
 		}
@@ -388,6 +378,17 @@ public class OrderItem2View extends ViewItemBase {
 				XHClick.mapStat(activity, "a_mail_orders","按钮点击","查看物流");
 			}
 		});
+	}
+
+	/**
+	 * 去购物车
+	 * @param info 暂时未使用
+	 */
+	private void goShopping(String info){
+		XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
+		Intent intent = new Intent(activity, ShoppingActivity.class);
+		MallCommon.setStatictisFrom("再次购买");
+		activity.startActivity(intent);
 	}
 
 	/** 物流信息 */

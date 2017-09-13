@@ -391,7 +391,6 @@ public class MallButtonView {
 		View view = createBaseView();
 		TagTextView tv = (TagTextView) view.findViewById(R.id.textview);
 		tv.setText(des);
-		Log.i("tzy","text = " + des);
 		tv.setTextColor(Color.parseColor("#ffffff"));
 		tv.setBackgroundResource(R.drawable.mall_buycommod_buy);
 		return view;
@@ -406,7 +405,6 @@ public class MallButtonView {
 		View view = createBaseView();
 		TagTextView tv = (TagTextView) view.findViewById(R.id.textview);
 		tv.setText(des);
-		Log.i("tzy","text = " + des);
 		tv.setTextColor(Color.parseColor("#666666"));
 		tv.setBackgroundResource(R.drawable.mall_order_item_button_style_1);
 		return view;
