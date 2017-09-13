@@ -8,7 +8,7 @@ public class MallStringManager extends UtilString {
 //    	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
     public static String apiAPI = "api";
     public static String appm = "m";
-    public static String httpData = "https://";
+    public static String httpData = "http://";
 
     public static String apiTitle = httpData + apiAPI;
     public static String appWebTitle = httpData + appm;
