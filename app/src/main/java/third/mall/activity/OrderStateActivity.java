@@ -488,7 +488,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					}
 
 					ViewGroup.LayoutParams params = gridview.getLayoutParams();
-					params.height = totalHeight + Tools.getDimen(OrderStateActivity.this,R.dimen.dp_40) + length * gridview.getVerticalSpacing();
+					params.height = totalHeight + Tools.getDimen(OrderStateActivity.this,R.dimen.dp_40) + length * Tools.getDimen(OrderStateActivity.this,R.dimen.dp_11);
 					gridview.setLayoutParams(params);
 				}
 			}
