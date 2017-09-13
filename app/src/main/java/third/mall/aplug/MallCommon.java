@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import amodule.main.Main;
 import aplug.basic.ReqInternet;
 import third.mall.MainMall;
 import third.mall.alipay.MallAlipay;
+import third.mall.override.MallBaseActivity;
 import third.mall.wx.WxPay;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
@@ -58,7 +60,6 @@ public class MallCommon {
 	public static int num=0;
 	public static boolean isShowMallAdvert= true;
 
-	public static String statictisFrom = "";
 	public MallCommon(Context context) {
 		this.context = context.getApplicationContext();
 	}
@@ -594,4 +595,19 @@ public class MallCommon {
 	public interface OnRegisterSuccessCallback{
 		void onRegisterSuccess();
 	}
+    public static String statictisFrom = "";
+    public static String getStatictisFrom(){
+        String data=statictisFrom;
+        statictisFrom="";
+	    Log.i("wyl","统计数据：获取：data：："+data+"::::statictisFrom::"+statictisFrom);
+        return data;
+    }
+    public static void setStatictisFrom(String dsfrom){
+        if(TextUtils.isEmpty(dsfrom)){
+            return;
+        }
+        MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?dsfrom: MallBaseActivity.PAGE_LOGO+dsfrom;
+    	Log.i("wyl","统计数据::保存：：："+MallCommon.statictisFrom);
+    }
+
 }

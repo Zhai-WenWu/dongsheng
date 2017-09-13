@@ -575,8 +575,8 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 							public void sucessCallBack() {
 								XHClick.mapStat(OrderStateActivity.this, "a_mail_order","底部按钮点击","再次购买");
 								Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
-                                                                        MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?"再次购买":PAGE_LOGO+"再次购买";
-								OrderStateActivity.this.startActivity(intent);
+                                                                   MallCommon.setStatictisFrom("再次购买");
+                                                                   OrderStateActivity.this.startActivity(intent);
 							}
 						}, map, MallButtonView.detail_state_payment,url_statistic,mall_stat_statistic);
 						setButtonViewLayout(view_repeat.findViewById(R.id.textview));
@@ -741,6 +741,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	private void goShopping(String info){
 		Intent intent= new Intent(OrderStateActivity.this,ShoppingActivity.class);
 		OrderStateActivity.this.startActivity(intent);
+		MallCommon.setStatictisFrom("再次购买");
 	}
 
 	/**

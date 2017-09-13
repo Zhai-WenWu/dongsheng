@@ -33,6 +33,7 @@ import third.mall.activity.PublishEvalutionMultiActivity;
 import third.mall.activity.PublishEvalutionSingleActivity;
 import third.mall.activity.ShoppingActivity;
 import third.mall.aplug.MallClickContorl;
+import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
@@ -234,6 +235,7 @@ public class OrderItem2View extends ViewItemBase {
 							public void sucessCallBack() {
 								Intent intent = new Intent(activity, ShoppingActivity.class);
 								activity.startActivity(intent);
+								MallCommon.setStatictisFrom("再次购买");
 								XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 							}
 						}, map, buttonView.list_state_order,url,mall_stat_statistic));
@@ -260,6 +262,7 @@ public class OrderItem2View extends ViewItemBase {
 				public void sucessCallBack() {
 					Intent intent = new Intent(activity, ShoppingActivity.class);
 					activity.startActivity(intent);
+					MallCommon.setStatictisFrom("再次购买");
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
 			}, map, buttonView.list_state_order,url,mall_stat_statistic));
@@ -309,6 +312,7 @@ public class OrderItem2View extends ViewItemBase {
 				public void sucessCallBack() {
 					Intent intent = new Intent(activity,ShoppingActivity.class);
 					activity.startActivity(intent);
+					MallCommon.setStatictisFrom("再次购买");
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
 			}, map, buttonView.list_state_order,url,mall_stat_statistic));
@@ -337,6 +341,7 @@ public class OrderItem2View extends ViewItemBase {
 				public void sucessCallBack() {
 					Intent intent = new Intent(activity, ShoppingActivity.class);
 					activity.startActivity(intent);
+					MallCommon.setStatictisFrom("再次购买");
 					XHClick.mapStat(activity, "a_mail_orders","按钮点击","再次购买");
 				}
 			}, map, buttonView.list_state_payment,url,mall_stat_statistic));

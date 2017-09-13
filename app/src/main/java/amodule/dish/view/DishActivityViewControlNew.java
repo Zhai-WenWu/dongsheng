@@ -155,7 +155,6 @@ public class  DishActivityViewControlNew {
             @Override
             public void onScroll(int scrollY) {
                 setViewOneState();
-                Log.i("wyl","30");
                 int[] location = new int[2];
                 int view_height = 0;
                 if (view_oneImage != null) {
@@ -174,7 +173,6 @@ public class  DishActivityViewControlNew {
 
             @Override
             public void scrollOritention(int scrollState) {
-                Log.i("wyl","31:::"+scrollState);
                 if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
 
                     bar_title_1.setVisibility(View.GONE);

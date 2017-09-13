@@ -422,6 +422,10 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
 			String param = "order_info=" + order_info + "&shipping_info=" + object_address.toString() 
 					+ "&address_id=" + address_id + "&pay_type=" + type+"&remark="+jsonArray.toString()
 					+"&shop_coupon_info="+setFavorableList().toString();
+                            //判断ds_from数据
+                            if(!TextUtils.isEmpty(MallCommon.statictisFrom)){
+                                param+="&ds_from="+MallCommon.getStatictisFrom();
+                            }
 			Log.i("remark", jsonArray.toString());
 			MallReqInternet.in().doPost(MallStringManager.mall_createOrderByCart_v2, param, new MallInternetCallback(this) {
 				@Override

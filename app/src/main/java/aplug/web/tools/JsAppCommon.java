@@ -1204,7 +1204,7 @@ public class JsAppCommon extends JsBase {
     @JavascriptInterface
     public void dsFrom(String dsfrom){
         if(!TextUtils.isEmpty(dsfrom)){
-            MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?dsfrom:MallBaseActivity.PAGE_LOGO+dsfrom;
+            MallCommon.setStatictisFrom(dsfrom);
         }
     }
 

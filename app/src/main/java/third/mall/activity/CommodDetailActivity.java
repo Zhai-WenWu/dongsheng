@@ -152,6 +152,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         initData();
         XHClick.track(this, "浏览商品");
         startTime = System.currentTimeMillis();
+        MallCommon.setStatictisFrom("商品详情");
     }
 
     /**

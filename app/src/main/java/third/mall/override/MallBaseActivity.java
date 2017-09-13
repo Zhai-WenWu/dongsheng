@@ -24,7 +24,7 @@ public class MallBaseActivity extends BaseActivity{
         dsFrom = getIntent().getStringExtra(PAGE_FROM);
         if(!TextUtils.isEmpty(dsFrom)){
             nowFrom=dsFrom;
-            MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?nowFrom:PAGE_LOGO+nowFrom;
+            MallCommon.setStatictisFrom(dsFrom);
         }
     }
 

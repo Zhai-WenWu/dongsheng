@@ -30,10 +30,10 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActMagager = new ActivityMethodManager(this);
-		dsFrom = getIntent().getStringExtra(MallBaseActivity.PAGE_FROM);
-		if(!TextUtils.isEmpty(dsFrom)){
-			MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?dsFrom:MallBaseActivity.PAGE_LOGO+dsFrom;
-		}
+//		dsFrom = getIntent().getStringExtra(MallBaseActivity.PAGE_FROM);
+//		if(!TextUtils.isEmpty(dsFrom)){
+//                      MallCommon.setStatictisFrom(dsFrom);
+//		}
 	}
 	
 	@Override

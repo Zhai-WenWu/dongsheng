@@ -338,6 +338,10 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 			object_address.put("consignee_address", consignee_address);
 			String url = MallStringManager.mall_api_createOrder;
 			String param = "order_info=" + array.toString() + "&shipping_info=" + object_address.toString() + "&address_id=" + address_id;
+			//判断ds_from数据
+			if(!TextUtils.isEmpty(MallCommon.statictisFrom)){
+				param+="&ds_from="+MallCommon.getStatictisFrom();
+			}
 			MallReqInternet.in().doPost(url, param, new MallInternetCallback(this) {
 
 				@Override
