@@ -599,7 +599,6 @@ public class MallCommon {
     public static String getStatictisFrom(){
         String data=statictisFrom;
         statictisFrom="";
-	    Log.i("wyl","统计数据：获取：data：："+data+"::::statictisFrom::"+statictisFrom);
         return data;
     }
     public static void setStatictisFrom(String dsfrom){
@@ -607,7 +606,6 @@ public class MallCommon {
             return;
         }
         MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?dsfrom: MallBaseActivity.PAGE_LOGO+dsfrom;
-    	Log.i("wyl","统计数据::保存：：："+MallCommon.statictisFrom);
     }
 
 }
