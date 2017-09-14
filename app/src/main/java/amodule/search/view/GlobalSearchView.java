@@ -323,6 +323,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         }
 
         edSearch.clearFocus();
+        ToolsDevice.keyboardControl(false,mActivity,edSearch);
 
         DataOperate.saveSearchWord(key);
         switch (type) {
