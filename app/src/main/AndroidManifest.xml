@@ -208,6 +208,7 @@
         android:icon="@drawable/ic_launcher"
         android:installLocation="internalOnly"
         android:label="@string/conf_appName"
+        android:resizeableActivity="true"
         android:largeHeap="true"
         android:launchMode="singleTask"
         android:theme="@style/AppBaseTheme"
@@ -1551,6 +1552,9 @@
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!--Baidu AD end-->
+        <!--全面屏适配-->
+        <meta-data android:name="android.max_aspect"
+                   android:value="ratio_float" />
 
     </application>
 
