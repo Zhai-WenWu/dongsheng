@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -15,6 +16,7 @@ import acore.widget.CommentBar;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.web.ShowTemplateWeb;
 import aplug.web.tools.XHTemplateManager;
+import third.mall.aplug.MallCommon;
 
 /**
  * PackageName : third.mall.activity
@@ -26,12 +28,13 @@ public class EvalutionListActivity extends ShowTemplateWeb {
 
     protected CommentBar commentBar;
     protected RelativeLayout editControlerLayout;
+    private TextView goShopping, bubbleSmall, bubbleBig;
 
     private String callbackName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent intent  = getIntent();
+        Intent intent = getIntent();
         intent.putExtra(EvalutionListActivity.REQUEST_METHOD, XHTemplateManager.DSCOMMENTLIST);
         setIntent(intent);
         super.onCreate(savedInstanceState);
@@ -45,13 +48,60 @@ public class EvalutionListActivity extends ShowTemplateWeb {
     @Override
     protected void initUI() {
         super.initUI();
-        title.setText("评价");
         initCommentBar();
+    }
+
+    @Override
+    protected void initTitleView() {
+        super.initTitleView();
+        title.setText("评价");
+        //初始化购物车
+//        initShopping();
+    }
+
+    /** 初始化购物车 */
+    private void initShopping() {
+        goShopping = (TextView) findViewById(R.id.rightText);
+        bubbleSmall = (TextView) findViewById(R.id.right_bubble_small);
+        bubbleBig = (TextView) findViewById(R.id.right_bubble_big);
+        setShoppingNumber();
+
+        goShopping.setText("购物车");
+        goShopping.setVisibility(View.VISIBLE);
+        goShopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EvalutionListActivity.this, ShoppingActivity.class));
+            }
+        });
+    }
+
+    /** 设置购物车气泡 */
+    public void setShoppingNumber(){
+        if(MallCommon.num_shopcat > 0
+                && MallCommon.num_shopcat <= 9){
+            bubbleSmall.setText(String.valueOf(MallCommon.num_shopcat));
+            bubbleSmall.setVisibility(View.VISIBLE);
+            bubbleBig.setVisibility(View.GONE);
+        }else if(MallCommon.num_shopcat > 9
+                && MallCommon.num_shopcat <= 99){
+            bubbleBig.setText(String.valueOf(MallCommon.num_shopcat));
+            bubbleSmall.setVisibility(View.GONE);
+            bubbleBig.setVisibility(View.VISIBLE);
+        }else if(MallCommon.num_shopcat > 99){
+            bubbleBig.setText("99+");
+            bubbleSmall.setVisibility(View.GONE);
+            bubbleBig.setVisibility(View.VISIBLE);
+        }else{
+            bubbleSmall.setVisibility(View.GONE);
+            bubbleBig.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+//        setShoppingNumber();
     }
 
     protected void initCommentBar() {
@@ -59,7 +109,7 @@ public class EvalutionListActivity extends ShowTemplateWeb {
         editControlerLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         resetCommentBar();
                         break;
@@ -72,13 +122,13 @@ public class EvalutionListActivity extends ShowTemplateWeb {
         commentBar.setOnPublishCommentCallback(new CommentBar.OnPublishCommentCallback() {
             @Override
             public boolean onPrePublishComment() {
-                if(!LoginManager.isLogin()){
-                    Tools.showToast(EvalutionListActivity.this,"请登录");
+                if (!LoginManager.isLogin()) {
+                    Tools.showToast(EvalutionListActivity.this, "请登录");
                     startActivity(new Intent(EvalutionListActivity.this, LoginByAccout.class));
                     return true;
                 }
-                if(!ToolsDevice.isNetworkAvailable(EvalutionListActivity.this)){
-                    Tools.showToast(EvalutionListActivity.this,"请检查网络连接");
+                if (!ToolsDevice.isNetworkAvailable(EvalutionListActivity.this)) {
+                    Tools.showToast(EvalutionListActivity.this, "请检查网络连接");
                     return true;
                 }
                 return false;
@@ -86,8 +136,8 @@ public class EvalutionListActivity extends ShowTemplateWeb {
 
             @Override
             public void onPublishComment(String content) {
-                if(templateWebView != null)
-                    templateWebView.loadUrl("javascript:"+callbackName+"(\""+content+"\")");
+                if (templateWebView != null)
+                    templateWebView.loadUrl("javascript:" + callbackName + "(\"" + content + "\")");
                 resetCommentBar();
             }
         });
@@ -109,13 +159,13 @@ public class EvalutionListActivity extends ShowTemplateWeb {
     }
 
 
-    public void showCommentBar(String userName,String callbackName){//dsShowCommentBarCallback
+    public void showCommentBar(String userName, String callbackName) {//dsShowCommentBarCallback
         this.callbackName = callbackName;
         commentBar.setEditTextHint("回复 ：" + userName);
         commentBar.show();
     }
 
-    public void resetCommentBar(){
+    public void resetCommentBar() {
         commentBar.setEditTextHint("回复 ");
         commentBar.resetEdit();
         commentBar.hide();
