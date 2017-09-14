@@ -33,18 +33,29 @@ public class LoadMoreManager {
 	 * @return
 	 */
 	public Button newLoadMoreBtn(Object key, OnClickListener clicker) {
-		Button loadMoreBtn = new Button(mContext);
-		loadMoreBtn.setHeight(mHeightLoadmore);
-		loadMoreBtn.setGravity(Gravity.CENTER);
-		loadMoreBtn.setText("点击加载更多");
-		loadMoreBtn.setTextSize(mTextSize);
-		loadMoreBtn.setTextColor(Color.parseColor("#AEAEAE"));
-		loadMoreBtn.setBackgroundResource(R.drawable.btn_nocolor);
-		int pa = ToolsDevice.dp2px(mContext, 1);
-		loadMoreBtn.setShadowLayer(pa, pa, pa,Color.parseColor("#CEFFFFFF"));
+		Button loadMoreBtn = null;
+		//先获取
+		if(key != null
+				&& mLoadMoreMap != null
+				&& !mLoadMoreMap.isEmpty()){
+			loadMoreBtn = mLoadMoreMap.get(key);
+		}
+		//如果为null则创建
+		if(loadMoreBtn == null){
+			loadMoreBtn = new Button(mContext);
+			loadMoreBtn.setHeight(mHeightLoadmore);
+			loadMoreBtn.setGravity(Gravity.CENTER);
+			loadMoreBtn.setText("点击加载更多");
+			loadMoreBtn.setTextSize(mTextSize);
+			loadMoreBtn.setTextColor(Color.parseColor("#AEAEAE"));
+			loadMoreBtn.setBackgroundResource(R.drawable.btn_nocolor);
+			int pa = ToolsDevice.dp2px(mContext, 1);
+			loadMoreBtn.setShadowLayer(pa, pa, pa,Color.parseColor("#CEFFFFFF"));
+			//按对应关系存储
+			mLoadMoreMap.put(key, loadMoreBtn);
+		}
+		//重新设置监听
 		loadMoreBtn.setOnClickListener(clicker);
-		//按对应关系存储
-		mLoadMoreMap.put(key, loadMoreBtn);
 		return loadMoreBtn;
 	}
 	

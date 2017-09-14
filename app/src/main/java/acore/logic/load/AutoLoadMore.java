@@ -72,6 +72,9 @@ public class AutoLoadMore {
 	 * @param clicker
 	 */
 	public static void setAutoMoreListen (final ListView list, final Button loadMore, final View.OnClickListener clicker) {
+		if(list.getFooterViewsCount() > 0){
+			list.removeFooterView(loadMore);
+		}
 		list.addFooterView (loadMore);
 		list.setOnScrollListener (new OnScrollListener () {
 			int visibleLast = -1;
@@ -109,6 +112,9 @@ public class AutoLoadMore {
 	 * @param clicker
 	 */
 	public static void setAutoMoreListen (final ListView list, final Button loadMore, final View.OnClickListener clicker, final OnListScrollListener scrollListener) {
+		if(list.getFooterViewsCount() > 0){
+			list.removeFooterView(loadMore);
+		}
 		list.addFooterView (loadMore);
 		list.setOnScrollListener (new OnScrollListener () {
 			int visibleLast = -1;
@@ -153,6 +159,9 @@ public class AutoLoadMore {
 	 * @param clicker
 	 */
 	public static void setAutoMoreListen (PlaceHoderHeaderLayout placeHoderHeaderLayout, final ListView list, final Button loadMore, final OnClickListener clicker) {
+		if(list.getFooterViewsCount() > 0){
+			list.removeFooterView(loadMore);
+		}
 		list.addFooterView (loadMore);
 		placeHoderHeaderLayout.setOnListScrollListener (new OnListScrollListener () {
 			int visibleLast = -1;
@@ -191,6 +200,9 @@ public class AutoLoadMore {
 	 * @param clicker
 	 */
 	public static void setAutoMoreListen (ScrollLinearListLayout scrollLinearListLayout, final ListView list, final Button loadMore, final OnClickListener clicker) {
+		if(list.getFooterViewsCount() > 0){
+			list.removeFooterView(loadMore);
+		}
 		list.addFooterView (loadMore);
 		scrollLinearListLayout.addOnScrollListener (new AbsListView.OnScrollListener () {
 			int visibleLast = -1;
@@ -236,6 +248,9 @@ public class AutoLoadMore {
 	 */
 	public static void setAutoMoreListen (final ListView list, final LayoutScroll scrollLayout, final ViewGroup backLayout, final Button loadMore,
 										  final View.OnClickListener clicker, final View.OnClickListener downClicker, final LoadManager.ViewScrollCallBack viewScrollCallBack) {
+		if(list.getFooterViewsCount() > 0){
+			list.removeFooterView(loadMore);
+		}
 		list.addFooterView (loadMore);
 		//含有下拉刷新
 		if (list instanceof DownRefreshList) {
@@ -390,6 +405,9 @@ public class AutoLoadMore {
 	// 设置DownRefreshList的自动加载更多-----带接口回调
 	public static void setAutoMoreListen (final DownRefreshList list, final Button loadMore, final View.OnClickListener clicker, final View.OnClickListener downClicker, final LoadManager.ViewScrollCallBack viewScrollCallBack) {
 		if (loadMore != null) {
+			if(list.getFooterViewsCount() > 0){
+				list.removeFooterView(loadMore);
+			}
 			list.addFooterView (loadMore);
 		}
 		//设置下拉事件
