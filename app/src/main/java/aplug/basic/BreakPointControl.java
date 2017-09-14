@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import acore.tools.FileManager;
+import acore.tools.ToolsDevice;
 import amodule.upload.callback.UploadListNetCallBack;
 
 /**
@@ -218,9 +219,18 @@ public class BreakPointControl {
         if (filePath.contains(".")) {
             temp = filePath.substring(filePath.lastIndexOf("."), filePath.length());
         }
-        setKey(BreakPointUploadManager.getInstance().getKey(type) + Md5Util.encode(filePath) + temp);
+        setKey(createKey(filePath,temp));
 
         this.filePath = filePath;
+    }
+
+    /**创建七牛路径*/
+    public String createKey(String filePath,String temp){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(BreakPointUploadManager.getInstance().getKey(type))
+                .append(Md5Util.encode(filePath + ToolsDevice.getXhIMEI(context) + new File(filePath).lastModified()))
+                .append(temp);
+        return buffer.toString();
     }
 
     /***
