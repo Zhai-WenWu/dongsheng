@@ -14,6 +14,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.WebActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import amodule.answer.db.AskAnswerSQLite;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
 import amodule.main.activity.MainChangeSend;
@@ -43,7 +44,6 @@ public class LoginManager {
     public static Map<String, String> userInfo = new HashMap<>(); // 当前登录用户信息
 
     private static String mPlatformName = "QQ";
-    private static BaseActivity mAct;
 
     public static boolean mIsShowAd = true,isLoadFile = false;
 
@@ -59,7 +59,7 @@ public class LoginManager {
             //			logout(act);
             new XGPushServer(act).initPush();
             //设置GrowingIO用户数据
-            new GrowingIOController().setUserProperties(mAct,userInfo);
+            new GrowingIOController().setUserProperties(act,userInfo);
         }else if(length > 0 || length <= 12){
             String params = "type=getData&devCode=" + XGPushServer.getXGToken(act);
             ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(act) {
@@ -78,7 +78,7 @@ public class LoginManager {
             });
         }else if(length == 13){
             //设置GrowingIO用户数据
-            new GrowingIOController().setUserProperties(mAct,userInfo);
+            new GrowingIOController().setUserProperties(act,userInfo);
             //统计
             XHClick.onEvent(act, "login", "自动");
             //设置用户其他
@@ -168,11 +168,29 @@ public class LoginManager {
                         mAct.finish();
                     //清除电商的数据
                     MallCommon.delSaveMall(mAct);
-                    getUserPowers();
-                    getActivityInfo();
+                    getUserPowers(mAct);
+                    getActivityInfo(mAct);
+
+                    //清除无用数据
+                    clearUserData(mAct);
                 }
             }
         });
+    }
+
+    /**
+     * 清除用户无用数据，如问答草稿
+     * @param activity
+     */
+    public static void clearUserData(final Activity activity) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //清除问答草稿数据
+                AskAnswerSQLite sqLite = new AskAnswerSQLite(activity);
+                sqLite.deleteAll();
+            }
+        }).start();
     }
 
     /**
@@ -238,13 +256,13 @@ public class LoginManager {
         //XG注册
         if (userInfo.get("code") != null)
             new XGPushServer(mAct).initPush(userInfo.get("code"));
-        getUserPowers();
-        getActivityInfo();
+        getUserPowers(mAct);
+        getActivityInfo(mAct);
     }
 
-    private static void getUserPowers() {
+    private static void getUserPowers(Activity act) {
 
-        ReqInternet.in().doGet(StringManager.api_getUserPowers, new InternetCallback(mAct) {
+        ReqInternet.in().doGet(StringManager.api_getUserPowers, new InternetCallback(act) {
             @Override
             public void loaded(int flag, String s, Object o) {
                 //Log.i("FRJ","getUserPowers()" + flag + "    o:" + o);
@@ -276,8 +294,8 @@ public class LoginManager {
         });
     }
 
-    private static void getActivityInfo() {
-        ReqInternet.in().doGet(StringManager.api_getActivityInfo, new InternetCallback(mAct) {
+    private static void getActivityInfo(Activity activity) {
+        ReqInternet.in().doGet(StringManager.api_getActivityInfo, new InternetCallback(activity) {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
