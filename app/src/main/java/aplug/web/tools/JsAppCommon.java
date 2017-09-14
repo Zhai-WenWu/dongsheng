@@ -175,6 +175,7 @@ public class JsAppCommon extends JsBase {
      *                   以back_开头 返回使用back_后的JS
      *                   JS 返回后，在之前页面执行JS
      *                   no 返回后，在之前页面不执行操作
+     *                   finish 返回后，直接关闭当前页面
      */
     @android.webkit.JavascriptInterface
     public void setGoBack(String backAction) {

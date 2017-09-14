@@ -77,15 +77,15 @@ public class WebActivity extends BaseActivity{
 				// 用JS来代替返回
 				if (JSAction.backAction.indexOf("back_") == 0) {
 					webview.loadUrl("javascript:" + JSAction.backAction.replace("back_", "") + ";");
-				}
-				// 返回后要在上一个页面执行JS，或清空要执行的js
-				else {
+				} else if (JSAction.backAction.startsWith("finish")) {
+					this.finish();
+					webview.downWebViewNum();
+				} else { // 返回后要在上一个页面执行JS，或清空要执行的js
 					JSAction.resumeAction = JSAction.backAction.equals("no") ? "" : JSAction.backAction;
 					this.finish();
 					webview.downWebViewNum();
 				}
-			}
-			else if (webview.canGoBack()) {
+			} else if (webview.canGoBack()) {
 				loadManager.showProgressBar();
 				webview.downWebViewNum();
 				webview.goBack();
