@@ -142,28 +142,6 @@ public class ActivityMethodManager {
         ReqEncyptInternet.in().clearListIntenert();
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        mAct.getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    public void onMenuItemSelected(int featureId, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_feedback:
-                Intent intent = new Intent(mAct, Feedback.class);
-                mAct.startActivity(intent);
-                break;
-            case R.id.menu_exit:
-                if (Main.allMain != null) {
-                    colse_level = 1;
-                    mAct.finish();
-                    Main.allMain.setDoExit(1);
-                    Main.allMain.doExit(mAct, false);
-                }
-                break;
-        }
-    }
-
     /**
      * 注册Home键的监听
      */

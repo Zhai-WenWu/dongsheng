@@ -226,15 +226,8 @@ public class BaseActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return mActMagager.onCreateOptionsMenu(menu);
+		return false;
 	}
-
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		mActMagager.onMenuItemSelected(featureId, item);
-		return super.onMenuItemSelected(featureId, item);
-	}
-
 
 	@Override
 	protected void onResume() {
