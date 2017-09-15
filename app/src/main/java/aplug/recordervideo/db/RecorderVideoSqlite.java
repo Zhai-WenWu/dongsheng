@@ -257,7 +257,7 @@ public class RecorderVideoSqlite extends SQLiteOpenHelper {
     }
 
     private static final String TB_NAME = "tb_recorderVideo";
-    private static final String CREATE_TABLE_SQL = "create table " + TB_NAME + "("
+    private static final String CREATE_TABLE_SQL = "create table if not exists " + TB_NAME + "("
             + RecorderVideoData.video_id + " integer primary key autoincrement,"
             + RecorderVideoData.video_add_time + " long,"
             + RecorderVideoData.video_show_time + " text,"

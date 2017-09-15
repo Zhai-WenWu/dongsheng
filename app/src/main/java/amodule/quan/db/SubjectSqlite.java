@@ -346,7 +346,7 @@ public class SubjectSqlite extends SQLiteOpenHelper{
 		public static final String db_videoType = "videoType";
 	}
 	
-	private static final String CREATE_TABLE_SQL = "create table " + SubjectDB.TB_NAME + "("
+	private static final String CREATE_TABLE_SQL = "create table if not exists " + SubjectDB.TB_NAME + "("
 			+ SubjectDB.db_id + " integer primary key autoincrement,"
 			+ SubjectDB.db_code + " text,"
 			+ SubjectDB.db_title + " text,"

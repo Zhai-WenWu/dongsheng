@@ -280,7 +280,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
 
     private String TB_NAME;
     private String getCreateTableSql(){
-        return "create table " + TB_NAME + "("
+        return "create table if not exists " + TB_NAME + "("
                 + UploadArticleData.article_id + " integer primary key autoincrement,"
                 + UploadArticleData.article_title + " text,"
                 + UploadArticleData.article_classCode + " text,"

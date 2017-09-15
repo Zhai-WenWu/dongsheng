@@ -143,7 +143,7 @@ public class BrowseHistorySqlite extends SQLiteOpenHelper {
 	}
 
 	private final String getCreateTableName(String tb_name) {
-		return "create table " + tb_name + "("
+		return "create table if not exists " + tb_name + "("
 				+ HistoryData._id + " integer primary key autoincrement,"
 				+ HistoryData._browseTime + " long,"
 				+ HistoryData._code + " char unique,"

@@ -301,7 +301,7 @@ public class ShowBuySqlite extends SQLiteOpenHelper {
     private final static String DB_NAME = "tb_showBuy";
     public static final String TB_MAIN_ENAME = "tb_showBuy";
 
-    private final String CREATE_MAIN_TABLE_SQL = "create table " + TB_MAIN_ENAME + "("
+    private final String CREATE_MAIN_TABLE_SQL = "create table if not exists " + TB_MAIN_ENAME + "("
             + DishOffData.bd_id + " integer primary key autoincrement,"
             + DishOffData.bd_code + " text,"
             + DishOffData.bd_name + " ntext,"

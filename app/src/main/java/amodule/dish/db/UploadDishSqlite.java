@@ -545,7 +545,7 @@ public class UploadDishSqlite extends SQLiteOpenHelper {
     }
 
     private static final String TB_NAME = "tb_uploadDish";
-    private static final String CREATE_TABLE_SQL = "create table " + TB_NAME + "("
+    private static final String CREATE_TABLE_SQL = "create table if not exists " + TB_NAME + "("
             + UploadDishData.ds_id + " integer primary key autoincrement,"
             + UploadDishData.ds_code + " text,"
             + UploadDishData.ds_name + " text,"

@@ -175,7 +175,7 @@ public class CircleSqlite extends SQLiteOpenHelper {
 		}
 	}
 
-	private static final String CREATE_TABLE_SQL = "create table " + CircleDB.TB_NAME + "("
+	private static final String CREATE_TABLE_SQL = "create table if not exists " + CircleDB.TB_NAME + "("
 			+ CircleDB.db_cid + " text primary key,"
 			+ CircleDB.db_name + " text,"
 			+ CircleDB.db_rule + " text,"
