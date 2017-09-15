@@ -498,9 +498,13 @@ public class ArticleDetailActivity extends BaseActivity {
             webView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString()))
-                        mArticleCommentBar.setEditTextShow(false);
-                    ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
+                    if (mArticleCommentBar != null
+                            && mArticleCommentBar.getEditText() != null){
+                        if(TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString())){
+                            mArticleCommentBar.setEditTextShow(false);
+                        }
+                        ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
+                    }
                     return false;
                 }
             });
