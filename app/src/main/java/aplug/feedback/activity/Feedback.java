@@ -97,16 +97,20 @@ public class Feedback extends BaseActivity implements OnClickListener {
                         getFeekbackInfo(true);
                         break;
                     case MSG_IMG_UPLOAD:
-                        contentList.get(contentList.size() - 1).put("progress_img", "hide");
-                        contentList.get(contentList.size() - 1).put("progress_text", "hide");
-                        adapter.notifyDataSetChanged();
+                        if(!contentList.isEmpty()){
+                            contentList.get(contentList.size() - 1).put("progress_img", "hide");
+                            contentList.get(contentList.size() - 1).put("progress_text", "hide");
+                            adapter.notifyDataSetChanged();
+                        }
                         if (!feekback_text.equals(""))
                             feebback_reply_content.setText(feekback_text);
                         break;
                     case MSG_TEXT_UPLOAD:
-                        contentList.get(contentList.size() - 1).put("progress_img", "hide");
-                        contentList.get(contentList.size() - 1).put("progress_text", "hide");
-                        adapter.notifyDataSetChanged();
+                        if(!contentList.isEmpty()){
+                            contentList.get(contentList.size() - 1).put("progress_img", "hide");
+                            contentList.get(contentList.size() - 1).put("progress_text", "hide");
+                            adapter.notifyDataSetChanged();
+                        }
                         feekback_text = "";
                         break;
                 }

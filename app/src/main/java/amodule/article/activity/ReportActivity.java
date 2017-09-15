@@ -37,7 +37,6 @@ public class ReportActivity extends BaseActivity {
     private TextView mAdminDesc;
     private LinearLayout mAdminContainer;
     private ImageView mReportInfo;
-    private TextView mName;
     private Button mCommitBtn;
 
     private String mUserCode = "";
@@ -49,7 +48,6 @@ public class ReportActivity extends BaseActivity {
     private String mReportContent = "";
     private String mReportType = "2";//1:主题，2:评论（默认），3:回复
 
-    private boolean mFlag;
     private boolean mLoaded;
 
     @Override
@@ -102,7 +100,7 @@ public class ReportActivity extends BaseActivity {
         mAdminContainer = (LinearLayout) findViewById(R.id.admin_report_container);
         mReportInfo = (ImageView) findViewById(R.id.icon_report);
         mCommitBtn = (Button) findViewById(R.id.report_commit);
-        mName = (TextView) findViewById(R.id.title);
+        TextView mName = (TextView) findViewById(R.id.title);
         if (!TextUtils.isEmpty(mReportName))
             mName.setText("举报 " + mReportName);
     }
