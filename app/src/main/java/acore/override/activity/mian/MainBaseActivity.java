@@ -48,14 +48,7 @@ public class MainBaseActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return mActMagager.onCreateOptionsMenu(menu);
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		mActMagager.onMenuItemSelected(0, item);
-		return super.onOptionsItemSelected(item);
+		return false;
 	}
 
 	@Override

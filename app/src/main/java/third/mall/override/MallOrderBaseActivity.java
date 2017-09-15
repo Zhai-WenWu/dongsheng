@@ -30,10 +30,6 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActMagager = new ActivityMethodManager(this);
-//		dsFrom = getIntent().getStringExtra(MallBaseActivity.PAGE_FROM);
-//		if(!TextUtils.isEmpty(dsFrom)){
-//                      MallCommon.setStatictisFrom(dsFrom);
-//		}
 	}
 	
 	@Override
@@ -48,13 +44,7 @@ public class MallOrderBaseActivity extends FragmentActivity{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return mActMagager.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		mActMagager.onMenuItemSelected(featureId, item);
-		return super.onMenuItemSelected(featureId, item);
+		return false;
 	}
 
 	@Override

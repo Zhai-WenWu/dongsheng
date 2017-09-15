@@ -158,13 +158,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return mActMagager.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		mActMagager.onMenuItemSelected(featureId, item);
-		return super.onMenuItemSelected(featureId, item);
+		return false;
 	}
 
 	@Override
