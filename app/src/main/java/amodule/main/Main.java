@@ -579,8 +579,10 @@ public class Main extends Activity implements OnClickListener {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("currentTab", defaultTab + "");
-        super.onSaveInstanceState(outState);
+        /*try catch 住 super方法，尝试解决 IllegalStateException 异常*/
+        try{
+            super.onSaveInstanceState(outState);
+        }catch (Exception ignored){}
     }
 
     @Override
