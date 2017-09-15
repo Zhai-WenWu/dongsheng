@@ -269,7 +269,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         Rect outRect = new Rect();
         this.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         statusBarHeight = outRect.top;
-        dishActivityViewControl.onResume();
+        if(dishActivityViewControl != null){
+            dishActivityViewControl.onResume();
+        }
     }
 
     @Override
@@ -277,7 +279,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         Log.i("DetailDishActivity","onPause()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
-        dishActivityViewControl.onPause();
+        if(dishActivityViewControl != null){
+            dishActivityViewControl.onPause();
+        }
     }
 
     @Override
@@ -285,7 +289,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         super.onDestroy();
         //反注册。
         ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
-        dishActivityViewControl.onDestroy();
+        if(dishActivityViewControl != null){
+            dishActivityViewControl.onDestroy();
+        }
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
