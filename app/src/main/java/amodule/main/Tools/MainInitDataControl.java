@@ -153,8 +153,6 @@ public class MainInitDataControl {
         Log.i("zhangyujian","initMainOnResume");
         long startTime= System.currentTimeMillis();
 
-        TencenApiAdTools.getTencenApiAdTools().getLocation();
-
         //更模版
         new XHTemplateManager().CheckUpdataAllTemplate();
 

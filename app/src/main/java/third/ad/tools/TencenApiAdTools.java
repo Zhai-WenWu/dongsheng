@@ -243,13 +243,17 @@ public class TencenApiAdTools {
             bidRequestJsonObj.put("app", appJsonObj);
             //设备信息
             JSONObject deviceJsonObj = new JSONObject();
-            deviceJsonObj.put("ua",ua);
-            if(!TextUtils.isEmpty(mLat)) {
-                JSONObject geoJsonObj = new JSONObject();
-                geoJsonObj.put("lat", mLat);
-                geoJsonObj.put("lon", mLon);
-                geoJsonObj.put("type", "1");
-                deviceJsonObj.put("geo", geoJsonObj);
+            if(!TextUtils.isEmpty(ua)
+                    && !TextUtils.isEmpty(mLat)
+                    && !TextUtils.isEmpty(mLon)){
+                deviceJsonObj.put("ua",ua);
+                if(!TextUtils.isEmpty(mLat)) {
+                    JSONObject geoJsonObj = new JSONObject();
+                    geoJsonObj.put("lat", mLat);
+                    geoJsonObj.put("lon", mLon);
+                    geoJsonObj.put("type", "1");
+                    deviceJsonObj.put("geo", geoJsonObj);
+                }
             }
 //            deviceJsonObj.put("ip", ToolsDevice.getIp());
 //            deviceJsonObj.put("ipv6", ToolsDevice.getIp());
