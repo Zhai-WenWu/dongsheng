@@ -1,23 +1,17 @@
 package amodule.other.activity;
 
-import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.transition.Transition;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xiangha.R;
-import com.example.gsyvideoplayer.listener.OnTransitionListener;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.xiangha.R;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
@@ -73,7 +67,8 @@ public class PlayVideo extends BaseAppCompatActivity {
         @Override
         public void onClick(View v) {
             findViewById(R.id.tip_view).setVisibility(View.GONE);
-            videoPlayer.startPlayLogic();
+            if (videoPlayer != null)
+                videoPlayer.startPlayLogic();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -129,20 +124,23 @@ public class PlayVideo extends BaseAppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        videoPlayer.onVideoPause();
+        if (videoPlayer != null)
+            videoPlayer.onVideoPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        videoPlayer.onVideoResume();
+        if (videoPlayer != null)
+            videoPlayer.onVideoResume();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //释放所有
-        videoPlayer.setStandardVideoAllCallBack(null);
+        if (videoPlayer != null)
+            videoPlayer.setStandardVideoAllCallBack(null);
         GSYVideoPlayer.releaseAllVideos();
         if (orientationUtils != null)
             orientationUtils.releaseListener();
@@ -152,7 +150,8 @@ public class PlayVideo extends BaseAppCompatActivity {
     public void onBackPressed() {
         //先返回正常状态
         if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            videoPlayer.getFullscreenButton().performClick();
+            if (videoPlayer != null)
+                videoPlayer.getFullscreenButton().performClick();
             return;
         }
         super.onBackPressed();

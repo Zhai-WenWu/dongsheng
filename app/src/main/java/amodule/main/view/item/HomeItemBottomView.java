@@ -53,30 +53,26 @@ public class HomeItemBottomView extends LinearLayout {
     }
 
     private void bindView() {
+        boolean showView = false;
         for (int i = 0; i < mDatas.size(); i ++) {
             Map<String, String> data = mDatas.get(i);
             if (data != null && !data.isEmpty()) {
-                switch (i) {
-                    case 0:
-                        String text1 = data.get("");
-                        if (!TextUtils.isEmpty(text1)) {
-                            mTextView1.setText(text1);
+                String text = data.get("");
+                if (!TextUtils.isEmpty(text)) {
+                    showView = true;
+                    switch (i) {
+                        case 0:
+                            mTextView1.setText(text);
                             mTextView1.setVisibility(View.VISIBLE);
-                        } else
-                            mTextView1.setVisibility(View.GONE);
-                        break;
-                    case 1:
-                        String text2 = data.get("");
-                        if (!TextUtils.isEmpty(text2)) {
-                            mTextView2.setText(text2);
+                            break;
+                        case 1:
+                            mTextView2.setText(text);
                             mTextView2.setVisibility(View.VISIBLE);
-                        } else
-                            mTextView2.setVisibility(View.GONE);
-                        break;
+                            break;
+                    }
                 }
-
             }
         }
-        setVisibility((mTextView1.getVisibility() == View.VISIBLE || mTextView2.getVisibility() == View.VISIBLE) ? View.VISIBLE : View.GONE);
+        setVisibility(showView ? View.VISIBLE : View.GONE);
     }
 }

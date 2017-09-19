@@ -13,8 +13,8 @@
         android:layout_marginRight="@dimen/dp_14"
         android:textColor="#b5b4b4"
         android:textSize="@dimen/sp_11"
-        android:text="七年老鸭"
-        android:visibility="visible" />
+        android:text=""
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/TextView2"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textColor="#b5b4b4"
         android:textSize="@dimen/sp_11"
-        android:text="七年老鸭"
-        android:visibility="visible" />
+        android:text=""
+        android:visibility="gone" />
 
 </LinearLayout>
