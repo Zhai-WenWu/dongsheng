@@ -343,7 +343,7 @@ public class TextAndImageMixLayout extends LinearLayout
      * @param imageUrlArray
      */
     public void addImageArray(List<String> imageUrlArray) {
-        if (imageUrlArray == null)
+        if (imageUrlArray == null || imageUrlArray.isEmpty())
             return;
         CharSequence content = currentEditText.getSelectionEndContent();
         for (int index = 0; index < imageUrlArray.size(); index++) {
