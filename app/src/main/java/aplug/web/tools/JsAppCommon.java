@@ -659,7 +659,27 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (mLoadManager != null) {
-                    VersionOp.getInstance().toUpdate(mLoadManager, true);
+                    VersionOp.getInstance().toUpdate(new VersionOp.OnGetUpdataCallback() {
+                        @Override
+                        public void onPreUpdate() {
+                            mLoadManager.startProgress("正在获取最新版本信息");
+                        }
+
+                        @Override
+                        public void onNeedUpdata() {
+                            mLoadManager.dismissProgress();
+                        }
+
+                        @Override
+                        public void onNotNeed() {
+                            mLoadManager.dismissProgress();
+                        }
+
+                        @Override
+                        public void onFail() {
+                            mLoadManager.dismissProgress();
+                        }
+                    },true);
                 }
             }
         });

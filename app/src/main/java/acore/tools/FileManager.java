@@ -242,7 +242,7 @@ public class FileManager extends UtilFile{
 		FileManager.setSharedPreference(mContext, FileManager.USERCHECK, str_new);
 	}
 	
-	public static String getCameraDir(){
+	public static String getSDCacheDir(){
 		return getSDDir()+save_cache+"/";
 	}
 	

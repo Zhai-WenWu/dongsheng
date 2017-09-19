@@ -45,13 +45,16 @@ public class GuideManager extends DialogManagerParent {
         count++;
         FileManager.saveShared(mAct, FileManager.xmlFile_appUrl, FileManager.xmlKey_confirnCount, map.get("url"));
         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, FileManager.xmlKey_confirnCount, "" + count);
+        //展示
         showDialog(map);
     }
 
     @Override
     public void isShow(final OnDialogManagerCallback callback) {
         mAct = XHActivityManager.getInstance().getCurrentActivity();
-        if (mAct == null) return;
+        if (mAct == null)
+            return;
+        //请求
         ReqInternet.in().doGet(StringManager.api_toConfirn, new InternetCallback(mAct) {
             @Override
             public void loaded(int flag, String url, Object msg) {
@@ -150,7 +153,7 @@ public class GuideManager extends DialogManagerParent {
                             try {
                                 final DownLoad downLoad = new DownLoad(mAct);
                                 downLoad.setNotifaction("开始下载", map.get("name") + ".apk", "正在下载", R.drawable.ic_launcher, false);
-                                downLoad.starDownLoad(url, FileManager.getCameraDir(), map.get("name"), true, new DownloadCallBack() {
+                                downLoad.starDownLoad(url, FileManager.getSDCacheDir(), map.get("name"), true, new DownloadCallBack() {
 
                                     @Override
                                     public void starDown() {

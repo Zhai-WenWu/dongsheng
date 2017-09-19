@@ -18,26 +18,24 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.logic.load.LoadManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilLog;
-import xh.basic.tool.UtilString;
 
 public class VersionOp extends DialogManagerParent{
 	private static VersionOp versionOp=null;
-	private String path = FileManager.getCameraDir();
+	private String path = FileManager.getSDCacheDir();
 	private String apkName = "香哈菜谱";
 	private VersionUpload versionUpload;
-
+	/***/
 	private boolean mShowPro;
+	/**是否必须升级*/
 	boolean isMustUpdata = false;
-
+	/***/
 	private boolean misSilentInstall = false;
 
 	private int appNum,hintNum;
@@ -55,6 +53,10 @@ public class VersionOp extends DialogManagerParent{
 	@Override
 	public void isShow(final OnDialogManagerCallback callback) {
 		getUpdata(false, new OnGetUpdataCallback() {
+			@Override
+			public void onPreUpdate() {
+			}
+
 			@Override
 			public void onNeedUpdata() {
 				callback.onShow();
@@ -99,10 +101,10 @@ public class VersionOp extends DialogManagerParent{
 				new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
 					@Override
 					public void loaded(int flag, final String url,Object returnObj) {
-						if (flag >= UtilInternet.REQ_OK_STRING) {
+						if (flag >= ReqInternet.REQ_OK_STRING) {
 							Activity mAct = XHActivityManager.getInstance().getCurrentActivity();
 							try {
-								ArrayList<Map<String, String>> array = UtilString.getListMapByJson(returnObj);
+								ArrayList<Map<String, String>> array = StringManager.getListMapByJson(returnObj);
 								//当需要升级时，服务端才返回升级数据
 								if(array.size() > 0){
 									Map<String, String> map = array.get(0);
@@ -157,33 +159,40 @@ public class VersionOp extends DialogManagerParent{
 	 * 检查更新
 	 * @param showPro 是否显示更新进度框
 	 */
-	public void toUpdate(final LoadManager loadManager, final boolean showPro) {
+	public void toUpdate(final OnGetUpdataCallback callback,final boolean showPro) {
 		mShowPro = showPro;
-		if (mShowPro)
-			loadManager.startProgress("正在获取最新版本信息");
+		if(callback != null){
+			callback.onPreUpdate();
+		}
 		getUpdata(showPro, new OnGetUpdataCallback() {
 			@Override
+			public void onPreUpdate() {
+
+			}
+
+			@Override
 			public void onNeedUpdata() {
-				if (mShowPro)
-					loadManager.dismissProgress();
 				versionUpload.starUpdate(!mShowPro,silentListener);
+				if(callback != null){
+					callback.onNeedUpdata();
+				}
 			}
 
 			@Override
 			public void onNotNeed() {
-				if (mShowPro)
-					loadManager.dismissProgress();
+				if(callback != null){
+					callback.onNotNeed();
+				}
 			}
 
 			@Override
 			public void onFail() {
-				if (mShowPro)
-					loadManager.dismissProgress();
+				if(callback != null){
+					callback.onFail();
+				}
 			}
 		});
 	}
-
-
 
 	private VersionUpload.VersionUpdateListener vsUpListener = new VersionUpload.VersionUpdateListener() {
 		@Override
@@ -262,10 +271,11 @@ public class VersionOp extends DialogManagerParent{
 		}
 	};
 
-	private interface OnGetUpdataCallback{
-		public void onNeedUpdata();
-		public void onNotNeed();
-		public void onFail();
+	public interface OnGetUpdataCallback{
+		void onPreUpdate();
+		void onNeedUpdata();
+		void onNotNeed();
+		void onFail();
 	}
 
 }

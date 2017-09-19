@@ -29,8 +29,6 @@ import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
 import com.xiangha.R;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -268,7 +266,7 @@ public class AppCommon {
             try {
                 final DownLoad downLoad = new DownLoad(XHApplication.in());
                 downLoad.setNotifaction("开始下载", appName + ".apk", "正在下载", R.drawable.ic_launcher, false);
-                downLoad.starDownLoad(downUrl, FileManager.getCameraDir(), appName, true, new DownloadCallBack() {
+                downLoad.starDownLoad(downUrl, FileManager.getSDCacheDir(), appName, true, new DownloadCallBack() {
                     @Override
                     public void starDown() {
                         super.starDown();

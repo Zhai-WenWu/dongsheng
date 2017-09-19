@@ -35,6 +35,21 @@ public class PushManager extends DialogManagerParent {
 
     @Override
     public void isShow(OnDialogManagerCallback callback) {
+        String show_time = (String)FileManager.loadShared(XHApplication.in(),FileManager.GOODCOMMENT_SHOW_TIME,FileManager.GOODCOMMENT_SHOW_TIME);
+        String show_num_all = (String) FileManager.loadShared(XHApplication.in(), FileManager.GOODCOMMENT_SHOW_NUM_ALL, FileManager.GOODCOMMENT_SHOW_NUM_ALL);
+        int all_num = 0;
+        if(!TextUtils.isEmpty(show_num_all)){
+            all_num = Integer.parseInt(show_num_all);
+        }
+        //当距离上次的好评弹框72小时才弹推送弹框
+        if(all_num > 0
+                && !TextUtils.isEmpty(show_time)
+                && System.currentTimeMillis() - Long.parseLong(show_time) < 72 * 60 * 60 * 1000){
+            if(callback != null){
+                callback.onGone();
+            }
+            return;
+        }
         boolean isShowNot = isNotificationEnabled();
         boolean isShowDia = isShowPushDialog();
         //Log.i("FRJ","isShowNot:" + isShowNot + "    isShowDia:" + isShowDia);
@@ -139,7 +154,8 @@ public class PushManager extends DialogManagerParent {
     public static boolean isGoAppSetting(){
         String brand = android.os.Build.BRAND;
         //Log.i("FRJ","brand:" + brand);
-        if(TextUtils.isEmpty(brand) || brand.contains("Lenovo"))
+        if(TextUtils.isEmpty(brand)
+                || brand.contains("Lenovo"))
             return false;
         return true;
     }
@@ -151,11 +167,7 @@ public class PushManager extends DialogManagerParent {
         String newTag = isEnabled ? "2" : "1";
         if(!newTag.equals(pushTag)){
             FileManager.saveShared(XHApplication.in(),FileManager.PUSH_INFO,FileManager.PUSH_TAG,newTag);
-            if(isEnabled){
-                XHClick.mapStat(XHApplication.in(),"a_push_user","开启推送","");
-            }else{
-                XHClick.mapStat(XHApplication.in(),"a_push_user","关闭推送","");
-            }
+            XHClick.mapStat(XHApplication.in(),"a_push_user",isEnabled?"开启推送":"关闭推送","");
         }
     }
 }

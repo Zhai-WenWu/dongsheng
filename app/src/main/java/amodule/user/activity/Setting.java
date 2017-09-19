@@ -310,7 +310,27 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             @Override
             public void onClick() {
                 XHClick.mapStat(Setting.this, tongjiId, "检查新版本", "");
-                VersionOp.getInstance().toUpdate(loadManager, true);
+                VersionOp.getInstance().toUpdate(new VersionOp.OnGetUpdataCallback() {
+                    @Override
+                    public void onPreUpdate() {
+                        loadManager.startProgress("正在获取最新版本信息");
+                    }
+
+                    @Override
+                    public void onNeedUpdata() {
+                        loadManager.dismissProgress();
+                    }
+
+                    @Override
+                    public void onNotNeed() {
+                        loadManager.dismissProgress();
+                    }
+
+                    @Override
+                    public void onFail() {
+                        loadManager.dismissProgress();
+                    }
+                },true);
             }
 
         });
