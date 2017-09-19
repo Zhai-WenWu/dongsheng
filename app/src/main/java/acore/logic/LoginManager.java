@@ -352,7 +352,14 @@ public class LoginManager {
             isLoadFile = true;
             mIsShowAd = getIsShowAd();
         }
-//        //Log.i("FRJ","isShowAd():" + mIsShowAd);
+        //在线参数，判断（广告是否开启）
+        String showAD= AppCommon.getConfigByLocal("showAD");
+        if(showAD == null|| TextUtils.isEmpty(showAD)){
+            return false;
+        }
+        if(showAD!=null&&!TextUtils.isEmpty(showAD)&&"1".equals(StringManager.getFirstMap(showAD).get("isShow"))){
+            return false;
+        }
         return mIsShowAd;
     }
 

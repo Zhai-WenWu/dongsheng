@@ -529,6 +529,10 @@ public class DishHeaderViewNew extends LinearLayout {
                     // 图片圆角和宽高适应
                     v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     UtilImage.setImgViewByWH(v, bitmap, 0, 0, false);
+                    //当前显示动画
+                    AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+                    alphaAnimation.setDuration(150);
+                    v.setAnimation(alphaAnimation);
                 }
             }
         };
