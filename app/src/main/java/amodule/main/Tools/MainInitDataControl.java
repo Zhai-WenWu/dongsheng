@@ -154,7 +154,7 @@ public class MainInitDataControl {
         long startTime= System.currentTimeMillis();
 
         //更模版
-        new XHTemplateManager().CheckUpdataAllTemplate();
+        new XHTemplateManager().checkDsUplateDsAllTemplate();
 
         delayedExcute(new Runnable() {
             @Override

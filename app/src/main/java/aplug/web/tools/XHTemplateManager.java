@@ -3,8 +3,22 @@ package aplug.web.tools;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
+import acore.tools.FileManager;
+import acore.tools.StringManager;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
+import aplug.basic.ReqInternet;
+import third.mall.aplug.MallInternetCallback;
+import third.mall.aplug.MallReqInternet;
+import third.mall.aplug.MallStringManager;
+
+import static com.xiangha.R.id.msg;
 
 /**
  * 香哈模版更新
@@ -35,36 +49,8 @@ public class XHTemplateManager {
         starttime= System.currentTimeMillis();
         templateNum=0;
     }
+    private ArrayList<Map<String,String>> mapArrayList = new ArrayList<>(); //处理全部模版集合数据
 
-    /**
-     * 检查全部更新
-     */
-    public void CheckUpdataAllTemplate(){
-        if(isLoad){
-            return;
-        }
-        if(templateNum<=0) {
-            templateNum = 0;
-        }else if(templateNum>=templates.length){
-            templateNum=-1;
-            isLoad=true;
-            return;
-        }
-        String requestMethod=templates[templateNum];
-        if(!TextUtils.isEmpty(requestMethod)){
-            getSingleTemplate(requestMethod, new TemplateWebViewControl.MouldCallBack() {
-                @Override
-                public void load(boolean isSuccess, String data, String requestMothed, String version) {
-                    ++templateNum;
-                    CheckUpdataAllTemplate();
-                }
-            });
-        }else{
-            templateNum=-1;
-            isLoad=true;
-            return;
-        }
-    }
 
     /**
      * 获取单个模版
@@ -77,5 +63,94 @@ public class XHTemplateManager {
         }
         templateWebViewControl.setMouldCallBack(mouldCallBack);
         templateWebViewControl.getH5MDWithRequestMed(requestMethod);
+    }
+
+    /**
+     * 处理电商全部模版更新
+     */
+    public void checkDsUplateDsAllTemplate(){
+        String url= MallStringManager.mall_api_autoloadTemplate;
+        MallReqInternet.in().doGet(url,new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+            @Override
+            public void loadstat(int flag, String url, Object msg, Object... stat) {
+                if(flag>= ReqInternet.REQ_OK_STRING){
+                     ArrayList<Map<String,String>> mapList= StringManager.getListMapByJson(msg);
+                    if(mapList!=null&&mapList.size()>0){
+                        int size = mapList.size();
+                        for(int i=0;i<size;i++){
+                            Map<String,String> map= mapList.get(i);
+                            map.put("namekey","template_name");
+                            map.put("versionkey","version_sign");
+                            mapArrayList.add(map);
+                        }
+                    }
+                }
+                handlerAllTemplateData();
+            }
+        });
+
+    }
+
+    /**
+     * 处理更新模版数据
+     */
+    private void handlerAllTemplateData(){
+        if(isLoad||mapArrayList==null||mapArrayList.size()<=0){
+            return;
+        }
+        if(templateNum<=0) {
+            templateNum = 0;
+        }else if(templateNum>=mapArrayList.size()){
+            templateNum=-1;
+            isLoad=true;
+            return;
+        }
+        Map<String,String> mapTemplate=mapArrayList.get(templateNum);
+        if(mapTemplate!=null&&mapTemplate.containsKey(mapTemplate.get("namekey"))){
+            //处理
+            String requestMethod= mapTemplate.get(mapTemplate.get("namekey"));
+            String versionSign= mapTemplate.get(mapTemplate.get("versionkey"));
+            //获取模版数据
+            final String path = FileManager.getSDDir() + "long/" + requestMethod;
+            final String readStr = FileManager.readFile(path);
+            //获取version
+            String versionUrl = (String) FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
+            if(TextUtils.isEmpty(readStr))versionUrl = "";
+
+            if(TextUtils.isEmpty(versionUrl) || !versionSign.equals(versionUrl)){
+                getSingleAllTemplate(requestMethod, mapTemplate, path, readStr, mapTemplate.get("versionkey"), new TemplateWebViewControl.MouldCallBack() {
+                    @Override
+                    public void load(boolean isSuccess, String data, String requestMothed, String version) {
+                        ++templateNum;
+                        handlerAllTemplateData();
+                    }
+                });
+            }else{
+                Log.i("wyl","当前sign:正确::");
+                ++templateNum;
+                handlerAllTemplateData();
+            }
+        }else{
+            templateNum=-1;
+            isLoad=true;
+            return;
+        }
+    }
+
+    /**
+     * 直接通过七牛url进行下载数据
+     * @param requestMethod
+     * @param msg
+     * @param path
+     * @param readStr
+     * @param versionKey
+     * @param mouldCallBack
+     */
+    private void getSingleAllTemplate(String requestMethod,Map<String,String> msg,final String path, final String readStr,String versionKey,TemplateWebViewControl.MouldCallBack mouldCallBack){
+        if(templateWebViewControl==null){
+            templateWebViewControl= new TemplateWebViewControl();
+        }
+        templateWebViewControl.setMouldCallBack(mouldCallBack);
+        templateWebViewControl.handlerQiniuGetData(msg,requestMethod,path,readStr,versionKey);
     }
 }
