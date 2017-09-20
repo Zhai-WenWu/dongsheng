@@ -2,8 +2,12 @@ package acore.override;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +15,13 @@ import android.util.Log;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
+import com.qiyukf.unicorn.api.ImageLoaderListener;
+import com.qiyukf.unicorn.api.OnBotEventListener;
+import com.qiyukf.unicorn.api.SavePowerConfig;
+import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
+import com.qiyukf.unicorn.api.Unicorn;
+import com.qiyukf.unicorn.api.UnicornImageLoader;
+import com.qiyukf.unicorn.api.YSFOptions;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -32,8 +43,10 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import third.growingio.GrowingIOController;
+import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
+import third.qiyu.GlideImageLoader;
 
 public class XHApplication extends MobApplication {
     /**包名*/
@@ -141,6 +154,28 @@ public class XHApplication extends MobApplication {
             public void onActivityDestroyed(Activity activity) {
             }
         });
+        //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
+        String appKey="419831f89a538914cb168cd01d1675f4";
+        Unicorn.init(this, appKey, options(), new GlideImageLoader(this));
+    }
+    // 如果返回值为null，则全部使用默认参数。
+    private YSFOptions options() {
+        YSFOptions options = new YSFOptions();
+        options.statusBarNotificationConfig = new StatusBarNotificationConfig();
+//        options.uiCustomization.
+        options.savePowerConfig = new SavePowerConfig();
+        options.statusBarNotificationConfig.notificationSmallIconId = R.drawable.ic_launcher;
+//        options.statusBarNotificationConfig.notificationEntrance = CommodDetailActivity.class;//
+        options.onBotEventListener = new OnBotEventListener() {
+            @Override
+            public boolean onUrlClick(Context context, String url) {
+                Log.i("wyl","url:::"+url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(intent);
+                return true;
+            }
+        };
+        return options;
     }
 
 

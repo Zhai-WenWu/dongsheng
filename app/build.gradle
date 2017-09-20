@@ -37,6 +37,7 @@ dependencies {
         exclude(module: 'alicloud-android-utdid')
     }
     compile project(':gsyVideoPlayer-java')
+    compile 'com.qiyukf.unicorn:unicorn:3.10.0'
 }
 
 android {

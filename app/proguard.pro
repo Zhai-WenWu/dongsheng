@@ -345,3 +345,6 @@ public static ** valueOf(java.lang.String);
 -dontwarn com.example.gsyvideoplayer.**
 -keep class moe.codeest.enviews.** { *; }
 -dontwarn moe.codeest.enviews.**
+#七鱼客服
+-dontwarn com.qiyukf.**
+-keep class com.qiyukf.** {*;}
