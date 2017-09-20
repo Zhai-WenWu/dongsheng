@@ -29,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import acore.dialogManager.VersionOp;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.tools.ChannelUtil;

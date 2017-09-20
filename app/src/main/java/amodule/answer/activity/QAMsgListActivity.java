@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.dialogManager.PushManager;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.tools.IObserver;
 import acore.tools.LogManager;
@@ -211,7 +211,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
                 loadManager.setLoading(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1") + (isRef ? "&type=" + mDatas.get(mCurrSelectedPos).get("type"): "")));
+                        mWebView.loadUrl(StringManager.replaceUrl(StringManager.API_QA_QAMSGLIST + "?notify=" + (PushManager.isNotificationEnabled(QAMsgListActivity.this) ? "2" : "1") + (isRef ? "&type=" + mDatas.get(mCurrSelectedPos).get("type"): "")));
                     }
                 });
             }

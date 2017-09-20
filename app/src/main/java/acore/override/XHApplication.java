@@ -19,8 +19,8 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
+import acore.logic.VersionOp;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.LogManager;

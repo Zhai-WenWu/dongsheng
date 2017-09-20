@@ -19,10 +19,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.util.Util;
+import com.popdialog.GoodCommentDialogControl;
 import com.xiangha.R;
 
-import acore.dialogManager.GoodCommentManager;
 import acore.logic.ActivityMethodManager;
+import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
@@ -254,7 +255,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         if (mUploadNetChangeWindowDialog != null && mUploadNetChangeWindowDialog.isHasShow()) {
             mUploadNetChangeWindowDialog.onResume();
         }
-        GoodCommentManager.setStictis(BaseAppCompatActivity.this);
+        //TODO
+        com.popdialog.util.GoodCommentManager.setStictis(BaseAppCompatActivity.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
+            @Override
+            public void onStatistics(String typeStr, String timeStr) {
+                XHClick.mapStat(BaseAppCompatActivity.this, "a_evaluate420", typeStr, timeStr);
+            }
+        });
 
 //		Log.e("activityName",getClass().getSimpleName());
     }

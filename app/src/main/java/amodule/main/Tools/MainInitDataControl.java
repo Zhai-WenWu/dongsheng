@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;

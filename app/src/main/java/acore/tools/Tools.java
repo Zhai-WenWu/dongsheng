@@ -50,7 +50,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import acore.dialogManager.VersionOp;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import aplug.recordervideo.tools.SortComparator;

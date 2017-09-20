@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.dialogManager.PushManager;
 import xh.basic.tool.UtilString;
 
 public class StringManager extends UtilString {

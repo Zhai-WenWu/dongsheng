@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -23,16 +24,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.dialogManager.PushManager;
-import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.PayCallback;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -1166,7 +1165,7 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PushManager.requestPermission();
+                PushManager.requestPermission(mAct);
             }
         });
     }

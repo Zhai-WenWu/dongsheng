@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.dialogManager.VersionOp;
+import acore.logic.VersionOp;
 import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;

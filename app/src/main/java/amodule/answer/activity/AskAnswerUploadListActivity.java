@@ -15,13 +15,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
-import acore.dialogManager.PushManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -163,7 +163,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                     sqLite.deleteData(mUploadPoolData.getDraftId());
                 }
                 if (Tools.isAppOnForeground() && flag) {
-                    if (!PushManager.isNotificationEnabled()) {
+                    if (!PushManager.isNotificationEnabled(AskAnswerUploadListActivity.this)) {
                         getIsTip();
                     }
                     Main.colse_level = 1;
@@ -398,7 +398,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
                                 @Override
                                 public void onClick(View v) {
                                     window.cancelFloatingWindow();
-                                    PushManager.requestPermission();
+                                    PushManager.requestPermission(AskAnswerUploadListActivity.this);
                                     XHClick.mapStat(AskAnswerUploadListActivity.this, "a_ask_push", "作者推送", "是");
                                 }
                             });

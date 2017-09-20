@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -16,7 +17,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.dialogManager.PushManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -112,7 +112,7 @@ public class MyMsgInformSetting extends BaseActivity{
 			
 			@Override
 			public void onChange(final boolean state) {
-				PushManager.requestPermission();
+				PushManager.requestPermission(MyMsgInformSetting.this);
 			}
 			
 		});
@@ -236,7 +236,7 @@ public class MyMsgInformSetting extends BaseActivity{
 	 */
 	private void doMsgShow() {
 		newMSG = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.newMSG);
-		boolean isNotifi = PushManager.isNotificationEnabled();
+		boolean isNotifi = PushManager.isNotificationEnabled(this);
 		//Log.i("FRJ","isNotifi:" + isNotifi + ";   newMSG:" + newMSG);
 		//判断总开关是否已关闭
 		if (newMSG.equals("2")) { //2为关闭

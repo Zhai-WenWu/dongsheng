@@ -25,7 +25,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
-import acore.dialogManager.VersionOp;
+import acore.logic.VersionOp;
 import acore.override.XHApplication;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;

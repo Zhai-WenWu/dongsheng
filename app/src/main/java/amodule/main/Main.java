@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mob.MobSDK;
+import com.popdialog.GoodCommentDialogControl;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
@@ -39,12 +40,10 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.dialogManager.DialogControler;
-import acore.dialogManager.GoodCommentManager;
-import acore.dialogManager.PushManager;
-import acore.dialogManager.VersionOp;
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
@@ -194,8 +193,17 @@ public class Main extends Activity implements OnClickListener {
                 showIndexActivity();
                 WelcomeDialogstate = true;
                 openUri();
-                new DialogControler().showDialog();
-                PushManager.tongjiPush();
+
+                //TODO
+//                new DialogControler().showDialog();
+                new AllPopDialogHelper(Main.this).start();
+                //TODO PushManager.tongjiPush();
+                com.popdialog.util.PushManager.tongjiPush(Main.this, new com.popdialog.util.PushManager.OnPushEnableCallback() {
+                    @Override
+                    public void onPushEnable(boolean isEnable) {
+                        XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","");
+                    }
+                });
                 isShowWelcomeDialog = false;
 
                 OffDishToFavoriteControl.addCollection(Main.this);
@@ -515,7 +523,14 @@ public class Main extends Activity implements OnClickListener {
 //        if (MallPayActivity.mall_state) {
 //            onClick(tabViews[1].findViewById(R.id.tab_linearLayout));
 //        }
-        GoodCommentManager.setStictis(Main.this);
+        //TODO
+        com.popdialog.util.GoodCommentManager.setStictis(Main.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
+            @Override
+            public void onStatistics(String typeStr, String timeStr) {
+                XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr);
+            }
+        });
+
         openUri();
 
     }
