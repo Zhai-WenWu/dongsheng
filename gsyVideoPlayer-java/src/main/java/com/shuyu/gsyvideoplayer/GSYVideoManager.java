@@ -272,7 +272,6 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
                     }
                     buffterPoint = 0;
                     cancelTimeOutBuffer();
-                    canChange = true;
                     break;
             }
         }
@@ -521,11 +520,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     @Override
     public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
-//        currentVideoWidth = mp.getVideoWidth();
-//        currentVideoHeight = mp.getVideoHeight();
         if(canChange){
-            currentVideoWidth = width;
-            currentVideoHeight = height;
+            currentVideoWidth = mp.getVideoWidth();
+            currentVideoHeight = mp.getVideoHeight();
         }
         mainThreadHandler.post(new Runnable() {
             @Override
