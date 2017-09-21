@@ -14,6 +14,7 @@ import com.popdialog.util.StringManager;
 import com.popdialog.view.XHADView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -28,6 +29,8 @@ public class FullSrceenDialogControl extends BaseDialogControl {
     private OnLoadImageCallback onLoadImageCallback;
     /**弹框状态回调*/
     private OnFullScreenStatusCallback onFullScreenStatusCallback;
+    /**广告数据*/
+    private Map<String, String> map = new HashMap<>();
 
     public FullSrceenDialogControl(Activity activity) {
         super(activity);
@@ -39,7 +42,8 @@ public class FullSrceenDialogControl extends BaseDialogControl {
             callback.onNextShow();
             return;
         }
-        if (isShowAd(StringManager.getFirstMap(data))) {
+        if (isShowAd(StringManager.getFirstMap(data))
+                && craeteAD()) {
             callback.onCanShow();
         } else {
             callback.onNextShow();
@@ -48,16 +52,23 @@ public class FullSrceenDialogControl extends BaseDialogControl {
 
     @Override
     public void show() {
-        craeteAD();
+        if(onLoadImageCallback != null && map != null && map.isEmpty()){
+            onLoadImageCallback.onLoadImage(map.get("img"), new OnAfterLoadImageCallback() {
+                @Override
+                public void onAfterLoadImage(Bitmap bitmap) {
+                    adShow(map, bitmap);
+                }
+            });
+        }
     }
 
     /**
      * 设置弹框推广位
      */
-    private void craeteAD() {
+    private boolean craeteAD() {
         Log.i("tzy", "craeteAD");
         //广告
-        final Map<String, String> map = FullScreenManager.getWelcomeInfo(mActivity);
+        map = FullScreenManager.getWelcomeInfo(mActivity);
         // 设置welcome图片
         if (map != null && map.get("img") != null && map.get("img").length() > 10) {
             //显示几次
@@ -71,21 +82,16 @@ public class FullSrceenDialogControl extends BaseDialogControl {
                     currentShowNum++;
                 }
                 FileManager.saveShared(mActivity, FileManager.xmlFile_popdialog, FileManager.xmlKey_fullSrceenShowNum, currentShowNum + "");
-                if(onLoadImageCallback != null){
-                    onLoadImageCallback.onLoadImage(map.get("img"), new OnAfterLoadImageCallback() {
-                        @Override
-                        public void onAfterLoadImage(Bitmap bitmap) {
-                            adShow(map, bitmap);
-                        }
-                    });
-                }
+                return true;
             }
         } else {
             final XHADView adScrollView = XHADView.getInstence(mActivity);
             if (adScrollView != null) {
                 adScrollView.hide();
             }
+
         }
+        return false;
     }
 
     private boolean isShowAd(Map<String, String> mData){
