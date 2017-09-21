@@ -135,11 +135,11 @@ public class GoodCommentDialogControl extends BaseDialogControl {
      */
     private void makeDataShow(OnPopDialogCallback callback) {
         String list_num = mLists.get(0).get("num");
-        String list_isForm = mLists.get(0).get("isForm");
-        if (!TextUtils.isEmpty(list_num) && !TextUtils.isEmpty(list_isForm)) {
+        String list_isShow = mLists.get(0).get("isShow");
+        if (!TextUtils.isEmpty(list_num) && !TextUtils.isEmpty(list_isShow)) {
             int dedult_num = DEFAULT_NUM;
             dedult_num = Integer.parseInt(list_num);
-            if (list_isForm.equals("2")) {
+            if (list_isShow.equals("2")) {
                 IsShow = true;
             } else {
                 IsShow = false;
