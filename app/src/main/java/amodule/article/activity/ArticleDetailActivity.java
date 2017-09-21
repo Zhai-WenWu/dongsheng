@@ -529,17 +529,20 @@ public class ArticleDetailActivity extends BaseActivity {
             mTitle.setText(customerData.get("nickName"));
             mTitle.setVisibility(View.VISIBLE);
         }
+        //获取是否可以编辑
+        boolean hasEditPermission = "2".equals(mapArticle.get("isEdit"));
         final String userCode = customerData.get("code");
         isAuthor = LoginManager.isLogin()
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
-
-        rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
+        final boolean canEdit = isAuthor || hasEditPermission;
+        //作者 或者 有编辑权限
+        rightButton.setImageResource(canEdit ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAuthor) {
+                if (canEdit) {
                     showBottomDialog();
                 } else {
                     openShare();
