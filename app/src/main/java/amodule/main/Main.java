@@ -798,7 +798,6 @@ public class Main extends Activity implements OnClickListener {
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
-                    XHClick.handlerPageStatic();
                 }
                 // 当软件所在页面正式你要刷新的页面,就直接刷新,不在跳了
 //				if (tabHost.getCurrentTab() == i && i == 2) {
