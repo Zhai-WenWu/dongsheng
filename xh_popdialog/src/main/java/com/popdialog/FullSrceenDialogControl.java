@@ -52,7 +52,7 @@ public class FullSrceenDialogControl extends BaseDialogControl {
 
     @Override
     public void show() {
-        if(onLoadImageCallback != null && map != null && map.isEmpty()){
+        if(onLoadImageCallback != null && map != null && !map.isEmpty()){
             onLoadImageCallback.onLoadImage(map.get("img"), new OnAfterLoadImageCallback() {
                 @Override
                 public void onAfterLoadImage(Bitmap bitmap) {
