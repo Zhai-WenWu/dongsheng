@@ -16,7 +16,7 @@ import com.popdialog.GoodCommentDialogControl;
 import com.popdialog.GuideDialogControl;
 import com.popdialog.PushDialogControl;
 import com.popdialog.base.BaseDialogControl;
-import com.xianghatest.R;
+import com.xiangha.R;
 
 import java.util.Map;
 
@@ -113,11 +113,13 @@ public class AllPopDialogHelper {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     Main.allMain.startActivity(intent);
                 }
+                //统计
                 XHClick.mapStat(XHApplication.in(),"a_NewDiversion",twoLevel,text);
             }
 
             @Override
             public void onClickCannel(Map<String, String> map,String twoLevel,String text) {
+                //统计
                 XHClick.mapStat(XHApplication.in(),"a_NewDiversion",twoLevel,text);
             }
         });
@@ -126,6 +128,7 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnFullScreenStatusCallback(new FullSrceenDialogControl.OnFullScreenStatusCallback() {
             @Override
             public void onShow() {
+                //统计
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_show_index", "全屏", "xh");
             }
 
