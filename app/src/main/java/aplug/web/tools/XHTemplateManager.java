@@ -66,9 +66,32 @@ public class XHTemplateManager {
     }
 
     /**
+     * 更新全部模版数据
+     */
+    public void checkUplateAllTemplate(){
+        checkXHUplateAllTemplate();
+    }
+
+    /**
+     * 处理香哈全部模版更新
+     */
+    private void checkXHUplateAllTemplate(){
+        String url="";
+        ReqEncyptInternet.in().doEncypt(url, "",new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+            @Override
+            public void loaded(int flag, String url, Object msg) {
+                if(flag>=ReqInternet.REQ_OK_STRING){
+
+                }
+                checkDsUplateAllTemplate();
+            }
+        });
+
+    }
+    /**
      * 处理电商全部模版更新
      */
-    public void checkDsUplateDsAllTemplate(){
+    public void checkDsUplateAllTemplate(){
         String url= MallStringManager.mall_api_autoloadTemplate;
         MallReqInternet.in().doGet(url,new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
