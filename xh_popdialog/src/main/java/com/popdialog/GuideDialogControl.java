@@ -33,7 +33,7 @@ public class GuideDialogControl extends BaseDialogControl {
 
     @Override
     public void isShow(String data, final OnPopDialogCallback callback) {
-        if (mActivity == null || TextUtils.isEmpty(data)){
+        if (mActivity == null || TextUtils.isEmpty(data)) {
             callback.onNextShow();
             return;
         }
@@ -101,11 +101,15 @@ public class GuideDialogControl extends BaseDialogControl {
         String titleColor = "#000000", messageColor = "#000000";
         String confirmButtonColor = "#007aff", cancelButtonColor = "#007aff";
         int layoutId = message.length() > lineNumber ? R.layout.dialog_common : R.layout.dialog_goodcomment;
+        final String twoLevel;
         if ("1".equals(alertType)) {
             cancelBold = true;
+            twoLevel = "原生左侧加粗";
         } else if ("2".equals(alertType)) {
             sureBold = true;
+            twoLevel = "原生右侧加粗";
         } else {
+            twoLevel = "自定义样式";
             titleColor = "#333333";
             messageColor = "#999999";
             confirmButtonColor = map.get("confirmButtonColor");
@@ -119,7 +123,7 @@ public class GuideDialogControl extends BaseDialogControl {
                     public void onClick(View v) {
                         dialog.cancel();
                         if (onGuideSureCallback != null) {
-                            onGuideSureCallback.onClickSure(map);
+                            onGuideSureCallback.onClickSure(map, twoLevel, map.get("confirmButtonText"));
                         }
                     }
                 })
@@ -128,7 +132,7 @@ public class GuideDialogControl extends BaseDialogControl {
                     public void onClick(View v) {
                         dialog.cancel();
                         if (onGuideSureCallback != null) {
-                            onGuideSureCallback.onClickCannel(map);
+                            onGuideSureCallback.onClickCannel(map, twoLevel, map.get("cancelButtonText"));
                         }
                     }
                 }).show();
@@ -136,8 +140,9 @@ public class GuideDialogControl extends BaseDialogControl {
     }
 
     public interface OnGuideClickCallback {
-        void onClickSure(Map<String, String> map);
-        void onClickCannel(Map<String, String> map);
+        void onClickSure(Map<String, String> map, String twoLevel, String text);
+
+        void onClickCannel(Map<String, String> map, String twoLevel, String text);
     }
 
     /*------------------------------------------------- Get & Set ---------------------------------------------------------------*/

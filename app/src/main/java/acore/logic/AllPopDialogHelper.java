@@ -16,7 +16,7 @@ import com.popdialog.GoodCommentDialogControl;
 import com.popdialog.GuideDialogControl;
 import com.popdialog.PushDialogControl;
 import com.popdialog.base.BaseDialogControl;
-import com.xiangha.R;
+import com.xianghatest.R;
 
 import java.util.Map;
 
@@ -71,7 +71,7 @@ public class AllPopDialogHelper {
         //导流回调
         allPopDialogControler.setOnGuideClickCallback(new GuideDialogControl.OnGuideClickCallback() {
             @Override
-            public void onClickSure(Map<String, String> map) {
+            public void onClickSure(Map<String, String> map,String twoLevel,String text) {
                 String url = map.get("url");
                 String type = map.get("type");
                 if ("1".equals(type)) {
@@ -113,11 +113,12 @@ public class AllPopDialogHelper {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     Main.allMain.startActivity(intent);
                 }
+                XHClick.mapStat(XHApplication.in(),"a_NewDiversion",twoLevel,text);
             }
 
             @Override
-            public void onClickCannel(Map<String, String> map) {
-
+            public void onClickCannel(Map<String, String> map,String twoLevel,String text) {
+                XHClick.mapStat(XHApplication.in(),"a_NewDiversion",twoLevel,text);
             }
         });
 
@@ -161,12 +162,13 @@ public class AllPopDialogHelper {
         //好评
         allPopDialogControler.setOnGoodCommentClickCallback(new GoodCommentDialogControl.OnGoodCommentClickCallback() {
             @Override
-            public void onClickSure() {
-
+            public void onClickSure(String twoLevel,String text) {
+                XHClick.mapStat(XHApplication.in(),"a_NewEvaluate",twoLevel,text);
             }
 
             @Override
-            public void onClickCannel() {
+            public void onClickCannel(String twoLevel,String text) {
+                XHClick.mapStat(XHApplication.in(),"a_NewEvaluate",twoLevel,text);
                 XHClick.mapStat(XHApplication.in(), "a_evaluate420", "首页弹框关闭", "");
             }
         });

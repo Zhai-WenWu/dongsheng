@@ -176,7 +176,7 @@ public class GoodCommentDialogControl extends BaseDialogControl {
 
     /** 展示对话框 */
     private void showDialog() {
-        Map<String, String> map = mLists.get(0);
+        final Map<String, String> map = mLists.get(0);
         ArrayList<Map<String, String>> listColor = StringManager.getListMapByJson(mLists.get(0).get("color"));
         Map<String, String> mapColor = listColor.get(0);
         String alertType = map.get("alertType");
@@ -194,14 +194,15 @@ public class GoodCommentDialogControl extends BaseDialogControl {
             layoutId = R.layout.dialog_goodcomment;
         }
 
+        final String twoLevel;
         if ("1".equals(alertType)) {
             cancelBold = true;
-//            twoLevel = "原生左侧加粗";
+            twoLevel = "原生左侧加粗";
         } else if ("2".equals(alertType)) {
             sureBold = true;
-//            twoLevel = "原生右侧加粗";
+            twoLevel = "原生右侧加粗";
         } else {
-//            twoLevel = "自定义样式";
+            twoLevel = "自定义样式";
             titleColor = "#333333";
             messageColor = "#999999";
             confirmButtonColor = mapColor.get("confirmButtonText");
@@ -216,7 +217,7 @@ public class GoodCommentDialogControl extends BaseDialogControl {
                     public void onClick(View v) {
                         popDialog.cancel();
                         if(onGoodCommentClickCallback != null){
-                            onGoodCommentClickCallback.onClickCannel();
+                            onGoodCommentClickCallback.onClickCannel(twoLevel,map.get("cancelButtonText"));
                         }
                     }
                 }).setSureButton(map.get("confirmButtonText"), confirmButtonColor, sureBold, new View.OnClickListener() {
@@ -225,7 +226,7 @@ public class GoodCommentDialogControl extends BaseDialogControl {
                 popDialog.cancel();
                 GoodCommentManager.setGoodComment("首页弹框确认", mActivity);
                 if(onGoodCommentClickCallback != null){
-                    onGoodCommentClickCallback.onClickSure();
+                    onGoodCommentClickCallback.onClickSure(twoLevel,map.get("confirmButtonText"));
                 }
             }
         }).show();
@@ -235,8 +236,8 @@ public class GoodCommentDialogControl extends BaseDialogControl {
     }
 
     public interface OnGoodCommentClickCallback {
-        void onClickSure();
-        void onClickCannel();
+        void onClickSure(String type,String text);
+        void onClickCannel(String twoLevel,String text);
     }
 
     public interface OnCommentTimeStatisticsCallback{
