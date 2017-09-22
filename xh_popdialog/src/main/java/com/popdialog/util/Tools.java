@@ -26,6 +26,7 @@ public class Tools {
     /**
      * @param context
      * @param id      dimens文件中的id(仅适用于dp)
+     *
      * @return dimen 对应分辨率的dp或者sp值
      */
     public static int getDimen(Context context, int id) {
@@ -36,13 +37,13 @@ public class Tools {
     }
 
     /**
-     *
      * @param context
      * @param tvWidth : textView的宽
      * @param tvSize
+     *
      * @return
      */
-    public static int getTextNumbers (Context context, int tvWidth, int tvSize) {
+    public static int getTextNumbers(Context context, int tvWidth, int tvSize) {
         int tv_pad = dip2px(context, 1.0f);
         /* 判断是否等于0 */
         return tvSize + tv_pad > 0 ? (tvWidth + tv_pad) / (tvSize + tv_pad) : 0;

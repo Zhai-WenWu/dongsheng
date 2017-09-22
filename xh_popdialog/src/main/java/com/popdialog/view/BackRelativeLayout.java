@@ -8,40 +8,41 @@ import android.widget.RelativeLayout;
 
 public class BackRelativeLayout extends RelativeLayout {
 
-	public BackRelativeLayout(Context context) {
-		super(context);
-	}
-	
-	public BackRelativeLayout(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
-	
-	public BackRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public BackRelativeLayout(Context context) {
+        super(context);
+    }
 
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		switch(event.getKeyCode()){
-		case KeyEvent.KEYCODE_BACK:
-			if(mOnBackListener != null){
-				mOnBackListener.onBack(BackRelativeLayout.this);
-			}
-			break;
-		}
-		return super.dispatchKeyEvent(event);
-	}
-	
-	private OnBackListener mOnBackListener;
-	public interface OnBackListener{
-		void onBack(View v);
-	}
+    public BackRelativeLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public BackRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_BACK:
+                if (mOnBackListener != null) {
+                    mOnBackListener.onBack(BackRelativeLayout.this);
+                }
+                break;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private OnBackListener mOnBackListener;
+
+    public interface OnBackListener {
+        void onBack(View v);
+    }
 
 	/*------------------------------------------------- Get & Set ---------------------------------------------------------------*/
 
-	public void setOnBackListener(OnBackListener listener){
-		this.mOnBackListener = listener;
-	}
-	
+    public void setOnBackListener(OnBackListener listener) {
+        this.mOnBackListener = listener;
+    }
+
 
 }

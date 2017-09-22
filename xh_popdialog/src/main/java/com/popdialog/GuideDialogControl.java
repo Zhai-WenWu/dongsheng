@@ -2,6 +2,7 @@ package com.popdialog;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.mrtrying.xh_popdialog.R;
@@ -12,8 +13,9 @@ import com.popdialog.util.Tools;
 import com.popdialog.util.ToolsDevice;
 import com.popdialog.view.PopDialog;
 
-import java.util.List;
 import java.util.Map;
+
+import static com.popdialog.AllPopDialogControler.TAG;
 
 /**
  * 倒流弹框
@@ -33,14 +35,14 @@ public class GuideDialogControl extends BaseDialogControl {
 
     @Override
     public void isShow(String data, final OnPopDialogCallback callback) {
+        Log.i(TAG, "GuideDialogControl :: mActivity = " + mActivity + " ; data = " + data);
         if (mActivity == null || TextUtils.isEmpty(data)) {
             callback.onNextShow();
             return;
         }
         //解析数据
-        List<Map<String, String>> returnData = StringManager.getListMapByJson(data);
-        if (returnData.size() > 0) {
-            map = returnData.get(0);
+        map = StringManager.getFirstMap(data);
+        if (map != null && !map.isEmpty()) {
             if (TextUtils.isEmpty(map.get("title"))
                     || TextUtils.isEmpty(map.get("popText"))
                     || TextUtils.isEmpty(map.get("confirmButtonText"))
@@ -64,6 +66,7 @@ public class GuideDialogControl extends BaseDialogControl {
                     isShowDialog = true;
                 else {
                     Long lastTime = Long.parseLong(lastShowTime);
+                    //间隔时间，单位 h
                     int spaceTime = Integer.parseInt(showTimeInterval);
                     if (System.currentTimeMillis() - lastTime >= spaceTime * 60 * 1000) {
                         isShowDialog = true;
@@ -91,6 +94,11 @@ public class GuideDialogControl extends BaseDialogControl {
         showDialog(map);
     }
 
+    /**
+     * 展示弹框
+     *
+     * @param map
+     */
     private void showDialog(final Map<String, String> map) {
         if (mActivity == null || map == null || map.isEmpty())
             return;

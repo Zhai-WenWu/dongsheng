@@ -22,8 +22,10 @@ public class StringManager {
 
     /**
      * 获取md5值
-     * @param str 加密字符串
+     *
+     * @param str  加密字符串
      * @param if32 是否要32位
+     *
      * @return
      */
     public static String toMD5(String str, boolean if32) {
@@ -39,7 +41,7 @@ public class StringManager {
             }
             return sb.toString();
         } catch (Exception e) {
-            Log.w("tzy","md5错误");
+            Log.w("tzy", "md5错误");
             return "";
         }
     }
@@ -55,7 +57,9 @@ public class StringManager {
 
     /**
      * 从json中获取MAP数组
+     *
      * @param json
+     *
      * @return
      */
     public static ArrayList<Map<String, String>> getListMapByJson(Object json) {
@@ -75,7 +79,7 @@ public class StringManager {
             try {
                 array.put(new JSONObject((String) json));
             } catch (JSONException e2) {
-                Log.w("xh_default","Json无法解析:"+json);
+                Log.w("xh_default", "Json无法解析:" + json);
             }
         }
         for (int i = 0; i < array.length(); i++) {
@@ -84,7 +88,7 @@ public class StringManager {
                 Iterator<?> it = array.getJSONObject(i).keys();
                 while (it.hasNext()) {
                     String key = (String) it.next();
-                    Object xx=array.getJSONObject(i).get(key);
+                    Object xx = array.getJSONObject(i).get(key);
                     map.put(key, xx.toString());
                 }
             } catch (Exception e) {
@@ -92,7 +96,7 @@ public class StringManager {
                 try {
                     map.put("", array.get(i).toString());
                 } catch (JSONException e1) {
-                    Log.w("xh_default","Json无法解析:"+array.toString());
+                    Log.w("xh_default", "Json无法解析:" + array.toString());
                 }
             }
             objs.add(map);

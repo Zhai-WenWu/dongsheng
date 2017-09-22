@@ -8,13 +8,14 @@ import android.util.Log;
 
 import com.download.down.VersionUpload;
 import com.popdialog.base.BaseDialogControl;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -23,19 +24,21 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import xh.basic.tool.UtilLog;
 
+import static com.popdialog.AllPopDialogControler.TAG;
+
 public class VersionOp extends BaseDialogControl {
     @SuppressLint("StaticFieldLeak")
     private volatile static VersionOp versionOp = null;
     private String path = FileManager.getSDCacheDir();
     private String apkName = "香哈菜谱";
     private VersionUpload versionUpload;
-    /***/
+    /**是否有相关提示*/
     private boolean mShowPro;
-    /** 是否必须升级 */
+    /** 是否《必须》升级 */
     public boolean isMustUpdata = false;
-
+    /** 是否《需要》升级 */
     public boolean isNeedUpdata = false;
-    /***/
+    /**是否静默安装*/
     private boolean misSilentInstall = false;
 
     private int appNum, hintNum;
@@ -56,7 +59,7 @@ public class VersionOp extends BaseDialogControl {
 
     @Override
     public void isShow(String data, final OnPopDialogCallback callback) {
-        getUpdata(false, new OnGetUpdataCallback() {
+        checkUpdate(false, new OnCheckUpdataCallback() {
             @Override
             public void onPreUpdate() {
             }
@@ -84,68 +87,77 @@ public class VersionOp extends BaseDialogControl {
     @Override
     public void show() {
         if (isMustUpdata || !misSilentInstall) {
-            Log.i("versionOp", "VersionOp show() starUpdate()");
+            Log.i(TAG, "VersionOp :: show() :: starUpdate()");
             versionUpload.starUpdate(!mShowPro, silentListener);
         } else {
-            Log.i("versionOp", "VersionOp show() silentInstall()");
+            Log.i(TAG, "VersionOp :: show() :: silentInstall()");
             File file = new File(path + apkName + "_" + newNum + ".apk");
             VersionUpload.silentInstall(isMustUpdata, XHActivityManager.getInstance().getCurrentActivity(), Uri.fromFile(file),
                     VersionUpload.INTALL_TYPE_NEXT_STAR, true, nowNum, newNum, appNum, hintNum, silentListener);
         }
     }
 
-    private void getUpdata(boolean showPro, final OnGetUpdataCallback callback) {
+    /**
+     * 检查更新
+     * @param showPro
+     * @param callback
+     */
+    private void checkUpdate(boolean showPro, final OnCheckUpdataCallback callback) {
         mShowPro = showPro;
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         //手动升级
-        if (mShowPro) map.put("update", "1");
+        if (mShowPro)
+            map.put("update", "1");
+        //请求检查升级接口
         ReqInternet.in().doPost(StringManager.api_versionInfo, map,
-                new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+                new InternetCallback(XHApplication.in()) {
                     @Override
                     public void loaded(int flag, final String url, Object returnObj) {
                         if (flag >= ReqInternet.REQ_OK_STRING) {
                             Activity mAct = XHActivityManager.getInstance().getCurrentActivity();
                             try {
-                                ArrayList<Map<String, String>> array = StringManager.getListMapByJson(returnObj);
+                                Map<String, String> map = StringManager.getFirstMap(returnObj);
                                 //当需要升级时，服务端才返回升级数据
-                                if (array.size() > 0) {
-                                    Map<String, String> map = array.get(0);
-                                    nowNum = getVerName(XHActivityManager.getInstance().getCurrentActivity());
+                                if (map != null && !map.isEmpty()) {
+                                    //当前版本
+                                    nowNum = getVerName(XHApplication.in());
+                                    //新版本
                                     newNum = map.get("code");
                                     String content = map.get("content");
                                     String updateUrl = map.get("url");
-                                    appNum = Integer.parseInt(map.get("appNum"));
-                                    int play = Integer.parseInt(map.get("play"));
+                                    //cishu为：0，不是无限，是无次数，最大此时为127
                                     hintNum = Integer.parseInt(map.get("cishu"));
-                                    if (appNum == 0) isMustUpdata = true;
-                                    boolean isPlay = true;
-                                    if (play == 1) isPlay = false;
+                                    //是否需要强制升级
+                                    appNum = Integer.parseInt(map.get("appNum"));
+                                    isMustUpdata = appNum == 0;
+                                    //升级中是否可用	1-不可用，2-可用
+                                    boolean isPlay = "2".equals(map.get("play"));
                                     boolean isNeedUpdata = false;
                                     if (!mShowPro) {
                                         misSilentInstall = isSilentInstall(isNeedUpdata, VersionUpload.INTALL_TYPE_NEXT_STAR, nowNum, newNum, appNum, hintNum);
                                         isNeedUpdata = misSilentInstall;
                                     }
-                                    Log.i("versionOp", "isNeedUpdata:" + isNeedUpdata + "  isMustUpdata:" + isMustUpdata);
                                     versionUpload = new VersionUpload(XHActivityManager.getInstance().getCurrentActivity(), content, R.drawable.ic_launcher, nowNum, newNum,
                                             isMustUpdata, isPlay, hintNum, appNum, updateUrl, path, apkName, vsUpListener);
-//									if(!misSilentInstall) isNeedUpdata = versionUpload.isUpdata();
-                                    if (!misSilentInstall)
+                                    if (!misSilentInstall){
                                         isNeedUpdata = versionUpload.isUpdata(!mShowPro);
-                                    Log.i("versionOp", "isNeedUpdata:" + isNeedUpdata);
+                                    }
+                                    Log.i(TAG, "checkUpdate :: isNeedUpdata = " + isNeedUpdata + " ; isMustUpdata = " + isMustUpdata);
                                     if (isNeedUpdata) {
                                         callback.onNeedUpdata();
                                     } else {
                                         callback.onNotNeed();
                                     }
                                 } else {
+                                    //不需要升级
                                     if (mShowPro) {
                                         Tools.showToast(mAct, "已是最新版本！");
                                     }
                                     callback.onNotNeed();
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                UtilLog.reportError("获取版本信息:" + returnObj.toString(), e);
+                                //Bugly上报异常
+                                CrashReport.postCatchedException(e,new Thread());
                                 if (mShowPro)
                                     Tools.showToast(mAct, "获取新版本错误，请稍后再试");
                                 callback.onFail();
@@ -159,16 +171,17 @@ public class VersionOp extends BaseDialogControl {
     }
 
     /**
-     * 检查更新
+     * * 检查更新
      *
+     * @param callback
      * @param showPro 是否显示更新进度框
      */
-    public void toUpdate(final OnGetUpdataCallback callback, final boolean showPro) {
+    public void toUpdate(final OnCheckUpdataCallback callback, final boolean showPro) {
         mShowPro = showPro;
         if (callback != null) {
             callback.onPreUpdate();
         }
-        getUpdata(showPro, new OnGetUpdataCallback() {
+        checkUpdate(showPro, new OnCheckUpdataCallback() {
             @Override
             public void onPreUpdate() {
 
@@ -237,7 +250,6 @@ public class VersionOp extends BaseDialogControl {
         return VersionUpload.isSilentInstall(isMustUp, XHActivityManager.getInstance().getCurrentActivity(), Uri.fromFile(file), type, true, nowNum, newNum, appNum, hintNum, silentListener);
     }
 
-
     // 获取当前版本
     public static String getVerName(Context context) {
         String verCode = "0.0.0";
@@ -277,7 +289,7 @@ public class VersionOp extends BaseDialogControl {
         }
     };
 
-    public interface OnGetUpdataCallback {
+    public interface OnCheckUpdataCallback {
         void onPreUpdate();
 
         void onNeedUpdata();

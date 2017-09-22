@@ -64,7 +64,6 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.dialog.FavorableDialog;
-import third.mall.override.MallBaseActivity;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
 import third.share.BarShareImage;
@@ -658,7 +657,7 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (mLoadManager != null) {
-                    VersionOp.getInstance().toUpdate(new VersionOp.OnGetUpdataCallback() {
+                    VersionOp.getInstance().toUpdate(new VersionOp.OnCheckUpdataCallback() {
                         @Override
                         public void onPreUpdate() {
                             mLoadManager.startProgress("正在获取最新版本信息");

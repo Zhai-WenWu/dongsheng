@@ -53,7 +53,7 @@ public class GoodCommentManager {
      * 获取记录去好评的的时间
      * 好评类型
      */
-    public static void setStictis(Activity activity,GoodCommentDialogControl.OnCommentTimeStatisticsCallback onCommentTimeStatisticsCallback) {
+    public static void setStictis(Activity activity, GoodCommentDialogControl.OnCommentTimeStatisticsCallback onCommentTimeStatisticsCallback) {
         String type = (String) FileManager.loadShared(activity, FileManager.GOODCOMMENT_TYPE, FileManager.GOODCOMMENT_TYPE);
         if (!TextUtils.isEmpty(type)) {
             String type_time = (String) FileManager.loadShared(activity, type, type);
@@ -64,7 +64,7 @@ public class GoodCommentManager {
                     if (time_interval >= contentTime * 1000) {
                         FileManager.saveShared(activity, FileManager.GOODCOMMENT_INFO, FileManager.GOODCOMMENT_TIME, String.valueOf(currentTimeMillis()));
                         okShow = true;
-                        if(onCommentTimeStatisticsCallback != null){
+                        if (onCommentTimeStatisticsCallback != null) {
                             onCommentTimeStatisticsCallback.onStatistics(type, ">" + contentTime);
                         }
                     } else {
@@ -72,7 +72,7 @@ public class GoodCommentManager {
                         if (temp.contains(".")) {
                             temp = temp.substring(0, temp.indexOf("."));
                         }
-                        if(onCommentTimeStatisticsCallback != null){
+                        if (onCommentTimeStatisticsCallback != null) {
                             onCommentTimeStatisticsCallback.onStatistics(type, temp);
                         }
                     }

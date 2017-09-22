@@ -17,7 +17,9 @@ public class ToolsDevice {
 
     /**
      * 检测该包名在手机中的状态;
+     *
      * @param packageName 完整的包名;
+     *
      * @return 状态标志 0-未安装，1-已安装，2-运行在后台，3-当前运行
      */
     public static int isAppInPhone(Context context, String packageName) {

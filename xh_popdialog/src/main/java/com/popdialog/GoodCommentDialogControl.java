@@ -2,6 +2,7 @@ package com.popdialog;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.mrtrying.xh_popdialog.R;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
+import static com.popdialog.AllPopDialogControler.TAG;
 import static com.popdialog.util.GoodCommentManager.okShow;
 import static java.lang.System.currentTimeMillis;
 
@@ -54,7 +56,8 @@ public class GoodCommentDialogControl extends BaseDialogControl {
 
     @Override
     public void isShow(String data, OnPopDialogCallback callback) {
-        if (mActivity == null || TextUtils.isEmpty(data)){
+        Log.i(TAG, "FullSrceenDialogControl :: mActivity = " + mActivity + " ; data = " + data);
+        if (mActivity == null || TextUtils.isEmpty(data)) {
             callback.onNextShow();
             return;
         }
@@ -79,28 +82,9 @@ public class GoodCommentDialogControl extends BaseDialogControl {
                 callback.onNextShow();
                 return;
             }
-
+            //解析数据
             analysisData(data, all_num, show_num, show_time, callback);
         }
-    }
-
-    @Override
-    public void show() {
-        //变化数据---增加数量变化的值
-        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_SHOW_NUM, FileManager.GOODCOMMENT_SHOW_NUM,
-                String.valueOf(++num));
-        String show_num_all = (String) FileManager.loadShared(mActivity, FileManager.GOODCOMMENT_SHOW_NUM_ALL, FileManager.GOODCOMMENT_SHOW_NUM_ALL);
-        int all_num = Integer.parseInt(show_num_all);
-        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_SHOW_NUM_ALL, FileManager.GOODCOMMENT_SHOW_NUM_ALL, String.valueOf(++all_num));
-        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_SHOW_TIME, FileManager.GOODCOMMENT_SHOW_TIME, String.valueOf(currentTimeMillis()));
-        String show_time_num = (String) FileManager.loadShared(mActivity, FileManager.GOODCOMMENT_INFO, FileManager.GOODCOMMENT_SHOW_TIME_NUM);
-        int showTimeNum = 0;
-        if (!TextUtils.isEmpty(show_time_num)) {
-            showTimeNum = Integer.parseInt(show_time_num);
-        }
-        showTimeNum++;
-        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_INFO, FileManager.GOODCOMMENT_SHOW_TIME_NUM, String.valueOf(showTimeNum));
-        showDialog();
     }
 
     /**
@@ -108,7 +92,7 @@ public class GoodCommentDialogControl extends BaseDialogControl {
      *
      * @param data      数据
      * @param all_num   目前一共显示了几次
-     * @param show_num 显示次数
+     * @param show_num  显示次数
      * @param show_time 上一次显示时间
      */
     private void analysisData(String data, int all_num, String show_num, String show_time, OnPopDialogCallback callback) {
@@ -161,7 +145,9 @@ public class GoodCommentDialogControl extends BaseDialogControl {
                     showTimeNum = Integer.parseInt(show_time_num);
                 }
                 showTimeNum = showTimeNum % (dedult_num + 1);
-                if (showTimeNum >= dedult_num && (!TextUtils.isEmpty(show_time) && System.currentTimeMillis() - Long.parseLong(show_time) < goodSpaceTime * 24 * 60 * 60 * 1000)) {
+                if (showTimeNum >= dedult_num
+                        && (!TextUtils.isEmpty(show_time)
+                        && System.currentTimeMillis() - Long.parseLong(show_time) < goodSpaceTime * 24 * 60 * 60 * 1000)) {
                     callback.onNextShow();
                     return;
                 }
@@ -172,6 +158,24 @@ public class GoodCommentDialogControl extends BaseDialogControl {
         } else {
             callback.onNextShow();
         }
+    }
+
+    @Override
+    public void show() {
+        //变化数据---增加数量变化的值
+        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_SHOW_NUM, FileManager.GOODCOMMENT_SHOW_NUM, String.valueOf(++num));
+        String show_num_all = (String) FileManager.loadShared(mActivity, FileManager.GOODCOMMENT_SHOW_NUM_ALL, FileManager.GOODCOMMENT_SHOW_NUM_ALL);
+        int all_num = Integer.parseInt(show_num_all);
+        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_SHOW_NUM_ALL, FileManager.GOODCOMMENT_SHOW_NUM_ALL, String.valueOf(++all_num));
+        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_SHOW_TIME, FileManager.GOODCOMMENT_SHOW_TIME, String.valueOf(currentTimeMillis()));
+        String show_time_num = (String) FileManager.loadShared(mActivity, FileManager.GOODCOMMENT_INFO, FileManager.GOODCOMMENT_SHOW_TIME_NUM);
+        int showTimeNum = 0;
+        if (!TextUtils.isEmpty(show_time_num)) {
+            showTimeNum = Integer.parseInt(show_time_num);
+        }
+        showTimeNum++;
+        FileManager.saveShared(mActivity, FileManager.GOODCOMMENT_INFO, FileManager.GOODCOMMENT_SHOW_TIME_NUM, String.valueOf(showTimeNum));
+        showDialog();
     }
 
     /** 展示对话框 */
@@ -216,8 +220,8 @@ public class GoodCommentDialogControl extends BaseDialogControl {
                     @Override
                     public void onClick(View v) {
                         popDialog.cancel();
-                        if(onGoodCommentClickCallback != null){
-                            onGoodCommentClickCallback.onClickCannel(twoLevel,map.get("cancelButtonText"));
+                        if (onGoodCommentClickCallback != null) {
+                            onGoodCommentClickCallback.onClickCannel(twoLevel, map.get("cancelButtonText"));
                         }
                     }
                 }).setSureButton(map.get("confirmButtonText"), confirmButtonColor, sureBold, new View.OnClickListener() {
@@ -225,8 +229,8 @@ public class GoodCommentDialogControl extends BaseDialogControl {
             public void onClick(View v) {
                 popDialog.cancel();
                 GoodCommentManager.setGoodComment("首页弹框确认", mActivity);
-                if(onGoodCommentClickCallback != null){
-                    onGoodCommentClickCallback.onClickSure(twoLevel,map.get("confirmButtonText"));
+                if (onGoodCommentClickCallback != null) {
+                    onGoodCommentClickCallback.onClickSure(twoLevel, map.get("confirmButtonText"));
                 }
             }
         }).show();
@@ -236,12 +240,13 @@ public class GoodCommentDialogControl extends BaseDialogControl {
     }
 
     public interface OnGoodCommentClickCallback {
-        void onClickSure(String type,String text);
-        void onClickCannel(String twoLevel,String text);
+        void onClickSure(String type, String text);
+
+        void onClickCannel(String twoLevel, String text);
     }
 
-    public interface OnCommentTimeStatisticsCallback{
-        void onStatistics(String typeStr,String timeStr);
+    public interface OnCommentTimeStatisticsCallback {
+        void onStatistics(String typeStr, String timeStr);
     }
 
     /*------------------------------------------------- Get & Set ---------------------------------------------------------------*/

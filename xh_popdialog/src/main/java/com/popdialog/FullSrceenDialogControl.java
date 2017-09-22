@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.popdialog.AllPopDialogControler.TAG;
+
 
 /**
  * PackageName : acore.dialogManager
@@ -38,6 +40,7 @@ public class FullSrceenDialogControl extends BaseDialogControl {
 
     @Override
     public void isShow(String data, @NonNull OnPopDialogCallback callback) {
+        Log.i(TAG, "FullSrceenDialogControl :: mActivity = " + mActivity + " ; data = " + data);
         if (mActivity == null || TextUtils.isEmpty(data)){
             callback.onNextShow();
             return;
@@ -66,8 +69,8 @@ public class FullSrceenDialogControl extends BaseDialogControl {
      * 设置弹框推广位
      */
     private boolean craeteAD() {
-        Log.i("tzy", "craeteAD");
-        //广告
+        Log.i(TAG, "craeteAD");
+        //广告数据
         map = FullScreenManager.getWelcomeInfo(mActivity);
         // 设置welcome图片
         if (map != null && map.get("img") != null && map.get("img").length() > 10) {
@@ -85,16 +88,20 @@ public class FullSrceenDialogControl extends BaseDialogControl {
                 return true;
             }
         } else {
-            final XHADView adScrollView = XHADView.getInstence(mActivity);
-            if (adScrollView != null) {
-                adScrollView.hide();
+            if (XHADView.getInstence(mActivity) != null) {
+                XHADView.getInstence(mActivity).hide();
             }
-
         }
         return false;
     }
 
+    /**
+     * 是否显示
+     * @param mData
+     * @return
+     */
     private boolean isShowAd(Map<String, String> mData){
+        Log.i(TAG, "FullSrceenDialogControl :: mData = " + mData.toString());
         if (mData.containsKey("adConfig")) {
             String valueConfig = mData.get("adConfig");
             if (!TextUtils.isEmpty(valueConfig)) {
@@ -113,7 +120,9 @@ public class FullSrceenDialogControl extends BaseDialogControl {
                                 keyNum = String.valueOf(4);
                             }
                             String valueNum = map.get(keyNum);
-                            if (!TextUtils.isEmpty(valueNum) && "2".equals(StringManager.getFirstMap(valueNum).get("open")) && "personal".equals(StringManager.getFirstMap(valueNum).get("type")))
+                            if (!TextUtils.isEmpty(valueNum)
+                                    && "2".equals(StringManager.getFirstMap(valueNum).get("open"))
+                                    && "personal".equals(StringManager.getFirstMap(valueNum).get("type")))
                                 return true;
                         }
                     }
@@ -125,7 +134,7 @@ public class FullSrceenDialogControl extends BaseDialogControl {
 
     //显示AD
     private void adShow(final Map<String, String> map, Bitmap bmp) {
-        Log.i("tzy", "adShow");
+        Log.i(TAG, "FullSrceenDialogControl :: adShow");
         if (bmp == null
                 || TextUtils.isEmpty(map.get("times"))
                 || TextUtils.isEmpty(map.get("delay"))) {
@@ -134,6 +143,7 @@ public class FullSrceenDialogControl extends BaseDialogControl {
         //需要时activity的context
         final XHADView adScrollView = XHADView.getInstence(mActivity);
         if (adScrollView != null) {
+            //设置手动关闭回调
             adScrollView.setOnManualCloseStatisticsCallback(new XHADView.OnManualCloseStatisticsCallback() {
                 @Override
                 public void onManualClose() {
@@ -142,11 +152,7 @@ public class FullSrceenDialogControl extends BaseDialogControl {
                     }
                 }
             });
-            adScrollView.refreshContext(mActivity);
-            adScrollView.setImage(bmp);
-            if(onFullScreenStatusCallback != null){
-                onFullScreenStatusCallback.onShow();
-            }
+            //设置广告点击回调
             adScrollView.setADClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -156,8 +162,19 @@ public class FullSrceenDialogControl extends BaseDialogControl {
                     }
                 }
             });
+            //刷新页面上下文
+            adScrollView.refreshContext(mActivity);
+            //设置图片
+            adScrollView.setImage(bmp);
+            //展示回调
+            if(onFullScreenStatusCallback != null){
+                onFullScreenStatusCallback.onShow();
+            }
+            //展示次数
             int displayTime = Integer.parseInt(map.get("times"));
+            //延迟
             int delay = Integer.parseInt(map.get("delay"));
+            Log.i(TAG, "FullSrceenDialogControl :: displayTime = " + displayTime + " ; delay = " + delay);
             //必须调用该方法初始化
             adScrollView.initTimer(delay * 1000, displayTime * 1000);
 //            adScrollView.initTimer(0, 0);

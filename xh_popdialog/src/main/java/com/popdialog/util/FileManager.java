@@ -24,17 +24,17 @@ public class FileManager {
 
     public static final String file_welcome = "welcomeData";
     //好评弹框
-    public static final String GOODCOMMENT_INFO="goodcomment_info";//好评信息
-    public static final String GOODCOMMENT_TIME="goodcomment_time";//点击去好评时时间
-    public static final String GOODCOMMENT_SHOW_TIME_NUM="goodcomment_show_time_num";//好评出现次数，当出现过2次，则3个月之内不再显示
-    public static final String GOODCOMMENT_SHOW_NUM="goodcomment_show_num";//好评弹框显示次数,当在线开关变化后，此数据清空
-    public static final String GOODCOMMENT_SHOW_TIME="goodcomment_show_time";//好评弹框上次显示时间
-    public static final String GOODCOMMENT_SHOW_NUM_ALL="goodcomment_show_num_all";//好评弹框显示总次数
-    public static final String GOODCOMMENT_TYPE="goodcomment_type";//好评弹框类型
+    public static final String GOODCOMMENT_INFO = "goodcomment_info";//好评信息
+    public static final String GOODCOMMENT_TIME = "goodcomment_time";//点击去好评时时间
+    public static final String GOODCOMMENT_SHOW_TIME_NUM = "goodcomment_show_time_num";//好评出现次数，当出现过2次，则3个月之内不再显示
+    public static final String GOODCOMMENT_SHOW_NUM = "goodcomment_show_num";//好评弹框显示次数,当在线开关变化后，此数据清空
+    public static final String GOODCOMMENT_SHOW_TIME = "goodcomment_show_time";//好评弹框上次显示时间
+    public static final String GOODCOMMENT_SHOW_NUM_ALL = "goodcomment_show_num_all";//好评弹框显示总次数
+    public static final String GOODCOMMENT_TYPE = "goodcomment_type";//好评弹框类型
     //推送
-    public static final String PUSH_INFO="push_info";//推送文件名
-    public static final String PUSH_TIME="push_time";//上次弹推送的时间
-    public static final String PUSH_TAG="push_tag";//上次弹推送的时间
+    public static final String PUSH_INFO = "push_info";//推送文件名
+    public static final String PUSH_TIME = "push_time";//上次弹推送的时间
+    public static final String PUSH_TAG = "push_tag";//上次弹推送的时间
 
     public static final String xmlFile_appUrl = "appUrl";
     public static final String xmlFile_popdialog = "popdialog";
@@ -80,7 +80,8 @@ public class FileManager {
      *
      * @param completePath : 完整路径
      * @param str
-     * @param append 是否在文件后面增加字符
+     * @param append       是否在文件后面增加字符
+     *
      * @return 成功file，失败null
      */
     public static File saveFileToCompletePath(String completePath, String str, boolean append) {
@@ -102,8 +103,10 @@ public class FileManager {
 
     /**
      * 在SD卡上存文件
+     *
      * @param completePath : 完整路径
      * @param is
+     *
      * @return 成功file，失败null
      */
     public static File saveFileToCompletePath(String completePath, InputStream is, boolean append) {
@@ -134,7 +137,9 @@ public class FileManager {
 
     /**
      * 读取文件
+     *
      * @param completePath ：文件的完整的路径
+     *
      * @return
      */
     public static String readFile(String completePath) {
@@ -157,6 +162,7 @@ public class FileManager {
 
     /**
      * 删除SD卡上的文件夹《包括文件夹下的文件》或者文件
+     *
      * @param path
      */
     public static void delDirectoryOrFile(String completePath) {
@@ -165,9 +171,9 @@ public class FileManager {
 
     /**
      * 删除SD卡上时间较早的文件
+     *
      * @param completePath
-     * @param 文件夹内只保留
-     *            (keep~keep*2)个文件
+     * @param 文件夹内只保留      (keep~keep*2)个文件
      */
     public static void delDirectoryOrFile(String completePath, int keep) {
         File file = new File(completePath);
@@ -193,7 +199,7 @@ public class FileManager {
                             }
                         });
                     } catch (Exception e) {
-                        Log.w("tzy","文件排序错误");
+                        Log.w("tzy", "文件排序错误");
                     }
                 }
                 for (int i = 0; i < files.length - keep; i++) {
@@ -212,6 +218,6 @@ public class FileManager {
 
     /** 获取App data路径 */
     public static String getDataDir(Context context) {
-        return Environment.getDataDirectory() + "/data/" + context.getPackageName() +  "/file/";
+        return Environment.getDataDirectory() + "/data/" + context.getPackageName() + "/file/";
     }
 }

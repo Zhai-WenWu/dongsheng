@@ -19,6 +19,7 @@ public class ImageManager {
      * @param width
      * @param height
      * @param zoom
+     *
      * @return
      */
     public static ViewGroup.LayoutParams setImgViewByWH(ImageView img, Bitmap bitmap, int width, int height, boolean zoom) {

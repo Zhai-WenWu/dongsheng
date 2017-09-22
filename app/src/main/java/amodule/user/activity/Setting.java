@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.popdialog.FullSrceenDialogControl;
 import com.popdialog.util.FullScreenManager;
 import com.popdialog.util.PushManager;
 import com.xiangha.R;
@@ -311,7 +310,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             @Override
             public void onClick() {
                 XHClick.mapStat(Setting.this, tongjiId, "检查新版本", "");
-                VersionOp.getInstance().toUpdate(new VersionOp.OnGetUpdataCallback() {
+                VersionOp.getInstance().toUpdate(new VersionOp.OnCheckUpdataCallback() {
                     @Override
                     public void onPreUpdate() {
                         loadManager.startProgress("正在获取最新版本信息");

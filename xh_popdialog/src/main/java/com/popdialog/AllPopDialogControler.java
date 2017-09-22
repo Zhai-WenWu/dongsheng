@@ -7,12 +7,14 @@ import android.util.Log;
 import com.popdialog.base.BaseDialogControl;
 
 /**
- * PackageName : com
+ * PackageName : com.popdialog
  * Created by MrTrying on 2017/9/19 15:44.
  * E_mail : ztanzeyu@gmail.com
  */
 
 public class AllPopDialogControler {
+
+    public static final String TAG = "tzy_pop";
 
     private Activity activity;
     /** 版本号 */
@@ -20,7 +22,12 @@ public class AllPopDialogControler {
     /** 获取数据回调 */
     private OnGetAllDataCallback onGetAllDataCallback;
 
-
+    /**
+     *
+     * @param activity 当前activity
+     * @param versionCode 版本号
+     * @param callback 获取数据的callbcak
+     */
     public AllPopDialogControler(Activity activity, String versionCode, OnGetAllDataCallback callback) {
         this.activity = activity;
         this.versionCode = versionCode;
@@ -36,9 +43,11 @@ public class AllPopDialogControler {
      */
     public void start(final OnPreStartCallback onPreStartCallback,@NonNull final OnStartFailCallback onStartFailCallback){
         if(onPreStartCallback == null){
+            Log.i(TAG, "AllPopDialogControler :: onPreStartCallback为空，直接执行导流");
             toGuideDialog(onStartFailCallback);
             return;
         }
+        Log.i(TAG, "AllPopDialogControler :: 开始");
         onPreStartCallback.onPreStart(new OnStartCallback() {
             @Override
             public void onStart() {
@@ -61,7 +70,7 @@ public class AllPopDialogControler {
         guideDialogControl.isShow(onGetAllDataCallback.getGuideData(), new BaseDialogControl.OnPopDialogCallback() {
             @Override
             public void onCanShow() {
-                Log.i("tzy", "toGetGuidData onShow()");
+                Log.i(TAG, "toGetGuidData onCanShow()");
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -72,6 +81,7 @@ public class AllPopDialogControler {
 
             @Override
             public void onNextShow() {
+                Log.i(TAG, "toGetGuidData onNextShow()");
                 if(onStartFailCallback == null
                         || !onStartFailCallback.onStartFail()){
                     toFullScreenDialog();
@@ -95,13 +105,13 @@ public class AllPopDialogControler {
         fullSrceenDialogControl.isShow(onGetAllDataCallback.getFullScreenData(), new BaseDialogControl.OnPopDialogCallback() {
             @Override
             public void onCanShow() {
-                Log.i("tzy", "toFullScreenDialog onCanShow()");
+                Log.i(TAG, "toFullScreenDialog onCanShow()");
                 fullSrceenDialogControl.show();
             }
 
             @Override
             public void onNextShow() {
-                Log.i("tzy", "toFullScreenDialog onNextShow()");
+                Log.i(TAG, "toFullScreenDialog onNextShow()");
                 toGoodCommentDialog();
             }
         });
@@ -118,7 +128,7 @@ public class AllPopDialogControler {
         goodCommentDialogControl.isShow(onGetAllDataCallback.getGoodCommentData(), new BaseDialogControl.OnPopDialogCallback() {
             @Override
             public void onCanShow() {
-                Log.i("tzy", "toGetGoodData onShow()");
+                Log.i(TAG, "toGetGoodData onCanShow()");
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -129,6 +139,7 @@ public class AllPopDialogControler {
 
             @Override
             public void onNextShow() {
+                Log.i(TAG, "toGetGoodData onNextShow()");
                 toPushDialog();
             }
         });
@@ -145,12 +156,13 @@ public class AllPopDialogControler {
         pushDialogControl.isShow(onGetAllDataCallback.getPushData(), new BaseDialogControl.OnPopDialogCallback() {
             @Override
             public void onCanShow() {
+                Log.i(TAG, "toPushDialog onCanShow()");
                 pushDialogControl.show();
             }
 
             @Override
             public void onNextShow() {
-
+                Log.i(TAG, "toPushDialog onNextShow()");
             }
         });
     }

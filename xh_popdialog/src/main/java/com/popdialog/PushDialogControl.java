@@ -1,12 +1,9 @@
 package com.popdialog;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.popdialog.base.BaseDialogControl;
 import com.popdialog.util.FileManager;
@@ -16,6 +13,8 @@ import com.popdialog.view.XhDialog;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import static com.popdialog.AllPopDialogControler.TAG;
 
 /**
  * Created by XiangHa on 2017/5/3.
@@ -31,14 +30,15 @@ public class PushDialogControl extends BaseDialogControl {
     private String versionCode;
     private OnPushDialogStatisticsCallback onPushDialogStatisticsCallback;
 
-    public PushDialogControl(Activity activity,String versionCode) {
+    public PushDialogControl(Activity activity, String versionCode) {
         super(activity);
         this.versionCode = versionCode;
     }
 
     @Override
     public void isShow(String data, OnPopDialogCallback callback) {
-        if (mActivity == null || TextUtils.isEmpty(data)){
+        Log.i(TAG, "PushDialogControl :: mActivity = " + mActivity + " ; data = " + data);
+        if (mActivity == null || TextUtils.isEmpty(data)) {
             callback.onNextShow();
             return;
         }
@@ -57,10 +57,11 @@ public class PushDialogControl extends BaseDialogControl {
             }
             return;
         }
-        boolean isShowNot = PushManager.isNotificationEnabled(mActivity);
-        boolean isShowDia = isShowPushDialog(data);
-        //Log.i("FRJ","isShowNot:" + isShowNot + "    isShowDia:" + isShowDia);
-        if (!isShowNot && isShowDia) {
+        //是否开始展示通知
+        boolean notificationEnabled = PushManager.isNotificationEnabled(mActivity);
+        //是否展示弹框
+        boolean isShowDialog = isShowPushDialog(data);
+        if (!notificationEnabled && isShowDialog) {
             callback.onCanShow();
         } else {
             callback.onNextShow();
@@ -70,12 +71,13 @@ public class PushDialogControl extends BaseDialogControl {
     @Override
     public void show() {
         xhDialog = new XhDialog(mActivity);
-        xhDialog.setTitle(title).setMessage(content)
+        xhDialog.setTitle(title)
+                .setMessage(content)
                 .setCanselButton(leftText, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         xhDialog.cancel();
-                        if(onPushDialogStatisticsCallback != null){
+                        if (onPushDialogStatisticsCallback != null) {
                             onPushDialogStatisticsCallback.onSureStatistics();
                         }
                     }
@@ -85,16 +87,18 @@ public class PushDialogControl extends BaseDialogControl {
                     public void onClick(View v) {
                         PushManager.requestPermission(mActivity);
                         xhDialog.cancel();
-                        if(onPushDialogStatisticsCallback != null){
+                        if (onPushDialogStatisticsCallback != null) {
                             onPushDialogStatisticsCallback.onCannelStatistics();
                         }
                     }
-                }).show();
+                })
+                .show();
+        //记录时间
         FileManager.saveShared(mActivity, FileManager.PUSH_INFO, versionCode, String.valueOf(++currentShowNumber));
         FileManager.saveShared(mActivity, FileManager.PUSH_INFO, FileManager.PUSH_TIME, String.valueOf(System.currentTimeMillis()));
     }
 
-    /**是否展示推送弹框*/
+    /** 是否展示推送弹框 */
     private boolean isShowPushDialog(String data) {
         if (!loadData(data)) {
             return false;
@@ -103,22 +107,25 @@ public class PushDialogControl extends BaseDialogControl {
         if (!TextUtils.isEmpty(pushNmuberStr)) {
             currentShowNumber = Integer.parseInt(pushNmuberStr);
         }
-        if (currentShowNumber < showNum && currentShowNumber < maxNumInVersion) {
+        if (currentShowNumber < showNum
+                && currentShowNumber < maxNumInVersion) {
             String pushTime = String.valueOf(FileManager.loadShared(mActivity, FileManager.PUSH_INFO, FileManager.PUSH_TIME));
             if (TextUtils.isEmpty(pushTime)) {
                 return true;
             }
+            //判断时间差
             long currentTime = System.currentTimeMillis();
             long old = Long.parseLong(pushTime);
-            if (currentTime - old > spaceTime * 60 * 1000) {
-                return true;
-            }
+            Log.i(TAG, "PushDialogControl :: currentTime = " + currentTime + " ; old = " + old);
+            Log.i(TAG, "PushDialogControl :: spaceTime = " + (spaceTime * 60 * 1000));
+            return currentTime - old > spaceTime * 60 * 1000;
         }
         return false;
     }
 
-    /**加载数据*/
+    /** 加载数据 */
     private boolean loadData(String data) {
+        Log.w(TAG, "PushDialogControl :: data = " + data);
         ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(data);
         if (arrayList.size() > 0) {
             try {
@@ -130,6 +137,7 @@ public class PushDialogControl extends BaseDialogControl {
                 showNum = Integer.parseInt(map.get("showNumber"));
                 spaceTime = Integer.parseInt(map.get("spaceTime"));
             } catch (Exception e) {
+                Log.w(TAG, "PushDialogControl :: Exception message : " + e.getMessage());
                 return false;
             }
             return true;
@@ -138,22 +146,9 @@ public class PushDialogControl extends BaseDialogControl {
         }
     }
 
-//    /**请求权限*/
-//    public void requestPermission() {
-//        Toast.makeText(mActivity,"请手动设置通知权限",Toast.LENGTH_SHORT).show();
-//        if (PushManager.isGoAppSetting()) {
-//            Intent intent2 = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//            Uri uri = Uri.fromParts("package", mActivity.getPackageName(), null);
-//            intent2.setData(uri);
-//            mActivity.startActivity(intent2);
-//        } else {
-//            Intent intent = new Intent(Settings.ACTION_SETTINGS);
-//            mActivity.startActivity(intent);
-//        }
-//    }
-
-    public interface OnPushDialogStatisticsCallback{
+    public interface OnPushDialogStatisticsCallback {
         void onSureStatistics();
+
         void onCannelStatistics();
     }
 

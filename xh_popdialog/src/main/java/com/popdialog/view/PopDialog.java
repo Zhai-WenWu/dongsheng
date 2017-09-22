@@ -3,7 +3,6 @@ package com.popdialog.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.View;
@@ -26,8 +25,10 @@ public class PopDialog extends Dialog {
 
     /**
      * 设置标题
+     *
      * @param title
      * @param titleColor
+     *
      * @return
      */
     public PopDialog setTitle(String title, String titleColor) {
@@ -41,8 +42,10 @@ public class PopDialog extends Dialog {
 
     /**
      * 设置文本
+     *
      * @param message
      * @param messageColor
+     *
      * @return
      */
     public PopDialog setMessage(String message, String messageColor) {
@@ -56,10 +59,12 @@ public class PopDialog extends Dialog {
 
     /**
      * 设置取消
-     * @param text 文本
+     *
+     * @param text      文本
      * @param textColor 文本颜色
-     * @param isBold 是否加粗
-     * @param listener 点击
+     * @param isBold    是否加粗
+     * @param listener  点击
+     *
      * @return
      */
     public PopDialog setCanselButton(final String text, String textColor, boolean isBold, final View.OnClickListener listener) {
@@ -86,10 +91,12 @@ public class PopDialog extends Dialog {
 
     /**
      * 设置确认
-     * @param text 文本
+     *
+     * @param text      文本
      * @param textColor 文本颜色
-     * @param isBold 是否加粗
-     * @param listener 点击
+     * @param isBold    是否加粗
+     * @param listener  点击
+     *
      * @return
      */
     public PopDialog setSureButton(final String text, String textColor, boolean isBold, final View.OnClickListener listener) {

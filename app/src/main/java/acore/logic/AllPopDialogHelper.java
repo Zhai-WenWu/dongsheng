@@ -30,6 +30,8 @@ import aplug.basic.SubBitmapTarget;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 
+import static com.popdialog.AllPopDialogControler.TAG;
+
 /**
  * PackageName : acore.logic
  * Created by MrTrying on 2017/9/20 10:37.
@@ -37,6 +39,7 @@ import third.ad.tools.AdPlayIdConfig;
  */
 
 public class AllPopDialogHelper {
+    /**所有弹框的控制器*/
     AllPopDialogControler allPopDialogControler;
 
     public AllPopDialogHelper(Activity activity) {
@@ -44,21 +47,25 @@ public class AllPopDialogHelper {
                 new AllPopDialogControler.OnGetAllDataCallback() {
                     @Override
                     public String getGuideData() {
+                        Log.i(TAG,"AllPopDialogHelper :: getGuideData");
                         return AppCommon.getConfigByLocal("diversion");
                     }
 
                     @Override
                     public String getFullScreenData() {
+                        Log.i(TAG,"AllPopDialogHelper :: getFullScreenData");
                         return Tools.map2Json(AdConfigTools.getInstance().getAdConfigData(AdPlayIdConfig.FULLSCREEN));
                     }
 
                     @Override
                     public String getGoodCommentData() {
+                        Log.i(TAG,"AllPopDialogHelper :: getGoodCommentData");
                         return AppCommon.getConfigByLocal("goodComment");
                     }
 
                     @Override
                     public String getPushData() {
+                        Log.i(TAG,"AllPopDialogHelper :: getPushData");
                         return AppCommon.getConfigByLocal("pushJson");
                     }
                 });
@@ -71,7 +78,12 @@ public class AllPopDialogHelper {
         //导流回调
         allPopDialogControler.setOnGuideClickCallback(new GuideDialogControl.OnGuideClickCallback() {
             @Override
-            public void onClickSure(Map<String, String> map,String twoLevel,String text) {
+            public void onClickSure(Map<String, String> map, String twoLevel, String text) {
+                if(map == null){
+                    return;
+                }
+                Log.i(TAG,"Guide :: onClickSure");
+                Log.i(TAG,"Guide :: map = " + map.toString());
                 String url = map.get("url");
                 String type = map.get("type");
                 if ("1".equals(type)) {
@@ -102,8 +114,6 @@ public class AllPopDialogHelper {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-//							//直接下载
-//							AppDownload.downloadApp(act, url, map.get("name"));
                 } else if ("2".equals(type)) {
                     //app内部打开
                     AppCommon.openUrl(Main.allMain, url, true);
@@ -113,14 +123,17 @@ public class AllPopDialogHelper {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     Main.allMain.startActivity(intent);
                 }
-                //统计
-                XHClick.mapStat(XHApplication.in(),"a_NewDiversion",twoLevel,text);
+                XHClick.mapStat(XHApplication.in(), "a_NewDiversion", twoLevel, text);//统计
             }
 
             @Override
-            public void onClickCannel(Map<String, String> map,String twoLevel,String text) {
-                //统计
-                XHClick.mapStat(XHApplication.in(),"a_NewDiversion",twoLevel,text);
+            public void onClickCannel(Map<String, String> map, String twoLevel, String text) {
+                if(map == null){
+                    return;
+                }
+                Log.i(TAG,"Guide :: onClickCannel");
+                Log.i(TAG,"Guide :: map = " + map.toString());
+                XHClick.mapStat(XHApplication.in(), "a_NewDiversion", twoLevel, text);//统计
             }
         });
 
@@ -128,25 +141,28 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnFullScreenStatusCallback(new FullSrceenDialogControl.OnFullScreenStatusCallback() {
             @Override
             public void onShow() {
-                //统计
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_show_index", "全屏", "xh");
+                Log.i(TAG,"FullScreen :: 展示");
+                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_show_index", "全屏", "xh");//统计
             }
 
             @Override
             public void onClickImage(Map<String, String> map) {
-                //点击统计
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_click_index", "全屏", "xh");
+                Log.i(TAG,"FullScreen :: 点击图片");
+                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_click_index", "全屏", "xh");//统计
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), map.get("url"), true);
             }
 
             @Override
             public void onClickClose() {
+                Log.i(TAG,"FullScreen :: 点击关闭");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "a_fullcereen_ad", "手动关闭", "");
             }
         });
         allPopDialogControler.setOnLoadImageCallback(new FullSrceenDialogControl.OnLoadImageCallback() {
             @Override
             public void onLoadImage(String imageUrl, final FullSrceenDialogControl.OnAfterLoadImageCallback callback) {
+                Log.i(TAG,"FullScreen :: 加载图片 :: imageUrl = " + imageUrl);
+                //加载图片
                 LoadImage.with(XHApplication.in())
                         .load(imageUrl)
                         .setSaveType(LoadImage.SAVE_LONG)
@@ -155,6 +171,7 @@ public class AllPopDialogHelper {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
                                 if (callback != null) {
+                                    Log.i(TAG,"FullScreen :: 执行回调，显示图片");
                                     callback.onAfterLoadImage(bitmap);
                                 }
                             }
@@ -165,13 +182,15 @@ public class AllPopDialogHelper {
         //好评
         allPopDialogControler.setOnGoodCommentClickCallback(new GoodCommentDialogControl.OnGoodCommentClickCallback() {
             @Override
-            public void onClickSure(String twoLevel,String text) {
-                XHClick.mapStat(XHApplication.in(),"a_NewEvaluate",twoLevel,text);
+            public void onClickSure(String twoLevel, String text) {
+                Log.i(TAG,"GoodComment :: onClickSure");
+                XHClick.mapStat(XHApplication.in(), "a_NewEvaluate", twoLevel, text);
             }
 
             @Override
-            public void onClickCannel(String twoLevel,String text) {
-                XHClick.mapStat(XHApplication.in(),"a_NewEvaluate",twoLevel,text);
+            public void onClickCannel(String twoLevel, String text) {
+                Log.i(TAG,"GoodComment :: onClickCannel");
+                XHClick.mapStat(XHApplication.in(), "a_NewEvaluate", twoLevel, text);
                 XHClick.mapStat(XHApplication.in(), "a_evaluate420", "首页弹框关闭", "");
             }
         });
@@ -180,26 +199,31 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnPushDialogStatisticsCallback(new PushDialogControl.OnPushDialogStatisticsCallback() {
             @Override
             public void onSureStatistics() {
+                Log.i(TAG,"Push :: onSureStatistics");
                 XHClick.mapStat(XHApplication.in(), "a_push", "是", "");
             }
 
             @Override
             public void onCannelStatistics() {
+                Log.i(TAG,"Push :: onCannelStatistics");
                 XHClick.mapStat(XHApplication.in(), "a_push", "否", "");
             }
         });
     }
 
+    /**开始*/
     public void start() {
         allPopDialogControler.start(
                 new AllPopDialogControler.OnPreStartCallback() {
                     @Override
                     public void onPreStart(final AllPopDialogControler.OnStartCallback onStartCallback) {
-                        VersionOp.getInstance().isShow("",new BaseDialogControl.OnPopDialogCallback() {
+                        VersionOp.getInstance().isShow("", new BaseDialogControl.OnPopDialogCallback() {
                             @Override
                             public void onCanShow() {
-                                Log.i("tzy", "toVersionUpdata onShow() versionOp.isMustUpdata:" + VersionOp.getInstance().isMustUpdata);
+                                Log.i(TAG, "VersionUpdata :: onCanShow");
+                                Log.i(TAG,"VersionUpdata :: versionOp.isMustUpdata:" + VersionOp.getInstance().isMustUpdata);
                                 if (VersionOp.getInstance().isMustUpdata) {
+                                    Log.i(TAG, "强制升级");
                                     VersionOp.getInstance().show();
                                 } else {
                                     if (onStartCallback != null) {
@@ -210,7 +234,7 @@ public class AllPopDialogHelper {
 
                             @Override
                             public void onNextShow() {
-                                Log.i("tzy", "toVersionUpdata onGone()");
+                                Log.i(TAG, "去执行导流");
                                 if (onStartCallback != null) {
                                     onStartCallback.onStart();
                                 }
@@ -220,10 +244,12 @@ public class AllPopDialogHelper {
                 }, new AllPopDialogControler.OnStartFailCallback() {
                     @Override
                     public boolean onStartFail() {
-                        if(VersionOp.getInstance().isNeedUpdata){
+                        if (VersionOp.getInstance().isNeedUpdata) {
+                            Log.i(TAG, "普通升级");
                             VersionOp.getInstance().show();
                             return true;
                         }
+                        Log.i(TAG, "不需要升级");
                         return false;
                     }
                 }

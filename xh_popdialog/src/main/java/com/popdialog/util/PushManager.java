@@ -16,11 +16,21 @@ import android.widget.Toast;
 
 public class PushManager {
 
+    /**
+     * 是否有展示通知权限
+     * @param context
+     * @return
+     */
     public static boolean isNotificationEnabled(Context context) {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         return notificationManagerCompat.areNotificationsEnabled();
     }
 
+    /**
+     *
+     * @param context
+     * @param callback
+     */
     public static void tongjiPush(Context context,OnPushEnableCallback callback) {
         boolean isEnabled = isNotificationEnabled(context);
         String pushTag = String.valueOf(FileManager.loadShared(context, FileManager.PUSH_INFO, FileManager.PUSH_TAG));
