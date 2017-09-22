@@ -296,79 +296,43 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
                         // 图片圆角和宽高适应auther_userImg
                         if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                            v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
                             v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                         } else if (map.get("isPromotion") != null && map.get("isPromotion").equals("1") && UtilString.getListMapByJson(map.get("imgs")).size()==1) {
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             int waith = context.getWindowManager().getDefaultDisplay().getWidth();
-                            int dp_15 = Tools.getDimen(context, R.dimen.dp_15);
-                            imgWidth = waith - dp_15 * 2;
-                            imgHeight = (waith - dp_15 * 2) * 720 / 1280;
+                            int dp_30 = Tools.getDimen(context, R.dimen.dp_30);
+                            imgWidth = waith - dp_30;
+                            imgHeight = (waith - dp_30) * 720 / 1280;
                             UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
                         } else if (v.getId() == R.id.image_one) {
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             imgZoom = true;
-                            int waith = context.getWindowManager().getDefaultDisplay().getWidth();
-                            int dp_15 = Tools.getDimen(context, R.dimen.dp_15);
-                            int dp_225 = Tools.getDimen(context, R.dimen.dp_225);
-                            int dp_340 = Tools.getDimen(context, R.dimen.dp_340);
-                            int dp_114 = Tools.getDimen(context, R.dimen.dp_114);
-                            int bt_waith = bitmap.getWidth();
-                            int bt_height = bitmap.getHeight();
-                            int no_waith = waith - dp_15 * 2;
-                            if (bt_waith <= dp_114) {//宽小于
-                                imgWidth = dp_114;
-                                bt_height = bt_height * dp_114 / bt_waith;
-                                if (bt_height >= dp_225) {
-                                    imgHeight = dp_225;
-                                } else if (bt_height <= dp_114) {
-                                    imgHeight = dp_114;
-                                } else imgHeight = bt_height;
-                            } else if (bt_height <= dp_114) {//高小于最小指
-                                imgHeight = dp_114;
-                                bt_waith = bt_waith * dp_114 / bt_height;
-                                if (bt_waith >= no_waith) {
-                                    imgWidth = no_waith;
-                                } else if (bt_waith <= dp_114) imgWidth = 114;
-                                else imgWidth = bt_waith;
-                            } else if (bt_waith >= no_waith && bt_height <= dp_225) {
-                                bt_height = bt_height * no_waith / bt_waith;
-                                imgWidth = no_waith;
-                                imgHeight = bt_height;
-                                if (bt_height <= dp_114) {
-                                    imgHeight = dp_114;
+                            final float maxW = ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_30);
+                            final float maxH = maxW * 4 / 5;
+                            final float minW = maxW / 4;
+                            final float minH = minW;
+
+                            final int originalW = bitmap.getWidth();
+                            final int originalH = bitmap.getHeight();
+
+                            final float tmpW = maxW;
+                            final float tmpH = originalH * maxW / originalW;
+
+                            if (tmpH <= minH) {
+                                imgHeight = (int) minH;
+                                imgWidth = (int) maxW;
+                            } else if (minH < tmpH && tmpH <= maxH) {
+                                imgWidth = (int) maxW;
+                                imgHeight = (int) tmpH;
+                            } else if (tmpH == maxW) {
+                                imgHeight = (int) (tmpH / 2);
+                                imgWidth = imgHeight;
+                            } else {
+                                imgHeight = (int) maxH;
+                                imgWidth = (int) (tmpW * maxH / tmpH);
+                                if (imgWidth < minW) {
+                                    imgWidth = (int) minW;
                                 }
-                            } else if (bt_waith <= no_waith && bt_height >= dp_225) {
-                                bt_waith = bt_waith * dp_225 / bt_height;
-                                imgHeight = dp_225;
-                                imgWidth = bt_waith;
-                                if (bt_waith <= dp_114) {
-                                    imgWidth = dp_114;
-                                }
-                            } else if (bt_waith >= no_waith && bt_height >= dp_225) {
-                                int w = no_waith;
-                                int h = bt_height * no_waith / bt_waith;
-                                if (h >= dp_225) {
-                                    imgHeight = dp_225;
-                                    w = bt_waith * dp_225 / bt_height;
-                                    imgWidth = w;
-                                    if (w >= no_waith) {
-                                        imgWidth = no_waith;
-                                        imgHeight = dp_225;
-                                    } else if (w <= dp_114) {
-                                        imgWidth = dp_114;
-                                        imgHeight = dp_225;
-                                    } else {
-                                    }
-                                } else if (h <= dp_114) {
-                                    imgWidth = no_waith;
-                                    imgHeight = dp_114;
-                                } else {
-                                    imgWidth = no_waith;
-                                }
-                            } else if (bt_waith <= no_waith && bt_height <= dp_225) {
-                                imgWidth = bt_waith;
-                                imgHeight = bt_height;
                             }
                             UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
                         } else {
