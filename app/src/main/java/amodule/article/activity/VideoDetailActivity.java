@@ -570,7 +570,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (canEdit) {
-                    showBottomDialog();
+                    showBottomDialog(isAuthor);
                 } else {
                     openShare();
                     statistics("分享", "");
@@ -797,7 +797,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         detailAdapter.notifyDataSetChanged();
     }
 
-    private void showBottomDialog() {
+    private void showBottomDialog(boolean isAuthor) {
         ToolsDevice.keyboardControl(false, this, mCommentBar);
         BottomDialog dialog = new BottomDialog(this);
         dialog.addButton("分享", new View.OnClickListener() {
@@ -815,12 +815,16 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 statistics("更多", "编辑");
                 VideoDetailActivity.this.finish();
             }
-        }).addButton("删除", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDeleteDialog();
-            }
         });
+        //是作者显示删除按钮
+        if(isAuthor){
+            dialog.addButton("删除", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openDeleteDialog();
+                }
+            });
+        }
         dialog.show();
     }
 

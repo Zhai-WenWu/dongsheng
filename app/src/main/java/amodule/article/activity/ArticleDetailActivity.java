@@ -543,7 +543,7 @@ public class ArticleDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (canEdit) {
-                    showBottomDialog();
+                    showBottomDialog(isAuthor);
                 } else {
                     openShare();
                     statistics("分享", "");
@@ -705,7 +705,7 @@ public class ArticleDetailActivity extends BaseActivity {
         detailAdapter.notifyDataSetChanged();
     }
 
-    private void showBottomDialog() {
+    private void showBottomDialog(boolean isAuthor) {
         ToolsDevice.keyboardControl(false, this, mArticleCommentBar);
         BottomDialog dialog = new BottomDialog(this);
         dialog.addButton("分享", new View.OnClickListener() {
@@ -723,12 +723,16 @@ public class ArticleDetailActivity extends BaseActivity {
                 statistics("更多", "编辑");
                 ArticleDetailActivity.this.finish();
             }
-        }).addButton("删除", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDeleteDialog();
-            }
         });
+        //是作者显示删除按钮
+        if(isAuthor){
+            dialog.addButton("删除", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openDeleteDialog();
+                }
+            });
+        }
         dialog.show();
     }
 
