@@ -561,11 +561,15 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             mTitle.setText(customerData.get("nickName"));
             mTitle.setVisibility(View.VISIBLE);
         }
-        rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
+        //获取是否可以编辑
+        boolean hasEditPermission = "2".equals(mapVideo.get("isEdit"));
+        //作者 或者 有编辑权限
+        final boolean canEdit = isAuthor || hasEditPermission;
+        rightButton.setImageResource(canEdit ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAuthor) {
+                if (canEdit) {
                     showBottomDialog();
                 } else {
                     openShare();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,6 +28,7 @@ import aplug.basic.SubBitmapTarget;
 public class BaseItemView extends RelativeLayout {
 
     protected final int TAG_ID = R.string.tag;
+    protected final int TAG_POSITION = R.string.tag_position;
     protected int mImgResource = R.drawable.i_nopic;
     protected int mRoundImgPixels = 0, mImgWidth = 0, mImgHeight = 0,// 以像素为单位
             mRoundType = 1; // 1为全圆角，2上半部分圆角
@@ -96,6 +98,7 @@ public class BaseItemView extends RelativeLayout {
             if (value.length() < 10)
                 return;
             v.setTag(TAG_ID, value);
+            v.setTag(TAG_POSITION, mPosition);
             if (v.getContext() == null) return;
             BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(v.getContext())
                     .load(value)
@@ -110,7 +113,7 @@ public class BaseItemView extends RelativeLayout {
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-                if (bitmap != null) {
+                if (bitmap != null && String.valueOf(mPosition).equals(v.getTag(TAG_POSITION))) {
                     v.setImageBitmap(bitmap);
                 }
             }

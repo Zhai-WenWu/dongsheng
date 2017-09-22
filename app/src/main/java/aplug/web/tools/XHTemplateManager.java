@@ -76,12 +76,21 @@ public class XHTemplateManager {
      * 处理香哈全部模版更新
      */
     private void checkXHUplateAllTemplate(){
-        String url="";
+        String url=StringManager.API_TEMPLATE_AUTOLOADTEMPLATE;
         ReqEncyptInternet.in().doEncypt(url, "",new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag>=ReqInternet.REQ_OK_STRING){
-
+                    ArrayList<Map<String,String>> mapList= StringManager.getListMapByJson(msg);
+                    if(mapList!=null&&mapList.size()>0){
+                        int size = mapList.size();
+                        for(int i=0;i<size;i++){
+                            Map<String,String> map= mapList.get(i);
+                            map.put("namekey","templateName");
+                            map.put("versionkey","versionSign");
+                            mapArrayList.add(map);
+                        }
+                    }
                 }
                 checkDsUplateAllTemplate();
             }
