@@ -115,13 +115,14 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private Long startTime;//统计使用的时间
     public boolean isPortrait = false;
     int statusBarH = 0;
-
+    private Handler handlerScreen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //保持高亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        new Handler().postDelayed(new Runnable() {
+        handlerScreen=new Handler();
+        handlerScreen.postDelayed(new Runnable() {
             @Override
             public void run() {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -184,6 +185,10 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         }
         if (mHaederLayout != null)
             mHaederLayout.onDestroy();
+        if(handlerScreen!=null){
+            handlerScreen.removeCallbacksAndMessages(null);
+            handlerScreen=null;
+        }
         super.onDestroy();
     }
 
