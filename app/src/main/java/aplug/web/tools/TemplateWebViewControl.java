@@ -34,63 +34,41 @@ import third.mall.aplug.MallStringManager;
  */
 public class TemplateWebViewControl {
     private boolean isCallBack = false;//是否已经回调
-
-//    /**
-//     * 处理模版数据
-//     * 存储数据，的key是通过当前url获取出来
-//     *
-//     * @param requestMethod
-//     */
-//    public void handleXHMouldData(final String requestMethod) {
-//        isCallBack = false;
-//        final String path = FileManager.getSDDir() + "long/" + requestMethod;
-//        final String readStr = FileManager.readFile(path);
-//        final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
-//        LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
-//        mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
-//        mapParams.put("requestMethod", requestMethod);
-//        String url = StringManager.api_getXhTemplate;
-//        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
-//            isCallBack = true;
-//            Log.i("wyl", "状态:2:111" );
-//            mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
-//        }
-//        ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
-//            @Override
-//            public void loaded(int flag, String url, final Object msg) {
-//                if (flag >= ReqInternet.REQ_OK_STRING) {
-//                    handlerQiniuGetData(msg, requestMethod, path, readStr, "versionSign");
-//                }
-//            }
-//        });
-//    }
-
-//    /**
-//     * 处理电商模版
-//     *
-//     * @param requestMethod
-//     */
-//    private void handlerDsMouldData(final String requestMethod) {
-//        isCallBack = false;
-//        final String path = FileManager.getSDDir() + "long/" + requestMethod;
-//        final String readStr = FileManager.readFile(path);
-//        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
-//        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
-//        String url = MallStringManager.mall_api_dsTemplate + "?request_method=" + requestMethod + "&version_sign=" + version;
-//        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
-//            isCallBack = true;
-//            Log.i("wyl", "状态::111" );
-//            mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
-//        }
-//        MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
-//            @Override
-//            public void loadstat(final int flag, final String url, final Object msg, Object... stat) {
-//                if (flag >= ReqInternet.REQ_OK_STRING) {
-//                    handlerQiniuGetData(msg, requestMethod, path, readStr, "version_sign");
-//                }
-//            }
-//        });
-//    }
+    /**
+     * 处理模版数据
+     * 存储数据，的key是通过当前url获取出来
+     *
+     * @param requestMethod
+     */
+    public void handleXHModuleData(final String requestMethod) {
+        isCallBack=false;
+        String url= StringManager.API_TEMPLATE_GETTEMPLATENAME;
+        String params= "requestMethod="+requestMethod;
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+            @Override
+            public void loaded(int flag, String url, final Object msg) {
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    Map<String,String> listMap= StringManager.getFirstMap(msg);
+                    if(listMap!=null&&listMap.containsKey("templateName")){
+                        String requestMethod=listMap.get("templateName");
+                        String version_key=listMap.get("versionSign");
+                        final String path = FileManager.getSDDir() + "long/" + requestMethod;
+                        final String readStr = FileManager.readFile(path);
+                        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
+                        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
+                        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
+                            isCallBack = true;
+                            Log.i("wyl","回调：：111");
+                            mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
+                        }
+                        if(TextUtils.isEmpty(version)||!version.equals(version_key)){
+                            handlerQiniuGetData(listMap,requestMethod,path,readStr,"versionSign");
+                        }
+                    }
+                }
+            }
+        });
+    }
 
     /**
      * 处理单个模版信息
@@ -227,7 +205,7 @@ public class TemplateWebViewControl {
         if (requestMethod.startsWith("Ds")) {//电商请求
             handlerDsModuleData(requestMethod);
         } else if (requestMethod.startsWith("xh")) {//香哈
-//            handleXHMouldData(requestMethod);
+            handleXHModuleData(requestMethod);
         }
     }
 
