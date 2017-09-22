@@ -43,6 +43,7 @@
     <string name="pwd_rule">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.-/:;()$&amp;@"
     _`'*#%! ?[]{}^£€¥+=\|~&lt;&gt;•</string>
     <string name="tag">id</string>
+    <string name="tag_position">position</string>
 
     <string name="short_video_recorder">按住拍</string>
     <string name="user_intro_def">对美食的敬意，便是与你分享</string>
