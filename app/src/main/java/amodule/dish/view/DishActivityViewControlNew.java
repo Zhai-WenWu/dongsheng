@@ -430,10 +430,6 @@ public class  DishActivityViewControlNew {
         if(dishHeaderView!=null)dishHeaderView.onPause();
     }
 
-    public void onDestroy() {
-        if(dishHeaderView!=null)dishHeaderView.onDestroy();
-    }
-
     public boolean onBackPressed(){
         return dishHeaderView.onBackPressed();
     }
@@ -623,4 +619,26 @@ public class  DishActivityViewControlNew {
 
         }
     }
+    /**
+     * 页面销毁时调用
+     */
+    public void onDestroy(){
+        if(dishTitleViewControl!=null){
+            dishTitleViewControl.onDestroy();
+            dishTitleViewControl=null;
+        }
+        if(dishHeaderView!=null){
+            dishHeaderView.onDestroy();
+            dishHeaderView=null;
+        }
+        if(mFootControl!=null){
+            mFootControl.onDestroy();
+            mFootControl=null;
+        }
+        if(mAct!=null){
+            mAct=null;
+        }
+        System.gc();
+    }
+
 }
