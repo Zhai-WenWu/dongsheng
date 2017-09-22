@@ -21,6 +21,7 @@ dependencies {
     compile(name: 'XH_Basic3.0-release', ext: 'aar')
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')
+    compile(name: 'xh_popdialog-release', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
     compile(name: 'SMSSDK-3.0.0', ext: 'aar')
     //    compile 'com.github.chrisbanes:photoview:latest.release'
@@ -37,7 +38,6 @@ dependencies {
         exclude(module: 'alicloud-android-utdid')
     }
     compile project(':gsyVideoPlayer-java')
-    compile project(':xh_popdialog')
 }
 
 android {
