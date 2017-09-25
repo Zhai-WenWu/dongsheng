@@ -16,6 +16,8 @@ import java.util.Map;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
+import acore.override.activity.base.BaseFragmentActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -94,6 +96,12 @@ public class SpecialWebControl {
                 } else if (context instanceof MainBaseActivity) {
                     loadManager = ((MainBaseActivity) context).loadManager;
                     rootLayout = ((MainBaseActivity) context).rl;
+                } else if(context instanceof BaseAppCompatActivity){
+                    loadManager = ((BaseAppCompatActivity) context).loadManager;
+                    rootLayout = ((BaseAppCompatActivity) context).rl;
+                } else if(context instanceof BaseFragmentActivity){
+                    loadManager = ((BaseFragmentActivity) context).loadManager;
+                    rootLayout = ((BaseFragmentActivity) context).rl;
                 }
             }
             if (loadManager == null || rootLayout == null) {
