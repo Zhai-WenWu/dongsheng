@@ -87,7 +87,6 @@ public class NotificationManager {
             return;
         }
         android.app.NotificationManager nManger = (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification();
         Notification.Builder builder = new Notification.Builder(context)
                 .setAutoCancel(true)
                 .setTicker(data.ticktext)
@@ -96,7 +95,7 @@ public class NotificationManager {
                 .setContentIntent(getContentIntent(context, data))
                 .setSmallIcon(data.iconResId)
                 .setWhen(System.currentTimeMillis());
-        notification = builder.getNotification();
+        Notification notification = builder.getNotification();
         //设置dimiss intent
         if (PushPraserService.TYPE_UMENG.equals(data.channel)
                 && !TextUtils.isEmpty(data.umengMessage)) {
