@@ -7,10 +7,11 @@
     <ViewStub
         android:id="@+id/line_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="1px"
         android:layout="@layout/home_item_top_line"
         android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginRight="@dimen/dp_20"/>
+        android:layout_marginRight="@dimen/dp_20"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/top_container"
