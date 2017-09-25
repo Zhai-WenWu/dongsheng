@@ -1,6 +1,5 @@
 package acore.logic;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -65,7 +64,7 @@ public class SpecialWebControl {
                 int maxCount = 2;
                 try {
                     maxCount = Integer.parseInt(urlMap.get("num"));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 if (!TextUtils.isEmpty(url)) {
                     String keyUrl = url;
