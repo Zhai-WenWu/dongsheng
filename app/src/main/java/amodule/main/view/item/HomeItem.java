@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected TextView mTopTxt;
 
     protected LinearLayout mNumInfoLayout;
-    protected LinearLayout mTimeTagContainer;
+    protected View mTimeTagContainer;
     protected TextView mTimeTag;
     protected View mLineTop;
 
@@ -106,7 +107,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             mNumInfoLayout.addView(mHomeItemBottomView);
         mHomeItemBottomView.setVisibility(View.GONE);
 
-        mTimeTagContainer = (LinearLayout) findViewById(R.id.time_tag_container);
+        mTimeTagContainer = findViewById(R.id.time_tag_container);
 
     }
 
