@@ -161,6 +161,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                if (v.getTag(TAG_ID) == null || !v.getTag(TAG_ID).equals(url))
+                    return;
                 if (mCallback != null) {
                     if (mCallback != null)
                         mCallback.callback(bitmap);
