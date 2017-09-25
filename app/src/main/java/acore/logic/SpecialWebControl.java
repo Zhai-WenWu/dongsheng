@@ -99,11 +99,8 @@ public class SpecialWebControl {
             //设置referer
             Map<String, String> referer = getWebReferer(name);
             if (referer == null) {
-                Log.i("tzy", "url = " + url);
                 webView.loadUrl(url);
             } else {
-                Log.i("tzy", "url = " + url);
-                Log.i("tzy", "referer = " + referer.toString());
                 webView.loadUrl(url, referer);
             }
         } catch (Exception igroned) {
