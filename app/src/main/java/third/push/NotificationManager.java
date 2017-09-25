@@ -95,8 +95,7 @@ public class NotificationManager {
                 .setContentText(data.ticktext)
                 .setContentIntent(getContentIntent(context, data))
                 .setSmallIcon(data.iconResId)
-                .setWhen(System.currentTimeMillis())
-                .setOngoing(true);
+                .setWhen(System.currentTimeMillis());
         notification = builder.getNotification();
         //设置dimiss intent
         if (PushPraserService.TYPE_UMENG.equals(data.channel)
