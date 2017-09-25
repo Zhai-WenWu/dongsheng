@@ -5,10 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -20,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.util.Util;
 import com.popdialog.GoodCommentDialogControl;
+import com.popdialog.util.GoodCommentManager;
 import com.xiangha.R;
 
 import acore.logic.ActivityMethodManager;
@@ -255,8 +254,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         if (mUploadNetChangeWindowDialog != null && mUploadNetChangeWindowDialog.isHasShow()) {
             mUploadNetChangeWindowDialog.onResume();
         }
-        //TODO
-        com.popdialog.util.GoodCommentManager.setStictis(BaseAppCompatActivity.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
+        //好评统计
+        GoodCommentManager.setStictis(BaseAppCompatActivity.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
             @Override
             public void onStatistics(String typeStr, String timeStr) {
                 XHClick.mapStat(BaseAppCompatActivity.this, "a_evaluate420", typeStr, timeStr);

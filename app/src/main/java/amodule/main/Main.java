@@ -28,8 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mob.MobSDK;
 import com.popdialog.GoodCommentDialogControl;
+import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
@@ -78,7 +78,6 @@ import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
-import aplug.web.tools.XHTemplateManager;
 import third.ad.control.AdControlHomeDish;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
@@ -194,10 +193,7 @@ public class Main extends Activity implements OnClickListener {
                 WelcomeDialogstate = true;
                 openUri();
 
-                //TODO
-//                new DialogControler().showDialog();
                 new AllPopDialogHelper(Main.this).start();
-                //TODO PushManager.tongjiPush();
                 com.popdialog.util.PushManager.tongjiPush(Main.this, new com.popdialog.util.PushManager.OnPushEnableCallback() {
                     @Override
                     public void onPushEnable(boolean isEnable) {
@@ -523,8 +519,8 @@ public class Main extends Activity implements OnClickListener {
 //        if (MallPayActivity.mall_state) {
 //            onClick(tabViews[1].findViewById(R.id.tab_linearLayout));
 //        }
-        //TODO
-        com.popdialog.util.GoodCommentManager.setStictis(Main.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
+        //好评统计
+        GoodCommentManager.setStictis(Main.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
             @Override
             public void onStatistics(String typeStr, String timeStr) {
                 XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr);
