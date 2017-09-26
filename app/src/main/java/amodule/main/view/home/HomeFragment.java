@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -352,6 +353,12 @@ public class HomeFragment extends BaseHomeFragment{
                 }, new AutoLoadMore.OnListScrollListener() {
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
+                        if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                                || scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                            Glide.with(getContext()).resumeRequests();
+                        }else{
+                            Glide.with(getContext()).pauseRequests();
+                        }
                     }
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
