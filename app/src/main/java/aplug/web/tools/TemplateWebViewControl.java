@@ -34,74 +34,83 @@ import third.mall.aplug.MallStringManager;
  */
 public class TemplateWebViewControl {
     private boolean isCallBack = false;//是否已经回调
-
     /**
      * 处理模版数据
      * 存储数据，的key是通过当前url获取出来
      *
      * @param requestMethod
      */
-    public void handleXHMouldData(final String requestMethod) {
-        isCallBack = false;
-        final String path = FileManager.getSDDir() + "long/" + requestMethod;
-        final String readStr = FileManager.readFile(path);
-        final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
-        LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
-        mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
-        mapParams.put("requestMethod", requestMethod);
-        String url = StringManager.api_getXhTemplate;
-        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
-            isCallBack = true;
-            Log.i("wyl", "状态:2:111" );
-            mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
-        }
-        ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+    public void handleXHModuleData(final String requestMethod) {
+        isCallBack=false;
+        String url= StringManager.API_TEMPLATE_GETTEMPLATENAME;
+        String params= "requestMethod="+requestMethod;
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, final Object msg) {
-                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr,"versionSign");
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    Map<String,String> listMap= StringManager.getFirstMap(msg);
+                    if(listMap!=null&&listMap.containsKey("templateName")){
+                        String requestMethod=listMap.get("templateName");
+                        String version_key=listMap.get("versionSign");
+                        final String path = FileManager.getSDDir() + "long/" + requestMethod;
+                        final String readStr = FileManager.readFile(path);
+                        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
+                        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
+                        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
+                            isCallBack = true;
+                            Log.i("wyl","回调：：111");
+                            mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
+                        }
+                        if(TextUtils.isEmpty(version)||!version.equals(version_key)){
+                            handlerQiniuGetData(listMap,requestMethod,path,readStr,"versionSign");
+                        }
+                    }
+                }
             }
         });
     }
 
     /**
-     * 处理电商模版
-     *
+     * 处理单个模版信息
      * @param requestMethod
      */
-    private void handlerDsMouldData(final String requestMethod) {
-        isCallBack = false;
-        final String path = FileManager.getSDDir() + "long/" + requestMethod;
-        final String readStr = FileManager.readFile(path);
-        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
-        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
-        String url = MallStringManager.mall_api_dsTemplate + "?request_method=" + requestMethod + "&version_sign=" + version;
-        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
-            isCallBack = true;
-            Log.i("wyl", "状态::111" );
-            mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
-        }
+    public void handlerDsModuleData(String requestMethod){
+        isCallBack=false;
+        String url= MallStringManager.mall_api_getTemplateName+"?request_method="+requestMethod;
         MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
-            public void loadstat(final int flag, final String url, final Object msg, Object... stat) {
-                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr,"version_sign");
+            public void loadstat(int flag, String url, Object msg, Object... stat) {
+                if(flag>=ReqInternet.REQ_OK_STRING){
+                    Map<String,String> listMap= StringManager.getFirstMap(msg);
+                    if(listMap!=null&&listMap.containsKey("template_name")){
+                        String requestMethod=listMap.get("template_name");
+                        String version_key=listMap.get("version_sign");
+                        final String path = FileManager.getSDDir() + "long/" + requestMethod;
+                        final String readStr = FileManager.readFile(path);
+                        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
+                        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
+                        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
+                            isCallBack = true;
+                            Log.i("wyl","回调：：111");
+                            mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
+                        }
+                        if(TextUtils.isEmpty(version)||!version.equals(version_key)){
+                            handlerQiniuGetData(listMap,requestMethod,path,readStr,"version_sign");
+                        }
+                    }
+                }
             }
         });
     }
-
     /**
      * 处理从七牛那请求数据
-     * @param flag
-     * @param url
-     * @param msg
+     * @param map
      * @param requestMethod  模块名称
      * @param path   文件保存路径
      * @param readStr  文件内容
      * @param versionKey 不同模版的key不同。
      */
-    private void handlerAnalyzData(int flag, final String url, final Object msg, final String requestMethod, final String path, final String readStr,String versionKey){
-        if (flag >= ReqInternet.REQ_OK_STRING) {
-            Log.i("wyl", "msg::" + msg);
-            Map<String, String> map = StringManager.getFirstMap(msg);
+    public void handlerQiniuGetData(final Map<String,String> map, final String requestMethod, final String path, final String readStr,String versionKey){
             if (map.containsKey("url") && !TextUtils.isEmpty(map.get("url"))) {
                 String dataUrl = map.get("url");
                 final String version_sign=map.get(versionKey);
@@ -113,7 +122,6 @@ public class TemplateWebViewControl {
                         ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
-                                Log.i("wyl", "状态:***"+flag );
                                 if (flag >= ReqInternet.REQ_OK_IS) {
                                     try {
                                         new Thread(new Runnable() {
@@ -135,21 +143,19 @@ public class TemplateWebViewControl {
 
                                     } catch (Exception e) {
                                         if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                            Log.i("wyl", "状态::444" );
+                                            Log.i("wyl","回调：：444");
                                             mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                         }
                                     }
                                 } else if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                    Log.i("wyl", "状态::555");
+                                    Log.i("wyl","回调：：555");
                                     mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                 }
-
                             }
                         });
                     }
                 });
             }
-        }
     }
 
     private void handler(String data,String path,String requestMethod,String readStr,String version_sign){
@@ -158,55 +164,13 @@ public class TemplateWebViewControl {
             if (file != null)
                 FileManager.saveShared(XHApplication.in(), requestMethod, "version_sign", String.valueOf(version_sign));
             if (mouldCallBack != null && !isCallBack) {
-                Log.i("wyl", "状态::222" );
+                Log.i("wyl","回调：：222");
                 mouldCallBack.load(true, data, requestMethod, String.valueOf(version_sign));
             }
         } else {
             if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                Log.i("wyl", "状态::333" );
+                Log.i("wyl","回调：：333");
                 mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
-            }
-        }
-    }
-
-    /**
-     * 处理解析数据
-     *
-     * @param flag
-     * @param url
-     * @param msg
-     * @param requestMethod--方法名称
-     * @param path--文件
-     * @param readStr---html代码
-     * @param versionSign--版本
-     */
-    private void AnalyzData(int flag, final String url, final Object msg, String requestMethod, String path, String readStr, Object versionSign) {
-        if (flag >= ReqInternet.REQ_OK_STRING) {
-            long time = System.currentTimeMillis();
-            if (!TextUtils.isEmpty(String.valueOf(msg)) && !"[]".equals(String.valueOf(msg))) {
-                Map<String, String> map = StringManager.getFirstMap(msg);
-                String data = map.get("html");
-                versionSign = map.get("versionSign");
-                if (!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
-                    File file = FileManager.saveFileToCompletePath(path, data, false);
-                    if (file != null)
-                        FileManager.saveShared(XHApplication.in(), requestMethod, "versionSign", String.valueOf(versionSign));
-                    if (mouldCallBack != null && !isCallBack) {
-                        mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
-                    }
-                } else {//无数据标示已经是最新版本。
-                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                        mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                    }
-                }
-            } else {
-                if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                    mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                }
-            }
-        } else {
-            if (mouldCallBack != null && !isCallBack) {
-                mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
             }
         }
     }
@@ -239,9 +203,9 @@ public class TemplateWebViewControl {
             return;
         }
         if (requestMethod.startsWith("Ds")) {//电商请求
-            handlerDsMouldData(requestMethod);
+            handlerDsModuleData(requestMethod);
         } else if (requestMethod.startsWith("xh")) {//香哈
-            handleXHMouldData(requestMethod);
+            handleXHModuleData(requestMethod);
         }
     }
 
@@ -275,8 +239,6 @@ public class TemplateWebViewControl {
             } catch (UnsupportedEncodingException e) {
                 throw new Exception("输出异常");
             }
-
         }
-
     }
 }

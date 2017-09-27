@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mob.MobSDK;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
@@ -79,7 +78,6 @@ import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
-import aplug.web.tools.XHTemplateManager;
 import third.ad.control.AdControlHomeDish;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
@@ -99,6 +97,7 @@ public class Main extends Activity implements OnClickListener {
     public static Timer timer;
     /** 把层级>=close_level的层级关闭 */
     public static int colse_level = 1000;
+    @SuppressLint("StaticFieldLeak")
     public static MainBaseActivity mainActivity;
 
     public Map<String, MainBaseActivity> allTab = new HashMap<>();
@@ -120,8 +119,7 @@ public class Main extends Activity implements OnClickListener {
     private int doExit = 0;
     private int defaultTab = 0;
     private String url = null;
-    // 每过everyReq请求一次，runTime+1
-    private int runTime = 100, everyReq = 4 * 60;
+    private int everyReq = 4 * 60;
     private boolean quanRefreshState = false;
 
     private boolean WelcomeDialogstate = false;//false表示当前无显示,true已经显示
@@ -143,10 +141,7 @@ public class Main extends Activity implements OnClickListener {
 
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
-        StatConfig.setDebugEnable(false);
-        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
-        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
-        StatService.setContext(this.getApplication());
+        initMTA();
 
         allMain = this;
         mLocalActivityManager = new LocalActivityManager(this, true);
@@ -158,6 +153,27 @@ public class Main extends Activity implements OnClickListener {
         LogManager.print("i", "Main -------- onCreate");
 
         // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
+
+        //初始化浮标位置
+        initBuoyTab(savedInstanceState);
+
+        mainInitDataControl = new MainInitDataControl();
+        welcomeDialog = LoginManager.isShowAd() ?
+                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
+        welcomeDialog.show();
+        LogManager.printStartTime("zhangyujian","main::oncreate::");
+    }
+
+    /**腾讯统计*/
+    private void initMTA(){
+        StatConfig.setDebugEnable(false);
+        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
+        StatService.setContext(this.getApplication());
+    }
+
+    /**初始化浮标位置*/
+    private void initBuoyTab(Bundle savedInstanceState){
         if (savedInstanceState != null) {
             String currentTapStr = savedInstanceState.getString("currentTab");
             if(!TextUtils.isEmpty(currentTapStr) && !"null".equals(currentTapStr)){
@@ -175,16 +191,9 @@ public class Main extends Activity implements OnClickListener {
                 }
             }
         }
-        mainInitDataControl = new MainInitDataControl();
-        welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
-        welcomeDialog.show();
-        LogManager.printStartTime("zhangyujian","main::oncreate::");
     }
 
-    /**
-     * welcomeDialog的回调封装
-     */
+    /** welcomeDialog的回调封装 */
     private WelcomeDialog.DialogShowCallBack dialogShowCallBack = new WelcomeDialog.DialogShowCallBack() {
         @Override
         public void dialogState(boolean show) {
@@ -396,7 +405,9 @@ public class Main extends Activity implements OnClickListener {
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
 
         //实例化有用到mRootLayout，必须按着顺序执行
-        mBuoy = new MainBuoy(this);
+        if(mBuoy == null){
+            mBuoy = new MainBuoy(this);
+        }
         tabHost = (XiangHaTabHost) findViewById(R.id.xiangha_tabhost);
         tabHost.setup(mLocalActivityManager);
         linear_item = (LinearLayout) findViewById(R.id.linear_item);
@@ -406,8 +417,7 @@ public class Main extends Activity implements OnClickListener {
         int btn_width = ToolsDevice.getWindowPx(this).widthPixels / 5;
         int padding = (btn_width - Tools.getDimen(this, R.dimen.dp_55)) / 2;
         int dp_3 = Tools.getDimen(this,R.dimen.dp_3);
-        int cha = padding / 4;
-        cha = 0;
+        int cha = 0;//padding / 4;
         changeSendLayout.getLayoutParams().width = btn_width;
         btn_changeSend.getLayoutParams().width = btn_width;
         btn_changeSend.setPadding(padding + cha+dp_3, dp_3, padding - cha+dp_3, dp_3);
@@ -470,7 +480,6 @@ public class Main extends Activity implements OnClickListener {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        runTime++;
                         AppCommon.getCommonData(null);
                     }
                 });
@@ -592,8 +601,10 @@ public class Main extends Activity implements OnClickListener {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
+        if (i != null) {
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+        }
 //		super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -780,7 +791,6 @@ public class Main extends Activity implements OnClickListener {
             if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
                 if (i == 2 && allTab.containsKey("MainCircle") && i == nowTab) {
                     MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
-//					mainCircle.setCurrentList(0);
                     mainCircle.refresh();
                 } else if (i == 0 && allTab.containsKey("MainIndex") && i == nowTab) {
                     MainHome mainIndex = (MainHome) allTab.get("MainIndex");
@@ -789,12 +799,6 @@ public class Main extends Activity implements OnClickListener {
                     MainMall mall = (MainMall) allTab.get("MainMall");
                     mall.scrollTop();
                     mall.refresh();
-//                    if (MallCommon.click_state)
-//                        mall.refresh();
-//                    MainCircle nous = (MainCircle) allTab.get("MainCircle");
-//                    nous.refresh();
-//                    if(quanRefreshState)
-//                        setRoteAnimation(tabViews[1].findViewById(iv_itemIsFine));
                 } else if (i == 4 && allTab.containsKey("MainMyself")) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get("MainMyself");
@@ -803,21 +807,11 @@ public class Main extends Activity implements OnClickListener {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
                 }
-                // 当软件所在页面正式你要刷新的页面,就直接刷新,不在跳了
-//				if (tabHost.getCurrentTab() == i && i == 2) {
-//					setCurrentTabByIndex(1);
-//					return;
-//				}
-//				if (i == 2) {
-//					setCurrentTabByIndex(1);
-//					return;
-//				} else {
                 try {
                     setCurrentTabByIndex(i);
                 } catch (Exception e) {
                     UtilLog.reportError("", e);
                 }
-//				}
                 XHClick.mapStat(Main.this, "a_index530", "底部导航栏", "点击" + tabTitle[i]);
                 XHClick.mapStat(Main.this, "a_down420", tabTitle[i] + "", "");
             }
@@ -877,32 +871,8 @@ public class Main extends Activity implements OnClickListener {
         }
     }
 
-    public int getDoExit() {
-        return doExit;
-    }
-
-    public void setDoExit(int doExit) {
-        this.doExit = doExit;
-    }
-
-    public int getRunTime() {
-        return runTime;
-    }
-
-    public void setRunTime(int runTime) {
-        this.runTime = runTime;
-    }
-
     public LocalActivityManager getLocalActivityManager() {
         return mLocalActivityManager;
-    }
-
-    public MainBaseActivity getMainActivity() {
-        return mainActivity;
-    }
-
-    public void setMainActivity(MainBaseActivity mainActivity) {
-        Main.mainActivity = mainActivity;
     }
 
     /**

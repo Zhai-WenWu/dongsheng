@@ -826,7 +826,6 @@ public class HomeFragment extends BaseHomeFragment{
         if(listmaps!=null&&listmaps.size()>0){
             int size= listmaps.size();
             for(int i=0;i<size;i++){
-                listmaps.get(i).put("isTop","2");
                 HomeItem view= handlerTopView(listmaps.get(i),i);
                 if(view!=null){
                     linearLayoutThree.addView(view);

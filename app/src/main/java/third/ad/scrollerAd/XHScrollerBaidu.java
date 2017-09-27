@@ -83,6 +83,7 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
                     map.put("type",XHScrollerAdParent.ADKEY_BAIDU);
                     map.put("isBigPic",isBigPic?"2":"1");
                     map.put("hide","1");//2隐藏，1显示
+                    Log.d("tzy", "XHScrollerBaidu :: map = " + map.toString());
                     if(TextUtils.isEmpty(imageUrl)
                             || (isJudgePicSize && !isBigPic)) {
                         xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BAIDU);

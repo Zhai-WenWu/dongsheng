@@ -529,18 +529,21 @@ public class ArticleDetailActivity extends BaseActivity {
             mTitle.setText(customerData.get("nickName"));
             mTitle.setVisibility(View.VISIBLE);
         }
+        //获取是否可以编辑
+        boolean hasEditPermission = "2".equals(mapArticle.get("isEdit"));
         final String userCode = customerData.get("code");
         isAuthor = LoginManager.isLogin()
                 && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                 && !TextUtils.isEmpty(userCode)
                 && userCode.equals(LoginManager.userInfo.get("code"));
-
-        rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
+        final boolean canEdit = isAuthor || hasEditPermission;
+        //作者 或者 有编辑权限
+        rightButton.setImageResource(canEdit ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAuthor) {
-                    showBottomDialog();
+                if (canEdit) {
+                    showBottomDialog(isAuthor);
                 } else {
                     openShare();
                     statistics("分享", "");
@@ -702,7 +705,7 @@ public class ArticleDetailActivity extends BaseActivity {
         detailAdapter.notifyDataSetChanged();
     }
 
-    private void showBottomDialog() {
+    private void showBottomDialog(boolean isAuthor) {
         ToolsDevice.keyboardControl(false, this, mArticleCommentBar);
         BottomDialog dialog = new BottomDialog(this);
         dialog.addButton("分享", new View.OnClickListener() {
@@ -720,12 +723,16 @@ public class ArticleDetailActivity extends BaseActivity {
                 statistics("更多", "编辑");
                 ArticleDetailActivity.this.finish();
             }
-        }).addButton("删除", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDeleteDialog();
-            }
         });
+        //是作者显示删除按钮
+        if(isAuthor){
+            dialog.addButton("删除", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openDeleteDialog();
+                }
+            });
+        }
         dialog.show();
     }
 
