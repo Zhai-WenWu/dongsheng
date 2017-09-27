@@ -31,6 +31,7 @@ import amodule.user.adapter.AdapterMainMsg;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
+import third.qiyu.QiYvHelper;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -52,6 +53,7 @@ public class MyMessage extends MainBaseActivity {
 	private boolean isShowData=true;
 
 	private TextView mMyQANum;
+	private TextView mQiYvNum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,22 @@ public class MyMessage extends MainBaseActivity {
 		}
 	}
 
+	private void initQiYvNum() {
+		if (mQiYvNum != null) {
+			QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+				@Override
+				public void onNumberReady(int count) {
+					if (count > 0) {
+						mQiYvNum.setText(String.valueOf(count));
+						mQiYvNum.setVisibility(View.VISIBLE);
+					} else {
+						mQiYvNum.setVisibility(View.GONE);
+					}
+				}
+			});
+		}
+	}
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -83,6 +101,7 @@ public class MyMessage extends MainBaseActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		QiYvHelper.getInstance().addUnreadCountChangeListener(null, false);
 	}
 
 	/**
@@ -143,6 +162,8 @@ public class MyMessage extends MainBaseActivity {
 		RelativeLayout headerSecretary = (RelativeLayout) headerView.findViewById(R.id.secretary);
 		RelativeLayout headerMyQA = (RelativeLayout) headerView.findViewById(R.id.my_qa);
 		mMyQANum = (TextView) headerMyQA.findViewById(R.id.qa_msg_num);
+		RelativeLayout headerQY = (RelativeLayout) headerView.findViewById(R.id.qiyv);
+		mQiYvNum = (TextView) headerQY.findViewById(R.id.qiyv_msg_num);
 		feekback_msg_num = (TextView) headerView.findViewById(R.id.feekback_msg_num);
 		listMessage.addHeaderView(headerView, null, false);
 		OnClickListener clickListener = new OnClickListener() {
@@ -162,11 +183,40 @@ public class MyMessage extends MainBaseActivity {
 						startActivity(new Intent(MyMessage.this, QAMsgListActivity.class));
 						XHClick.mapStat(MyMessage.this, "a_message", "点击我问我答", "");
 						break;
+					case R.id.qiyv:
+						if (mQiYvNum != null && mQiYvNum.getVisibility() == View.VISIBLE) {
+							mQiYvNum.setText("");
+							mQiYvNum.setVisibility(View.GONE);
+							QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+								@Override
+								public void onNumberReady(int count) {
+									Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+								}
+							});
+						}
+						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null);
+						break;
 				}
 			}
 		};
 		headerSecretary.setOnClickListener(clickListener);
 		headerMyQA.setOnClickListener(clickListener);
+		headerQY.setOnClickListener(clickListener);
+
+		QiYvHelper.getInstance().addUnreadCountChangeListener(new QiYvHelper.UnreadCountChangeListener() {
+			@Override
+			public void onUnreadCountChange(int count) {
+				if (count > 0) {
+					if (mQiYvNum != null) {
+						mQiYvNum.setText(String.valueOf(count));
+						mQiYvNum.setVisibility(View.VISIBLE);
+					}
+					Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+				}
+			}
+		}, true);
+		initQiYvNum();
+
 		setFeekbackMsg();
 		listDataMessage = new ArrayList<Map<String, String>>();
 		adapter = new AdapterMainMsg(this, listMessage, listDataMessage, 0, null, null);

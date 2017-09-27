@@ -29,8 +29,6 @@ import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
 import com.xiangha.R;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +66,7 @@ import aplug.web.ShowWeb;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.ad.scrollerAd.XHAllAdControl;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
@@ -111,7 +110,12 @@ public class AppCommon {
                         }
                         try {
                             // 所有消息数
-                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage);
+                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+                                @Override
+                                public void onNumberReady(int count) {
+                                    Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + count);
+                                }
+                            });
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;

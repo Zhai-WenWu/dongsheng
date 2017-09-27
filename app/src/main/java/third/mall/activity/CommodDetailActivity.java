@@ -671,12 +671,18 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             case R.id.service_mercat://客服
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "客服按钮");
 
-                QiYvHelper.getInstance().startServiceAcitivity(this, new QiYvHelper.OnSessionLifeCycleListener() {
-                    @Override
-                    public void onLeaveSession() {
+                Map<String, String> infoMap = new HashMap<String, String>();
+                if (map != null) {
 
-                    }
-                }, map);
+                    //xhds.product.info.app?product_code=63089&data_type=8&module_type=info
+                    infoMap.put("title", map.get("name"));
+                    infoMap.put("imgUrl", map.get("buy_img"));
+                    infoMap.put("clickUrl", map.get("m_url"));
+                    infoMap.put("note1", "价格：" + map.get("price"));
+                    infoMap.put("show", "0");
+                    infoMap.put("alwaysSend", "0");
+                }
+                QiYvHelper.getInstance().startServiceAcitivity(this, null, infoMap);
                 break;
             case R.id.commod_buy:
                 if (LoginManager.isLogin()) {

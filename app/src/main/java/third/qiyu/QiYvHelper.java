@@ -3,7 +3,7 @@ package third.qiyu;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.UserManager;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,12 +22,12 @@ import com.qiyukf.unicorn.api.lifecycle.SessionLifeCycleOptions;
 import com.xiangha.R;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import amodule.user.activity.login.LoginByAccout;
 
@@ -66,6 +66,7 @@ public class QiYvHelper {
     public void initSDK(Context context) {
         String appKey = "419831f89a538914cb168cd01d1675f4";
         Unicorn.init(context, appKey, initOptions(), new GlideImageLoader(context));
+        toggleNotification(true);
     }
 
     /**
@@ -87,7 +88,6 @@ public class QiYvHelper {
                 return true;
             }
         };
-
         return mOptions;
     }
 
@@ -202,15 +202,18 @@ public class QiYvHelper {
          */
         boolean mapNull = (infoMap == null || infoMap.isEmpty());
         ConsultSource source = new ConsultSource("baidu", "xiaoming", "10010010");
-        source.productDetail = new ProductDetail.Builder()
-                .setTitle(mapNull ? "" : infoMap.get("title"))
-                .setDesc(mapNull ? "" : infoMap.get("desc"))
-                .setPicture(mapNull ? "" : infoMap.get("imgUrl"))
-                .setNote(mapNull ? "" : (infoMap.get("note1") + "    " + infoMap.get("note2")))
-                .setUrl(mapNull ? "" : infoMap.get("clickUrl"))
-                .setShow(mapNull ? 0 : Integer.valueOf(infoMap.get("show")))
-                .setAlwaysSend(mapNull ? false : TextUtils.equals(infoMap.get("alwaysSend"), "1"))
-                .create();
+        ProductDetail.Builder builder = new ProductDetail.Builder();
+        if (!mapNull) {
+            builder.setTitle(TextUtils.isEmpty(infoMap.get("title")) ? "" : infoMap.get("title"))
+                    .setDesc(TextUtils.isEmpty(infoMap.get("desc")) ? "" : infoMap.get("desc"))
+                    .setPicture(TextUtils.isEmpty(infoMap.get("imgUrl")) ? "" : infoMap.get("imgUrl"))
+                    .setNote((TextUtils.isEmpty(infoMap.get("note1")) ? "" : infoMap.get("note1")) + "    " + (TextUtils.isEmpty(infoMap.get("note2")) ? "" : infoMap.get("note2")))
+                    .setShow(Integer.valueOf(infoMap.get("show")))
+                    .setAlwaysSend(TextUtils.equals(infoMap.get("alwaysSend"), "1"));
+            if (!TextUtils.isEmpty(infoMap.get("clickUrl")))
+                builder.setUrl(infoMap.get("clickUrl"));
+        }
+        source.productDetail = builder.create();
         SessionLifeCycleOptions lifeCycleOptions = new SessionLifeCycleOptions();
         lifeCycleOptions.setCanCloseSession(true)
                 .setCanQuitQueue(true)
@@ -238,6 +241,7 @@ public class QiYvHelper {
 
     /**
      * 对话周期监听
+     * 适用于会话窗口是Fragment，Activity不适用。
      */
     public interface OnSessionLifeCycleListener {
         void onLeaveSession();
@@ -271,15 +275,16 @@ public class QiYvHelper {
     /**
      * 设置未读消息数变化监听
      * @param listener
+     * @param add true为添加，false为撤销
      */
-    public void addUnreadCountChangeListener (final UnreadCountChangeListener listener) {
+    public void addUnreadCountChangeListener (final UnreadCountChangeListener listener, final boolean add) {
         Unicorn.addUnreadCountChangeListener(new com.qiyukf.unicorn.api.UnreadCountChangeListener() {
             @Override
             public void onUnreadCountChange(int count) {
-               if (listener != null)
+               if (listener != null && add)
                    listener.onUnreadCountChange(count);
             }
-        }, true);
+        }, add);
     }
 
     public interface UnreadCountChangeListener {
@@ -294,7 +299,7 @@ public class QiYvHelper {
      * 切换通知开关
      * @param on true 打开消息提醒
      */
-    public void toggleNotification (boolean on) {
+    private void toggleNotification (boolean on) {
         Unicorn.toggleNotification(on);
     }
 
@@ -305,5 +310,29 @@ public class QiYvHelper {
         Unicorn.clearCache();
     }
 
+    /**
+     * 获取未读消息数
+     * @return
+     */
+    public void getUnreadCount(final NumberCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final int count = Unicorn.getUnreadCount();
+                Handler handler = new Handler(XHApplication.in().getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (callback != null)
+                            callback.onNumberReady(count);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public interface NumberCallback {
+        void onNumberReady(int count);
+    }
 
 }
