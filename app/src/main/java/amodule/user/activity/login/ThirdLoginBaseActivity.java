@@ -179,6 +179,8 @@ public class ThirdLoginBaseActivity extends BaseLoginActivity {
     }
 
     private static String getGender(String gender) {
+        if (TextUtils.isEmpty(gender))
+            return "1";
         switch (gender) {
             case "m":
                 return "2";//男
