@@ -3,6 +3,7 @@ package cn.srain.cube.views.ptr;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -277,7 +278,12 @@ public class PtrFrameLayout extends ViewGroup {
     }
 
     public boolean dispatchTouchEventSupper(MotionEvent e) {
-        return super.dispatchTouchEvent(e);
+        try{
+            return super.dispatchTouchEvent(e);
+        }catch (Exception ignored){
+            Log.w("tzy","PtrFrameLayout :: dispatchTouchEventSupper :: " + ignored);
+            return false;
+        }
     }
 
     @Override

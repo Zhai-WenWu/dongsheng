@@ -248,7 +248,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private void requestWeb(String dishJson) {
         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
         if(dishInfo != null){
-            SpecialWebControl.initSpecialWeb(this,"dishInfo",dishInfo.get("name"),code);
+            SpecialWebControl.initSpecialWeb(this,rl,"dishInfo",dishInfo.get("name"),code);
         }
     }
     //**********************************************Activity生命周期方法**************************************************

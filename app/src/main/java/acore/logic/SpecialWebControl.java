@@ -1,12 +1,15 @@
 package acore.logic;
 
-import android.app.Activity;
+import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.widget.RelativeLayout;
-
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -14,16 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.load.LoadManager;
-import acore.override.activity.base.BaseActivity;
-import acore.override.activity.base.BaseAppCompatActivity;
-import acore.override.activity.base.BaseFragmentActivity;
-import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
-import aplug.web.tools.WebviewManager;
-import aplug.web.view.XHWebView;
 
 /**
  * PackageName : acore.logic
@@ -58,7 +54,7 @@ public class SpecialWebControl {
      * @param name
      * @param code
      */
-    public static void initSpecialWeb(Activity context, @NonNull String type, String name, String code) {
+    public static void initSpecialWeb(Context context, ViewGroup parent, @NonNull String type, String name, String code) {
         String configData = AppCommon.getConfigByLocal("navToWebStat");
         Map<String, String> data = StringManager.getFirstMap(configData);
         if (data != null && data.containsKey(type)) {
@@ -68,14 +64,14 @@ public class SpecialWebControl {
                 int maxCount = 2;
                 try {
                     maxCount = Integer.parseInt(urlMap.get("num"));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 if (!TextUtils.isEmpty(url)) {
                     String keyUrl = url;
                     if (!TextUtils.isEmpty(code)) {
                         keyUrl = url.replace("{code}", code);
                     }
-                    createWeb(context, url, keyUrl, type, name, maxCount);
+                    createWeb(context, parent, url, keyUrl, type, name, maxCount);
                 }
             }
         }
@@ -85,26 +81,9 @@ public class SpecialWebControl {
      * @param context
      * @param url
      */
-    private static void createWeb(Activity context, String keyUrl, String url, @NonNull String type, String name, int maxCount) {
+    private static void createWeb(Context context, ViewGroup parent, String keyUrl, String url, @NonNull String type, String name, int maxCount) {
         try {
-            LoadManager loadManager = null;
-            RelativeLayout rootLayout = null;
-            if (context != null) {
-                if (context instanceof BaseActivity) {
-                    loadManager = ((BaseActivity) context).loadManager;
-                    rootLayout = ((BaseActivity) context).rl;
-                } else if (context instanceof MainBaseActivity) {
-                    loadManager = ((MainBaseActivity) context).loadManager;
-                    rootLayout = ((MainBaseActivity) context).rl;
-                } else if(context instanceof BaseAppCompatActivity){
-                    loadManager = ((BaseAppCompatActivity) context).loadManager;
-                    rootLayout = ((BaseAppCompatActivity) context).rl;
-                } else if(context instanceof BaseFragmentActivity){
-                    loadManager = ((BaseFragmentActivity) context).loadManager;
-                    rootLayout = ((BaseFragmentActivity) context).rl;
-                }
-            }
-            if (loadManager == null || rootLayout == null) {
+            if (context == null || parent == null) {
                 return;
             }
             //是否能请求
@@ -112,8 +91,11 @@ public class SpecialWebControl {
                 return;
             }
             //同步cookie并获得webview
-            XHWebView webView = syncCookie(context, loadManager, url);
-            rootLayout.addView(webView, 0, 0);
+            WebView webView = syncCookie(context, url);
+            if (parent.indexOfChild(webView) > -1) {
+                parent.removeView(webView);
+            }
+            parent.addView(webView, 0, 0);
             //设置referer
             Map<String, String> referer = getWebReferer(name);
             if (referer == null) {
@@ -121,8 +103,8 @@ public class SpecialWebControl {
             } else {
                 webView.loadUrl(url, referer);
             }
-        } catch (Exception e) {
-
+        } catch (Exception igroned) {
+            Log.i("tzy", "Exception.message = " + igroned.getMessage());
         }
     }
 
@@ -156,14 +138,27 @@ public class SpecialWebControl {
      * 同步cookie
      *
      * @param context
-     * @param loadManager
      * @param url
      *
      * @return
      */
-    private static XHWebView syncCookie(Activity context, LoadManager loadManager, String url) {
-        WebviewManager webviewManager = new WebviewManager(context, loadManager, false);
-        XHWebView webView = webviewManager.createWebView(0);
+    private static WebView syncCookie(Context context, String url) {
+        WebView webView = new WebView(context);
+        WebSettings settings = webView.getSettings();
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setAppCacheEnabled(false);
+        settings.setDomStorageEnabled(true);
+        settings.setAllowFileAccess(true);
+
+        settings.setSupportZoom(false);
+        settings.setBuiltInZoomControls(false);
+        settings.setJavaScriptEnabled(true);
+        settings.setSavePassword(false);
+        settings.setDefaultTextEncodingName("utf-8");
+
+        //兼容https,在部分版本上资源显示不全的问题
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
         Map<String, String> header = ReqInternet.in().getHeader(context);
         String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
         String[] cookie = cookieStr.split(";");
