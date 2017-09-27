@@ -2,6 +2,7 @@ package third.mall.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ public class MallShopProductView extends ViewItemBase{
 	private ImageView shopping_item_commod_choose;
 	private ImageView shopping_item_commod_iv;
 	private TextView shopping_item_commod_text;
-	private TextView shopping_item_commod_price;
+	private TextView shopping_item_commod_price,shopping_item_commod_price_before;
 	private TextView shopping_item_commod_none;
 	private RelativeLayout shopping_item_commod_cut;
 	private TextView shopping_item_commod_num;
@@ -67,6 +68,7 @@ public class MallShopProductView extends ViewItemBase{
 		shopping_item_commod_iv = (ImageView) findViewById(R.id.shopping_item_commod_iv);
 		shopping_item_commod_text = (TextView) findViewById(R.id.shopping_item_commod_texts);
 		shopping_item_commod_price = (TextView) findViewById(R.id.shopping_item_commod_price);
+		shopping_item_commod_price_before = (TextView) findViewById(R.id.shopping_item_commod_price_before);
 		shopping_item_commod_none = (TextView) findViewById(R.id.shopping_item_commod_none);
 		shopping_item_commod_cut = (RelativeLayout) findViewById(R.id.shopping_item_commod_cut);
 		shopping_item_commod_num = (TextView) findViewById(R.id.shopping_item_commod_num);
@@ -93,6 +95,14 @@ public class MallShopProductView extends ViewItemBase{
 		setViewImage(shopping_item_commod_iv, bean_product.getImg());
 		shopping_item_commod_text.setText(bean_product.getTitle());
 		shopping_item_commod_price.setText("¥"+bean_product.getDiscount_price());
+		//原始价格
+		if(!bean_product.getDiscount_price().equals(bean_product.getPrice())){
+			shopping_item_commod_price_before.setText("¥"+bean_product.getPrice());
+			shopping_item_commod_price_before.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+			shopping_item_commod_price_before.setVisibility(View.VISIBLE);
+		}else{
+			shopping_item_commod_price_before.setVisibility(View.GONE);
+		}
 		shopping_item_commod_num.setText(bean_product.getNum());
 		max_sale_num= Integer.parseInt(bean_product.getMax_sale_num());
 		//商品状态

@@ -8,7 +8,7 @@ public class MallStringManager extends UtilString {
 //    	public final static String defaultDomain = ".ds.mamaweiyang.net:7888";
     public static String apiAPI = "api";
     public static String appm = "m";
-    public static String httpData = "https://";
+    public static String httpData = "http://";
 
     public static String apiTitle = httpData + apiAPI;
     public static String appWebTitle = httpData + appm;
@@ -67,6 +67,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_createOrderByCart_v2 = mall_apiUrl + "/v2/order/createOrderByCart";
     public final static String mall_dsInfo = mall_apiUrl + "/v1/home/dsInfo";
     public final static String mall_getCartInfo_v2 = mall_apiUrl + "/v2/cart/getCartInfo";
+    public final static String mall_getCartInfo_v3 = mall_apiUrl + "/v3/cart/getCartInfo";
     //物流信息
     public final static String mall_getShippingUrl = mall_apiUrl + "/v1/shipping/getShippingUrl";
     //第6版的接口
