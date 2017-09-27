@@ -17,6 +17,7 @@ import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.qiyukf.unicorn.api.ImageLoaderListener;
 import com.qiyukf.unicorn.api.OnBotEventListener;
+import com.qiyukf.unicorn.api.OnMessageItemClickListener;
 import com.qiyukf.unicorn.api.SavePowerConfig;
 import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
 import com.qiyukf.unicorn.api.Unicorn;
@@ -47,6 +48,7 @@ import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
 import third.qiyu.GlideImageLoader;
+import third.qiyu.QiYvHelper;
 
 public class XHApplication extends MobApplication {
     /**包名*/
@@ -155,29 +157,8 @@ public class XHApplication extends MobApplication {
             }
         });
         //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
-        String appKey="419831f89a538914cb168cd01d1675f4";
-        Unicorn.init(this, appKey, options(), new GlideImageLoader(this));
+        QiYvHelper.getInstance().initSDK(this);
     }
-    // 如果返回值为null，则全部使用默认参数。
-    private YSFOptions options() {
-        YSFOptions options = new YSFOptions();
-        options.statusBarNotificationConfig = new StatusBarNotificationConfig();
-//        options.uiCustomization.
-        options.savePowerConfig = new SavePowerConfig();
-        options.statusBarNotificationConfig.notificationSmallIconId = R.drawable.ic_launcher;
-//        options.statusBarNotificationConfig.notificationEntrance = CommodDetailActivity.class;//
-        options.onBotEventListener = new OnBotEventListener() {
-            @Override
-            public boolean onUrlClick(Context context, String url) {
-                Log.i("wyl","url:::"+url);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                context.startActivity(intent);
-                return true;
-            }
-        };
-        return options;
-    }
-
 
     @Override
     public void onTerminate() {

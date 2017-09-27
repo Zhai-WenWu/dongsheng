@@ -1,0 +1,309 @@
+package third.qiyu;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.UserManager;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.qiyukf.unicorn.api.ConsultSource;
+import com.qiyukf.unicorn.api.OnBotEventListener;
+import com.qiyukf.unicorn.api.OnMessageItemClickListener;
+import com.qiyukf.unicorn.api.ProductDetail;
+import com.qiyukf.unicorn.api.RequestCallback;
+import com.qiyukf.unicorn.api.SavePowerConfig;
+import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
+import com.qiyukf.unicorn.api.Unicorn;
+import com.qiyukf.unicorn.api.YSFOptions;
+import com.qiyukf.unicorn.api.YSFUserInfo;
+import com.qiyukf.unicorn.api.lifecycle.SessionLifeCycleListener;
+import com.qiyukf.unicorn.api.lifecycle.SessionLifeCycleOptions;
+import com.xiangha.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
+
+import acore.logic.LoginManager;
+import acore.tools.StringManager;
+import amodule.user.activity.login.LoginByAccout;
+
+
+/**
+ * Created by sll on 2017/9/26.
+ */
+
+public class QiYvHelper {
+
+    private static QiYvHelper mQiYvHelper;
+    private YSFOptions mOptions;
+
+    private boolean mSetUserInfo;
+
+    private QiYvHelper() {
+
+    }
+
+    /**
+     * 获取QiYvHelper对象
+     * @return
+     */
+    public static QiYvHelper getInstance() {
+        synchronized (QiYvHelper.class) {
+            if (mQiYvHelper == null)
+                mQiYvHelper = new QiYvHelper();
+            return mQiYvHelper;
+        }
+    }
+
+    /**
+     * 初始化七鱼SDK
+     * @param context
+     */
+    public void initSDK(Context context) {
+        String appKey = "419831f89a538914cb168cd01d1675f4";
+        Unicorn.init(context, appKey, initOptions(), new GlideImageLoader(context));
+    }
+
+    /**
+     * 初始化配置信息
+     * @return 如果返回值为null，则全部使用默认参数。
+     */
+    private YSFOptions initOptions() {
+        mOptions = new YSFOptions();
+        mOptions.statusBarNotificationConfig = new StatusBarNotificationConfig();
+        mOptions.savePowerConfig = new SavePowerConfig();
+        mOptions.statusBarNotificationConfig.notificationSmallIconId = R.drawable.ic_launcher;
+//        mOptions.statusBarNotificationConfig.notificationEntrance = CommodDetailActivity.class;//
+        mOptions.onBotEventListener = new OnBotEventListener() {
+            @Override
+            public boolean onUrlClick(Context context, String url) {
+                Log.i("wyl","url:::"+url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(intent);
+                return true;
+            }
+        };
+
+        return mOptions;
+    }
+
+    /**
+     * 使用默认自定义UI
+     * 此方法可以在需要的地方设置，否则使用七鱼默认的样式。
+     */
+    public void useDefCustomUI() {
+        if (mOptions == null)
+            return;
+//        mOptions.uiCustomization.
+    }
+
+    /**
+     * 设置用户信息
+     */
+    private void setUserInfo() {
+        Map<String, String> userData = LoginManager.userInfo;
+        if (userData == null || userData.isEmpty())
+            return;
+        YSFUserInfo userInfo = new YSFUserInfo();
+        Log.e("SLL", "userInfo = " + LoginManager.userInfo.toString());
+        userInfo.userId = userData.get("code");
+        JSONArray dataArray = new JSONArray();
+        try {
+            JSONObject userNick = new JSONObject();
+            userNick.put("key", "real_name");
+            userNick.put("value", userData.get("nickName"));
+            dataArray.put(userNick);
+
+            JSONObject userPhone = new JSONObject();
+            userPhone.put("key", "mobile_phone");
+            userPhone.put("value", userData.get("tel"));
+            dataArray.put(userPhone);
+
+            JSONObject userEmail = new JSONObject();
+            userEmail.put("key", "email");
+            userEmail.put("value", "888888@qq.com");
+            dataArray.put(userEmail);
+
+            JSONObject userVIP = new JSONObject();
+            userVIP.put("index", 3);
+            userVIP.put("key", "user_vip");
+            userVIP.put("label", "是否VIP");
+            Map<String, String> vipJson = StringManager.getFirstMap(userData.get("vip"));
+            userVIP.put("value", TextUtils.equals(vipJson.get("isVip"), "2") ? "是" : "否");
+            dataArray.put(userVIP);
+
+            JSONObject userLevel = new JSONObject();
+            userLevel.put("index", 4);
+            userLevel.put("key", "user_level");
+            userLevel.put("label", "用户等级");
+            userLevel.put("value", userData.get("lv"));
+            dataArray.put(userLevel);
+
+            JSONObject regTime = new JSONObject();
+            regTime.put("index", 5);
+            regTime.put("key", "reg_data");
+            regTime.put("label", "注册日期");
+            regTime.put("value", "2015-12-22 15:38:54");
+            dataArray.put(regTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        userInfo.data = dataArray.toString();
+//        userInfo.data = "[{\"key\":\"real_name\", \"value\":\"土豪\"}," +
+//                "{\"key\":\"mobile_phone\", \"hidden\":true}," +
+//                "{\"key\":\"email\", \"value\":\"13800000000@163.com\"}," +
+//                "{\"index\":0, \"key\":\"account\", \"label\":\"账号\", \"value\":\"zhangsan\" , \"href\":\"http://example.domain/user/zhangsan\"}," +
+//                "{\"index\":1, \"key\":\"sex\", \"label\":\"性别\", \"value\":\"先生\"}," +
+//                "{\"index\":5, \"key\":\"reg_date\", \"label\":\"注册日期\", \"value\":\"2015-11-16\"}," +
+//                "{\"index\":6, \"key\":\"last_login\", \"label\":\"上次登录时间\", \"value\":\"2015-12-22 15:38:54\"}]";
+
+        Unicorn.setUserInfo(userInfo, new RequestCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i("wyl","测试数据");
+            }
+
+            @Override
+            public void onFailed(int i) {
+
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+
+            }
+        });
+        mSetUserInfo = true;
+    }
+
+    /**
+     * 打开咨询页面
+     * @param context
+     */
+    public void startServiceAcitivity(Context context, final OnSessionLifeCycleListener listener, Map<String, String> infoMap) {
+        if (context == null)
+            return;
+        if (!LoginManager.isLogin()) {
+            context.startActivity(new Intent(context, LoginByAccout.class));
+            return;
+        }
+        if (!mSetUserInfo)
+            setUserInfo();
+        String title = "聊天窗口的标题";
+        /**
+         * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
+         * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。
+         * 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
+         */
+        boolean mapNull = (infoMap == null || infoMap.isEmpty());
+        ConsultSource source = new ConsultSource("baidu", "xiaoming", "10010010");
+        source.productDetail = new ProductDetail.Builder()
+                .setTitle(mapNull ? "" : infoMap.get("title"))
+                .setDesc(mapNull ? "" : infoMap.get("desc"))
+                .setPicture(mapNull ? "" : infoMap.get("imgUrl"))
+                .setNote(mapNull ? "" : (infoMap.get("note1") + "    " + infoMap.get("note2")))
+                .setUrl(mapNull ? "" : infoMap.get("clickUrl"))
+                .setShow(mapNull ? 0 : Integer.valueOf(infoMap.get("show")))
+                .setAlwaysSend(mapNull ? false : TextUtils.equals(infoMap.get("alwaysSend"), "1"))
+                .create();
+        SessionLifeCycleOptions lifeCycleOptions = new SessionLifeCycleOptions();
+        lifeCycleOptions.setCanCloseSession(true)
+                .setCanQuitQueue(true)
+                .setQuitQueuePrompt("退出排队提示")
+                .setSessionLifeCycleListener(new SessionLifeCycleListener() {
+                    @Override
+                    public void onLeaveSession() {
+                        if (listener != null)
+                            listener.onLeaveSession();
+                    }
+                });
+        source.sessionLifeCycleOptions = lifeCycleOptions;
+
+        /**
+         * 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable()，
+         * 如果返回为false，该接口不会有任何动作
+         *
+         * @param context 上下文
+         * @param title   聊天窗口的标题
+         * @param source  咨询的发起来源，包括发起咨询的url，title，描述信息等
+         */
+        if (Unicorn.isServiceAvailable())
+            Unicorn.openServiceActivity(context, title, source);
+    }
+
+    /**
+     * 对话周期监听
+     */
+    public interface OnSessionLifeCycleListener {
+        void onLeaveSession();
+    }
+
+    /**
+     * 当关联的用户从 APP 注销后，调用此方法，
+     */
+    public void logout() {
+        mSetUserInfo = false;
+        Unicorn.logout();
+    }
+
+    public void addOnUrlItemClickListener(final OnUrlItemClickListener listener) {
+        if (mOptions != null) {
+            mOptions.onMessageItemClickListener = new OnMessageItemClickListener() {
+                @Override
+                public void onURLClicked(Context context, String url) {
+                    if (listener != null)
+                        listener.onURLClicked(context, url);
+                    Log.e("SLL", "onURLClicked  url = " + url);
+                }
+            };
+        }
+    }
+
+    public interface OnUrlItemClickListener {
+        void onURLClicked(Context context, String url);
+    }
+
+    /**
+     * 设置未读消息数变化监听
+     * @param listener
+     */
+    public void addUnreadCountChangeListener (final UnreadCountChangeListener listener) {
+        Unicorn.addUnreadCountChangeListener(new com.qiyukf.unicorn.api.UnreadCountChangeListener() {
+            @Override
+            public void onUnreadCountChange(int count) {
+               if (listener != null)
+                   listener.onUnreadCountChange(count);
+            }
+        }, true);
+    }
+
+    public interface UnreadCountChangeListener {
+        /**
+         * 未读消息数变化回调
+         * @param count 当前未读数
+         */
+        void onUnreadCountChange(int count);
+    }
+
+    /**
+     * 切换通知开关
+     * @param on true 打开消息提醒
+     */
+    public void toggleNotification (boolean on) {
+        Unicorn.toggleNotification(on);
+    }
+
+    /**
+     * 清除缓存文件
+     */
+    public void clearCache () {
+        Unicorn.clearCache();
+    }
+
+
+}

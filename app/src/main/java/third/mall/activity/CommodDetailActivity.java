@@ -76,6 +76,7 @@ import third.mall.widget.MyScrollView;
 import third.mall.widget.MyScrollView.ScrollViewInterface;
 import third.mall.widget.ScrollViewContainer;
 import third.mall.widget.ScrollViewContainer.ScrollviewContaninerInter;
+import third.qiyu.QiYvHelper;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
 import xh.basic.internet.UtilInternet;
@@ -669,9 +670,13 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         switch (v.getId()) {
             case R.id.service_mercat://客服
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "客服按钮");
-                Intent intentmark = new Intent(this, Feedback.class);
-                intentmark.putExtra("feekUrl",map.get("m_url"));
-                this.startActivity(intentmark);
+
+                QiYvHelper.getInstance().startServiceAcitivity(this, new QiYvHelper.OnSessionLifeCycleListener() {
+                    @Override
+                    public void onLeaveSession() {
+
+                    }
+                }, map);
                 break;
             case R.id.commod_buy:
                 if (LoginManager.isLogin()) {

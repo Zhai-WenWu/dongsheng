@@ -94,6 +94,7 @@ import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 import xh.windowview.XhDialog;
@@ -809,6 +810,7 @@ public class Main extends Activity implements OnClickListener {
                     myMessage.onRefresh();
                     XHClick.handlerPageStatic();
 //                    handleQiYu();
+                    QiYvHelper.getInstance().startServiceAcitivity(this, null, null);
                 }
                 // 当软件所在页面正式你要刷新的页面,就直接刷新,不在跳了
 //				if (tabHost.getCurrentTab() == i && i == 2) {
@@ -957,77 +959,77 @@ public class Main extends Activity implements OnClickListener {
         }
         super.onDestroy();
     }
-    private void handleQiYu(){
-        String title = "聊天窗口的标题";
-        YSFUserInfo userInfoC = new YSFUserInfo();
-        userInfoC.userId = "晓彤";
-        userInfoC.data = userInfoData("晓彤", "13503286027", "xiaotong@163.com", "已认证", "622202******0111015", "七鱼银票(2016010702)").toString();
-        Unicorn.setUserInfo(userInfoC, new RequestCallback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.i("wyl","测试数据");
-            }
+//    private void handleQiYu(){
+//        String title = "聊天窗口的标题";
+//        YSFUserInfo userInfoC = new YSFUserInfo();
+//        userInfoC.userId = "晓彤";
+//        userInfoC.data = userInfoData("晓彤", "13503286027", "xiaotong@163.com", "已认证", "622202******0111015", "七鱼银票(2016010702)").toString();
+//        Unicorn.setUserInfo(userInfoC, new RequestCallback<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Log.i("wyl","测试数据");
+//            }
+//
+//            @Override
+//            public void onFailed(int i) {
+//
+//            }
+//
+//            @Override
+//            public void onException(Throwable throwable) {
+//
+//            }
+//        });
+//        /**
+//         * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
+//         * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。
+//         * 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
+//         */
+//        ConsultSource source = new ConsultSource("baidu", "zhangyujian", "10010010");
+//        source.productDetail = new ProductDetail.Builder().setTitle("dsjkdksd").setDesc("不错弄").setUrl(/*"https://www.xiangha.com/caipu/90151166.html"*/"xiangha://welcome?userIndex.app%3fcode%3d37914324450%26type%3ddish").create();
+//        /**
+//         * 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable()，
+//         * 如果返回为false，该接口不会有任何动作
+//         *
+//         * @param context 上下文
+//         * @param title   聊天窗口的标题
+//         * @param source  咨询的发起来源，包括发起咨询的url，title，描述信息等
+//         */
+//        Unicorn.openServiceActivity(this, title, source);
+//    }
 
-            @Override
-            public void onFailed(int i) {
+//    private JSONArray userInfoData(String name, String mobile, String email, String auth, String card, String order) {
+//        JSONArray array = new JSONArray();
+//        try {
+//            array.put(userInfoDataItem("real_name", name, false, -1, null, null)); // name
+//            array.put(userInfoDataItem("mobile_phone", mobile, false, -1, null, null)); // mobile
+//            array.put(userInfoDataItem("email", email, false, -1, null, null)); // email
+//            array.put(userInfoDataItem("real_name_auth", auth, false, 0, "实名认证", null));
+//            array.put(userInfoDataItem("bound_bank_card", card, false, 1, "绑定银行卡", null));
+//            array.put(userInfoDataItem("recent_order", order, false, 2, "最近订单", null));
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        return array;
+//    }
 
-            }
-
-            @Override
-            public void onException(Throwable throwable) {
-
-            }
-        });
-        /**
-         * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
-         * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。
-         * 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
-         */
-        ConsultSource source = new ConsultSource("baidu", "zhangyujian", "10010010");
-        source.productDetail = new ProductDetail.Builder().setTitle("dsjkdksd").setDesc("不错弄").create();
-        /**
-         * 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable()，
-         * 如果返回为false，该接口不会有任何动作
-         *
-         * @param context 上下文
-         * @param title   聊天窗口的标题
-         * @param source  咨询的发起来源，包括发起咨询的url，title，描述信息等
-         */
-        Unicorn.openServiceActivity(this, title, source);
-    }
-
-    private JSONArray userInfoData(String name, String mobile, String email, String auth, String card, String order) {
-        JSONArray array = new JSONArray();
-        try {
-            array.put(userInfoDataItem("real_name", name, false, -1, null, null)); // name
-            array.put(userInfoDataItem("mobile_phone", mobile, false, -1, null, null)); // mobile
-            array.put(userInfoDataItem("email", email, false, -1, null, null)); // email
-            array.put(userInfoDataItem("real_name_auth", auth, false, 0, "实名认证", null));
-            array.put(userInfoDataItem("bound_bank_card", card, false, 1, "绑定银行卡", null));
-            array.put(userInfoDataItem("recent_order", order, false, 2, "最近订单", null));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return array;
-    }
-
-    private JSONObject userInfoDataItem(String key, Object value, boolean hidden, int index, String label, String href) throws JSONException {
-        JSONObject item = new JSONObject();
-        item.put("key", key);
-        item.put("value", value);
-        if (hidden) {
-            item.put("hidden", true);
-        }
-        if (index >= 0) {
-            item.put("index", index);
-        }
-        if (!TextUtils.isEmpty(label)) {
-            item.put("label", label);
-        }
-        if (!TextUtils.isEmpty(href)) {
-            item.put("href", href);
-        }
-        return item;
-    }
+//    private JSONObject userInfoDataItem(String key, Object value, boolean hidden, int index, String label, String href) throws JSONException {
+//        JSONObject item = new JSONObject();
+//        item.put("key", key);
+//        item.put("value", value);
+//        if (hidden) {
+//            item.put("hidden", true);
+//        }
+//        if (index >= 0) {
+//            item.put("index", index);
+//        }
+//        if (!TextUtils.isEmpty(label)) {
+//            item.put("label", label);
+//        }
+//        if (!TextUtils.isEmpty(href)) {
+//            item.put("href", href);
+//        }
+//        return item;
+//    }
 }
