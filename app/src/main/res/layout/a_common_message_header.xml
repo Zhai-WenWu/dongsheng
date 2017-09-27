@@ -83,7 +83,7 @@
             android:layout_height="@dimen/dp_30"
             android:layout_marginRight="@dimen/dp_8"
             android:layout_centerVertical="true"
-            android:src="@drawable/qa_msg_icon"/>
+            android:src="@drawable/ysf_qiyv_msgheader"/>
 
         <TextView
             android:id="@+id/qiyv_name"

@@ -14,11 +14,10 @@ import com.qiyukf.unicorn.api.ProductDetail;
 import com.qiyukf.unicorn.api.RequestCallback;
 import com.qiyukf.unicorn.api.SavePowerConfig;
 import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
+import com.qiyukf.unicorn.api.UICustomization;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
 import com.qiyukf.unicorn.api.YSFUserInfo;
-import com.qiyukf.unicorn.api.lifecycle.SessionLifeCycleListener;
-import com.qiyukf.unicorn.api.lifecycle.SessionLifeCycleOptions;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -42,6 +41,7 @@ public class QiYvHelper {
     private YSFOptions mOptions;
 
     private boolean mSetUserInfo;
+    private boolean mSetDefUI;
 
     private QiYvHelper() {
 
@@ -78,11 +78,9 @@ public class QiYvHelper {
         mOptions.statusBarNotificationConfig = new StatusBarNotificationConfig();
         mOptions.savePowerConfig = new SavePowerConfig();
         mOptions.statusBarNotificationConfig.notificationSmallIconId = R.drawable.ic_launcher;
-//        mOptions.statusBarNotificationConfig.notificationEntrance = CommodDetailActivity.class;//
         mOptions.onBotEventListener = new OnBotEventListener() {
             @Override
             public boolean onUrlClick(Context context, String url) {
-                Log.i("wyl","url:::"+url);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 context.startActivity(intent);
                 return true;
@@ -95,10 +93,14 @@ public class QiYvHelper {
      * 使用默认自定义UI
      * 此方法可以在需要的地方设置，否则使用七鱼默认的样式。
      */
-    public void useDefCustomUI() {
+    public void useDefCustomUI(Context context) {
         if (mOptions == null)
             return;
-//        mOptions.uiCustomization.
+        mSetDefUI = true;
+        mOptions.uiCustomization = new UICustomization();
+        mOptions.uiCustomization.titleBackgroundResId = R.color.common_top_bg;
+        mOptions.uiCustomization.titleCenter = true;
+        mOptions.uiCustomization.titleBarStyle = 1;
     }
 
     /**
@@ -109,7 +111,6 @@ public class QiYvHelper {
         if (userData == null || userData.isEmpty())
             return;
         YSFUserInfo userInfo = new YSFUserInfo();
-        Log.e("SLL", "userInfo = " + LoginManager.userInfo.toString());
         userInfo.userId = userData.get("code");
         JSONArray dataArray = new JSONArray();
         try {
@@ -154,18 +155,11 @@ public class QiYvHelper {
         }
 
         userInfo.data = dataArray.toString();
-//        userInfo.data = "[{\"key\":\"real_name\", \"value\":\"土豪\"}," +
-//                "{\"key\":\"mobile_phone\", \"hidden\":true}," +
-//                "{\"key\":\"email\", \"value\":\"13800000000@163.com\"}," +
-//                "{\"index\":0, \"key\":\"account\", \"label\":\"账号\", \"value\":\"zhangsan\" , \"href\":\"http://example.domain/user/zhangsan\"}," +
-//                "{\"index\":1, \"key\":\"sex\", \"label\":\"性别\", \"value\":\"先生\"}," +
-//                "{\"index\":5, \"key\":\"reg_date\", \"label\":\"注册日期\", \"value\":\"2015-11-16\"}," +
-//                "{\"index\":6, \"key\":\"last_login\", \"label\":\"上次登录时间\", \"value\":\"2015-12-22 15:38:54\"}]";
 
         Unicorn.setUserInfo(userInfo, new RequestCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.i("wyl","测试数据");
+
             }
 
             @Override
@@ -194,6 +188,8 @@ public class QiYvHelper {
         }
         if (!mSetUserInfo)
             setUserInfo();
+        if (!mSetDefUI)
+            useDefCustomUI(context);
         String title = "聊天窗口的标题";
         /**
          * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
@@ -214,18 +210,6 @@ public class QiYvHelper {
                 builder.setUrl(infoMap.get("clickUrl"));
         }
         source.productDetail = builder.create();
-        SessionLifeCycleOptions lifeCycleOptions = new SessionLifeCycleOptions();
-        lifeCycleOptions.setCanCloseSession(true)
-                .setCanQuitQueue(true)
-                .setQuitQueuePrompt("退出排队提示")
-                .setSessionLifeCycleListener(new SessionLifeCycleListener() {
-                    @Override
-                    public void onLeaveSession() {
-                        if (listener != null)
-                            listener.onLeaveSession();
-                    }
-                });
-        source.sessionLifeCycleOptions = lifeCycleOptions;
 
         /**
          * 请注意： 调用该接口前，应先检查Unicorn.isServiceAvailable()，
@@ -262,7 +246,6 @@ public class QiYvHelper {
                 public void onURLClicked(Context context, String url) {
                     if (listener != null)
                         listener.onURLClicked(context, url);
-                    Log.e("SLL", "onURLClicked  url = " + url);
                 }
             };
         }
