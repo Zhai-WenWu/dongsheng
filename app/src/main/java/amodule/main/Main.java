@@ -175,16 +175,19 @@ public class Main extends Activity implements OnClickListener {
     /**初始化浮标位置*/
     private void initBuoyTab(Bundle savedInstanceState){
         if (savedInstanceState != null) {
-            defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
-            if (defaultTab == 0 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatIndex()) && "1".equals(mBuoy.getFloatIndex())
-                    || defaultTab == 1 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatSubjectList()) && "1".equals(mBuoy.getFloatSubjectList())
-                    || defaultTab == 2
-                    || defaultTab == 3) {
-                if (mBuoy != null) {
-                    mBuoy.clearAnimation();
-                    mBuoy.hide();
-                    mBuoy.setClosed(true);
-                    mBuoy.setMove(true);
+            String currentTapStr = savedInstanceState.getString("currentTab");
+            if(!TextUtils.isEmpty(currentTapStr) && !"null".equals(currentTapStr)){
+                defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
+                if (defaultTab == 0 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatIndex()) && "1".equals(mBuoy.getFloatIndex())
+                        || defaultTab == 1 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatSubjectList()) && "1".equals(mBuoy.getFloatSubjectList())
+                        || defaultTab == 2
+                        || defaultTab == 3) {
+                    if (mBuoy != null) {
+                        mBuoy.clearAnimation();
+                        mBuoy.hide();
+                        mBuoy.setClosed(true);
+                        mBuoy.setMove(true);
+                    }
                 }
             }
         }
@@ -590,6 +593,7 @@ public class Main extends Activity implements OnClickListener {
     protected void onSaveInstanceState(Bundle outState) {
         /*try catch 住 super方法，尝试解决 IllegalStateException 异常*/
         try{
+            outState.putString("currentTab",""+defaultTab);
             super.onSaveInstanceState(outState);
         }catch (Exception ignored){}
     }
@@ -802,7 +806,6 @@ public class Main extends Activity implements OnClickListener {
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
-                    XHClick.handlerPageStatic();
                 }
                 try {
                     setCurrentTabByIndex(i);

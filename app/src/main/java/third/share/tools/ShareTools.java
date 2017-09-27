@@ -76,12 +76,13 @@ public class ShareTools {
 	public void showSharePlatform(String title, String content,String types,
 			String img, final String clickUrl, String platform,String from,String parent,boolean isShowBeginToast) {
 		starEvent("a_share400", mParent,mFrom);
-		mClickUrl = clickUrl + "";
+		String newClickUrl = clickUrl;
+		mClickUrl = newClickUrl + "";
 		mFrom = from + "";
 		mParent = parent + "";
-		if (platform == LINK_COPY && !TextUtils.isEmpty(clickUrl)) {
+		if (platform == LINK_COPY && !TextUtils.isEmpty(newClickUrl)) {
 			XHClick.onEvent(mContext, "a_share_click", "拷贝");
-			Tools.inputToClipboard(mContext,clickUrl);
+			Tools.inputToClipboard(mContext,newClickUrl);
 			Toast.makeText(mContext, "链接已复制", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -108,10 +109,10 @@ public class ShareTools {
 			content = " ";
 		}
 		if(platform.equals(SINA_NAME)){
-			content = content + clickUrl;
+			content = content + newClickUrl;
 		}
 		if(platform.equals(SHORT_MESSAGE)){
-			content = title + content + clickUrl;
+			content = title + content + newClickUrl;
 //			title = " ";
 		}
 		oks = new OnekeyShare();
@@ -124,14 +125,14 @@ public class ShareTools {
 		// getString(R.string.app_name));
 		// title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
 		oks.setTitle(title);
-		oks.setTitleUrl(clickUrl);
+		oks.setTitleUrl(newClickUrl);
 		// text是分享文本，所有平台都需要这个字段
 		oks.setText(content);
 		// imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 		oks.setImagePath(imgPath); // 确保SDcard下面存在此张图片
 		oks.setImageUrl(imgUrl);
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl(clickUrl);
+		oks.setUrl(newClickUrl);
 		
 		oks.setCallback(new PlatformActionListener() {
 
