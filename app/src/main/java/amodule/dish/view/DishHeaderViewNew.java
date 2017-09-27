@@ -463,11 +463,6 @@ public class DishHeaderViewNew extends LinearLayout {
         mVideoPlayerController.onPause();
     }
 
-    public void onDestroy() {
-        if(mVideoPlayerController != null)
-        mVideoPlayerController.onDestroy();
-    }
-
     public boolean onBackPressed(){
         return mVideoPlayerController != null ? mVideoPlayerController.onBackPressed() : false;
     }
@@ -537,4 +532,20 @@ public class DishHeaderViewNew extends LinearLayout {
             }
         };
     }
+    /**
+     * 页面销毁时调用
+     */
+    public void onDestroy(){
+        if(mVideoPlayerController!=null){
+            mVideoPlayerController.onDestroy();
+//            mVideoPlayerController=null;
+        }
+        if(context!=null){
+            context=null;
+        }
+        if(activity!=null){
+            activity=null;
+        }
+    }
+
 }

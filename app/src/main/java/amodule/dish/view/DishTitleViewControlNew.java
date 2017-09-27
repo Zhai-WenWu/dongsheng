@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -344,6 +342,24 @@ public class DishTitleViewControlNew implements View.OnClickListener{
             detailDish.startActivity(intent);
         }
     }
+    /**
+     * 页面销毁时调用
+     */
+    public void onDestroy(){
+        if(mVideoPlayerController!=null){
+            mVideoPlayerController=null;
+        }
+        if(mFavePopWindowDialog!=null){
+            mFavePopWindowDialog=null;
+        }
+        if(context!=null){
+            context=null;
+        }
+        if(detailDish!=null){
+            detailDish=null;
+        }
+    }
+
 
 }
 
