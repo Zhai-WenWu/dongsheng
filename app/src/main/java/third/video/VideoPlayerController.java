@@ -78,6 +78,7 @@ public class VideoPlayerController {
      */
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl) {
         this(context,viewGroup,imgUrl,GSYVideoType.SCREEN_TYPE_DEFAULT);
+        GSYVideoManager.instance().canChange = true;
     }
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl,int type) {
         this.mContext = context;
@@ -111,8 +112,10 @@ public class VideoPlayerController {
                 super.onPrepared(url, objects);
                 if(url.startsWith("http"))
                     setNetworkCallback();
-                GSYVideoManager.instance().setCurrentVideoWidth(viewGroup.getWidth());
-                GSYVideoManager.instance().setCurrentVideoHeight(viewGroup.getHeight());
+                if(!GSYVideoManager.instance().canChange){
+                    GSYVideoManager.instance().setCurrentVideoWidth(viewGroup.getWidth());
+                    GSYVideoManager.instance().setCurrentVideoHeight(viewGroup.getHeight());
+                }
             }
 
             @Override

@@ -34,9 +34,6 @@ dependencies {
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile('com.aliyun.ams:alicloud-android-hotfix:3.0.6') {
-        exclude(module: 'alicloud-android-utdid')
-    }
     compile project(':gsyVideoPlayer-java')
 }
 
@@ -49,8 +46,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 200
-        versionName "5.6.0.1"
+        versionCode 202
+        versionName "5.6.2"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -69,7 +66,8 @@ android {
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
 //            storeFile file('D:/android_workspace/xiangha.keystore')
-//            storeFile file('E:/keystore/xiangha.keystore')
+//            storeFile file('E:/keystore/xiangha.keystore'
+
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
 //            yulekwok

@@ -1,6 +1,7 @@
 package acore.logic;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -58,7 +59,7 @@ import static acore.tools.ToolsDevice.getWindowPx;
 public class XHClick {
     public static final int CIRCULATION_TIME = 30000;
     public static int HOME_STATICTIS_TIME = 10 * 1000;
-    public static int PAGE_STATICTIS_TIME = 10 * 60 * 1000;//页面停留时间修改
+    public static int PAGE_STATICTIS_TIME = 5 * 60 * 1000;//页面停留时间修改
     public static final int NOTIFY_A = 1;
     public static final int NOTIFY_B = 2;
     public static final int NOTIFY_C = 3;
@@ -454,8 +455,8 @@ public class XHClick {
         runnablePageStatictis = new Runnable() {
             @Override
             public void run() {
-                //循环统计feed流数据
-                loopHandlerStatictis();
+                //循环统计页面流数据
+                handlerPageStatic();
                 //循环倒计时--10分钟统计
                 handlerPageStatictis.postDelayed(runnablePageStatictis, PAGE_STATICTIS_TIME);
             }
@@ -1041,10 +1042,10 @@ public class XHClick {
      */
     public synchronized static void handlerPageStatic() {
         try {
-            String url = StringManager.API_STATISTIC_S7;
+            String url = StringManager.API_STATISTIC_S8;
             String baseData = getStatictisParams();
             ArrayList<String> data = StatictisSQLiteDataBase.getInstance().selectPageAllData();
-            StatictisSQLiteDataBase.getInstance().deleteAllData();
+            StatictisSQLiteDataBase.getInstance().deletePageAllData();
 
             Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
             JSONObject jsonObject = MapToJson(baseMap);
@@ -1053,7 +1054,7 @@ public class XHClick {
                 int lenght = data.size();
                 for (int i = 0; i < lenght; i++) {
                     if (!TextUtils.isEmpty(data.get(i))) {
-                        jsonArray.put(MapToJson(UtilString.getMapByString(data.get(i), "&", "=")));
+                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
                     }
                 }
                 jsonObject.put("log_data", jsonArray);
@@ -1068,7 +1069,7 @@ public class XHClick {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Log.i("wyl", "上传数据s7");
+                        Log.i("wyl", "上传数据s8");
                     } else {
 
                     }
@@ -1114,6 +1115,28 @@ public class XHClick {
             while (enty.hasNext()) {
                 Map.Entry<String, String> entry = enty.next();
                 jsonObject.put(entry.getKey(), entry.getValue());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+    /**
+     * map转json
+     *
+     * @param maps
+     * @return
+     */
+    public static JSONObject MapToJsonEncode(Map<String, String> maps) {
+
+        JSONObject jsonObject = new JSONObject();
+        if (maps == null || maps.size() <= 0) return jsonObject;
+
+        Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
+        try {
+            while (enty.hasNext()) {
+                Map.Entry<String, String> entry = enty.next();
+                jsonObject.put(entry.getKey(), Uri.encode(entry.getValue()));
             }
         } catch (JSONException e) {
             e.printStackTrace();

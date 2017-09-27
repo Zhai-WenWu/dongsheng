@@ -74,7 +74,7 @@ public class MainHomePageNew extends MainBaseActivity {
 		}
 		//为了解决首页打开webview后再调用此句再打开的webView的大小就不是0*0啦
 		if(onResumeNum == 1){
-			SpecialWebControl.initSpecialWeb(this,"index","","");
+			SpecialWebControl.initSpecialWeb(this,rl,"index","","");
 		}
 		if(mAds != null){
 			for(AdsShow ad : mAds){

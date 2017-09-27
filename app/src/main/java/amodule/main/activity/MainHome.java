@@ -315,7 +315,7 @@ public class MainHome extends MainBaseActivity {
 
     public void onResumeFake(){
         if(resumeCount != 0)
-            SpecialWebControl.initSpecialWeb(this,"index","","");
+            SpecialWebControl.initSpecialWeb(this,rl,"index","","");
         resumeCount++;
     }
 

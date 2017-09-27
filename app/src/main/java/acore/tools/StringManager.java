@@ -245,9 +245,6 @@ public class StringManager extends UtilString {
     //菜谱详情页
     public final static String api_getDishInfoNew = apiUrl + urlSection.get("caipu6") + "info";
     public final static String api_getDishTopInfo = apiUrl + "main7/dish/topInfo";
-    public final static String api_getTemplate = apiUrl + "main7/template/layout";
-    public final static String api_getXhTemplate = apiUrl + "main7/template/xhLayout";
-    public final static String api_getDishMould = apiUrl + "main7/dish/layout";
     public final static String api_getDishTieInfo = apiUrl + "main7/dish/tieInfo";
     public final static String api_getDishstatusValue = apiUrl + "main7/dish/statusValue";
     public final static String api_getDishLikeNumStatus = apiUrl + "main7/dish/likeNumStatus";
@@ -300,6 +297,7 @@ public class StringManager extends UtilString {
      */
     public final static String API_STATISTIC_S6 = "http://stat.xiangha.com/s6.gif"; //新首页统计
     public final static String API_STATISTIC_S7 = "http://stat.xiangha.com/s7.gif"; //页面统计时间
+    public final static String API_STATISTIC_S8 = "http://stat.xiangha.com/s8.gif"; //页面统计时间
 
     /*文章*/
     public final static String api_getArticleClass = apiUrl + "main7/article/getArticleClass"; //文章分类
@@ -351,6 +349,9 @@ public class StringManager extends UtilString {
     public final static String API_QA_QAARBITRATION = appWebUrl + "qa/arbitrateList?fullScreen=2";//问答仲裁
 
     public final static String API_RAND_PROMOTION = apiUrl + "main7/open/getRandPromotion";//随机推广
+
+    public final static String API_TEMPLATE_AUTOLOADTEMPLATE = apiUrl + "main7/template/autoloadTemplate";//多模版控制
+    public final static String API_TEMPLATE_GETTEMPLATENAME = apiUrl + "main7/template/getTemplateName";//获取单个模版
 
     //替换url
     public final static String replaceUrl(String url) {

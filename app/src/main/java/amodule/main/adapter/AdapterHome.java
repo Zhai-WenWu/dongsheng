@@ -30,11 +30,23 @@ public class AdapterHome extends AdapterSimple{
     public void setViewOnClickCallBack(ViewClickCallBack viewClickCallBack){
         this.viewClickCallBack= viewClickCallBack;
     }
+
+    @Override
+    public int getViewTypeCount() {
+        return 5;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Map<String, String> map = listmap.get(position);
+        String type= map.get("type");
+        return Integer.parseInt(type);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Map<String, String> map = listmap.get(position);
-        String type= map.get("type");
-        if("4".equals(type)){//专辑
+        if(4 == getItemViewType(position)){//专辑
             ViewAlbumViewHolder viewAlbumViewHolder = null;
             if (convertView == null
                     || !(convertView.getTag() instanceof ViewAlbumViewHolder)) {
@@ -45,7 +57,8 @@ public class AdapterHome extends AdapterSimple{
                 viewAlbumViewHolder = (ViewAlbumViewHolder) convertView.getTag();
             }
             viewAlbumViewHolder.setData(map, position);
-        }else if("1".equals(type)||"2".equals(type)){//图文
+        }else if(1 == getItemViewType(position)
+                    || 2 == getItemViewType(position)){//图文
             ViewDishViewHolder viewHolder = null;
             if (convertView == null
                     || !(convertView.getTag() instanceof ViewDishViewHolder)) {
@@ -56,7 +69,7 @@ public class AdapterHome extends AdapterSimple{
                 viewHolder = (ViewDishViewHolder) convertView.getTag();
             }
             viewHolder.setData(map, position);
-        }else if("5".equals(type)){//美食贴
+        }else if(5 == getItemViewType(position)){//美食贴
             ViewTiziViewHolder viewHolder = null;
             if (convertView == null
                     || !(convertView.getTag() instanceof ViewTiziViewHolder)) {
@@ -67,7 +80,7 @@ public class AdapterHome extends AdapterSimple{
                 viewHolder = (ViewTiziViewHolder) convertView.getTag();
             }
             viewHolder.setData(map, position);
-        }else if("3".equals(type)){//文章
+        }else if(3 == getItemViewType(position)){//文章
             ViewTxtViewHolder viewHolder = null;
             if (convertView == null
                     || !(convertView.getTag() instanceof ViewTxtViewHolder)) {

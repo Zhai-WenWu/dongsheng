@@ -95,6 +95,10 @@ public class MallStringManager extends UtilString {
     public final static String mall_dsInfo_v3 = mall_apiUrl + "/v3/home/dsInfo";
     public final static String mall_api_getTemplate = mall_apiUrl + "/v3/template/getTemplate";
     public final static String mall_api_dsTemplate = mall_apiUrl + "/v3/template/dsTemplate";
+    //版本处理
+    public final static String mall_api_autoloadTemplate = mall_apiUrl + "/v3/template/autoloadTemplate";
+    public final static String mall_api_getTemplateName = mall_apiUrl + "/v3/template/getTemplateName";
+
 
     /**
      * 替换url

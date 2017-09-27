@@ -11,8 +11,6 @@ import android.util.Log;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
-import com.taobao.sophix.SophixManager;
-import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
@@ -51,12 +49,10 @@ public class XHApplication extends MobApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
-        initHotfix();
     }
 
     @Override
     public void onCreate() {
-        SophixManager.getInstance().queryAndLoadNewPatch();
         startTime = System.currentTimeMillis();
         super.onCreate();
         LogManager.printStartTime("zhangyujian","XhApplication::super.oncreate::");
@@ -181,24 +177,4 @@ public class XHApplication extends MobApplication {
         }).start();
     }
 
-    /** 初始化热修复 */
-    private void initHotfix() {
-        SophixManager.getInstance().setContext(this)
-                .setAppVersion(VersionOp.getVerName(this))
-                .setAesKey("v587xiangha05186")
-                .setEnableDebug(false)
-                .setPatchLoadStatusStub(new PatchLoadStatusListener() {
-                    @Override
-                    public void onLoad(final int mode, final int code, final String info, final int handlePatchVersion) {
-                        if(Tools.isDebug(mAppApplication)){
-                            String msg = new StringBuilder("").append("Mode:").append(mode)
-                                    .append(" Code:").append(code)
-                                    .append(" Info:").append(info)
-                                    .append(" HandlePatchVersion:").append(handlePatchVersion).toString();
-                            Log.i("tzy_hot",msg);
-                        }
-                    }
-                }).initialize();
-
-    }
 }
