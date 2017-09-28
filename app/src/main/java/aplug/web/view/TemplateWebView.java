@@ -241,6 +241,7 @@ public class TemplateWebView extends XHWebView{
             public void load(boolean isSuccess, String data, String requestMothed, String version) {
                 mMouldVersion = version;
                 if(isSuccess){
+                    Log.i(TemplateWebViewControl.TAG,"模版开始渲染");
                     if(originData!=null&&originData.length>0&&nowData!=null&&nowData.length>0) {
                         int lenght= originData.length;
                         int nowLenght=nowData.length;
