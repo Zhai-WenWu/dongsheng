@@ -75,6 +75,12 @@ public class AllPopDialogHelper {
 
     /** 初始化 */
     private void initialize() {
+        allPopDialogControler.setmGetCurrentActiivtyCallback(new AllPopDialogControler.GetCurrentActiivtyCallback() {
+            @Override
+            public Activity getCurrentActivity() {
+                return XHActivityManager.getInstance().getCurrentActivity();
+            }
+        });
         //导流回调
         allPopDialogControler.setOnGuideClickCallback(new GuideDialogControl.OnGuideClickCallback() {
             @Override
