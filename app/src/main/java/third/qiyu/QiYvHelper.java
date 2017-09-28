@@ -190,7 +190,6 @@ public class QiYvHelper {
             setUserInfo();
         if (!mSetDefUI)
             useDefCustomUI(context);
-        String title = "聊天窗口的标题";
         /**
          * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
          * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。
@@ -220,7 +219,7 @@ public class QiYvHelper {
          * @param source  咨询的发起来源，包括发起咨询的url，title，描述信息等
          */
         if (Unicorn.isServiceAvailable())
-            Unicorn.openServiceActivity(context, title, source);
+            Unicorn.openServiceActivity(context, "商城在线客服", source);
     }
 
     /**
