@@ -132,6 +132,7 @@ public class Main extends Activity implements OnClickListener {
     public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
     private boolean isInit=false;//是否已经进行初始化
     private WelcomeDialog welcomeDialog;//dialog,显示
+    public static final String TAG="xianghaTag";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

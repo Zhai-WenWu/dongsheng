@@ -32,6 +32,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.DishActivityViewControlNew;
+import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
@@ -103,7 +104,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         },15 * 60 * 1000);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        Log.i(TemplateWebViewControl.TAG,"菜谱详情页");
+        Log.i(Main.TAG,"菜谱详情页");
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
@@ -181,7 +182,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    Log.i(TemplateWebViewControl.TAG,"topinfo返回数据");
+                    Log.i(Main.TAG,"topinfo返回数据");
                     if(!hasPermission || !contiunRefresh) return;
                     dishActivityViewControl.reset();
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
@@ -207,7 +208,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
-                    Log.i(TemplateWebViewControl.TAG,"tieinfo返回数据");
+                    Log.i(Main.TAG,"tieinfo返回数据");
                     dishActivityViewControl.analyzeUserShowDishInfoData(String.valueOf(o));
                 }
             }

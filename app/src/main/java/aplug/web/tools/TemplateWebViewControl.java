@@ -35,7 +35,6 @@ import third.mall.aplug.MallStringManager;
  */
 public class TemplateWebViewControl {
     private boolean isCallBack = false;//是否已经回调
-    public static String TAG="xianghaTag";
     /**
      * 处理模版数据
      * 存储数据，的key是通过当前url获取出来
@@ -66,7 +65,7 @@ public class TemplateWebViewControl {
                         //对数据进行校验。md5验证
                         if(versionUrl != null &&!TextUtils.isEmpty(String.valueOf(versionUrl))&& !TextUtils.isEmpty(readStr)){
                             String md5Data= MD5(readStr).toLowerCase();
-                            Log.i(TAG,"md5Data::"+md5Data+":::"+versionUrl);
+                            Log.i(Main.TAG,"md5Data::"+md5Data+":::"+versionUrl);
                             if(!String.valueOf(versionUrl).equals(md5Data)){
                                 version="";
                                 readStr="";
@@ -74,12 +73,12 @@ public class TemplateWebViewControl {
                         }
                         if (mouldCallBack != null ) {
                             if(TextUtils.isEmpty(readStr)){
-                                Log.i(TAG,"当前没有下载下来数据，从资源文件中取");
+                                Log.i(Main.TAG,"当前没有下载下来数据，从资源文件中取::"+requestMethod);
                                 readStr=FileManager.getFromAssets(XHActivityManager.getInstance().getCurrentActivity(),requestMethod);
                             }
                             if(!TextUtils.isEmpty(readStr)) {
                                 isCallBack = true;
-                                Log.i(TAG,"有资源数据，直接返回");
+                                Log.i(Main.TAG,"有资源数据，直接返回::"+requestMethod);
                                 mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
                             }
                         }
@@ -120,7 +119,7 @@ public class TemplateWebViewControl {
                         //对数据进行校验。md5验证
                         if(versionUrl != null &&!TextUtils.isEmpty(String.valueOf(versionUrl))&& !TextUtils.isEmpty(readStr)){
                             String md5Data= MD5(readStr).toLowerCase();
-                            Log.i(TAG,"md5Data::"+md5Data+":::"+versionUrl);
+                            Log.i(Main.TAG,"md5Data::"+md5Data+":::"+versionUrl);
                             if(!String.valueOf(versionUrl).equals(md5Data)){
                                 version="";
                                 readStr="";
@@ -128,12 +127,12 @@ public class TemplateWebViewControl {
                         }
                         if (mouldCallBack != null ) {
                             if(TextUtils.isEmpty(readStr)){
-                                Log.i(TAG,"当前没有下载下来数据，从资源文件中取");
+                                Log.i(Main.TAG,"当前没有下载下来数据，从资源文件中取：："+requestMethod);
                                 readStr=FileManager.getFromAssets(XHActivityManager.getInstance().getCurrentActivity(),requestMethod);
                             }
                             if(!TextUtils.isEmpty(readStr)) {
                                 isCallBack = true;
-                                Log.i(TAG,"有资源数据，直接返回");
+                                Log.i(Main.TAG,"有资源数据，直接返回：："+requestMethod);
                                 mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
                             }
                         }
@@ -175,7 +174,7 @@ public class TemplateWebViewControl {
                                                     long time= System.currentTimeMillis();
                                                     String dataMd5 = MD5(data).toLowerCase();
                                                     long timenow= System.currentTimeMillis();
-                                                    Log.i(TAG,"dataMd5::"+dataMd5+":::"+version_sign+":::"+(timenow-time));
+                                                    Log.i(Main.TAG,"dataMd5::"+dataMd5+":::"+version_sign+":::"+(timenow-time));
                                                     if(version_sign.equals(dataMd5)) {
                                                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                                                             @Override
@@ -185,7 +184,7 @@ public class TemplateWebViewControl {
                                                         });
                                                     }else{
                                                         if (mouldCallBack != null  && !isCallBack) {
-                                                            Log.i(TAG,"服务端返回数据777");
+                                                            Log.i(Main.TAG,"服务端返回数据777::"+requestMethod);
                                                             mouldCallBack.load(true, TextUtils.isEmpty(readStr) ? "" : readStr, requestMethod, String.valueOf(version_sign));
                                                         }
 
@@ -198,12 +197,12 @@ public class TemplateWebViewControl {
 
                                     } catch (Exception e) {
                                         if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                            Log.i(TAG,"服务端返回数据444");
+                                            Log.i(Main.TAG,"服务端返回数据444::"+requestMethod);
                                             mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                         }
                                     }
                                 } else if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                    Log.i(TAG,"服务端返回数据555");
+                                    Log.i(Main.TAG,"服务端返回数据555::"+requestMethod);
                                     mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                 }
                             }
@@ -219,12 +218,12 @@ public class TemplateWebViewControl {
             if (file != null)
                 FileManager.saveShared(XHApplication.in(), requestMethod, "version_sign", String.valueOf(version_sign));
             if (mouldCallBack != null && !isCallBack) {
-                Log.i(TAG,"服务端返回数据222");
+                Log.i(Main.TAG,"服务端返回数据222::"+requestMethod);
                 mouldCallBack.load(true, data, requestMethod, String.valueOf(version_sign));
             }
         } else {
             if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                Log.i(TAG,"服务端返回数据333");
+                Log.i(Main.TAG,"服务端返回数据333::"+requestMethod);
                 mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
             }
         }

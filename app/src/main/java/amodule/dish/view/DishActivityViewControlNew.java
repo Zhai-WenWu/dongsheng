@@ -30,6 +30,7 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.TemplateWebViewControl;
@@ -116,7 +117,7 @@ public class  DishActivityViewControlNew {
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
             @Override
             public void onLoadFinish() {
-                Log.i(TemplateWebViewControl.TAG,"模版加载完成");
+                Log.i(Main.TAG,"模版加载完成");
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
