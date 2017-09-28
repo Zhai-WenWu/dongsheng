@@ -3,6 +3,7 @@ package amodule.article.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -213,7 +214,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
         StringBuilder sbuild = new StringBuilder();
         sbuild.append("type=").append(type).append("&")
                 .append("code=").append(code).append("&")
-                .append("content=").append(getContent());
+                .append("content=").append(Uri.encode(getContent()));
         ReqEncyptInternet.in().doEncypt(StringManager.api_addForum, sbuild.toString(),
                 new InternetCallback(getContext()) {
                     @Override

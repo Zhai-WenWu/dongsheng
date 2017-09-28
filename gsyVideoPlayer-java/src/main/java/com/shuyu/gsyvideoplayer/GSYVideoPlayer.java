@@ -499,13 +499,17 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     @Override
     public void onVideoResume() {
-        mPauseTime = 0;
-        if (mCurrentState == CURRENT_STATE_PAUSE) {
-            if (mCurrentPosition > 0 && GSYVideoManager.instance().getMediaPlayer() != null) {
-                setStateAndUi(CURRENT_STATE_PLAYING);
-                GSYVideoManager.instance().getMediaPlayer().seekTo(mCurrentPosition);
-                GSYVideoManager.instance().getMediaPlayer().start();
+        try{
+            mPauseTime = 0;
+            if (mCurrentState == CURRENT_STATE_PAUSE) {
+                if (mCurrentPosition > 0 && GSYVideoManager.instance().getMediaPlayer() != null) {
+                    setStateAndUi(CURRENT_STATE_PLAYING);
+                    GSYVideoManager.instance().getMediaPlayer().seekTo(mCurrentPosition);
+                    GSYVideoManager.instance().getMediaPlayer().start();
+                }
             }
+        }catch (Exception igored){
+
         }
     }
 

@@ -225,7 +225,8 @@ public class  DishActivityViewControlNew {
                                 mTimer.schedule(2);
                             }
                         }
-                        mFootControl.hindGoodLayout();
+                        if(null != mFootControl)
+                            mFootControl.hindGoodLayout();
                         break;
                 }
                 return false;
@@ -257,7 +258,8 @@ public class  DishActivityViewControlNew {
 
         String authorCode = dishInfoMap.get("customerCode");
         if (!TextUtils.isEmpty(authorCode)){
-            mFootControl.setAuthorCode(authorCode);
+            if(null != mFootControl)
+                mFootControl.setAuthorCode(authorCode);
             if(LoginManager.userInfo != null
                     && authorCode.equals(LoginManager.userInfo.get("code"))) {
                 state = "";
@@ -364,11 +366,13 @@ public class  DishActivityViewControlNew {
     }
 
     public void analyzeUserShowDishInfoData(String dishJson){
-        mFootControl.initUserDish(dishJson);
+        if(null != mFootControl)
+            mFootControl.initUserDish(dishJson);
     }
 
     public void analyzeDishLikeNumberInfoData(String dishJson){
-        mFootControl.initLikeState(dishJson);
+        if(null != mFootControl)
+            mFootControl.initLikeState(dishJson);
     }
 
     /**
