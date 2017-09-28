@@ -181,7 +181,11 @@ public class AdapterOrderState extends MallAdapterSimple {
 						infoMap.put("show", "0");
 						infoMap.put("alwaysSend", "0");
 					}
-					QiYvHelper.getInstance().startServiceAcitivity(context, null, infoMap);
+					Map<String, String> customMap = new HashMap<String, String>();
+					customMap.put("pageUrl", "");
+					customMap.put("pageTitle", "订单详情页");
+					customMap.put("pageCustom", "");
+					QiYvHelper.getInstance().startServiceAcitivity(context, null, infoMap, customMap);
 				}
 			});
 			/* *************************处理用户留言，和联系商家end****************************************8 */

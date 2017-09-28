@@ -15,12 +15,15 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
@@ -35,7 +38,7 @@ import third.qiyu.QiYvHelper;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
-public class MyMessage extends MainBaseActivity {
+public class MyMessage extends MainBaseActivity implements IObserver{
 	private DownRefreshList listMessage;
 	private TextView feekback_msg_num,msg_title_sort;
 	
@@ -62,6 +65,8 @@ public class MyMessage extends MainBaseActivity {
 		Main.allMain.allTab.put("MyMessage", this);
 		init();
 		XHClick.track(this, "浏览消息列表页");
+		ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+		ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
 	}
 
 	@Override
@@ -83,6 +88,7 @@ public class MyMessage extends MainBaseActivity {
 					} else {
 						mQiYvNum.setVisibility(View.GONE);
 					}
+					Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
 				}
 			});
 		}
@@ -101,7 +107,8 @@ public class MyMessage extends MainBaseActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		QiYvHelper.getInstance().addUnreadCountChangeListener(null, false);
+		mUnreadCountListener = null;
+		ObserverManager.getInstence().unRegisterObserver(this);
 	}
 
 	/**
@@ -194,7 +201,10 @@ public class MyMessage extends MainBaseActivity {
 								}
 							});
 						}
-						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null);
+
+						Map<String, String> customMap = new HashMap<String, String>();
+						customMap.put("pageTitle", "消息列表页");
+						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null, customMap);
 						break;
 				}
 			}
@@ -203,19 +213,10 @@ public class MyMessage extends MainBaseActivity {
 		headerMyQA.setOnClickListener(clickListener);
 		headerQY.setOnClickListener(clickListener);
 
-		QiYvHelper.getInstance().addUnreadCountChangeListener(new QiYvHelper.UnreadCountChangeListener() {
-			@Override
-			public void onUnreadCountChange(int count) {
-				if (count > 0) {
-					if (mQiYvNum != null) {
-						mQiYvNum.setText(String.valueOf(count));
-						mQiYvNum.setVisibility(View.VISIBLE);
-					}
-					Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
-				}
-			}
-		}, true);
-		initQiYvNum();
+		if (LoginManager.isLogin()) {
+			addQiYvListener();
+			initQiYvNum();
+		}
 
 		setFeekbackMsg();
 		listDataMessage = new ArrayList<Map<String, String>>();
@@ -256,6 +257,28 @@ public class MyMessage extends MainBaseActivity {
 				}
 			}
 		};
+	}
+
+	private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
+	/**
+	 * 设置七鱼未读消息监听
+	 */
+	private void addQiYvListener() {
+		if (mUnreadCountListener == null) {
+			mUnreadCountListener = new QiYvHelper.UnreadCountChangeListener() {
+				@Override
+				public void onUnreadCountChange(int count) {
+					if (count > 0) {
+						if (mQiYvNum != null) {
+							mQiYvNum.setText(String.valueOf(count));
+							mQiYvNum.setVisibility(View.VISIBLE);
+						}
+						Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+					}
+				}
+			};
+		}
+		QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
 	}
 
 	/**
@@ -457,4 +480,29 @@ public class MyMessage extends MainBaseActivity {
 		}
 	};
 
+	@Override
+	public void notify(String name, Object sender, Object data) {
+		if (!TextUtils.isEmpty(name)) {
+			switch (name) {
+				case ObserverManager.NOTIFY_LOGIN:
+					if (data != null && data instanceof Boolean) {
+						if ((Boolean)data) {
+							onRefresh();
+							addQiYvListener();
+							QiYvHelper.getInstance().onUserLogin();
+							initQiYvNum();
+						}
+					}
+					break;
+				case ObserverManager.NOTIFY_LOGOUT:
+					if (data != null && data instanceof Boolean) {
+						if ((Boolean)data) {
+							onRefresh();
+							QiYvHelper.getInstance().onUserLogout();
+						}
+					}
+					break;
+			}
+		}
+	}
 }

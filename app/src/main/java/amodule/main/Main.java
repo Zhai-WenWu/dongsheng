@@ -9,8 +9,10 @@ package amodule.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -176,6 +178,24 @@ public class Main extends Activity implements OnClickListener {
                 new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
         LogManager.printStartTime("zhangyujian","main::oncreate::");
+        QiYvHelper.getInstance().addOnUrlItemClickListener(new QiYvHelper.OnUrlItemClickListener() {
+            @Override
+            public void onURLClicked(Context context, String url) {
+                if (!TextUtils.isEmpty(url)) {
+                    if (url.contains("m.ds.xiangha.com") && url.contains("product_code=")) {//商品详情链接
+                        String[] strs = url.split("\\?");
+                        if (strs != null && strs.length > 1) {
+                            String params = strs[1];
+                            if (!TextUtils.isEmpty(params)) {
+                                AppCommon.openUrl(Main.this, "xhds.product.info.app?" + params, true);
+                            }
+                        }
+                    } else {
+                        AppCommon.openUrl(Main.this, "xiangha://welcome?showWeb.app?url=" + Uri.encode(url), true);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -950,5 +970,7 @@ public class Main extends Activity implements OnClickListener {
             welcomeDialog.dismiss();
         }
         super.onDestroy();
+        if (!LoginManager.isLogin())
+            QiYvHelper.getInstance().destroyQiYvHelper();
     }
 }

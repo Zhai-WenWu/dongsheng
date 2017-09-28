@@ -3,7 +3,6 @@ package acore.logic;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +12,7 @@ import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.WebActivity;
 import acore.tools.FileManager;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.dish.db.DataOperate;
@@ -173,6 +173,9 @@ public class LoginManager {
 
                     //清除无用数据
                     clearUserData(mAct);
+                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, true);
+                } else {
+                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, false);
                 }
             }
         });

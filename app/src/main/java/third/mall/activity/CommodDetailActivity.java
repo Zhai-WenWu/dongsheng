@@ -41,6 +41,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,16 +50,13 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.other.activity.PlayVideo;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
-import aplug.shortvideo.activity.VideoFullScreenActivity;
 import aplug.web.ShowTemplateWeb;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
@@ -682,7 +680,12 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                     infoMap.put("show", "0");
                     infoMap.put("alwaysSend", "0");
                 }
-                QiYvHelper.getInstance().startServiceAcitivity(this, null, infoMap);
+
+                Map<String, String> customMap = new HashMap<String, String>();
+                customMap.put("pageUrl", map.get("m_url"));
+                customMap.put("pageTitle", "商品详情页");
+                customMap.put("pageCustom", "");
+                QiYvHelper.getInstance().startServiceAcitivity(this, null, infoMap, customMap);
                 break;
             case R.id.commod_buy:
                 if (LoginManager.isLogin()) {

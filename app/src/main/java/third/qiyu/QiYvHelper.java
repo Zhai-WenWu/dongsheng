@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.qiyukf.unicorn.api.ConsultSource;
 import com.qiyukf.unicorn.api.OnBotEventListener;
@@ -39,6 +38,7 @@ public class QiYvHelper {
 
     private static QiYvHelper mQiYvHelper;
     private YSFOptions mOptions;
+    private com.qiyukf.unicorn.api.UnreadCountChangeListener mUnreadCountListener;
 
     private boolean mSetUserInfo;
     private boolean mSetDefUI;
@@ -92,6 +92,7 @@ public class QiYvHelper {
     /**
      * 使用默认自定义UI
      * 此方法可以在需要的地方设置，否则使用七鱼默认的样式。
+     * @param context
      */
     public void useDefCustomUI(Context context) {
         if (mOptions == null)
@@ -126,7 +127,7 @@ public class QiYvHelper {
 
             JSONObject userEmail = new JSONObject();
             userEmail.put("key", "email");
-            userEmail.put("value", "888888@qq.com");
+            userEmail.put("value", TextUtils.isEmpty(userData.get("email")) ? "无" : userData.get("email"));
             dataArray.put(userEmail);
 
             JSONObject userVIP = new JSONObject();
@@ -179,7 +180,7 @@ public class QiYvHelper {
      * 打开咨询页面
      * @param context
      */
-    public void startServiceAcitivity(Context context, final OnSessionLifeCycleListener listener, Map<String, String> infoMap) {
+    public void startServiceAcitivity(Context context, final OnSessionLifeCycleListener listener, Map<String, String> infoMap, Map<String, String> customMap) {
         if (context == null)
             return;
         if (!LoginManager.isLogin()) {
@@ -195,19 +196,35 @@ public class QiYvHelper {
          * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。
          * 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
          */
+
         boolean mapNull = (infoMap == null || infoMap.isEmpty());
-        ConsultSource source = new ConsultSource("baidu", "xiaoming", "10010010");
         ProductDetail.Builder builder = new ProductDetail.Builder();
         if (!mapNull) {
+            int show = 0;
+            try {
+                show = Integer.valueOf(infoMap.get("show"));
+            } catch (Exception e) {
+            }
             builder.setTitle(TextUtils.isEmpty(infoMap.get("title")) ? "" : infoMap.get("title"))
                     .setDesc(TextUtils.isEmpty(infoMap.get("desc")) ? "" : infoMap.get("desc"))
                     .setPicture(TextUtils.isEmpty(infoMap.get("imgUrl")) ? "" : infoMap.get("imgUrl"))
                     .setNote((TextUtils.isEmpty(infoMap.get("note1")) ? "" : infoMap.get("note1")) + "    " + (TextUtils.isEmpty(infoMap.get("note2")) ? "" : infoMap.get("note2")))
-                    .setShow(Integer.valueOf(infoMap.get("show")))
+                    .setShow(show)
                     .setAlwaysSend(TextUtils.equals(infoMap.get("alwaysSend"), "1"));
             if (!TextUtils.isEmpty(infoMap.get("clickUrl")))
                 builder.setUrl(infoMap.get("clickUrl"));
         }
+
+        String pageUrl = null;
+        String pageTitle = null;
+        String pageCustom = null;
+        if (customMap != null && !customMap.isEmpty()) {
+            pageUrl = customMap.get("pageUrl");
+            pageTitle = customMap.get("pageTitle");
+            pageCustom = customMap.get("pageCustom");
+        }
+
+        ConsultSource source = new ConsultSource(pageUrl == null ? "" : pageUrl, pageTitle == null ? "" : pageTitle, pageCustom == null ? "" : pageCustom);
         source.productDetail = builder.create();
 
         /**
@@ -233,9 +250,18 @@ public class QiYvHelper {
     /**
      * 当关联的用户从 APP 注销后，调用此方法，
      */
-    public void logout() {
+    public void onUserLogout() {
+        mSetDefUI = false;
         mSetUserInfo = false;
+        Unicorn.addUnreadCountChangeListener(mUnreadCountListener, false);
         Unicorn.logout();
+    }
+
+    /**
+     * 当用户登录后，设置用户信息。
+     */
+    public void onUserLogin() {
+        setUserInfo();
     }
 
     public void addOnUrlItemClickListener(final OnUrlItemClickListener listener) {
@@ -260,13 +286,16 @@ public class QiYvHelper {
      * @param add true为添加，false为撤销
      */
     public void addUnreadCountChangeListener (final UnreadCountChangeListener listener, final boolean add) {
-        Unicorn.addUnreadCountChangeListener(new com.qiyukf.unicorn.api.UnreadCountChangeListener() {
-            @Override
-            public void onUnreadCountChange(int count) {
-               if (listener != null && add)
-                   listener.onUnreadCountChange(count);
-            }
-        }, add);
+        if (mUnreadCountListener == null) {
+            mUnreadCountListener = new com.qiyukf.unicorn.api.UnreadCountChangeListener() {
+                @Override
+                public void onUnreadCountChange(int count) {
+                    if (listener != null && add)
+                        listener.onUnreadCountChange(count);
+                }
+            };
+        }
+        Unicorn.addUnreadCountChangeListener(mUnreadCountListener, add);
     }
 
     public interface UnreadCountChangeListener {
@@ -289,7 +318,12 @@ public class QiYvHelper {
      * 清除缓存文件
      */
     public void clearCache () {
-        Unicorn.clearCache();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Unicorn.clearCache();
+            }
+        }).start();
     }
 
     /**
@@ -315,6 +349,17 @@ public class QiYvHelper {
 
     public interface NumberCallback {
         void onNumberReady(int count);
+    }
+
+    /**
+     * 销毁Helper
+     */
+    public void destroyQiYvHelper() {
+        onUserLogout();
+        mUnreadCountListener = null;
+        mOptions = null;
+        mQiYvHelper = null;
+        clearCache();
     }
 
 }
