@@ -97,6 +97,11 @@ public class VersionOp extends BaseDialogControl {
         }
     }
 
+    @Override
+    public Activity getCurrentActivity() {
+        return null;
+    }
+
     /**
      * 检查更新
      * @param showPro
