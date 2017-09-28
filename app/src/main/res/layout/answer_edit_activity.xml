@@ -30,7 +30,7 @@
             android:paddingBottom="@dimen/dp_20"
             android:textSize="@dimen/sp_16"
             android:textColorHint="#d4d4d4"
-            android:hint="答案发布后，若提问者在72小时内满意你的答案，提问金额将在24小时内，以香豆形式进入你的钱包。"
+            android:hint="@string/qa_answer_eidt_hint"
             android:maxLength="2000"
             android:lineSpacingExtra="@dimen/dp_6"/>
 
