@@ -632,6 +632,9 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     protected int saveDraft() {
         int id;
+        if(uploadArticleData == null){
+            uploadArticleData = new UploadArticleData();
+        }
         uploadArticleData.setTitle(String.valueOf(editTitle.getText()));
         String content = mixLayout.getXHServiceData();
         Log.i("articleUpload", "saveDraft() content:" + content);

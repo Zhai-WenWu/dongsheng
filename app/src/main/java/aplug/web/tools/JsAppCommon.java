@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -23,16 +24,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.dialogManager.PushManager;
-import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.PayCallback;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -65,7 +64,6 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.dialog.FavorableDialog;
-import third.mall.override.MallBaseActivity;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
 import third.share.BarShareImage;
@@ -659,7 +657,27 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (mLoadManager != null) {
-                    VersionOp.getInstance().toUpdate(mLoadManager, true);
+                    VersionOp.getInstance().toUpdate(new VersionOp.OnCheckUpdataCallback() {
+                        @Override
+                        public void onPreUpdate() {
+                            mLoadManager.startProgress("正在获取最新版本信息");
+                        }
+
+                        @Override
+                        public void onNeedUpdata() {
+                            mLoadManager.dismissProgress();
+                        }
+
+                        @Override
+                        public void onNotNeed() {
+                            mLoadManager.dismissProgress();
+                        }
+
+                        @Override
+                        public void onFail() {
+                            mLoadManager.dismissProgress();
+                        }
+                    },true);
                 }
             }
         });
@@ -1146,7 +1164,7 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PushManager.requestPermission();
+                PushManager.requestPermission(mAct);
             }
         });
     }

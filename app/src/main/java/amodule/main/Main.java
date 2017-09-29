@@ -28,6 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.popdialog.GoodCommentDialogControl;
+import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
@@ -38,12 +40,10 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.dialogManager.DialogControler;
-import acore.dialogManager.GoodCommentManager;
-import acore.dialogManager.PushManager;
-import acore.dialogManager.VersionOp;
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
@@ -132,6 +132,7 @@ public class Main extends Activity implements OnClickListener {
     public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
     private boolean isInit=false;//是否已经进行初始化
     private WelcomeDialog welcomeDialog;//dialog,显示
+    public static final String TAG="xianghaTag";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,16 +176,19 @@ public class Main extends Activity implements OnClickListener {
     /**初始化浮标位置*/
     private void initBuoyTab(Bundle savedInstanceState){
         if (savedInstanceState != null) {
-            defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
-            if (defaultTab == 0 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatIndex()) && "1".equals(mBuoy.getFloatIndex())
-                    || defaultTab == 1 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatSubjectList()) && "1".equals(mBuoy.getFloatSubjectList())
-                    || defaultTab == 2
-                    || defaultTab == 3) {
-                if (mBuoy != null) {
-                    mBuoy.clearAnimation();
-                    mBuoy.hide();
-                    mBuoy.setClosed(true);
-                    mBuoy.setMove(true);
+            String currentTapStr = savedInstanceState.getString("currentTab");
+            if(!TextUtils.isEmpty(currentTapStr) && !"null".equals(currentTapStr)){
+                defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
+                if (defaultTab == 0 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatIndex()) && "1".equals(mBuoy.getFloatIndex())
+                        || defaultTab == 1 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatSubjectList()) && "1".equals(mBuoy.getFloatSubjectList())
+                        || defaultTab == 2
+                        || defaultTab == 3) {
+                    if (mBuoy != null) {
+                        mBuoy.clearAnimation();
+                        mBuoy.hide();
+                        mBuoy.setClosed(true);
+                        mBuoy.setMove(true);
+                    }
                 }
             }
         }
@@ -203,8 +207,13 @@ public class Main extends Activity implements OnClickListener {
                 showIndexActivity();
                 WelcomeDialogstate = true;
                 openUri();
-                new DialogControler().showDialog();
-                PushManager.tongjiPush();
+                new AllPopDialogHelper(Main.this).start();
+                com.popdialog.util.PushManager.tongjiPush(Main.this, new com.popdialog.util.PushManager.OnPushEnableCallback() {
+                    @Override
+                    public void onPushEnable(boolean isEnable) {
+                        XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","");
+                    }
+                });
                 isShowWelcomeDialog = false;
 
                 OffDishToFavoriteControl.addCollection(Main.this);
@@ -524,7 +533,12 @@ public class Main extends Activity implements OnClickListener {
 //        if (MallPayActivity.mall_state) {
 //            onClick(tabViews[1].findViewById(R.id.tab_linearLayout));
 //        }
-        GoodCommentManager.setStictis(Main.this);
+        GoodCommentManager.setStictis(Main.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
+            @Override
+            public void onStatistics(String typeStr, String timeStr) {
+                XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr);
+            }
+        });
         openUri();
 
     }
@@ -590,6 +604,7 @@ public class Main extends Activity implements OnClickListener {
     protected void onSaveInstanceState(Bundle outState) {
         /*try catch 住 super方法，尝试解决 IllegalStateException 异常*/
         try{
+            outState.putString("currentTab",""+defaultTab);
             super.onSaveInstanceState(outState);
         }catch (Exception ignored){}
     }
@@ -802,7 +817,6 @@ public class Main extends Activity implements OnClickListener {
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
-                    XHClick.handlerPageStatic();
                 }
                 try {
                     setCurrentTabByIndex(i);

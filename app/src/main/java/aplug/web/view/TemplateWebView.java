@@ -31,6 +31,7 @@ import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.main.Main;
 import aplug.basic.XHConf;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
@@ -241,6 +242,7 @@ public class TemplateWebView extends XHWebView{
             public void load(boolean isSuccess, String data, String requestMothed, String version) {
                 mMouldVersion = version;
                 if(isSuccess){
+                    Log.i(Main.TAG,"模版开始渲染");
                     if(originData!=null&&originData.length>0&&nowData!=null&&nowData.length>0) {
                         int lenght= originData.length;
                         int nowLenght=nowData.length;

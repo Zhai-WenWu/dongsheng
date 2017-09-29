@@ -16,12 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
-import acore.dialogManager.PushManager;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -497,7 +497,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         if (TextUtils.isEmpty(mQADetailUrl))
             return;
         AppCommon.openUrl(this, mQADetailUrl, false);
-        if (!PushManager.isNotificationEnabled()) {
+        if (!PushManager.isNotificationEnabled(AskEditActivity.this)) {
             getIsTip();
         }
         this.finish();
@@ -531,7 +531,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             @Override
                             public void onClick(View v) {
                                 window.cancelFloatingWindow();
-                                PushManager.requestPermission();
+                                PushManager.requestPermission(AskEditActivity.this);
                                 XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人推送", "是");
                             }
                         });

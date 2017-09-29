@@ -1,8 +1,13 @@
 package third.ad.tools;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.popdialog.FullSrceenDialogControl;
+import com.popdialog.util.FullScreenManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,7 +17,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import acore.dialogManager.ADPopwindiwManager;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -21,7 +25,9 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
+import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
+import aplug.basic.SubBitmapTarget;
 import third.ad.AdParent;
 import xh.basic.tool.UtilString;
 
@@ -91,7 +97,23 @@ public class AdConfigTools {
 									}catch(Exception ignored){
 
 									}
-									ADPopwindiwManager.saveWelcomeInfo(array.toString());
+									FullScreenManager.saveWelcomeInfo(context, array.toString(), new FullSrceenDialogControl.OnLoadImageCallback() {
+										@Override
+										public void onLoadImage(String imageUrl, final FullSrceenDialogControl.OnAfterLoadImageCallback callback) {
+											LoadImage.with(XHApplication.in())
+													.load(imageUrl)
+													.setSaveType(LoadImage.SAVE_LONG)
+													.build()
+													.into(new SubBitmapTarget() {
+														@Override
+														public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+															if (callback != null) {
+																callback.onAfterLoadImage(bitmap);
+															}
+														}
+													});
+										}
+									});
 								}
 							}
 						}

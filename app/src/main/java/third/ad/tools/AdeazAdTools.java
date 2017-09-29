@@ -123,7 +123,7 @@ public class AdeazAdTools {
                 try {
                     final DownLoad downLoad = new DownLoad(act);
                     downLoad.setNotifaction("开始下载", map.get("title") + ".apk", "正在下载", R.drawable.ic_launcher, false);
-                    downLoad.starDownLoad(map.get("url"), FileManager.getCameraDir(), map.get("title"), true, new DownloadCallBack() {
+                    downLoad.starDownLoad(map.get("url"), FileManager.getSDCacheDir(), map.get("title"), true, new DownloadCallBack() {
 
                         @Override
                         public void starDown() {

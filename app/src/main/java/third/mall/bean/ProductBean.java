@@ -1,5 +1,7 @@
 package third.mall.bean;
 
+import android.util.Log;
+
 import java.util.Map;
 
 /**
@@ -17,6 +19,11 @@ public class ProductBean {
 	private String max_sale_num;
 	private String saleable_num;
 	private String stock_flag;
+	//新加的数据结构
+	private String price;
+	private String favor_sale_price;
+	private String favor_sale_num;
+
 	//当前是否可增加数量
 	public boolean saleable_state=false;
 	//获取当前商品的价格
@@ -87,8 +94,33 @@ public class ProductBean {
 	public void setStock_flag(String stock_flag) {
 		this.stock_flag = stock_flag;
 	}
-	
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public String getFavor_sale_price() {
+		return favor_sale_price;
+	}
+
+	public void setFavor_sale_price(String favor_sale_price) {
+		this.favor_sale_price = favor_sale_price;
+	}
+
+	public String getFavor_sale_num() {
+		return favor_sale_num;
+	}
+
+	public void setFavor_sale_num(String favor_sale_num) {
+		this.favor_sale_num = favor_sale_num;
+	}
+
 	public ProductBean setProductData(Map<String,String> map){
+		Log.i("wyl","商品数据：："+map.toString());
 		setCode(map.get("code"));
 		setTitle(map.get("title"));
 		setImg(map.get("img"));
@@ -97,6 +129,14 @@ public class ProductBean {
 		setMax_sale_num(map.get("max_sale_num"));
 		setSaleable_num(map.get("saleable_num"));
 		setStock_flag(map.get("stock_flag"));
+		//现在新加优惠数据
+		setFavor_sale_num(map.get("favor_sale_num"));
+		setPrice(map.get("price"));
+		setFavor_sale_price(map.get("favor_sale_price"));
+
+//		setSale_num("2");
+//		setPrice("8.8");
+//		setSale_price("1.1");
 		return this;
 	} 
 	

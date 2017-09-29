@@ -518,9 +518,6 @@ public class DishFootControl implements View.OnClickListener{
             dishAdDataView.onDestroy();
             dishAdDataView=null;
         }
-        if(mAct!=null){
-            mAct=null;
-        }
     }
 
 }

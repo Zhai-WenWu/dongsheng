@@ -50,7 +50,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import acore.dialogManager.VersionOp;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import aplug.recordervideo.tools.SortComparator;
@@ -451,6 +451,9 @@ public class Tools {
     }
 
     public static String getColorStr(Context context, int resId) {
+        if(null == context){
+            return "#00FFFFFE";
+        }
         return context.getResources().getString(resId);
     }
 

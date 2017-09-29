@@ -17,17 +17,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.popdialog.util.FullScreenManager;
+import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.dialogManager.ADPopwindiwManager;
-import acore.dialogManager.PushManager;
-import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.FileManager;
@@ -310,7 +310,27 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             @Override
             public void onClick() {
                 XHClick.mapStat(Setting.this, tongjiId, "检查新版本", "");
-                VersionOp.getInstance().toUpdate(loadManager, true);
+                VersionOp.getInstance().toUpdate(new VersionOp.OnCheckUpdataCallback() {
+                    @Override
+                    public void onPreUpdate() {
+                        loadManager.startProgress("正在获取最新版本信息");
+                    }
+
+                    @Override
+                    public void onNeedUpdata() {
+                        loadManager.dismissProgress();
+                    }
+
+                    @Override
+                    public void onNotNeed() {
+                        loadManager.dismissProgress();
+                    }
+
+                    @Override
+                    public void onFail() {
+                        loadManager.dismissProgress();
+                    }
+                },true);
             }
 
         });
@@ -412,7 +432,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.qa_setting:
-                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING + "?notify=" + (PushManager.isNotificationEnabled() ? "2" : "1"), false);
+                AppCommon.openUrl(Setting.this, StringManager.API_QA_QASETTING + "?notify=" + (PushManager.isNotificationEnabled(Setting.this) ? "2" : "1"), false);
                 break;
             default:
                 break;
@@ -448,7 +468,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 UtilFile.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_appData);
                 UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
                 AppCommon.deleteIndexData();
-                ADPopwindiwManager.saveWelcomeInfo(null);
+                FullScreenManager.saveWelcomeInfo(Setting.this,null,null);
                 Setting.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

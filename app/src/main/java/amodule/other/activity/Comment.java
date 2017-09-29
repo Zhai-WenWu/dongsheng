@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.popdialog.util.GoodCommentManager;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
-import acore.dialogManager.GoodCommentManager;
 import aplug.feedback.activity.Feedback;
 
 public class Comment extends BaseActivity implements OnClickListener{

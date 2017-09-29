@@ -41,7 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import acore.dialogManager.VersionOp;
+import acore.logic.VersionOp;
 import acore.override.XHApplication;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;

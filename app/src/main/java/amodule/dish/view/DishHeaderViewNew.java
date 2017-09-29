@@ -540,12 +540,6 @@ public class DishHeaderViewNew extends LinearLayout {
             mVideoPlayerController.onDestroy();
 //            mVideoPlayerController=null;
         }
-        if(context!=null){
-            context=null;
-        }
-        if(activity!=null){
-            activity=null;
-        }
     }
 
 }

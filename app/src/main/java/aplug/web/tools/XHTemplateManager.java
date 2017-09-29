@@ -18,7 +18,6 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 
-import static com.xiangha.R.id.msg;
 
 /**
  * 香哈模版更新

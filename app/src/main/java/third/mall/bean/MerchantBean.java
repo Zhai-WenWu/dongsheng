@@ -1,5 +1,8 @@
 package third.mall.bean;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -81,8 +84,21 @@ public class MerchantBean {
 		float price = 0;
 		if(list_product.size()>0){
 			for (int i = 0,size=list_product.size(); i < size; i++) {
-				if(list_product.get(i).getChoose_state())
-					price+=Float.parseFloat(list_product.get(i).getDiscount_price())*Float.parseFloat(list_product.get(i).getNum());
+				if(list_product.get(i).getChoose_state()){
+					if(!TextUtils.isEmpty(list_product.get(i).getFavor_sale_num())){//当前有优惠数量
+						float sale_num = Float.parseFloat(list_product.get(i).getFavor_sale_num());
+						float num = Float.parseFloat(list_product.get(i).getNum());
+						if(sale_num>=num||"0".equals(list_product.get(i).getFavor_sale_num())){//优惠数量小于当前选择数量 或 当数据为0不限优惠价格
+							price += Float.parseFloat(list_product.get(i).getFavor_sale_price()) * num;
+						}else {
+							price += Float.parseFloat(list_product.get(i).getFavor_sale_price()) * sale_num +Float.parseFloat(list_product.get(i).getPrice())*(num-sale_num);
+						}
+					}else {
+						price += Float.parseFloat(list_product.get(i).getPrice()) * Float.parseFloat(list_product.get(i).getNum());
+					}
+
+				}
+
 			}
 		}
 		return ToolView.getNumberPart(String.valueOf(price));
