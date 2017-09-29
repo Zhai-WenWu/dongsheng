@@ -451,6 +451,9 @@ public class Tools {
     }
 
     public static String getColorStr(Context context, int resId) {
+        if(null == context){
+            return "#00FFFFFE";
+        }
         return context.getResources().getString(resId);
     }
 
