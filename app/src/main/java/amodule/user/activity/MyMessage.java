@@ -77,20 +77,33 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 		}
 	}
 
+	/**
+	 * 初始化七鱼客服未读消息数
+	 */
 	private void initQiYvNum() {
 		if (mQiYvNum != null) {
 			QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 				@Override
 				public void onNumberReady(int count) {
-					if (count > 0) {
-						mQiYvNum.setText(String.valueOf(count));
-						mQiYvNum.setVisibility(View.VISIBLE);
-					} else {
-						mQiYvNum.setVisibility(View.GONE);
-					}
+					setQiYvNum(count);
 					Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
 				}
 			});
+		}
+	}
+
+	/**
+	 * 设置消息数的显示
+	 * @param count
+	 */
+	public void setQiYvNum(int count) {
+		if (mQiYvNum != null) {
+			if (count > 0) {
+				mQiYvNum.setText(String.valueOf(count));
+				mQiYvNum.setVisibility(View.VISIBLE);
+			} else {
+				mQiYvNum.setVisibility(View.GONE);
+			}
 		}
 	}
 
@@ -107,7 +120,6 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mUnreadCountListener = null;
 		ObserverManager.getInstence().unRegisterObserver(this);
 	}
 
@@ -191,20 +203,11 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 						XHClick.mapStat(MyMessage.this, "a_message", "点击我问我答", "");
 						break;
 					case R.id.qiyv:
-						if (mQiYvNum != null && mQiYvNum.getVisibility() == View.VISIBLE) {
-							mQiYvNum.setText("");
-							mQiYvNum.setVisibility(View.GONE);
-							QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-								@Override
-								public void onNumberReady(int count) {
-									Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
-								}
-							});
-						}
-
+						setQiYvNum(0);
 						Map<String, String> customMap = new HashMap<String, String>();
 						customMap.put("pageTitle", "消息列表页");
 						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null, customMap);
+						Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
 						break;
 				}
 			}
@@ -214,7 +217,6 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 		headerQY.setOnClickListener(clickListener);
 
 		if (LoginManager.isLogin()) {
-			addQiYvListener();
 			initQiYvNum();
 		}
 
@@ -257,28 +259,6 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 				}
 			}
 		};
-	}
-
-	private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
-	/**
-	 * 设置七鱼未读消息监听
-	 */
-	private void addQiYvListener() {
-		if (mUnreadCountListener == null) {
-			mUnreadCountListener = new QiYvHelper.UnreadCountChangeListener() {
-				@Override
-				public void onUnreadCountChange(int count) {
-					if (count > 0) {
-						if (mQiYvNum != null) {
-							mQiYvNum.setText(String.valueOf(count));
-							mQiYvNum.setVisibility(View.VISIBLE);
-						}
-						Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
-					}
-				}
-			};
-		}
-		QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
 	}
 
 	/**
@@ -488,7 +468,6 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 					if (data != null && data instanceof Boolean) {
 						if ((Boolean)data) {
 							onRefresh();
-							addQiYvListener();
 							QiYvHelper.getInstance().onUserLogin();
 							initQiYvNum();
 						}

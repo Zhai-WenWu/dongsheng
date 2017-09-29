@@ -51,7 +51,9 @@ import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -95,7 +97,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 
 
 @SuppressWarnings("deprecation")
-public class Main extends Activity implements OnClickListener {
+public class Main extends Activity implements OnClickListener, IObserver {
     public static Main allMain;
     public static Timer timer;
     /** 把层级>=close_level的层级关闭 */
@@ -178,6 +180,15 @@ public class Main extends Activity implements OnClickListener {
                 new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
         LogManager.printStartTime("zhangyujian","main::oncreate::");
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+        addQiYvListener();
+    }
+
+    private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
+    /**
+     * 设置七鱼未读消息监听
+     */
+    private void addQiYvListener() {
         QiYvHelper.getInstance().addOnUrlItemClickListener(new QiYvHelper.OnUrlItemClickListener() {
             @Override
             public void onURLClicked(Context context, String url) {
@@ -196,6 +207,21 @@ public class Main extends Activity implements OnClickListener {
                 }
             }
         });
+        if (mUnreadCountListener == null) {
+            mUnreadCountListener = new QiYvHelper.UnreadCountChangeListener() {
+                @Override
+                public void onUnreadCountChange(int count) {
+                    if (count > 0) {
+                        if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                            MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                            myMessage.setQiYvNum(count);
+                        }
+                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+                    }
+                }
+            };
+        }
+        QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
     }
 
     /**
@@ -970,7 +996,18 @@ public class Main extends Activity implements OnClickListener {
             welcomeDialog.dismiss();
         }
         super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
+        mUnreadCountListener = null;
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
+            if (data != null && data instanceof Boolean && (Boolean)data) {
+                addQiYvListener();
+            }
+        }
     }
 }

@@ -77,6 +77,7 @@ public class QiYvHelper {
         mOptions = new YSFOptions();
         mOptions.statusBarNotificationConfig = new StatusBarNotificationConfig();
         mOptions.savePowerConfig = new SavePowerConfig();
+        mOptions.statusBarNotificationConfig.bigIconUri = "drawable-xhdpi://" + R.drawable.ic_launcher;
         mOptions.statusBarNotificationConfig.notificationSmallIconId = R.drawable.ic_launcher;
         mOptions.onBotEventListener = new OnBotEventListener() {
             @Override
