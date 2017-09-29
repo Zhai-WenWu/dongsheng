@@ -352,12 +352,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         if(mFavePopWindowDialog!=null){
             mFavePopWindowDialog=null;
         }
-        if(context!=null){
-            context=null;
-        }
-        if(detailDish!=null){
-            detailDish=null;
-        }
     }
 
 

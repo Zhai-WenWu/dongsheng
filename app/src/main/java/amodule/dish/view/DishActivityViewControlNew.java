@@ -285,8 +285,7 @@ public class  DishActivityViewControlNew {
         dishHeaderView.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
             @Override
             public void videoImageOnClick() {
-                String color = Tools.getColorStr(mAct, R.color.common_top_bg);
-                bar_title_1.setBackgroundColor(Color.parseColor(color));
+                bar_title_1.setBackgroundResource(R.color.common_top_bg);
                 isHasVideoOnClick = true;
             }
             @Override
@@ -389,8 +388,7 @@ public class  DishActivityViewControlNew {
             bar_title_1.clearAnimation();
             //初始化view都为不透明
             if (isHasVideoOnClick) return;
-            String color = Tools.getColorStr(mAct, R.color.common_top_bg);
-            bar_title_1.setBackgroundColor(Color.parseColor(color));
+            bar_title_1.setBackgroundResource(R.color.common_top_bg);
             if(!isShowTitleColor){
                 AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
                 alphaAnimation.setDuration(1000);
@@ -641,9 +639,6 @@ public class  DishActivityViewControlNew {
         if(mFootControl!=null){
             mFootControl.onDestroy();
             mFootControl=null;
-        }
-        if(mAct!=null){
-            mAct=null;
         }
         System.gc();
     }
