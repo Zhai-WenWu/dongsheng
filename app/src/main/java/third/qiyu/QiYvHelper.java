@@ -17,6 +17,7 @@ import com.qiyukf.unicorn.api.UICustomization;
 import com.qiyukf.unicorn.api.Unicorn;
 import com.qiyukf.unicorn.api.YSFOptions;
 import com.qiyukf.unicorn.api.YSFUserInfo;
+import com.qiyukf.unicorn.ui.activity.ServiceMessageActivity;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -79,6 +80,7 @@ public class QiYvHelper {
         mOptions.savePowerConfig = new SavePowerConfig();
         mOptions.statusBarNotificationConfig.bigIconUri = "drawable-xhdpi://" + R.drawable.ic_launcher;
         mOptions.statusBarNotificationConfig.notificationSmallIconId = R.drawable.ic_launcher;
+        mOptions.statusBarNotificationConfig.notificationEntrance = ServiceMessageActivity.class;
         mOptions.onBotEventListener = new OnBotEventListener() {
             @Override
             public boolean onUrlClick(Context context, String url) {
@@ -133,8 +135,15 @@ public class QiYvHelper {
             userEmail.put("value", TextUtils.isEmpty(userData.get("email")) ? "无" : userData.get("email"));
             dataArray.put(userEmail);
 
+            JSONObject userID = new JSONObject();
+            userID.put("index", 0);
+            userID.put("key", "user_id");
+            userID.put("label", "用户ID");
+            userID.put("value", userData.get("code"));
+            dataArray.put(userID);
+
             JSONObject userVIP = new JSONObject();
-            userVIP.put("index", 3);
+            userVIP.put("index", 1);
             userVIP.put("key", "user_vip");
             userVIP.put("label", "是否VIP");
             Map<String, String> vipJson = StringManager.getFirstMap(userData.get("vip"));
@@ -142,14 +151,14 @@ public class QiYvHelper {
             dataArray.put(userVIP);
 
             JSONObject userLevel = new JSONObject();
-            userLevel.put("index", 4);
+            userLevel.put("index", 2);
             userLevel.put("key", "user_level");
             userLevel.put("label", "用户等级");
             userLevel.put("value", userData.get("lv"));
             dataArray.put(userLevel);
 
             JSONObject regTime = new JSONObject();
-            regTime.put("index", 5);
+            regTime.put("index", 3);
             regTime.put("key", "reg_data");
             regTime.put("label", "注册日期");
             regTime.put("value", "2015-12-22 15:38:54");

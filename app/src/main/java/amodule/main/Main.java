@@ -211,7 +211,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             mUnreadCountListener = new QiYvHelper.UnreadCountChangeListener() {
                 @Override
                 public void onUnreadCountChange(int count) {
-                    if (count > 0) {
+                    if (count >= 0) {
                         if (nowTab == 3 || allTab.containsKey("MyMessage")) {
                             MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                             myMessage.setQiYvNum(count);
