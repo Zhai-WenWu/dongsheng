@@ -102,6 +102,8 @@ public class QiYvHelper {
         mOptions.uiCustomization.titleBackgroundResId = R.color.common_top_bg;
         mOptions.uiCustomization.titleCenter = true;
         mOptions.uiCustomization.titleBarStyle = 1;
+        if (LoginManager.userInfo != null && !TextUtils.isEmpty(LoginManager.userInfo.get("img")))
+            mOptions.uiCustomization.rightAvatar = LoginManager.userInfo.get("img");
     }
 
     /**
