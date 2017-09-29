@@ -22,8 +22,6 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
@@ -38,7 +36,7 @@ import third.qiyu.QiYvHelper;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
-public class MyMessage extends MainBaseActivity implements IObserver{
+public class MyMessage extends MainBaseActivity{
 	private DownRefreshList listMessage;
 	private TextView feekback_msg_num,msg_title_sort;
 	
@@ -65,8 +63,6 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 		Main.allMain.allTab.put("MyMessage", this);
 		init();
 		XHClick.track(this, "浏览消息列表页");
-		ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
-		ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
 	}
 
 	@Override
@@ -81,15 +77,12 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 	 * 初始化七鱼客服未读消息数
 	 */
 	private void initQiYvNum() {
-		if (mQiYvNum != null) {
-			QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-				@Override
-				public void onNumberReady(int count) {
-					setQiYvNum(count);
-					Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
-				}
-			});
-		}
+		QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+			@Override
+			public void onNumberReady(int count) {
+				setQiYvNum(count);
+			}
+		});
 	}
 
 	/**
@@ -120,7 +113,6 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		ObserverManager.getInstence().unRegisterObserver(this);
 	}
 
 	/**
@@ -459,29 +451,4 @@ public class MyMessage extends MainBaseActivity implements IObserver{
 			load(true);
 		}
 	};
-
-	@Override
-	public void notify(String name, Object sender, Object data) {
-		if (!TextUtils.isEmpty(name)) {
-			switch (name) {
-				case ObserverManager.NOTIFY_LOGIN:
-					if (data != null && data instanceof Boolean) {
-						if ((Boolean)data) {
-							onRefresh();
-							QiYvHelper.getInstance().onUserLogin();
-							initQiYvNum();
-						}
-					}
-					break;
-				case ObserverManager.NOTIFY_LOGOUT:
-					if (data != null && data instanceof Boolean) {
-						if ((Boolean)data) {
-							onRefresh();
-							QiYvHelper.getInstance().onUserLogout();
-						}
-					}
-					break;
-			}
-		}
-	}
 }

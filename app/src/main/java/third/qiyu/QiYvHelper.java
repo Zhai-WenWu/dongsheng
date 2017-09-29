@@ -67,6 +67,8 @@ public class QiYvHelper {
     public void initSDK(Context context) {
         String appKey = "419831f89a538914cb168cd01d1675f4";
         Unicorn.init(context, appKey, initOptions(), new GlideImageLoader(context));
+        if (!mSetDefUI)
+            useDefCustomUI();
         toggleNotification(true);
     }
 
@@ -95,9 +97,8 @@ public class QiYvHelper {
     /**
      * 使用默认自定义UI
      * 此方法可以在需要的地方设置，否则使用七鱼默认的样式。
-     * @param context
      */
-    public void useDefCustomUI(Context context) {
+    public void useDefCustomUI() {
         if (mOptions == null)
             return;
         mSetDefUI = true;
@@ -202,7 +203,7 @@ public class QiYvHelper {
         if (!mSetUserInfo)
             setUserInfo();
         if (!mSetDefUI)
-            useDefCustomUI(context);
+            useDefCustomUI();
         /**
          * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
          * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。

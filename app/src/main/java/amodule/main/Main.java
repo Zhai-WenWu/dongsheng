@@ -181,7 +181,22 @@ public class Main extends Activity implements OnClickListener, IObserver {
         welcomeDialog.show();
         LogManager.printStartTime("zhangyujian","main::oncreate::");
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        if (LoginManager.isLogin())
+            initQiYvUnreadCount();
         addQiYvListener();
+    }
+
+    /**
+     * 初始化七鱼未读消息数
+     */
+    private void initQiYvUnreadCount() {
+        QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+            @Override
+            public void onNumberReady(int count) {
+                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
+            }
+        });
     }
 
     private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
@@ -550,13 +565,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             getApiSurTime("homeback", homebackTime, newHomebackTime);
         }
         isForeground = true;
-        //设置未读消息数
-        QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-            @Override
-            public void onNumberReady(int count) {
-                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
-            }
-        });
         //去我的页面
         if (MallPayActivity.pay_state) {
             onClick(tabViews[4].findViewById(R.id.tab_linearLayout));
@@ -1007,6 +1015,31 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
             if (data != null && data instanceof Boolean && (Boolean)data) {
                 addQiYvListener();
+                if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                    myMessage.onRefresh();
+                }
+                QiYvHelper.getInstance().onUserLogin();
+                QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+                    @Override
+                    public void onNumberReady(int count) {
+                        if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                            MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                            myMessage.setQiYvNum(count);
+                        }
+                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
+                    }
+                });
+            }
+        } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
+            if (data != null && data instanceof Boolean) {
+                if ((Boolean)data) {
+                    if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                        MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                        myMessage.onRefresh();
+                    }
+                    QiYvHelper.getInstance().onUserLogout();
+                }
             }
         }
     }
