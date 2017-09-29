@@ -22,7 +22,9 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
@@ -234,7 +236,14 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 }
             } else if (mTransferUrl.contains("xhds.product.info.app?")) {//商品详情页，原生
                 c = CommodDetailActivity.class;
-                intent.putExtra("product_code", map.get("product_code"));
+                Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+                if (iterator != null) {//电商可能传入多个参数
+                    while (iterator.hasNext()) {
+                        Map.Entry<String, String> entry = iterator.next();
+                        if (entry != null)
+                            intent.putExtra(entry.getKey(), entry.getValue());
+                    }
+                }
             } else if (mTransferUrl.contains("nousInfo.app")) {
                 c = ShowWeb.class;
                 intent.putExtra("url", StringManager.api_nouseInfo);
