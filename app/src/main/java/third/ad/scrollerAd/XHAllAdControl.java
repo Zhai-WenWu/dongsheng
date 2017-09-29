@@ -319,7 +319,7 @@ public class XHAllAdControl {
                             try {
                                 xhBackIdsDataCallBack.callBack(AdData);
                             } catch (Exception e) {
-                                Log.e("tzy",e.getMessage());
+                                Log.e("tzy","Exception : " + e.getMessage());
                             }
                         }
                     }
@@ -410,7 +410,7 @@ public class XHAllAdControl {
             }
             return jsonObject;
         } catch (Exception e) {
-            Log.e("tzy",e.getMessage());
+            Log.e("tzy","Exception : " + e.getMessage());
         }
         return null;
     }
