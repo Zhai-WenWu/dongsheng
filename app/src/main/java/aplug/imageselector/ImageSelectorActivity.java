@@ -529,6 +529,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 							// 获取文件夹名称
 							File imageFile = new File(path);
 							File folderFile = imageFile.getParentFile();
+							if(null == folderFile)
+								continue;
 							Folder folder = new Folder();
 							folder.name = folderFile.getName();
 							folder.path = folderFile.getAbsolutePath();
