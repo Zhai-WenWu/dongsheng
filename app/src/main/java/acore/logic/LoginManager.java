@@ -232,6 +232,8 @@ public class LoginManager {
 				userInfo.put("isGourmet", map.get("isGourmet"));
 				userInfo.put("tel", map.get("tel"));
 				userInfo.put("vip", map.get("vip"));
+				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
+				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
 				new UMPushServer(mAct).addAlias(map.get("code"));
 				if(map.containsKey("sex"))userInfo.put("sex",map.get("sex"));

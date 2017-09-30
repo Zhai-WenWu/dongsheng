@@ -28,6 +28,7 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import amodule.user.activity.login.LoginByAccout;
 
 
@@ -162,8 +163,23 @@ public class QiYvHelper {
             regTime.put("index", 3);
             regTime.put("key", "reg_data");
             regTime.put("label", "注册日期");
-            regTime.put("value", "2015-12-22 15:38:54");
+            regTime.put("value", userData.get("regTime"));
             dataArray.put(regTime);
+
+            JSONObject appVersionCode = new JSONObject();
+            appVersionCode.put("index", 4);
+            appVersionCode.put("key", "version_code");
+            appVersionCode.put("label", "app版本");
+            appVersionCode.put("value", ToolsDevice.getVerName(XHApplication.in()));
+            dataArray.put(appVersionCode);
+
+            JSONObject deviceCode = new JSONObject();
+            deviceCode.put("index", 5);
+            deviceCode.put("key", "device_code");
+            deviceCode.put("label", "设备码");
+            deviceCode.put("value", ToolsDevice.getXhIMEI(XHApplication.in()));
+            dataArray.put(deviceCode);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
