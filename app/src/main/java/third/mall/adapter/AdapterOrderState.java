@@ -173,10 +173,25 @@ public class AdapterOrderState extends MallAdapterSimple {
 				public void onClick(View v) {
 					Map<String, String> infoMap = new HashMap<String, String>();
 					if (map != null && listMapByJson != null && !listMapByJson.isEmpty()) {
-						infoMap.put("title", "编号：" + map.get("fk_payment_order_id"));
-						infoMap.put("desc", "时间：" + map.get("create_time") + "\n金额：" + map.get("order_amt"));
+						String orderId = null;
+						String orderStatus = map.get("order_status");
+						if (!TextUtils.isEmpty(orderStatus)) {
+							switch (orderStatus) {
+								case "order":
+									orderId = map.get("order_id");
+									break;
+								case "payment_order":
+									orderId = map.get("fk_payment_order_id");
+									break;
+								default:
+									orderId = "";
+									break;
+							}
+						}
+						infoMap.put("title", "订单号：" + (orderId == null ? "无订单号" : orderId));
+						infoMap.put("desc", "时间：" + map.get("create_time") + "\n共：" + listMapByJson.get(0).get("num") + "件");
 						infoMap.put("imgUrl", listMapByJson.get(0).get("img"));
-						infoMap.put("note1", "共" + listMapByJson.get(0).get("num") + "件");
+						infoMap.put("note1", "金额：" +  map.get("order_amt"));
 						infoMap.put("note2", map.get("order_status_desc"));
 						infoMap.put("show", "0");
 						infoMap.put("alwaysSend", "0");

@@ -23,7 +23,12 @@ import com.xiangha.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.security.SecureRandom;
 import java.util.Map;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.spec.SecretKeySpec;
 
 import acore.logic.LoginManager;
 import acore.override.XHApplication;
@@ -68,7 +73,7 @@ public class QiYvHelper {
     public void initSDK(Context context) {
         String appKey = "419831f89a538914cb168cd01d1675f4";
         Unicorn.init(context, appKey, initOptions(), new GlideImageLoader(context));
-        if (!mSetDefUI)
+//        if (!mSetDefUI)
             useDefCustomUI();
         toggleNotification(true);
     }
@@ -109,7 +114,7 @@ public class QiYvHelper {
         mOptions.uiCustomization.titleBarStyle = 1;
         if (LoginManager.userInfo != null && !TextUtils.isEmpty(LoginManager.userInfo.get("img")))
             mOptions.uiCustomization.rightAvatar = LoginManager.userInfo.get("img");
-    }
+}
 
     /**
      * 设置用户信息
@@ -166,15 +171,22 @@ public class QiYvHelper {
             regTime.put("value", userData.get("regTime"));
             dataArray.put(regTime);
 
+            JSONObject arguFrom = new JSONObject();
+            arguFrom.put("index", 4);
+            arguFrom.put("key", "argument_from");
+            arguFrom.put("label", "访问来源");
+            arguFrom.put("value", "and");
+            dataArray.put(arguFrom);
+
             JSONObject appVersionCode = new JSONObject();
-            appVersionCode.put("index", 4);
+            appVersionCode.put("index", 5);
             appVersionCode.put("key", "version_code");
             appVersionCode.put("label", "app版本");
             appVersionCode.put("value", ToolsDevice.getVerName(XHApplication.in()));
             dataArray.put(appVersionCode);
 
             JSONObject deviceCode = new JSONObject();
-            deviceCode.put("index", 5);
+            deviceCode.put("index", 6);
             deviceCode.put("key", "device_code");
             deviceCode.put("label", "设备码");
             deviceCode.put("value", ToolsDevice.getXhIMEI(XHApplication.in()));
@@ -218,7 +230,7 @@ public class QiYvHelper {
         }
         if (!mSetUserInfo)
             setUserInfo();
-        if (!mSetDefUI)
+//        if (!mSetDefUI)
             useDefCustomUI();
         /**
          * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
@@ -389,6 +401,48 @@ public class QiYvHelper {
         mOptions = null;
         mQiYvHelper = null;
         clearCache();
+    }
+
+    /**
+     * 使用AES算法对content加密
+     *
+     * @param content    待加密的内容
+     * @param encryptKey 加密密钥
+     * @return 加密后的byte[]
+     */
+    public static String encrypt(String content, String encryptKey) {
+        try {
+            KeyGenerator kgen = KeyGenerator.getInstance("AES");
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+            random.setSeed(encryptKey.getBytes());
+            kgen.init(128, random);
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AES"));
+            return byteArr2HexStr(cipher.doFinal(content.getBytes("utf-8")));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * 将byte数组转换为16进制值的字符串
+     *
+     * @param b 需要转换的byte数组
+     * @return 转换后的字符串
+     */
+    private static String byteArr2HexStr(byte[] b) {
+        int length = b.length;
+        StringBuffer sb = new StringBuffer(length * 2);
+        for (int i = 0; i < length; i++) {
+            int temp = b[i];
+            while (temp < 0) {
+                temp = temp + 256;
+            }
+            if (temp < 16) {
+                sb.append("0");
+            }
+            sb.append(Integer.toString(temp, 16));
+        }
+        return sb.toString();
     }
 
 }

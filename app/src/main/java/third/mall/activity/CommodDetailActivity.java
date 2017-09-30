@@ -671,12 +671,10 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
                 Map<String, String> infoMap = new HashMap<String, String>();
                 if (map != null) {
-
-                    //xhds.product.info.app?product_code=63089&data_type=8&module_type=info
                     infoMap.put("title", map.get("name"));
                     infoMap.put("imgUrl", map.get("buy_img"));
                     infoMap.put("clickUrl", map.get("m_url"));
-                    infoMap.put("note1", "价格：" + map.get("price"));
+                    infoMap.put("note1", "价格：" + map.get("discount_price"));
                     infoMap.put("show", "0");
                     infoMap.put("alwaysSend", "0");
                 }
