@@ -23,12 +23,7 @@ import com.xiangha.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.security.SecureRandom;
 import java.util.Map;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.spec.SecretKeySpec;
 
 import acore.logic.LoginManager;
 import acore.override.XHApplication;
@@ -48,7 +43,6 @@ public class QiYvHelper {
     private com.qiyukf.unicorn.api.UnreadCountChangeListener mUnreadCountListener;
 
     private boolean mSetUserInfo;
-    private boolean mSetDefUI;
 
     private QiYvHelper() {
 
@@ -73,8 +67,7 @@ public class QiYvHelper {
     public void initSDK(Context context) {
         String appKey = "419831f89a538914cb168cd01d1675f4";
         Unicorn.init(context, appKey, initOptions(), new GlideImageLoader(context));
-//        if (!mSetDefUI)
-            useDefCustomUI();
+        useDefCustomUI();
         toggleNotification(true);
     }
 
@@ -107,14 +100,13 @@ public class QiYvHelper {
     public void useDefCustomUI() {
         if (mOptions == null)
             return;
-        mSetDefUI = true;
         mOptions.uiCustomization = new UICustomization();
         mOptions.uiCustomization.titleBackgroundResId = R.color.common_top_bg;
         mOptions.uiCustomization.titleCenter = true;
         mOptions.uiCustomization.titleBarStyle = 1;
         if (LoginManager.userInfo != null && !TextUtils.isEmpty(LoginManager.userInfo.get("img")))
             mOptions.uiCustomization.rightAvatar = LoginManager.userInfo.get("img");
-}
+    }
 
     /**
      * 设置用户信息
@@ -230,13 +222,7 @@ public class QiYvHelper {
         }
         if (!mSetUserInfo)
             setUserInfo();
-//        if (!mSetDefUI)
-            useDefCustomUI();
-        /**
-         * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
-         * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。
-         * 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
-         */
+        useDefCustomUI();
 
         boolean mapNull = (infoMap == null || infoMap.isEmpty());
         ProductDetail.Builder builder = new ProductDetail.Builder();
@@ -265,6 +251,11 @@ public class QiYvHelper {
             pageCustom = customMap.get("pageCustom");
         }
 
+        /**
+         * 设置访客来源，标识访客是从哪个页面发起咨询的，用于客服了解用户是从什么页面进入。
+         * 三个参数分别为：来源页面的url，来源页面标题，来源页面额外信息（可自由定义）。
+         * 设置来源后，在客服会话界面的"用户资料"栏的页面项，可以看到这里设置的值。
+         */
         ConsultSource source = new ConsultSource(pageUrl == null ? "" : pageUrl, pageTitle == null ? "" : pageTitle, pageCustom == null ? "" : pageCustom);
         source.productDetail = builder.create();
 
@@ -292,7 +283,6 @@ public class QiYvHelper {
      * 当关联的用户从 APP 注销后，调用此方法，
      */
     public void onUserLogout() {
-        mSetDefUI = false;
         mSetUserInfo = false;
         Unicorn.addUnreadCountChangeListener(mUnreadCountListener, false);
         Unicorn.logout();
@@ -401,48 +391,6 @@ public class QiYvHelper {
         mOptions = null;
         mQiYvHelper = null;
         clearCache();
-    }
-
-    /**
-     * 使用AES算法对content加密
-     *
-     * @param content    待加密的内容
-     * @param encryptKey 加密密钥
-     * @return 加密后的byte[]
-     */
-    public static String encrypt(String content, String encryptKey) {
-        try {
-            KeyGenerator kgen = KeyGenerator.getInstance("AES");
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-            random.setSeed(encryptKey.getBytes());
-            kgen.init(128, random);
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AES"));
-            return byteArr2HexStr(cipher.doFinal(content.getBytes("utf-8")));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    /**
-     * 将byte数组转换为16进制值的字符串
-     *
-     * @param b 需要转换的byte数组
-     * @return 转换后的字符串
-     */
-    private static String byteArr2HexStr(byte[] b) {
-        int length = b.length;
-        StringBuffer sb = new StringBuffer(length * 2);
-        for (int i = 0; i < length; i++) {
-            int temp = b[i];
-            while (temp < 0) {
-                temp = temp + 256;
-            }
-            if (temp < 16) {
-                sb.append("0");
-            }
-            sb.append(Integer.toString(temp, 16));
-        }
-        return sb.toString();
     }
 
 }
