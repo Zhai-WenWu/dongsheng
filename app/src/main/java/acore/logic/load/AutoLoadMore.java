@@ -466,26 +466,28 @@ public class AutoLoadMore {
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
+
+				int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+				if (newState == RecyclerView.SCROLL_STATE_IDLE
+						&& lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4) {
+					if (!isLoading) {
+						isLoading = true;
+						clicker.onClick (loadMore);
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								isLoading = false;
+							}
+						}, 500);
+					}
+				}
 			}
 
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
 
-				int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-				if (lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4) {
-					if (!isLoading) {
-						isLoading = true;
-//						clicker.onClick (loadMore);
-						new Handler().postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								clicker.onClick (loadMore);
-								isLoading = false;
-							}
-						}, 100);
-					}
-				}
+
 			}
 		});
 	}
