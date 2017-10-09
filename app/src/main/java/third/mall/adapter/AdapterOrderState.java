@@ -189,7 +189,7 @@ public class AdapterOrderState extends MallAdapterSimple {
 							}
 						}
 						infoMap.put("title", "订单号：" + (orderId == null ? "无订单号" : orderId));
-						infoMap.put("desc", "时间：" + map.get("create_time") + "\n共：" + listMapByJson.get(0).get("num") + "件");
+						infoMap.put("desc", "时间：" + map.get("create_time") + "\n共：" + listMapByJson.size() + "件");
 						infoMap.put("imgUrl", listMapByJson.get(0).get("img"));
 						infoMap.put("note1", "金额：" +  map.get("order_amt"));
 						infoMap.put("note2", map.get("order_status_desc"));
