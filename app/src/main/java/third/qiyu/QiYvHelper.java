@@ -67,7 +67,6 @@ public class QiYvHelper {
     public void initSDK(Context context) {
         String appKey = "419831f89a538914cb168cd01d1675f4";
         Unicorn.init(context, appKey, initOptions(), new GlideImageLoader(context));
-        useDefCustomUI();
         toggleNotification(true);
     }
 
@@ -90,22 +89,28 @@ public class QiYvHelper {
                 return true;
             }
         };
-        return mOptions;
-    }
 
-    /**
-     * 使用默认自定义UI
-     * 此方法可以在需要的地方设置，否则使用七鱼默认的样式。
-     */
-    public void useDefCustomUI() {
-        if (mOptions == null)
-            return;
         mOptions.uiCustomization = new UICustomization();
         mOptions.uiCustomization.titleBackgroundResId = R.color.common_top_bg;
         mOptions.uiCustomization.titleCenter = true;
         mOptions.uiCustomization.titleBarStyle = 1;
-        if (LoginManager.userInfo != null && !TextUtils.isEmpty(LoginManager.userInfo.get("img")))
+
+        return mOptions;
+    }
+
+    private boolean mSetAvatar;
+    /**
+     * 设置用户头像
+     * 此方法可以在需要的地方设置，否则使用七鱼默认的样式。
+     */
+    private void setCustomerAvatar() {
+        if (mOptions == null || mSetAvatar)
+            return;
+        if (LoginManager.userInfo != null && !TextUtils.isEmpty(LoginManager.userInfo.get("img"))) {
             mOptions.uiCustomization.rightAvatar = LoginManager.userInfo.get("img");
+            Unicorn.updateOptions(mOptions);
+            mSetAvatar = true;
+        }
     }
 
     /**
@@ -222,7 +227,7 @@ public class QiYvHelper {
         }
         if (!mSetUserInfo)
             setUserInfo();
-        useDefCustomUI();
+        setCustomerAvatar();
 
         boolean mapNull = (infoMap == null || infoMap.isEmpty());
         ProductDetail.Builder builder = new ProductDetail.Builder();
@@ -284,6 +289,7 @@ public class QiYvHelper {
      */
     public void onUserLogout() {
         mSetUserInfo = false;
+        mSetAvatar = false;
         Unicorn.addUnreadCountChangeListener(mUnreadCountListener, false);
         Unicorn.logout();
     }
