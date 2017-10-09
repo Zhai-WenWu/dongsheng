@@ -352,11 +352,8 @@ public class LoginManager {
             isLoadFile = true;
             mIsShowAd = getIsShowAd();
         }
-        //在线参数，判断（广告是否开启）
-        String showAD= AppCommon.getConfigByLocal("showAD");
-        if(showAD == null|| TextUtils.isEmpty(showAD)){
-            return false;
-        }
+        //在线参数，判断vivo市场单独处理（广告是否开启）
+        String showAD= AppCommon.getConfigByLocal("showVivoAD");
         if(showAD!=null&&!TextUtils.isEmpty(showAD)&&"1".equals(StringManager.getFirstMap(showAD).get("isShow"))){
             return false;
         }
