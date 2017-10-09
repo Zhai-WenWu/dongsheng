@@ -11,18 +11,19 @@ import acore.widget.rvlistview.RvListView;
 public abstract class PtrDefaultHandler implements PtrHandler {
 
     public static boolean canChildScrollUp(View view) {
-            if (view instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) view;
-                return absListView.getChildCount() > 0
-                        && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
-                        .getTop() < absListView.getPaddingTop());
-            } else if(view instanceof RvListView){
-                LinearLayoutManager layoutManager = (LinearLayoutManager) ((RecyclerView) view).getLayoutManager();
-                return layoutManager.getChildCount() > 0
-                        && (layoutManager.findFirstCompletelyVisibleItemPosition() > (((RvListView) view).getHeaderViewsSize() != 0 ? 0 : 1));
-            } else {
-                return view.getScrollY() > 0;
-            }
+        if (view instanceof AbsListView) {
+            final AbsListView absListView = (AbsListView) view;
+            return absListView.getChildCount() > 0
+                    && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
+                    .getTop() < absListView.getPaddingTop());
+        } else if (view instanceof RvListView) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) ((RecyclerView) view).getLayoutManager();
+            Log.i("tzy", "findFirstCompletelyVisibleItemPosition :: " + layoutManager.findFirstCompletelyVisibleItemPosition());
+            return layoutManager.getChildCount() > 0
+                    && (layoutManager.findFirstCompletelyVisibleItemPosition() > (((RvListView) view).getHeaderViewsSize() != 0 ? 0 : 1) || layoutManager.findFirstCompletelyVisibleItemPosition() == -1);
+        } else {
+            return view.getScrollY() > 0;
+        }
     }
 
     /**
@@ -31,6 +32,7 @@ public abstract class PtrDefaultHandler implements PtrHandler {
      * @param frame
      * @param content
      * @param header
+     *
      * @return
      */
     public static boolean checkContentCanBePulledDown(PtrFrameLayout frame, View content, View header) {
