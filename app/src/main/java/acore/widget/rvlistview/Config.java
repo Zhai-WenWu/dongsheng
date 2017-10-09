@@ -17,7 +17,7 @@
 package acore.widget.rvlistview;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : acore.widget.rvlistview
  * Created by MrTrying on 2017/9/29 09:25.
  * Author : mrtrying

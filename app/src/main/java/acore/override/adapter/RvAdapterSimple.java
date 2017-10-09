@@ -26,7 +26,7 @@ import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : acore.override.adapter
  * Created by MrTrying on 2017/9/29 15:39.
  * Author : mrtrying

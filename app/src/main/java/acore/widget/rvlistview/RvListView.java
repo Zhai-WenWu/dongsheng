@@ -31,7 +31,7 @@ import java.util.List;
 
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : acore.widget.rvlistview
  * Created by MrTrying on 2017/9/26 19:32.
  * Author : mrtrying

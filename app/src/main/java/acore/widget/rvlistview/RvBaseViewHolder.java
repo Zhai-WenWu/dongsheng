@@ -23,7 +23,7 @@ import android.util.SparseArray;
 import android.view.View;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : acore.widget.rvlistview
  * Created by MrTrying on 2017/9/28 15:31.
  * Author : mrtrying

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : acore.widget.rvlistview
  * Created by MrTrying on 2017/9/27 11:19.
  * Author : mrtrying

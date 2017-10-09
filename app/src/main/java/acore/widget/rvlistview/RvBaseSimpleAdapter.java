@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : acore.widget.rvlistview
  * Created by MrTrying on 2017/9/28 16:32.
  * Author : mrtrying
