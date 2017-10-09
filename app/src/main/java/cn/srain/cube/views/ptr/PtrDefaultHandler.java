@@ -1,5 +1,7 @@
 package cn.srain.cube.views.ptr;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AbsListView;
 
@@ -12,6 +14,10 @@ public abstract class PtrDefaultHandler implements PtrHandler {
                 return absListView.getChildCount() > 0
                         && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
                         .getTop() < absListView.getPaddingTop());
+            } else if(view instanceof RecyclerView && ((RecyclerView) view).getLayoutManager() instanceof LinearLayoutManager){
+                LinearLayoutManager layoutManager = (LinearLayoutManager) ((RecyclerView) view).getLayoutManager();
+                return layoutManager.getChildCount() > 0
+                        && (layoutManager.findFirstVisibleItemPosition() > 0 || layoutManager.getChildAt(0).getTop() < layoutManager.getPaddingTop());
             } else {
                 return view.getScrollY() > 0;
             }

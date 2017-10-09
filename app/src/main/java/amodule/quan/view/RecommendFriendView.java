@@ -44,7 +44,7 @@ import static com.xiangha.R.id.follow_rela;
  */
 public class RecommendFriendView extends CircleItemBaseLinearLayout {
     private Context context;
-    private List<Map<String, String>> recCutomerArray = new ArrayList<Map<String,String>>();
+    private List<Map<String, String>> recCutomerArray = new ArrayList<>();
     private LinearLayout recommend_friends_linear;
     private Animation animation;
     private ArrayList<Map<String, String>> recommendList;
@@ -80,17 +80,18 @@ public class RecommendFriendView extends CircleItemBaseLinearLayout {
      */
     public void initView(Map<String, String> recommendMap) {
         this.mapCustomers= recommendMap;
+        int dp_81 = Tools.getDimen(getContext(),R.dimen.dp_81);
         if (recommendList == null || recommendList.size() <= 0) {
             recommendList = UtilString.getListMapByJson(recommendMap.get("customers"));
         }
-        final int childCount = getChildCount();
-        for (int index = childCount - 1; index > 1; index--) {
-            removeViewAt(index);
+        final int childCount = recommend_friends_linear.getChildCount();
+        if(childCount > 0){
+            recommend_friends_linear.removeAllViews();
         }
         for (int i = 0; i < recommendList.size(); i++) {
             Map<String, String> map = recommendList.get(i);
             RelativeLayout layout = new RelativeLayout(context);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp_81);
             layout.setLayoutParams(params);
             layout.setTag(String.valueOf(i));
             recommend_friends_linear.addView(layout);
@@ -180,7 +181,7 @@ public class RecommendFriendView extends CircleItemBaseLinearLayout {
      * @return
      */
     private View getView(Map<String, String> map, final int position, boolean isAdd) {
-        final View view_item = LayoutInflater.from(context).inflate(R.layout.circle_recommend_item, null);
+        final View view_item = LayoutInflater.from(context).inflate(R.layout.circle_recommend_item, null,false);
         ImageView iv_userImg = (ImageView) view_item.findViewById(R.id.auther_userImg);
         ImageView iv_userType = (ImageView) view_item.findViewById(R.id.cusType);
         TextView tv_name = (TextView) view_item.findViewById(R.id.tv_name);

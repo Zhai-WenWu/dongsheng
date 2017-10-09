@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,15 +15,11 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -29,17 +27,16 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.logic.load.AutoLoadMore;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import acore.widget.rvlistview.RvListView;
 import amodule.main.Tools.CacheControler;
 import amodule.main.activity.MainHome;
-import amodule.main.adapter.AdapterHome;
-import amodule.main.adapter.AdapterListView;
+import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.HomeTabHScrollView;
 import amodule.main.view.ReplayAndShareView;
@@ -79,7 +76,7 @@ public class HomeFragment extends BaseHomeFragment{
     protected MainBaseActivity mActivity;
     protected View mView;
     protected PtrClassicFrameLayout refreshLayout;
-    protected ListView mListview;
+    protected RvListView mListview;
     protected ImageView returnTop;
     protected View homeHeaderDataNum;//数据条数view
     protected TextView show_num_tv;
@@ -101,7 +98,8 @@ public class HomeFragment extends BaseHomeFragment{
     protected String backUrl= "";//向上拉取数据集合
     protected String nextUrl="";//下页拉取数据集合
     //    protected AdapterHome adapterHome;
-    protected AdapterListView adapterListView;
+//    protected HomeAdapter HomeAdapter;
+    protected HomeAdapter mHomeAdapter;
     protected boolean isloadTwodata=false;//是否加载过二级数据
     protected LinearLayout layout,linearLayoutOne,linearLayoutTwo,linearLayoutThree;//头部view
     protected String reset_time="";//向上刷新的时间戳
@@ -208,7 +206,7 @@ public class HomeFragment extends BaseHomeFragment{
         homeHeaderDataNum=mView.findViewById(R.id.homeHeaderNum);
         show_num_tv= (TextView) mView.findViewById(R.id.show_num_tv);
         homeHeaderDataNum.setVisibility(View.GONE);
-        mListview = (ListView) mView.findViewById(R.id.v_scroll);
+        mListview = (RvListView) mView.findViewById(R.id.rvListview);
         addItemClickListener();
         mListview.addHeaderView(layout);
         mHeaderCount++;
@@ -221,9 +219,9 @@ public class HomeFragment extends BaseHomeFragment{
     }
 
     private void addItemClickListener() {
-        mListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListview.setOnItemClickListener(new RvListView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 if (homeModuleBean == null)
                     return;
                 if (view instanceof HomeItem) {
@@ -301,9 +299,9 @@ public class HomeFragment extends BaseHomeFragment{
      * 初始化数据
      */
     protected void initData() {
-        adapterListView = new AdapterListView(mListview,mActivity,mListData,mAdControl);
-        adapterListView.setHomeModuleBean(homeModuleBean);
-        adapterListView.setViewOnClickCallBack(new AdapterHome.ViewClickCallBack() {
+        mHomeAdapter = new HomeAdapter(mActivity,mListData,mAdControl);
+        mHomeAdapter.setHomeModuleBean(homeModuleBean);
+        mHomeAdapter.setViewOnClickCallBack(new HomeAdapter.ViewClickCallBack() {
             @Override
             public void viewOnClick(boolean isOnClick) {
                 refresh();
@@ -331,49 +329,58 @@ public class HomeFragment extends BaseHomeFragment{
                             //插入广告
                             mListData = mAdControl.getNewAdData(mListData, false);
                         }
-                        adapterListView.notifyDataSetChanged();
+                        mHomeAdapter.notifyDataSetChanged();
                     }
                 }
             });
         }
         if(!LoadOver){
-                mLoadManager.setLoading(refreshLayout, mListview, adapterListView, true, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            final LinearLayoutManager layoutManager = (LinearLayoutManager) mListview.getLayoutManager();
+            mListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+//                    if(newState == RecyclerView.SCROLL_STATE_IDLE
+//                            || newState == RecyclerView.SCROLL_STATE_TOUCH_SCROLL){
+//                        Glide.with(getContext()).resumeRequests();
+//                    }else{
+//                        Glide.with(getContext()).pauseRequests();
+//                    }
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                    isScrollData=true;
+                    if(scrollDataIndex<(lastVisibleItemPosition-1)) {
+                        scrollDataIndex = (lastVisibleItemPosition-1);
+                    }
+                    if (mPlayPosition != -1) {
+                        //正在播放的视频滑出屏幕
+                        if ((mPlayPosition + mHeaderCount) < firstVisibleItem || (mPlayPosition + mHeaderCount) > (lastVisibleItemPosition - 1)) {
+                            stopVideo();
+                        }
+                    }
+                }
+            });
+            mLoadManager.setLoading(refreshLayout, mListview, mHomeAdapter, true,
+                    new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 //                        if(!TextUtils.isEmpty(statisticKey)){
 //                            mAdControl.getAdData(mActivity,statisticKey);
 //                        }
-                        EntryptData(true);
-                    }
-                }, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        EntryptData(!LoadOver);
-                    }
-                }, new AutoLoadMore.OnListScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(AbsListView view, int scrollState) {
-                        if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-                                || scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
-                            Glide.with(getContext()).resumeRequests();
-                        }else{
-                            Glide.with(getContext()).pauseRequests();
-                        }
-                    }
-                    @Override
-                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                        isScrollData=true;
-                        if(scrollDataIndex<(firstVisibleItem+visibleItemCount-1)) {
-                            scrollDataIndex = (firstVisibleItem + visibleItemCount-1);
-                        }
-                        if (mPlayPosition != -1) {
-                            //正在播放的视频滑出屏幕
-                            if ((mPlayPosition + mHeaderCount) < firstVisibleItem || (mPlayPosition + mHeaderCount) > (firstVisibleItem + visibleItemCount - 1)) {
-                                stopVideo();
-                            }
-                        }
-                    }
-                });
+                    EntryptData(true);
+                }
+            },
+                    new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EntryptData(!LoadOver);
+                }
+            });
         }
     }
 
@@ -526,7 +533,7 @@ public class HomeFragment extends BaseHomeFragment{
                             }
                         }
 //                    beforNum += listmaps.size();
-                        adapterListView.notifyDataSetChanged();
+                        mHomeAdapter.notifyDataSetChanged();
 
                         //只有推荐，刷新数据才进行保存历史记录，第一次刷新不存储，下一次存储上次的数据，
                         if (isRecom && refresh) {
@@ -548,7 +555,7 @@ public class HomeFragment extends BaseHomeFragment{
                             for (int i = 0; i < size; i++) {
                                 mListData.get(i).put("refreshTime", "");
                             }
-                            adapterListView.notifyDataSetChanged();
+                            mHomeAdapter.notifyDataSetChanged();
                         }else{//无数据时---请求下一页数据
                             if(dataMap.containsKey("nexturl")&&isNextUrl){
                                 nextUrl = dataMap.get("nexturl");
@@ -599,7 +606,7 @@ public class HomeFragment extends BaseHomeFragment{
                         homeModuleBean.setTwoType(map.get("two_type"));
                         homeModuleBean.setTwoTitle(map.get("title"));
                         homeModuleBean.setTwoTypeIndex(Integer.parseInt(map.get("position")));
-                        adapterListView.setHomeModuleBean(homeModuleBean);
+                        mHomeAdapter.setHomeModuleBean(homeModuleBean);
                         compelClearData=true;
                         //请求数据
                         backUrl="";
@@ -664,7 +671,7 @@ public class HomeFragment extends BaseHomeFragment{
      */
     public void returnListTop() {
         if (mListview != null) {
-            mListview.setSelection(0);
+            mListview.scrollToPosition(0);
         }
     }
     /**
@@ -851,23 +858,23 @@ public class HomeFragment extends BaseHomeFragment{
     protected HomeItem handlerTopView(Map<String,String> map,int position){
         HomeItem viewTop=null;
         if(map.containsKey("style")&&!TextUtils.isEmpty(map.get("style"))){
-            String type=map.get("style");
+            int type=TextUtils.isEmpty(map.get("style")) ? HomeAdapter.type_noImage : Integer.parseInt(map.get("style"));
             switch (type){
-                case AdapterListView.type_tagImage:
+                case HomeAdapter.type_tagImage:
                     viewTop= new HomeRecipeItem(mActivity);
                     break;
 
-                case AdapterListView.type_levelImage:
+                case HomeAdapter.type_levelImage:
                     viewTop= new HomeAlbumItem(mActivity);
                     break;
-                case AdapterListView.type_threeImage:
+                case HomeAdapter.type_threeImage:
                     viewTop= new HomePostItem(mActivity);
                     break;
-                case AdapterListView.type_anyImage:
+                case HomeAdapter.type_anyImage:
                     viewTop= new HomeAnyImgStyleItem(mActivity);
                     break;
-                case AdapterListView.type_rightImage:
-                case AdapterListView.type_noImage:
+                case HomeAdapter.type_rightImage:
+                case HomeAdapter.type_noImage:
                     default:
                     viewTop= new HomeTxtItem(mActivity);
                     break;
@@ -976,7 +983,7 @@ public class HomeFragment extends BaseHomeFragment{
      * @param isForceRefresh 是否强制刷新广告
      */
     public void isNeedRefresh(boolean isForceRefresh){
-        if(mAdControl==null||mListData==null||adapterListView==null)return;//条件过滤
+        if(mAdControl==null||mListData==null||mHomeAdapter==null)return;//条件过滤
         boolean state=mAdControl.isNeedRefresh();
         Log.i(tag_yu,"isNeedRefresh::::"+state+":::"+homeModuleBean.getTitle()+"：：：isForceRefresh：："+isForceRefresh);
         if(isForceRefresh)state=isForceRefresh;//强制刷新
@@ -1024,7 +1031,7 @@ public class HomeFragment extends BaseHomeFragment{
             if(listTemp.size()>0){
                 mListData.removeAll(listTemp);
             }
-            adapterListView.notifyDataSetChanged();
+            mHomeAdapter.notifyDataSetChanged();
         }
     }
 
@@ -1036,7 +1043,8 @@ public class HomeFragment extends BaseHomeFragment{
             @Override
             public void run() {
                 mListData = mAdControl.getNewAdData(mListData, false);
-                if(adapterListView!=null)adapterListView.notifyDataSetChanged();
+                if(mHomeAdapter!=null)
+                    mHomeAdapter.notifyDataSetChanged();
             }
         });
     }

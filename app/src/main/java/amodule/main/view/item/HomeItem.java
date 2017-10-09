@@ -22,9 +22,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
@@ -32,7 +30,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
-import amodule.main.adapter.AdapterHome;
+import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.home.HomeFragment;
 import aplug.basic.SubBitmapTarget;
@@ -72,7 +70,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected String mType;
 
     protected HomeModuleBean mModuleBean;
-    private AdapterHome.ViewClickCallBack mRefreshCallBack;
+    private HomeAdapter.ViewClickCallBack mRefreshCallBack;
 
     protected HomeItemBottomView mHomeItemBottomView;
     private ImageView mAdTag;
@@ -188,7 +186,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         };
     }
 
-    public void setRefreshTag(AdapterHome.ViewClickCallBack callBack) {
+    public void setRefreshTag(HomeAdapter.ViewClickCallBack callBack) {
         this.mRefreshCallBack = callBack;
     }
 
