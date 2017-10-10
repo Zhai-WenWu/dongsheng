@@ -139,6 +139,13 @@ public class QiYvHelper {
             userEmail.put("value", TextUtils.isEmpty(userData.get("email")) ? "无" : userData.get("email"));
             dataArray.put(userEmail);
 
+            if (LoginManager.isLogin() && !TextUtils.isEmpty(LoginManager.userInfo.get("img"))) {
+                JSONObject userAvatar = new JSONObject();
+                userAvatar.put("key", "avatar");
+                userAvatar.put("value", LoginManager.userInfo.get("img"));
+                dataArray.put(userAvatar);
+            }
+
             JSONObject userID = new JSONObject();
             userID.put("index", 0);
             userID.put("key", "user_id");
