@@ -90,11 +90,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/qiyv_header"
-            android:layout_marginRight="@dimen/dp_3"
             android:layout_centerVertical="true"
             android:text="电商客服专线"
             android:textColor="#26BC89"
             android:textSize="@dimen/sp_14"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/qiyv_name"
+            android:layout_toLeftOf="@+id/qiyv_msg_num"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:layout_marginRight="@dimen/dp_3"
+            android:layout_centerVertical="true"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="商品或订单问题由此咨询"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_11"/>
 
         <TextView
             android:id="@+id/qiyv_msg_num"
