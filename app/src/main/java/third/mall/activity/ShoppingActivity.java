@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.override.activity.mian.MainBaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
@@ -396,6 +397,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 					XHClick.mapStat(ShoppingActivity.this, "a_mail_shopping_cart","你可能喜欢","点击商品");
 					Intent intent = new Intent(ShoppingActivity.this, CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM,"猜你喜欢");
 					startActivity(intent);
 				}
 			});
