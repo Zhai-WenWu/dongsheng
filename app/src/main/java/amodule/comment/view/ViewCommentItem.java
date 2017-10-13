@@ -134,7 +134,7 @@ public class ViewCommentItem extends LinearLayout {
             });
             if(!TextUtils.isEmpty(cusstomMap.get("name_color")))
                 userName.setTextColor(Color.parseColor(cusstomMap.get("name_color")));
-            AppCommon.setVip((Activity) mContext, userVip, cusstomMap.get("is_member"), new OnClickListener() {
+            AppCommon.setVip((Activity) mContext, userVip, cusstomMap.get("is_member"), AppCommon.VipFrom.COMMENT, new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(mUserListener != null) mUserListener.onCommentUserVipClick();

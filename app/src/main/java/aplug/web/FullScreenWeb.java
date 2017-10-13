@@ -8,8 +8,12 @@ import android.view.WindowManager;
 
 import com.xiangha.R;
 
+import java.util.Map;
+
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -17,7 +21,7 @@ import aplug.web.tools.WebviewManager;
 /**
  * 全屏weview
  */
-public class FullScreenWeb extends WebActivity {
+public class FullScreenWeb extends WebActivity implements IObserver {
 
     protected JsAppCommon jsAppCommon;
     protected String url = "";
@@ -56,6 +60,8 @@ public class FullScreenWeb extends WebActivity {
                 loadData();
             }
         });
+
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND);
     }
 
     /**
@@ -78,6 +84,8 @@ public class FullScreenWeb extends WebActivity {
             XHClick.saveStatictisFile("FullScreenWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
+
+        ObserverManager.getInstence().unRegisterObserver(this);
     }
 
     @Override
@@ -90,4 +98,21 @@ public class FullScreenWeb extends WebActivity {
         super.finish();
     }
 
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (!TextUtils.isEmpty(name)) {
+            switch (name) {
+                case ObserverManager.NOTIFY_YIYUAN_BIND:
+                    if (data != null) {
+                        if (data instanceof Map) {
+                            Map<String, String> state = (Map<String, String>) data;
+                            if (TextUtils.equals("2", state.get("state")))
+                                if (webview != null)
+                                    webview.loadUrl(url);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 }

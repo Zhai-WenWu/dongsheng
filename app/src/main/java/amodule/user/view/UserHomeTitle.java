@@ -148,7 +148,7 @@ public class UserHomeTitle {
             TextView addTime = (TextView) mParentTitleView.findViewById(R.id.a_user_home_title_addTime);
 
             boolean hasLv = AppCommon.setLvImage(Integer.valueOf(userinfo_map.get("lv")), friend_lv);
-            boolean isVip = AppCommon.setVip(mAct,friend_vip,userinfo_map.get("vip"),tongjiId,"个人信息");
+            boolean isVip = AppCommon.setVip(mAct,friend_vip,userinfo_map.get("vip"),tongjiId,"个人信息", AppCommon.VipFrom.FRIEND_HOME);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) friend_name.getLayoutParams();
             if(hasLv && isVip){
                 layoutParams.setMargins(0,0,Tools.getDimen(mAct,R.dimen.dp_50),0);

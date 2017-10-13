@@ -1227,4 +1227,18 @@ public class JsAppCommon extends JsBase {
         }
     }
 
+    /**
+     *一元购登录
+     */
+    @JavascriptInterface
+    public void vipTransfer() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                LoginManager.setAutoBindYiYuanVIP(true);
+                login();
+            }
+        });
+    }
+
 }

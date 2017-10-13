@@ -117,7 +117,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 			AppCommon.setLvImage(Integer.parseInt(user.get("lv")), i_user_lv);
 		}
 		ImageView i_user_vip = (ImageView) view.findViewById(R.id.i_user_vip);
-		AppCommon.setVip(mAct,i_user_vip,user.get("vip"));
+		AppCommon.setVip(mAct,i_user_vip,user.get("vip"), AppCommon.VipFrom.COMMENT);
 		ImageView iv_userType = (ImageView) view.findViewById(R.id.iv_userType);
 		// 加v显示
 		if (user.containsKey("isGourmet") && user.get("isGourmet") != null) {

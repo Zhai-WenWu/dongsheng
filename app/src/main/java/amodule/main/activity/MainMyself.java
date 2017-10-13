@@ -1,5 +1,6 @@
 package amodule.main.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -25,10 +26,12 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.logic.login.widget.YiYuanBindDialog;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
 import acore.tools.LogManager;
-import acore.tools.PageStatisticsUtils;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
@@ -47,14 +50,15 @@ import amodule.user.activity.Setting;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.feedback.activity.Feedback;
 import third.mall.activity.MallMyFavorableActivity;
 import third.mall.activity.MyOrderActivity;
 import third.mall.alipay.MallPayActivity;
-import third.mall.override.MallBaseActivity;
 import third.push.xg.XGPushServer;
+import xh.basic.internet.UtilInternet;
 
 /**
  * @Description:
@@ -62,15 +66,15 @@ import third.push.xg.XGPushServer;
  * @author: FangRuijiao
  * @date: 2016年11月13日 下午15:22:50
  */
-public class MainMyself extends MainBaseActivity implements OnClickListener {
+public class MainMyself extends MainBaseActivity implements OnClickListener, IObserver {
     // 布局
     private RelativeLayout right_myself, userPage;
     private LinearLayout gourp1, gourp2,gourp3;
     private String[] name1 = {"我的订单"},
-            name2 = {"我的会员","我的问答", "我的收藏",/*"缓存下载",*/"浏览历史"},
+            name2 = {"我的会员", "当前设备已开通会员", "我的问答", "我的收藏",/*"缓存下载",*/"浏览历史"},
             name3 = {"反馈帮助","设置"};
     private String[] clickTag1 = {"order"},
-            clickTag2 = {"vip", "qa", "favor",/*"download",*/"hitstory"},
+            clickTag2 = {"vip", "yiyuan", "qa", "favor",/*"download",*/"hitstory"},
             clickTag3 = {"helpe","setting"};
 
     private final String tongjiId = "a_mine";
@@ -78,6 +82,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
     //我的问答
     private View mQAItemView;
     private String mQAType = "1";//问答类型，我问：1（默认）  我答：2
+
+    //权益迁移
+    private View mYiYuanVIPView;
 
     //头部控件
     private TextView goManagerInfo,name,myself_please_login;
@@ -90,6 +97,11 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
     private TextView vipInfo,vipNewHint, qaInfo, qaNewHint;
     private ImageView vipIcon, qaIcon;
 
+    private boolean mIsTempVIP;
+    private boolean mYiYuanDialogShowing;
+
+    private boolean mIsOnResuming;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,12 +110,20 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         loadManager.showProgressBar();
         initUI();
         XHClick.track(this,"浏览我的页面");
+        loadManager.setLoading(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getYiYuanBindState();
+            }
+        });
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_PAYFINISH);
     }
 
     @Override
     protected void onResume() {
         Main.mainActivity = this;
         super.onResume();
+        mIsOnResuming = true;
         if (LoginManager.isLogin()) {
             if (mQAItemView != null)
                 mQAItemView.setVisibility(View.VISIBLE);
@@ -126,6 +146,39 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         //去我的订单
         if(MallPayActivity.pay_state){
             onListEventCommon("order");
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsOnResuming = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
+    }
+
+    private void getYiYuanBindState() {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_bindstate, "", new InternetCallback(this) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                onBindStateDataReady(i >= UtilInternet.REQ_OK_STRING ? o : null);
+            }
+        });
+    }
+
+    private void onBindStateDataReady(Object obj) {
+        if (obj == null)
+            return;
+        Map<String, String> data = StringManager.getFirstMap(obj);
+        Object vipTransfer = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "vipTransfer");
+        mIsTempVIP = "2".equals(data.get("isBindingVip"));
+        mYiYuanVIPView.setVisibility(mIsTempVIP ? View.VISIBLE : View.GONE);
+        if ("2".equals(data.get("isBindingPopup")) && mIsTempVIP && !"2".equals(vipTransfer)) {
+            showYiYuanDialog(true);
         }
     }
 
@@ -193,9 +246,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
             findViewById(R.id.my_money_hint).setVisibility(View.VISIBLE);
         }
 
-        qaInfo = (TextView) gourp2.getChildAt(1).findViewById(R.id.text_right_myself);
-        qaNewHint = (TextView) gourp2.getChildAt(1).findViewById(R.id.my_new_info);
-        qaIcon = (ImageView) gourp2.getChildAt(1).findViewById(R.id.ico_right_myself);
+        qaInfo = (TextView) gourp2.getChildAt(2).findViewById(R.id.text_right_myself);
+        qaNewHint = (TextView) gourp2.getChildAt(2).findViewById(R.id.my_new_info);
+        qaIcon = (ImageView) gourp2.getChildAt(2).findViewById(R.id.ico_right_myself);
         if (isShowQA == null || TextUtils.isEmpty(String.valueOf(isShowQA))) {
             notifyQAItemChanged(0, true, false);
         }
@@ -318,7 +371,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                     }
 
                     AppCommon.setLvImage(Integer.valueOf(listMap.get("lv")), myself_lv);
-                    boolean isVip = AppCommon.setVip(MainMyself.this,isVipImg,listMap.get("vip"),tongjiId,"头部");
+                    boolean isVip = AppCommon.setVip(MainMyself.this,isVipImg,listMap.get("vip"),tongjiId,"头部", AppCommon.VipFrom.MY_SELF);
                     if(isVip){
                         my_vip.setText("会员续费");
                         my_vip.setSideColor(getResources().getColor(R.color.comment_color));
@@ -373,8 +426,24 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 
     private void itemInfalter(LayoutInflater layoutInfater,LinearLayout parent, String[] groupNames,String[] clickTags) {
         for (int i = 0; i < groupNames.length; i++) {
-            View itemView =  layoutInfater.inflate(R.layout.a_common_myself_item, null);
             String tag = clickTags[i];
+            if ("yiyuan".equals(tag)) {
+                mYiYuanVIPView = layoutInfater.inflate(R.layout.myself_viptransferitem, null);
+                TextView text = (TextView) mYiYuanVIPView.findViewById(R.id.text_myself);
+                text.setText(groupNames[i]);
+                TextView descText = (TextView) mYiYuanVIPView.findViewById(R.id.text_desc);
+                descText.setText(R.string.myself_viptransfer_itemdesc);
+                TextView rightText = (TextView) mYiYuanVIPView.findViewById(R.id.text_right_myself);
+                rightText.setText("权限迁移");
+                mYiYuanVIPView.findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
+                mYiYuanVIPView.setVisibility(View.GONE);
+                mYiYuanVIPView.setTag(tag);
+                mYiYuanVIPView.setOnClickListener(this);
+                parent.addView(mYiYuanVIPView, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.dp_45)));
+                continue;
+            }
+
+            View itemView =  layoutInfater.inflate(R.layout.a_common_myself_item, null);
             itemView.setClickable(true);
             itemView.setTag(tag);
             itemView.setOnClickListener(this);
@@ -437,7 +506,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                 case R.id.my_vip: //开通会员
                     XHClick.track(getApplicationContext(), "点击我的页面的头部");
                     XHClick.mapStat(this, tongjiId, "头部", "会员");
-                    AppCommon.openUrl(this, StringManager.api_openVip, true);
+                    AppCommon.openUrl(this, StringManager.getVipUrl(true) + String.format("&vipFrom=我的页面%s按钮", LoginManager.isVIP() ? "会员续费" : "开通会员"), true);
                     break;
                 case R.id.myself_lv: //用户等级
                     XHClick.track(getApplicationContext(), "点击我的页面的头部");
@@ -509,6 +578,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
 
         if(!isOption){
             switch (clickTag) {
+                case "yiyuan"://权益迁移
+                    new YiYuanBindDialog(this).show("权益迁移", getResources().getString(R.string.yiyuan_dialog_desc));
+                    break;
                 case "qa"://我的问答
                     FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowQA","2");
                     notifyQAItemChanged (0, false, true);
@@ -539,7 +611,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
                     break;
                 case "vip": //会员
                     XHClick.mapStat(this, tongjiId,"列表", "我的会员");
-                    AppCommon.openUrl(MainMyself.this,StringManager.api_vip,true);
+                    AppCommon.openUrl(MainMyself.this, StringManager.getVipUrl(false) + "&vipFrom=我的页面我的会员按钮",true);
                     FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowVip","2");
                     vipNewHint.setVisibility(View.GONE);
                     if(vipInfo.getVisibility() != View.VISIBLE) vipIcon.setVisibility(View.VISIBLE);
@@ -580,5 +652,54 @@ public class MainMyself extends MainBaseActivity implements OnClickListener {
         qaInfo.setVisibility(numInfo > 0 ? View.VISIBLE : View.GONE);
         qaNewHint.setVisibility(showNewHint ? View.VISIBLE : View.GONE);
         qaIcon.setVisibility(showIcon ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (name != null) {
+            switch (name) {
+                case ObserverManager.NOTIFY_LOGIN:
+                    if (data != null && data instanceof Boolean && (Boolean)data && mIsTempVIP && !LoginManager.isAutoBindYiYuanVIP()) {
+                        showYiYuanDialog(false);
+                    }
+                    break;
+                case ObserverManager.NOTIFY_YIYUAN_BIND:
+                    if (data != null && data instanceof Map) {
+                        Map<String, String> state = (Map<String, String>) data;
+                        if ("2".equals(state.get("state"))) {
+                            mIsTempVIP = false;
+                            mYiYuanVIPView.setVisibility(View.GONE);
+                            if (mIsOnResuming)
+                                getData();
+                        }
+                    }
+                    break;
+                case ObserverManager.NOTIFY_PAYFINISH:
+                    if (data != null && data instanceof Boolean && (Boolean)data) {
+                        getYiYuanBindState();
+                    }
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 显示权限迁移弹框
+     * @param fromServer 是否来自服务器控制的弹框
+     */
+    private void showYiYuanDialog(boolean fromServer) {
+        if (mYiYuanDialogShowing)
+            return;
+        mYiYuanDialogShowing = true;
+        if (fromServer)
+            FileManager.saveShared(MainMyself.this,FileManager.xmlFile_appInfo,"vipTransfer","2");
+        YiYuanBindDialog bindDialog = new YiYuanBindDialog(this);
+        bindDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mYiYuanDialogShowing = false;
+            }
+        });
+        bindDialog.show(getString(R.string.yiyuan_bind_title), getString(R.string.yiyuan_dialog_desc));
     }
 }

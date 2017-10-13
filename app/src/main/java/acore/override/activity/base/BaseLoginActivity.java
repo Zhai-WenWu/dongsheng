@@ -180,6 +180,7 @@ public class BaseLoginActivity extends BaseActivity {
                         LoginManager.loginSuccess(mAct, returnObj.toString());
                         ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, true);
                         callback.onSuccess();
+                        LoginManager.bindYiYuanVIP(mAct);
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {
                                 LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_MAILBOX, "", "", phoneNum);
@@ -647,6 +648,7 @@ public class BaseLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LoginManager.setAutoBindYiYuanVIP(false);
         try{
             if (eventHandler != null){
                 SMSSDK.unregisterEventHandler(eventHandler);

@@ -121,7 +121,7 @@ public class SubjectHeaderUser extends RelativeLayout implements View.OnClickLis
             boolean isShowLv = AppCommon.setLvImage(Integer.parseInt(customer_map.get("exp")), sb_header_textview_lv);
             if(isShowLv) iconNum++;
         }
-        boolean isVip = AppCommon.setVip(act,sb_header_textview_vip,customer_map.get("vip"));
+        boolean isVip = AppCommon.setVip(act,sb_header_textview_vip,customer_map.get("vip"), AppCommon.VipFrom.POST_DETAIL);
         if(isVip) iconNum++;
         if(iconNum>0){
             sb_header_tv_user_name.setMaxWidth(ToolsDevice.dp2px(getContext(),160 - 18 * iconNum));

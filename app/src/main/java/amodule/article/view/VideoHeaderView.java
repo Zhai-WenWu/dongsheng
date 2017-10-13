@@ -227,7 +227,7 @@ public class VideoHeaderView extends RelativeLayout {
         view.findViewById(R.id.ad_vip_lead).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.openUrl(activity, StringManager.api_openVip, true);
+                AppCommon.openUrl(activity, StringManager.getVipUrl(true) + "&vipFrom=视频贴片广告会员免广告", true);
             }
         });
 

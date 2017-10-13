@@ -59,5 +59,13 @@
 
     <string name="publish_evalution_desc_hint">宝贝满足你的期待吗？说说你的使用心得，分享给想买的友友吧！</string>
     <string name="publish_evalution_share_text">分享到美食圈</string>
+    <string name="yiyuan_dialog_desc">您目前的会员权益仅能在本设备下使用，若卸载APP后可能导致会员权益的丢失~建议您将会员权益迁移至香哈账号哦~</string>
+    <string name="yiyuan_succ_title">迁移成功</string>
+    <string name="str_know">我知道了</string>
+    <string name="yiyuan_succ_desc">恭喜您成功迁移权益，您可以通过登录账号跨设备享受会员权益。</string>
+    <string name="yiyuan_bind_title">权益迁移</string>
+    <string name="vip_transfer_this">转移到本账号</string>
+    <string name="vip_transfer_xh">转移到香哈账号</string>
+    <string name="myself_viptransfer_itemdesc">将权益迁移到账号可在各设备上享受会员</string>
 
 </resources>

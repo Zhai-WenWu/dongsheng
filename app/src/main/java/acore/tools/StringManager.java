@@ -231,11 +231,13 @@ public class StringManager extends UtilString {
 
     //钱包会员
     public final static String api_money = appWebUrl + "vip/walletV1?fullScreen=2"; //我的钱包
-    public final static String api_vip = appWebUrl + "vip/myvip?fullScreen=2"; //会员中心
-    public final static String api_openVip = appWebUrl + "vip/myvip?payset=2&fullScreen=2"; //开通vip
 
     public final static String api_isAuto = apiUrl + urlSection.get("vip6") + "isAuto"; //是否自动续费
     public final static String api_setIsAuto = apiUrl + urlSection.get("vip6") + "setAuto"; //设置是否自动续费
+
+    //一元VIP
+    public final static String api_yiyuan_bindstate = apiUrl + "main7/user/isBindingState";//一元VIP绑定状态
+    public final static String api_yiyuan_binduser = apiUrl + "main7/user/bindingUser";//一元VIP绑定
 
 
     //广告统计
@@ -491,5 +493,14 @@ public class StringManager extends UtilString {
         if(content.length() == 0)
             return false;
         return true;
+    }
+
+    /**
+     * 获取vip的url
+     * @param hasOpen 是否已经开通了会员
+     * @return
+     */
+    public static String getVipUrl(boolean hasOpen) {
+        return appWebUrl + "vip/myvip?fullScreen=2" + (hasOpen ? "&payset=2" : ""); //会员中心
     }
 }

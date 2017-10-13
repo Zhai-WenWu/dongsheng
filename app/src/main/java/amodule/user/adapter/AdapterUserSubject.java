@@ -74,7 +74,7 @@ public class AdapterUserSubject extends AdapterSimple {
                                 .setSureButton("开通会员", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        AppCommon.openUrl(mContext, StringManager.api_openVip, true);
+                                        AppCommon.openUrl(mContext, StringManager.getVipUrl(true) + "&vipFrom=个人主页置顶弹框", true);
                                         xhDialog.cancel();
                                     }
                                 }).setCanselButton("取消", new View.OnClickListener() {

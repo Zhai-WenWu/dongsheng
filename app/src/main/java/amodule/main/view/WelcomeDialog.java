@@ -395,7 +395,7 @@ public class WelcomeDialog extends Dialog {
         Log.i("zhangyujian","closeDialog");
         WelcomeDialog.this.dismiss();
         if(isAdLeadClick) {
-            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.api_vip, true);
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.getVipUrl(false) + "&vipFrom=开屏广告会员免广告", true);
         }
         activity.overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
     }

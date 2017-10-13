@@ -985,19 +985,19 @@ public class AppCommon {
         }
     }
 
-    public static boolean setVip(final Activity act, ImageView vipView, String data) {
-        return setVip(act, vipView, data, "", "");
+    public static boolean setVip(final Activity act, ImageView vipView, String data, VipFrom vipFrom) {
+        return setVip(act, vipView, data, "", "", vipFrom);
     }
 
-    public static boolean setVip(final Activity act, ImageView vipView, String data, View.OnClickListener listener) {
-        return setVip(act, vipView, data, "", "", "", listener);
+    public static boolean setVip(final Activity act, ImageView vipView, String data, VipFrom vipFrom, View.OnClickListener listener) {
+        return setVip(act, vipView, data, "", "", "", vipFrom, listener);
     }
 
-    public static boolean setVip(final Activity act, ImageView vipView, String data, final String eventId, final String twoLevel) {
-        return setVip(act, vipView, data, eventId, twoLevel, "", null);
+    public static boolean setVip(final Activity act, ImageView vipView, String data, final String eventId, final String twoLevel, VipFrom vipFrom) {
+        return setVip(act, vipView, data, eventId, twoLevel, "", vipFrom, null);
     }
 
-    public static boolean setVip(final Activity act, ImageView vipView, String data, final String eventId, final String twoLevel, final String threadLevel, final View.OnClickListener listener) {
+    public static boolean setVip(final Activity act, ImageView vipView, final String data, final String eventId, final String twoLevel, final String threadLevel, final VipFrom vipFrom, final View.OnClickListener listener) {
         boolean isVip = isVip(data);
         if (isVip) {
             vipView.setVisibility(View.VISIBLE);
@@ -1011,7 +1011,27 @@ public class AppCommon {
                 if (!TextUtils.isEmpty(eventId))
                     XHClick.mapStat(act, eventId, twoLevel, TextUtils.isEmpty(threadLevel) ? "会员皇冠" : threadLevel);
                 if (listener != null) listener.onClick(v);
-                AppCommon.openUrl(act, StringManager.api_vip, true);
+                String from = "";
+                if (vipFrom != null) {
+                    switch (vipFrom) {
+                        case COMMENT:
+                            from = "用户评论皇冠按钮";
+                            break;
+                        case FRIEND_HOME:
+                            from = "个人主页皇冠按钮";
+                            break;
+                        case MY_SELF:
+                            from = "我的页面皇冠按钮";
+                            break;
+                        case POST_DETAIL:
+                            from = "美食帖详情皇冠按钮";
+                            break;
+                        case POST_LIST:
+                            from = "美食帖列表皇冠按钮";
+                            break;
+                    }
+                }
+                AppCommon.openUrl(act, StringManager.getVipUrl(false) + (TextUtils.isEmpty(from) ? "" : ("&vipFrom=" + from)), true);
             }
         });
         return isVip;
@@ -1068,8 +1088,11 @@ public class AppCommon {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(eventID))
                     XHClick.mapStat(act, eventID, twoLevel, "点击【会员全站去广告】按钮");
-                if (LoginManager.isLogin()) AppCommon.openUrl(act, StringManager.api_openVip, true);
-                else AppCommon.openUrl(act, StringManager.api_vip, true);
+                if (LoginManager.isLogin()) {
+                    AppCommon.openUrl(act, StringManager.getVipUrl(true) + "&vipFrom=会员全站去广告", true);
+                } else {
+                    AppCommon.openUrl(act, StringManager.getVipUrl(false) + "&vipFrom=会员全站去广告", true);
+                }
                 bottomDialog.cancel();
             }
         }).setBottomButtonColor("#59bdff").show();
@@ -1155,6 +1178,14 @@ public class AppCommon {
      */
     public static String loadRandPromotionData() {
         return FileManager.readFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig);
+    }
+
+    public enum VipFrom {
+        MY_SELF,//"我的页面皇冠按钮"
+        FRIEND_HOME,//"个人主页皇冠按钮"
+        COMMENT,//"用户评论皇冠按钮"
+        POST_DETAIL,//"美食帖详情皇冠按钮"
+        POST_LIST;//"美食帖列表皇冠按钮"
     }
 
 }

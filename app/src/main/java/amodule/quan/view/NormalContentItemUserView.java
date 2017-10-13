@@ -127,7 +127,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
         }else view.findViewById(R.id.cusType).setVisibility(View.GONE);
 
         String id = TextUtils.isEmpty(normarlContentData.getStatisID()) ? "a_quan_homepage" : normarlContentData.getStatisID();
-        boolean isVip = AppCommon.setVip(mAct,userVip,customers.get(0).get("vip"),id,statisKey);
+        boolean isVip = AppCommon.setVip(mAct,userVip,customers.get(0).get("vip"),id,statisKey, AppCommon.VipFrom.POST_LIST);
         int showNum = userIconView.setData(customers.get(0).get("sex"), customers.get(0).get("lv"), "");
         if(isVip)showNum ++;
         auther_name.setMaxWidth(ToolsDevice.dp2px(mAct, (float) (190 - showNum * 19)));

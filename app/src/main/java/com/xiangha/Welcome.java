@@ -311,7 +311,7 @@ public class Welcome extends BaseActivity {
                 mMainHandler = null;
             }
             if (isAdLeadClick) {
-                AppCommon.openUrl(Welcome.this, StringManager.api_vip, true);
+                AppCommon.openUrl(Welcome.this, StringManager.getVipUrl(false) + "&vipFrom=开屏广告会员免广告", true);
             }
             this.finish();
 //            isclose=false;

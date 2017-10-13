@@ -3,16 +3,19 @@ package acore.logic;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
+
+import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.login.widget.MsgNotifyDialog;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.WebActivity;
 import acore.tools.FileManager;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.dish.db.DataOperate;
@@ -23,6 +26,7 @@ import amodule.user.activity.Setting;
 import amodule.user.activity.login.AccoutActivity;
 import amodule.user.activity.login.UserSetting;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.JsAppCommon;
 import third.growingio.GrowingIOController;
@@ -541,5 +545,38 @@ public class LoginManager {
         return regTime;
     }
 
+    private static boolean mAutoBindYiYuanVIP;
+    public static void setAutoBindYiYuanVIP(boolean auto) {
+        mAutoBindYiYuanVIP = auto;
+    }
+
+    public static boolean isAutoBindYiYuanVIP() {
+        return mAutoBindYiYuanVIP;
+    }
+
+    public static void bindYiYuanVIP(final Context context) {
+        if (!mAutoBindYiYuanVIP)
+            return;
+        mAutoBindYiYuanVIP = false;
+        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_binduser, "", new InternetCallback(context) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= UtilInternet.REQ_OK_STRING) {
+                    Map<String, String> state = StringManager.getFirstMap(o);
+                    if ("2".equals(state.get("state"))) {
+                        MsgNotifyDialog dialog = new MsgNotifyDialog(context);
+                        dialog.show(context.getString(R.string.yiyuan_succ_title), context.getString(R.string.yiyuan_succ_desc), context.getString(R.string.str_know));
+                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
+                    } else {
+                        //绑定失败
+                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
+                    }
+                } else {
+                    //绑定失败
+                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, null);
+                }
+            }
+        });
+    }
 
 }
