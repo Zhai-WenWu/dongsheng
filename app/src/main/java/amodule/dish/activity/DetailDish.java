@@ -297,7 +297,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(dishActivityViewControl != null){
             dishActivityViewControl.onDestroy();
             dishActivityViewControl=null;
-            System.gc();
         }
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){

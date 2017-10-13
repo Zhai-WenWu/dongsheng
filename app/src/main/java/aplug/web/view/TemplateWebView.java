@@ -205,6 +205,7 @@ public class TemplateWebView extends XHWebView{
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {
                 super.onShowCustomView(view, callback);
+
             }
 
             //弹出提示
@@ -255,6 +256,8 @@ public class TemplateWebView extends XHWebView{
                 }
             }
         });
+        //避免webview乱跳。
+        this.setFocusable(false);
     }
 
     /**
