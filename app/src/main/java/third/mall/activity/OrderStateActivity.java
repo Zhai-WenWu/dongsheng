@@ -461,6 +461,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					setStatisticIndex();
 					Intent intent = new Intent(OrderStateActivity.this,CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM,"猜你喜欢");
 					OrderStateActivity.this.startActivity(intent);
 				}
 			});
