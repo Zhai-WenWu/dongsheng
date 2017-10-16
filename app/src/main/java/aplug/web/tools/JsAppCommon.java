@@ -1235,8 +1235,12 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                LoginManager.setAutoBindYiYuanVIP(true);
-                login();
+                if (LoginManager.isLogin()) {
+                    LoginManager.bindYiYuanVIP(mAct);
+                } else {
+                    LoginManager.setAutoBindYiYuanVIP(true);
+                    login();
+                }
             }
         });
     }

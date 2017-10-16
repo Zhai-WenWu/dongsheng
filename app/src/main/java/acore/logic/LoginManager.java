@@ -2,6 +2,8 @@ package acore.logic;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -15,6 +17,7 @@ import acore.logic.login.widget.MsgNotifyDialog;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.WebActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -565,15 +568,21 @@ public class LoginManager {
                 if (i >= UtilInternet.REQ_OK_STRING) {
                     Map<String, String> state = StringManager.getFirstMap(o);
                     if ("2".equals(state.get("state"))) {
-                        final MsgNotifyDialog dialog = new MsgNotifyDialog(context);
-                        dialog.setMsgBtnClickListener(new View.OnClickListener() {
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
-                            public void onClick(View v) {
-                                dialog.cancel();
-                                XHClick.mapStat(context, "a_vip_movesuccess", "点击我知道了按钮", "");
+                            public void run() {
+                                final Context currContext = XHActivityManager.getInstance().getCurrentActivity();
+                                final MsgNotifyDialog dialog = new MsgNotifyDialog(currContext);
+                                dialog.setMsgBtnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.cancel();
+                                        XHClick.mapStat(currContext, "a_vip_movesuccess", "点击我知道了按钮", "");
+                                    }
+                                });
+                                dialog.show(currContext.getString(R.string.yiyuan_succ_title), currContext.getString(R.string.yiyuan_succ_desc), currContext.getString(R.string.str_know));
                             }
-                        });
-                        dialog.show(context.getString(R.string.yiyuan_succ_title), context.getString(R.string.yiyuan_succ_desc), context.getString(R.string.str_know));
+                        }, 200);
                         ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
                     } else {
                         //绑定失败
