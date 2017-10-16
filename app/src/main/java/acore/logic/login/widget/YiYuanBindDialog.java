@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import amodule.user.activity.login.LoginByAccout;
 
 /**
@@ -37,7 +38,7 @@ public class YiYuanBindDialog extends Dialog {
         this(context, true, null);
     }
 
-    protected YiYuanBindDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+    protected YiYuanBindDialog(@NonNull final Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
         View contentView = LayoutInflater.from(context).inflate(R.layout.yiyuan_dialog_content, null);
         setContentView(contentView);
@@ -54,15 +55,22 @@ public class YiYuanBindDialog extends Dialog {
                         if (LoginManager.isLogin()) {
                             LoginManager.setAutoBindYiYuanVIP(true);
                             LoginManager.bindYiYuanVIP(mContext);
+                            XHClick.mapStat(context, "a_vip_thismove", "转移到本账号", "");
                         } else {
                             LoginManager.setAutoBindYiYuanVIP(true);
                             Intent intent = new Intent(mContext, LoginByAccout.class);
                             mContext.startActivity(intent);
+                            XHClick.mapStat(context, "a_vip_newmove", "转移到香哈账号", "");
                         }
                         YiYuanBindDialog.this.cancel();
                         break;
                     case R.id.btn2:
                         YiYuanBindDialog.this.cancel();
+                        if (LoginManager.isLogin()) {
+                            XHClick.mapStat(context, "a_vip_thismove","取消", "");
+                        } else {
+                            XHClick.mapStat(context, "a_vip_newmove","取消", "");
+                        }
                         break;
                 }
             }

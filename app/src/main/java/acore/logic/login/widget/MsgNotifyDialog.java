@@ -39,12 +39,6 @@ public class MsgNotifyDialog extends Dialog {
         mSingleBtn = (Button) content.findViewById(R.id.know);
         setContentView(content);
         getWindow().setBackgroundDrawableResource(R.drawable.bg_round_white13);
-        mSingleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MsgNotifyDialog.this.cancel();
-            }
-        });
     }
 
     public void show(String title, String desc, String btnText) {
@@ -52,5 +46,11 @@ public class MsgNotifyDialog extends Dialog {
         mContentView.setText(desc == null ? "" : desc);
         mSingleBtn.setText(btnText == null ? "" : btnText);
         show();
+    }
+
+    public void setMsgBtnClickListener(View.OnClickListener clickListener) {
+        if (mSingleBtn != null && clickListener != null) {
+            mSingleBtn.setOnClickListener(clickListener);
+        }
     }
 }

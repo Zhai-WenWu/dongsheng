@@ -580,6 +580,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             switch (clickTag) {
                 case "yiyuan"://权益迁移
                     new YiYuanBindDialog(this).show("权益迁移", getResources().getString(R.string.yiyuan_dialog_desc));
+                    XHClick.mapStat(this, tongjiId, "权限迁移按钮", "");
                     break;
                 case "qa"://我的问答
                     FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowQA","2");

@@ -3,6 +3,7 @@ package acore.logic;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.xiangha.R;
 
@@ -564,7 +565,14 @@ public class LoginManager {
                 if (i >= UtilInternet.REQ_OK_STRING) {
                     Map<String, String> state = StringManager.getFirstMap(o);
                     if ("2".equals(state.get("state"))) {
-                        MsgNotifyDialog dialog = new MsgNotifyDialog(context);
+                        final MsgNotifyDialog dialog = new MsgNotifyDialog(context);
+                        dialog.setMsgBtnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.cancel();
+                                XHClick.mapStat(context, "a_vip_movesuccess", "点击我知道了按钮", "");
+                            }
+                        });
                         dialog.show(context.getString(R.string.yiyuan_succ_title), context.getString(R.string.yiyuan_succ_desc), context.getString(R.string.str_know));
                         ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
                     } else {
