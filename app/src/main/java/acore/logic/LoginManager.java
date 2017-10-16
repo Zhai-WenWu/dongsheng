@@ -582,8 +582,6 @@ public class LoginManager {
     }
 
     public static void bindYiYuanVIP(final Context context) {
-        if (!mAutoBindYiYuanVIP)
-            return;
         mAutoBindYiYuanVIP = false;
         ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_binduser, "", new InternetCallback(context) {
             @Override

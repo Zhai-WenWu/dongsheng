@@ -53,7 +53,6 @@ public class YiYuanBindDialog extends Dialog {
                 switch (v.getId()) {
                     case R.id.btn1:
                         if (LoginManager.isLogin()) {
-                            LoginManager.setAutoBindYiYuanVIP(true);
                             LoginManager.bindYiYuanVIP(mContext);
                             XHClick.mapStat(context, "a_vip_thismove", "转移到本账号", "");
                         } else {
