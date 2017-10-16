@@ -68,6 +68,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private int height;
     private String img = "";
     private Handler handlerScreen;
+    private String courseCode;//课程分类
+    private String chapterCode;//章节分类
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
@@ -79,6 +81,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if (bundle != null) {
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
+            courseCode = bundle.getString("courseCode");
+            chapterCode = bundle.getString("chapterCode");
             if (dishTitle == null) dishTitle = "香哈菜谱";
             state = bundle.getString("state");
             data_type=bundle.getString("data_type");

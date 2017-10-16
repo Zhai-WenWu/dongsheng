@@ -316,6 +316,71 @@ public class ReqEncyptInternet extends UtilInternet {
         String now_parms="";
 
         String encryptparams=ReqEncryptCommon.getInstance().getData(now_parms,sign_yes);
+        //当前了然过期，需要重新请求验证
         return encryptparams;
+    }
+
+    /**
+     * 获取当前加密值
+     * @return
+     */
+    public String getEncryptParamNew(){
+        long timeNow= System.currentTimeMillis();
+        if(!isLoginSign && ReqEncryptCommon.getInstance().isencrypt()&&
+                (ReqEncryptCommon.getInstance().getNowTime()+ReqEncryptCommon.getInstance().getTimeLength()*1000)>=timeNow) {
+            long now_request_time = System.currentTimeMillis();
+            int time = (int) (now_request_time - now_login_time) / 1000;
+            //处理当前sign，获取要传输的sign
+            String sign_no = ReqEncryptCommon.decrypt(ReqEncryptCommon.getInstance().getSign(), ReqEncryptCommon.password);
+            String sign_yes = ReqEncryptCommon.encrypt(sign_no + "_" + time, ReqEncryptCommon.password);
+            String now_parms = "";
+
+            String encryptparams = ReqEncryptCommon.getInstance().getData(now_parms, sign_yes);
+            //当前了然过期，需要重新请求验证
+            return encryptparams;
+        }else{
+
+            return "";
+        }
+    }
+    public void handlerloginAppSync(){
+        try {
+            Log.i("zhangyujian","oginAppSync 开始:");
+            if (isLoginSign) {//当前已经请求
+                return;//不处理
+            }
+            isLoginSign = true;
+            String url = StringManager.api_circleFind + "?page=1" ;;
+//            String token = ReqEncryptCommon.getInstance().getToken();
+//            LinkedHashMap<String,String> maps= new LinkedHashMap<String,String>();
+//            maps.put("token",URLEncoder.encode(token, "utf-8"));
+            ReqInternet.in().doPostSync(url, new LinkedHashMap<String,String>(), new InternetCallback(XHApplication.in()) {
+                @Override
+                public void loaded(int flag, String url, Object object) {
+                    Log.i("zhangyujian","getLoginApp() falg:" + flag + "  url:" + url + "  object:" + object);
+                    isLoginSign=false;
+                    if (flag >= ReqInternet.REQ_OK_STRING) {
+                        //loginApp的的时间戳。
+                        now_login_time = System.currentTimeMillis();
+                        Map<String, String> map = StringManager.getFirstMap(object);
+                        if (map.containsKey("gy")) {
+                            ReqEncryptCommon.getInstance().setNowTime(System.currentTimeMillis());
+                            String GY = ReqEncryptCommon.getInstance().decrypt(map.get("gy"), ReqEncryptCommon.password);
+                            ReqEncryptCommon.getInstance().setGY(GY);
+                            String sign = map.get("sign");
+                            ReqEncryptCommon.getInstance().setSign(sign);
+                            if (map.containsKey("aliveTime")) {
+                                String timeLength = map.get("aliveTime");
+                                ReqEncryptCommon.getInstance().setTimeLength(Long.parseLong(timeLength));
+                            }
+                            ReqEncryptCommon.getInstance().setIsencrypt(true);
+                        }
+                    }
+                }
+            });
+//            Log.i("zhangyujian","data:::"+data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

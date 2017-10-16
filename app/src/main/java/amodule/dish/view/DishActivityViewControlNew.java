@@ -82,6 +82,8 @@ public class  DishActivityViewControlNew {
     private boolean isLoadWebViewData=false;//是否webview加载过数据
     private boolean isHeaderLoadCallBack=false;//是否执行header的callback
 
+    private String courseCode,chapterCode;//
+
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
@@ -95,6 +97,15 @@ public class  DishActivityViewControlNew {
         initView();
     }
 
+    /**
+     * 设置章节code和课程code
+     * @param courseCode 课程
+     * @param chapterCode 章节
+     */
+    public void setCode(String courseCode,String chapterCode){
+        this.courseCode = courseCode;
+        this.chapterCode = chapterCode;
+    }
     /**
      * view的初始化
      */
@@ -469,7 +480,16 @@ public class  DishActivityViewControlNew {
         if(!isLoadWebViewData) {
             Log.i("wyl","24");
             Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
-            templateWebView.loadData(XHTemplateManager.XHDISHLAYOUT,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT),new String[]{mDishCode});
+            String[] temp= XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT);
+            ArrayList<String> strLists= new ArrayList<>();
+            for(String str:temp){
+                strLists.add(str);
+            }
+            strLists.add(courseCode);
+            strLists.add(chapterCode);
+
+            String [] layout= (String[]) strLists.toArray();
+            templateWebView.loadData(XHTemplateManager.XHDISHLAYOUT,layout,new String[]{mDishCode,courseCode,chapterCode});
             isLoadWebViewData = true;
         }
     }
