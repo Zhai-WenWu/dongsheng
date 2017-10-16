@@ -177,7 +177,27 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         Object vipTransfer = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "vipTransfer");
         mIsTempVIP = "2".equals(data.get("isBindingVip"));
         mYiYuanVIPView.setVisibility(mIsTempVIP ? View.VISIBLE : View.GONE);
-        if ("2".equals(data.get("isBindingPopup")) && mIsTempVIP && !"2".equals(vipTransfer)) {
+        boolean showDialog = false;
+        Map<String, String> dataContentMap = StringManager.getFirstMap(data.get("data"));
+        Map<String, String> vipContentMap = StringManager.getFirstMap(dataContentMap.get("vip"));
+        String vipFirstTime = vipContentMap.get("first_time");
+        String vipLastTime = vipContentMap.get("last_time");
+        String vipMaturityTime = vipContentMap.get("maturity_time");
+        try {
+            //单位都是秒
+            long firstTime = Long.parseLong(vipFirstTime);
+            long lastTime = Long.parseLong(vipLastTime);
+            long maturityTime = Long.parseLong(vipMaturityTime);
+            long dialogTime = lastTime + 20 * 24 * 60 * 60;
+            long currTime = System.currentTimeMillis() / 1000;
+            if (dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) {
+                showDialog = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if ("2".equals(data.get("isBindingPopup")) && mIsTempVIP && !"2".equals(vipTransfer) && showDialog) {
             showYiYuanDialog(true);
         }
     }
