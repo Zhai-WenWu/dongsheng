@@ -1,12 +1,16 @@
 package acore.logic;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.CookieManager;
 
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -181,9 +185,28 @@ public class LoginManager {
 
                     //清除无用数据
                     clearUserData(mAct);
+
+                    //清除Cookie
+                    removeAllCookie(mAct);
                 }
             }
         });
+    }
+
+    private static void removeAllCookie(Context context) {
+        if (context == null)
+            return;
+        CookieSyncManager.createInstance(context);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.removeSessionCookies(null);
+            cookieManager.removeAllCookies(null);
+        } else {
+            cookieManager.removeSessionCookie();
+            cookieManager.removeAllCookie();
+        }
+
     }
 
     /**
