@@ -319,7 +319,6 @@ public class XHAllAdControl {
                             try {
                                 xhBackIdsDataCallBack.callBack(AdData);
                             } catch (Exception e) {
-                                Log.e("tzy","Exception : " + e.getMessage());
                             }
                         }
                     }
