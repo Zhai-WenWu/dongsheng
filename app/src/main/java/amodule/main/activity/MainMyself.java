@@ -197,7 +197,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             e.printStackTrace();
         }
 
-        if ("2".equals(data.get("isBindingPopup")) && mIsTempVIP && !"2".equals(vipTransfer) && showDialog) {
+        if (mIsTempVIP && !"2".equals(vipTransfer) && showDialog) {
             showYiYuanDialog(true);
         }
     }
