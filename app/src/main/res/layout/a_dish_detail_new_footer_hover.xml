@@ -12,7 +12,8 @@
         android:layout_below="@+id/line_linear"
         android:background="#f9f9f9f9"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/a_dish_detail_new_footer_hover_good_linear"
@@ -165,5 +166,28 @@
         style="@style/lineView"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/dp_20" />
+    <RelativeLayout
+        android:id="@+id/a_dish_detail_new_footer_member_rela"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/a_dish_detail_new_footer_member_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="开通VIP"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_17"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#EDEDDE"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

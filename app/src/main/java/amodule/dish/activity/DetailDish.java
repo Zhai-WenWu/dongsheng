@@ -38,6 +38,7 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.TemplateWebViewControl;
+import aplug.web.view.TemplateWebView;
 import third.video.VideoPlayerController;
 
 /**
@@ -81,8 +82,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if (bundle != null) {
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
-            courseCode = bundle.getString("courseCode");
-            chapterCode = bundle.getString("chapterCode");
+            courseCode = bundle.getString("courseCode","");
+            chapterCode = bundle.getString("chapterCode","");
             if (dishTitle == null) dishTitle = "香哈菜谱";
             state = bundle.getString("state");
             data_type=bundle.getString("data_type");
@@ -137,15 +138,30 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
         setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);
-        dishActivityViewControl.init(state, loadManager, code, new DishActivityViewControlNew.DishViewCallBack() {
+        dishActivityViewControl.init(state, loadManager, new DishActivityViewControlNew.DishViewCallBack() {
             @Override
             public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
+            }
+        }, new TemplateWebView.OnTemplateCallBack() {
+            @Override
+            public void readLoad(String param) {
+                Log.i(Main.TAG,"数据：：："+param);
+                Map<String,String> map= StringManager.getMapByString(param,"&","=");
+                code=map.get("code");
+                courseCode=map.get("courseCode");
+                chapterCode=map.get("chapterCode");
+                initData();
             }
         });
         //优先处理：img
         if(!TextUtils.isEmpty(img)) {
             dishActivityViewControl.setDishOneView(img);
         }
+        initData();
+    }
+    private void initData(){
+        dishActivityViewControl.setCode(courseCode,chapterCode);
+        dishActivityViewControl.initData(code);
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +181,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             @Override
             public void getPower(int flag, String url, Object obj) {
                 //权限检测
-                if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)){
+                if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)&& !"{}".equals(obj)){
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
                     }else{
@@ -191,6 +207,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                     dishActivityViewControl.reset();
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
                         analyzeData(String.valueOf(o),detailPermissionMap);
+                        Map<String,String> maps= StringManager.getFirstMap(o);
+
+                        if(maps.containsKey("isHide")&&!"2".equals(maps.get("isHide"))){
+                            handlerOtherTieData();//不隐藏。
+                        }
                     } else {
                         loadManager.loadOver(flag, 1, true);
                     }
@@ -202,10 +223,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         });
     }
 
-    /**
-     * 请求其他接口数据
-     */
-    private void loadOtherData(){
+    private void handlerOtherTieData(){
         String params = "code=" + code;
         //获取帖子数据
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDish.this.getApplicationContext()) {
@@ -217,7 +235,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 }
             }
         });
-
+    }
+    /**
+     * 请求其他接口数据
+     */
+    private void loadOtherData(){
+        String params = "code=" + code;
         //获取点赞数据
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDish.this.getApplicationContext()) {
             @Override
