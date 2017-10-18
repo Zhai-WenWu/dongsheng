@@ -251,6 +251,11 @@ public class MyMessage extends MainBaseActivity{
 				}
 			}
 		};
+		findViewById(R.id.no_login_rela).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+			}
+		});
 	}
 
 	/**
