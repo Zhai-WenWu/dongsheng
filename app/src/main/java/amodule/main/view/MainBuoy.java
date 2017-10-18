@@ -17,6 +17,7 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -46,6 +47,7 @@ public class MainBuoy {
 	private ImageView imageButton;
 	
 	public MainBuoy(Main act){
+		Log.i("tzy","create MainBuoy");
 		this.mAct = act;
 		// 浮动按钮
 		isMove = true;
@@ -60,8 +62,7 @@ public class MainBuoy {
 	private void initBuoy(){
 		imageButton = new ImageView(mAct);
 		int width = Tools.getDimen(mAct, R.dimen.dp_45);
-		int height = width;
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
 		DisplayMetrics dm = ToolsDevice.getWindowPx(mAct);
 		params.setMargins(params.leftMargin, dm.heightPixels / 5 * 2,params.rightMargin, params.bottomMargin);
 		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -164,8 +165,8 @@ public class MainBuoy {
 			
 			/**
 			 * 处理图片
-			 * @param iv
-			 * @param imgUrl
+			 * @param iv ImageView
+			 * @param imgUrl 图片链接
 			 */
 			private void setBuoyImage(final ImageView iv, String imgUrl) {
 				iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -250,28 +251,8 @@ public class MainBuoy {
 		return floatSubjectList;
 	}
 
-	public String getFloatSubjectInfo() {
-		return floatSubjectInfo;
-	}
-
-	public boolean isOneFloat() {
-		return isOneFloat;
-	}
-
-	public ImageView getImageButton() {
-		return imageButton;
-	}
-
-	public boolean isMove(){
-		return isMove;
-	}
-	
 	public void setMove(boolean isMove) {
 		this.isMove = isMove;
-	}
-	
-	public boolean isClosed(){
-		return isClosed;
 	}
 
 	public void setClosed(boolean isClosed) {

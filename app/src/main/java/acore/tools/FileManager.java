@@ -25,7 +25,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
-import acore.dialogManager.VersionOp;
+import acore.logic.VersionOp;
 import acore.override.XHApplication;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
@@ -242,7 +242,7 @@ public class FileManager extends UtilFile{
 		FileManager.setSharedPreference(mContext, FileManager.USERCHECK, str_new);
 	}
 	
-	public static String getCameraDir(){
+	public static String getSDCacheDir(){
 		return getSDDir()+save_cache+"/";
 	}
 	

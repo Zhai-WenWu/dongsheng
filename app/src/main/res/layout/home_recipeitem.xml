@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:background="@color/transparent_fe">
 
-    <View
+    <ViewStub
         android:id="@+id/line_top"
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout="@layout/home_item_top_line"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
-        android:background="#e9e9e9"
         android:visibility="gone"/>
 
     <RelativeLayout
@@ -60,36 +60,15 @@
                 android:background="#000000"/>
         </LinearLayout>
 
-        <LinearLayout
+        <ViewStub
             android:id="@+id/time_tag_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginRight="@dimen/dp_20"
-            android:background="@drawable/bg_round_homeitem"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="gone">
+            android:layout="@layout/home_item_time_tag_container"
+            />
 
-            <TextView
-                android:id="@+id/time_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_35"
-                android:gravity="center"
-                android:maxLines="1"
-                android:textColor="#ff533c"
-                android:textSize="@dimen/sp_14"
-                android:visibility="visible" />
-
-            <ImageView
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
-                android:layout_marginLeft="@dimen/dp_3"
-                android:layout_marginTop="@dimen/dp_1"
-                android:src="@drawable/time_tag_refresh"
-                android:scaleType="centerInside"/>
-
-        </LinearLayout>
     </RelativeLayout>
 
     <TextView

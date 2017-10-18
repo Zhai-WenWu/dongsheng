@@ -115,13 +115,14 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private Long startTime;//统计使用的时间
     public boolean isPortrait = false;
     int statusBarH = 0;
-
+    private Handler handlerScreen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //保持高亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        new Handler().postDelayed(new Runnable() {
+        handlerScreen=new Handler();
+        handlerScreen.postDelayed(new Runnable() {
             @Override
             public void run() {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -184,6 +185,10 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         }
         if (mHaederLayout != null)
             mHaederLayout.onDestroy();
+        if(handlerScreen!=null){
+            handlerScreen.removeCallbacksAndMessages(null);
+            handlerScreen=null;
+        }
         super.onDestroy();
     }
 
@@ -561,12 +566,16 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             mTitle.setText(customerData.get("nickName"));
             mTitle.setVisibility(View.VISIBLE);
         }
-        rightButton.setImageResource(isAuthor ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
+        //获取是否可以编辑
+        boolean hasEditPermission = "2".equals(mapVideo.get("isEdit"));
+        //作者 或者 有编辑权限
+        final boolean canEdit = isAuthor || hasEditPermission;
+        rightButton.setImageResource(canEdit ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAuthor) {
-                    showBottomDialog();
+                if (canEdit) {
+                    showBottomDialog(isAuthor);
                 } else {
                     openShare();
                     statistics("分享", "");
@@ -793,7 +802,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         detailAdapter.notifyDataSetChanged();
     }
 
-    private void showBottomDialog() {
+    private void showBottomDialog(boolean isAuthor) {
         ToolsDevice.keyboardControl(false, this, mCommentBar);
         BottomDialog dialog = new BottomDialog(this);
         dialog.addButton("分享", new View.OnClickListener() {
@@ -811,12 +820,16 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 statistics("更多", "编辑");
                 VideoDetailActivity.this.finish();
             }
-        }).addButton("删除", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDeleteDialog();
-            }
         });
+        //是作者显示删除按钮
+        if(isAuthor){
+            dialog.addButton("删除", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openDeleteDialog();
+                }
+            });
+        }
         dialog.show();
     }
 

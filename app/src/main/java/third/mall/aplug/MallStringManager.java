@@ -67,6 +67,7 @@ public class MallStringManager extends UtilString {
     public final static String mall_createOrderByCart_v2 = mall_apiUrl + "/v2/order/createOrderByCart";
     public final static String mall_dsInfo = mall_apiUrl + "/v1/home/dsInfo";
     public final static String mall_getCartInfo_v2 = mall_apiUrl + "/v2/cart/getCartInfo";
+    public final static String mall_getCartInfo_v3 = mall_apiUrl + "/v3/cart/getCartInfo";
     //物流信息
     public final static String mall_getShippingUrl = mall_apiUrl + "/v1/shipping/getShippingUrl";
     //第6版的接口
@@ -95,6 +96,10 @@ public class MallStringManager extends UtilString {
     public final static String mall_dsInfo_v3 = mall_apiUrl + "/v3/home/dsInfo";
     public final static String mall_api_getTemplate = mall_apiUrl + "/v3/template/getTemplate";
     public final static String mall_api_dsTemplate = mall_apiUrl + "/v3/template/dsTemplate";
+    //版本处理
+    public final static String mall_api_autoloadTemplate = mall_apiUrl + "/v3/template/autoloadTemplate";
+    public final static String mall_api_getTemplateName = mall_apiUrl + "/v3/template/getTemplateName";
+
 
     /**
      * 替换url

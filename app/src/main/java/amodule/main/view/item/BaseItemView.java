@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -110,7 +111,7 @@ public class BaseItemView extends RelativeLayout {
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-                if (bitmap != null) {
+                if (bitmap != null && v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(url)) {
                     v.setImageBitmap(bitmap);
                 }
             }

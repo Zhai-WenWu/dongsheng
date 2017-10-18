@@ -30,8 +30,10 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
+import aplug.web.tools.TemplateWebViewControl;
 import aplug.web.tools.WebviewManager;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
@@ -115,6 +117,7 @@ public class  DishActivityViewControlNew {
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
             @Override
             public void onLoadFinish() {
+                Log.i(Main.TAG,"模版加载完成");
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -222,7 +225,8 @@ public class  DishActivityViewControlNew {
                                 mTimer.schedule(2);
                             }
                         }
-                        mFootControl.hindGoodLayout();
+                        if(null != mFootControl)
+                            mFootControl.hindGoodLayout();
                         break;
                 }
                 return false;
@@ -254,7 +258,8 @@ public class  DishActivityViewControlNew {
 
         String authorCode = dishInfoMap.get("customerCode");
         if (!TextUtils.isEmpty(authorCode)){
-            mFootControl.setAuthorCode(authorCode);
+            if(null != mFootControl)
+                mFootControl.setAuthorCode(authorCode);
             if(LoginManager.userInfo != null
                     && authorCode.equals(LoginManager.userInfo.get("code"))) {
                 state = "";
@@ -280,8 +285,7 @@ public class  DishActivityViewControlNew {
         dishHeaderView.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
             @Override
             public void videoImageOnClick() {
-                String color = Tools.getColorStr(mAct, R.color.common_top_bg);
-                bar_title_1.setBackgroundColor(Color.parseColor(color));
+                bar_title_1.setBackgroundResource(R.color.common_top_bg);
                 isHasVideoOnClick = true;
             }
             @Override
@@ -361,11 +365,13 @@ public class  DishActivityViewControlNew {
     }
 
     public void analyzeUserShowDishInfoData(String dishJson){
-        mFootControl.initUserDish(dishJson);
+        if(null != mFootControl)
+            mFootControl.initUserDish(dishJson);
     }
 
     public void analyzeDishLikeNumberInfoData(String dishJson){
-        mFootControl.initLikeState(dishJson);
+        if(null != mFootControl)
+            mFootControl.initLikeState(dishJson);
     }
 
     /**
@@ -382,8 +388,7 @@ public class  DishActivityViewControlNew {
             bar_title_1.clearAnimation();
             //初始化view都为不透明
             if (isHasVideoOnClick) return;
-            String color = Tools.getColorStr(mAct, R.color.common_top_bg);
-            bar_title_1.setBackgroundColor(Color.parseColor(color));
+            bar_title_1.setBackgroundResource(R.color.common_top_bg);
             if(!isShowTitleColor){
                 AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
                 alphaAnimation.setDuration(1000);
@@ -428,10 +433,6 @@ public class  DishActivityViewControlNew {
     }
     public void onPause() {
         if(dishHeaderView!=null)dishHeaderView.onPause();
-    }
-
-    public void onDestroy() {
-        if(dishHeaderView!=null)dishHeaderView.onDestroy();
     }
 
     public boolean onBackPressed(){
@@ -623,4 +624,23 @@ public class  DishActivityViewControlNew {
 
         }
     }
+    /**
+     * 页面销毁时调用
+     */
+    public void onDestroy(){
+        if(dishTitleViewControl!=null){
+            dishTitleViewControl.onDestroy();
+            dishTitleViewControl=null;
+        }
+        if(dishHeaderView!=null){
+            dishHeaderView.onDestroy();
+            dishHeaderView=null;
+        }
+        if(mFootControl!=null){
+            mFootControl.onDestroy();
+            mFootControl=null;
+        }
+        System.gc();
+    }
+
 }

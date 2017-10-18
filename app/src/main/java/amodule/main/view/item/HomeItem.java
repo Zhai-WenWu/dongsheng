@@ -1,5 +1,6 @@
 package amodule.main.view.item;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,13 +17,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.BuglyLog;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
@@ -55,7 +57,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected TextView mTopTxt;
 
     protected LinearLayout mNumInfoLayout;
-    protected LinearLayout mTimeTagContainer;
+    protected View mTimeTagContainer;
     protected TextView mTimeTag;
     protected View mLineTop;
 
@@ -76,11 +78,11 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     private ImageView mAdTag;
 
     public HomeItem(Context context, int layoutId) {
-        this(context,null,layoutId);
+        this(context, null, layoutId);
     }
 
     public HomeItem(Context context, AttributeSet attrs, int layoutId) {
-        this(context, attrs,0,layoutId);
+        this(context, attrs, 0, layoutId);
     }
 
     public HomeItem(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
@@ -106,7 +108,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             mNumInfoLayout.addView(mHomeItemBottomView);
         mHomeItemBottomView.setVisibility(View.GONE);
 
-        mTimeTagContainer = (LinearLayout) findViewById(R.id.time_tag_container);
+        mTimeTagContainer = findViewById(R.id.time_tag_container);
 
     }
 
@@ -122,7 +124,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     /**
      * 点击事件，由外界或者item内部的view点击事件调用，此写法是解决有些手机偶尔出现点击事件不响应的问题。
-     * @param v
+     *
+     * @param v 点击的view
      */
     public void onClickEvent(View v) {
         if (mIsAd) {
@@ -142,6 +145,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     }
 
     private ADImageLoadCallback mCallback;
+
     protected void loadImage(String url, ImageView view, ADImageLoadCallback callback) {
         mCallback = callback;
         loadImage(url, view);
@@ -158,6 +162,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                if (v.getTag(TAG_ID) == null || !v.getTag(TAG_ID).equals(url))
+                    return;
                 if (mCallback != null) {
                     if (mCallback != null)
                         mCallback.callback(bitmap);
@@ -188,7 +194,9 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     /**
      * 处理Item点击事件外的其他事件。
+     *
      * @param view 点击的Item
+     *
      * @return 如果返回false，表示外界不处理点击事件，将会自己处理点击事件；
      */
     private boolean handleClickEvent(View view) {
@@ -196,40 +204,45 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
                 if (!mTransferUrl.contains("data_type=") && !mTransferUrl.contains("module_type=")) {
                     if (!mTransferUrl.startsWith("http")) {
-                        if(mTransferUrl.contains("?"))mTransferUrl+="&data_type="+mDataMap.get("type");
-                        else mTransferUrl+="?data_type="+mDataMap.get("type");
-                        mTransferUrl+="&module_type="+(isTopTypeView()?"top_info":"info");
+                        if (mTransferUrl.contains("?"))
+                            mTransferUrl += "&data_type=" + mDataMap.get("type");
+                        else
+                            mTransferUrl += "?data_type=" + mDataMap.get("type");
+                        mTransferUrl += "&module_type=" + (isTopTypeView() ? "top_info" : "info");
                     }
                 }
-                Log.i("zhangyujian","点击："+mDataMap.get("code")+":::"+mTransferUrl);
-                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","click","","",String.valueOf(mPosition+1),"","");
+                Log.i("zhangyujian", "点击：" + mDataMap.get("code") + ":::" + mTransferUrl);
+                XHClick.saveStatictisFile("home", getModleViewType(), mDataMap.get("type"), mDataMap.get("code"), "", "click", "", "", String.valueOf(mPosition + 1), "", "");
             }
-            if(mTransferUrl.contains("dishInfo.app")&&!TextUtils.isEmpty(mDataMap.get("type"))
-                    &&!"2".equals(mDataMap.get("type"))){
-                mTransferUrl+="&img="+mDataMap.get("img");
+            if (mTransferUrl.contains("dishInfo.app")
+                    && !TextUtils.isEmpty(mDataMap.get("type"))
+                    && !"2".equals(mDataMap.get("type"))) {
+                mTransferUrl += "&img=" + mDataMap.get("img");
             }
             String params = mTransferUrl.substring(mTransferUrl.indexOf("?") + 1, mTransferUrl.length());
-            Log.i("zhangyujian","mTransferUrl:::"+params);
+            Log.i("zhangyujian", "mTransferUrl:::" + params);
             Map<String, String> map = StringManager.getMapByString(params, "&", "=");
             Class c = null;
             Intent intent = new Intent();
             if (mTransferUrl.startsWith("http")) {//我的香豆、我的会员页面
-                if (mTransferUrl.indexOf("fullScreen=2") > -1) {
+                if (mTransferUrl.contains("fullScreen=2")) {
                     c = FullScreenWeb.class;
                     intent.putExtra("url", mTransferUrl);
                     intent.putExtra("code", map.containsKey("code") ? map.get("code") : "");
                 } else {
                     c = ShowWeb.class;
-                    intent.putExtra("url",mTransferUrl);
-                    intent.putExtra("code",map.get("code"));
+                    intent.putExtra("url", mTransferUrl);
+                    intent.putExtra("code", map.get("code"));
                 }
             } else if (mTransferUrl.contains("xhds.product.info.app?")) {//商品详情页，原生
                 c = CommodDetailActivity.class;
-                intent.putExtra("product_code",map.get("product_code"));
-            } else if(mTransferUrl.contains("nousInfo.app")){
+                for(String key : map.keySet()){//取全部参数。
+                    intent.putExtra(key, map.get(key));
+                }
+            } else if (mTransferUrl.contains("nousInfo.app")) {
                 c = ShowWeb.class;
-                intent.putExtra("url",StringManager.api_nouseInfo);
-                intent.putExtra("code",map.get("code"));
+                intent.putExtra("url", StringManager.api_nouseInfo);
+                intent.putExtra("code", map.get("code"));
             }
             if (c != null) {
                 intent.putExtra("data_type", mDataMap.get("type"));
@@ -248,7 +261,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     /**
      * 设置广告控制器，在setData前设置。
-     * @param adControlParent
+     *
+     * @param adControlParent 广告控制器
      */
     public void setAdControl(AdControlParent adControlParent) {
         this.mAdControlParent = adControlParent;
@@ -269,7 +283,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                     if (mRefreshCallBack != null)
                         mRefreshCallBack.viewOnClick(true);
                     if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
-                        XHClick.mapStat((Activity) getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
+                        XHClick.mapStat(getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
         addInnerListener();
@@ -277,14 +291,18 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         if (mDataMap != null) {
             initData();
             //统计---只展示一次，isShow 2已经显示
-            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())&&!TextUtils.isEmpty(mDataMap.get("code"))&&(!mDataMap.containsKey("isShowStatistic")||"1".equals(mDataMap.get("isShowStatistic")))) {//保证推荐模块类型
-                Log.i("zhangyujian","展示曝光数据::"+mDataMap.get("name")+"::::"+mDataMap.get("type")+"::position:::"+position);
-                XHClick.saveStatictisFile("home",getModleViewType(),mDataMap.get("type"),mDataMap.get("code"),"","show","","",String.valueOf(mPosition+1),"","");
-                mDataMap.put("isShowStatistic","2");
+            if (mModuleBean != null
+                    && MainHome.recommedType.equals(mModuleBean.getType())
+                    && !TextUtils.isEmpty(mDataMap.get("code"))
+                    && (!mDataMap.containsKey("isShowStatistic") || "1".equals(mDataMap.get("isShowStatistic")))) {//保证推荐模块类型
+                Log.i("zhangyujian", "展示曝光数据::" + mDataMap.get("name") + "::::" + mDataMap.get("type") + "::position:::" + position);
+                XHClick.saveStatictisFile("home", getModleViewType(), mDataMap.get("type"), mDataMap.get("code"), "", "show", "", "", String.valueOf(mPosition + 1), "", "");
+                mDataMap.put("isShowStatistic", "2");
             }
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void initData() {
         resetData();
         resetView();
@@ -451,7 +469,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                         break;
                 }
                 if (!TextUtils.isEmpty(eventId) && !TextUtils.isEmpty(twoLevel))
-                    XHClick.mapStat((Activity) getContext(), eventId, twoLevel, "点击" + (mPosition + 1) + "位置");
+                    XHClick.mapStat(getContext(), eventId, twoLevel, "点击" + (mPosition + 1) + "位置");
             }
         }
     }
@@ -482,30 +500,33 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                         break;
                 }
                 if (mAdControlParent != null)
-                    mAdControlParent.onAdHintClick((Activity)getContext(), mDataMap, eventId, "点击" + mModuleBean.getTitle() + "【广告】icon");
+                    mAdControlParent.onAdHintClick((Activity) getContext(), mDataMap, eventId, "点击" + mModuleBean.getTitle() + "【广告】icon");
             }
         }
     }
 
     /**
      * 获取当前数据类型：用于统计
-     * @return
+     *
+     * @return view类型
      */
-    public String getModleViewType(){
+    public String getModleViewType() {
         return isTopTypeView() ? "top" : MainHome.recommedType_statictus;
     }
 
     /**
      * 是否是置顶数据类型
-     * @return
+     *
+     * @return true 是置顶数据 ：false不是
      */
-    public boolean isTopTypeView(){
+    public boolean isTopTypeView() {
         return !TextUtils.isEmpty(viewType) && HomeFragment.MODULETOPTYPE.equals(viewType);
     }
 
     /**
      * 获取当前Item的数据体类型
-     * @return
+     *
+     * @return 当前Item的数据体类型
      */
     public String getDataType() {
         return mType;
@@ -513,11 +534,13 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     /**
      * 获取广告图片的大小。
-     * @param size 一个两个整数的数组
+     *
+     * @param size  一个两个整数的数组
      * @param style 广告样式 适用于大图样式1和任意图样式6的广告
      */
     protected void getADImgSize(int[] size, String style) {
-        if (mDataMap == null || (!"1".equals(mDataMap.get("style")) && !"6".equals(mDataMap.get("style"))))
+        if (mDataMap == null
+                || (!"1".equals(mDataMap.get("style")) && !"6".equals(mDataMap.get("style"))))
             return;
         Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), mDataMap.get("stype"), "1");
         if (mapSize == null || mapSize.isEmpty())

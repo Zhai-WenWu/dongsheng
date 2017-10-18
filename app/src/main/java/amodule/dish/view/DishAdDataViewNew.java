@@ -291,4 +291,10 @@ public class DishAdDataViewNew extends ItemBaseView {
         }
     }
 
+    public void onDestroy(){
+        if(xhAllAdControl!=null){
+            xhAllAdControl=null;
+        }
+    }
+
 }

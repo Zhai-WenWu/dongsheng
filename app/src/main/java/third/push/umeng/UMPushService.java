@@ -58,7 +58,7 @@ public class UMPushService extends UmengMessageService {
 			serviceIntent.putExtra("channel",PushPraserService.TYPE_UMENG);
 			context.startService(serviceIntent);
 		} catch (Exception e) {
-			UmLog.e(TAG, e.getMessage());
+			UmLog.e(TAG, "Exception : " + e.getMessage());
 		}
 	}
 }

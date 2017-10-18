@@ -510,4 +510,14 @@ public class DishFootControl implements View.OnClickListener{
     public void setAuthorCode(String authorCode){
         this.authorCode= authorCode;
     }
+     /**
+      * 页面销毁时调用
+     */
+    public void onDestroy(){
+        if(dishAdDataView!=null){
+            dishAdDataView.onDestroy();
+            dishAdDataView=null;
+        }
+    }
+
 }

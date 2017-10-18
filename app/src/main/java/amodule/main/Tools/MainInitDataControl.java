@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.dialogManager.VersionOp;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
@@ -75,7 +75,9 @@ public class MainInitDataControl {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                CookieManager.getInstance().removeAllCookie();
+                try{
+                    CookieManager.getInstance().removeAllCookie();
+                }catch (Exception ignored){}
                 XHClick.saveFirstStartTime(XHApplication.in());
                 XHClick.registerMonthSuperProperty(XHApplication.in());
             }
@@ -154,7 +156,7 @@ public class MainInitDataControl {
         long startTime= System.currentTimeMillis();
 
         //更模版
-        new XHTemplateManager().CheckUpdataAllTemplate();
+        new XHTemplateManager().checkUplateAllTemplate();
 
         delayedExcute(new Runnable() {
             @Override

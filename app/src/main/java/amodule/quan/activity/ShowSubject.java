@@ -200,7 +200,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		Tools.setStatusBarColor(this, Color.parseColor(color));
 		//		setViewIndex();
 		XHClick.track(this, "浏览美食贴");
-		SpecialWebControl.initSpecialWeb(this,"subjectInfo","",subCode);
+		SpecialWebControl.initSpecialWeb(this,rl,"subjectInfo","",subCode);
 	}
 
 	private void addFloor(Map<String,String> map, String msg){

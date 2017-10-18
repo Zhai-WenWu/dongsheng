@@ -37,6 +37,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import aplug.web.tools.TemplateWebViewControl;
 import third.video.VideoPlayerController;
 
 /**
@@ -66,6 +67,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private String module_type="";
     private int height;
     private String img = "";
+    private Handler handlerScreen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
@@ -93,7 +95,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
         //保持高亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        new Handler().postDelayed(new Runnable() {
+        handlerScreen=new Handler();
+        handlerScreen.postDelayed(new Runnable() {
             @Override
             public void run() {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -101,7 +104,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         },15 * 60 * 1000);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        Log.i("zyj","activity:::"+(System.currentTimeMillis()-startTime));
+        Log.i(Main.TAG,"菜谱详情页");
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
@@ -153,7 +156,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     private void loadDishInfo() {
         String params = "code=" + code;
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this.getApplicationContext()) {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
@@ -179,6 +182,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
+                    Log.i(Main.TAG,"topinfo返回数据");
                     if(!hasPermission || !contiunRefresh) return;
                     dishActivityViewControl.reset();
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
@@ -200,17 +204,18 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private void loadOtherData(){
         String params = "code=" + code;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDish.this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDish.this.getApplicationContext()) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
+                    Log.i(Main.TAG,"tieinfo返回数据");
                     dishActivityViewControl.analyzeUserShowDishInfoData(String.valueOf(o));
                 }
             }
         });
 
         //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDish.this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDish.this.getApplicationContext()) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING){
@@ -219,7 +224,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             }
         });
 
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(DetailDish.this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(DetailDish.this.getApplicationContext()) {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING){
@@ -248,7 +253,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private void requestWeb(String dishJson) {
         Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
         if(dishInfo != null){
-            SpecialWebControl.initSpecialWeb(this,"dishInfo",dishInfo.get("name"),code);
+            SpecialWebControl.initSpecialWeb(this,rl,"dishInfo",dishInfo.get("name"),code);
         }
     }
     //**********************************************Activity生命周期方法**************************************************
@@ -291,10 +296,16 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
         if(dishActivityViewControl != null){
             dishActivityViewControl.onDestroy();
+            dishActivityViewControl=null;
+            System.gc();
         }
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+        }
+        if(handlerScreen!=null){
+            handlerScreen.removeCallbacksAndMessages(null);
+            handlerScreen=null;
         }
 
     }

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,74 +35,124 @@ import third.mall.aplug.MallStringManager;
  */
 public class TemplateWebViewControl {
     private boolean isCallBack = false;//是否已经回调
-
     /**
      * 处理模版数据
      * 存储数据，的key是通过当前url获取出来
      *
      * @param requestMethod
      */
-    public void handleXHMouldData(final String requestMethod) {
-        isCallBack = false;
-        final String path = FileManager.getSDDir() + "long/" + requestMethod;
-        final String readStr = FileManager.readFile(path);
-        final Object versionSign = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
-        LinkedHashMap<String, String> mapParams = new LinkedHashMap<>();
-        mapParams.put("versionSign", versionSign == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionSign));
-        mapParams.put("requestMethod", requestMethod);
-        String url = StringManager.api_getXhTemplate;
-        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
-            isCallBack = true;
-            Log.i("wyl", "状态:2:111" );
-            mouldCallBack.load(true, readStr, requestMethod, versionSign == null ? "" : String.valueOf(versionSign));
-        }
-        ReqEncyptInternet.in().doEncypt(url, mapParams, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+    public void handleXHModuleData(final String requestMethod) {
+        isCallBack=false;
+        String url= StringManager.API_TEMPLATE_GETTEMPLATENAME;
+        String params= "requestMethod="+requestMethod;
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
             public void loaded(int flag, String url, final Object msg) {
-                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr,"versionSign");
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    Map<String,String> listMap= StringManager.getFirstMap(msg);
+                    if(listMap!=null&&listMap.containsKey("templateName")){
+                        String requestMethod=listMap.get("templateName");
+                        String version_key=listMap.get("versionSign");
+                        String path = FileManager.getSDDir() + "long/" + requestMethod;
+                        String readStr = null;
+                        try {
+                            readStr = readInfoStream(FileManager.loadFile(path));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
+                        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
+                        //对数据进行校验。md5验证
+                        if(versionUrl != null &&!TextUtils.isEmpty(String.valueOf(versionUrl))&& !TextUtils.isEmpty(readStr)){
+                            String md5Data= MD5(readStr).toLowerCase();
+                            Log.i(Main.TAG,"md5Data::"+md5Data+":::"+versionUrl);
+                            if(!String.valueOf(versionUrl).equals(md5Data)){
+                                version="";
+                                readStr="";
+                            }
+                        }
+                        if (mouldCallBack != null ) {
+                            if(TextUtils.isEmpty(readStr)){
+                                Log.i(Main.TAG,"当前没有下载下来数据，从资源文件中取::"+requestMethod);
+                                readStr=FileManager.getFromAssets(XHActivityManager.getInstance().getCurrentActivity(),requestMethod);
+                            }
+                            if(!TextUtils.isEmpty(readStr)) {
+                                isCallBack = true;
+                                Log.i(Main.TAG,"有资源数据，直接返回::"+requestMethod);
+                                mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
+                            }
+                        }
+                        if(TextUtils.isEmpty(version)||!version.equals(version_key)){
+                            handlerQiniuGetData(listMap,requestMethod,path,readStr,"versionSign");
+                        }
+                    }
+                }
             }
         });
     }
 
     /**
-     * 处理电商模版
-     *
+     * 处理单个模版信息
      * @param requestMethod
      */
-    private void handlerDsMouldData(final String requestMethod) {
-        isCallBack = false;
-        final String path = FileManager.getSDDir() + "long/" + requestMethod;
-        final String readStr = FileManager.readFile(path);
-        final Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
-        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
-        String url = MallStringManager.mall_api_dsTemplate + "?request_method=" + requestMethod + "&version_sign=" + version;
-        if (mouldCallBack != null && !TextUtils.isEmpty(readStr)) {
-            isCallBack = true;
-            Log.i("wyl", "状态::111" );
-            mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
-        }
+    public void handlerDsModuleData(String requestMethod){
+        isCallBack=false;
+        String url= MallStringManager.mall_api_getTemplateName+"?request_method="+requestMethod;
         MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
             @Override
-            public void loadstat(final int flag, final String url, final Object msg, Object... stat) {
-                handlerAnalyzData(flag,url,msg,requestMethod,path,readStr,"version_sign");
+            public void loadstat(int flag, String url, Object msg, Object... stat)  {
+                if(flag>=ReqInternet.REQ_OK_STRING){
+                    Map<String,String> listMap= StringManager.getFirstMap(msg);
+                    if(listMap!=null&&listMap.containsKey("template_name")){
+                        String requestMethod=listMap.get("template_name");
+                        String version_key=listMap.get("version_sign");
+                        String path = FileManager.getSDDir() + "long/" + requestMethod;
+                        String readStr = null;
+                        try {
+                            readStr = readInfoStream(FileManager.loadFile(path));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Object versionUrl = FileManager.loadShared(XHApplication.in(), requestMethod, "version_sign");
+                        String version = versionUrl == null || TextUtils.isEmpty(readStr) ? "" : String.valueOf(versionUrl);
+
+                        //对数据进行校验。md5验证
+                        if(versionUrl != null &&!TextUtils.isEmpty(String.valueOf(versionUrl))&& !TextUtils.isEmpty(readStr)){
+                            String md5Data= MD5(readStr).toLowerCase();
+                            Log.i(Main.TAG,"md5Data::"+md5Data+":::"+versionUrl);
+                            if(!String.valueOf(versionUrl).equals(md5Data)){
+                                version="";
+                                readStr="";
+                            }
+                        }
+                        if (mouldCallBack != null ) {
+                            if(TextUtils.isEmpty(readStr)){
+                                Log.i(Main.TAG,"当前没有下载下来数据，从资源文件中取：："+requestMethod);
+                                readStr=FileManager.getFromAssets(XHActivityManager.getInstance().getCurrentActivity(),requestMethod);
+                            }
+                            if(!TextUtils.isEmpty(readStr)) {
+                                isCallBack = true;
+                                Log.i(Main.TAG,"有资源数据，直接返回：："+requestMethod);
+                                mouldCallBack.load(true, readStr, requestMethod, versionUrl == null ? "" : String.valueOf(versionUrl));
+                            }
+                        }
+                        if(TextUtils.isEmpty(version)||!version.equals(version_key)){
+                            handlerQiniuGetData(listMap,requestMethod,path,readStr,"version_sign");
+                        }
+                    }
+                }
             }
         });
     }
-
     /**
      * 处理从七牛那请求数据
-     * @param flag
-     * @param url
-     * @param msg
+     * @param map
      * @param requestMethod  模块名称
      * @param path   文件保存路径
      * @param readStr  文件内容
      * @param versionKey 不同模版的key不同。
      */
-    private void handlerAnalyzData(int flag, final String url, final Object msg, final String requestMethod, final String path, final String readStr,String versionKey){
-        if (flag >= ReqInternet.REQ_OK_STRING) {
-            Log.i("wyl", "msg::" + msg);
-            Map<String, String> map = StringManager.getFirstMap(msg);
+    public void handlerQiniuGetData(final Map<String,String> map, final String requestMethod, final String path, final String readStr,String versionKey){
             if (map.containsKey("url") && !TextUtils.isEmpty(map.get("url"))) {
                 String dataUrl = map.get("url");
                 final String version_sign=map.get(versionKey);
@@ -113,7 +164,6 @@ public class TemplateWebViewControl {
                         ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
-                                Log.i("wyl", "状态:***"+flag );
                                 if (flag >= ReqInternet.REQ_OK_IS) {
                                     try {
                                         new Thread(new Runnable() {
@@ -121,12 +171,24 @@ public class TemplateWebViewControl {
                                             public void run() {
                                                 try {
                                                     final String data = readInfoStream((InputStream) msg);
-                                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            handler(data,path,requestMethod,readStr,version_sign);
+                                                    long time= System.currentTimeMillis();
+                                                    String dataMd5 = MD5(data).toLowerCase();
+                                                    long timenow= System.currentTimeMillis();
+                                                    Log.i(Main.TAG,"dataMd5::"+dataMd5+":::"+version_sign+":::"+(timenow-time));
+                                                    if(version_sign.equals(dataMd5)) {
+                                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                handler(data, path, requestMethod, readStr, version_sign);
+                                                            }
+                                                        });
+                                                    }else{
+                                                        if (mouldCallBack != null  && !isCallBack) {
+                                                            Log.i(Main.TAG,"服务端返回数据777::"+requestMethod);
+                                                            mouldCallBack.load(true, TextUtils.isEmpty(readStr) ? "" : readStr, requestMethod, String.valueOf(version_sign));
                                                         }
-                                                    });
+
+                                                    }
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
@@ -135,21 +197,19 @@ public class TemplateWebViewControl {
 
                                     } catch (Exception e) {
                                         if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                            Log.i("wyl", "状态::444" );
+                                            Log.i(Main.TAG,"服务端返回数据444::"+requestMethod);
                                             mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                         }
                                     }
                                 } else if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                                    Log.i("wyl", "状态::555");
+                                    Log.i(Main.TAG,"服务端返回数据555::"+requestMethod);
                                     mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
                                 }
-
                             }
                         });
                     }
                 });
             }
-        }
     }
 
     private void handler(String data,String path,String requestMethod,String readStr,String version_sign){
@@ -158,55 +218,13 @@ public class TemplateWebViewControl {
             if (file != null)
                 FileManager.saveShared(XHApplication.in(), requestMethod, "version_sign", String.valueOf(version_sign));
             if (mouldCallBack != null && !isCallBack) {
-                Log.i("wyl", "状态::222" );
+                Log.i(Main.TAG,"服务端返回数据222::"+requestMethod);
                 mouldCallBack.load(true, data, requestMethod, String.valueOf(version_sign));
             }
         } else {
             if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                Log.i("wyl", "状态::333" );
+                Log.i(Main.TAG,"服务端返回数据333::"+requestMethod);
                 mouldCallBack.load(true, readStr, requestMethod, String.valueOf(version_sign));
-            }
-        }
-    }
-
-    /**
-     * 处理解析数据
-     *
-     * @param flag
-     * @param url
-     * @param msg
-     * @param requestMethod--方法名称
-     * @param path--文件
-     * @param readStr---html代码
-     * @param versionSign--版本
-     */
-    private void AnalyzData(int flag, final String url, final Object msg, String requestMethod, String path, String readStr, Object versionSign) {
-        if (flag >= ReqInternet.REQ_OK_STRING) {
-            long time = System.currentTimeMillis();
-            if (!TextUtils.isEmpty(String.valueOf(msg)) && !"[]".equals(String.valueOf(msg))) {
-                Map<String, String> map = StringManager.getFirstMap(msg);
-                String data = map.get("html");
-                versionSign = map.get("versionSign");
-                if (!TextUtils.isEmpty(data)) {//返回数据---有新版本处理
-                    File file = FileManager.saveFileToCompletePath(path, data, false);
-                    if (file != null)
-                        FileManager.saveShared(XHApplication.in(), requestMethod, "versionSign", String.valueOf(versionSign));
-                    if (mouldCallBack != null && !isCallBack) {
-                        mouldCallBack.load(true, data, requestMethod, String.valueOf(versionSign));
-                    }
-                } else {//无数据标示已经是最新版本。
-                    if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                        mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                    }
-                }
-            } else {
-                if (mouldCallBack != null && !TextUtils.isEmpty(readStr) && !isCallBack) {
-                    mouldCallBack.load(true, readStr, requestMethod, String.valueOf(versionSign));
-                }
-            }
-        } else {
-            if (mouldCallBack != null && !isCallBack) {
-                mouldCallBack.load(false, "", requestMethod, String.valueOf(versionSign));
             }
         }
     }
@@ -239,9 +257,9 @@ public class TemplateWebViewControl {
             return;
         }
         if (requestMethod.startsWith("Ds")) {//电商请求
-            handlerDsMouldData(requestMethod);
+            handlerDsModuleData(requestMethod);
         } else if (requestMethod.startsWith("xh")) {//香哈
-            handleXHMouldData(requestMethod);
+            handleXHModuleData(requestMethod);
         }
     }
 
@@ -275,8 +293,47 @@ public class TemplateWebViewControl {
             } catch (UnsupportedEncodingException e) {
                 throw new Exception("输出异常");
             }
-
         }
-
     }
+
+    /**
+     * md5加密
+     * @param pwd
+     * @return
+     */
+    public static String MD5(String pwd) {
+        //用于加密的字符
+        char md5String[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F' };
+        try {
+            //使用平台的默认字符集将此 String 编码为 byte序列，并将结果存储到一个新的 byte数组中
+            byte[] btInput = pwd.getBytes();
+
+            //信息摘要是安全的单向哈希函数，它接收任意大小的数据，并输出固定长度的哈希值。
+            MessageDigest mdInst = MessageDigest.getInstance("MD5");
+
+            //MessageDigest对象通过使用 update方法处理数据， 使用指定的byte数组更新摘要
+            mdInst.update(btInput);
+
+            // 摘要更新之后，通过调用digest（）执行哈希计算，获得密文
+            byte[] md = mdInst.digest();
+
+            // 把密文转换成十六进制的字符串形式
+            int j = md.length;
+            char str[] = new char[j * 2];
+            int k = 0;
+            for (int i = 0; i < j; i++) {   //  i = 0
+                byte byte0 = md[i];  //95
+                str[k++] = md5String[byte0 >>> 4 & 0xf];    //    5
+                str[k++] = md5String[byte0 & 0xf];   //   F
+            }
+
+            //返回经过加密后的字符串
+            return new String(str);
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

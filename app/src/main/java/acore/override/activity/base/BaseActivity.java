@@ -12,10 +12,8 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -28,10 +26,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.util.Util;
+import com.popdialog.GoodCommentDialogControl;
+import com.popdialog.util.GoodCommentManager;
 import com.xiangha.R;
 
-import acore.dialogManager.GoodCommentManager;
 import acore.logic.ActivityMethodManager;
+import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
@@ -270,8 +270,13 @@ public class BaseActivity extends Activity {
 		if(mUploadNetChangeWindowDialog != null && mUploadNetChangeWindowDialog.isHasShow()) {
 			mUploadNetChangeWindowDialog.onResume();
 		}
-		GoodCommentManager.setStictis(BaseActivity.this);
-
+		//好评统计
+		GoodCommentManager.setStictis(BaseActivity.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
+			@Override
+			public void onStatistics(String typeStr, String timeStr) {
+				XHClick.mapStat(BaseActivity.this, "a_evaluate420", typeStr, timeStr);
+			}
+		});
 //		Log.e("activityName",getClass().getSimpleName());
 	}
 

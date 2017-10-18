@@ -232,7 +232,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 	 */
 	public void setRequest(final boolean state){
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,list.size()==0);
-		url = MallStringManager.mall_getCartInfo_v2;
+		url = MallStringManager.mall_getCartInfo_v3;
 		for (int i = 0,size= list_statistic.size(); i < size; i++) {
 			if(i==0){
 				url+="?"+list_statistic.get(i);

@@ -59,13 +59,24 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/comment_color"
                 android:textSize="@dimen/sp_14" />
+            <TextView
+                android:id="@+id/shopping_item_commod_price_before"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/shopping_item_commod_price"
+                android:layout_alignBottom="@+id/shopping_item_commod_price"
+                android:gravity="center_vertical"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_12"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/shopping_item_commod_none"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_5"
-                android:layout_toRightOf="@+id/shopping_item_commod_price"
+                android:layout_toRightOf="@+id/shopping_item_commod_price_before"
                 android:text="(缺货)"
                 android:textColor="#8a8f97"
                 android:textSize="@dimen/sp_13"
