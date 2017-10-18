@@ -99,7 +99,6 @@ public class LoginManager {
         }
 	}
 
-
     /**
      * 登录成功
      */
@@ -137,6 +136,15 @@ public class LoginManager {
 
     public static void loginSuccess(final Activity mAct, Object returnObj) {
         loginSuccess(mAct, returnObj, false);
+        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, true);
+    }
+
+    /**
+     * 登录失败
+     * @param obj 失败后返回的数据
+     */
+    public static void loginFail(Object obj) {
+        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, false);
     }
 
     /**
@@ -348,34 +356,6 @@ public class LoginManager {
         });
     }
 
-
-    public static void userLogin(final BaseActivity mAct, String param) {
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback(mAct) {
-
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    //判断用户是否已经登录
-                    if (!LoginManager.isLogin()) {
-                        //统计
-                        XHClick.onEvent(mAct, "login", mPlatformName);
-                        loginSuccess(mAct, returnObj,true);
-//						if(userInfo.get("nickName")!=null)
-//							Tools.showToast(mAct, "欢迎" + (userInfo.get("nickName").length()==0?"":userInfo.get("nickName")) + "回来！");
-                    }
-
-                    //如果是用户设置页面，第三方登录为绑定，需要修改UI界面
-                    if (mAct instanceof AccoutActivity) {
-                        for (int i = 0; i < PLATFORMS.length; i++) {
-                            if (mPlatformName.equals(PLATFORMS[i]))
-                                ((AccoutActivity) mAct).getData();
-                        }
-                    }
-                }
-                mAct.loadManager.hideProgressBar();
-            }
-        });
-    }
     /**
      * 判断是否有去掉广告的权利
      * @return true:显示广告   false：去掉广告

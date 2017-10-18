@@ -178,7 +178,6 @@ public class BaseLoginActivity extends BaseActivity {
                     if (maps != null && maps.size() > 0) {
                         err_count_secret = 0;
                         LoginManager.loginSuccess(mAct, returnObj.toString());
-                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, true);
                         callback.onSuccess();
                         if (LoginManager.isAutoBindYiYuanVIP())
                             LoginManager.bindYiYuanVIP(mAct);
@@ -192,9 +191,10 @@ public class BaseLoginActivity extends BaseActivity {
                     } else {
                         onSercretError(loginType, zoneCode, phoneNum);
                         callback.onFalse(flag);
-                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, false);
+                        LoginManager.loginFail(returnObj);
                     }
                 } else {
+                    LoginManager.loginFail(returnObj);
                     onSercretError(loginType, zoneCode, phoneNum);
                     callback.onFalse(flag);
                 }
@@ -270,6 +270,7 @@ public class BaseLoginActivity extends BaseActivity {
                             countryCode, phoneNum, "");
                 } else {
                     callback.onFalse(flag);
+                    LoginManager.loginFail(returnObj);
                 }
             }
         });
@@ -483,6 +484,7 @@ public class BaseLoginActivity extends BaseActivity {
                     LoginManager.loginSuccess((Activity) context, returnObj);
                 } else {
                     callback.onFalse(flag);
+                    LoginManager.loginFail(returnObj);
                     Log.e("modifySecret", returnObj.toString());
                 }
                 loadManager.hideProgressBar();
