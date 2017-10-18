@@ -1,6 +1,5 @@
 package acore.logic;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -387,8 +386,8 @@ public class LoginManager {
             mIsShowAd = getIsShowAd();
         }
         //在线参数，判断vivo市场单独处理（广告是否开启）
-        String showAD= AppCommon.getConfigByLocal("showVivoAD");
-        if(showAD!=null&&!TextUtils.isEmpty(showAD)&&"1".equals(StringManager.getFirstMap(showAD).get("isShow"))){
+        String showAD= AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
+        if(showAD!=null&&!TextUtils.isEmpty(showAD)&&"1".equals(StringManager.getFirstMap(showAD).get("release"))){
             return false;
         }
         if (isTempVip())
