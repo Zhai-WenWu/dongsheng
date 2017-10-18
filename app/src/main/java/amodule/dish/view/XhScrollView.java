@@ -3,7 +3,6 @@ package amodule.dish.view;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ScrollView;
 
@@ -100,7 +99,7 @@ public class XhScrollView extends ScrollView {
         if (oldt < t && ((t - oldt) > 15)) {// 向下
             if (onScrollListener != null)
                 onScrollListener.scrollOritention(SCROLL_DOWN);
-        } else if (oldt > t && (oldt - t) > 15) {// 向上
+        } else if (oldt > t && (oldt - t) >=1) {// 向上
             if (onScrollListener != null)
                 onScrollListener.scrollOritention(SCROLL_UP);
         }
