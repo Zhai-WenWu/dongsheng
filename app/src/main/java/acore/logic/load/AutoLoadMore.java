@@ -462,21 +462,23 @@ public class AutoLoadMore {
 		final LinearLayoutManager layoutManager = (LinearLayoutManager)listView.getLayoutManager();
 		final RecyclerView.Adapter adapter = listView.getAdapter();
 		listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-			boolean isLoading = false;
+			boolean alowLoad = true;
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
 
 				int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-				if (newState == RecyclerView.SCROLL_STATE_IDLE
-						&& lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4) {
-					if (!isLoading) {
-						isLoading = true;
+				if (loadMore != null
+						&& newState == RecyclerView.SCROLL_STATE_IDLE
+						&& lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4
+						&& loadMore.isEnabled()) {
+					if (alowLoad) {
+						alowLoad = false;
 						clicker.onClick (loadMore);
 						new Handler().postDelayed(new Runnable() {
 							@Override
 							public void run() {
-								isLoading = false;
+								alowLoad = true;
 							}
 						}, 500);
 					}
