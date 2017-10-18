@@ -142,6 +142,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 		pay_wechat = (ImageView) findViewById(R.id.pay_wechat);
 		pay_alipay = (ImageView) findViewById(R.id.pay_alipay);
 		order_status_linear=(LinearLayout) findViewById(R.id.order_status_linear);
+		gridview =(GridView) findViewById(R.id.gridview);
 	}
 
 	private void initData() {
@@ -451,7 +452,6 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 
 	private void setRecommendProduct(){
 		if(list_recommend.size()>0){
-			gridview =(GridView) findViewById(R.id.gridview);
 			recommend = new AdapterShopRecommed(this,gridview, list_recommend, R.layout.a_mall_shop_recommend_item_grid, new String[]{}, new int[]{},"a_mail_order");
 			gridview.setAdapter(recommend);
 			gridview.setOnItemClickListener(new OnItemClickListener() {
@@ -461,6 +461,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					setStatisticIndex();
 					Intent intent = new Intent(OrderStateActivity.this,CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM,"猜你喜欢");
 					OrderStateActivity.this.startActivity(intent);
 				}
 			});

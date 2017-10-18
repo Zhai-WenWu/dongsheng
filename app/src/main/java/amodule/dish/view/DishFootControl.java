@@ -3,6 +3,7 @@ package amodule.dish.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
@@ -67,7 +69,7 @@ public class DishFootControl implements View.OnClickListener{
     private TextView mHoverNum,mHoverTv;
     private String askStatus="";
 
-    public DishFootControl(Activity act,String code){
+    public DishFootControl(Activity act){
         mAct = act;
         this.code = code;
         init();
@@ -107,9 +109,12 @@ public class DishFootControl implements View.OnClickListener{
         mNoLikeImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_img);
         hoverGoodImg= (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
         hoverGoodImg.setOnClickListener(this);
-        setRequestAskButtonStatus();
     }
 
+    public void initData(String code){
+        this.code = code;
+        setRequestAskButtonStatus();
+    }
     /**
      * 设置菜谱名称
      * @param dishName
@@ -124,6 +129,7 @@ public class DishFootControl implements View.OnClickListener{
      */
     public void initUserDish(String dishJson){
         ArrayList<Map<String, String>> arrayList = getListMapByJson(dishJson);
+        mRelevantTv.setVisibility(View.VISIBLE);
         if(arrayList.size() > 0) {
             Map<String, String> TieMap = arrayList.get(0);
             mRecommentNum.setText(TieMap.get("totalNum") + "个作品");
@@ -222,6 +228,7 @@ public class DishFootControl implements View.OnClickListener{
             }
         }else{
             userDishLayout.removeAllViews();
+
             mRecomentLayout.setVisibility(View.GONE);
             mAct.findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.GONE);
         }
@@ -480,15 +487,46 @@ public class DishFootControl implements View.OnClickListener{
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
                     Map<String,String> map= StringManager.getFirstMap(o);
-
-                    if(map.containsKey("status")&&!TextUtils.isEmpty(map.get("status"))) {
-                        handlrAskStatus(map.get("status"));
+                    if(map.containsKey("button")&&!TextUtils.isEmpty(map.get("button"))&&!"0".equals(StringManager.getFirstMap(map.get("button")).get("style"))) {
+                        handlerAskButton(StringManager.getFirstMap(map.get("button")));
+                    }else{
+                        if (map.containsKey("status") && !TextUtils.isEmpty(map.get("status"))) {
+                            handlrAskStatus(map.get("status"));
+                        }
                     }
                 }
             }
         });
     }
 
+    /**
+     * 对按钮处理
+     * 会员去看看。
+     */
+    private void handlerAskButton(final Map<String,String> map){
+        if(map.containsKey("title")&&map.containsKey("url")) {
+            mAct.findViewById(R.id.a_dish_detail_new_footer_hover_layout).setVisibility(View.GONE);
+            mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+            RelativeLayout bottom_layout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_member_rela);
+            bottom_layout.setVisibility(View.VISIBLE);
+            TextView vip_immediately = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_member_tv);
+            vip_immediately.setText(map.get("title"));
+            if(map.containsKey("color"))vip_immediately.setTextColor(Color.parseColor(map.get("color")));
+            if(map.containsKey("bgColor")){
+                bottom_layout.setBackgroundColor(Color.parseColor(map.get("bgColor")));
+                vip_immediately.setBackgroundColor(Color.parseColor(map.get("bgColor")));
+            }
+            //点击展示。
+            vip_immediately.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppCommon.openUrl(mAct,map.get("url"),false);
+                }
+            });
+        }
+
+
+    }
     /**
      * 处理状态：1：不显示，2：向作者提问，3：提醒作者开通问答，4：未登陆状态
      * @param status
@@ -505,7 +543,11 @@ public class DishFootControl implements View.OnClickListener{
         }
         if("2".equals(status)||"3".equals(status)||"4".equals(status)){
             mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
-        }else mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
+            hoverLayout.setVisibility(View.VISIBLE);
+        }else{
+            mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
+            hoverLayout.setVisibility(View.GONE);
+        }
     }
     public void setAuthorCode(String authorCode){
         this.authorCode= authorCode;

@@ -811,7 +811,7 @@ public class AppCommon {
 
     private static Map<String, String> urlRuleMap = null;
 
-    private static Map<String, String> geturlRule(Context context) {
+    public static Map<String, String> geturlRule(Context context) {
         if (urlRuleMap == null) {
             final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
             String urlRuleJson = readFile(urlRulePath);

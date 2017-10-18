@@ -140,6 +140,7 @@ public class PaySuccedActvity extends MallBaseActivity implements OnClickListene
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Intent intent = new Intent(PaySuccedActvity.this, CommodDetailActivity.class);
 					intent.putExtra("product_code", list_recommend.get(position).get("product_code"));
+					intent.putExtra(MallBaseActivity.PAGE_FROM,"猜你喜欢");
 					startActivity(intent);
 				}
 			});

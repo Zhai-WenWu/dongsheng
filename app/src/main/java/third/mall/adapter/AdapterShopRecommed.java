@@ -93,6 +93,8 @@ public class AdapterShopRecommed extends MallAdapterSimple{
 								if(!TextUtils.isEmpty(statistickey)) {
 									XHClick.mapStat(activity, statistickey, "你可能喜欢", "加入购物车");
 								}
+								//统计
+								MallCommon.setStatictisFrom("猜你喜欢");
 								Tools.showToast(context, "已添加到购物车");
 							}
 						}

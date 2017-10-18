@@ -31,6 +31,7 @@ import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.dish.activity.DetailDish;
 import amodule.main.Main;
 import aplug.basic.XHConf;
 import aplug.web.tools.JSAction;
@@ -47,7 +48,6 @@ import xh.basic.tool.UtilString;
  */
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
 public class TemplateWebView extends XHWebView{
-    private Activity mAct;
     public static final String ERROR_HTML_URL = "file:///android_asset/error.html";
     private Activity act;
     private LoadManager loadManager;
@@ -168,8 +168,60 @@ public class TemplateWebView extends XHWebView{
 
             // 当前页打开
             @Override
-            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                AppCommon.openUrl(act, url, true);
+            public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+                Log.i(Main.TAG,"url::"+url);
+                String XH_PROTOCOL = "xiangha://welcome?";
+                // 如果识别到外部开启链接，则解析
+                if(act instanceof DetailDish) {
+                    if (url.startsWith(XH_PROTOCOL) && url.length() > XH_PROTOCOL.length()) {
+                        String tmpUrl = url.substring(XH_PROTOCOL.length());
+                        if (tmpUrl.startsWith("url=")) {
+                            tmpUrl = tmpUrl.substring("url=".length());
+                        }
+                        if (TextUtils.isEmpty(tmpUrl)) {
+                            url = StringManager.wwwUrl;
+                        } else {
+                            url = tmpUrl;
+                        }
+                    }
+                    Log.i(Main.TAG, "url:22:" + url);
+                    try {
+                        if (url.contains("?")) {
+                            Map<String, String> urlRule = AppCommon.geturlRule(act);
+                            String[] urls = url.split("\\?");
+                            String urlKey = urls[0];
+                            if (urls[0].lastIndexOf("/") >= 0) {
+                                urlKey = urls[0].substring(urls[0].lastIndexOf("/") + 1);
+                            }
+                            if (urlRule == null || urlRule.get(urlKey) == null) {
+                                Log.i(Main.TAG, "url:33:" + url);
+                                AppCommon.openUrl(act, url, true);
+                            } else {
+                                Log.i(Main.TAG, "name::" + act.getComponentName().getClassName());
+                                Log.i(Main.TAG, "urlKey::" + urlKey + "::::" + urlRule.get(urlKey));
+                                if (act != null && act.getComponentName().getClassName().equals(urlRule.get(urlKey))) {
+                                    String params = url.substring(urlKey.length() + 1, url.length());
+                                    Log.i(Main.TAG, "params::" + params);
+                                    if (onTemplateCallBack != null) {
+                                        onTemplateCallBack.readLoad(params);
+                                    }
+                                } else {
+                                    Log.i(Main.TAG, "url:44:" + url);
+                                    AppCommon.openUrl(act, url, true);
+                                }
+                            }
+
+                        } else {
+                            Log.i(Main.TAG, "url:55:" + url);
+                            AppCommon.openUrl(act, url, true);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    AppCommon.openUrl(act, url, true);
+                }
+
                 return true;
             }
             @Override
@@ -205,6 +257,7 @@ public class TemplateWebView extends XHWebView{
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {
                 super.onShowCustomView(view, callback);
+
             }
 
             //弹出提示
@@ -255,6 +308,8 @@ public class TemplateWebView extends XHWebView{
                 }
             }
         });
+        //避免webview乱跳。
+        this.setFocusable(false);
     }
 
     /**
@@ -263,5 +318,13 @@ public class TemplateWebView extends XHWebView{
      */
     public void refreshWebviewMethod(String dataUrl){
         loadUrl(dataUrl);
+    }
+
+    public interface OnTemplateCallBack{
+        public void readLoad(String param);
+    }
+    private OnTemplateCallBack onTemplateCallBack;
+    public void setOnTemplateCallBack(OnTemplateCallBack onTemplateCallBack){
+        this.onTemplateCallBack= onTemplateCallBack;
     }
 }
