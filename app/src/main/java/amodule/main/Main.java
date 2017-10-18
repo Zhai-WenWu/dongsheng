@@ -9,8 +9,10 @@ package amodule.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -49,7 +51,9 @@ import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -83,6 +87,7 @@ import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 import xh.windowview.XhDialog;
@@ -92,7 +97,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 
 
 @SuppressWarnings("deprecation")
-public class Main extends Activity implements OnClickListener {
+public class Main extends Activity implements OnClickListener, IObserver {
     public static Main allMain;
     public static Timer timer;
     /** 把层级>=close_level的层级关闭 */
@@ -163,6 +168,63 @@ public class Main extends Activity implements OnClickListener {
                 new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
         LogManager.printStartTime("zhangyujian","main::oncreate::");
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        if (LoginManager.isLogin())
+            initQiYvUnreadCount();
+        addQiYvListener();
+    }
+
+    /**
+     * 初始化七鱼未读消息数
+     */
+    private void initQiYvUnreadCount() {
+        QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+            @Override
+            public void onNumberReady(int count) {
+                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
+            }
+        });
+    }
+
+    private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
+    /**
+     * 设置七鱼未读消息监听
+     */
+    private void addQiYvListener() {
+        QiYvHelper.getInstance().addOnUrlItemClickListener(new QiYvHelper.OnUrlItemClickListener() {
+            @Override
+            public void onURLClicked(Context context, String url) {
+                if (!TextUtils.isEmpty(url)) {
+                    if (url.contains("m.ds.xiangha.com") && url.contains("product_code=")) {//商品详情链接
+                        String[] strs = url.split("\\?");
+                        if (strs != null && strs.length > 1) {
+                            String params = strs[1];
+                            if (!TextUtils.isEmpty(params)) {
+                                AppCommon.openUrl(Main.this, "xhds.product.info.app?" + params, true);
+                            }
+                        }
+                    } else {
+                        AppCommon.openUrl(Main.this, "xiangha://welcome?showWeb.app?url=" + Uri.encode(url), true);
+                    }
+                }
+            }
+        });
+        if (mUnreadCountListener == null) {
+            mUnreadCountListener = new QiYvHelper.UnreadCountChangeListener() {
+                @Override
+                public void onUnreadCountChange(int count) {
+                    if (count >= 0) {
+                        if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                            MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                            myMessage.setQiYvNum(count);
+                        }
+                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+                    }
+                }
+            };
+        }
+        QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
     }
 
     /**腾讯统计*/
@@ -523,8 +585,6 @@ public class Main extends Activity implements OnClickListener {
             getApiSurTime("homeback", homebackTime, newHomebackTime);
         }
         isForeground = true;
-        //设置未读消息数
-        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
         //去我的页面
         if (MallPayActivity.pay_state) {
             onClick(tabViews[4].findViewById(R.id.tab_linearLayout));
@@ -930,5 +990,43 @@ public class Main extends Activity implements OnClickListener {
             welcomeDialog.dismiss();
         }
         super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
+        mUnreadCountListener = null;
+        if (!LoginManager.isLogin())
+            QiYvHelper.getInstance().destroyQiYvHelper();
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
+            if (data != null && data instanceof Boolean && (Boolean)data) {
+                addQiYvListener();
+                if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                    myMessage.onRefresh();
+                }
+                QiYvHelper.getInstance().onUserLogin();
+                QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+                    @Override
+                    public void onNumberReady(int count) {
+                        if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                            MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                            myMessage.setQiYvNum(count);
+                        }
+                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
+                    }
+                });
+            }
+        } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
+            if (data != null && data instanceof Boolean) {
+                if ((Boolean)data) {
+                    if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                        MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                        myMessage.onRefresh();
+                    }
+                    QiYvHelper.getInstance().onUserLogout();
+                }
+            }
+        }
     }
 }

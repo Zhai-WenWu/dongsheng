@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -31,10 +32,11 @@ import amodule.user.adapter.AdapterMainMsg;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
+import third.qiyu.QiYvHelper;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
-public class MyMessage extends MainBaseActivity {
+public class MyMessage extends MainBaseActivity{
 	private DownRefreshList listMessage;
 	private TextView feekback_msg_num,msg_title_sort;
 	
@@ -52,6 +54,7 @@ public class MyMessage extends MainBaseActivity {
 	private boolean isShowData=true;
 
 	private TextView mMyQANum;
+	private TextView mQiYvNum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,33 @@ public class MyMessage extends MainBaseActivity {
 		super.onResume();
 		if(LoginManager.isLogin()&&isShowData){
 			onRefresh();
+		}
+	}
+
+	/**
+	 * 初始化七鱼客服未读消息数
+	 */
+	private void initQiYvNum() {
+		QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+			@Override
+			public void onNumberReady(int count) {
+				setQiYvNum(count);
+			}
+		});
+	}
+
+	/**
+	 * 设置消息数的显示
+	 * @param count
+	 */
+	public void setQiYvNum(int count) {
+		if (mQiYvNum != null) {
+			if (count > 0) {
+				mQiYvNum.setText(String.valueOf(count));
+				mQiYvNum.setVisibility(View.VISIBLE);
+			} else {
+				mQiYvNum.setVisibility(View.GONE);
+			}
 		}
 	}
 
@@ -143,6 +173,8 @@ public class MyMessage extends MainBaseActivity {
 		RelativeLayout headerSecretary = (RelativeLayout) headerView.findViewById(R.id.secretary);
 		RelativeLayout headerMyQA = (RelativeLayout) headerView.findViewById(R.id.my_qa);
 		mMyQANum = (TextView) headerMyQA.findViewById(R.id.qa_msg_num);
+		RelativeLayout headerQY = (RelativeLayout) headerView.findViewById(R.id.qiyv);
+		mQiYvNum = (TextView) headerQY.findViewById(R.id.qiyv_msg_num);
 		feekback_msg_num = (TextView) headerView.findViewById(R.id.feekback_msg_num);
 		listMessage.addHeaderView(headerView, null, false);
 		OnClickListener clickListener = new OnClickListener() {
@@ -162,11 +194,24 @@ public class MyMessage extends MainBaseActivity {
 						startActivity(new Intent(MyMessage.this, QAMsgListActivity.class));
 						XHClick.mapStat(MyMessage.this, "a_message", "点击我问我答", "");
 						break;
+					case R.id.qiyv:
+						setQiYvNum(0);
+						Map<String, String> customMap = new HashMap<String, String>();
+						customMap.put("pageTitle", "消息列表页");
+						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null, customMap);
+						Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
+						break;
 				}
 			}
 		};
 		headerSecretary.setOnClickListener(clickListener);
 		headerMyQA.setOnClickListener(clickListener);
+		headerQY.setOnClickListener(clickListener);
+
+		if (LoginManager.isLogin()) {
+			initQiYvNum();
+		}
+
 		setFeekbackMsg();
 		listDataMessage = new ArrayList<Map<String, String>>();
 		adapter = new AdapterMainMsg(this, listMessage, listDataMessage, 0, null, null);
@@ -406,5 +451,4 @@ public class MyMessage extends MainBaseActivity {
 			load(true);
 		}
 	};
-
 }

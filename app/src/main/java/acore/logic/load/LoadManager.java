@@ -24,6 +24,8 @@ import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.LayoutScroll;
 import acore.widget.ScrollLinearListLayout;
+import acore.widget.rvlistview.RvBaseAdapter;
+import acore.widget.rvlistview.RvListView;
 import amodule.quan.adapter.AdapterCircle;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -320,12 +322,31 @@ public class LoadManager {
 			}
 		});
 		if (listView.getAdapter() == null) {
+			listView.setAdapter(adapter);
 			if (hasMore) {
 				Button loadMore = mLoadMore.newLoadMoreBtn(listView, loadMoreListener);
 				AutoLoadMore.setAutoMoreListen(listView, loadMore, loadMoreListener,scrollListener);
 
 			}
+		}
+		setLoading(loadMoreListener);
+	}
+
+	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
+						   boolean hasMore,final OnClickListener refreshListener, final OnClickListener loadMoreListener){
+		refreshLayout.setPtrHandler(new PtrDefaultHandler() {
+			@Override
+			public void onRefreshBegin(PtrFrameLayout frame) {
+				refreshListener.onClick(null);
+			}
+		});
+		if (listView.getAdapter() == null) {
 			listView.setAdapter(adapter);
+			if (hasMore) {
+				Button loadMore = mLoadMore.newLoadMoreBtn(listView, loadMoreListener);
+				AutoLoadMore.setAutoMoreListen(listView, loadMore, loadMoreListener);
+
+			}
 		}
 		setLoading(loadMoreListener);
 	}

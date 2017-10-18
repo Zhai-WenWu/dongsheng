@@ -14,7 +14,7 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import amodule.main.activity.MainHome;
-import amodule.main.adapter.AdapterListView;
+import amodule.main.adapter.HomeAdapter;
 
 /**
  * 右图，无图，样式, 带有标题，描述等信息
@@ -77,7 +77,7 @@ public class HomeTxtItem extends HomeItem {
             mIsVideo = true;
         mPlayImg.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         int imgCount = 0;
-        if (String.valueOf(AdapterListView.type_rightImage).equals(mDataMap.get("style"))) {//右图模式
+        if (String.valueOf(HomeAdapter.type_rightImage).equals(mDataMap.get("style"))) {//右图模式
             Map<String, String> imgMap = StringManager.getFirstMap(mDataMap.get("styleData"));
             String imgUrl = imgMap.get("url");
             if (!TextUtils.isEmpty(imgUrl))

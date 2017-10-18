@@ -280,7 +280,7 @@ public class QuanAdvertControl {
      * @param promotionIndex
      */
     public void onAdBind(String controlTag,int indexInData,View view,String promotionIndex){
-        if(!TextUtils.isEmpty(controlTag))
+        if(!TextUtils.isEmpty(controlTag) && mapAd.get(controlTag) != null)
             mapAd.get(controlTag).onAdBind(indexInData,view,promotionIndex);
     }
 
@@ -292,7 +292,7 @@ public class QuanAdvertControl {
      * @param promotionIndex
      */
     public void onAdClick(String controlTag,View view,int indexInData,String promotionIndex){
-        if(!TextUtils.isEmpty(controlTag))
+        if(!TextUtils.isEmpty(controlTag) && mapAd.get(controlTag) != null)
             mapAd.get(controlTag).onAdClick(view,indexInData,promotionIndex);
     }
 

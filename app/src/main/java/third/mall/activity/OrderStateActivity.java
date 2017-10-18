@@ -228,7 +228,11 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 					}
 					setOrderStatus(Integer.parseInt(status), listMapByJson.get(0));
 					for (int i = 0; i < listMapByJson_payment.size(); i++) {
-						listData.add(listMapByJson_payment.get(i));
+						Map<String, String> newMap = listMapByJson_payment.get(i);
+						if (newMap != null) {
+							newMap.put("order_status", order_satus);
+							listData.add(newMap);
+						}
 					}
 					if(listMapByJson_one.get(0).containsKey("recommend_product")){
 						ArrayList<Map<String, String>> list= UtilString.getListMapByJson(listMapByJson_one.get(0).get("recommend_product"));

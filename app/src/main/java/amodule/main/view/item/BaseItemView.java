@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 
 import acore.tools.FileManager;
 import aplug.basic.LoadImage;
+import aplug.basic.SubAnimTarget;
 import aplug.basic.SubBitmapTarget;
 
 /**
@@ -102,8 +104,12 @@ public class BaseItemView extends RelativeLayout {
                     .load(value)
                     .setSaveType(mImgLevel)
                     .build();
-            if (bitmapRequest != null)
-                bitmapRequest.into(getTarget(v, value));
+            if (bitmapRequest != null){
+                AlphaAnimation animation = new AlphaAnimation(0f,1f);
+                animation.setDuration(300);
+                bitmapRequest.animate(animation);
+                bitmapRequest.into(getSubAnimTarget(v, value));
+            }
         }
     }
 
@@ -111,6 +117,17 @@ public class BaseItemView extends RelativeLayout {
         return new SubBitmapTarget() {
             @Override
             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                if (bitmap != null && v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(url)) {
+                    v.setImageBitmap(bitmap);
+                }
+            }
+        };
+    }
+
+    protected SubAnimTarget getSubAnimTarget(final ImageView v,final String url){
+        return new SubAnimTarget(v) {
+            @Override
+            protected void setResource(Bitmap bitmap) {
                 if (bitmap != null && v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(url)) {
                     v.setImageBitmap(bitmap);
                 }
