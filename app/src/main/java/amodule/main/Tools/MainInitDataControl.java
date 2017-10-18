@@ -75,7 +75,9 @@ public class MainInitDataControl {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                CookieManager.getInstance().removeAllCookie();
+                try{
+                    CookieManager.getInstance().removeAllCookie();
+                }catch (Exception ignored){}
                 XHClick.saveFirstStartTime(XHApplication.in());
                 XHClick.registerMonthSuperProperty(XHApplication.in());
             }

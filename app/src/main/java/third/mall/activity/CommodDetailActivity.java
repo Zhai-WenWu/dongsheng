@@ -41,6 +41,7 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,16 +50,13 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.other.activity.PlayVideo;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import aplug.feedback.activity.Feedback;
 import aplug.imageselector.ShowImageActivity;
-import aplug.shortvideo.activity.VideoFullScreenActivity;
 import aplug.web.ShowTemplateWeb;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
@@ -76,6 +74,7 @@ import third.mall.widget.MyScrollView;
 import third.mall.widget.MyScrollView.ScrollViewInterface;
 import third.mall.widget.ScrollViewContainer;
 import third.mall.widget.ScrollViewContainer.ScrollviewContaninerInter;
+import third.qiyu.QiYvHelper;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
 import xh.basic.internet.UtilInternet;
@@ -669,9 +668,22 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         switch (v.getId()) {
             case R.id.service_mercat://客服
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "客服按钮");
-                Intent intentmark = new Intent(this, Feedback.class);
-                intentmark.putExtra("feekUrl",map.get("m_url"));
-                this.startActivity(intentmark);
+
+                Map<String, String> infoMap = new HashMap<String, String>();
+                if (map != null) {
+                    infoMap.put("title", map.get("name"));
+                    infoMap.put("imgUrl", map.get("buy_img"));
+                    infoMap.put("clickUrl", map.get("m_url"));
+                    infoMap.put("note1", "价格：" + map.get("discount_price"));
+                    infoMap.put("show", "0");
+                    infoMap.put("alwaysSend", "0");
+                }
+
+                Map<String, String> customMap = new HashMap<String, String>();
+                customMap.put("pageUrl", map.get("m_url"));
+                customMap.put("pageTitle", "商品详情页");
+                customMap.put("pageCustom", "");
+                QiYvHelper.getInstance().startServiceAcitivity(this, null, infoMap, customMap);
                 break;
             case R.id.commod_buy:
                 if (LoginManager.isLogin()) {

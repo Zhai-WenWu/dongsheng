@@ -18,6 +18,7 @@ import amodule.main.Main;
 import aplug.feedback.activity.Feedback;
 import third.push.model.NotificationData;
 import third.push.xg.XGLocalPushServer;
+import third.qiyu.QiYvHelper;
 
 /**
  * PackageName : third.push.model
@@ -112,7 +113,12 @@ public class PushPraser {
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 								} else {
 									AppCommon.feekbackMessage++;
-									Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
+									QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+										@Override
+										public void onNumberReady(int count) {
+											Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+										}
+									});
 									new NotificationManager().notificationActivity(mContext, data);
 								}
 							} else {
@@ -126,14 +132,24 @@ public class PushPraser {
 								new NotificationManager().notificationActivity(mContext, data);
 							} else {
 								AppCommon.quanMessage++;
-								Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
+								QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+									@Override
+									public void onNumberReady(int count) {
+										Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+									}
+								});
 								new NotificationManager().notificationActivity(mContext, data);
 							}
 							break;
 						// 显示通知，存在消息列表中，使用app不通知
 						case XHClick.NOTIFY_C:
 							AppCommon.quanMessage++;
-							Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
+							QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+								@Override
+								public void onNumberReady(int count) {
+									Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+								}
+							});
 							if (mContext != null && ToolsDevice.isAppInPhone(mContext, mContext.getPackageName()) < 2) {
 								if (data.url.indexOf("subjectInfo.app?") > -1) {
 									// 叠加消息数量

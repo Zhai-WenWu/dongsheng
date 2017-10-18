@@ -35,6 +35,7 @@ dependencies {
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':gsyVideoPlayer-java')
+    compile 'com.qiyukf.unicorn:unicorn:3.10.0'
 }
 
 android {

@@ -30,14 +30,12 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
-import acore.tools.PageStatisticsUtils;
-import aplug.feedback.activity.Feedback;
 import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallStringManager;
-import third.mall.override.MallBaseActivity;
 import third.mall.tool.ToolView;
 import third.mall.view.HorizontalListView;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
@@ -142,7 +140,7 @@ public class AdapterOrderState extends MallAdapterSimple {
 			tv_shop_tel=(TextView) view.findViewById(R.id.tv_shop_tel);
 			
 		}
-		public void setValue(Map<String,String> map,int position){
+		public void setValue(final Map<String,String> map, final int position){
 			buycommod_commod_price_res.setText("¥" + map.get("product_amt"));
 			buycommod_commod_price_pos.setText("+ ¥" + map.get("postage_amt"));
 			//满减
@@ -173,8 +171,36 @@ public class AdapterOrderState extends MallAdapterSimple {
 			rela_shop.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					context.startActivity(new Intent(context, Feedback.class));
-//					showDialog(listMapByJson_order.get(0).get("shop_tel"));
+					Map<String, String> infoMap = new HashMap<String, String>();
+					if (map != null && listMapByJson != null && !listMapByJson.isEmpty()) {
+						String orderId = null;
+						String orderStatus = map.get("order_status");
+						if (!TextUtils.isEmpty(orderStatus)) {
+							switch (orderStatus) {
+								case "order":
+									orderId = map.get("order_id");
+									break;
+								case "payment_order":
+									orderId = map.get("fk_payment_order_id");
+									break;
+								default:
+									orderId = "";
+									break;
+							}
+						}
+						infoMap.put("title", "订单号：" + (orderId == null ? "无订单号" : orderId));
+						infoMap.put("desc", "时间：" + map.get("create_time") + "\n共：" + listMapByJson.size() + "件");
+						infoMap.put("imgUrl", listMapByJson.get(0).get("img"));
+						infoMap.put("note1", "金额：" +  map.get("order_amt"));
+						infoMap.put("note2", map.get("order_status_desc"));
+						infoMap.put("show", "0");
+						infoMap.put("alwaysSend", "0");
+					}
+					Map<String, String> customMap = new HashMap<String, String>();
+					customMap.put("pageUrl", "");
+					customMap.put("pageTitle", "订单详情页");
+					customMap.put("pageCustom", "");
+					QiYvHelper.getInstance().startServiceAcitivity(context, null, infoMap, customMap);
 				}
 			});
 			/* *************************处理用户留言，和联系商家end****************************************8 */
