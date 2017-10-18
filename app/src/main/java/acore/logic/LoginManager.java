@@ -185,10 +185,11 @@ public class LoginManager {
 
                     //清除无用数据
                     clearUserData(mAct);
-
                     //清除Cookie
                     removeAllCookie(mAct);
+                    
                 }
+                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
             }
         });
     }
@@ -260,6 +261,8 @@ public class LoginManager {
 				userInfo.put("isGourmet", map.get("isGourmet"));
 				userInfo.put("tel", map.get("tel"));
 				userInfo.put("vip", map.get("vip"));
+				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
+				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
 				new UMPushServer(mAct).addAlias(map.get("code"));
 				if(map.containsKey("sex"))userInfo.put("sex",map.get("sex"));
@@ -383,11 +386,8 @@ public class LoginManager {
             isLoadFile = true;
             mIsShowAd = getIsShowAd();
         }
-        //在线参数，判断（广告是否开启）
-        String showAD= AppCommon.getConfigByLocal("showAD");
-        if(showAD == null|| TextUtils.isEmpty(showAD)){
-            return false;
-        }
+        //在线参数，判断vivo市场单独处理（广告是否开启）
+        String showAD= AppCommon.getConfigByLocal("showVivoAD");
         if(showAD!=null&&!TextUtils.isEmpty(showAD)&&"1".equals(StringManager.getFirstMap(showAD).get("isShow"))){
             return false;
         }

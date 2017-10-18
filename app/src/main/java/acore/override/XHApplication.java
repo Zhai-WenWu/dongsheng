@@ -2,8 +2,12 @@ package acore.override;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +15,14 @@ import android.util.Log;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
+import com.qiyukf.unicorn.api.ImageLoaderListener;
+import com.qiyukf.unicorn.api.OnBotEventListener;
+import com.qiyukf.unicorn.api.OnMessageItemClickListener;
+import com.qiyukf.unicorn.api.SavePowerConfig;
+import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
+import com.qiyukf.unicorn.api.Unicorn;
+import com.qiyukf.unicorn.api.UnicornImageLoader;
+import com.qiyukf.unicorn.api.YSFOptions;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
@@ -30,8 +42,11 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import third.growingio.GrowingIOController;
+import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
+import third.qiyu.GlideImageLoader;
+import third.qiyu.QiYvHelper;
 
 public class XHApplication extends MobApplication {
     /**包名*/
@@ -137,8 +152,9 @@ public class XHApplication extends MobApplication {
             public void onActivityDestroyed(Activity activity) {
             }
         });
+        //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
+        QiYvHelper.getInstance().initSDK(this);
     }
-
 
     @Override
     public void onTerminate() {

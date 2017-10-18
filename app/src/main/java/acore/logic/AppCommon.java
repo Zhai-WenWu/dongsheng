@@ -66,6 +66,7 @@ import aplug.web.ShowWeb;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.ad.scrollerAd.XHAllAdControl;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
@@ -109,7 +110,12 @@ public class AppCommon {
                         }
                         try {
                             // 所有消息数
-                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage);
+                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+                                @Override
+                                public void onNumberReady(int count) {
+                                    Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + count);
+                                }
+                            });
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;
@@ -811,7 +817,7 @@ public class AppCommon {
 
     private static Map<String, String> urlRuleMap = null;
 
-    private static Map<String, String> geturlRule(Context context) {
+    public static Map<String, String> geturlRule(Context context) {
         if (urlRuleMap == null) {
             final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
             String urlRuleJson = readFile(urlRulePath);

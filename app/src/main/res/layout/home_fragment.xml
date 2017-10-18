@@ -33,16 +33,16 @@
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
         cube_ptr:ptr_resistance="1.7">
 
-        <ListView
-            android:id="@+id/v_scroll"
-            style="@style/listNoDivider"
+        <acore.widget.rvlistview.RvListView
+            android:id="@+id/rvListview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:cacheColorHint="@android:color/transparent"
             android:listSelector="@android:color/transparent"
             android:paddingLeft="0dp"
-            android:paddingRight="0dp"/>
+            android:paddingRight="0dp"
+            />
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 

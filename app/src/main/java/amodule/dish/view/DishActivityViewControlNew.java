@@ -1,7 +1,7 @@
 package amodule.dish.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -33,7 +33,6 @@ import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
-import aplug.web.tools.TemplateWebViewControl;
 import aplug.web.tools.WebviewManager;
 import aplug.web.tools.XHTemplateManager;
 import aplug.web.view.TemplateWebView;
@@ -55,6 +54,7 @@ public class  DishActivityViewControlNew {
     private View view_oneImage;
     private RelativeLayout dishVidioLayout;
     private XHWebView pageXhWebView;//页面限制：例如显示一个开通会员页面
+    private RelativeLayout dredgeVipFullLayout;
 
     private int wm_height;//屏幕高度
     private int adBarHeight = 0;//广告所用bar高度
@@ -82,23 +82,33 @@ public class  DishActivityViewControlNew {
     private boolean isLoadWebViewData=false;//是否webview加载过数据
     private boolean isHeaderLoadCallBack=false;//是否执行header的callback
 
+    private String courseCode,chapterCode;//
+
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
     }
 
-    public void init(String state, LoadManager loadManager, String code, DishViewCallBack callBack) {
+    public void init(String state, LoadManager loadManager, DishViewCallBack callBack, TemplateWebView.OnTemplateCallBack onTemplateCallBack) {
         this.state = state;
         this.loadManager = loadManager;
-        mDishCode = code;
         this.callBack = callBack;
-        initView();
+        initView(onTemplateCallBack);
     }
 
     /**
+     * 设置章节code和课程code
+     * @param courseCode 课程
+     * @param chapterCode 章节
+     */
+    public void setCode(String courseCode,String chapterCode){
+        this.courseCode = courseCode;
+        this.chapterCode = chapterCode;
+    }
+    /**
      * view的初始化
      */
-    private void initView(){
+    private void initView(TemplateWebView.OnTemplateCallBack onTemplateCallBack){
         Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
         initTitle();
@@ -114,6 +124,7 @@ public class  DishActivityViewControlNew {
 
         templateWebView = (TemplateWebView) mAct.findViewById(R.id.a_dish_detail_new_web);
         templateWebView.initBaseData(mAct,loadManager);
+        templateWebView.setOnTemplateCallBack(onTemplateCallBack);
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
             @Override
             public void onLoadFinish() {
@@ -129,14 +140,21 @@ public class  DishActivityViewControlNew {
             public void onLoadStart() {
             }
         });
-        handlerDishWebviewData();
         //底部view
-        mFootControl = new DishFootControl(mAct,mDishCode);
+        mFootControl = new DishFootControl(mAct);
+
         mScrollView = (XhScrollView) mAct.findViewById(R.id.a_dish_detail_new_scrollview);
         setGlideViewListener();
         templateWebView.setVisibility(View.VISIBLE);
+
+        dredgeVipFullLayout = (RelativeLayout) mAct.findViewById(R.id.dredge_vip_full_layout);
     }
 
+    public void initData(String code){
+        this.mDishCode=code;
+        handlerDishWebviewData();
+        mFootControl.initData(mDishCode);
+    }
     /**
      * 处理标题
      */
@@ -310,9 +328,9 @@ public class  DishActivityViewControlNew {
     private boolean isSaveApiData = false;
     private boolean isSaveJsData = false;
 
-    public Map<String, String> needSaveDishInfo = new HashMap<>();
+    private Map<String, String> needSaveDishInfo = new HashMap<>();
 
-    public void saveDishInfo(String dishJson){
+    private void saveDishInfo(String dishJson){
         saveDishInfo = true;
         Map<String,String> dishMap = StringManager.getFirstMap(dishJson);
         needSaveDishInfo.put("name", dishMap.get("name"));
@@ -348,7 +366,7 @@ public class  DishActivityViewControlNew {
     }
 
     /**保存数据到数据库*/
-    public synchronized void saveHistoryToDB() {
+    private synchronized void saveHistoryToDB() {
         if (saveDishInfo && isSaveApiData && isSaveJsData) {
             new Thread(new Runnable() {
                 @Override
@@ -441,7 +459,7 @@ public class  DishActivityViewControlNew {
 
     /**
      * 外部设置是否是视频
-     * @param isHasVideo
+     * @param isHasVideo 是否是视频
      */
     public void setHasVideo(boolean isHasVideo){
         this.isHasVideo= isHasVideo;
@@ -451,7 +469,8 @@ public class  DishActivityViewControlNew {
         dishTitleViewControl.reset();
         dishHeaderView.reset();
         setLoginStatus();
-        if(pageXhWebView!=null)pageXhWebView.setVisibility(View.GONE);
+        if(pageXhWebView!=null)
+            pageXhWebView.setVisibility(View.GONE);
     }
 
     public void setLoginStatus(){
@@ -463,12 +482,25 @@ public class  DishActivityViewControlNew {
      * 处理dishWebView的数据
      */
     public void handlerDishWebviewData(){
-        if(!isLoadWebViewData) {
+//        if(!isLoadWebViewData) {
             Log.i("wyl","24");
             Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
-            templateWebView.loadData(XHTemplateManager.XHDISHLAYOUT,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT),new String[]{mDishCode});
-            isLoadWebViewData = true;
-        }
+            String[] temp= XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT);
+            ArrayList<String> strLists= new ArrayList<>();
+            for(String str:temp){
+                strLists.add(str);
+            }
+            strLists.add(courseCode);
+            strLists.add(chapterCode);
+
+            String[] array=new String[strLists.size()];
+            for(int i=0;i<strLists.size();i++){
+                array[i]=(String)strLists.get(i);
+            }
+            templateWebView.loadData(XHTemplateManager.XHDISHLAYOUT,array,new String[]{mDishCode,courseCode,chapterCode
+            });
+//            isLoadWebViewData = true;
+//        }
     }
     /**
      * 页面限制：显示h5页面，例如：显示一个开通会员页面
@@ -482,12 +514,40 @@ public class  DishActivityViewControlNew {
             pageXhWebView = manager.createWebView(R.id.XHWebview);
             String url = pagePermission.get("url");
             pageXhWebView.loadUrl(url);
-            pageXhWebView.setVisibility(View.VISIBLE);
+            RelativeLayout bar_title_2 = (RelativeLayout) dredgeVipFullLayout.findViewById(R.id.dish_title_page);
+            bar_title_2.findViewById(R.id.back).setOnClickListener(backClickListener);
+            bar_title_2.findViewById(R.id.leftClose).setOnClickListener(backClickListener);
+            bar_title_2.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_2.getLayoutParams();
+            statusBarHeight = Tools.getStatusBarHeight(mAct);
+            layoutParams.height = titleHeight + statusBarHeight;
+            View title_state_bar_page = mAct.findViewById(R.id.title_state_bar_page);
+            layoutParams = (RelativeLayout.LayoutParams) title_state_bar_page.getLayoutParams();
+            layoutParams.height = statusBarHeight;
+            dredgeVipFullLayout.setVisibility(View.VISIBLE);
             return false;
         }
-        if(pageXhWebView!=null)pageXhWebView.setVisibility(View.GONE);
+        if(dredgeVipFullLayout!=null)
+            dredgeVipFullLayout.setVisibility(View.GONE);
         return true;
     }
+
+    private View.OnClickListener backClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.back:
+                    XHClick.mapStat(mAct, tongjiId, "顶部导航栏", "返回点击量");
+                    mAct.finish();
+                    break;
+                case R.id.leftClose:
+                    XHClick.mapStat(mAct, tongjiId, "顶部导航栏", "关闭点击量");
+                    Main.colse_level = 1;
+                    mAct.finish();
+                    break;
+            }
+        }
+    };
 
     /**
      * 获取头部控件
@@ -561,6 +621,7 @@ public class  DishActivityViewControlNew {
     private int mMoveLen = 0;
     private MyTimer mTimer;
     private int tempHeight = -1;
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

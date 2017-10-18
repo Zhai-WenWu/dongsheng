@@ -15,6 +15,7 @@ public class ObserverManager {
     //用于通知的tag
     public static final String NOTIFY_UPLOADOVER = "notify_uploadover";
     public static final String NOTIFY_LOGIN = "notify_login";
+    public static final String NOTIFY_LOGOUT = "notify_logout";
     public static final String NOTIFY_FOLLOW = "notify_follow";
     public static final String NOTIFY_PAYFINISH = "notify_payfinish";
     public static final String NOTIFY_SHARE = "notify_share";

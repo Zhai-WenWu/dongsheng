@@ -68,7 +68,15 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
         BaiduAdTools.newInstance().getNativeData(nativeResponse, new BaiduAdTools.OnHandlerDataCallback() {
             @Override
             public void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isBigPic) {
-                if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(desc)&&!TextUtils.isEmpty(imageUrl)){
+//                Log.d("tzy", "XHScrollerBaidu :: title = " + title);
+//                Log.d("tzy", "XHScrollerBaidu :: desc = " + desc);
+//                Log.d("tzy", "XHScrollerBaidu :: iconUrl = " + iconUrl);
+//                Log.d("tzy", "XHScrollerBaidu :: imageUrl = " + imageUrl);
+//                Log.d("tzy", "XHScrollerBaidu :: isBigPic = " + isBigPic);
+                if(!TextUtils.isEmpty(title)
+                        && !TextUtils.isEmpty(desc)
+                        && (!TextUtils.isEmpty(imageUrl) || !TextUtils.isEmpty(iconUrl))
+                        ){
                     Map<String,String> map= new HashMap<>();
                     if(title.length() > desc.length()){
                         //交换title和desc
@@ -79,11 +87,12 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
                         map.put("desc",desc);
                     }
                     map.put("iconUrl",iconUrl);
-                    map.put("imgUrl",imageUrl);
-                    map.put("type",XHScrollerAdParent.ADKEY_BAIDU);
-                    map.put("isBigPic",isBigPic?"2":"1");
+                    //如果imageUrl为空，则使用iconurl
+                    map.put("imgUrl" , TextUtils.isEmpty(imageUrl) ? iconUrl : imageUrl);
+                    map.put("type" , XHScrollerAdParent.ADKEY_BAIDU);
+                    map.put("isBigPic" , isBigPic ? "2" : "1");
                     map.put("hide","1");//2隐藏，1显示
-                    Log.d("tzy", "XHScrollerBaidu :: map = " + map.toString());
+//                    Log.d("tzy", "XHScrollerBaidu :: map = " + map.toString());
                     if(TextUtils.isEmpty(imageUrl)
                             || (isJudgePicSize && !isBigPic)) {
                         xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BAIDU);

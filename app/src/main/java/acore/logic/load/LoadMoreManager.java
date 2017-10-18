@@ -2,8 +2,10 @@ package acore.logic.load;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.xiangha.R;
@@ -51,6 +53,9 @@ public class LoadMoreManager {
 			loadMoreBtn.setBackgroundResource(R.drawable.btn_nocolor);
 			int pa = ToolsDevice.dp2px(mContext, 1);
 			loadMoreBtn.setShadowLayer(pa, pa, pa,Color.parseColor("#CEFFFFFF"));
+			if(key != null && key instanceof RecyclerView){
+				loadMoreBtn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mHeightLoadmore));
+			}
 			//按对应关系存储
 			mLoadMoreMap.put(key, loadMoreBtn);
 		}

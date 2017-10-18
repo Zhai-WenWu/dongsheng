@@ -77,9 +77,13 @@ public class WebviewManager {
         XHWebView webview = null;
         if (id > 0) {
             webview = (XHWebView) act.findViewById(id);
-        }
-        if (webview == null)
+            if(null == webview){
+                throw new RuntimeException("Id : " + id + " , not found this id.");
+            }
+        }else{
             webview = new XHWebView(act);
+        }
+
         if(isCookieSync) {
             CookieSyncManager.createInstance(act);
             CookieManager cookieManager = CookieManager.getInstance();

@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,11 +16,9 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -29,13 +29,13 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
-import acore.logic.load.AutoLoadMore;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.quan.adapter.AdapterCircle;
+import acore.widget.rvlistview.RvListView;
+import amodule.quan.adapter.AdapterMainCircle;
 import amodule.quan.db.PlateData;
 import amodule.quan.tool.QuanAdvertControl;
 import amodule.quan.view.CircleHeaderView;
@@ -72,7 +72,7 @@ public class CircleMainFragment extends Fragment {
     private CircleHeaderView mCircleHeaderView;
     private PtrClassicFrameLayout refreshLayout;
     /** 展示列表 */
-    private ListView mListview;
+    private RvListView mListView;
     /** Fragment 的 root view */
     private View mView;
 
@@ -102,7 +102,7 @@ public class CircleMainFragment extends Fragment {
     protected String mid = "";
     protected String mCircleName = "";
     /**  */
-    private AdapterCircle mAdapter;
+    private AdapterMainCircle mAdapter;
     String mPageTime = "";
     String mStartTime = "";
     private String noDataNotice_1 = "", noDataNotice_2 = "", noDataUrl = "";
@@ -112,15 +112,18 @@ public class CircleMainFragment extends Fragment {
     private ConnectionChangeReceiver connectionChangeReceiver;
     private boolean isAutoPaly = false;
     private int firstVisibleItems = 0;
+
     public CircleMainFragment() {
         super();
     }
-    private boolean isLoadAd= true;//是否加载广告
+
+    private boolean isLoadAd = true;//是否加载广告
     private QuanAdvertControl quanAdvertControl;
     //对视频的处理
     private LinearLayout video_layout;
     private VideoImageView videoImageView;
-    private int headerCount=0;//存在listview头数据
+    private int headerCount = 0;//存在listview头数据
+
     public static CircleMainFragment newInstance(PlateData plateData) {
         CircleMainFragment fragment = new CircleMainFragment();
         fragment.setPosition(plateData.getPosition());
@@ -154,11 +157,11 @@ public class CircleMainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.circle_fragment_list, null);
+        mView = inflater.inflate(R.layout.circle_main_fragment_list, null);
         mCircleHeaderView = new CircleHeaderView(mActivity);
         mCircleHeaderView.setStiaticID(mPlateData.getStiaticID());
         refreshLayout = (PtrClassicFrameLayout) mView.findViewById(R.id.refresh_list_view_frame);
-        mListview = (ListView) mView.findViewById(R.id.v_scroll);
+        mListView = (RvListView) mView.findViewById(R.id.rvListview);
         returnTop = (ImageView) mView.findViewById(return_top);
         returnTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +178,7 @@ public class CircleMainFragment extends Fragment {
         });
         //初始化AD
         initAd();
-        mListview.addHeaderView(mCircleHeaderView);
+        mListView.addHeaderView(mCircleHeaderView);
         headerCount++;
         mLoadManager = mActivity.loadManager;
         LoadOver = false;
@@ -192,7 +195,7 @@ public class CircleMainFragment extends Fragment {
             mCircleHeaderAD.setStiaticID(mPlateData.getStiaticID());
             headerLayout.addView(mCircleHeaderAD);
             mAds = mCircleHeaderAD.init(mActivity);
-            mListview.addHeaderView(headerLayout);
+            mListView.addHeaderView(headerLayout);
             headerCount++;
         }
     }
@@ -246,8 +249,8 @@ public class CircleMainFragment extends Fragment {
 
     protected void onVisible() {
         preLoad();
-        if (mLoadManager != null && mListview != null) {
-            Button loadMore = mLoadManager.getSingleLoadMore(mListview);
+        if (mLoadManager != null && mListView != null) {
+            Button loadMore = mLoadManager.getSingleLoadMore(mListView);
             if (loadMore != null) {
                 loadMore.setVisibility(mListData.size() == 0 ? View.INVISIBLE : View.VISIBLE);
             }
@@ -270,7 +273,7 @@ public class CircleMainFragment extends Fragment {
 
     private void init() {
         //更新ListView的空header的高度
-        mAdapter = new AdapterCircle(mActivity, mListview, mListData);
+        mAdapter = new AdapterMainCircle(mActivity, mListData);
         mAdapter.setStiaticKey(mPlateData.getStiaticID());
         mAdapter.setModuleName(mPlateData.getName());
         mAdapter.setCircleName(mCircleName);
@@ -282,83 +285,88 @@ public class CircleMainFragment extends Fragment {
         });
         if (!LoadOver) {
             //设置加载，并传入PlaceHoderHeaderLayout设置滑动加载
-            mLoadManager.setLoading(refreshLayout, mListview, mAdapter, true, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getData(true);
-                            //刷新广告
-                            quanAdvertControl.getAdData(mActivity);
-                        }
-                    }, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getData(!LoadOver);
-                        }
-                    },
-                    new AutoLoadMore.OnListScrollListener() {
-                        final int topRedundant = Tools.getDimen(getContext(),R.dimen.dp_45) + Tools.getStatusBarHeight(getContext());
-                        final int bottomRedundant = Tools.getDimen(getContext(),R.dimen.dp_50);
-                        final int Min = topRedundant;
-                        final int Max = (ToolsDevice.getWindowPx(getContext()).heightPixels  - topRedundant - bottomRedundant) * 3 / 5 + topRedundant;
-                        int currentPlayPosition = -1;
+            mLoadManager.setLoading(refreshLayout, mListView, mAdapter, true, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getData(true);
+                    //刷新广告
+                    quanAdvertControl.getAdData(mActivity);
+                }
+            }, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getData(!LoadOver);
+                }
+            });
+            mListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                final int topRedundant = Tools.getDimen(getContext(), R.dimen.dp_45) + Tools.getStatusBarHeight(getContext());
+                final int bottomRedundant = Tools.getDimen(getContext(), R.dimen.dp_50);
+                final int Min = topRedundant;
+                final int Max = (ToolsDevice.getWindowPx(getContext()).heightPixels - topRedundant - bottomRedundant) * 3 / 5 + topRedundant;
+                int currentPlayPosition = -1;
+                LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) mListView.getLayoutManager();
 
-                        @Override
-                        public void onScrollStateChanged(AbsListView view, int scrollState) {
-                            if(videoImageView!=null&&videoImageView.getIsPlaying()){//滑动暂停
-                               stopVideo();
-                            }
-                            if(!isAutoPaly){
-                                return;
-                            }
-                            final int length = view.getChildCount();
-                            if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE){
-                                int count = 0;
-                                int index = 0;
-                                for(; index < length ; index ++){
-                                    View itemView = view.getChildAt(index);
-                                    int top = itemView.getTop();
-                                    int height = itemView.getHeight();
-                                    final int value = height * 4 / 7 + top;
-                                    if(itemView instanceof NormalContentView){
-                                        if(value <= Max && value >= Min){
-                                            ((NormalContentView)itemView).startVideoView();
-                                            currentPlayPosition = view.getPositionForView(itemView);
-                                            Log.i("zhangyujian","自动数据的位置:::"+((NormalContentView)itemView).getPositionNow());
-                                            setVideoLayout(itemView,((NormalContentView)itemView).getPositionNow());
-//                                            mAdapter.setCurrentPlayPosition(currentPlayPosition - mListview.getHeaderViewsCount());
-                                        }else{
-                                            count++;
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (videoImageView != null && videoImageView.getIsPlaying()) {//滑动暂停
+                        stopVideo();
+                    }
+                    if (!isAutoPaly) {
+                        return;
+                    }
+                    final int length = mLinearLayoutManager.getChildCount();
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        int count = 0;
+                        int index = 0;
+                        for (; index < length; index++) {
+                            View itemView = mLinearLayoutManager.getChildAt(index);
+                            int top = itemView.getTop();
+                            int height = itemView.getHeight();
+                            final int value = height * 4 / 7 + top;
+                            if (itemView instanceof NormalContentView) {
+                                if (value <= Max && value >= Min) {
+                                    ((NormalContentView) itemView).startVideoView();
+                                    currentPlayPosition = mLinearLayoutManager.getPosition(itemView);
+                                    Log.i("zhangyujian", "自动数据的位置:::" + ((NormalContentView) itemView).getPositionNow());
+                                    setVideoLayout(itemView, ((NormalContentView) itemView).getPositionNow());
+//                                            mAdapter.setCurrentPlayPosition(currentPlayPosition - mListView.getHeaderViewsCount());
+                                } else {
+                                    count++;
 //                                            ((NormalContentView)itemView).stopVideoView();
-                                        }
-                                    }
-                                }
-                                if(count == index){
-                                    mAdapter.setCurrentPlayPosition(-1);
                                 }
                             }
                         }
-
-                        @Override
-                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                            firstVisibleItems=firstVisibleItem;
-                            setQuanmCurrentPage();
+                        if (count == index) {
+                            mAdapter.setCurrentPlayPosition(-1);
                         }
-                    });
+                    }
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                        firstVisibleItems = mLinearLayoutManager.findFirstVisibleItemPosition();
+                        setQuanmCurrentPage();
+                    }
+                }
+            });
             LoadOver = true;
         }
-        quanAdvertControl= new QuanAdvertControl(mActivity);
+        quanAdvertControl = new QuanAdvertControl(mActivity);
 //        quanAdvertControl.getGdtData(mActivity);
 //        quanAdvertControl.getTencentApiAd(mActivity);
         quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
             @Override
             public void dataBack() {
-                if(isLoadAd){
-                    index_size=0;
-                    mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                if (isLoadAd) {
+                    index_size = 0;
+                    mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
                     //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
                     mAdapter.notifyDataSetChanged();
-                    index_size=mListData.size();
-                }else{
+                    index_size = mListData.size();
+                } else {
                 }
             }
         });
@@ -368,23 +376,24 @@ public class CircleMainFragment extends Fragment {
         mAdapter.setVideoClickCallBack(new NormarlContentItemImageVideoView.VideoClickCallBack() {
             @Override
             public void videoImageOnClick(final int position) {
-                int firstVisiPosi = mListview.getFirstVisiblePosition();
+                int firstVisiPosi = ((LinearLayoutManager)mListView.getLayoutManager()).findFirstVisibleItemPosition();
                 //要获得listview的第n个View,则需要n减去第一个可见View的位置。+1是因为有header
-                View parentView = mListview.getChildAt(position-firstVisiPosi + headerCount);
-                setVideoLayout(parentView,position);
+                View parentView = mListView.getChildAt(position - firstVisiPosi + headerCount);
+                setVideoLayout(parentView, position);
             }
         });
     }
 
     /**
      * 处理view,video
+     *
      * @param parentView
      * @param position
      */
-    private void setVideoLayout(View parentView, final int position){
-        if(mListData.get(position).containsKey("selfVideo") && !TextUtils.isEmpty(mListData.get(position).get("selfVideo"))) {
+    private void setVideoLayout(View parentView, final int position) {
+        if (mListData.get(position).containsKey("selfVideo") && !TextUtils.isEmpty(mListData.get(position).get("selfVideo"))) {
             Map<String, String> videoData = StringManager.getFirstMap(mListData.get(position).get("selfVideo"));
-            if(videoImageView==null)
+            if (videoImageView == null)
                 videoImageView = new VideoImageView(mActivity);
             videoImageView.setImageBg(videoData.get("sImgUrl"));
             videoImageView.setVideoData(videoData.get("videoUrl"));
@@ -405,21 +414,23 @@ public class CircleMainFragment extends Fragment {
             });
         }
     }
+
     /**
      * 暂停播放
      */
-    private void stopVideo(){
-        if(videoImageView!=null){
+    private void stopVideo() {
+        if (videoImageView != null) {
             videoImageView.onVideoPause();
             videoImageView.setVisibility(View.GONE);
         }
     }
+
     /**
      * 详情页
      */
-    private void goNextActivity(int position){
-        String isSafa="";
-        Map<String,String> map = mListData.get(position);
+    private void goNextActivity(int position) {
+        String isSafa = "";
+        Map<String, String> map = mListData.get(position);
         if (map.containsKey("isSafa"))
             isSafa = map.get("isSafa");
         if (map.containsKey("style") && map.get("style").equals("6"))
@@ -452,7 +463,7 @@ public class CircleMainFragment extends Fragment {
         setQuanmCurrentPage();
 
         //更新加载按钮状态
-        mLoadManager.changeMoreBtn(mListview, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, isRefresh);
+        mLoadManager.changeMoreBtn(mListView, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, isRefresh);
         if (isRefresh) {
             mLoadManager.hideProgressBar();
         }
@@ -487,7 +498,7 @@ public class CircleMainFragment extends Fragment {
                             for (int index = 0, length = returnData.size(); index < length; index++) {
                                 Map<String, String> map = returnData.get(index);
                                 String upInfo = map.get("upInfo");//upInfo	更新说明
-                                mListview.setSelection(0);
+                                mListView.scrollToPosition(0);
                                 if (!TextUtils.isEmpty(upInfo) && !"null".equals(upInfo)) {
                                     mCircleHeaderView.initTopView(upInfo, "#ffffff", "#b6b6b6", true);
                                 }
@@ -529,9 +540,9 @@ public class CircleMainFragment extends Fragment {
                         }
                     }
                 }
-                int size= mListData.size();
-                mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
-                if(size<mListData.size())isLoadAd=false;
+                int size = mListData.size();
+                mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                if (size < mListData.size()) isLoadAd = false;
                 index_size = mListData.size();
                 if (mEveryPageNum == 0) {
                     mEveryPageNum = loadCount;
@@ -541,11 +552,11 @@ public class CircleMainFragment extends Fragment {
                 //不为null则刷新，为null则尝试从listview.getAdapter()获取adapter并刷新数据
                 if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
-                } else if (mListview != null && mListview.getAdapter() != null) {
-                    mAdapter = (AdapterCircle) mListview.getAdapter();
+                } else if (mListView != null && mListView.getAdapter() != null) {
+                    mAdapter = (AdapterMainCircle) mListView.getAdapter();
                     mAdapter.notifyDataSetChanged();
                 }
-                mCurrentPage = mLoadManager.changeMoreBtn(mListview, flag, LoadManager.FOOTTIME_PAGE, loadCount, mCurrentPage, isRefresh);
+                mCurrentPage = mLoadManager.changeMoreBtn(mListView, flag, LoadManager.FOOTTIME_PAGE, loadCount, mCurrentPage, isRefresh);
                 //判断是否刷新
                 if (isRefresh) {
                     //添加置顶和公告data
@@ -573,10 +584,10 @@ public class CircleMainFragment extends Fragment {
                     mView.findViewById(R.id.return_top_rela).setVisibility(View.GONE);
                     returnTop.setVisibility(View.GONE);
                 } else {
-                    if(mCurrentPage>=3) {
+                    if (mCurrentPage >= 3) {
                         mView.findViewById(R.id.return_top_rela).setVisibility(View.VISIBLE);
                         returnTop.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         mView.findViewById(R.id.return_top_rela).setVisibility(View.GONE);
                         returnTop.setVisibility(View.GONE);
                     }
@@ -636,7 +647,7 @@ public class CircleMainFragment extends Fragment {
         }
     }
 
-    private void registnetworkListener(){
+    private void registnetworkListener() {
         connectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
             public void disconnect() {
@@ -653,12 +664,12 @@ public class CircleMainFragment extends Fragment {
                 isAutoPaly = false;
             }
         });
-        IntentFilter filter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        getContext().registerReceiver(connectionChangeReceiver,filter);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        getContext().registerReceiver(connectionChangeReceiver, filter);
     }
 
-    public void unregistnetworkListener(){
-        if(connectionChangeReceiver != null){
+    public void unregistnetworkListener() {
+        if (connectionChangeReceiver != null) {
             getContext().unregisterReceiver(connectionChangeReceiver);
         }
     }
@@ -670,19 +681,20 @@ public class CircleMainFragment extends Fragment {
     }
 
     public void returnListTop() {
-        if (mListview != null) {
-            mListview.setSelection(0);
+        if (mListView != null) {
+            mListView.scrollToPosition(0);
         }
     }
 
     /**
-     *设置当前页面加载页面位置
+     * 设置当前页面加载页面位置
      */
-    public void setQuanmCurrentPage(){
-        if(firstVisibleItems>=10){
+    public void setQuanmCurrentPage() {
+        if (firstVisibleItems >= 10) {
             allMain.setQuanRefreshState(true);
-        }else allMain.setQuanRefreshState(false);
+        } else allMain.setQuanRefreshState(false);
     }
+
     public PlateData getmPlateData() {
         return mPlateData;
     }
@@ -710,7 +722,7 @@ public class CircleMainFragment extends Fragment {
     /**
      * 刷新广告数据
      */
-    public void refreshAdData(){
+    public void refreshAdData() {
 //        if(quanAdvertControl==null)return;
 //        boolean state= quanAdvertControl.isNeedRefresh();
 //        if(state){

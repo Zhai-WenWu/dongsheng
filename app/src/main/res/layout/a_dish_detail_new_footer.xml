@@ -82,6 +82,8 @@
         android:gravity="center"
         android:text="晒我做的这道菜"
         android:textColor="#fff"
-        android:textSize="@dimen/sp_17"/>
+        android:textSize="@dimen/sp_17"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

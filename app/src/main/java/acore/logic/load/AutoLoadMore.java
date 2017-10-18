@@ -1,6 +1,9 @@
 package acore.logic.load;
 
 import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import acore.widget.DownRefreshList;
 import acore.widget.DownRefreshList.OnRefreshListener;
 import acore.widget.LayoutScroll;
 import acore.widget.ScrollLinearListLayout;
+import acore.widget.rvlistview.RvBaseAdapter;
+import acore.widget.rvlistview.RvListView;
 import aplug.stickheaderlayout.PlaceHoderHeaderLayout;
 
 public class AutoLoadMore {
@@ -451,6 +456,42 @@ public class AutoLoadMore {
 			}
 		});
 	}
+
+	public static void setAutoMoreListen(RvListView listView,final Button loadMore, final View.OnClickListener clicker){
+		listView.addFooterView(loadMore);
+		final LinearLayoutManager layoutManager = (LinearLayoutManager)listView.getLayoutManager();
+		final RecyclerView.Adapter adapter = listView.getAdapter();
+		listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			boolean isLoading = false;
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+
+				int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+				if (newState == RecyclerView.SCROLL_STATE_IDLE
+						&& lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4) {
+					if (!isLoading) {
+						isLoading = true;
+						clicker.onClick (loadMore);
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								isLoading = false;
+							}
+						}, 500);
+					}
+				}
+			}
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+
+
+			}
+		});
+	}
+
 	/** 用于在PlaceHoderHeaderLayout中同步listView的滑动接口 */
 	public interface OnListScrollListener {
 		public void onScrollStateChanged (AbsListView view, int scrollState);
