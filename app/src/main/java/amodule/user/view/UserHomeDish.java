@@ -182,7 +182,7 @@ public class UserHomeDish extends TabContentView {
                     }
                 });
             }
-            setHeadViewHeight();
+            Log.i("tzy","initLoad");
         }
         if (isMyselft) {
             UploadDishSqlite sqlite = new UploadDishSqlite(mAct);
@@ -193,6 +193,9 @@ public class UserHomeDish extends TabContentView {
             }else{
                 headLayout.findViewById(R.id.a_user_home_dish_draft_layout).setVisibility(View.GONE);
             }
+        }
+        if (theListView.getAdapter() == null) {
+            setHeadViewHeight();
         }
 
         loadManager.setLoading(theListView, adapter, scrollLayout, backLayout, headView, new OnClickListener() {
@@ -213,9 +216,12 @@ public class UserHomeDish extends TabContentView {
     private void setHeadViewHeight() {
         int tabHost_h = Tools.getDimen(mAct, R.dimen.dp_51);
         int draf_h = 0;
-        if (isMyselft && draftSize > 0) draf_h = Tools.getDimen(mAct, R.dimen.dp_65);
+        if (isMyselft && draftSize > 0)
+            draf_h = Tools.getDimen(mAct, R.dimen.dp_65);
         int bigImg_h = Tools.getDimen(mAct, R.dimen.dp_200) + Tools.getStatusBarHeight(mAct);
         int userinfo_h = Tools.getTargetHeight(friend_info);
+        Log.i("tzy","userinfo_h = " + userinfo_h);
+        Log.i("tzy","draf_h = " + draf_h);
         try {
             if (friend_info.getText() == null || friend_info.getText().toString().equals("")) {
 //                headLayout.setLayoutParams(new AbsListView.LayoutParams(
@@ -230,6 +236,8 @@ public class UserHomeDish extends TabContentView {
                 headLayout.getLayoutParams().width= ViewGroup.LayoutParams.MATCH_PARENT;
                 headLayout.getLayoutParams().height=tabHost_h + draf_h + bigImg_h + userinfo_h;
             }
+            headLayout.requestLayout();
+            Log.i("tzy","height = " + headLayout.getLayoutParams().height);
         } catch (Exception e) {
             UtilLog.reportError("MyselfSubject头部局异常", e);
         }
@@ -318,8 +326,9 @@ public class UserHomeDish extends TabContentView {
                     }
                     loadPage = returnList.size();
                     isBlankSpace = false;
-                    adapter.notifyDataSetChanged();
+                    Log.i("tzy","request");
                     setHeadViewHeight();
+                    adapter.notifyDataSetChanged();
                 }
                 if (everyPage == 0)
                     everyPage = loadPage;

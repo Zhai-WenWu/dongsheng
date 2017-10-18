@@ -187,6 +187,7 @@ public class UserHomeVideo extends TabContentView {
                 mHeadViewHeight = tabHost_h + bigImg_h + userinfo_h;
             headView.setLayoutParams(new AbsListView.LayoutParams(
                     android.view.ViewGroup.LayoutParams.MATCH_PARENT, mHeadViewHeight));
+            headView.requestLayout();
         } catch (Exception e) {
             UtilLog.reportError("MyselfSubject头部局异常", e);
         }

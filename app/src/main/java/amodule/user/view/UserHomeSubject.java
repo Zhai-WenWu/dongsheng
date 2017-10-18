@@ -251,6 +251,7 @@ public class UserHomeSubject extends TabContentView {
 				headView.setLayoutParams(new AbsListView.LayoutParams(
 						android.view.ViewGroup.LayoutParams.MATCH_PARENT,
 						tabHost_h + bigImg_h + userinfo_h));
+			headView.requestLayout();
 		} catch (Exception e) {
 			UtilLog.reportError("MyselfSubject头部局异常", e);
 		}
