@@ -37,14 +37,18 @@ public class SpecialWebControl {
     /** 替换字段1 */
     private static final String REPLACE_RANDOM = "{2}";
     /** referer数组1 */
-    private static final String[] referersArray_1 = {"http://m.sogou.com/web/searchList.jsp?&keyword={1}&bid=sogou-mobp-a3bf6e4db644",
+    private static final String[] referersArray_1 = {
+            "http://m.sogou.com/web/searchList.jsp?&keyword={1}&bid=sogou-mobp-a3bf6e4db644",
             "http://so.m.sm.cn/s?q={1}&uc_param_str=dnntnwvepjbprsvdsme&from=ucframe",
             "http://www.baidu.com/from=844b/s?word={1}&oq={1}",
-            "http://m.so.com/s?q={1}&src=suglist&srcg=360aphone&mso_from=360_browser"};
+            "http://m.so.com/s?q={1}&src=suglist&srcg=360aphone&mso_from=360_browser"
+    };
     /** referer数组2 */
-    private static final String[] referersArray_2 = {"http://wisd.sogou.com/?from={2}a",
+    private static final String[] referersArray_2 = {
+            "http://wisd.sogou.com/?from={2}a",
             "http://m.so.com/?tn=&from={2}k",
-            "http://so.m.sm.cn/s?uc_param_str=dnntnwvepffrgibijbp{2}"};
+            "http://so.m.sm.cn/s?uc_param_str=dnntnwvepffrgibijbp{2}"
+    };
     /** 储存次数信息 */
     public static Map<String, Integer> createCount = new HashMap<>();
 
