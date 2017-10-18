@@ -42,8 +42,6 @@ public class QiYvHelper {
     private YSFOptions mOptions;
     private com.qiyukf.unicorn.api.UnreadCountChangeListener mUnreadCountListener;
 
-    private boolean mSetUserInfo;
-
     private QiYvHelper() {
 
     }
@@ -98,18 +96,16 @@ public class QiYvHelper {
         return mOptions;
     }
 
-    private boolean mSetAvatar;
     /**
      * 设置用户头像
      * 此方法可以在需要的地方设置，否则使用七鱼默认的样式。
      */
     private void setCustomerAvatar() {
-        if (mOptions == null || mSetAvatar)
+        if (mOptions == null)
             return;
         if (LoginManager.userInfo != null && !TextUtils.isEmpty(LoginManager.userInfo.get("img"))) {
             mOptions.uiCustomization.rightAvatar = LoginManager.userInfo.get("img");
             Unicorn.updateOptions(mOptions);
-            mSetAvatar = true;
         }
     }
 
@@ -218,7 +214,6 @@ public class QiYvHelper {
 
             }
         });
-        mSetUserInfo = true;
     }
 
     /**
@@ -232,8 +227,7 @@ public class QiYvHelper {
             context.startActivity(new Intent(context, LoginByAccout.class));
             return;
         }
-        if (!mSetUserInfo)
-            setUserInfo();
+        setUserInfo();
         setCustomerAvatar();
 
         boolean mapNull = (infoMap == null || infoMap.isEmpty());
@@ -295,8 +289,6 @@ public class QiYvHelper {
      * 当关联的用户从 APP 注销后，调用此方法，
      */
     public void onUserLogout() {
-        mSetUserInfo = false;
-        mSetAvatar = false;
         Unicorn.addUnreadCountChangeListener(mUnreadCountListener, false);
         Unicorn.logout();
     }
