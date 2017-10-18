@@ -57,7 +57,7 @@ public class LoginManager {
 
     private static String mPlatformName = "QQ";
 
-    public static boolean mIsShowAd = true,isLoadFile = false;
+    private static boolean mIsShowAd = true,isLoadFile = false;
 
     /**
      * 自动登录
@@ -391,6 +391,8 @@ public class LoginManager {
         if(showAD!=null&&!TextUtils.isEmpty(showAD)&&"1".equals(StringManager.getFirstMap(showAD).get("isShow"))){
             return false;
         }
+        if (isTempVip())
+            return false;
         return mIsShowAd;
     }
 
@@ -413,6 +415,27 @@ public class LoginManager {
             return "2".equals(vipMap.get("isVip"));
         }
         return false;
+    }
+
+    /**
+     * 是否是临时vip
+     * @return
+     */
+    public static boolean isTempVip() {
+        return "2".equals(FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "isTempVip"));
+    }
+
+    /**
+     * 设置是否是临时vip
+     * @param tempVip
+     */
+    public static void setTempVip(final boolean tempVip) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
+            }
+        }).start();
     }
 
     public static boolean isBindMobilePhone(){
@@ -573,14 +596,27 @@ public class LoginManager {
     }
 
     private static boolean mAutoBindYiYuanVIP;
+
+    /**
+     * 设置自动绑定vip
+     * @param auto
+     */
     public static void setAutoBindYiYuanVIP(boolean auto) {
         mAutoBindYiYuanVIP = auto;
     }
 
+    /**
+     * vip是否绑定
+     * @return
+     */
     public static boolean isAutoBindYiYuanVIP() {
         return mAutoBindYiYuanVIP;
     }
 
+    /**
+     * 绑定vip
+     * @param context
+     */
     public static void bindYiYuanVIP(final Context context) {
         mAutoBindYiYuanVIP = false;
         ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_binduser, "", new InternetCallback(context) {
@@ -589,6 +625,7 @@ public class LoginManager {
                 if (i >= UtilInternet.REQ_OK_STRING) {
                     Map<String, String> state = StringManager.getFirstMap(o);
                     if ("2".equals(state.get("state"))) {
+                        setTempVip(false);
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
                             public void run() {
