@@ -176,6 +176,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         Map<String, String> data = StringManager.getFirstMap(obj);
         Object vipTransfer = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "vipTransfer");
         mIsTempVIP = "2".equals(data.get("isBindingVip"));
+        LoginManager.setTempVip(mIsTempVIP);
         mYiYuanVIPView.setVisibility(mIsTempVIP ? View.VISIBLE : View.GONE);
         boolean showDialog = false;
         Map<String, String> dataContentMap = StringManager.getFirstMap(data.get("data"));
