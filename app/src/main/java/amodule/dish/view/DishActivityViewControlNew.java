@@ -490,8 +490,8 @@ public class  DishActivityViewControlNew {
             for(String str:temp){
                 strLists.add(str);
             }
-            strLists.add(courseCode);
-            strLists.add(chapterCode);
+            strLists.add("<{courseCode}>");
+            strLists.add("<{chapterCode}>");
 
             String[] array=new String[strLists.size()];
             for(int i=0;i<strLists.size();i++){
