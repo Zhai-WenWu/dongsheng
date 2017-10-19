@@ -30,7 +30,7 @@
         android:layout_toLeftOf="@+id/imgs">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/title_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_9"
@@ -38,7 +38,6 @@
             android:ellipsize="end"
             android:textSize="@dimen/sp_17"
             android:lineSpacingExtra="@dimen/dp_4"
-            android:text="七年老鸭"
             android:textColor="@color/c_black_text"
             android:visibility="visible"/>
 
@@ -97,7 +96,6 @@
                     android:maxLength="5"
                     android:maxLines="1"
                     android:textColor="#b5b4b4"
-                    android:text="七年老鸭"
                     android:textSize="@dimen/sp_11"
                     android:visibility="visible" />
 
