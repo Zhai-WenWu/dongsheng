@@ -154,7 +154,7 @@ public class MainInitDataControl {
     public void initMainOnResume(final Activity act){
         Log.i("zhangyujian","initMainOnResume");
 
-        LoginManager.initYiYuanBindState(act);
+        LoginManager.initYiYuanBindState(act, null);
 
         long startTime= System.currentTimeMillis();
 
