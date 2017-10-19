@@ -47,8 +47,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 205
-        versionName "5.6.6.2"
+        versionCode 206
+        versionName "5.6.6"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -74,9 +74,9 @@ android {
 //            yulekwok
 //            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
-//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
 //            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
-            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
+//            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'
 //            v2SigningEnabled false
         }
