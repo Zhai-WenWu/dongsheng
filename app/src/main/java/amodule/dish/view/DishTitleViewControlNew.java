@@ -140,6 +140,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         if ("2".equals(isFav)) {
             favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
             favText.setText("已收藏");
+        }else{
+            favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+            favText.setText("未收藏");
         }
     }
     @Override
