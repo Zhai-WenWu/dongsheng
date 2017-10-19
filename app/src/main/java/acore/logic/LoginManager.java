@@ -635,8 +635,9 @@ public class LoginManager {
     /**
      * 初始化临时会员绑定状态
      * @param context
+     * @param callback
      */
-    public static void initYiYuanBindState(Context context) {
+    public static void initYiYuanBindState(Context context, final Runnable callback) {
         ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_bindstate, "", new InternetCallback(context) {
             @Override
             public void loaded(int i, String s, Object obj) {
@@ -660,6 +661,8 @@ public class LoginManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                if (callback != null)
+                    callback.run();
             }
         });
     }

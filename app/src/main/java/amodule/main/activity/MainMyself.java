@@ -161,25 +161,20 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     }
 
     private void getYiYuanBindState() {
-        new Thread(new Runnable() {
+        LoginManager.initYiYuanBindState(this, new Runnable() {
             @Override
             public void run() {
                 Object shouldShowDialog = FileManager.loadShared(MainMyself.this, FileManager.xmlFile_appInfo, "shouldShowDialog");
                 onBindStateDataReady(LoginManager.isTempVip(), "2".equals(shouldShowDialog));
             }
-        }).start();
+        });
     }
 
     private void onBindStateDataReady(final boolean isTempVip, final boolean showDialog) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mYiYuanVIPView.setVisibility(isTempVip ? View.VISIBLE : View.GONE);
-                if (showDialog) {
-                    showYiYuanDialog(true);
-                }
-            }
-        });
+        mYiYuanVIPView.setVisibility(isTempVip ? View.VISIBLE : View.GONE);
+        if (showDialog) {
+            showYiYuanDialog(true);
+        }
     }
 
     // 重置用户个人信息
