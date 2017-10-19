@@ -13,7 +13,6 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.activity.MainHome;
@@ -58,7 +57,7 @@ public class HomeRecipeItem extends HomeItem {
     @Override
     protected void initView() {
         super.initView();
-        mTitle = (TextView) findViewById(R.id.title);
+        mTitle = (TextView) findViewById(R.id.title_recipe);
         mTitleTop = (TextView) findViewById(R.id.title_top);
         mVideoTime = (TextView) findViewById(R.id.video_time);
         mVIP = (ImageView) findViewById(R.id.vip);

@@ -43,7 +43,7 @@ public class HomeAlbumItem extends HomeItem {
         super.initView();
         mVIP = (ImageView) findViewById(R.id.vip);
         mImg = (ImageView) findViewById(R.id.img);
-        mTitle = (TextView) findViewById(R.id.title);
+        mTitle = (TextView) findViewById(R.id.title_album);
         mNum1 = (TextView) findViewById(R.id.num1);
         mLayerView = findViewById(R.id.layer_view);
     }

@@ -49,7 +49,7 @@ public class HomePostItem extends HomeItem {
     @Override
     protected void initView() {
         super.initView();
-        mTitle = (TextView) findViewById(R.id.title);
+        mTitle = (TextView) findViewById(R.id.title_post);
         mImg1 = (ImageView) findViewById(R.id.img1);
         mImg2 = (ImageView) findViewById(R.id.img2);
         mImg3 = (ImageView) findViewById(R.id.img3);
