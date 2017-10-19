@@ -3,7 +3,6 @@ package amodule.main.view.item;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,7 +13,6 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.tools.StringManager;
-import amodule.main.Main;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.HomeAdapter;
 
@@ -67,7 +65,6 @@ public class HomeTxtItem extends HomeItem {
         if (mDataMap == null)
             return;
         String name = mIsAd ? mDataMap.get("content") : mDataMap.get("name");
-        Log.i(Main.TAG,"name:::"+name);
         mTitle.setText(name);
         mTitle.setVisibility(!TextUtils.isEmpty(name) ? View.VISIBLE : View.GONE);
         mLayerView.setVisibility(mIsAd ? View.VISIBLE : View.GONE);
