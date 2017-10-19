@@ -134,6 +134,7 @@ public class MyMessage extends MainBaseActivity{
 			findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
 			findViewById(R.id.tv_login_notify).setVisibility(View.VISIBLE);
 			findViewById(R.id.tv_noData).setVisibility(View.GONE);
+			isShowData=true;
 		}
 	}
 
@@ -294,6 +295,7 @@ public class MyMessage extends MainBaseActivity{
 	 */
 	private void load(final boolean isForward) {
 		String getUrl=null;
+		isShowData=false;
 		if (isForward) {
 			currentPage = 1;
 			everyPage = 0;
@@ -396,7 +398,7 @@ public class MyMessage extends MainBaseActivity{
 						findViewById(R.id.tv_noData).setVisibility(View.GONE);
 						isShowData=true;
 					}
-				}
+				}else isShowData=true;
 				listMessage.setVisibility(View.VISIBLE);
 				if (everyPage == 0)
 					everyPage = loadCount;
