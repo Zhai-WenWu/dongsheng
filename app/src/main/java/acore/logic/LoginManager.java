@@ -18,7 +18,6 @@ import java.util.Map;
 
 import acore.logic.login.widget.MsgNotifyDialog;
 import acore.override.XHApplication;
-import acore.override.activity.base.BaseActivity;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
@@ -628,6 +627,38 @@ public class LoginManager {
                 } else {
                     //绑定失败
                     ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, null);
+                }
+            }
+        });
+    }
+
+    /**
+     * 初始化临时会员绑定状态
+     * @param context
+     */
+    public static void initYiYuanBindState(Context context) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_bindstate, "", new InternetCallback(context) {
+            @Override
+            public void loaded(int i, String s, Object obj) {
+                Map<String, String> data = StringManager.getFirstMap(obj);
+                Object vipTransfer = FileManager.loadShared(context, FileManager.xmlFile_appInfo, "vipTransfer");
+                boolean isTempVip = "2".equals(data.get("isBindingVip"));
+                LoginManager.setTempVip(isTempVip);
+                Map<String, String> dataContentMap = StringManager.getFirstMap(data.get("data"));
+                Map<String, String> vipContentMap = StringManager.getFirstMap(dataContentMap.get("vip"));
+                String vipFirstTime = vipContentMap.get("first_time");
+                String vipLastTime = vipContentMap.get("last_time");
+                String vipMaturityTime = vipContentMap.get("maturity_time");
+                try {
+                    //单位都是秒
+                    long firstTime = Long.parseLong(vipFirstTime);
+                    long lastTime = Long.parseLong(vipLastTime);
+                    long maturityTime = Long.parseLong(vipMaturityTime);
+                    long dialogTime = lastTime + 20 * 24 * 60 * 60;
+                    long currTime = System.currentTimeMillis() / 1000;
+                    FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

@@ -97,7 +97,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private TextView vipInfo,vipNewHint, qaInfo, qaNewHint;
     private ImageView vipIcon, qaIcon;
 
-    private boolean mIsTempVIP;
     private boolean mYiYuanDialogShowing;
 
     private boolean mIsOnResuming;
@@ -162,45 +161,25 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     }
 
     private void getYiYuanBindState() {
-        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_bindstate, "", new InternetCallback(this) {
+        new Thread(new Runnable() {
             @Override
-            public void loaded(int i, String s, Object o) {
-                onBindStateDataReady(i >= UtilInternet.REQ_OK_STRING ? o : null);
+            public void run() {
+                Object shouldShowDialog = FileManager.loadShared(MainMyself.this, FileManager.xmlFile_appInfo, "shouldShowDialog");
+                onBindStateDataReady(LoginManager.isTempVip(), "2".equals(shouldShowDialog));
             }
-        });
+        }).start();
     }
 
-    private void onBindStateDataReady(Object obj) {
-        if (obj == null)
-            return;
-        Map<String, String> data = StringManager.getFirstMap(obj);
-        Object vipTransfer = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "vipTransfer");
-        mIsTempVIP = "2".equals(data.get("isBindingVip"));
-        LoginManager.setTempVip(mIsTempVIP);
-        mYiYuanVIPView.setVisibility(mIsTempVIP ? View.VISIBLE : View.GONE);
-        boolean showDialog = false;
-        Map<String, String> dataContentMap = StringManager.getFirstMap(data.get("data"));
-        Map<String, String> vipContentMap = StringManager.getFirstMap(dataContentMap.get("vip"));
-        String vipFirstTime = vipContentMap.get("first_time");
-        String vipLastTime = vipContentMap.get("last_time");
-        String vipMaturityTime = vipContentMap.get("maturity_time");
-        try {
-            //单位都是秒
-            long firstTime = Long.parseLong(vipFirstTime);
-            long lastTime = Long.parseLong(vipLastTime);
-            long maturityTime = Long.parseLong(vipMaturityTime);
-            long dialogTime = lastTime + 20 * 24 * 60 * 60;
-            long currTime = System.currentTimeMillis() / 1000;
-            if (dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) {
-                showDialog = true;
+    private void onBindStateDataReady(final boolean isTempVip, final boolean showDialog) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mYiYuanVIPView.setVisibility(isTempVip ? View.VISIBLE : View.GONE);
+                if (showDialog) {
+                    showYiYuanDialog(true);
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (mIsTempVIP && !"2".equals(vipTransfer) && showDialog) {
-            showYiYuanDialog(true);
-        }
+        });
     }
 
     // 重置用户个人信息
@@ -681,7 +660,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         if (name != null) {
             switch (name) {
                 case ObserverManager.NOTIFY_LOGIN:
-                    if (data != null && data instanceof Boolean && (Boolean)data && mIsTempVIP && !LoginManager.isAutoBindYiYuanVIP()) {
+                    if (data != null && data instanceof Boolean && (Boolean)data && LoginManager.isTempVip() && !LoginManager.isAutoBindYiYuanVIP()) {
                         showYiYuanDialog(false);
                     }
                     break;
@@ -689,7 +668,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     if (data != null && data instanceof Map) {
                         Map<String, String> state = (Map<String, String>) data;
                         if ("2".equals(state.get("state"))) {
-                            mIsTempVIP = false;
                             mYiYuanVIPView.setVisibility(View.GONE);
                             if (mIsOnResuming)
                                 getData();
