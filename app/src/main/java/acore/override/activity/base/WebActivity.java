@@ -142,7 +142,7 @@ public class WebActivity extends BaseActivity{
 		return false;
 	}
 
-	private static void setCookie(String theUrl){
+	protected static void setCookie(String theUrl){
 //		String cookieKey = StringManager.apiUrl.replace(StringManager.apiTitle, "").replace("/", "");
 		if(theUrl.indexOf(MallStringManager.domain)>-1){//电商 ds.xiangha.com
 			Map<String,String> header=MallReqInternet.in().getHeader(mShowWeb);

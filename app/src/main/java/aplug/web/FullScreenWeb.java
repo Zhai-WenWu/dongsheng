@@ -107,8 +107,10 @@ public class FullScreenWeb extends WebActivity implements IObserver {
                         if (data instanceof Map) {
                             Map<String, String> state = (Map<String, String>) data;
                             if (TextUtils.equals("2", state.get("state")))
-                                if (webview != null)
+                                if (webview != null){
+                                    setCookie(url);
                                     webview.loadUrl(url);
+                                }
                         }
                     }
                     break;
