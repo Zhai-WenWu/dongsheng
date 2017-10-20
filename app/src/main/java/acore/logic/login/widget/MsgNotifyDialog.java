@@ -28,17 +28,21 @@ public class MsgNotifyDialog extends Dialog {
     }
 
     public MsgNotifyDialog(@NonNull Context context, @StyleRes int themeResId) {
-        this(context, true, null);
+        super(context, themeResId);
+        initView(context);
     }
 
     protected MsgNotifyDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
+        initView(context);
+    }
+
+    private void initView(Context context) {
         View content = LayoutInflater.from(context).inflate(R.layout.msg_dialog_layout, null);
         mTitleView = (TextView) content.findViewById(R.id.title);
         mContentView = (TextView) content.findViewById(R.id.desc);
         mSingleBtn = (Button) content.findViewById(R.id.know);
         setContentView(content);
-        getWindow().setBackgroundDrawableResource(R.drawable.bg_round_white13);
     }
 
     public void show(String title, String desc, String btnText) {

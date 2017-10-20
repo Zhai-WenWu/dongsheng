@@ -35,14 +35,18 @@ public class YiYuanBindDialog extends Dialog {
     }
 
     public YiYuanBindDialog(@NonNull Context context, @StyleRes int themeResId) {
-        this(context, true, null);
+        super(context, themeResId);
+        initView(context);
     }
 
     protected YiYuanBindDialog(@NonNull final Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
+        initView(context);
+    }
+
+    private void initView(final Context context) {
         View contentView = LayoutInflater.from(context).inflate(R.layout.yiyuan_dialog_content, null);
         setContentView(contentView);
-        getWindow().setBackgroundDrawableResource(R.drawable.bg_round_white13);
 
         mTitleView = (TextView) contentView.findViewById(R.id.title );
         mDescView = (TextView) contentView.findViewById(R.id.desc);
