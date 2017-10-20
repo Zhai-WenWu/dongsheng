@@ -26,6 +26,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.ChannelUtil;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
@@ -93,7 +94,16 @@ public class Welcome extends BaseActivity {
                 closeActivity();
             }
         });
-        initAd();
+        if("developer.huawei".equals(ChannelUtil.getChannel(this))) {
+            String showHuaweiAD = AppCommon.getConfigByLocal("huaweiAD");//release 2表示显示发布，显示广告，1不显示广告
+            //单独处理华为渠道
+            boolean isShowAdHuawei = !TextUtils.isEmpty(showHuaweiAD)
+                    && "2".equals(StringManager.getFirstMap(showHuaweiAD).get("release"));
+            if(isShowAdHuawei)
+                initAd();
+        }else{
+            initAd();
+        }
     }
 
     private void initAd() {
