@@ -134,10 +134,17 @@ public class ScrollViewContainer extends RelativeLayout {
         mTimer = new MyTimer(handler);
     }
 
+    private float xDistance, yDistance, yLast, xLast;
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+
+                xDistance = yDistance = 0f;
+                xLast = ev.getX();
+                yLast = ev.getY();
+
+
                 if (vt == null)
                     vt = VelocityTracker.obtain();
                 else
@@ -152,6 +159,22 @@ public class ScrollViewContainer extends RelativeLayout {
                 mEvents = -1;
                 break;
             case MotionEvent.ACTION_MOVE:
+
+                final float curX = ev.getX();
+                final float curY = ev.getY();
+
+                xDistance += Math.abs(curX - xLast);
+                yDistance += Math.abs(curY - yLast);
+                xLast = curX;
+                yLast = curY;
+
+                /**
+                 * 横向滑动时，不作其他操作，直接由系统处理滑动事件
+                 */
+                if (xDistance > yDistance) {
+                    return super.dispatchTouchEvent(ev);
+                }
+
                 vt.addMovement(ev);
                 if (canPullUp && mCurrentViewIndex == 0 && mEvents == 0) {
                     mMoveLen += (ev.getY() - mLastY);
