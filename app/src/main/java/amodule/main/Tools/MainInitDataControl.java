@@ -29,6 +29,7 @@ import acore.logic.LoginManager;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -189,8 +190,31 @@ public class MainInitDataControl {
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
 
+        onMainResumeStatics();
+
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initMainOnResume::时间::3::"+(endTime2-startTime));
+    }
+
+    /**
+     * 页面展示后，发送需要统计的数据
+     */
+    private void onMainResumeStatics() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Object userCountStatics = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "userCount");
+                if (!"2".equals(userCountStatics)) {
+                    String channel = ChannelUtil.getChannel(XHApplication.in());
+                    if (channel.contains(".")) {
+                        String[] channels = channel.split("\\.");
+                        channel = channels[channels.length - 1];
+                    }
+                    XHClick.mapStat(XHApplication.in(), "a_usercount", channel, ToolsDevice.getVerName(XHApplication.in()));
+                    FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "userCount", "2");
+                }
+            }
+        }).start();
     }
 
     /**
