@@ -31,9 +31,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.override.activity.mian.MainBaseActivity;
 import acore.override.adapter.AdapterSimple;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import amodule.main.Main;
 import third.mall.adapter.AdapterShopRecommed;
@@ -408,7 +406,10 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 			shopCatNoView=LayoutInflater.from(this).inflate(R.layout.a_shopcat_no_cat_view, null);
 			shopCatNoView.findViewById(R.id.shoppingcat_go).setOnClickListener(this);
 		}
-		Layout_no.addView(shopCatNoView);
+		if(Layout_no!=null) {
+			Layout_no.removeAllViews();
+			Layout_no.addView(shopCatNoView);
+		}
 	}
 	/**
 	 * 解析获取合计价格

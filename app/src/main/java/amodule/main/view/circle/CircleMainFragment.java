@@ -403,15 +403,17 @@ public class CircleMainFragment extends Fragment {
             }
 
             video_layout = (LinearLayout) parentView.findViewById(R.id.video_layout);
-            video_layout.addView(videoImageView);
-            videoImageView.onBegin();
-            videoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
-                @Override
-                public void setVideoClick() {
-                    stopVideo();
-                    goNextActivity(position);
-                }
-            });
+            if(videoImageView!=null) {
+                video_layout.addView(videoImageView);
+                videoImageView.onBegin();
+                videoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
+                    @Override
+                    public void setVideoClick() {
+                        stopVideo();
+                        goNextActivity(position);
+                    }
+                });
+            }
         }
     }
 

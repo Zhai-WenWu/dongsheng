@@ -355,8 +355,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         if(mFavePopWindowDialog!=null){
             mFavePopWindowDialog=null;
         }
+        if(loadManager!=null){
+            loadManager.dismissProgress();
+        }
     }
-
-
 }
 
