@@ -988,7 +988,12 @@ public class JsAppCommon extends JsBase {
                     }
                     ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                     if (isOk)//支付成功，如果是开通的VIP，设置VIP状态。因为无法区分此次支付是否是购买VIP，所以每次支付成功都设置一次。
-                        LoginManager.setVipStateChanged();
+                        LoginManager.initYiYuanBindState(mAct, new Runnable() {
+                            @Override
+                            public void run() {
+                                LoginManager.setVipStateChanged();
+                            }
+                        });
                 }
             });
         }

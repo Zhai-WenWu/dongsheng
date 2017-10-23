@@ -400,6 +400,7 @@ public class HomeFragment extends BaseHomeFragment{
         if(refresh){
             isNeedRefresh(false);
         }
+        Log.i("SLL","EntryptData::"+mNeedRefCurrData);
         if (mNeedRefCurrData) {//需要刷新当前数据
             mNeedRefCurrData = false;
             backUrl = "";//重置backUrl
@@ -438,7 +439,7 @@ public class HomeFragment extends BaseHomeFragment{
      * 获取数据
      */
     protected void loadData(final boolean refresh, String data){
-        Log.i("zhangyujian","refresh::"+refresh+"::data:"+data);
+        Log.i("SLL","refresh::"+refresh+"::data:"+data);
         if (homeModuleBean != null && isRecom() && refresh)
             XHClick.mapStat(mActivity, "a_recommend", "刷新效果", "下拉刷新");
         linearLayoutOne.removeAllViews();
