@@ -281,7 +281,8 @@ public class DishAdDataViewNew extends ItemBaseView {
             findViewById(id).setVisibility(id == showId ? View.VISIBLE : View.GONE);
         }
         Log.i("tzy", "addView");
-        parentView.addView(DishAdDataViewNew.this);
+        if(DishAdDataViewNew.this!=null&&context!=null)
+            parentView.addView(DishAdDataViewNew.this);
     }
 
     public void onListScroll() {
