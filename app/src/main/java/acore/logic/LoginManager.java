@@ -136,6 +136,7 @@ public class LoginManager {
     public static void loginSuccess(final Activity mAct, Object returnObj) {
         loginSuccess(mAct, returnObj, false);
         ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, true);
+        setVipStateChanged();
     }
 
     /**
@@ -193,6 +194,8 @@ public class LoginManager {
                     clearUserData(mAct);
                     //清除Cookie
                     removeAllCookie(mAct);
+
+                    setVipStateChanged();
                     
                 }
                 ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
@@ -665,6 +668,19 @@ public class LoginManager {
                     callback.run();
             }
         });
+    }
+
+    /**
+     * 设置vip状态改变
+     */
+    public static void setVipStateChanged() {
+        Object vipState = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState");
+        boolean lastVipState = "2".equals(vipState);
+        boolean currVipState = isVIP() || isTempVip();
+        if(lastVipState != currVipState) {//如果vip状态改变
+            FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState", currVipState ? "2" : "1");
+            ObserverManager.getInstence().notify(ObserverManager.NOTIFY_VIPSTATE_CHANGED, null, null);
+        }
     }
 
 }

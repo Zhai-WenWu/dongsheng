@@ -30,6 +30,8 @@ import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -64,7 +66,7 @@ import static amodule.main.activity.MainHome.tag;
 import static com.xiangha.R.id.return_top;
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
-public class HomeFragment extends BaseHomeFragment{
+public class HomeFragment extends BaseHomeFragment implements IObserver{
 
     public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
 
@@ -214,6 +216,7 @@ public class HomeFragment extends BaseHomeFragment{
         mLoadManager = mActivity.loadManager;
         LoadOver = false;
         isPrepared = true;
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
         preLoad();
         return mView;
     }
@@ -267,6 +270,9 @@ public class HomeFragment extends BaseHomeFragment{
         if (getUserVisibleHint()) {
             isVisible = true;
             onVisible();
+            if (mNeedRefCurrData) {
+                refresh();
+            }
         } else {
             isVisible = false;
             onInvisible();
@@ -384,6 +390,8 @@ public class HomeFragment extends BaseHomeFragment{
         }
     }
 
+    private boolean mNeedRefCurrData = false;
+
     /**
      * 请求数据入口
      * @param refresh，是否刷新
@@ -391,6 +399,13 @@ public class HomeFragment extends BaseHomeFragment{
     protected void EntryptData(final boolean refresh){
         if(refresh){
             isNeedRefresh(false);
+        }
+        if (mNeedRefCurrData) {
+            mNeedRefCurrData = false;
+            backUrl = "";
+            mListData.clear();
+            if (mHomeAdapter != null)
+                mHomeAdapter.notifyDataSetChanged();
         }
         String params="";
         LoadOver = true;
@@ -416,8 +431,9 @@ public class HomeFragment extends BaseHomeFragment{
                 if(!TextUtils.isEmpty(homeModuleBean.getTwoType()))params+="&two_type="+homeModuleBean.getTwoType();
             }
         }
-        loadData(refresh,params);
+        loadData(refresh, params);
     }
+
     /**
      * 获取数据
      */
@@ -634,12 +650,21 @@ public class HomeFragment extends BaseHomeFragment{
         if(statrTime<=0&& isRecom()){
             statrTime=System.currentTimeMillis();
         }
+        if (mNeedRefCurrData) {
+            refresh();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopVideo();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
     }
 
     public HomeModuleBean getmoduleBean() {
@@ -1047,5 +1072,16 @@ public class HomeFragment extends BaseHomeFragment{
                     mHomeAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (!TextUtils.isEmpty(name)) {
+            switch (name) {
+                case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
+                    mNeedRefCurrData = true;
+                    break;
+            }
+        }
     }
 }

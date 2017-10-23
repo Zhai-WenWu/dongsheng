@@ -15,7 +15,9 @@ import java.util.Map;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.IObserver;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;
@@ -28,7 +30,7 @@ import third.mall.aplug.MallStringManager;
  * Created by sll on 2017/6/26.
  */
 
-public class BaseHomeFragment extends Fragment {
+public class BaseHomeFragment extends Fragment implements IObserver {
     /** 保存板块信息的key */
     protected static final String MODULEDATA = "moduleData";
     private MainBaseActivity mActivity;
@@ -41,6 +43,7 @@ public class BaseHomeFragment extends Fragment {
     private RelativeLayout mRootView;
 
     private boolean LoadOver = false;
+    private boolean mNeedRefCurrData = false;
 
     public static BaseHomeFragment instance(HomeModuleBean moduleBean) {
         BaseHomeFragment fragment = new BaseHomeFragment();
@@ -80,6 +83,7 @@ public class BaseHomeFragment extends Fragment {
         mRootView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         LoadOver = false;
         initView();
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
         return mRootView;
     }
 
@@ -96,6 +100,14 @@ public class BaseHomeFragment extends Fragment {
         loadWeb(isVisibleToUser);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mNeedRefCurrData) {
+            loadWeb(true);
+        }
+    }
+
     private void initView() {
         mWebViewManager = new WebviewManager(mActivity, mLoadManager, false);
         mWebview = mWebViewManager.createWebView(0,false);
@@ -110,12 +122,13 @@ public class BaseHomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                loadWebData(false);
+                loadWebData(mNeedRefCurrData);
             }
         });
     }
 
     public void loadWebData(boolean isRefresh) {
+        mNeedRefCurrData = false;
         if (mModuleBean == null)
             return;
         if (mWebViewManager != null) {
@@ -146,6 +159,7 @@ public class BaseHomeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
     }
 
     @Override
@@ -160,6 +174,17 @@ public class BaseHomeFragment extends Fragment {
         if (mRootView != null) {
             mRootView.removeAllViews();
             mRootView = null;
+        }
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (!TextUtils.isEmpty(name)) {
+            switch (name) {
+                case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
+                    mNeedRefCurrData = true;
+                    break;
+            }
         }
     }
 }
