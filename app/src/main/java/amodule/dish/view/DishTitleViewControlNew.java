@@ -287,7 +287,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (loading) loadManager.startProgress("仍在进行");
+                    if (loading&&context!=null) loadManager.startProgress("仍在进行");
                 }
             }, 1000);
             AppCommon.onFavoriteClick(detailDish.getApplicationContext(), "favorites", code,

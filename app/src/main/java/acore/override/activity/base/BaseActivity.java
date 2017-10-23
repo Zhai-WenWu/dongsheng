@@ -210,7 +210,8 @@ public class BaseActivity extends Activity {
 	public  FrameLayout.LayoutParams frameLayoutParams;
 	protected int computeUsableHeight() {
 		Rect r = new Rect();
-		mChildOfContent.getWindowVisibleDisplayFrame(r);
+		if(mChildOfContent!=null)
+			mChildOfContent.getWindowVisibleDisplayFrame(r);
 		return (r.bottom - r.top);
 	}
 
