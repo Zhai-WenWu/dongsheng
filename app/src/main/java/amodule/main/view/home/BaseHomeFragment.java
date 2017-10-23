@@ -30,7 +30,7 @@ import third.mall.aplug.MallStringManager;
  * Created by sll on 2017/6/26.
  */
 
-public class BaseHomeFragment extends Fragment implements IObserver {
+public class BaseHomeFragment extends Fragment {
     /** 保存板块信息的key */
     protected static final String MODULEDATA = "moduleData";
     private MainBaseActivity mActivity;
@@ -43,7 +43,8 @@ public class BaseHomeFragment extends Fragment implements IObserver {
     private RelativeLayout mRootView;
 
     private boolean LoadOver = false;
-    private boolean mNeedRefCurrData = false;
+    private boolean mNeedRefCurrData = false;//是否需要刷新当前数据
+    protected boolean mIsCreated = false;//Fragment是否被创建
 
     public static BaseHomeFragment instance(HomeModuleBean moduleBean) {
         BaseHomeFragment fragment = new BaseHomeFragment();
@@ -83,7 +84,7 @@ public class BaseHomeFragment extends Fragment implements IObserver {
         mRootView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         LoadOver = false;
         initView();
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        mIsCreated = true;
         return mRootView;
     }
 
@@ -103,9 +104,17 @@ public class BaseHomeFragment extends Fragment implements IObserver {
     @Override
     public void onResume() {
         super.onResume();
-        if (mNeedRefCurrData) {
-            loadWeb(true);
-        }
+    }
+
+    /**
+     *设置需要刷新当前数据
+     */
+    public void setNeedRefCurrData() {
+        mNeedRefCurrData = true;
+    }
+
+    public boolean isCreated() {
+        return mIsCreated;
     }
 
     private void initView() {
@@ -159,7 +168,6 @@ public class BaseHomeFragment extends Fragment implements IObserver {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
     }
 
     @Override
@@ -177,14 +185,4 @@ public class BaseHomeFragment extends Fragment implements IObserver {
         }
     }
 
-    @Override
-    public void notify(String name, Object sender, Object data) {
-        if (!TextUtils.isEmpty(name)) {
-            switch (name) {
-                case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
-                    mNeedRefCurrData = true;
-                    break;
-            }
-        }
-    }
 }

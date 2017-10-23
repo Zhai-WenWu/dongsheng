@@ -45,7 +45,7 @@
             android:id="@+id/desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/title_txt"
             android:layout_marginBottom="@dimen/dp_6"
             android:layout_alignParentLeft="true"
             android:lineSpacingExtra="@dimen/dp_5"
