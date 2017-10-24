@@ -293,18 +293,22 @@ public class TemplateWebView extends XHWebView{
         xhTemplateManager.getSingleTemplate(requestMethod,new TemplateWebViewControl.MouldCallBack() {
             @Override
             public void load(boolean isSuccess, String data, String requestMothed, String version) {
-                mMouldVersion = version;
-                if(isSuccess){
-                    Log.i(Main.TAG,"模版开始渲染");
-                    if(originData!=null&&originData.length>0&&nowData!=null&&nowData.length>0) {
-                        int lenght= originData.length;
-                        int nowLenght=nowData.length;
-                        for(int i=0;i<lenght;i++) {
-                            data = data.replace(originData[i], i<nowLenght?nowData[i]:"");
+                try {
+                    mMouldVersion = version;
+                    if (isSuccess) {
+                        Log.i(Main.TAG, "模版开始渲染");
+                        if (originData != null && originData.length > 0 && nowData != null && nowData.length > 0) {
+                            int lenght = originData.length;
+                            int nowLenght = nowData.length;
+                            for (int i = 0; i < lenght; i++) {
+                                data = data.replace(originData[i], i < nowLenght ? nowData[i] : "");
+                            }
                         }
+                        final String html = data;
+                        loadDataWithBaseURL(null, html, "text/html", "utf-8", null);//当前位置可能内存溢出。
                     }
-                    final String html = data;
-                    loadDataWithBaseURL(null,html,"text/html","utf-8", null);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });

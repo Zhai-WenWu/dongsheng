@@ -40,7 +40,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
-public class WebviewManager {
+public class  WebviewManager {
     public static final String ERROR_HTML_URL = "file:///android_asset/error.html";
     private Activity act;
     private LoadManager loadManager;
@@ -124,7 +124,7 @@ public class WebviewManager {
         settings.setAppCacheEnabled(false);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
-
+        settings.setSavePassword(false);//解决因用户输入信息，导致H5出错
 
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
