@@ -93,6 +93,7 @@ public class  WebviewManager {
         //初始化WebSetting
         initWebSetting(webview);
         webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webview.clearCache(false);
         //设置WebViewClient
         setWebViewClient(webview);
         //设置WebChromeClient
