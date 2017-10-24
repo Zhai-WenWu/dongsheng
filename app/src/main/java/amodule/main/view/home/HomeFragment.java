@@ -66,7 +66,7 @@ import static amodule.main.activity.MainHome.tag;
 import static com.xiangha.R.id.return_top;
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
-public class HomeFragment extends BaseHomeFragment implements IObserver{
+public class HomeFragment extends BaseHomeFragment{
 
     public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
 
@@ -216,7 +216,7 @@ public class HomeFragment extends BaseHomeFragment implements IObserver{
         mLoadManager = mActivity.loadManager;
         LoadOver = false;
         isPrepared = true;
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        mIsCreated = true;
         preLoad();
         return mView;
     }
@@ -400,9 +400,10 @@ public class HomeFragment extends BaseHomeFragment implements IObserver{
         if(refresh){
             isNeedRefresh(false);
         }
-        if (mNeedRefCurrData) {
+        Log.i("SLL","EntryptData::"+mNeedRefCurrData);
+        if (mNeedRefCurrData) {//需要刷新当前数据
             mNeedRefCurrData = false;
-            backUrl = "";
+            backUrl = "";//重置backUrl
             mListData.clear();
             if (mHomeAdapter != null)
                 mHomeAdapter.notifyDataSetChanged();
@@ -438,7 +439,7 @@ public class HomeFragment extends BaseHomeFragment implements IObserver{
      * 获取数据
      */
     protected void loadData(final boolean refresh, String data){
-        Log.i("zhangyujian","refresh::"+refresh+"::data:"+data);
+        Log.i("SLL","refresh::"+refresh+"::data:"+data);
         if (homeModuleBean != null && isRecom() && refresh)
             XHClick.mapStat(mActivity, "a_recommend", "刷新效果", "下拉刷新");
         linearLayoutOne.removeAllViews();
@@ -650,9 +651,6 @@ public class HomeFragment extends BaseHomeFragment implements IObserver{
         if(statrTime<=0&& isRecom()){
             statrTime=System.currentTimeMillis();
         }
-        if (mNeedRefCurrData) {
-            refresh();
-        }
     }
 
     @Override
@@ -664,7 +662,6 @@ public class HomeFragment extends BaseHomeFragment implements IObserver{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
     }
 
     public HomeModuleBean getmoduleBean() {
@@ -1074,14 +1071,10 @@ public class HomeFragment extends BaseHomeFragment implements IObserver{
         });
     }
 
-    @Override
-    public void notify(String name, Object sender, Object data) {
-        if (!TextUtils.isEmpty(name)) {
-            switch (name) {
-                case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
-                    mNeedRefCurrData = true;
-                    break;
-            }
-        }
+    /**
+     * 通知需要刷新当前数据
+     */
+    public void notifyNeedRefCurrData() {
+        mNeedRefCurrData = true;
     }
 }

@@ -28,6 +28,8 @@ import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
@@ -46,7 +48,7 @@ import aplug.basic.ReqInternet;
 /**
  * 新的框架首页
  */
-public class MainHome extends MainBaseActivity {
+public class MainHome extends MainBaseActivity implements IObserver {
     public final static String tag = "zhangyujian";
     public final static String recommedType = "recomv1";//推荐类型
     public final static String recommedType_statictus = "recom";//推荐类型-用于统计
@@ -81,6 +83,7 @@ public class MainHome extends MainBaseActivity {
                 XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
             }
         }
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
     }
 
     /**
@@ -311,6 +314,11 @@ public class MainHome extends MainBaseActivity {
             Log.i("zyj","mainHome::onPause");
             setRecommedTime(System.currentTimeMillis());
         }
+
+        if (mNeedRefCurrFm) {
+            mNeedRefCurrFm = false;
+            refreshContentView(true);
+        }
     }
 
     public void onResumeFake(){
@@ -325,6 +333,38 @@ public class MainHome extends MainBaseActivity {
         if(recommedType.equals(listBean.get(itemPosition).getType())) {
             Log.i("zyj","mainHome::onPause");
             setRecommedStatistic();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
+    }
+
+    private boolean mNeedRefCurrFm;
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (!TextUtils.isEmpty(name)) {
+            switch (name) {
+                case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
+                    mNeedRefCurrFm = true;
+                    List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                    if (fragments != null && fragments.size() > 0) {
+                        for (Fragment fragment : fragments) {
+                            if (fragment instanceof HomeFragment) {
+                                HomeFragment homeFragment = (HomeFragment) fragment;
+                                if (homeFragment.isCreated())
+                                    homeFragment.notifyNeedRefCurrData();
+                            } else if (fragment instanceof BaseHomeFragment) {
+                                BaseHomeFragment homeFragment = (BaseHomeFragment) fragment;
+                                if (homeFragment.isCreated())
+                                    homeFragment.setNeedRefCurrData();
+                            }
+                        }
+                    }
+                    break;
+            }
         }
     }
 
