@@ -50,7 +50,6 @@ import amodule.user.activity.Setting;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
-import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.feedback.activity.Feedback;
@@ -58,7 +57,6 @@ import third.mall.activity.MallMyFavorableActivity;
 import third.mall.activity.MyOrderActivity;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGPushServer;
-import xh.basic.internet.UtilInternet;
 
 /**
  * @Description:
