@@ -38,13 +38,11 @@ public class MyScrollView extends ScrollView {
 			move_y= ev.getY();
 			float y=move_y-down_y;
 			if(y<0){//逐渐显示出来
-//				System.out.println("1::"+y+":::now_y::"+now_y);
 				if(now_y<255){
 					sv_interface.setYandState(y, state);
 				}
 
 			}else{//逐渐变淡
-//				System.out.println("2::"+y+":::now_y::"+now_y);
 				if(now_y>0&&now_y<=255){
 					sv_interface.setYandState(y, state);
 				}

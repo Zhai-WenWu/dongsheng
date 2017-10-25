@@ -387,7 +387,6 @@ public class InviteFriend extends BaseActivity {
 			// 把输入的文本转为二维码
 			BitMatrix martix = writer.encode(text, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT);
 
-			// System.out.println("w:" + martix.getWidth() + "h:" +
 			// martix.getHeight());
 
 			Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();

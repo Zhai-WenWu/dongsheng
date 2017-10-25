@@ -91,7 +91,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public void initActivity(String title, int level, int color, int barTitleXml, int contentXml) {
         this.level = level;
         className = this.getComponentName().getClassName();
-        System.out.println("className:::" + className);
 
         control = new CommonBottonControl();
         if (barTitleXml > 0) {
