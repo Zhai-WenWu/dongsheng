@@ -1,5 +1,7 @@
 package acore.tools;
 
+import android.text.TextUtils;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,7 +20,8 @@ public class CPUTool{
             fr = new FileReader(kCpuInfoMaxFreqFilePath);
             br = new BufferedReader(fr);
             String text = br.readLine();
-            result = Integer.parseInt(text.trim());
+            if(!TextUtils.isEmpty(text))
+                result = Integer.parseInt(text.trim());
         } catch (FileNotFoundException e){
         	UtilLog.reportError("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 文件未找到", e);
         } catch (IOException e){
@@ -52,7 +55,8 @@ public class CPUTool{
             fr = new FileReader(kCpuInfoMinFreqFilePath);
             br = new BufferedReader(fr);
             String text = br.readLine();
-            result = Integer.parseInt(text.trim());
+            if(!TextUtils.isEmpty(text))
+                result = Integer.parseInt(text.trim());
         } catch (FileNotFoundException e){
             e.printStackTrace();
         } catch (IOException e){
@@ -85,7 +89,8 @@ public class CPUTool{
             fr = new FileReader(kCpuInfoCurFreqFilePath);
             br = new BufferedReader(fr);
             String text = br.readLine();
-            result = Integer.parseInt(text.trim());
+            if(!TextUtils.isEmpty(text))
+                result = Integer.parseInt(text.trim());
         } catch (FileNotFoundException e){
             e.printStackTrace();
         } catch (IOException e){

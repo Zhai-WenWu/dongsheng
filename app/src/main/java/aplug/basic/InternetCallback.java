@@ -44,7 +44,7 @@ public abstract class InternetCallback extends InterCallback {
 		super(context);
 		this.encryptparams= encryptparams;
 	}
-	public void setEncryptparams(String encryptparams){
+	public void  setEncryptparams(String encryptparams){
 		this.encryptparams= encryptparams;
 	}
 	@Override

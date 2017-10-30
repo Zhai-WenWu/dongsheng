@@ -1086,8 +1086,8 @@ public class ShowSubject extends BaseAppCompatActivity {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		if(hasFocus){
-		}
+//		if(hasFocus){
+//		}
 	}
 
 	@Override

@@ -204,8 +204,8 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 				ReqInternet.in().doGet(url, new InternetCallback(QuanRecommend.this) {
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {
-						if (flag < UtilInternet.REQ_OK_STRING){
-						}
+//						if (flag < UtilInternet.REQ_OK_STRING){
+//						}
 					}
 				});
 			}
