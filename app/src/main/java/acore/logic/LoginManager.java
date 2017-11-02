@@ -7,9 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.CookieManager;
 
-import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.CookieManager;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ import amodule.main.Main;
 import amodule.main.activity.MainChangeSend;
 import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.Setting;
-import amodule.user.activity.login.AccoutActivity;
 import amodule.user.activity.login.UserSetting;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -206,7 +204,6 @@ public class LoginManager {
     private static void removeAllCookie(Context context) {
         if (context == null)
             return;
-        CookieSyncManager.createInstance(context);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -1,11 +1,11 @@
 package acore.override.activity.base;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
+
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 
 import java.util.Map;
 
@@ -154,6 +154,7 @@ public class WebActivity extends BaseActivity{
 			for (int i = 0; i < cookie.length; i++) {
 				cookieManager.setCookie(cookieKey_mall, cookie[i]);
 			}
+			CookieSyncManager.createInstance(mShowWeb);
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}else if (theUrl.indexOf(StringManager.domain) > -1) {//菜谱  .xiangha.com
@@ -164,6 +165,7 @@ public class WebActivity extends BaseActivity{
 			for (int i = 0; i < cookie.length; i++) {
 				cookieManager.setCookie(StringManager.domain, cookie[i]);
 			}
+			CookieSyncManager.createInstance(mShowWeb);
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}

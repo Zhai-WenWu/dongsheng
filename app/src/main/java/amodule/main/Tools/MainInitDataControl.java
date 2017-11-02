@@ -8,12 +8,11 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.mob.MobSDK;
 import com.tencent.android.tpush.XGPushManager;
+import com.tencent.smtt.sdk.CookieManager;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 
@@ -46,7 +45,6 @@ import aplug.service.alarm.PushAlarm;
 import aplug.service.base.ServiceManager;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
-import third.ad.tools.TencenApiAdTools;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
 import xh.basic.tool.UtilFile;

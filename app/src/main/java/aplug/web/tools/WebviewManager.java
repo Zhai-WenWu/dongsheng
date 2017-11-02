@@ -6,23 +6,20 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.net.http.SslError;
-import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
-import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
+import com.tencent.smtt.export.external.interfaces.JsResult;
+import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +82,6 @@ public class  WebviewManager {
         }
 
         if(isCookieSync) {
-            CookieSyncManager.createInstance(act);
             CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.setAcceptCookie(true);
             cookieManager.removeSessionCookie();//移除无过期时间的cookie
@@ -136,8 +132,7 @@ public class  WebviewManager {
         settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
+        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
     }
 
     /**
@@ -197,6 +192,7 @@ public class  WebviewManager {
                     view.requestFocus();
                 }
                 // 读取cookie的sessionId
+
                 CookieManager cookieManager = CookieManager.getInstance();
                 Map<String, String> map = UtilString.getMapByString(cookieManager.getCookie(url), ";", "=");
                 String sessionId = UtilInternet.cookieMap.get("USERID");
@@ -241,10 +237,9 @@ public class  WebviewManager {
                 return true;
             }
 
-
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler sslhandler, SslError error) {
-                sslhandler.proceed();
+            public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, com.tencent.smtt.export.external.interfaces.SslError sslError) {
+                sslErrorHandler.proceed();
             }
 
             @Override
@@ -277,8 +272,8 @@ public class  WebviewManager {
             }
 
             @Override
-            public void onShowCustomView(View view, CustomViewCallback callback) {
-                super.onShowCustomView(view, callback);
+            public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
+                super.onShowCustomView(view, customViewCallback);
             }
 
             //弹出提示

@@ -1,6 +1,5 @@
 package amodule.answer.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -9,14 +8,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.popdialog.util.PushManager;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -345,6 +344,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
             cookieManager.setCookie(cookieKey, cookie[i]);
         }
+        CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
         mWebView.loadUrl(mWebUrl);
     }

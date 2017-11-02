@@ -18,8 +18,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -27,6 +25,8 @@ import android.widget.RelativeLayout;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.net.URLDecoder;
@@ -983,6 +983,7 @@ public class AppCommon {
                 cookieManager.setCookie(url, cookie[i]);
             }
             cookieManager.setCookie(url, "xhWebStat=1");
+            CookieSyncManager.createInstance(context);
             CookieSyncManager.getInstance().sync();
             rl.addView(webView, 0, 0);
             webView.loadUrl(url);

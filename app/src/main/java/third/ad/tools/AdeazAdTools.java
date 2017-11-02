@@ -5,11 +5,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.webkit.WebView;
 
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
+import com.tencent.smtt.sdk.WebView;
 import com.xiangha.R;
 
 import org.json.JSONObject;

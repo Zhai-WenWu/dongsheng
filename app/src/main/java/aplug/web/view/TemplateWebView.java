@@ -6,26 +6,22 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.net.http.SslError;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
+import com.tencent.smtt.export.external.interfaces.JsResult;
+import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
@@ -33,12 +29,10 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
 import amodule.main.Main;
-import aplug.basic.XHConf;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.JsBase;
 import aplug.web.tools.TemplateWebViewControl;
-import aplug.web.tools.WebviewManager;
 import aplug.web.tools.XHTemplateManager;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -116,8 +110,7 @@ public class TemplateWebView extends XHWebView{
         settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
+        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
     }
@@ -224,9 +217,10 @@ public class TemplateWebView extends XHWebView{
 
                 return true;
             }
+
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler sslhandler, SslError error) {
-                sslhandler.proceed();
+            public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, com.tencent.smtt.export.external.interfaces.SslError sslError) {
+                sslErrorHandler.proceed();
             }
 
             @Override
@@ -254,10 +248,10 @@ public class TemplateWebView extends XHWebView{
                 showTip(message, result);
                 return true;
             }
-            @Override
-            public void onShowCustomView(View view, CustomViewCallback callback) {
-                super.onShowCustomView(view, callback);
 
+            @Override
+            public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
+                super.onShowCustomView(view, customViewCallback);
             }
 
             //弹出提示

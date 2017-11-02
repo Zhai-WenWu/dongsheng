@@ -6,11 +6,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -20,7 +20,6 @@ import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
@@ -33,7 +32,6 @@ import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
-import third.mall.override.MallBaseActivity;
 import xh.basic.tool.UtilFile;
 
 
@@ -124,6 +122,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 				LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
 				cookieManager.setCookie(cookieKey, cookie[i]);
 			}
+			CookieSyncManager.createInstance(this);
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}

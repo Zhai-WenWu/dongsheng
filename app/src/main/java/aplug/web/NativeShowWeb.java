@@ -3,8 +3,8 @@ package aplug.web;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.webkit.WebView;
 
+import com.tencent.smtt.sdk.WebView;
 import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;

@@ -2,12 +2,8 @@ package acore.override;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,22 +11,14 @@ import android.util.Log;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
-import com.qiyukf.unicorn.api.ImageLoaderListener;
-import com.qiyukf.unicorn.api.OnBotEventListener;
-import com.qiyukf.unicorn.api.OnMessageItemClickListener;
-import com.qiyukf.unicorn.api.SavePowerConfig;
-import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.UnicornImageLoader;
-import com.qiyukf.unicorn.api.YSFOptions;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
 
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.VersionOp;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.LogManager;
@@ -42,10 +30,8 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import third.growingio.GrowingIOController;
-import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
-import third.qiyu.GlideImageLoader;
 import third.qiyu.QiYvHelper;
 
 public class XHApplication extends MobApplication {
@@ -154,6 +140,30 @@ public class XHApplication extends MobApplication {
         });
         //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
         QiYvHelper.getInstance().initSDK(this);
+
+        initX5();
+    }
+
+    /**
+     * 初始化X5浏览器
+     */
+    private void initX5() {
+        //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
+
+        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+
+            @Override
+            public void onViewInitFinished(boolean arg0) {
+                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                Log.d("app", " onViewInitFinished is " + arg0);
+            }
+
+            @Override
+            public void onCoreInitFinished() {
+            }
+        };
+        //x5内核初始化接口
+        QbSdk.initX5Environment(getApplicationContext(),  cb);
     }
 
     @Override
