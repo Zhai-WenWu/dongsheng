@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,6 +82,19 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
             @Override
             public void afterTextChanged(Editable s) {
                 mClearSearch.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+            }
+        });
+        mEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                switch (keyCode){
+                    case KeyEvent.KEYCODE_ENTER:
+                    case KeyEvent.ACTION_DOWN:
+                        doSearch();
+                        return true;
+                    default:
+                        return false;
+                }
             }
         });
     }

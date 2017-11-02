@@ -20,13 +20,13 @@
 
             <ImageView
                 android:id="@+id/btn_back"
-                android:layout_width="@dimen/dp_52"
+                android:layout_width="@dimen/dp_48"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:clickable="true"
                 android:gravity="center"
                 android:paddingLeft="@dimen/dp_20"
-                android:paddingRight="@dimen/dp_22"
+                android:paddingRight="@dimen/dp_20"
                 android:src="@drawable/z_z_topbar_ico_back_white"/>
 
             <RelativeLayout

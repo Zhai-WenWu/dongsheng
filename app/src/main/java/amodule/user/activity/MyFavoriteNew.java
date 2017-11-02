@@ -80,6 +80,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     private void initData() {
         myFavorite = new AdapterMyFavorite(this, mData);
         View view = new View(this);
+        view.setBackgroundResource(R.drawable.item_decoration);
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,Tools.getDimen(this,R.dimen.dp_35)));
         rvListview.addHeaderView(view);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
