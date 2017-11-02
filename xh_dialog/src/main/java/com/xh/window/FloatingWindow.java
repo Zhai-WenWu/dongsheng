@@ -1,15 +1,17 @@
-package amodule.answer.window;
+package com.xh.window;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import acore.override.XHApplication;
+import com.xh.view.base.BaseButtonView;
+import com.xh.view.base.BaseView;
 
 /**
+ * 悬浮窗，显示在Application的window层。
  * Created by sll on 2017/8/7.
  */
 
@@ -19,26 +21,46 @@ public class FloatingWindow {
     private static FloatingWindow mFloatingWindow;
     private boolean mIsShowing = false;
     private FloatingRootView mRootView;
-    private View mContentView;
+    private FloatingContentView mContentView;
     private WindowManager mWindowManager;
 
     private boolean mCancelable = false;
+    private int mGravity = RelativeLayout.CENTER_IN_PARENT;
 
-    private FloatingWindow() {
-        mWindowManager = (WindowManager) XHApplication.in().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        mRootView = new FloatingRootView(XHApplication.in().getApplicationContext());
+    private FloatingWindow(Context applicationContext) {
+        mWindowManager = (WindowManager) applicationContext.getSystemService(Context.WINDOW_SERVICE);
+        mRootView = new FloatingRootView(applicationContext);
+        mContentView = new FloatingContentView(applicationContext);
         RelativeLayout.LayoutParams rootParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         mRootView.setLayoutParams(rootParams);
     }
 
-    public synchronized static FloatingWindow getInstance() {
+    public synchronized static FloatingWindow getInstance(Context applicationContext) {
         if (mFloatingWindow == null)
-            mFloatingWindow = new FloatingWindow();
+            mFloatingWindow = new FloatingWindow(applicationContext);
         return mFloatingWindow;
     }
 
-    public void setContentView(View contentView) {
-        mContentView = contentView;
+    /**
+     * 设置View
+     * @param view
+     * @return
+     */
+    public FloatingWindow setView(@Nullable BaseView view) {
+        if (view instanceof BaseButtonView)
+            mContentView.getInnerBtnContainer().addView(view);
+        else
+            mContentView.getInnerMsgContainer().addView(view);
+        return mFloatingWindow;
+    }
+
+    /**
+     * 去掉内部原有的纵向间距
+     * @return
+     */
+    public FloatingWindow noPadding() {
+        mContentView.noPadding();
+        return mFloatingWindow;
     }
 
     public void showFloatingWindow() {
@@ -52,16 +74,28 @@ public class FloatingWindow {
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
         params.gravity = Gravity.CENTER;
         mWindowManager.addView(mRootView, params);
-        RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        contentParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mRootView.addView(mContentView, contentParams);
+        RelativeLayout.LayoutParams innerParams = (RelativeLayout.LayoutParams) mContentView.getInnerContainer().getLayoutParams();
+        innerParams.addRule(mGravity);
+        mContentView.getInnerContainer().setLayoutParams(innerParams);
+        mRootView.addView(mContentView);
         mRootView.invalidate();
         mIsShowing = true;
     }
 
-    public void setCancelable(boolean cancelable) {
+    public FloatingWindow setCancelable(boolean cancelable) {
         mCancelable = cancelable;
         setOnBackPressed();
+        return mFloatingWindow;
+    }
+
+    /**
+     * 设置Window内部View在屏幕中显示的位置，默认RelativeLayout.CENTER_IN_PARENT
+     * @param gravity
+     * @return
+     */
+    public FloatingWindow setGravity(int gravity) {
+        mGravity = gravity;
+        return mFloatingWindow;
     }
 
     private void setOnBackPressed() {
@@ -84,8 +118,10 @@ public class FloatingWindow {
             return;
         mRootView.removeAllViews();
         mWindowManager.removeView(mRootView);
+        mRootView = null;
         mContentView = null;
         mIsShowing = false;
+        mFloatingWindow = null;
         if (mCancelable && mOnCancelListener != null)
             mOnCancelListener.onCancel();
     }

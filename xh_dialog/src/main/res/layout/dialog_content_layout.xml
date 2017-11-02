@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_container"
+    style="@style/DialogOutContent">
+
+    <LinearLayout
+        android:id="@+id/inner_container"
+        style="@style/DialogInnerContent">
+
+        <View
+            android:id="@+id/empty1"
+            style="@style/DialogEmpty"/>
+
+        <LinearLayout
+            android:id="@+id/inner_msg_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+        <View
+            android:id="@+id/empty2"
+            style="@style/DialogEmpty"/>
+        <LinearLayout
+            android:id="@+id/inner_btn_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

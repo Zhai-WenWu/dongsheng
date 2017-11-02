@@ -1,4 +1,4 @@
-package amodule.answer.window;
+package com.xh.window;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 
 /**
+ * 悬浮窗的根View
  * Created by sll on 2017/8/8.
  */
 
