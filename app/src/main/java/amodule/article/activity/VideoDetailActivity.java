@@ -1,5 +1,6 @@
 package amodule.article.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -78,7 +79,7 @@ import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private TextView mTitle;
-    private ImageView rightButton;
+    private ImageView rightButton,rightButtonFav;
     private RelativeLayout dredgeVipLayout;
     private RelativeLayout allTitleRelaPort;
     private TextView dredgeVipImmediately;
@@ -109,6 +110,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
     private boolean isOnce = true;
+    private boolean isFav = false;
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
@@ -227,6 +229,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         dredgeVipLayout.setVisibility(View.GONE);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initStatusBar() {
         statusBarH = Tools.getStatusBarHeight(this);
         if (Tools.isShowTitle()) {
@@ -272,6 +275,9 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         int dp85 = Tools.getDimen(this,R.dimen.dp_85);
         mTitle.setPadding(dp85,0,dp85,0);
         rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
+        rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
+        //TODO
+        rightButtonFav.setVisibility(View.VISIBLE);
         ImageView leftImage = (ImageView) view.findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
         layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
@@ -286,6 +292,25 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                         onBackPressed();
                     }
                 });
+        rightButtonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCommon.handlerFavorite(VideoDetailActivity.this, "type", code, new InternetCallback(VideoDetailActivity.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+                        if(i >= ReqEncyptInternet.REQ_OK_STRING){
+                            //成功
+                        }else{
+                            //失败
+                        }
+                        isFav = !isFav;
+                        rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        Tools.showToast(VideoDetailActivity.this,isFav?"收藏陈功":"取消收藏");
+                    }
+                });
+
+            }
+        });
     }
 
     /** 初始化ListView */
@@ -550,6 +575,14 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         isPortrait = isPortraitVideo(mapVideo);
         if(isPortrait){
             handlerPortrait();
+        }
+
+        //TODO 待完成字段
+        //处理收藏状态
+        if (!TextUtils.isEmpty(mapVideo.get("isFav"))) {
+            isFav = "2".equals(mapVideo.get("isFav"));
+            rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+            rightButtonFav.setVisibility(View.VISIBLE);
         }
 
         xhWebView.setVisibility(View.GONE);

@@ -615,6 +615,21 @@ public class AppCommon {
             callback.loaded(-1, null, "");// 暂时这么写
     }
 
+    public static void handlerFavorite(final Context context,String type,String code,final @NonNull InternetCallback callback){
+        if(context == null || TextUtils.isEmpty(type) || TextUtils.isEmpty(code)){
+            if(callback != null){
+                callback.loaded(-1,"","");
+            }
+            return;
+        }
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("type",type);
+        params.put("code",code);
+
+        //TODO 暂时这么写
+        ReqEncyptInternet.in().doEncypt("", params, callback);
+    }
+
     /**
      * @param lv        等级
      * @param imageView 等级图片

@@ -74,7 +74,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private LinearLayout linearLayoutTwo;
     private LinearLayout linearLayoutThree;
     private TextView mTitle;
-    private ImageView rightButton;
+    private ImageView rightButton, rightButtonFav;
     private PtrClassicFrameLayout refreshLayout;
     private ArticleContentBottomView articleContentBottomView;
     private ArticleHeaderView headerView;
@@ -103,7 +103,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
     private boolean webviewLoadOver = false;
-
+    private boolean isFav = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,12 +136,12 @@ public class ArticleDetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         Glide.with(this).pauseRequests();
-        ToolsDevice.keyboardControl(false,this,mArticleCommentBar);
+        ToolsDevice.keyboardControl(false, this, mArticleCommentBar);
     }
 
     @Override
     protected void onDestroy() {
-        if(mArticleCommentBar != null) mArticleCommentBar = null;
+        if (mArticleCommentBar != null) mArticleCommentBar = null;
         //统计
         long nowTime = System.currentTimeMillis();
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
@@ -208,6 +208,9 @@ public class ArticleDetailActivity extends BaseActivity {
         int dp85 = Tools.getDimen(this, R.dimen.dp_85);
         mTitle.setPadding(dp85, 0, dp85, 0);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
+        rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
+        //TODO
+        rightButtonFav.setVisibility(View.VISIBLE);
         ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
         layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
@@ -220,6 +223,25 @@ public class ArticleDetailActivity extends BaseActivity {
                         onBackPressed();
                     }
                 });
+        rightButtonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCommon.handlerFavorite(ArticleDetailActivity.this, "type", code, new InternetCallback(ArticleDetailActivity.this) {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+                        if(i >= ReqEncyptInternet.REQ_OK_STRING){
+                            //成功
+                        }else{
+                            //失败
+                        }
+                        isFav = !isFav;
+                        rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        Tools.showToast(ArticleDetailActivity.this,isFav?"收藏陈功":"取消收藏");
+                    }
+                });
+
+            }
+        });
     }
 
     /** 初始化评论框 */
@@ -311,7 +333,7 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutTwo);
         layout.addView(linearLayoutThree);
 
-        listView.addHeaderView(layout,null,false);
+        listView.addHeaderView(layout, null, false);
     }
 
     /** 数据初始化 **/
@@ -447,7 +469,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
                 //没有数据直接退出
-                if(TextUtils.isEmpty((String) object) && isOnce){
+                if (TextUtils.isEmpty((String) object) && isOnce) {
                     ArticleDetailActivity.this.finish();
                     return;
                 }
@@ -493,14 +515,14 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
             }
         });
-        if (webView == null){
+        if (webView == null) {
             webView = manager.createWebView(0);
             webView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (mArticleCommentBar != null
-                            && mArticleCommentBar.getEditText() != null){
-                        if(TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString())){
+                            && mArticleCommentBar.getEditText() != null) {
+                        if (TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString())) {
                             mArticleCommentBar.setEditTextShow(false);
                         }
                         ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
@@ -523,6 +545,14 @@ public class ArticleDetailActivity extends BaseActivity {
             htmlStr = htmlStr.replace("&gt;", ">");
         webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), htmlStr, "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
+
+        //TODO 待完成字段
+        //处理收藏状态
+        if (!TextUtils.isEmpty(mapArticle.get("isFav"))) {
+            isFav = "2".equals(mapArticle.get("isFav"));
+            rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+            rightButtonFav.setVisibility(View.VISIBLE);
+        }
 
         customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         if (!TextUtils.isEmpty(customerData.get("nickName"))) {
@@ -551,6 +581,7 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         rightButton.setVisibility(View.VISIBLE);
+
         if (articleContentBottomView == null)
             articleContentBottomView = new ArticleContentBottomView(this);
         if (linearLayoutThree.getChildCount() == 0)
@@ -561,14 +592,14 @@ public class ArticleDetailActivity extends BaseActivity {
         articleContentBottomView.setOnReportClickCallback(isAuthor ? null : new ArticleContentBottomView.OnReportClickCallback() {
             @Override
             public void onReportClick() {
-                if(!LoginManager.isLogin()){
+                if (!LoginManager.isLogin()) {
                     startActivity(new Intent(ArticleDetailActivity.this, LoginByAccout.class));
                     return;
                 }
-                if(LoginManager.isLogin()
+                if (LoginManager.isLogin()
                         && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                         && !TextUtils.isEmpty(userCode)
-                        && !userCode.equals(LoginManager.userInfo.get("code"))){
+                        && !userCode.equals(LoginManager.userInfo.get("code"))) {
                     Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
                     intent.putExtra("code", code);
                     intent.putExtra("type", getType());
@@ -725,7 +756,7 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         //是作者显示删除按钮
-        if(isAuthor){
+        if (isAuthor) {
             dialog.addButton("删除", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
