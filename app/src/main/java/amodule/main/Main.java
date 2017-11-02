@@ -80,6 +80,8 @@ import amodule.main.activity.MainMyself;
 import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
 import amodule.quan.tool.MyQuanDataControl;
+import amodule.user.activity.MyFavorite;
+import amodule.user.activity.MyFavoriteNew;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
@@ -886,8 +888,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //                    MainMyself mainMyself = (MainMyself) allTab.get("MainMyself");
 //                    mainMyself.scrollToTop();
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
-                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
-                    myMessage.onRefresh();
+//                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+//                    myMessage.onRefresh();
+                    this.startActivity(new Intent(this, MyFavoriteNew.class));
                 }
                 try {
                     setCurrentTabByIndex(i);

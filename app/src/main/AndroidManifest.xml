@@ -778,6 +778,12 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
+            android:name="amodule.user.activity.MyFavoriteNew"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name="amodule.user.activity.MyManagerInfo"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
