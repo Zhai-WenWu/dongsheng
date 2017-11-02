@@ -22,15 +22,15 @@ public class ModuleMaskImgView extends ModuleBaseView{
     private ImageView mask_img;
     private TextView mask_title_album,mask_num;
     private String url="";
-    public ModuleMaskImgView(Context context, int layoutId) {
+    public ModuleMaskImgView(Context context) {
         super(context, R.layout.module_mask_view);
     }
 
-    public ModuleMaskImgView(Context context, AttributeSet attrs, int layoutId) {
+    public ModuleMaskImgView(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.module_mask_view);
     }
 
-    public ModuleMaskImgView(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
+    public ModuleMaskImgView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.module_mask_view);
     }
 

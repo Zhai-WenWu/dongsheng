@@ -355,7 +355,7 @@ public class StringManager extends UtilString {
     public final static String API_TEMPLATE_AUTOLOADTEMPLATE = apiUrl + "main7/template/autoloadTemplate";//多模版控制
     public final static String API_TEMPLATE_GETTEMPLATENAME = apiUrl + "main7/template/getTemplateName";//获取单个模版
     //main8
-    public final static String API_COLLECTIONLIST = apiUrl + "/main8/favorites/favoritesList";//收藏列表+搜索收藏
+    public final static String API_COLLECTIONLIST = apiUrl + "main8/favorites/favoritesList";//收藏列表+搜索收藏
 
     //替换url
     public final static String replaceUrl(String url) {

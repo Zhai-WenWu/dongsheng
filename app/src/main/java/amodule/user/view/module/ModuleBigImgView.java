@@ -22,15 +22,15 @@ public class ModuleBigImgView extends ModuleBaseView{
     private TextView big_title;
     private ImageView big_img;
     private String url="";
-    public ModuleBigImgView(Context context, int layoutId) {
+    public ModuleBigImgView(Context context ) {
         super(context, R.layout.module_big_view);
     }
 
-    public ModuleBigImgView(Context context, AttributeSet attrs, int layoutId) {
+    public ModuleBigImgView(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.module_big_view);
     }
 
-    public ModuleBigImgView(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
+    public ModuleBigImgView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.module_big_view);
     }
 

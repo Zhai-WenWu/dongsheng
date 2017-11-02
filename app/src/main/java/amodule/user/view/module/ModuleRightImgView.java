@@ -23,15 +23,16 @@ public class ModuleRightImgView extends ModuleBaseView{
     private TextView module_title_txt,module_desc;
     private ImageView module_img;
     private String url="";
-    public ModuleRightImgView(Context context, int layoutId) {
+
+    public ModuleRightImgView(Context context) {
         super(context, R.layout.module_right_view);
     }
 
-    public ModuleRightImgView(Context context, AttributeSet attrs, int layoutId) {
+    public ModuleRightImgView(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.module_right_view);
     }
 
-    public ModuleRightImgView(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
+    public ModuleRightImgView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.module_right_view);
     }
 

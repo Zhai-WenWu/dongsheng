@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -38,7 +39,9 @@ public class FavoriteItemBaseView extends RelativeLayout{
      * @param layoutId
      */
     private void initLayout(int layoutId){
-        LayoutInflater.from(mContext).inflate(layoutId,this,true);
+        //TODO 有问题
+        View view = LayoutInflater.from(mContext).inflate(layoutId,null,true);
+        addView(view);
     }
     /**
      * 设置数据

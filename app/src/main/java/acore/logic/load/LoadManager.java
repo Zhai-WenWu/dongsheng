@@ -173,17 +173,16 @@ public class LoadManager {
 	 * @param clicker 加载事件
 	 */
 	public void setLoading(@NonNull RvListView rvListView, @NonNull RvBaseAdapter adapter, @NonNull boolean hasMore, @NonNull View.OnClickListener clicker) {
-	 if(rvListView!=null){
-			if(rvListView.getAdapter()==null){
-					rvListView.setAdapter( adapter);
-				if(hasMore){
-					Button loadMore = mLoadMore.newLoadMoreBtn(rvListView, clicker);
-					AutoLoadMore.setAutoMoreListen(rvListView, loadMore, clicker);
-				}
+		if(rvListView!=null && rvListView.getAdapter()==null){
+			rvListView.setAdapter( adapter);
+			if(hasMore){
+				Button loadMore = mLoadMore.newLoadMoreBtn(rvListView, clicker);
+				AutoLoadMore.setAutoMoreListen(rvListView, loadMore, clicker);
 			}
 		}
 		setLoading(clicker);
 	}
+
 	public void setLoading(ListView list, ListAdapter adapter, boolean hasMore, final View.OnClickListener clicker, AutoLoadMore.OnListScrollListener listScrollListener) {
 		if (list.getAdapter() == null) {
 			if (hasMore) {

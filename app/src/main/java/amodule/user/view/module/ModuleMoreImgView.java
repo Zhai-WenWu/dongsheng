@@ -41,15 +41,15 @@ public class ModuleMoreImgView extends ModuleBaseView{
     private int subjectImgWidth;
     private Map<String,String> map;
     private String url="";
-    public ModuleMoreImgView(Context context, int layoutId) {
+    public ModuleMoreImgView(Context context) {
         super(context, R.layout.module_more_view);
     }
 
-    public ModuleMoreImgView(Context context, AttributeSet attrs, int layoutId) {
+    public ModuleMoreImgView(Context context, AttributeSet attrs ) {
         super(context, attrs, R.layout.module_more_view);
     }
 
-    public ModuleMoreImgView(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
+    public ModuleMoreImgView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.module_more_view);
     }
 
