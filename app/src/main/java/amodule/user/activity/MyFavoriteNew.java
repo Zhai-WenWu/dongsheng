@@ -1,26 +1,29 @@
 package amodule.user.activity;
 
-import android.app.Activity;
+import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
-import amodule.main.Main;
 import amodule.user.adapter.AdapterMyFavorite;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -31,14 +34,13 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
  * 我的收藏页面改版
  */
 public class MyFavoriteNew extends BaseActivity implements View.OnClickListener {
-    private ArrayList<Map<String, String>> mapList = new ArrayList<>();
-    private TextView title, rightText;
-    private PtrClassicFrameLayout refreshLayout;
+
+    private ArrayList<Map<String, String>> mData = new ArrayList<>();
+    private RelativeLayout seekLayout;
     private RvListView rvListview;
-    private EditText ed_search_word;
     private AdapterMyFavorite myFavorite;
-    private String name = "";//当前搜索的名称
     private int currentpage = 0, everyPage = 0;//页面号码
+    private int seekLayoutHeight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,41 +51,70 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     }
 
     private void initUi() {
-        title = (TextView) findViewById(R.id.title);
-        rightText = (TextView) findViewById(R.id.rightText);
+        TextView title = (TextView) findViewById(R.id.title);
         title.setText("我的收藏");
+        TextView rightText = (TextView) findViewById(R.id.rightText);
         rightText.setText("浏览历史");
-        rightText.setTextColor(Color.parseColor("#fffffe"));
-        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
+        rightText.setVisibility(View.VISIBLE);
+        rightText.setTextColor(Color.parseColor("#999999"));
         rvListview = (RvListView) findViewById(R.id.rvListview);
-        findViewById(R.id.seek_but_rela).setOnClickListener(this);
-        findViewById(R.id.btn_search_global).setOnClickListener(this);
-        ed_search_word = (EditText) findViewById(R.id.ed_search_word);
-        ed_search_word.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        seekLayout = (RelativeLayout) findViewById(R.id.seek_layout);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+        seekLayout.setOnClickListener(this);
+        rightText.setOnClickListener(this);
+        findViewById(R.id.title).setOnClickListener(this);
+        findViewById(R.id.ll_back).setOnClickListener(this);
 
+        seekLayout.post(new Runnable() {
             @Override
-            public void afterTextChanged(Editable s) {
+            public void run() {
+                seekLayoutHeight = seekLayout.getMeasuredHeight();
             }
         });
-        isShowEditView(false);
     }
 
+    private static final int HIDE_THRESHOLD = 20;//滑动隐藏的阈值
+
+    private int mScrolledDistance = 0;//滑动距离
+    private boolean mControlsVisible = true;//控件的显示状态
     private void initData() {
-        myFavorite = new AdapterMyFavorite(this, mapList);
-        loadManager.setLoading(refreshLayout, rvListview, myFavorite, true,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestData(true);
+        myFavorite = new AdapterMyFavorite(this, mData);
+        View view = new View(this);
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,Tools.getDimen(this,R.dimen.dp_35)));
+        rvListview.addHeaderView(view);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
+        itemDecoration.setDrawable(drawable);
+        rvListview.addItemDecoration(itemDecoration);
+        rvListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+                if (firstVisibleItem == 0) {//如果已经滑动到最顶端
+                    if(!mControlsVisible) {
+                        showSreachBar();
+                        mControlsVisible = true;
                     }
-                }, new View.OnClickListener() {
+                } else {//当前Item不是第一条
+                    if (mScrolledDistance > HIDE_THRESHOLD && mControlsVisible) {//向下滑动
+                        hideSearchBar();
+                        mControlsVisible = false;
+                        mScrolledDistance = 0;
+                    } else if (mScrolledDistance < -HIDE_THRESHOLD && !mControlsVisible) {//向上滑动
+                        showSreachBar();
+                        mControlsVisible = true;
+                        mScrolledDistance = 0;
+                    }
+                }
+                if((mControlsVisible && dy>0) || (!mControlsVisible && dy<0)) {
+                    mScrolledDistance += dy;
+                }
+            }
+        });
+        loadManager.setLoading(rvListview, myFavorite, true,
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestData(false);
@@ -91,38 +122,45 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 });
     }
 
+    private void hideSearchBar(){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout,View.TRANSLATION_Y,0,-seekLayoutHeight);
+        animator.setDuration(500);
+        animator.start();
+    }
+
+    private void showSreachBar(){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout,View.TRANSLATION_Y,-seekLayoutHeight,0);
+        animator.setDuration(500);
+        animator.start();
+    }
+
     /**
      * 请求数据
      */
     private void requestData(final boolean isRefresh) {
         currentpage = isRefresh ? 1 : ++currentpage;
-        String url = StringManager.API_COLLECTIONLIST;
-        String params = "page=" + currentpage;
-        if (!TextUtils.isEmpty(name))
-            params += "&name=" + name;
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("page", String.valueOf(currentpage));
         loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, false);
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 int loadCount = 0;
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     if (isRefresh)
-                        mapList.clear();
-                    Log.i(Main.TAG, "msg::" + msg);
+                        mData.clear();
                     Map<String, String> maps = StringManager.getFirstMap(msg);
                     if (maps.containsKey("list") && !TextUtils.isEmpty(maps.get("list"))) {
                         ArrayList<Map<String, String>> listMaps = StringManager.getListMapByJson(maps.get("list"));
                         loadCount = listMaps.size();
-                        mapList.addAll(listMaps);
+                        mData.addAll(listMaps);
                         myFavorite.notifyDataSetChanged();
                     }
                 }
                 if (everyPage == 0) {
                     everyPage = loadCount;
                 }
-                if (isRefresh)
-                    refreshLayout.refreshComplete();
-                loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mapList.isEmpty());
+                loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mData.isEmpty());
             }
         });
     }
@@ -145,37 +183,35 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.seek_but_rela:
-                isShowEditView(true);
+            case R.id.title:
+                gotoTop();
                 break;
-            case R.id.btn_search_global:
-                handlerSearch();
+            case R.id.ll_back:
+                finish();
+                break;
+            case R.id.rightText:
+                startActivity(new Intent(this, BrowseHistory.class));
+                break;
+            case R.id.seek_layout:
+                startActivity(new Intent(this, SreachFavoriteActivity.class));
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * 处理搜索
-     */
-    private void handlerSearch() {
-        name = ed_search_word.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            Tools.showToast(this, "傻逼没有数据");
-            return;
+    long firstClickTime = 0;
+
+    private void gotoTop() {
+        if (firstClickTime == 0) {
+            firstClickTime = System.currentTimeMillis();
+        } else {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - firstClickTime < 500) {
+                rvListview.scrollToPosition(0);
+            }
+            firstClickTime = 0;
         }
-        currentpage = 0;
-        requestData(true);
     }
 
-    /**
-     * 判断是否显示
-     *
-     * @param isShow
-     */
-    private void isShowEditView(boolean isShow) {
-        findViewById(R.id.seek_edit_rela).setVisibility(isShow ? View.VISIBLE : View.GONE);
-        findViewById(R.id.seek_but_rela).setVisibility(isShow ? View.GONE : View.VISIBLE);
-    }
 }

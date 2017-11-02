@@ -367,7 +367,6 @@ public class LoadManager {
 			if (hasMore) {
 				Button loadMore = mLoadMore.newLoadMoreBtn(listView, loadMoreListener);
 				AutoLoadMore.setAutoMoreListen(listView, loadMore, loadMoreListener);
-
 			}
 		}
 		setLoading(loadMoreListener);

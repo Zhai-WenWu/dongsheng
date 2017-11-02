@@ -9,8 +9,8 @@
         android:background="#fffffe"
         android:gravity="center_vertical"
         android:paddingBottom="@dimen/dp_4"
-        android:paddingLeft="@dimen/dp_15"
-        android:paddingRight="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_15">
 
         <ImageView

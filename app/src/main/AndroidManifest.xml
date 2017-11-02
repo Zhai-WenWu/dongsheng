@@ -905,6 +905,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.user.activity.SreachFavoriteActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"
+            />
         <!-- user end -->
 
 
