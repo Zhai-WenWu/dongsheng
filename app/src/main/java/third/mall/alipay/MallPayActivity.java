@@ -363,7 +363,6 @@ public class MallPayActivity extends MallBaseActivity implements OnClickListener
 								MallPayActivity.this.finish();
 							}
 						})
-						.setPositiveTextColor(Color.parseColor("#ff533c"))
 						.setPositiveText("继续支付", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {

@@ -664,7 +664,6 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 								dialogManager.cancel();
 							}
 						})
-						.setPositiveTextColor(Color.parseColor("#ff533c"))
 						.setPositiveText("确定", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -724,7 +723,6 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 								dialogManager.cancel();
 							}
 						})
-						.setPositiveTextColor(Color.parseColor("#ff533c"))
 						.setPositiveText("确定", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -747,7 +745,6 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 								dialogManager.cancel();
 							}
 						})
-						.setPositiveTextColor(Color.parseColor("#ff533c"))
 						.setPositiveText("确定", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
