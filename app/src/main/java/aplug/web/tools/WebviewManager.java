@@ -2,15 +2,11 @@ package aplug.web.tools;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
@@ -18,11 +14,16 @@ import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -283,23 +284,25 @@ public class  WebviewManager {
 
             //弹出提示
             private void showTip(String message, final JsResult result) {
-                Builder builder = new Builder(webview.getContext());
-                builder.setTitle("提示");
-                builder.setMessage(message);
-                builder.setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-
-                });
-                builder.setNeutralButton(android.R.string.cancel, new AlertDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.cancel();
-                    }
-
-                }).setCancelable(false).create().show();
+                final DialogManager dialogManager = new DialogManager(webview.getContext());
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleView(webview.getContext()).setText("提示"))
+                        .setView(new MessageView(webview.getContext()).setText(message))
+                        .setView(new HButtonView(webview.getContext())
+                                .setNegativeText(android.R.string.cancel, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        result.cancel();
+                                    }
+                                })
+                                .setPositiveText(android.R.string.ok, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        result.confirm();
+                                    }
+                                }))).setCancelable(false).show();
             }
 
         });

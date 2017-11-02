@@ -18,6 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -32,8 +36,6 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.ToolsDevice;
 import amodule.dish.upload.VideoDishUploadListPool;
-//import amodule.dish.video.activity.MediaPreviewActivity;
-import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
@@ -199,41 +201,38 @@ public class UploadDishListActivity extends BaseActivity {
         tv_cancel_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String showInfo = "确定取消上传视频吗？";
-                String btnMsg1 = "确定";
-                String btnMsg2 = "取消";
+                final DialogManager dialogManager = new DialogManager(UploadDishListActivity.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(UploadDishListActivity.this).setText("确定取消上传视频吗？"))
+                        .setView(new HButtonView(UploadDishListActivity.this)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                    }
+                                })
+                                .setPositiveText("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        listPool.cancelUpload();
+                                        if (FriendHome.isAlive) {
+                                            Intent broadIntent = new Intent();
+                                            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                                            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
+                                            Main.allMain.sendBroadcast(broadIntent);
+                                        }
+                                        isStopUpload = true;
 
-                final CommonDialog dialog = new CommonDialog(UploadDishListActivity.this);
-                dialog.setMessage(showInfo).setSureButton(btnMsg1, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                        listPool.cancelUpload();
-                        if (FriendHome.isAlive) {
-                            Intent broadIntent = new Intent();
-                            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
-                            broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
-                            Main.allMain.sendBroadcast(broadIntent);
-                        }
-                        isStopUpload = true;
-
-                        Intent intent = new Intent();
-                        intent.setClass(UploadDishListActivity.this,UploadDishActivity.class);
-                        intent.putExtra(UploadDishActivity.DISH_TYPE_KEY,UploadDishActivity.DISH_TYPE_VIDEO);
-                        intent.putExtra("id",draftId);
-                        intent.putExtra("state", UploadDishActivity.UPLOAD_DISH_DRAFT);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                });
-                dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
+                                        Intent intent = new Intent();
+                                        intent.setClass(UploadDishListActivity.this,UploadDishActivity.class);
+                                        intent.putExtra(UploadDishActivity.DISH_TYPE_KEY,UploadDishActivity.DISH_TYPE_VIDEO);
+                                        intent.putExtra("id",draftId);
+                                        intent.putExtra("state", UploadDishActivity.UPLOAD_DISH_DRAFT);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }))).show();
             }
         });
 

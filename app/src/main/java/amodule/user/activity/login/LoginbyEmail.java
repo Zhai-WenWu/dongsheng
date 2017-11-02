@@ -1,5 +1,6 @@
 package amodule.user.activity.login;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -8,6 +9,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
@@ -16,7 +21,6 @@ import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.ToolsDevice;
 import amodule.user.view.NextStepView;
 import amodule.user.view.SecretInputView;
-import xh.windowview.XhDialog;
 
 /**
  * Created by ：fei_teng on 2017/3/2 15:06.
@@ -117,27 +121,27 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
 
                         @Override
                         public void onFalse(int flag) {
-
-                            final XhDialog xhDialog = new XhDialog(LoginbyEmail.this);
-                            xhDialog.setTitle("该邮箱尚未注册，"+"\n是否注册新账号？")
-                                    .setCanselButton("不注册", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "失败原因：弹框未注册，选择不注册");
-                                            xhDialog.cancel();
-                                        }
-                                    })
-                                    .setSureButtonTextColor("#007aff")
-                                    .setCancelButtonTextColor("#007aff")
-                                    .setSureButton("注册", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "失败原因：弹框未注册，选择注册");
-                                            register(LoginbyEmail.this, "", "");
-                                            xhDialog.cancel();
-                                        }
-                                    });
-                            xhDialog.show();
+                            final DialogManager dialogManager = new DialogManager(LoginbyEmail.this);
+                            dialogManager.createDialog(new ViewManager(dialogManager)
+                                    .setView(new TitleMessageView(LoginbyEmail.this).setText("该邮箱尚未注册，"+"\n是否注册新账号？"))
+                                    .setView(new HButtonView(LoginbyEmail.this)
+                                            .setNegativeTextColor(Color.parseColor("#007aff"))
+                                            .setNegativeText("不注册", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialogManager.cancel();
+                                                    XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "失败原因：弹框未注册，选择不注册");
+                                                }
+                                            })
+                                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                                            .setPositiveText("注册", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialogManager.cancel();
+                                                    XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "失败原因：弹框未注册，选择注册");
+                                                    register(LoginbyEmail.this, "", "");
+                                                }
+                                            }))).show();
                         }
                     });
         }else{

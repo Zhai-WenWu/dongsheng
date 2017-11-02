@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="#66000000">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="@dimen/dp_32"
-        android:paddingBottom="@dimen/dp_32"
+        android:paddingTop="@dimen/dp_35"
+        android:paddingBottom="@dimen/dp_35"
         android:paddingLeft="@dimen/dp_49"
-        android:paddingRight="@dimen/dp_49"
-        android:background="@drawable/bg_round8_white">
+        android:paddingRight="@dimen/dp_49">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -27,8 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"
-            android:textSize="@dimen/sp_16"
-            android:text="正在提交......"/>
+            android:textSize="@dimen/sp_16.5"
+            android:text="正在提交......"
+            android:textColor="@color/c_black_text"/>
     </LinearLayout>
 
 </RelativeLayout>

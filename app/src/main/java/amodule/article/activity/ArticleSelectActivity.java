@@ -19,6 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -47,7 +51,6 @@ import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import xh.windowview.XhDialog;
 
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 
@@ -340,22 +343,23 @@ public class ArticleSelectActivity extends BaseActivity implements View.OnClickL
         if ("wifi".equals(ToolsDevice.getNetWorkType(ArticleSelectActivity.this))) {
             upload();
         }else{
-            final XhDialog xhDialog = new XhDialog(ArticleSelectActivity.this);
-            xhDialog.setTitle("当前不是WiFi环境，是否发布？")
-                    .setCanselButton("取消", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            xhDialog.cancel();
-                        }
-                    }).setSureButton("确定", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    upload();
-                    xhDialog.cancel();
-                }
-            }).setSureButtonTextColor("#333333")
-                    .setCancelButtonTextColor("#333333")
-                    .show();
+            final DialogManager dialogManager = new DialogManager(ArticleSelectActivity.this);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(ArticleSelectActivity.this).setText("当前不是WiFi环境，是否发布？"))
+                    .setView(new HButtonView(ArticleSelectActivity.this)
+                            .setNegativeText("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                }
+                            })
+                            .setPositiveText("确定", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    upload();
+                                    dialogManager.cancel();
+                                }
+                            }))).show();
         }
     }
 

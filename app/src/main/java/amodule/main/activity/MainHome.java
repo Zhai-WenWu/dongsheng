@@ -1,6 +1,5 @@
 package amodule.main.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -11,8 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,7 +33,6 @@ import acore.widget.PagerSlidingTabStrip;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
-import amodule.main.view.HomeGuidancePage;
 import amodule.main.view.home.BaseHomeFragment;
 import amodule.main.view.home.HomeFragment;
 import amodule.other.activity.ClassifyHealthActivity;
@@ -445,29 +441,6 @@ public class MainHome extends MainBaseActivity implements IObserver {
             }
         }
         return  null;
-    }
-
-    /**
-     * 显示引导页
-     */
-    private void showGuidancePage() {
-        String msg = (String) FileManager.loadShared(this, FileManager.MAIN_HOME_GUIDANCEPAGE, FileManager.MAIN_HOME_GUIDANCEPAGE);
-        if (TextUtils.isEmpty(msg) || !msg.equals("1")) {
-            final Dialog dialog = new Dialog(this, R.style.dialog);
-            Window window = dialog.getWindow();
-            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-            HomeGuidancePage homeGuidancePage = new HomeGuidancePage(this);
-            homeGuidancePage.setOnGuidancePageFinishListener(new HomeGuidancePage.OnGuidancePageFinishListener() {
-                @Override
-                public void onGuidancePageFinish() {
-                    dialog.dismiss();
-                }
-            });
-            homeGuidancePage.show();
-            dialog.setContentView(homeGuidancePage);
-            dialog.show();
-            FileManager.saveShared(this, FileManager.MAIN_HOME_GUIDANCEPAGE, FileManager.MAIN_HOME_GUIDANCEPAGE, "1");
-        }
     }
 
     public void onActivityshow() {

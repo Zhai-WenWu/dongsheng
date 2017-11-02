@@ -1,13 +1,11 @@
 package amodule.answer.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -17,6 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.popdialog.util.PushManager;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
+import com.xh.window.FloatingWindow;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -34,9 +37,7 @@ import acore.tools.ToolsDevice;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.upload.AskAnswerUploadListPool;
 import amodule.answer.view.AskAnswerImgController;
-import amodule.answer.window.FloatingWindow;
-import amodule.answer.window.UploadingDialog;
-import amodule.dish.view.CommonDialog;
+import amodule.answer.view.UploadingView;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
 import amodule.upload.bean.UploadItemData;
@@ -48,7 +49,6 @@ import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.tools.WebviewManager;
 import xh.basic.internet.UtilInternet;
-import xh.windowview.XhDialog;
 
 /**
  * Created by sll on 2017/7/17.
@@ -260,22 +260,24 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void hintNetWork(){
-        final XhDialog xhDialog = new XhDialog(AskEditActivity.this);
-        xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
-                .setCanselButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-                    }
-                }).setSureButton("确定", new View.OnClickListener() {
+        final DialogManager dialogManager = new DialogManager(AskEditActivity.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+        .setView(new TitleMessageView(AskEditActivity.this).setText("当前不是WiFi环境，是否继续上传？"))
+        .setView(new HButtonView(AskEditActivity.this).setNegativeTextColor(Color.parseColor("#333333"))
+        .setNegativeText("取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                xhDialog.cancel();
+                dialogManager.cancel();
+            }
+        })
+        .setPositiveTextColor(Color.parseColor("#333333"))
+        .setPositiveText("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogManager.cancel();
                 allStartOrPause(true);
             }
-        }).setSureButtonTextColor("#333333")
-                .setCancelButtonTextColor("#333333")
-                .show();
+        }))).show();
     }
 
     @Override
@@ -398,14 +400,14 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         }
     }
 
-    private UploadingDialog mUploadingDialog;
+    private DialogManager mUploadingDialog;
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
         if (mUploadingDialog == null) {
-            mUploadingDialog = new UploadingDialog(this);
-            mUploadingDialog.setContentView();
-            mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            mUploadingDialog = new DialogManager(this);
+            mUploadingDialog.createDialog(new ViewManager(mUploadingDialog)
+            .setView(new UploadingView(this))).noPadding().setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     cancelUpload();
@@ -422,14 +424,16 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void showPriceChangeDialog(String msg) {
-        final CommonDialog dialog = new CommonDialog(this, R.layout.c_common_dialog);
-        dialog.setCancelable(true);
-        dialog.setMessage(msg).setSureButton("我知道了", new View.OnClickListener() {
+        final DialogManager dialogManager = new DialogManager(AskEditActivity.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+        .setView(new TitleMessageView(AskEditActivity.this).setText(msg))
+        .setView(new HButtonView(AskEditActivity.this)
+        .setNegativeText("我知道了", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.cancel();
+                dialogManager.cancel();
             }
-        }).show();
+        }))).show();
         XHClick.mapStat(this, getTjId(), "点击发布按钮", "价格变动通知");
     }
 
@@ -507,37 +511,29 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         ReqEncyptInternet.in().doEncypt(StringManager.API_QA_ISTIP, "type=1", new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object obj) {
-                final FloatingWindow window = FloatingWindow.getInstance();
+                //比较特殊的弹框，涉及到页面跳转不能影响弹框
                 if (i >= UtilInternet.REQ_OK_STRING) {
                     Map<String, String> map = StringManager.getFirstMap(obj);
                     if (map != null && !map.isEmpty() && "2".equals(map.get("isTip"))) {
-                        View view = LayoutInflater.from(XHApplication.in().getApplicationContext()).inflate(R.layout.c_common_dialog, null, false);
-                        ((TextView) view.findViewById(R.id.dialog_message)).setText("开启推送通知，作者回答后将在第一时间通知你，是否开启？");
-                        TextView tvCancel = (TextView) view.findViewById(R.id.dialog_cancel);
-                        tvCancel.setText("否");
-                        tvCancel.setVisibility(View.VISIBLE);
-                        tvCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                window.cancelFloatingWindow();
-                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人推送", "否");
-                            }
-                        });
-                        view.findViewById(R.id.dialog_negative_line).setVisibility(View.VISIBLE);
-                        TextView tvSure = (TextView) view.findViewById(R.id.dialog_sure);
-                        tvSure.setText("是");
-                        tvSure.setVisibility(View.VISIBLE);
-                        tvSure.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                window.cancelFloatingWindow();
-                                PushManager.requestPermission(AskEditActivity.this);
-                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人推送", "是");
-                            }
-                        });
-                        window.setContentView(view);
-                        window.setCancelable(true);
-                        window.showFloatingWindow();
+                        final FloatingWindow window = FloatingWindow.getInstance(XHApplication.in().getApplicationContext());
+                        window.setView(new TitleMessageView(XHApplication.in().getApplicationContext())
+                                .setText("开启推送通知，用户的追问或评价结果将在第一时间通知你，是否开启？"))
+                                .setView(new HButtonView(XHApplication.in().getApplicationContext())
+                                        .setPositiveText("是", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                window.cancelFloatingWindow();
+                                                PushManager.requestPermission(AskEditActivity.this);
+                                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人推送", "是");
+                                            }
+                                        })
+                                        .setNegativeText("否", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                window.cancelFloatingWindow();
+                                                XHClick.mapStat(AskEditActivity.this, "a_ask_push", "提问人推送", "否");
+                                            }
+                                        })).setCancelable(true).showFloatingWindow();
                     }
                 }
             }

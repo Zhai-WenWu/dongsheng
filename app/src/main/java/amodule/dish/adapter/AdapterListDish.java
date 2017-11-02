@@ -1,7 +1,5 @@
 package amodule.dish.adapter;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +8,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.List;
@@ -150,24 +153,27 @@ public class AdapterListDish extends AdapterSimple {
         return new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                new AlertDialog.Builder(mAct)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("取消删除")
-                        .setMessage("确定要删除离线菜谱?")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                DataOperate.deleteBuyBurden(mAct, map.get("code"));
-                                data.remove(index);
-                                notifyDataSetChanged();
-                                Tools.showToast(mAct, "删除成功");
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        }).create().show();
+                final DialogManager dialogManager = new DialogManager(mAct);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleView(mAct).setText("取消删除"))
+                        .setView(new MessageView(mAct).setText("确定要删除离线菜谱？"))
+                        .setView(new HButtonView(mAct)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                    }
+                                })
+                                .setPositiveText("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        DataOperate.deleteBuyBurden(mAct, map.get("code"));
+                                        data.remove(index);
+                                        notifyDataSetChanged();
+                                        Tools.showToast(mAct, "删除成功");
+                                        dialogManager.cancel();
+                                    }
+                                }))).show();
             }
         };
     }

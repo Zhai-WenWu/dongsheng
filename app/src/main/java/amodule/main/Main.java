@@ -34,6 +34,10 @@ import com.popdialog.GoodCommentDialogControl;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -91,7 +95,6 @@ import third.push.xg.XGLocalPushServer;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
-import xh.windowview.XhDialog;
 
 import static acore.tools.Tools.getApiSurTime;
 import static com.xiangha.R.id.iv_itemIsFine;
@@ -349,29 +352,30 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 show = true;
                 intent.setClass(Main.this, tempC);
                 final Intent finalIntent = intent;
-                final XhDialog dialog = new XhDialog(Main.this);
-                dialog.setTitle(msg)
-                        .setCancelable(true)
-                        .setCanselButton("否", new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.cancel();
-                                new Thread(new Runnable() {
+                final DialogManager dialogManager = new DialogManager(Main.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(Main.this).setText(msg))
+                        .setView(new HButtonView(Main.this)
+                                .setNegativeText("否", new View.OnClickListener() {
                                     @Override
-                                    public void run() {
-                                        sqLite.deleteAll();
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                sqLite.deleteAll();
+                                            }
+                                        }).start();
                                     }
-                                }).start();
-                            }
-                        })
-                        .setSureButton("是", new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Main.this.startActivity(finalIntent);
-                                dialog.cancel();
-                            }
-                        })
-                        .show();
+                                })
+                                .setPositiveTextColor(Color.parseColor("#007aff"))
+                                .setPositiveText("是", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        Main.this.startActivity(finalIntent);
+                                    }
+                                }))).show();
             }
             return show;
         }
@@ -379,34 +383,36 @@ public class Main extends Activity implements OnClickListener, IObserver {
         private boolean showUploading(final UploadParentSQLite sqLite, final int dataType, String title) {
             final UploadArticleData uploadArticleData = sqLite.getUploadIngData();
             if (uploadArticleData != null) {
-                final XhDialog xhDialog = new XhDialog(Main.this);
-                xhDialog.setTitle(title)
-                        .setCanselButton("取消", new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
-                                sqLite.update(uploadArticleData.getId(),uploadArticleData);
-                                xhDialog.cancel();
-                            }
-                        }).setSureButton("确定", new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
-                        intent.putExtra("draftId", uploadArticleData.getId());
-                        intent.putExtra("dataType", dataType);
-                        intent.putExtra("coverPath", uploadArticleData.getImg());
-                        String videoPath = "";
-                        ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
-                        if(videoArray.size() > 0){
-                            videoPath = videoArray.get(0).get("video");
-                        }
-                        intent.putExtra("finalVideoPath", videoPath);
-                        startActivity(intent);
-                        xhDialog.cancel();
-                    }
-                }).setSureButtonTextColor("#333333")
-                        .setCancelButtonTextColor("#333333")
-                        .show();
+                final DialogManager dialogManager = new DialogManager(Main.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(Main.this).setText(title))
+                        .setView(new HButtonView(Main.this)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
+                                        sqLite.update(uploadArticleData.getId(),uploadArticleData);
+                                    }
+                                })
+                                .setPositiveTextColor(Color.parseColor("#007aff"))
+                                .setPositiveText("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
+                                        intent.putExtra("draftId", uploadArticleData.getId());
+                                        intent.putExtra("dataType", dataType);
+                                        intent.putExtra("coverPath", uploadArticleData.getImg());
+                                        String videoPath = "";
+                                        ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
+                                        if(videoArray.size() > 0){
+                                            videoPath = videoArray.get(0).get("video");
+                                        }
+                                        intent.putExtra("finalVideoPath", videoPath);
+                                        dialogManager.cancel();
+                                        startActivity(intent);
+                                    }
+                                }))).show();
                 return true;
             }
             return false;

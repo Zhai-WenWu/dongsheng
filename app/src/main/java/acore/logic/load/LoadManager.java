@@ -14,9 +14,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.tencent.android.tpush.XGPushConfig;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.load.view.LoadingView;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
@@ -35,7 +38,6 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.push.xg.XGPushServer;
-import xh.windowview.XhLoadingDialog;
 
 @SuppressLint("InflateParams")
 public class LoadManager {
@@ -43,7 +45,7 @@ public class LoadManager {
 	/** progress管理类 */
 	public LoadProgressManager mLoadProgress;
 	public LoadMoreManager mLoadMore;
-	public XhLoadingDialog mProgressDialog = null;
+	public DialogManager mProgressDialog = null;
 	public static String tok = "";
 	public static int FOOTTIME_PAGE = -2;//特殊的值，用于标示时间戳翻页。
 
@@ -504,9 +506,10 @@ public class LoadManager {
 	//开启和关闭进度框
 	public void startProgress(String title) {
 		if (mContext != null) {
-			mProgressDialog = new XhLoadingDialog(mContext);
-			mProgressDialog.setTitle(title);
-			mProgressDialog.show();
+			if (mProgressDialog != null && mProgressDialog.isShowing())
+				dismissProgress();
+			mProgressDialog = new DialogManager(mContext);
+			mProgressDialog.createDialog(new ViewManager(mProgressDialog).setView(new LoadingView(mContext).setText(title))).show();
 		}
 	}
 

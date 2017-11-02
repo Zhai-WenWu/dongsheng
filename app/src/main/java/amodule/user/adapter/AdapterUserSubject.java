@@ -5,6 +5,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +23,6 @@ import acore.tools.Tools;
 import amodule.quan.adapter.AdapterCircle;
 import amodule.quan.view.NormalContentView;
 import amodule.quan.view.NormarlContentItemImageVideoView;
-import xh.windowview.XhDialog;
 
 /**
  * Created by XiangHa on 2016/9/20.
@@ -69,20 +74,24 @@ public class AdapterUserSubject extends AdapterSimple {
                 @Override
                 public void onTitleTopStateCallBack(boolean isok,boolean isConfirm,int position,Object data) {
                     if(isok && isConfirm && isShowTopHint()) {
-                        final XhDialog xhDialog = new XhDialog(mContext);
-                        xhDialog.setTitle("置顶成功").setMessage("非会员72小时失效，会员永久有效哦~立刻开通会员？")
-                                .setSureButton("开通会员", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        AppCommon.openUrl(mContext, StringManager.getVipUrl(true) + "&vipFrom=个人主页置顶弹框", true);
-                                        xhDialog.cancel();
-                                    }
-                                }).setCanselButton("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                xhDialog.cancel();
-                            }
-                        }).show();
+                        final DialogManager dialogManager = new DialogManager(mContext);
+                        dialogManager.createDialog(new ViewManager(dialogManager)
+                                .setView(new TitleView(mContext).setText("置顶成功"))
+                                .setView(new MessageView(mContext).setText("非会员72小时失效，会员永久有效哦~立刻开通会员？"))
+                                .setView(new HButtonView(mContext)
+                                        .setNegativeText("取消", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialogManager.cancel();
+                                            }
+                                        })
+                                        .setPositiveText("开通会员", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                dialogManager.cancel();
+                                                AppCommon.openUrl(mContext, StringManager.getVipUrl(true) + "&vipFrom=个人主页置顶弹框", true);
+                                            }
+                                        }))).show();
                     }else{
                         Tools.showToast(mContext, String.valueOf(data));
                     }

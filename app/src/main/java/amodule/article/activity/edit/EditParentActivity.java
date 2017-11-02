@@ -29,6 +29,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -57,7 +61,6 @@ import aplug.basic.ReqInternet;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import aplug.recordervideo.db.RecorderVideoData;
-import xh.windowview.XhDialog;
 
 import static amodule.article.view.richtext.RichText.FORMAT_BOLD;
 import static amodule.article.view.richtext.RichText.FORMAT_CENTER;
@@ -745,26 +748,26 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         } else {
             if (isKeyboradShow)
                 ToolsDevice.keyboardControl(false, this, editTitle);//收回键盘
-            final XhDialog xhDialog = new XhDialog(EditParentActivity.this);
-            xhDialog.setTitle("二次编辑的内容将不会保存到草稿箱，是否继续退出？")
-                    .setCanselButton("取消", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            xhDialog.cancel();
-                        }
-                    })
-                    .setSureButton("退出", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (uploadArticleData != null) {
-                                sqLite.deleteById(uploadArticleData.getId());
-                            }
-                            xhDialog.cancel();
-                            finshActivity();
-                        }
-                    }).setSureButtonTextColor("#333333")
-                    .setCancelButtonTextColor("#333333")
-                    .show();
+            final DialogManager dialogManager = new DialogManager(EditParentActivity.this);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(EditParentActivity.this).setText("二次编辑的内容将不会保存到草稿箱，是否继续退出？"))
+                    .setView(new HButtonView(EditParentActivity.this)
+                            .setNegativeText("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                }
+                            })
+                            .setPositiveText("退出", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (uploadArticleData != null) {
+                                        sqLite.deleteById(uploadArticleData.getId());
+                                    }
+                                    dialogManager.cancel();
+                                    finshActivity();
+                                }
+                            }))).show();
         }
 
     }

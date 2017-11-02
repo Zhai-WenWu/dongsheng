@@ -15,6 +15,10 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -40,7 +44,6 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilLog;
-import xh.windowview.XhDialog;
 
 /**
  * 我的页面：视频
@@ -128,24 +131,25 @@ public class UserHomeVideo extends TabContentView {
     }
 
     private void showDialog(final String text, final String url) {
-        final XhDialog dialog = new XhDialog(mAct);
-        dialog.setTitle("暂无发布\"" + text + "\"的权限，是否申请发布权限？")
-                .setSureButton("是", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        XHClick.mapStat(mAct, "a_post_button", text, "权限弹框 - 是");
-                        AppCommon.openUrl(mAct, url, true);
-                        dialog.cancel();
-                    }
-                })
-                .setCanselButton("否", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        XHClick.mapStat(mAct, "a_post_button", text, "权限弹框 - 否");
-                        dialog.cancel();
-                    }
-                })
-                .show();
+        final DialogManager dialogManager = new DialogManager(mAct);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(mAct).setText("暂无发布\"" + text + "\"的权限，是否申请发布权限？"))
+                .setView(new HButtonView(mAct)
+                        .setNegativeText("否", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                XHClick.mapStat(mAct, "a_post_button", text, "权限弹框 - 否");
+                            }
+                        })
+                        .setPositiveText("是", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                XHClick.mapStat(mAct, "a_post_button", text, "权限弹框 - 是");
+                                AppCommon.openUrl(mAct, url, true);
+                            }
+                        }))).show();
     }
 
     private UserHomeItem.OnItemClickListener mOnItemClickListener;

@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 import android.view.View;
+
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.tools.Tools;
 import amodule.dish.BrocastReceiver.BatteryBrocastReceiver;
-import amodule.dish.view.CommonDialog;
+import amodule.dish.view.TitleProgressView;
 import aplug.recordervideo.tools.AudioTools;
 
 /**
@@ -168,17 +173,17 @@ public class DeviceUtilDialog {
      */
     private void showDialog(Context context, String msg, String sureMsg,
                             final DeviceCallBack deviceCallBack) {
-        final CommonDialog dialog = new CommonDialog(context);
-        dialog.setCancelable(false);
-        dialog.setMessage(msg).setSureButton(sureMsg, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deviceCallBack.backResultState(true);
-                dialog.cancel();
-            }
-        });
-
-        dialog.show();
+        final DialogManager dialogManager = new DialogManager(context);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(context).setText(msg))
+                .setView(new HButtonView(context)
+                        .setNegativeText(sureMsg, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deviceCallBack.backResultState(true);
+                                dialogManager.cancel();
+                            }
+                        }))).setCancelable(false).show();
     }
 
     /**
@@ -187,24 +192,24 @@ public class DeviceUtilDialog {
     private void showDialog(Context context, String msg, String cancelMsg,
                             String sureMsg, final boolean isPressLeftBtnDoNothing,
                             final DeviceCallBack deviceCallBack) {
-        final CommonDialog dialog = new CommonDialog(context);
-        dialog.setCancelable(false);
-        dialog.setMessage(msg).setSureButton(sureMsg, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deviceCallBack.backResultState(isPressLeftBtnDoNothing);
-                dialog.cancel();
-            }
-        });
-
-        dialog.setCanselButton(cancelMsg, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deviceCallBack.backResultState(!isPressLeftBtnDoNothing);
-                dialog.cancel();
-            }
-        });
-        dialog.show();
+        final DialogManager dialogManager = new DialogManager(context);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(context).setText(msg))
+                .setView(new HButtonView(context)
+                        .setNegativeText(cancelMsg, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deviceCallBack.backResultState(!isPressLeftBtnDoNothing);
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveText(sureMsg, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deviceCallBack.backResultState(isPressLeftBtnDoNothing);
+                                dialogManager.cancel();
+                            }
+                        }))).setCancelable(false).show();
     }
 
 
@@ -215,26 +220,26 @@ public class DeviceUtilDialog {
                             String sureMsg, int progress,
                             final boolean isPressLeftBtnDoNothing,
                             final DeviceCallBack deviceCallBack) {
-        final CommonDialog dialog = new CommonDialog(context);
-        dialog.setCancelable(false);
-        dialog.setMessage(msg).setSureButton(sureMsg, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deviceCallBack.backResultState(isPressLeftBtnDoNothing);
-                dialog.cancel();
-            }
-        });
 
-        dialog.setCanselButton(cancelMsg, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deviceCallBack.backResultState(!isPressLeftBtnDoNothing);
-                dialog.cancel();
-            }
-        });
+        final DialogManager dialogManager = new DialogManager(context);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleProgressView(context).setTitle(msg).setProgress(progress))
+                .setView(new HButtonView(context)
+                        .setNegativeText(cancelMsg, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deviceCallBack.backResultState(!isPressLeftBtnDoNothing);
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveText(sureMsg, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deviceCallBack.backResultState(isPressLeftBtnDoNothing);
+                                dialogManager.cancel();
+                            }
+                        }))).setCancelable(false).show();
 
-        dialog.setProgress(progress);
-        dialog.show();
     }
 
 

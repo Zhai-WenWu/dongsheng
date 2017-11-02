@@ -36,6 +36,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':gsyVideoPlayer-java')
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
+    compile project(':xh_dialog')
 }
 
 android {
@@ -67,6 +68,7 @@ android {
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
 //            storeFile file('D:/android_workspace/xiangha.keystore')
+            storeFile file('E:/keystore/xiangha.keystore')
 //            storeFile file('E:/keystore/xiangha.keystore'
 
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
@@ -74,7 +76,7 @@ android {
 //            yulekwok
 //            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
-            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
 //            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
 //            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'

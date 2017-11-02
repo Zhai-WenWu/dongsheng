@@ -3,6 +3,7 @@ package acore.override.activity.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.tencent.bugly.crashreport.CrashReport;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleMessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -51,7 +58,6 @@ import aplug.feedback.activity.Feedback;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import third.push.xg.XGPushServer;
-import xh.windowview.XhDialog;
 
 /**
  * Created by ：fei_teng on 2017/2/15 20:21.
@@ -208,39 +214,36 @@ public class BaseLoginActivity extends BaseActivity {
         err_count_secret++;
         if (err_count_secret > 2) {
             if (!TextUtils.isEmpty(zoneCode)) {
-                final XhDialog xhDialog = new XhDialog(mAct);
-                xhDialog.setTitle("账号或密码错误，\n可以通过短信验证码完成登录")
-                        .setCanselButton("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                XHClick.mapStat(mAct, "a_login520", "手机号登录", "失败原因：弹框验证码登录，选择取消");
-                                xhDialog.cancel();
-                            }
-                        })
-                        .setSureButton("短信登录", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                gotoLoginByIndetify(mAct, zoneCode, phoneNum);
-                                XHClick.mapStat(mAct, "a_login520", "手机号登录", "失败原因：弹框验证码登录，选择去登录");
-                                xhDialog.cancel();
-                            }
-                        })
-                        .setSureButtonTextColor("#007aff")
-                        .setCancelButtonTextColor("#007aff");
-                xhDialog.show();
+                final DialogManager dialogManager = new DialogManager(mAct);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(mAct).setText("账号或密码错误，\n可以通过短信验证码完成登录"))
+                .setView(new HButtonView(mAct).setNegativeText("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        XHClick.mapStat(mAct, "a_login520", "手机号登录", "失败原因：弹框验证码登录，选择取消");
+                        dialogManager.cancel();
+                    }
+                }).setNegativeTextColor(Color.parseColor("#007aff"))
+                .setPositiveText("短信登录", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoLoginByIndetify(mAct, zoneCode, phoneNum);
+                        XHClick.mapStat(mAct, "a_login520", "手机号登录", "失败原因：弹框验证码登录，选择去登录");
+                        dialogManager.cancel();
+                    }
+                }).setPositiveTextColor(Color.parseColor("#007aff")))).show();
             } else {
-                final XhDialog xhDialog = new XhDialog(mAct);
-                xhDialog.setTitle("邮箱注册的账号，请使用电脑访问www.xiangha.com找回密码!")
-                        .setSureButton("我知道了", new View.OnClickListener() {
+
+                final DialogManager dialogManager = new DialogManager(mAct);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(mAct).setText("邮箱注册的账号，请使用电脑访问www.xiangha.com找回密码!"))
+                        .setView(new HButtonView(mAct).setNegativeText("我知道了", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 XHClick.mapStat(mAct, PHONE_TAG, "邮箱登录", "失败原因：弹框电脑找回密码");
-                                xhDialog.cancel();
+                                dialogManager.cancel();
                             }
-                        })
-                        .setSureButtonTextColor("#007aff")
-                        .setCancelButtonTextColor("#007aff");
-                xhDialog.show();
+                        }).setNegativeTextColor(Color.parseColor("#007aff")))).show();
             }
         }
     }

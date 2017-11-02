@@ -2,6 +2,7 @@ package acore.logic;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,13 +11,17 @@ import android.view.View;
 import android.webkit.CookieManager;
 
 import com.tencent.smtt.sdk.CookieSyncManager;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.login.widget.MsgNotifyDialog;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
@@ -29,7 +34,6 @@ import amodule.main.Main;
 import amodule.main.activity.MainChangeSend;
 import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.Setting;
-import amodule.user.activity.login.AccoutActivity;
 import amodule.user.activity.login.UserSetting;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -611,15 +615,17 @@ public class LoginManager {
                             @Override
                             public void run() {
                                 final Context currContext = XHActivityManager.getInstance().getCurrentActivity();
-                                final MsgNotifyDialog dialog = new MsgNotifyDialog(currContext);
-                                dialog.setMsgBtnClickListener(new View.OnClickListener() {
+                                final DialogManager dialogManager = new DialogManager(currContext);
+                                dialogManager.createDialog(new ViewManager(dialogManager)
+                                        .setView(new TitleView(currContext).setText(R.string.yiyuan_succ_title))
+                                .setView(new MessageView(currContext).setText(R.string.yiyuan_succ_desc))
+                                .setView(new HButtonView(currContext).setNegativeText(R.string.str_know, new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        dialog.cancel();
+                                        dialogManager.cancel();
                                         XHClick.mapStat(currContext, "a_vip_movesuccess", "点击我知道了按钮", "");
                                     }
-                                });
-                                dialog.show(currContext.getString(R.string.yiyuan_succ_title), currContext.getString(R.string.yiyuan_succ_desc), currContext.getString(R.string.str_know));
+                                }).setNegativeTextColor(Color.parseColor("#007aff")))).show();
                             }
                         }, 200);
                         ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);

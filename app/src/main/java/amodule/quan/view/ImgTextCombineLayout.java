@@ -18,6 +18,10 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.io.InputStream;
@@ -28,7 +32,6 @@ import java.util.Map;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TextViewShow;
-import amodule.dish.view.CommonDialog;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import core.xiangha.emj.tools.EmjParseMsgUtil;
@@ -409,24 +412,23 @@ public class ImgTextCombineLayout extends RelativeLayout {
 	 * 展示删除dialog
 	 */
 	private void showDialog() {
-		String btnMsg1 = "确定";
-		String btnMsg2 = "取消";
-
-		final CommonDialog dialog = new CommonDialog(context);
-		dialog.setMessage("确认要删除这张图片吗？").setSureButton(btnMsg1, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-				imgTextCallBack.onDelete(ImgTextCombineLayout.this);
-			}
-		});
-		dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-			}
-		});
-		dialog.show();
+		final DialogManager dialogManager = new DialogManager(context);
+		dialogManager.createDialog(new ViewManager(dialogManager)
+				.setView(new TitleMessageView(context).setText("确认要删除这张图片吗？"))
+				.setView(new HButtonView(context)
+						.setNegativeText("取消", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+							}
+						})
+						.setPositiveText("确定", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+								imgTextCallBack.onDelete(ImgTextCombineLayout.this);
+							}
+						}))).show();
 	}
 
 	/**

@@ -514,9 +514,7 @@ public class JsAppCommon extends JsBase {
 
             @Override
             public void run() {
-                if (LoginManager.isLogin()) {
-                    FavorableDialog dialog = new FavorableDialog(mAct, shop_code);
-                } else {
+                if (!LoginManager.isLogin()) {
                     Intent intent_user = new Intent(mAct, LoginByAccout.class);
                     mAct.startActivity(intent_user);
                 }

@@ -1,9 +1,6 @@
 package amodule.dish.activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +14,11 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -111,39 +113,42 @@ public class OfflineDish extends BaseActivity {
 		rightBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Dialog dialog = new AlertDialog.Builder(OfflineDish.this)
-					.setTitle("清空离线菜谱")
-					.setMessage("您确定要清空全部离线菜谱吗？")
-					.setPositiveButton("清空",new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-								int x = Integer.parseInt(DataOperate.buyBurden(OfflineDish.this, "x"));
-								//统计
-								XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "清空" , -x);
-								DataOperate.deleteBuyBurden(OfflineDish.this, "");
-								Tools.showToast(getApplicationContext(), "清除成功");
-								arrayList.clear();
-								adapter.notifyDataSetChanged();
-								loadManager.hideProgressBar();
-								loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, 10, 0,1,true);
-								rightBtn.setVisibility(View.GONE);
-								findViewById(R.id.dish_offline_noData).setVisibility(View.VISIBLE);
-								if(AppCommon.nextDownDish > 0 && AppCommon.nextDownDish < AppCommon.maxDownDish){
-									TextView tv = (TextView)findViewById(R.id.title_hint);
-									tv.setVisibility(View.VISIBLE);
-									tv.setText("升级后，离线上限增加到" + AppCommon.nextDownDish +"，查看我的等级>>");
-									tv.setOnClickListener(onLookLevel);
-								}
-								rultView.setVisibility(View.GONE);
-							}
-						})
-					.setNegativeButton("取消",new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-								dialog.cancel();
-							}
-						}).create();
-				dialog.show();
+
+				final DialogManager dialogManager = new DialogManager(OfflineDish.this);
+				dialogManager.createDialog(new ViewManager(dialogManager)
+						.setView(new TitleView(OfflineDish.this).setText("清空离线菜谱"))
+						.setView(new MessageView(OfflineDish.this).setText("您确定要清空全部离线菜谱吗？"))
+						.setView(new HButtonView(OfflineDish.this)
+								.setNegativeText("取消", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+									}
+								})
+								.setPositiveText("清空", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										int x = Integer.parseInt(DataOperate.buyBurden(OfflineDish.this, "x"));
+										//统计
+										XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "清空" , -x);
+										DataOperate.deleteBuyBurden(OfflineDish.this, "");
+										Tools.showToast(getApplicationContext(), "清除成功");
+										arrayList.clear();
+										adapter.notifyDataSetChanged();
+										loadManager.hideProgressBar();
+										loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, 10, 0,1,true);
+										rightBtn.setVisibility(View.GONE);
+										findViewById(R.id.dish_offline_noData).setVisibility(View.VISIBLE);
+										if(AppCommon.nextDownDish > 0 && AppCommon.nextDownDish < AppCommon.maxDownDish){
+											TextView tv = (TextView)findViewById(R.id.title_hint);
+											tv.setVisibility(View.VISIBLE);
+											tv.setText("升级后，离线上限增加到" + AppCommon.nextDownDish +"，查看我的等级>>");
+											tv.setOnClickListener(onLookLevel);
+										}
+										rultView.setVisibility(View.GONE);
+										dialogManager.cancel();
+									}
+								}))).show();
 			}
 		});
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -167,28 +172,31 @@ public class OfflineDish extends BaseActivity {
 				final int newPositon = positon;
 				if(newPositon>=arrayList.size())return true;
 				final Map<String, String> map = arrayList.get(newPositon);
-				new AlertDialog.Builder(OfflineDish.this)
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setTitle("取消删除")
-						.setMessage("确定要删除离线菜谱?")
-						.setPositiveButton("确定",new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-								//统计
-								XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "删除" , -1);
-								DataOperate.deleteBuyBurden(OfflineDish.this,map.get("code"));
-								arrayList.remove(newPositon);
-								adapter.notifyDataSetChanged();
-								if(arrayList.size()==0)
-									onBackPressed();
-								Tools.showToast(OfflineDish.this,"删除成功");
-							}
-						})
-						.setNegativeButton("取消",new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-							}
-						}).create().show();
+				final DialogManager dialogManager = new DialogManager(OfflineDish.this);
+				dialogManager.createDialog(new ViewManager(dialogManager)
+						.setView(new TitleView(OfflineDish.this).setText("取消删除"))
+						.setView(new MessageView(OfflineDish.this).setText("确定要删除离线菜谱?"))
+						.setView(new HButtonView(OfflineDish.this)
+								.setNegativeText("取消", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+									}
+								})
+								.setPositiveText("确定", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										//统计
+										XHClick.onEventValue(OfflineDish.this, "dishDownload315", "dishDownload", "删除" , -1);
+										DataOperate.deleteBuyBurden(OfflineDish.this,map.get("code"));
+										arrayList.remove(newPositon);
+										adapter.notifyDataSetChanged();
+										if(arrayList.size()==0)
+											onBackPressed();
+										Tools.showToast(OfflineDish.this,"删除成功");
+										dialogManager.cancel();
+									}
+								}))).show();
 				return true;
 			}
 		});

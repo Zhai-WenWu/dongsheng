@@ -1,7 +1,7 @@
 package third.mall.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,11 +11,14 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -412,32 +415,24 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 	 * 删除dialog
 	 */
 	private void showdelAddress(){
-		final Dialog dialog= new Dialog(this,R.style.dialog);
-		dialog.setContentView(R.layout.a_mall_alipa_dialog);
-		Window window=dialog.getWindow();
-		window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-		TextView dialog_message= (TextView) window.findViewById(R.id.dialog_message);
-		dialog_message.setText("确定删除该地址吗？");
-		TextView dialog_cancel= (TextView) window.findViewById(R.id.dialog_cancel);
-		TextView dialog_sure= (TextView) window.findViewById(R.id.dialog_sure);
-		dialog_cancel.setText("取消");
-		dialog_sure.setText("确定");
-		dialog_cancel.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-			}
-		});
-		dialog_sure.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				delAddress();
-				dialog.cancel();
-			}
-		});
-		dialog.show();
+		final DialogManager dialogManager = new DialogManager(this);
+		dialogManager.createDialog(new ViewManager(dialogManager)
+				.setView(new TitleMessageView(this).setText("确定删除该地址吗？"))
+				.setView(new HButtonView(this)
+						.setNegativeText("取消", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+							}
+						})
+						.setPositiveTextColor(Color.parseColor("#ff533c"))
+						.setPositiveText("确定", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+								delAddress();
+							}
+						}))).show();
 	}
 	/**
 	 * 删除地址

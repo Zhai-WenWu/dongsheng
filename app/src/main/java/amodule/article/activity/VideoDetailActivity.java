@@ -24,6 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -61,7 +65,6 @@ import aplug.web.view.XHWebView;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
 import third.video.VideoPlayerController;
-import xh.windowview.XhDialog;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_VIDEO;
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
@@ -866,24 +869,24 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     }
 
     private void openDeleteDialog() {
-        final XhDialog dialog = new XhDialog(this);
-        dialog.setTitle("确定删除这个视频吗？")
-                .setCanselButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                })
-                .setSureButton("确定", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                        deleteThis();
-                        statistics("更多", "删除");
-                    }
-                }).setSureButtonTextColor("#333333")
-                .setCancelButtonTextColor("#333333")
-                .show();
+        final DialogManager dialogManager = new DialogManager(VideoDetailActivity.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(VideoDetailActivity.this).setText("确定删除这个视频吗？"))
+                .setView(new HButtonView(VideoDetailActivity.this)
+                        .setNegativeText("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveText("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                deleteThis();
+                                statistics("更多", "删除");
+                            }
+                        }))).show();
     }
 
     private void deleteThis() {

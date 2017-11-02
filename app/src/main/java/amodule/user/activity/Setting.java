@@ -19,6 +19,10 @@ import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.popdialog.util.FullScreenManager;
 import com.popdialog.util.PushManager;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.text.DecimalFormat;
@@ -48,7 +52,6 @@ import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
-import xh.windowview.XhDialog;
 
 /**
  * Created by ：fei_teng on 2017/2/21 20:32.
@@ -274,26 +277,31 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                         setMsgNotify();
                     }
                 });
-        final XhDialog xhDialog = new XhDialog(Setting.this);
-        xhDialog.setTitle("若关闭自动续费，会员到期后将不再自动扣除下月费用")
-                .setCanselButton("不关闭", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-                    }
-                }).setSureButton("确认关闭", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setIsAuto(false);
-                xhDialog.cancel();
-            }
-        });
+        final DialogManager dialogManager = new DialogManager(Setting.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(Setting.this).setText("若关闭自动续费，会员到期后将不再自动扣除下月费用"))
+                .setView(new HButtonView(Setting.this)
+                        .setNegativeText("不关闭", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveTextColor(Color.parseColor("#007aff"))
+                        .setPositiveText("确认关闭", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                setIsAuto(false);
+                            }
+                        })));
+
         view_vip.init("香哈会员自动续费", "", true, false, null);
         view_vip.setSwitch(true, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isChecked) //要关闭
-                    xhDialog.show();
+                    dialogManager.show();
                 else {
                     setIsAuto(true);
                 }
