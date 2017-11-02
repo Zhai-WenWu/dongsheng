@@ -40,7 +40,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_6"
                 android:scaleType="centerCrop"
-                android:src="@drawable/z_home_real_search_icon"/>
+                android:src="@drawable/icon_favorite_search_fake"/>
 
             <TextView
                 android:layout_width="wrap_content"
