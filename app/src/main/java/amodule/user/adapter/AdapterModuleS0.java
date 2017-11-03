@@ -20,6 +20,7 @@ import amodule.user.view.module.ModuleItemS0View;
  * ModuleS的标准adapter
  */
 public class AdapterModuleS0 extends RvBaseAdapter<Map<String, String>> {
+    private String statisticId = "";//统计id
     public AdapterModuleS0(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
     }
@@ -54,5 +55,13 @@ public class AdapterModuleS0 extends RvBaseAdapter<Map<String, String>> {
                 view.initData(data);
             }
         }
+    }
+
+    public String getStatisticId() {
+        return statisticId;
+    }
+
+    public void setStatisticId(String statisticId) {
+        this.statisticId = statisticId;
     }
 }
