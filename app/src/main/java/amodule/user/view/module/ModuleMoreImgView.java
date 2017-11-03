@@ -79,6 +79,7 @@ public class ModuleMoreImgView extends ModuleBaseView{
             return;
         }
         setImageView();
+        setListener();
     }
 
     @Override

@@ -48,6 +48,8 @@ public class ModuleUserView extends ModuleBaseView{
             findViewById(R.id.cusType).setVisibility(map.containsKey("iconGourmet")&&"2".equals(map.get("iconGourmet"))?VISIBLE:GONE);
             if(map.containsKey("img")&&!TextUtils.isEmpty(map.get("img")))setViewImage(auther_userImg,map.get("img"));
         }
+        //url点击跳转
+        if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))userUrl= map.get("url");
         //右标题
         if(map.containsKey("text3")&& !TextUtils.isEmpty(map.get("text3"))){
             right_title.setText(map.get("text3"));
@@ -55,6 +57,7 @@ public class ModuleUserView extends ModuleBaseView{
         }else{
             right_title.setVisibility(View.GONE);
         }
+        setListener();
     }
 
     @Override
@@ -69,7 +72,7 @@ public class ModuleUserView extends ModuleBaseView{
     private OnClickListener UserOnClickListener= new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(TextUtils.isEmpty(userUrl)){
+            if(!TextUtils.isEmpty(userUrl)){
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),userUrl,false);
                 if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击头像","");
             }

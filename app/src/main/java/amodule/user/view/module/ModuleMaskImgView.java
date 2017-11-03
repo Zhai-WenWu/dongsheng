@@ -65,6 +65,7 @@ public class ModuleMaskImgView extends ModuleBaseView{
         }else{
             findViewById(R.id.mask_album_container).setVisibility(GONE);
         }
+        setListener();
     }
 
     @Override

@@ -63,6 +63,7 @@ public class ModuleRightImgView extends ModuleBaseView{
             findViewById(R.id.module_layer_view).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
             findViewById(R.id.module_play_img).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
         }else findViewById(R.id.module_imgs_rela).setVisibility(GONE);
+        setListener();
 
     }
 

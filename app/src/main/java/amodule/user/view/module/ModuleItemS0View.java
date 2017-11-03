@@ -44,9 +44,9 @@ public class ModuleItemS0View extends RelativeLayout{
      * @param layoutId
      */
     private void initLayout(int layoutId){
+        Log.i("xianghaTag","initLayout");
         View view = LayoutInflater.from(mContext).inflate(layoutId,null,true);
         addView(view);
-        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         part_0= (RelativeLayout) findViewById(R.id.rela_part_1);
         part_1= (RelativeLayout) findViewById(R.id.rela_part_2);
         part_2= (RelativeLayout) findViewById(R.id.rela_part_3);
@@ -72,12 +72,8 @@ public class ModuleItemS0View extends RelativeLayout{
     }
     private void handlerViewShow(RelativeLayout part,Map<String,String> map){
         int part_0_size=part.getChildCount();
-        Log.i("xianghaTag","part_0_size:::"+part_0_size);
         for(int i=0;i<part_0_size;i++){
             View viewStub= part.getChildAt(i);
-            if(viewStub==null){
-                Log.i("xianghaTag","viewStub:::");
-            }
             if( viewStub!=null&&map.get("style").equals(viewStub.getTag()) ){
                 viewStub.setVisibility(View.VISIBLE);
                 viewStub.invalidate();

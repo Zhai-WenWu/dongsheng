@@ -3,6 +3,7 @@ package amodule.user.view.module;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,12 +39,14 @@ public class ModuleBigImgView extends ModuleBaseView{
     @Override
     public void initUI() {
         setMODULE_TAG("B1");
+//        Log.i("xianghaTag","ModuleBigImgView:::initUI");
         big_title= (TextView) findViewById(R.id.big_title);
         big_img= (ImageView) findViewById(R.id.big_img);
     }
 
     @Override
     public void initData(Map<String, String> map) {
+//        Log.i("xianghaTag","ModuleBigImgView::initData");
         //标题
         if(map.containsKey("text1")&& !TextUtils.isEmpty(map.get("text1"))){
             big_title.setVisibility(View.VISIBLE);
@@ -64,6 +67,7 @@ public class ModuleBigImgView extends ModuleBaseView{
             findViewById(R.id.big_layer_view).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
             findViewById(R.id.big_play_img).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
         }else findViewById(R.id.big_container_rela).setVisibility(GONE);
+        setListener();
     }
 
     @Override
@@ -74,6 +78,7 @@ public class ModuleBigImgView extends ModuleBaseView{
     private OnClickListener UrlOnClickListener= new OnClickListener() {
         @Override
         public void onClick(View v) {
+            Log.i("xianghaTag","OnClickListener");
             if(!TextUtils.isEmpty(url)) {
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
                 if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击内容","");
