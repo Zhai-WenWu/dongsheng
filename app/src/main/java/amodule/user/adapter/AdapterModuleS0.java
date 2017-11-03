@@ -52,6 +52,7 @@ public class AdapterModuleS0 extends RvBaseAdapter<Map<String, String>> {
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
+                view.setStatisticId(getStatisticId());
                 view.initData(data);
             }
         }
