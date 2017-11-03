@@ -265,9 +265,10 @@ public class ModuleMoreImgView extends ModuleBaseView{
      * @param number
      */
     private void setViewImage(ImageView v, String value, float number) {
+        if(TextUtils.isEmpty(value)||v==null)return;
         setViewImage(v, value);
-//        if (value.indexOf(Environment.getExternalStorageDirectory().toString()) == 0) {
-//            v.setImageBitmap(UtilImage.imgPathToBitmap(value, (int) (subjectImgWidth / number), subjectImgWidth, true, null));
-//        }
+        if (value.indexOf(Environment.getExternalStorageDirectory().toString()) == 0) {
+            v.setImageBitmap(UtilImage.imgPathToBitmap(value, (int) (subjectImgWidth / number), subjectImgWidth, true, null));
+        }
     }
 }
