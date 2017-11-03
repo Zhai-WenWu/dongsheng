@@ -8,26 +8,36 @@
         android:id="@+id/rela_part_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <amodule.user.view.module.ModuleUserView
+        <ViewStub
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:tag="A1"
+            android:layout="@layout/module_a1_user"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/rela_part_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <amodule.user.view.module.ModuleBigImgView
+        <ViewStub
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <amodule.user.view.module.ModuleMaskImgView
+            android:layout_height="wrap_content"
+            android:tag="B1"
+            android:layout="@layout/module_b1_big"/>
+        <ViewStub
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <amodule.user.view.module.ModuleRightImgView
+            android:layout_height="wrap_content"
+            android:tag="B2"
+            android:layout="@layout/module_b2_mask"/>
+        <ViewStub
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <amodule.user.view.module.ModuleMoreImgView
+            android:layout_height="wrap_content"
+            android:tag="B3"
+            android:layout="@layout/module_b3_right"/>
+        <ViewStub
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:tag="B4"
+            android:layout="@layout/module_b4_more"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/rela_part_3"

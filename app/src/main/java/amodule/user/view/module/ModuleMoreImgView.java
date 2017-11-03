@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -93,7 +94,10 @@ public class ModuleMoreImgView extends ModuleBaseView{
     private OnClickListener UrlOnClickListener= new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(!TextUtils.isEmpty(url)) AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
+            if(!TextUtils.isEmpty(url)) {
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
+                if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击内容","");
+            }
         }
     };
     /**
@@ -262,8 +266,8 @@ public class ModuleMoreImgView extends ModuleBaseView{
      */
     private void setViewImage(ImageView v, String value, float number) {
         setViewImage(v, value);
-        if (value.indexOf(Environment.getExternalStorageDirectory().toString()) == 0) {
-            v.setImageBitmap(UtilImage.imgPathToBitmap(value, (int) (subjectImgWidth / number), subjectImgWidth, true, null));
-        }
+//        if (value.indexOf(Environment.getExternalStorageDirectory().toString()) == 0) {
+//            v.setImageBitmap(UtilImage.imgPathToBitmap(value, (int) (subjectImgWidth / number), subjectImgWidth, true, null));
+//        }
     }
 }

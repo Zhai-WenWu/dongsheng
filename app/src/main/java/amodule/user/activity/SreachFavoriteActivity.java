@@ -8,9 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,7 +23,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
-import amodule.user.adapter.AdapterMyFavorite;
+import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -48,7 +46,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
     private TextView mClearSearch;
 
     private ArrayList<Map<String, String>> mSearchData = new ArrayList<>();
-    private AdapterMyFavorite mAdapter;
+    private AdapterModuleS0 mAdapter;
     private int currentpage = 0, everyPage = 0;//页面号码
     private String searchWord = "";
 
@@ -104,7 +102,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
     }
 
     private void initData() {
-        mAdapter = new AdapterMyFavorite(this, mSearchData);
+        mAdapter = new AdapterModuleS0(this, mSearchData);
         loadManager.setLoading(mRefreshLayout, mRvListview, mAdapter, true,
                 new View.OnClickListener() {
                     @Override

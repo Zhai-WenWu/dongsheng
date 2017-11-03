@@ -37,6 +37,7 @@ public abstract class ModuleBaseView extends RelativeLayout{
     protected String mImgLevel = FileManager.save_cache; // 图片保存等级
     protected ImageView.ScaleType mScaleType = ImageView.ScaleType.CENTER_CROP;
     public Context mContext;
+    public String statisticId="";//统计id
     public ModuleBaseView(Context context,int layoutId) {
         super(context);
         mContext= context;
@@ -145,5 +146,13 @@ public abstract class ModuleBaseView extends RelativeLayout{
     }
     public void setMODULE_TAG(String MODULE_TAG) {
         this.MODULE_TAG = MODULE_TAG;
+    }
+
+    public String getStatisticId() {
+        return statisticId;
+    }
+
+    public void setStatisticId(String statisticId) {
+        this.statisticId = statisticId;
     }
 }

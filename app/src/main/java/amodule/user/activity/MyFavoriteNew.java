@@ -159,7 +159,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                     if (maps.containsKey("list") && !TextUtils.isEmpty(maps.get("list"))) {
                         ArrayList<Map<String, String>> listMaps = StringManager.getListMapByJson(maps.get("list"));
                         loadCount = listMaps.size();
-//                        mData.addAll(listMaps);
+                        mData.addAll(listMaps);
                         myFavorite.notifyDataSetChanged();
                     }
                 }

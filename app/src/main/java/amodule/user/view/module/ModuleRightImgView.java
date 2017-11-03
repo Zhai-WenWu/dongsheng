@@ -13,6 +13,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 
@@ -74,7 +75,10 @@ public class ModuleRightImgView extends ModuleBaseView{
     private OnClickListener UrlOnClickListener= new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(!TextUtils.isEmpty(url)) AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
+            if(!TextUtils.isEmpty(url)) {
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
+                if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击内容","");
+            }
         }
     };
 }

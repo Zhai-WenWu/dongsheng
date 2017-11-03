@@ -38,7 +38,7 @@ public class AdapterModuleS0 extends RvBaseAdapter<Map<String, String>> {
     }
 
     public String getItemType(int position) {
-        return "s0";
+        return "0";
     }
     /**
      * 模块数据
