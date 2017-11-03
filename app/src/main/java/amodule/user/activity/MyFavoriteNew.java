@@ -24,11 +24,12 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
+import amodule.main.Main;
+import amodule.main.activity.MainHome;
 import amodule.user.adapter.AdapterMyFavorite;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
  * 我的收藏页面改版
@@ -37,6 +38,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
 
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
     private RelativeLayout seekLayout;
+    private LinearLayout noDataLayout;
     private RvListView rvListview;
     private AdapterMyFavorite myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
@@ -59,11 +61,13 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         rightText.setTextColor(Color.parseColor("#999999"));
         rvListview = (RvListView) findViewById(R.id.rvListview);
         seekLayout = (RelativeLayout) findViewById(R.id.seek_layout);
+        noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
 
         seekLayout.setOnClickListener(this);
         rightText.setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
         findViewById(R.id.ll_back).setOnClickListener(this);
+        findViewById(R.id.btn_no_data).setOnClickListener(this);
 
         seekLayout.post(new Runnable() {
             @Override
@@ -77,13 +81,14 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
 
     private int mScrolledDistance = 0;//滑动距离
     private boolean mControlsVisible = true;//控件的显示状态
+
     private void initData() {
         myFavorite = new AdapterMyFavorite(this, mData);
         View view = new View(this);
         view.setBackgroundResource(R.drawable.item_decoration);
-        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,Tools.getDimen(this,R.dimen.dp_35)));
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
         rvListview.addHeaderView(view);
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         rvListview.addItemDecoration(itemDecoration);
@@ -94,7 +99,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
                 if (firstVisibleItem == 0) {//如果已经滑动到最顶端
-                    if(!mControlsVisible) {
+                    if (!mControlsVisible) {
                         showSreachBar();
                         mControlsVisible = true;
                     }
@@ -109,7 +114,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                         mScrolledDistance = 0;
                     }
                 }
-                if((mControlsVisible && dy>0) || (!mControlsVisible && dy<0)) {
+                if ((mControlsVisible && dy > 0) || (!mControlsVisible && dy < 0)) {
                     mScrolledDistance += dy;
                 }
             }
@@ -123,14 +128,14 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 });
     }
 
-    private void hideSearchBar(){
-        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout,View.TRANSLATION_Y,0,-seekLayoutHeight);
+    private void hideSearchBar() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout, View.TRANSLATION_Y, 0, -seekLayoutHeight);
         animator.setDuration(500);
         animator.start();
     }
 
-    private void showSreachBar(){
-        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout,View.TRANSLATION_Y,-seekLayoutHeight,0);
+    private void showSreachBar() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout, View.TRANSLATION_Y, -seekLayoutHeight, 0);
         animator.setDuration(500);
         animator.start();
     }
@@ -154,7 +159,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                     if (maps.containsKey("list") && !TextUtils.isEmpty(maps.get("list"))) {
                         ArrayList<Map<String, String>> listMaps = StringManager.getListMapByJson(maps.get("list"));
                         loadCount = listMaps.size();
-                        mData.addAll(listMaps);
+//                        mData.addAll(listMaps);
                         myFavorite.notifyDataSetChanged();
                     }
                 }
@@ -162,8 +167,18 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                     everyPage = loadCount;
                 }
                 loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mData.isEmpty());
+                handlerNoDataLayout();
             }
         });
+    }
+
+    private void handlerNoDataLayout() {
+        if (mData == null) {
+            return;
+        }
+        final boolean dataIsEmpty = mData.isEmpty();
+        noDataLayout.setVisibility(dataIsEmpty ? View.VISIBLE : View.GONE);
+        rvListview.setVisibility(dataIsEmpty ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -195,6 +210,17 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.seek_layout:
                 startActivity(new Intent(this, SreachFavoriteActivity.class));
+                break;
+            //回到首页第一页
+            case R.id.btn_no_data:
+                if (Main.allMain != null) {
+                    Main.allMain.setCurrentTabByClass(MainHome.class);
+                    if (Main.allMain.allTab != null && Main.allMain.allTab.get("MainIndex") != null) {
+                        ((MainHome) Main.allMain.allTab.get("MainIndex")).setCurrentTab(0);
+                    }
+                }
+                Main.colse_level = 1;
+                finish();
                 break;
             default:
                 break;

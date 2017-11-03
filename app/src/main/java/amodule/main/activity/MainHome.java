@@ -565,11 +565,19 @@ public class MainHome extends MainBaseActivity implements IObserver {
      */
     public void refreshAdData(int position){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-            if (fragments != null && fragments.size() > position) {
-                if (fragments.get(position) instanceof HomeFragment) {
-                    ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
-                }
+        if (fragments != null && fragments.size() > position) {
+            if (fragments.get(position) instanceof HomeFragment) {
+                ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
             }
         }
+    }
+
+    public void setCurrentTab(int itemPosition){
+        if(viewpager == null || itemPosition < 0 || itemPosition >= viewpager.getChildCount() ){
+            return;
+        }
+        viewpager.setCurrentItem(itemPosition);
+    }
+
 }
 

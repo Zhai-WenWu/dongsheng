@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
     style="@style/layout">
 
@@ -65,5 +66,40 @@
             android:id="@+id/ll_title"
             layout="@layout/c_view_bar_title"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/noData_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_rela_all"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:visibility="visible"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_150"
+            android:src="@drawable/z_favo_no_data"/>
+
+        <TextView
+            android:id="@+id/no_data_text"
+            style="@style/noDataText"
+            android:text="没有收藏内容，快去收藏吧！"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_50"
+            android:textSize="@dimen/sp_13"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/btn_no_data"
+            android:layout_width="@dimen/dp_126"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginTop="@dimen/dp_30"
+            android:background="@drawable/btn_round_read_submit"
+            android:text="去收藏"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_14"/>
+    </LinearLayout>
 
 </RelativeLayout>
