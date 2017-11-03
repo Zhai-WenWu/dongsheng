@@ -25,10 +25,7 @@ import acore.logic.FavoriteHelper;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
-import amodule.article.activity.ArticleDetailActivity;
-import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.view.BottomDialog;
 import amodule.main.Main;
 import amodule.main.activity.MainHome;
@@ -259,14 +256,19 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         Log.i("tzy","showBottomDialog");
 //        Log.i("tzy","showBottomDialog");
 //        Log.i("tzy","showBottomDialog");
-        Map<String, String> item = myFavorite.getItem(position);
+        if(mData == null || position < 0 || position >= mData.size())
+            return;
+        Map<String, String> item = mData.get(position);
+        if(item == null){
+            return;
+        }
         item = StringManager.getFirstMap(item.get("B"));
         Log.i("tzy","item="+item.toString());
         if (item.isEmpty()) return;
         final String code = item.get("code");
         final String type = item.get("type");
         final String typeName = item.get("text1");
-        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type) || TextUtils.isEmpty(typeName)) {
+        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type)) {
             return;
         }
         BottomDialog dialog = new BottomDialog(this);

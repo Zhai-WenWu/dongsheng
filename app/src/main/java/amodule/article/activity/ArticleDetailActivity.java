@@ -242,7 +242,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     public void onSuccess() {
                         isFav = !isFav;
                         rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        Tools.showToast(ArticleDetailActivity.this,isFav?"收藏陈功":"取消收藏");
+                        Tools.showToast(ArticleDetailActivity.this,isFav?"收藏成功":"取消收藏");
                     }
 
                     @Override
