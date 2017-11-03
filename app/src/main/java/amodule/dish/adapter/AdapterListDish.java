@@ -143,7 +143,7 @@ public class AdapterListDish extends AdapterSimple {
     private void parseFavClick(Map<String, String> map) {
         String str = map.get("favorites");
         int favorites = Integer.parseInt(str.substring(0, str.indexOf("收藏")));
-        Tools.showToast(mAct,!(map.get("isFav") + "").equals("2")?"收藏陈功":"取消收藏");
+        Tools.showToast(mAct,!(map.get("isFav") + "").equals("2")?"收藏成功":"取消收藏");
         if ((map.get("isFav") + "").equals("2")) {
             map.put("favorites", (favorites - 1) + "收藏");
             map.put("isFav", "1");

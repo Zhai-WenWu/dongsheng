@@ -242,7 +242,7 @@ public class ListDish extends BaseActivity {
                     public void onSuccess() {
                         isFav = !isFav;
                         img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        Tools.showToast(ListDish.this,isFav?"收藏陈功":"取消收藏");
+                        Tools.showToast(ListDish.this,isFav?"收藏成功":"取消收藏");
                     }
 
                     @Override

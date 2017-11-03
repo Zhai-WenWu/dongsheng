@@ -269,7 +269,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 									isFav = !isFav;
 									favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 									favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
-									Tools.showToast(ShowSubject.this,isFav?"收藏陈功":"取消收藏");
+									Tools.showToast(ShowSubject.this,isFav?"收藏成功":"取消收藏");
 								}
 
 								@Override
