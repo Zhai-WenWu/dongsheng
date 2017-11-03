@@ -266,7 +266,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         final String code = item.get("code");
         final String type = item.get("type");
         final String typeName = item.get("text1");
-        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type) || TextUtils.isEmpty(typeName)) {
+        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type)) {
             return;
         }
         BottomDialog dialog = new BottomDialog(this);
