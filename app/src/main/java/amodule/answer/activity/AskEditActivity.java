@@ -1,6 +1,5 @@
 package amodule.answer.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -436,8 +435,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     public void onUploadOver(boolean flag, String response) {
         mIsStopUpload = true;
+        cancelUploadingDialog();
         if (!flag && !TextUtils.isEmpty(response)) {
-            cancelUploadingDialog();
             Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -449,7 +448,6 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             try {
                 int t = Integer.parseInt(type);
                 if (t > 200 && !TextUtils.isEmpty(msg)) {// >200表示失败，
-                    cancelUploadingDialog();
                     showPriceChangeDialog(msg);
                     onPriceDataReady(true, map);
                 } else {// <=200表示成功，吊起支付弹窗
@@ -458,7 +456,6 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     if (mIsAskMore) {
                         if (flag) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
-                            cancelUploadingDialog();
                             if (mFromHome)
                                 startQADetail();
                             else
@@ -466,7 +463,11 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             finish();
                         }
                     } else {
-                        startPay();
+                        if ("0".equals(mAskPrice) || "0".equals(mAskPrice) || "0.00".equals(mAskPrice)) {
+                            startQADetail();
+                        } else {
+                            startPay();
+                        }
                     }
                 }
             } catch (Exception e){
