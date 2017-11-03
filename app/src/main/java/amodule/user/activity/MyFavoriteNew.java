@@ -26,7 +26,7 @@ import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.main.Main;
 import amodule.main.activity.MainHome;
-import amodule.user.adapter.AdapterMyFavorite;
+import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -40,7 +40,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     private RelativeLayout seekLayout;
     private LinearLayout noDataLayout;
     private RvListView rvListview;
-    private AdapterMyFavorite myFavorite;
+    private AdapterModuleS0 myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
     private int seekLayoutHeight = 0;
 
@@ -83,7 +83,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     private boolean mControlsVisible = true;//控件的显示状态
 
     private void initData() {
-        myFavorite = new AdapterMyFavorite(this, mData);
+        myFavorite = new AdapterModuleS0(this, mData);
         View view = new View(this);
         view.setBackgroundResource(R.drawable.item_decoration);
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
