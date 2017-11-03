@@ -256,7 +256,12 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         Log.i("tzy","showBottomDialog");
 //        Log.i("tzy","showBottomDialog");
 //        Log.i("tzy","showBottomDialog");
+        if(mData == null || position < 0 || position >= mData.size())
+            return;
         Map<String, String> item = mData.get(position);
+        if(item == null){
+            return;
+        }
         item = StringManager.getFirstMap(item.get("B"));
         Log.i("tzy","item="+item.toString());
         if (item.isEmpty()) return;
