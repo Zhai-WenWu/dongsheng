@@ -27,6 +27,7 @@ import xh.basic.tool.UtilImage;
  * 2、处理图片加载。
  */
 public abstract class ModuleBaseView extends RelativeLayout{
+    public String MODULE_TAG="";
     protected final int TAG_ID = R.string.tag;
     protected int mImgResource = R.drawable.i_nopic;
     public int roundImgPixels = 0, imgWidth = 0, imgHeight = 0,// 以像素为单位
@@ -85,6 +86,7 @@ public abstract class ModuleBaseView extends RelativeLayout{
      */
     protected void setViewImage(final ImageView v, String value) {
         v.setVisibility(View.VISIBLE);
+        if(TextUtils.isEmpty(value)||v==null)return;
 
         if (value.indexOf("http") == 0) {// 异步请求网络图片
             if (v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(value))

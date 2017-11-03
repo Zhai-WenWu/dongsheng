@@ -16,7 +16,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 
 /**
- * 大图样式
+ * 大图样式--B1
  */
 public class ModuleBigImgView extends ModuleBaseView{
     private TextView big_title;
@@ -36,6 +36,7 @@ public class ModuleBigImgView extends ModuleBaseView{
 
     @Override
     public void initUI() {
+        MODULE_TAG="B1";
         big_title= (TextView) findViewById(R.id.big_title);
         big_img= (ImageView) findViewById(R.id.big_img);
     }
@@ -43,9 +44,9 @@ public class ModuleBigImgView extends ModuleBaseView{
     @Override
     public void initData(Map<String, String> map) {
         //标题
-        if(map.containsKey("title")&& !TextUtils.isEmpty(map.get("title"))){
+        if(map.containsKey("text1")&& !TextUtils.isEmpty(map.get("text1"))){
             big_title.setVisibility(View.VISIBLE);
-            big_title.setText(map.get("title"));
+            big_title.setText(map.get("text1"));
         }
         //url点击跳转
         if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
@@ -55,9 +56,9 @@ public class ModuleBigImgView extends ModuleBaseView{
         }
         //显示数据判断
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
-        if(mapStyle.containsKey("url")&&!TextUtils.isEmpty(mapStyle.get("url"))){
+        if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))){
             findViewById(R.id.big_container_rela).setVisibility(VISIBLE);
-            setViewImage(big_img,mapStyle.get("url"));
+            setViewImage(big_img,mapStyle.get("img"));
             //type 类型判断//1:图，2视频，3gif
             findViewById(R.id.big_layer_view).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
             findViewById(R.id.big_play_img).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);

@@ -30,7 +30,7 @@ import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
 /**
- * 多图---美食贴多图样式
+ * 多图---美食贴多图样式--B4
  */
 public class ModuleMoreImgView extends ModuleBaseView{
     private TextViewShow module_title,tv_content;
@@ -55,6 +55,7 @@ public class ModuleMoreImgView extends ModuleBaseView{
 
     @Override
     public void initUI() {
+        MODULE_TAG="B4";
         module_title= (TextViewShow) findViewById(R.id.module_title);
         tv_content= (TextViewShow) findViewById(R.id.tv_content);
         // 多图模式
@@ -68,8 +69,8 @@ public class ModuleMoreImgView extends ModuleBaseView{
     @Override
     public void initData(Map<String, String> map) {
         this.map= map;
-        setKeyContent(map,module_title,"title");
-        setKeyContent(map,tv_content,"content");
+        setKeyContent(map,module_title,"text1");
+        setKeyContent(map,tv_content,"text2");
         //url点击跳转
         if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
         if(!map.containsKey("styleData")|| TextUtils.isEmpty(map.get("styleData"))){
@@ -142,7 +143,7 @@ public class ModuleMoreImgView extends ModuleBaseView{
                     quan_iv_img_1.setVisibility(View.GONE);
                     quan_item_model_video.setVisibility(View.GONE);
 
-                    setViewImage(image_one, imgurl.get(0).get("url"), 1);
+                    setViewImage(image_one, imgurl.get(0).get("img"), 1);
                     ll_imgs.setLayoutParams(_1PicLayoutParams);
 //                }
                 break;
@@ -158,8 +159,8 @@ public class ModuleMoreImgView extends ModuleBaseView{
                 quan_iv_img_2.setVisibility(View.VISIBLE);
                 quan_iv_img_3.setVisibility(View.GONE);
                 quan_item_model_video.setVisibility(View.GONE);
-                setViewImage(quan_iv_img_1, imgurl.get(0).get("url"), 1);
-                setViewImage(quan_iv_img_2, imgurl.get(1).get("url"), 1);
+                setViewImage(quan_iv_img_1, imgurl.get(0).get("img"), 1);
+                setViewImage(quan_iv_img_2, imgurl.get(1).get("img"), 1);
                 break;
             default:
                 quan_item_model_video.setVisibility(View.GONE);
@@ -174,9 +175,9 @@ public class ModuleMoreImgView extends ModuleBaseView{
                 quan_iv_img_1.setVisibility(View.VISIBLE);
                 quan_iv_img_2.setVisibility(View.VISIBLE);
                 quan_iv_img_3.setVisibility(View.VISIBLE);
-                setViewImage(quan_iv_img_1, imgurl.get(0).get("url"), 1);
-                setViewImage(quan_iv_img_2, imgurl.get(1).get("url"), 1);
-                setViewImage(quan_iv_img_3, imgurl.get(2).get("url"), 1);
+                setViewImage(quan_iv_img_1, imgurl.get(0).get("img"), 1);
+                setViewImage(quan_iv_img_2, imgurl.get(1).get("img"), 1);
+                setViewImage(quan_iv_img_3, imgurl.get(2).get("img"), 1);
                 break;
         }
         if (imgurl.size() <= 0) {

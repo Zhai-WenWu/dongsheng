@@ -40,16 +40,15 @@ public class ModuleUserView extends ModuleBaseView{
     }
     @Override
     public void initData(Map<String, String> map) {
-        Map<String,String> mapCustomer= StringManager.getFirstMap(map.get("customer"));
         //用户信息
-        if(mapCustomer!=null&&!mapCustomer.isEmpty()){
-            auther_name.setText(mapCustomer.get("nickName"));
-            findViewById(R.id.cusType).setVisibility(mapCustomer.containsKey("isGourmet")&&"2".equals(mapCustomer.get("isGourmet"))?VISIBLE:GONE);
-            if(mapCustomer.containsKey("img")&&!TextUtils.isEmpty(mapCustomer.get("img")))setViewImage(auther_userImg,mapCustomer.get("img"));
+        if(map!=null&&!map.isEmpty()){
+            auther_name.setText(map.get("text2"));
+            findViewById(R.id.cusType).setVisibility(map.containsKey("iconGourmet")&&"2".equals(map.get("iconGourmet"))?VISIBLE:GONE);
+            if(map.containsKey("img")&&!TextUtils.isEmpty(map.get("img")))setViewImage(auther_userImg,map.get("img"));
         }
         //右标题
-        if(map.containsKey("rightTitle")&& !TextUtils.isEmpty(map.get("rightTitle"))){
-            right_title.setText(map.get("rightTitle"));
+        if(map.containsKey("text3")&& !TextUtils.isEmpty(map.get("text3"))){
+            right_title.setText(map.get("text3"));
             right_title.setVisibility(View.VISIBLE);
         }else{
             right_title.setVisibility(View.GONE);

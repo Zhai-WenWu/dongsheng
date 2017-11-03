@@ -16,7 +16,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 
 /**
- * 蒙版
+ * 蒙版--B2
  */
 public class ModuleMaskImgView extends ModuleBaseView{
     private ImageView mask_img;
@@ -36,6 +36,7 @@ public class ModuleMaskImgView extends ModuleBaseView{
 
     @Override
     public void initUI() {
+        MODULE_TAG="B2";
         mask_img= (ImageView) findViewById(R.id.mask_img);
         mask_title_album= (TextView) findViewById(R.id.mask_title_album);
         mask_num= (TextView) findViewById(R.id.mask_num);
@@ -51,14 +52,14 @@ public class ModuleMaskImgView extends ModuleBaseView{
         //url点击跳转
         if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
-        if(mapStyle.containsKey("url")&&!TextUtils.isEmpty(mapStyle.get("url"))){
+        if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))){
             setViewImage(mask_img,mapStyle.get("url"));
             findViewById(R.id.mask_album_container).setVisibility(VISIBLE);
             findViewById(R.id.mask_layer_view).setVisibility(VISIBLE);
-            setKeyContent(map,mask_title_album,"title");//标题
-            if(map.containsKey("dishNum")&&TextUtils.isEmpty(map.get("dishNum"))){
+            setKeyContent(map,mask_title_album,"text1");//标题
+            if(map.containsKey("dishNum")&&TextUtils.isEmpty(map.get("text2"))){
                 mask_num.setVisibility(View.VISIBLE);
-                mask_num.setText(map.get("dishNum")+"道菜");
+                mask_num.setText(map.get("text2"));
             }else mask_num.setVisibility(View.GONE);
         }else{
             findViewById(R.id.mask_album_container).setVisibility(GONE);

@@ -1,6 +1,5 @@
 package amodule.user.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -15,12 +14,7 @@ import java.util.Map;
 import acore.widget.rvlistview.RvBaseAdapter;
 import acore.widget.rvlistview.RvBaseViewHolder;
 import amodule.main.adapter.HomeAdapter;
-import amodule.main.view.item.HomeAlbumItem;
-import amodule.main.view.item.HomeAnyImgStyleItem;
-import amodule.main.view.item.HomePostItem;
-import amodule.main.view.item.HomeRecipeItem;
-import amodule.main.view.item.HomeTxtItem;
-import amodule.user.view.FavoriteItemBaseView;
+import amodule.user.view.module.ModuleItemS0View;
 
 /**
  * 我的收藏配件
@@ -33,16 +27,18 @@ public class AdapterMyFavorite extends RvBaseAdapter<Map<String, String>> {
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.i("xianghaTag","viewType:::"+viewType);
-        switch (viewType) {
-            case HomeAdapter.type_tagImage://大图
-                return new BigViewHolder(new FavoriteItemBaseView(mContext,R.layout.favorite_big));
-//            case HomeAdapter.type_levelImage://蒙版
-//                return new MaskViewHolder(new FavoriteItemBaseView(mContext));
-            case HomeAdapter.type_rightImage://右图
-            case HomeAdapter.type_noImage://无图
-            default://找不到样式类型，指定默认-----无图样式
-                return new RightViewHolder(new FavoriteItemBaseView(mContext, R.layout.favorite_right));
-        }
+
+//        switch (viewType) {
+//            case HomeAdapter.type_tagImage://大图
+//                return new BigViewHolder(new FavoriteItemBaseView(mContext,R.layout.favorite_big));
+////            case HomeAdapter.type_levelImage://蒙版
+////                return new MaskViewHolder(new FavoriteItemBaseView(mContext));
+//            case HomeAdapter.type_rightImage://右图
+//            case HomeAdapter.type_noImage://无图
+//            default://找不到样式类型，指定默认-----无图样式
+//                return new RightViewHolder(new FavoriteItemBaseView(mContext, R.layout.favorite_right));
+//        }
+        return new RightViewHolder(new ModuleItemS0View(mContext));
     }
 
     @Override
@@ -66,9 +62,9 @@ public class AdapterMyFavorite extends RvBaseAdapter<Map<String, String>> {
      * 大图
      */
     public class BigViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        FavoriteItemBaseView view;
+        ModuleItemS0View view;
 
-        public BigViewHolder(FavoriteItemBaseView view) {
+        public BigViewHolder(ModuleItemS0View view) {
             super(view);
             this.view = view;
         }
@@ -84,9 +80,9 @@ public class AdapterMyFavorite extends RvBaseAdapter<Map<String, String>> {
      * 右图
      */
     public class RightViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        FavoriteItemBaseView view;
+        ModuleItemS0View view;
 
-        public RightViewHolder(FavoriteItemBaseView view) {
+        public RightViewHolder(ModuleItemS0View view) {
             super(view);
             this.view = view;
         }
@@ -102,9 +98,9 @@ public class AdapterMyFavorite extends RvBaseAdapter<Map<String, String>> {
      * 蒙版
      */
     public class MaskViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        FavoriteItemBaseView view;
+        ModuleItemS0View view;
 
-        public MaskViewHolder(FavoriteItemBaseView view) {
+        public MaskViewHolder(ModuleItemS0View view) {
             super(view);
             this.view = view;
         }
@@ -120,9 +116,9 @@ public class AdapterMyFavorite extends RvBaseAdapter<Map<String, String>> {
      * 多图
      */
     public class MoreViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        FavoriteItemBaseView view;
+        ModuleItemS0View view;
 
-        public MoreViewHolder(FavoriteItemBaseView view) {
+        public MoreViewHolder(ModuleItemS0View view) {
             super(view);
             this.view = view;
         }

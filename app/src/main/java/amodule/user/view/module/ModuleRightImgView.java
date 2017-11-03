@@ -17,7 +17,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 
 /**
- *右图
+ *右图--B3
  */
 public class ModuleRightImgView extends ModuleBaseView{
     private TextView module_title_txt,module_desc;
@@ -38,6 +38,7 @@ public class ModuleRightImgView extends ModuleBaseView{
 
     @Override
     public void initUI() {
+        MODULE_TAG="B3";
         module_title_txt= (TextView) findViewById(R.id.module_title_txt);
         module_desc= (TextView) findViewById(R.id.module_desc);
         module_img= (ImageView) findViewById(R.id.module_img);
@@ -46,25 +47,21 @@ public class ModuleRightImgView extends ModuleBaseView{
     @Override
     public void initData(Map<String, String> map) {
         Log.i("xianghaTag","ModuleRightImgView::");
-        setKeyContent(map,module_title_txt,"title");//标题
-        setKeyContent(map,module_desc,"content");//内容
+        setKeyContent(map,module_title_txt,"text1");//标题
+        setKeyContent(map,module_desc,"text2");//内容
         //url点击跳转
         if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
-        if("2".equals(map.get("style"))){//右图
-            if(!map.containsKey("styleData")||TextUtils.isEmpty(map.get("styleData"))){
-                findViewById(R.id.module_imgs_rela).setVisibility(GONE);
-                return;
-            }
-            Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
-            if(mapStyle.containsKey("url")&&!TextUtils.isEmpty(mapStyle.get("url"))){
-                findViewById(R.id.module_imgs_rela).setVisibility(VISIBLE);
-                setViewImage(module_img,mapStyle.get("url"));
-                findViewById(R.id.module_layer_view).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
-                findViewById(R.id.module_play_img).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
-            }else findViewById(R.id.module_imgs_rela).setVisibility(GONE);
-        }else{
+        if(!map.containsKey("styleData")||TextUtils.isEmpty(map.get("styleData"))){
             findViewById(R.id.module_imgs_rela).setVisibility(GONE);
+            return;
         }
+        Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
+        if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))){
+            findViewById(R.id.module_imgs_rela).setVisibility(VISIBLE);
+            setViewImage(module_img,mapStyle.get("url"));
+            findViewById(R.id.module_layer_view).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
+            findViewById(R.id.module_play_img).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
+        }else findViewById(R.id.module_imgs_rela).setVisibility(GONE);
 
     }
 

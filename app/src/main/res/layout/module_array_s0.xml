@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/module_linear_s0"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rela_part_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <amodule.user.view.module.ModuleUserView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rela_part_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <amodule.user.view.module.ModuleBigImgView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <amodule.user.view.module.ModuleMaskImgView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <amodule.user.view.module.ModuleRightImgView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <amodule.user.view.module.ModuleMoreImgView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rela_part_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></RelativeLayout>
+</LinearLayout>
