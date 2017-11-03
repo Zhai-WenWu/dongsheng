@@ -27,7 +27,7 @@ import xh.basic.tool.UtilImage;
  * 2、处理图片加载。
  */
 public abstract class ModuleBaseView extends RelativeLayout{
-    public String MODULE_TAG="";
+    public String MODULE_TAG="";//当前模块名称
     protected final int TAG_ID = R.string.tag;
     protected int mImgResource = R.drawable.i_nopic;
     public int roundImgPixels = 0, imgWidth = 0, imgHeight = 0,// 以像素为单位
@@ -138,5 +138,12 @@ public abstract class ModuleBaseView extends RelativeLayout{
             textView.setText(map.get(key));
             textView.setVisibility(VISIBLE);
         }else textView.setVisibility(GONE);
+    }
+
+    public String getMODULE_TAG() {
+        return MODULE_TAG;
+    }
+    public void setMODULE_TAG(String MODULE_TAG) {
+        this.MODULE_TAG = MODULE_TAG;
     }
 }

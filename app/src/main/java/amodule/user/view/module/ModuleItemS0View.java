@@ -69,7 +69,7 @@ public class ModuleItemS0View extends RelativeLayout{
         int part_0_size=part.getChildCount();
         for(int i=0;i<part_0_size;i++){
             ModuleBaseView baseView= (ModuleBaseView) part.getChildAt(i);
-            if( map.get("style").equals(baseView.MODULE_TAG) ){
+            if( map.get("style").equals(baseView.getMODULE_TAG()) ){
                 baseView.setVisibility(VISIBLE);
                 baseView.initData(map);
             }else baseView.setVisibility(GONE);

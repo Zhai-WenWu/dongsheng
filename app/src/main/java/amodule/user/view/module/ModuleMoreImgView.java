@@ -55,7 +55,7 @@ public class ModuleMoreImgView extends ModuleBaseView{
 
     @Override
     public void initUI() {
-        MODULE_TAG="B4";
+        setMODULE_TAG("B4");
         module_title= (TextViewShow) findViewById(R.id.module_title);
         tv_content= (TextViewShow) findViewById(R.id.tv_content);
         // 多图模式

@@ -36,7 +36,7 @@ public class ModuleMaskImgView extends ModuleBaseView{
 
     @Override
     public void initUI() {
-        MODULE_TAG="B2";
+        setMODULE_TAG("B2");
         mask_img= (ImageView) findViewById(R.id.mask_img);
         mask_title_album= (TextView) findViewById(R.id.mask_title_album);
         mask_num= (TextView) findViewById(R.id.mask_num);

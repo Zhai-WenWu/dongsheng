@@ -38,7 +38,7 @@ public class ModuleRightImgView extends ModuleBaseView{
 
     @Override
     public void initUI() {
-        MODULE_TAG="B3";
+        setMODULE_TAG("B3");
         module_title_txt= (TextView) findViewById(R.id.module_title_txt);
         module_desc= (TextView) findViewById(R.id.module_desc);
         module_img= (ImageView) findViewById(R.id.module_img);
