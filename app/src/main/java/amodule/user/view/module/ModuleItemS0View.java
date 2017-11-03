@@ -44,9 +44,9 @@ public class ModuleItemS0View extends RelativeLayout{
      * @param layoutId
      */
     private void initLayout(int layoutId){
-        //TODO 有问题
         View view = LayoutInflater.from(mContext).inflate(layoutId,null,true);
         addView(view);
+        setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         part_0= (RelativeLayout) findViewById(R.id.rela_part_1);
         part_1= (RelativeLayout) findViewById(R.id.rela_part_2);
         part_2= (RelativeLayout) findViewById(R.id.rela_part_3);

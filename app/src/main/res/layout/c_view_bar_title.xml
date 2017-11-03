@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/barTitle"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_45"
-    android:background="@color/common_top_bg" >
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/barTitle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_45"
+                android:background="@color/common_top_bg">
 
     <TextView
         android:id="@+id/title"
@@ -120,12 +121,16 @@
     <ImageView
         android:id="@+id/rightImgBtn2"
         style="@style/rightBtn"
+        tools:visibility="visible"
+        tools:src="@drawable/z_z_topbar_ico_share"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/dp_11"/>
 
     <ImageView
         android:id="@+id/rightImgBtn4"
         style="@style/rightBtn"
+        tools:visibility="visible"
+        tools:src="@drawable/z_caipu_xiangqing_topbar_ico_fav"
         android:layout_toLeftOf="@+id/rightImgBtn2" />
 
     <ImageView

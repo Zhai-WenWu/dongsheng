@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
@@ -111,6 +112,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private int page = 0;//相关推荐的page
     private boolean isOnce = true;
     private boolean isFav = false;
+    private String title = "";
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
@@ -295,22 +297,27 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         rightButtonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.handlerFavorite(VideoDetailActivity.this, "type", code, new InternetCallback(VideoDetailActivity.this) {
+                handlerFavorite();
+            }
+        });
+    }
+
+    private void handlerFavorite(){
+        statistics(isFav?"取消收藏":"收藏","");
+        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_VIDEO,
+                new FavoriteHelper.FavoriteHandlerCallback() {
                     @Override
-                    public void loaded(int i, String s, Object o) {
-                        if(i >= ReqEncyptInternet.REQ_OK_STRING){
-                            //成功
-                        }else{
-                            //失败
-                        }
+                    public void onSuccess() {
                         isFav = !isFav;
                         rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                         Tools.showToast(VideoDetailActivity.this,isFav?"收藏陈功":"取消收藏");
                     }
-                });
 
-            }
-        });
+                    @Override
+                    public void onFailed() {
+                        Tools.showToast(VideoDetailActivity.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
+                    }
+                });
     }
 
     /** 初始化ListView */
@@ -507,7 +514,27 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     }
 
+    private void requestFavoriteState(){
+        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_VIDEO,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(String state) {
+                        //处理收藏状态
+                        isFav = "2".equals(state);
+                        rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        rightButtonFav.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        rightButtonFav.setVisibility(View.GONE);
+                    }
+                });
+    }
+
     private void requestVideoData(final boolean onlyUser) {
+        //请求收藏状态数据
+        requestFavoriteState();
 //        loadManager.showProgressBar();
         String params = new StringBuilder().append("code=").append(code).append("&type=RAW").toString();
         ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback(this) {
@@ -576,15 +603,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         if(isPortrait){
             handlerPortrait();
         }
-
-        //TODO 待完成字段
-        //处理收藏状态
-        if (!TextUtils.isEmpty(mapVideo.get("isFav"))) {
-            isFav = "2".equals(mapVideo.get("isFav"));
-            rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-            rightButtonFav.setVisibility(View.VISIBLE);
-        }
-
+        title = mapVideo.get("title");
         xhWebView.setVisibility(View.GONE);
         mCommentBar.setVisibility(View.VISIBLE);
         customerData = StringManager.getFirstMap(mapVideo.get("customer"));

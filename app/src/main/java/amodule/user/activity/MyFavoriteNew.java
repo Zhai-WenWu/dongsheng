@@ -9,6 +9,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,10 +21,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.FavoriteHelper;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule.article.activity.ArticleDetailActivity;
+import amodule.article.activity.edit.ArticleEidtActivity;
+import amodule.article.view.BottomDialog;
 import amodule.main.Main;
 import amodule.main.activity.MainHome;
 import amodule.user.adapter.AdapterModuleS0;
@@ -84,6 +90,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
 
     private void initData() {
         myFavorite = new AdapterModuleS0(this, mData);
+        myFavorite.setStatisticId("a_my_collection");
         View view = new View(this);
         view.setBackgroundResource(R.drawable.item_decoration);
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
@@ -92,6 +99,13 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         rvListview.addItemDecoration(itemDecoration);
+        rvListview.setOnItemLongClickListener(new RvListView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                showBottomDialog(position);
+                return true;
+            }
+        });
         rvListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -239,6 +253,46 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
             }
             firstClickTime = 0;
         }
+    }
+
+    private void showBottomDialog(final int position) {
+        Log.i("tzy","showBottomDialog");
+//        Log.i("tzy","showBottomDialog");
+//        Log.i("tzy","showBottomDialog");
+        Map<String, String> item = myFavorite.getItem(position);
+        item = StringManager.getFirstMap(item.get("B"));
+        Log.i("tzy","item="+item.toString());
+        if (item.isEmpty()) return;
+        final String code = item.get("code");
+        final String type = item.get("type");
+        final String typeName = item.get("text1");
+        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type) || TextUtils.isEmpty(typeName)) {
+            return;
+        }
+        BottomDialog dialog = new BottomDialog(this);
+        dialog.addButton("取消收藏", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mData.remove(position);
+                rvListview.notifyItemViewRemove(position);
+                FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code, type, typeName,
+                        new FavoriteHelper.FavoriteHandlerCallback() {
+                            @Override
+                            public void onSuccess() {
+                                mData.remove(position);
+                                rvListview.notifyItemViewRemove(position);
+                                Log.i("tzy", "请求成功");
+                                Tools.showToast(MyFavoriteNew.this, "取消成功");
+                            }
+
+                            @Override
+                            public void onFailed() {
+                                Log.i("tzy", "请求失败");
+                            }
+                        });
+            }
+        });
+        dialog.show();
     }
 
 }

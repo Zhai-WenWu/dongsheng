@@ -584,53 +584,6 @@ public class AppCommon {
     }
 
     /**
-     * @param code 菜谱code
-     * @return 收藏状态
-     */
-    public static void onFavoriteClick(final Context context, String type, final String code,
-                                       final InternetCallback callback) {
-        if (code != null) {
-            ReqInternet.in().doPost(StringManager.api_setDishInfo, "type=" + type + "&code=" + code, new InternetCallback(context) {
-                @Override
-                public void loaded(int flag, String url, Object returnObj) {
-                    if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Map<String, String> map = getListMapByJson(returnObj).get(0);
-                        boolean nowFav = map.get("type").equals("2");
-                        String dishJson = DataOperate.buyBurden(context, code);
-                        if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
-                            // 修改splite数据
-                            dishJson = dishJson.replace(nowFav ? "\"isFav\":1" : "\"isFav\":2", nowFav ? "\"isFav\":2" : "\"isFav\":1");
-                            DishOffSqlite sqlite = new DishOffSqlite(context);
-                            sqlite.updateIsFav(code, dishJson);
-                        }
-                        Tools.showToast(context, nowFav ? "收藏成功" : "取消收藏");
-                        callback.loaded(ReqInternet.REQ_OK_STRING, url, returnObj);
-                    } else {
-                        callback.loaded(0, url, returnObj);
-                        Tools.showToast(context, returnObj.toString());
-                    }
-                }
-            });
-        } else
-            callback.loaded(-1, null, "");// 暂时这么写
-    }
-
-    public static void handlerFavorite(final Context context,String type,String code,final @NonNull InternetCallback callback){
-        if(context == null || TextUtils.isEmpty(type) || TextUtils.isEmpty(code)){
-            if(callback != null){
-                callback.loaded(-1,"","");
-            }
-            return;
-        }
-        LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        params.put("type",type);
-        params.put("code",code);
-
-        //TODO 暂时这么写
-        ReqEncyptInternet.in().doEncypt("", params, callback);
-    }
-
-    /**
      * @param lv        等级
      * @param imageView 等级图片
      */

@@ -103,6 +103,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
 
     private void initData() {
         mAdapter = new AdapterModuleS0(this, mSearchData);
+        mAdapter.setStatisticId("a_my_collection_search");
         loadManager.setLoading(mRefreshLayout, mRvListview, mAdapter, true,
                 new View.OnClickListener() {
                     @Override

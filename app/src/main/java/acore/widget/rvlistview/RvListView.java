@@ -108,6 +108,12 @@ public class RvListView extends RecyclerView {
         super.swapAdapter(mAdapter, removeAndRecycleExistingViews);
     }
 
+    public void notifyItemViewRemove(int position){
+        if(null != mAdapter){
+            mAdapter.notifyItemViewRemove(position);
+        }
+    }
+
     /*------------------------------------------------------- Header -------------------------------------------------------*/
 
     public LinearLayout getHeaderContainer() {
@@ -500,6 +506,12 @@ public class RvListView extends RecyclerView {
             }
         }
 
+        public void notifyItemViewRemove(int position) {
+            if(position <= getItemCount()){
+                notifyItemRemoved(position);
+            }
+        }
+
         protected boolean isEnabled(int viewType) {
             return true;
         }
@@ -552,6 +564,7 @@ public class RvListView extends RecyclerView {
         Adapter getOriginalAdapter() {
             return mOriginalAdapter;
         }
+
     }
 
     /*------------------------------------------------------- Inner Interface -------------------------------------------------------*/

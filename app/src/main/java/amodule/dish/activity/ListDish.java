@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.FavoriteHelper;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.dish.adapter.ListDishAdapter;
 import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
@@ -71,6 +73,7 @@ public class ListDish extends BaseActivity {
     private Map<String,String> detailPermissionMap = new HashMap<>();
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
+    String classifyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +211,8 @@ public class ListDish extends BaseActivity {
         });
     }
 
+    boolean isFav = false;
+    ImageView img_fav;
     private void initBarView() {
         // titleBar初始化
         ImageView img_share = (ImageView) findViewById(R.id.rightImgBtn2);
@@ -219,10 +224,39 @@ public class ListDish extends BaseActivity {
                 doShare();
             }
         });
+        img_fav = (ImageView) findViewById(R.id.rightImgBtn4);
+        img_fav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+        img_fav.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handlerFavorite();
+            }
+        });
+    }
+
+    private void handlerFavorite() {
+        statistics(isFav?"取消收藏":"收藏","");
+        FavoriteHelper.instance().setFavoriteStatus(this, g1, classifyName, FavoriteHelper.TYPE_MUNE,
+                new FavoriteHelper.FavoriteHandlerCallback() {
+                    @Override
+                    public void onSuccess() {
+                        isFav = !isFav;
+                        img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        Tools.showToast(ListDish.this,isFav?"收藏陈功":"取消收藏");
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        Tools.showToast(ListDish.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
+                    }
+                });
     }
 
     @SuppressLint("NewApi")
     public void loadData() {
+        if(currentPage == 0 && !type.equals("recommend")){
+            requestFavroiteState();
+        }
         currentPage++;
         loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, arrayList.size() == 0);
         String url = null;
@@ -265,7 +299,7 @@ public class ListDish extends BaseActivity {
 
                     ArrayList<Map<String, String>> returnList = UtilString.getListMapByJson(returnObj);
                     if (!type.equals("recommend") && !type.equals("typeRecommend")) {
-                        String classifyName = returnList.get(0).get("name");
+                        classifyName = returnList.get(0).get("name");
                         String customer = returnList.get(0).get("customer");
                         final ArrayList<Map<String, String>> customers = StringManager.getListMapByJson(customer);
                         String info = returnList.get(0).get("info");
@@ -353,6 +387,23 @@ public class ListDish extends BaseActivity {
         });
     }
 
+    private void requestFavroiteState() {
+        FavoriteHelper.instance().getFavoriteStatus(this, g1, FavoriteHelper.TYPE_MUNE,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(String state) {
+                        isFav = "2".equals(state);
+                        img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        img_fav.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailed() {
+
+                    }
+                });
+    }
+
     /**
      *
      * @param pagePermission
@@ -423,5 +474,9 @@ public class ListDish extends BaseActivity {
             }
         }
         return listData;
+    }
+
+    private void statistics(String twoLevel, String threeLevel) {
+        XHClick.mapStat(this, "a_menu_detail", twoLevel, threeLevel);
     }
 }

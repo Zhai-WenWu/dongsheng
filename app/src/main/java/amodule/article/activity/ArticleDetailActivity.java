@@ -1,5 +1,6 @@
 package amodule.article.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -27,10 +28,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
@@ -104,6 +107,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private Long startTime;//统计使用的时间
     private boolean webviewLoadOver = false;
     private boolean isFav = false;
+    private String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +213,6 @@ public class ArticleDetailActivity extends BaseActivity {
         mTitle.setPadding(dp85, 0, dp85, 0);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
         rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
-        //TODO
         rightButtonFav.setVisibility(View.VISIBLE);
         ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
@@ -226,22 +229,27 @@ public class ArticleDetailActivity extends BaseActivity {
         rightButtonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.handlerFavorite(ArticleDetailActivity.this, "type", code, new InternetCallback(ArticleDetailActivity.this) {
+                handlerFavorite();
+            }
+        });
+    }
+
+    private void handlerFavorite(){
+        statistics(isFav?"取消收藏":"收藏","");
+        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_ARTICLE,
+                new FavoriteHelper.FavoriteHandlerCallback() {
                     @Override
-                    public void loaded(int i, String s, Object o) {
-                        if(i >= ReqEncyptInternet.REQ_OK_STRING){
-                            //成功
-                        }else{
-                            //失败
-                        }
+                    public void onSuccess() {
                         isFav = !isFav;
                         rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                         Tools.showToast(ArticleDetailActivity.this,isFav?"收藏陈功":"取消收藏");
                     }
-                });
 
-            }
-        });
+                    @Override
+                    public void onFailed() {
+                        Tools.showToast(ArticleDetailActivity.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
+                    }
+                });
     }
 
     /** 初始化评论框 */
@@ -289,6 +297,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     /** 初始化ListView */
+    @SuppressLint("ClickableViewAccessibility")
     private void initListView() {
         listView = (ListView) findViewById(R.id.listview);
         listView.setOnTouchListener(new View.OnTouchListener() {
@@ -459,11 +468,33 @@ public class ArticleDetailActivity extends BaseActivity {
         if (detailAdapter != null) detailAdapter.notifyDataSetChanged();
     }
 
+    private void requestFavoriteState(){
+        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_ARTICLE,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(String state) {
+                        //处理收藏状态
+                        isFav = "2".equals(state);
+                        rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        rightButtonFav.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        rightButtonFav.setVisibility(View.GONE);
+                    }
+                });
+    }
+
     /** 请求网络 */
     private void requestArticleData(final boolean onlyUser) {
+        //请求收藏状态数据
+        requestFavoriteState();
 //        loadManager.showProgressBar();
-        StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=HTML");
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params.toString(), new InternetCallback(this) {
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("code",code);
+        params.put("type","HTML");
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 refreshLayout.refreshComplete();
@@ -490,6 +521,7 @@ public class ArticleDetailActivity extends BaseActivity {
      *
      * @param mapArticle 文章数据
      */
+    @SuppressLint("ClickableViewAccessibility")
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
         if (mapArticle.isEmpty()) return;
 
@@ -499,6 +531,7 @@ public class ArticleDetailActivity extends BaseActivity {
             linearLayoutOne.addView(headerView);
         headerView.setType(getType());
         headerView.setData(mapArticle);
+        title = mapArticle.get("title");
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
         if (onlyUser)
@@ -545,14 +578,6 @@ public class ArticleDetailActivity extends BaseActivity {
             htmlStr = htmlStr.replace("&gt;", ">");
         webView.loadDataWithBaseURL(getMAPI() + mapArticle.get("code"), htmlStr, "text/html", "utf-8", null);
         linearLayoutTwo.setVisibility(View.VISIBLE);
-
-        //TODO 待完成字段
-        //处理收藏状态
-        if (!TextUtils.isEmpty(mapArticle.get("isFav"))) {
-            isFav = "2".equals(mapArticle.get("isFav"));
-            rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-            rightButtonFav.setVisibility(View.VISIBLE);
-        }
 
         customerData = StringManager.getFirstMap(mapArticle.get("customer"));
         if (!TextUtils.isEmpty(customerData.get("nickName"))) {
@@ -658,8 +683,11 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 请求推荐列表 */
     private void requestRelateData() {
-        String param = "code=" + code + "&page=" + ++page + "&pagesize=10";
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleRelated, param, new InternetCallback(this) {
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("code",code);
+        params.put("page",String.valueOf(++page));
+        params.put("pagesize","10");
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleRelated, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {

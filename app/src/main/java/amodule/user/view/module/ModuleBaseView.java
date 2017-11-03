@@ -62,6 +62,7 @@ public abstract class ModuleBaseView extends RelativeLayout{
         LayoutInflater.from(mContext).inflate(layoutId,this,true);
         initUI();
         setListener();
+        setLongClickable(false);
     }
 
     /**

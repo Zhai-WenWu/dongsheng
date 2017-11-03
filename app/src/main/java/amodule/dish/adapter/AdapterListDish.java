@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.dish.db.DataOperate;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
@@ -119,13 +121,19 @@ public class AdapterListDish extends AdapterSimple {
 
     // 收藏响应
     public void doFavorite(final Map<String, String> map) {
-        AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING)
-                    parseFavClick(map);
-            }
-        });
+        FavoriteHelper.instance().setFavoriteStatus(mAct, map.get("code"), map.get("name"),
+                "2".equals(map.get("hasVideo")) ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                new FavoriteHelper.FavoriteHandlerCallback() {
+                    @Override
+                    public void onSuccess() {
+                        parseFavClick(map);
+                    }
+
+                    @Override
+                    public void onFailed() {
+
+                    }
+                });
     }
 
     /**
@@ -135,6 +143,7 @@ public class AdapterListDish extends AdapterSimple {
     private void parseFavClick(Map<String, String> map) {
         String str = map.get("favorites");
         int favorites = Integer.parseInt(str.substring(0, str.indexOf("收藏")));
+        Tools.showToast(mAct,!(map.get("isFav") + "").equals("2")?"收藏陈功":"取消收藏");
         if ((map.get("isFav") + "").equals("2")) {
             map.put("favorites", (favorites - 1) + "收藏");
             map.put("isFav", "1");

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -171,10 +172,27 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         });
     }
 
+    private void requestFavoriteState(){
+        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_ARTICLE,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(String state) {
+                        //处理收藏状态
+                        dishActivityViewControl.getDishTitleViewControl().setNowFav("2".equals(state));
+                    }
+
+                    @Override
+                    public void onFailed() {
+                    }
+                });
+    }
+
     /**
      * 请求网络
      */
     private void loadDishInfo() {
+        //获取收藏状态
+        requestFavoriteState();
         String params = "code=" + code;
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this.getApplicationContext()) {
 
