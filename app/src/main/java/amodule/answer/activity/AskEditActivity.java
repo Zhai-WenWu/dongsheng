@@ -463,7 +463,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             finish();
                         }
                     } else {
-                        if ("0".equals(mAskPrice) || "0".equals(mAskPrice) || "0.00".equals(mAskPrice)) {
+                        if ("0".equals(mAskPrice) || "0.0".equals(mAskPrice) || "0.00".equals(mAskPrice)) {
                             startQADetail();
                         } else {
                             startPay();
