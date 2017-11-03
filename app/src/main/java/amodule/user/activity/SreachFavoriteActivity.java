@@ -6,10 +6,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -37,11 +39,12 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class SreachFavoriteActivity extends BaseActivity implements View.OnClickListener{
+public class SreachFavoriteActivity extends BaseActivity implements View.OnClickListener {
 
     private PtrClassicFrameLayout mRefreshLayout;
     private RvListView mRvListview;
     private EditText mEditText;
+    private RelativeLayout mNoDataLayout;
     private TextView mClearSearch;
 
     private ArrayList<Map<String, String>> mSearchData = new ArrayList<>();
@@ -52,7 +55,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("",2,0,0, R.layout.a_search_favorite);
+        initActivity("", 2, 0, 0, R.layout.a_search_favorite);
         initUI();
         initData();
     }
@@ -62,16 +65,18 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         mRvListview = (RvListView) findViewById(R.id.rvListview);
         mEditText = (EditText) findViewById(R.id.ed_search_main);
         mClearSearch = (TextView) findViewById(R.id.btn_ed_clear_main);
+        mNoDataLayout = (RelativeLayout) findViewById(R.id.no_data_layout);
 
         mClearSearch.setOnClickListener(this);
         findViewById(R.id.btn_search_main).setOnClickListener(this);
         findViewById(R.id.btn_back).setOnClickListener(this);
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         mRvListview.addItemDecoration(itemDecoration);
         mEditText.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
@@ -83,10 +88,23 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
                 mClearSearch.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             }
         });
+        mEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_ENTER:
+                    case KeyEvent.ACTION_DOWN:
+                        doSearch();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 
     private void initData() {
-        mAdapter = new AdapterMyFavorite(this,mSearchData);
+        mAdapter = new AdapterMyFavorite(this, mSearchData);
         loadManager.setLoading(mRefreshLayout, mRvListview, mAdapter, true,
                 new View.OnClickListener() {
                     @Override
@@ -106,7 +124,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
      * 请求数据
      */
     private void requestData(final boolean isRefresh) {
-        if(TextUtils.isEmpty(searchWord)){
+        if (TextUtils.isEmpty(searchWord)) {
             return;
         }
         currentpage = isRefresh ? 1 : ++currentpage;
@@ -140,16 +158,16 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         });
     }
 
-    private void handlerNoData(){
-        if(mSearchData.isEmpty()){
-            findViewById(R.id.no_data_layout).setVisibility(View.VISIBLE);
-            mRefreshLayout.setVisibility(View.GONE);
-        }else{
-            findViewById(R.id.no_data_layout).setVisibility(View.GONE);
-            mRefreshLayout.setVisibility(View.VISIBLE);
+    private void handlerNoData() {
+        if (mSearchData == null) {
+            return;
         }
+        final boolean dataIsEmpty = mSearchData.isEmpty();
+        mNoDataLayout.setVisibility(dataIsEmpty ? View.VISIBLE : View.GONE);
+        mRefreshLayout.setVisibility(dataIsEmpty ? View.GONE : View.VISIBLE);
     }
-    private void doSearch(){
+
+    private void doSearch() {
         searchWord = mEditText.getText().toString().trim();
         if (TextUtils.isEmpty(searchWord)) {
             Tools.showToast(this, "傻逼没有数据");
@@ -164,14 +182,14 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         searchWord = "";
         mEditText.setText("");
         mEditText.clearFocus();
-        ToolsDevice.keyboardControl(false,this,mEditText);
+        ToolsDevice.keyboardControl(false, this, mEditText);
 //        mSearchData.clear();
 //        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_ed_clear_main:
                 clearSearch();
                 break;
