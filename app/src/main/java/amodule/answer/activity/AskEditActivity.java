@@ -464,6 +464,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                         }
                     } else {
                         if ("0".equals(mAskPrice) || "0.0".equals(mAskPrice) || "0.00".equals(mAskPrice)) {
+                            mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
                             startQADetail();
                         } else {
                             startPay();
