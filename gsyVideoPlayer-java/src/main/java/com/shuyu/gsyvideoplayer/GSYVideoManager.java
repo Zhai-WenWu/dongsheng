@@ -376,9 +376,10 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     private Runnable mTimeOutRunnable = new Runnable() {
         @Override
         public void run() {
+            GSYMediaPlayerListener listener = listener();
             if (listener != null) {
                 Debuger.printfError("time out for error listener");
-                listener().onError(BUFFER_TIME_OUT_ERROR, BUFFER_TIME_OUT_ERROR);
+                listener.onError(BUFFER_TIME_OUT_ERROR, BUFFER_TIME_OUT_ERROR);
             }
         }
     };
@@ -435,8 +436,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
             @Override
             public void run() {
                 cancelTimeOutBuffer();
+                GSYMediaPlayerListener listener = listener();
                 if (listener != null) {
-                    listener().onPrepared();
+                    listener.onPrepared();
                 }
             }
         });
@@ -448,8 +450,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
             @Override
             public void run() {
                 cancelTimeOutBuffer();
+                GSYMediaPlayerListener listener = listener();
                 if (listener != null) {
-                    listener().onAutoCompletion();
+                    listener.onAutoCompletion();
                 }
             }
         });
@@ -460,11 +463,12 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
         mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
+                GSYMediaPlayerListener listener = listener();
                 if (listener != null) {
                     if (percent > buffterPoint) {
-                        listener().onBufferingUpdate(percent);
+                        listener.onBufferingUpdate(percent);
                     } else {
-                        listener().onBufferingUpdate(buffterPoint);
+                        listener.onBufferingUpdate(buffterPoint);
                     }
                 }
             }
@@ -477,8 +481,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
             @Override
             public void run() {
                 cancelTimeOutBuffer();
+                GSYMediaPlayerListener listener = listener();
                 if (listener != null) {
-                    listener().onSeekComplete();
+                    listener.onSeekComplete();
                 }
             }
         });
@@ -490,8 +495,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
             @Override
             public void run() {
                 cancelTimeOutBuffer();
+                GSYMediaPlayerListener listener = listener();
                 if (listener != null) {
-                    listener().onError(what, extra);
+                    listener.onError(what, extra);
                 }
             }
         });
@@ -510,8 +516,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
                         cancelTimeOutBuffer();
                     }
                 }
+                GSYMediaPlayerListener listener = listener();
                 if (listener != null) {
-                    listener().onInfo(what, extra);
+                    listener.onInfo(what, extra);
                 }
             }
         });
@@ -527,8 +534,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
         mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
+                GSYMediaPlayerListener listener = listener();
                 if (listener != null) {
-                    listener().onVideoSizeChanged();
+                    listener.onVideoSizeChanged();
                 }
             }
         });
