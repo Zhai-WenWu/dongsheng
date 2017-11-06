@@ -330,12 +330,13 @@ public class HomeFragment extends BaseHomeFragment{
                 public void onLoad(List<Map<String, String>> data) {
                     if(!LoadOver){
                         mListData.addAll(data);//顺序插入
+                        mHomeAdapter.notifyDataSetChanged();
                         //如果需要加广告，插入广告
                         if (mAdControl != null) {
                             //插入广告
                             mListData = mAdControl.getNewAdData(mListData, false);
+                            mHomeAdapter.notifyDataSetChanged();
                         }
-                        mHomeAdapter.notifyDataSetChanged();
                     }
                 }
             });
