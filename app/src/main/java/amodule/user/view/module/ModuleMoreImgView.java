@@ -65,14 +65,14 @@ public class ModuleMoreImgView extends ModuleBaseView{
         image_one = (ImageView) findViewById(R.id.image_one);
         video_rela = (RelativeLayout)findViewById(R.id.video_rela);
         video_image= (ImageViewVideo)findViewById(R.id.video_image);
-        subjectImgWidth = ToolsDevice.getWindowPx(mContext).widthPixels - Tools.getDimen(mContext, R.dimen.dp_30);// 左右两边的pinding值
+        subjectImgWidth = ToolsDevice.getWindowPx(mContext).widthPixels - Tools.getDimen(mContext, R.dimen.dp_40);// 左右两边的pinding值
     }
 
     @Override
     public void initData(Map<String, String> map) {
         this.map= map;
         setKeyContent(map,module_title,"text1");
-        setKeyContent(map,tv_content,"text2");
+//        setKeyContent(map,tv_content,"text2");
         //url点击跳转
         if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
         if(!map.containsKey("styleData")|| TextUtils.isEmpty(map.get("styleData"))){
@@ -131,10 +131,10 @@ public class ModuleMoreImgView extends ModuleBaseView{
         LinearLayout.LayoutParams _1PicImageParams = new LinearLayout.LayoutParams(subjectImgWidth, subjectImgWidth * 2 / 3);
 
         RelativeLayout.LayoutParams _2PicLayoutParams = new RelativeLayout.LayoutParams(subjectImgWidth, subjectImgWidth / 2);
-        LinearLayout.LayoutParams _2PicImageParams = new LinearLayout.LayoutParams(subjectImgWidth / 2, subjectImgWidth / 2);
+        LinearLayout.LayoutParams _2PicImageParams = new LinearLayout.LayoutParams((subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_4)) / 2, (subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_4)) / 2);
 
         RelativeLayout.LayoutParams _3PicLayoutParams = new RelativeLayout.LayoutParams(subjectImgWidth, subjectImgWidth / 3);
-        LinearLayout.LayoutParams _3PicImageParams = new LinearLayout.LayoutParams(subjectImgWidth / 3, subjectImgWidth / 3);
+        LinearLayout.LayoutParams _3PicImageParams = new LinearLayout.LayoutParams((subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_8)) / 3, (subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_8)) / 3);
         findViewById(R.id.line_1).setVisibility(View.GONE);
         findViewById(R.id.line_2).setVisibility(View.GONE);
         switch (imgurl.size()) {

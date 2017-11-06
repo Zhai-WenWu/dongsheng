@@ -10,9 +10,7 @@
         android:id="@+id/module_txt_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/dp_74.5"
         android:layout_marginTop="@dimen/dp_13"
-        android:layout_marginBottom="@dimen/dp_15"
         android:layout_toLeftOf="@+id/module_imgs_rela">
 
         <TextView
@@ -24,7 +22,8 @@
             android:ellipsize="end"
             android:textSize="@dimen/sp_17"
             android:lineSpacingExtra="@dimen/dp_4"
-            android:textColor="@color/c_black_text"
+            android:textStyle="bold"
+            android:textColor="#333333"
             android:visibility="visible"/>
 
         <TextView
@@ -32,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/module_title_txt"
-            android:layout_marginBottom="@dimen/dp_6"
             android:layout_alignParentLeft="true"
             android:lineSpacingExtra="@dimen/dp_5"
             android:ellipsize="end"
@@ -48,7 +46,6 @@
         android:layout_height="@dimen/dp_72.5"
         android:layout_marginTop="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_17"
-        android:layout_marginBottom="@dimen/dp_15"
         android:layout_alignParentRight="true"
         android:visibility="visible">
 

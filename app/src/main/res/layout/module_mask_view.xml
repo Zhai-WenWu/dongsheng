@@ -8,10 +8,9 @@
     <RelativeLayout
         android:id="@+id/mask_album_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_190"
+        android:layout_height="@dimen/dp_180"
         android:background="@color/transparent_fe"
-        android:layout_marginTop="@dimen/dp_15"
-        android:layout_marginBottom="@dimen/dp_15">
+        android:layout_marginTop="@dimen/dp_12">
 
         <ImageView
             android:id="@+id/mask_img"
@@ -53,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/c_white_text"
-                android:textSize="@dimen/sp_18"
+                android:textSize="@dimen/sp_21"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:background="@color/transparent_fe"

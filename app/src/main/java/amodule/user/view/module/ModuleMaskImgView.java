@@ -55,14 +55,17 @@ public class ModuleMaskImgView extends ModuleBaseView{
         if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
         if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))){
-            setViewImage(mask_img,mapStyle.get("url"));
+            setViewImage(mask_img,mapStyle.get("img"));
             findViewById(R.id.mask_album_container).setVisibility(VISIBLE);
             findViewById(R.id.mask_layer_view).setVisibility(VISIBLE);
             setKeyContent(map,mask_title_album,"text1");//标题
-            if(map.containsKey("dishNum")&&TextUtils.isEmpty(map.get("text2"))){
-                mask_num.setVisibility(View.VISIBLE);
-                mask_num.setText(map.get("text2"));
-            }else mask_num.setVisibility(View.GONE);
+//            if(map.containsKey("dishNum")&&TextUtils.isEmpty(map.get("text2"))){
+//                mask_num.setVisibility(View.VISIBLE);
+//                mask_num.setText(map.get("text2"));
+//            }else mask_num.setVisibility(View.GONE);
+            mask_title_album.setText("长得换手机号大数据库带回家看撒谎的");
+            mask_num.setText("30道菜");
+            mask_num.setVisibility(View.VISIBLE);
         }else{
             findViewById(R.id.mask_album_container).setVisibility(GONE);
         }

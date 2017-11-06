@@ -60,7 +60,8 @@ public class ModuleRightImgView extends ModuleBaseView{
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
         if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))){
             findViewById(R.id.module_imgs_rela).setVisibility(VISIBLE);
-            setViewImage(module_img,mapStyle.get("url"));
+//            setViewImage(module_img,mapStyle.get("img"));
+            setViewImage(module_img,"http://s1.cdn.xiangha.com/img/201706/2820/s/5953a2012a975.png/NjAweDQwMA?600_400");
             findViewById(R.id.module_layer_view).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
             findViewById(R.id.module_play_img).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);
         }else findViewById(R.id.module_imgs_rela).setVisibility(GONE);

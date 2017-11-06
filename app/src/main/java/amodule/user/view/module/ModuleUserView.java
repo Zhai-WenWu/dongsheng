@@ -44,16 +44,21 @@ public class ModuleUserView extends ModuleBaseView{
     @Override
     public void initData(Map<String, String> map) {
         //用户信息
-        if(map!=null&&!map.isEmpty()){
-            auther_name.setText(map.get("text2"));
-            findViewById(R.id.cusType).setVisibility(map.containsKey("iconGourmet")&&"2".equals(map.get("iconGourmet"))?VISIBLE:GONE);
-            if(map.containsKey("img")&&!TextUtils.isEmpty(map.get("img")))setViewImage(auther_userImg,map.get("img"));
+        if(map.containsKey("userView")&&!TextUtils.isEmpty(map.get("userView"))) {
+            Map<String,String> mapUser= StringManager.getFirstMap(map.get("userView"));
+            if (mapUser != null && !mapUser.isEmpty()) {
+                auther_name.setText(mapUser.get("nickName"));
+//                findViewById(R.id.cusType).setVisibility(mapUser.containsKey("iconGourmet") && "2".equals(mapUser.get("iconGourmet")) ? VISIBLE : GONE);
+                if (mapUser.containsKey("img") && !TextUtils.isEmpty(mapUser.get("img")))
+                    setViewImage(auther_userImg, map.get("img"));
+            }
+            //url点击跳转
+            if (mapUser.containsKey("url") && !TextUtils.isEmpty(mapUser.get("url")))
+                userUrl = mapUser.get("url");
         }
-        //url点击跳转
-        if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))userUrl= map.get("url");
         //右标题
-        if(map.containsKey("text3")&& !TextUtils.isEmpty(map.get("text3"))){
-            right_title.setText(map.get("text3"));
+        if(map.containsKey("rightTxt")&& !TextUtils.isEmpty(map.get("rightTxt"))){
+            right_title.setText(map.get("rightTxt"));
             right_title.setVisibility(View.VISIBLE);
         }else{
             right_title.setVisibility(View.GONE);
