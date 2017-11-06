@@ -48,9 +48,9 @@ public class ModuleUserView extends ModuleBaseView{
             Map<String,String> mapUser= StringManager.getFirstMap(map.get("userView"));
             if (mapUser != null && !mapUser.isEmpty()) {
                 auther_name.setText(mapUser.get("nickName"));
-//                findViewById(R.id.cusType).setVisibility(mapUser.containsKey("iconGourmet") && "2".equals(mapUser.get("iconGourmet")) ? VISIBLE : GONE);
+                findViewById(R.id.cusType).setVisibility(mapUser.containsKey("iconGourmet") && "2".equals(mapUser.get("iconGourmet")) ? VISIBLE : GONE);
                 if (mapUser.containsKey("img") && !TextUtils.isEmpty(mapUser.get("img")))
-                    setViewImage(auther_userImg, map.get("img"));
+                    setViewImage(auther_userImg, mapUser.get("img"));
             }
             //url点击跳转
             if (mapUser.containsKey("url") && !TextUtils.isEmpty(mapUser.get("url")))

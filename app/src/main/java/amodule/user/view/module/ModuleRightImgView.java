@@ -58,7 +58,7 @@ public class ModuleRightImgView extends ModuleBaseView{
             return;
         }
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
-        if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))){
+        if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))&&!"null".equals(mapStyle.get("img"))){
             findViewById(R.id.module_imgs_rela).setVisibility(VISIBLE);
             setViewImage(module_img,mapStyle.get("img"));
             findViewById(R.id.module_layer_view).setVisibility(mapStyle.containsKey("type")&&"2".equals(mapStyle.get("type"))?VISIBLE:GONE);

@@ -79,6 +79,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 seekLayoutHeight = seekLayout.getMeasuredHeight();
             }
         });
+        refreshLayout.getHeader().setBackgroundColor(Color.parseColor("#f2f2f2"));
     }
 
     private static final int HIDE_THRESHOLD = 20;//滑动隐藏的阈值
