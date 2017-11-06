@@ -77,7 +77,7 @@ public class RvListView extends RecyclerView {
     public RvListView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         //默认使用LinearLayoutManager，并且处置布局
-        setLayoutManager(new LinearLayoutManagerWrapper(context, LinearLayoutManager.VERTICAL, false));
+        setLayoutManager(new LinearLayoutManagerWrapper(context));
         mHeaderContainer = new LinearLayout(context);
         mFooterContainer = new LinearLayout(context);
         Log.d(TAG, "Constructor execute.");
