@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20"
-    android:background="@color/transparent_fe">
+    android:background="#fffffe">
     <RelativeLayout
         android:id="@+id/mask_album_container"
         android:layout_width="match_parent"

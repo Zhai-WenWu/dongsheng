@@ -18,7 +18,7 @@
             android:id="@+id/auther_userImg"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
-            android:background="@color/transparent"
+            android:background="@drawable/bg_round_zannum"
             android:scaleType="centerCrop" />
 
         <ImageView
