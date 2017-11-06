@@ -102,17 +102,6 @@ public class MainHome extends MainBaseActivity implements IObserver {
         viewpager.setOffscreenPageLimit(5);
 //        initTopView();
         addListener();
-
-        //TODO
-        Button button = new Button(this);
-        button.setText("MenuDish");
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainHome.this, MenuDish.class));
-            }
-        });
-        rl.addView(button);
     }
 
     /**初始化顶部布局 */

@@ -468,6 +468,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		View fillFooterView = new View(this);
 		fillFooterView.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_45));
 		listSubject.addFooterView(fillFooterView,null,false);
+		requestFavoriteState();
 		registerObserver();
 	}
 
