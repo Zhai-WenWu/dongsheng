@@ -662,11 +662,11 @@ public class ShowSubject extends BaseAppCompatActivity {
 			theSubjectListMap = UtilString.getListMapByJson(map.get("theSubject")).get(0);
 			commentNum = Integer.parseInt(theSubjectListMap.get("commentNum"));//评论数
 			subjectTitle = theSubjectListMap.get("title");//美食贴名称
-			if (theSubjectListMap.containsKey("isFav")) {
-				boolean isFav = theSubjectListMap.get("isFav").equals("2");//是否收藏过
-				favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-				favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
-			}
+//			if (theSubjectListMap.containsKey("isFav")) {
+//				boolean isFav = theSubjectListMap.get("isFav").equals("2");//是否收藏过
+//				favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+//				favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
+//			}
 			if (theSubjectListMap.containsKey("type"))//贴子类
 			{
 				types = theSubjectListMap.get("type");
