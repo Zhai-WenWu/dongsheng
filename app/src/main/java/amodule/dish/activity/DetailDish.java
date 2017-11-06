@@ -173,7 +173,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
 
     private void requestFavoriteState(){
-        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_ARTICLE,
+        FavoriteHelper.instance().getFavoriteStatus(this, code,
+                dishActivityViewControl.isHasVideo() ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(String state) {
@@ -191,8 +192,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      * 请求网络
      */
     private void loadDishInfo() {
-        //获取收藏状态
-        requestFavoriteState();
         String params = "code=" + code;
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this.getApplicationContext()) {
 
@@ -293,6 +292,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
         requestWeb(data);
         dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
+        //请求收藏数据
+        requestFavoriteState();
     }
 
     private void requestWeb(String dishJson) {

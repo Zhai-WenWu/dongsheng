@@ -1,6 +1,7 @@
 package amodule.user.view.module;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -65,6 +66,14 @@ public class ModuleRightImgView extends ModuleBaseView{
         }else findViewById(R.id.module_imgs_rela).setVisibility(GONE);
         setListener();
 
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        findViewById(R.id.module_title_txt).setOnLongClickListener(l);
+        findViewById(R.id.module_desc).setOnLongClickListener(l);
+        findViewById(R.id.module_img).setOnLongClickListener(l);
     }
 
     @Override

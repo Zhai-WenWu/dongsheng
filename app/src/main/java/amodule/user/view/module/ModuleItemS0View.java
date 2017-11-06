@@ -1,13 +1,11 @@
 package amodule.user.view.module;
 
 import android.content.Context;
-import android.text.TextUtils;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewStub;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -15,7 +13,6 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.tools.StringManager;
-import amodule.user.view.module.ModuleBaseView;
 
 /**
  * Created by Administrator on 2017/11/1.
@@ -24,6 +21,7 @@ public class ModuleItemS0View extends RelativeLayout{
     public Context mContext;
     private RelativeLayout part_0,part_1,part_2;
     private String statisticId="";
+    private OnLongClickListener mLongClickListener;
     public ModuleItemS0View(Context context) {
         super(context);
         mContext= context;
@@ -80,6 +78,9 @@ public class ModuleItemS0View extends RelativeLayout{
                 ModuleBaseView  baseView= (ModuleBaseView) findViewWithTag(viewStub.getTag());
                 baseView.setStatisticId(getStatisticId());
                 baseView.initData(map);
+                if(mLongClickListener != null){
+                    baseView.setOnLongClickListener(mLongClickListener);
+                }
             }else viewStub.setVisibility(GONE);
         }
     }
@@ -89,5 +90,16 @@ public class ModuleItemS0View extends RelativeLayout{
 
     public void setStatisticId(String statisticId) {
         this.statisticId = statisticId;
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        this.mLongClickListener = l;
+        Log.i("tzy",this.getClass().getSimpleName() + "::setOnLongClickListener");
+        for(int index = 0 , length = getChildCount( ) ; index < length ; index++){
+            View view = getChildAt(index);
+            view.setOnLongClickListener(l);
+        }
     }
 }

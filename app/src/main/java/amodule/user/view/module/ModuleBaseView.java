@@ -1,6 +1,7 @@
 package amodule.user.view.module;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -62,7 +63,6 @@ public abstract class ModuleBaseView extends RelativeLayout{
         LayoutInflater.from(mContext).inflate(layoutId,this,true);
         initUI();
         setListener();
-        setLongClickable(false);
     }
 
     /**
@@ -155,5 +155,14 @@ public abstract class ModuleBaseView extends RelativeLayout{
 
     public void setStatisticId(String statisticId) {
         this.statisticId = statisticId;
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        for(int index = 0 , length = getChildCount( ) ; index < length ; index++){
+            View view = getChildAt(index);
+            view.setOnLongClickListener(l);
+        }
     }
 }

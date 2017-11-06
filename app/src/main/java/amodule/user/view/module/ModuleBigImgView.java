@@ -1,6 +1,7 @@
 package amodule.user.view.module;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -71,14 +72,22 @@ public class ModuleBigImgView extends ModuleBaseView{
     }
 
     @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        Log.i("tzy",this.getClass().getSimpleName() + "::setOnLongClickListener");
+        findViewById(R.id.big_container_rela).setOnLongClickListener(l);
+        findViewById(R.id.big_title).setOnLongClickListener(l);
+    }
+
+    @Override
     public void setListener() {
         findViewById(R.id.big_container_rela).setOnClickListener(UrlOnClickListener);
         big_title.setOnClickListener(UrlOnClickListener);
     }
+
     private OnClickListener UrlOnClickListener= new OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.i("xianghaTag","OnClickListener");
             if(!TextUtils.isEmpty(url)) {
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
                 if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击内容","");

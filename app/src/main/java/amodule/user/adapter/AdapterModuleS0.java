@@ -2,18 +2,13 @@ package amodule.user.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.ViewGroup;
-
-import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
 
 import acore.widget.rvlistview.RvBaseAdapter;
 import acore.widget.rvlistview.RvBaseViewHolder;
-import amodule.main.adapter.HomeAdapter;
 import amodule.user.view.module.ModuleItemS0View;
 
 /**
@@ -26,13 +21,12 @@ public class AdapterModuleS0 extends RvBaseAdapter<Map<String, String>> {
     }
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i("tzy","onCreateViewHolder");
         return new ModuleS0ViewHolder(new ModuleItemS0View(mContext));
     }
-    @Override
-    public void onBindViewHolder(RvBaseViewHolder holder, int position) {
-        holder.bindData(position, getItem(position));
-    }
+//    @Override
+//    public void onBindViewHolder(RvBaseViewHolder holder, int position) {
+//        holder.bindData(position, getItem(position));
+//    }
     @Override
     public int getItemViewType(int position) {
         return Integer.parseInt(getItemType(position));

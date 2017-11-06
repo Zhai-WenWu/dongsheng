@@ -704,4 +704,7 @@ public class  DishActivityViewControlNew {
         System.gc();
     }
 
+    public boolean isHasVideo() {
+        return isHasVideo;
+    }
 }

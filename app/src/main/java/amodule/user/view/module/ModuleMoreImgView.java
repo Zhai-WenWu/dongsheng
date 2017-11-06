@@ -3,6 +3,7 @@ package amodule.user.view.module;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -80,6 +81,17 @@ public class ModuleMoreImgView extends ModuleBaseView{
         }
         setImageView();
         setListener();
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        findViewById(R.id.module_title).setOnLongClickListener(l);
+        findViewById(R.id.tv_content).setOnLongClickListener(l);
+        findViewById(R.id.ll_imgs).setOnLongClickListener(l);
+        findViewById(R.id.image_one).setOnLongClickListener(l);
+        findViewById(R.id.video_rela).setOnLongClickListener(l);
+        findViewById(R.id.video_image).setOnLongClickListener(l);
     }
 
     @Override

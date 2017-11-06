@@ -1,6 +1,7 @@
 package amodule.user.view.module;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -66,6 +67,12 @@ public class ModuleMaskImgView extends ModuleBaseView{
             findViewById(R.id.mask_album_container).setVisibility(GONE);
         }
         setListener();
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        findViewById(R.id.mask_img).setOnLongClickListener(l);
     }
 
     @Override
