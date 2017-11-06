@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#fffffe"
     android:layout_height="wrap_content">
     <RelativeLayout
         android:id="@+id/rela_1_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#fffffe"
         android:gravity="center_vertical"
+        android:background="@color/transparent"
         android:paddingBottom="@dimen/dp_4"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
@@ -17,7 +18,7 @@
             android:id="@+id/auther_userImg"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
-            android:background="@drawable/bg_round_zannum"
+            android:background="@color/transparent"
             android:scaleType="centerCrop" />
 
         <ImageView
@@ -27,6 +28,7 @@
             android:layout_alignBottom="@+id/auther_userImg"
             android:layout_alignRight="@+id/auther_userImg"
             android:clickable="true"
+            android:background="@color/transparent"
             android:src="@drawable/z_user_gourmet_ico"
             android:visibility="visible" />
 
@@ -37,6 +39,7 @@
             android:layout_marginLeft="@dimen/dp_11"
             android:layout_toRightOf="@+id/auther_userImg"
             android:orientation="vertical"
+            android:background="@color/transparent"
             android:paddingTop="@dimen/dp_6.5">
 
             <TextView

@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/module_linear_s0"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
 
     <RelativeLayout
         android:id="@+id/rela_part_1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -17,7 +19,8 @@
     <RelativeLayout
         android:id="@+id/rela_part_2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,5 +45,6 @@
     <RelativeLayout
         android:id="@+id/rela_part_3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></RelativeLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"></RelativeLayout>
 </LinearLayout>

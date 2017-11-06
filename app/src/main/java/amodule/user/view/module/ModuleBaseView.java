@@ -1,6 +1,7 @@
 package amodule.user.view.module;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -17,6 +18,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 import java.util.Map;
 import acore.tools.FileManager;
+import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubAnimTarget;
 import aplug.basic.SubBitmapTarget;
@@ -119,7 +121,9 @@ public abstract class ModuleBaseView extends RelativeLayout{
                 if (bitmap != null && v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(url)) {
                     if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                         v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
+                        bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(mContext, 500));
+						v.setImageBitmap(UtilImage.makeRoundCorner(bitmap));
+//                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
                     }else {
                         v.setScaleType(scaleType);
                         v.setImageBitmap(bitmap);

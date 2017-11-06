@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -48,6 +49,11 @@ public class ModuleItemS0View extends RelativeLayout{
         part_0= (RelativeLayout) findViewById(R.id.rela_part_1);
         part_1= (RelativeLayout) findViewById(R.id.rela_part_2);
         part_2= (RelativeLayout) findViewById(R.id.rela_part_3);
+        part_0.getChildAt(0).setTag("A1");
+        part_1.getChildAt(0).setTag("B1");
+        part_1.getChildAt(1).setTag("B2");
+        part_1.getChildAt(2).setTag("B3");
+        part_1.getChildAt(3).setTag("B4");
     }
     /**
      * 设置数据
@@ -58,20 +64,24 @@ public class ModuleItemS0View extends RelativeLayout{
         //已知布局中有三个数据
         Map<String,String> mapA= StringManager.getFirstMap(map.get("A"));
         Map<String,String> mapB= StringManager.getFirstMap(map.get("B"));
-//        Map<String,String> mapC= StringManager.getFirstMap(map.get("C"));
-        part_0.getChildAt(0).setTag("A1");
-        part_1.getChildAt(0).setTag("B1");
-        part_1.getChildAt(1).setTag("B2");
-        part_1.getChildAt(2).setTag("B3");
-        part_1.getChildAt(3).setTag("B4");
+
         handlerViewShow(part_0,mapA);
         handlerViewShow(part_1,mapB);
+//        handlerViewShow(mapA,"a1");
+//        handlerViewShow(mapB,"b1");
+//        handlerViewShow(mapA,"b2");
+//        handlerViewShow(mapA,"b3");
+//        handlerViewShow(mapA,"b4");
 
     }
     private void handlerViewShow(RelativeLayout part,Map<String,String> map){
         int part_0_size=part.getChildCount();
+        Log.i("xianghaTag","part_0_size::"+part_0_size);
         for(int i=0;i<part_0_size;i++){
             View viewStub= part.getChildAt(i);
+            if(viewStub==null){
+                Log.i("xianghaTag","viewStub:::"+i);
+            }
             if( viewStub!=null&&map.get("style").equals(viewStub.getTag()) ){
                 viewStub.setVisibility(View.VISIBLE);
                 viewStub.invalidate();
@@ -84,6 +94,29 @@ public class ModuleItemS0View extends RelativeLayout{
             }else viewStub.setVisibility(GONE);
         }
     }
+//    private void handlerViewShow(Map<String,String> map,String tag){
+//            ViewStub viewStub= (ViewStub) findViewWithTag(tag);
+//            if(viewStub==null){
+//                Log.i("xianghaTag","viewStub:::"+tag);
+//            }
+//            if(map.get("style").equals(tag.toUpperCase()) ){
+//                if(viewStub!=null) {
+//                    viewStub.setVisibility(View.VISIBLE);
+//                    viewStub.invalidate();
+//                    Log.i("xianghaTag","viewStub::_______________________________:");
+//                }
+//                ModuleBaseView  baseView= (ModuleBaseView) findViewWithTag(tag);
+//                baseView.setStatisticId(getStatisticId());
+//                baseView.initData(map);
+//            }else {
+//                if(viewStub!=null){
+//                    viewStub.setVisibility(GONE);
+//                    Log.i("xianghaTag","viewStub::****************************************:");
+//                    return;
+//                }
+//                findViewWithTag(tag).setVisibility(View.GONE);
+//            }
+//    }
     public String getStatisticId() {
         return statisticId;
     }
