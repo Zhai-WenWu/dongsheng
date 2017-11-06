@@ -890,7 +890,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
 //                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
 //                    myMessage.onRefresh();
-                    this.startActivity(new Intent(this, MyFavoriteNew.class));
                 }
                 try {
                     setCurrentTabByIndex(i);

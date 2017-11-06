@@ -278,7 +278,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         mTitle.setPadding(dp85,0,dp85,0);
         rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
         rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
-        //TODO
         rightButtonFav.setVisibility(View.VISIBLE);
         ImageView leftImage = (ImageView) view.findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();

@@ -307,7 +307,7 @@ public class LoadManager {
 	 * @param refreshListener
 	 * @param loadMoreListener
 	 */
-	public void setLoading(PtrClassicFrameLayout refreshLayout, ListView listView, BaseAdapter adapter,
+	public void setLoading(PtrFrameLayout refreshLayout, ListView listView, BaseAdapter adapter,
 								   boolean hasMore, final OnClickListener refreshListener, final OnClickListener loadMoreListener) {
 		refreshLayout.setPtrHandler(new PtrDefaultHandler() {
 			@Override

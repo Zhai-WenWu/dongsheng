@@ -9,7 +9,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -72,15 +71,15 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         seekLayout.setOnClickListener(this);
         rightText.setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
-        findViewById(R.id.ll_back).setOnClickListener(this);
+        findViewById(R.id.back).setOnClickListener(this);
         findViewById(R.id.btn_no_data).setOnClickListener(this);
 
-//        seekLayout.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                seekLayoutHeight = seekLayout.getMeasuredHeight();
-//            }
-//        });
+        seekLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                seekLayoutHeight = seekLayout.getMeasuredHeight();
+            }
+        });
     }
 
     private static final int HIDE_THRESHOLD = 20;//滑动隐藏的阈值
@@ -226,7 +225,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
             case R.id.title:
                 gotoTop();
                 break;
-            case R.id.ll_back:
+            case R.id.back:
                 finish();
                 break;
             case R.id.rightText:
@@ -284,7 +283,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         dialog.addButton("取消收藏", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code, type, typeName,
+                FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code,  typeName,type,
                         new FavoriteHelper.FavoriteHandlerCallback() {
                             @Override
                             public void onSuccess() {

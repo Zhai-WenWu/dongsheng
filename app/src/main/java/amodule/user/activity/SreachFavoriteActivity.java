@@ -31,7 +31,7 @@ import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.user.activity
  * Created by MrTrying on 2017/11/2 15:29.
  * Author : mrtrying
@@ -126,6 +126,8 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
      */
     private void requestData(final boolean isRefresh) {
         if (TextUtils.isEmpty(searchWord)) {
+            if (isRefresh)
+                mRefreshLayout.refreshComplete();
             return;
         }
         currentpage = isRefresh ? 1 : ++currentpage;
@@ -171,7 +173,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
     private void doSearch() {
         searchWord = mEditText.getText().toString().trim();
         if (TextUtils.isEmpty(searchWord)) {
-            Tools.showToast(this, "傻逼没有数据");
+            Tools.showToast(this, "请输入查询关键词");
             return;
         }
         ToolsDevice.keyboardControl(false, this, mEditText);
