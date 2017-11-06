@@ -9,6 +9,7 @@ import com.tencent.smtt.sdk.CookieSyncManager;
 
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import amodule.main.Main;
@@ -154,7 +155,7 @@ public class WebActivity extends BaseActivity{
 			for (int i = 0; i < cookie.length; i++) {
 				cookieManager.setCookie(cookieKey_mall, cookie[i]);
 			}
-			CookieSyncManager.createInstance(mShowWeb);
+			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}else if (theUrl.indexOf(StringManager.domain) > -1) {//菜谱  .xiangha.com
@@ -165,7 +166,7 @@ public class WebActivity extends BaseActivity{
 			for (int i = 0; i < cookie.length; i++) {
 				cookieManager.setCookie(StringManager.domain, cookie[i]);
 			}
-			CookieSyncManager.createInstance(mShowWeb);
+			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}

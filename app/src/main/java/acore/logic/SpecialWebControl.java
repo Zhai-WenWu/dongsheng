@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
@@ -170,7 +171,7 @@ public class SpecialWebControl {
             cookieManager.setCookie(url, cookie[i]);
         }
         cookieManager.setCookie(url, "xhWebStat=1");
-        CookieSyncManager.createInstance(context);
+        CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
         CookieSyncManager.getInstance().sync();
         return webView;
     }
