@@ -41,7 +41,9 @@ import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -55,6 +57,7 @@ import amodule.article.view.VideoAllHeaderView;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -193,6 +196,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
+        ObserverManager.getInstence().unRegisterObserver(mIObserver);
         super.onDestroy();
     }
 
@@ -296,7 +300,10 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         rightButtonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handlerFavorite();
+                if(LoginManager.isLogin())
+                    handlerFavorite();
+                else
+                    startActivity(new Intent(VideoDetailActivity.this,LoginByAccout.class));
             }
         });
     }
@@ -304,17 +311,15 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private void handlerFavorite(){
         statistics(isFav?"取消收藏":"收藏","");
         FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_VIDEO,
-                new FavoriteHelper.FavoriteHandlerCallback() {
+                new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess() {
-                        isFav = !isFav;
+                    public void onSuccess(boolean state) {
+                        isFav = state;
                         rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        Tools.showToast(VideoDetailActivity.this,isFav?"收藏成功":"取消收藏");
                     }
 
                     @Override
                     public void onFailed() {
-                        Tools.showToast(VideoDetailActivity.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
                     }
                 });
     }
@@ -457,8 +462,23 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         listView.addFooterView(view);
         //请求文章数据
         requestVideoData(false);
+        //请求收藏状态数据
+        requestFavoriteState();
         //初始化广告
         initAD();
+
+        registerObserver();
+    }
+
+    private IObserver mIObserver;
+    private void registerObserver(){
+        mIObserver = new IObserver() {
+            @Override
+            public void notify(String name, Object sender, Object data) {
+                requestFavoriteState();
+            }
+        };
+        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     private void initAD() {
@@ -516,9 +536,9 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_VIDEO,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess(String state) {
+                    public void onSuccess(boolean state) {
                         //处理收藏状态
-                        isFav = "2".equals(state);
+                        isFav = state;
                         rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                         rightButtonFav.setVisibility(View.VISIBLE);
                     }
@@ -531,8 +551,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     }
 
     private void requestVideoData(final boolean onlyUser) {
-        //请求收藏状态数据
-        requestFavoriteState();
 //        loadManager.showProgressBar();
         String params = new StringBuilder().append("code=").append(code).append("&type=RAW").toString();
         ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback(this) {

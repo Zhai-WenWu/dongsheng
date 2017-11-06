@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -77,7 +78,7 @@ public class FavoriteHelper {
                                 if(TextUtils.isEmpty(state))
                                     callback.onFailed();
                                 else
-                                    callback.onSuccess(state);
+                                    callback.onSuccess("2".equals(state));
                             }
                         }else{
                             if(null != callback)
@@ -96,7 +97,7 @@ public class FavoriteHelper {
      * @param callback 回调
      */
     public void setFavoriteStatus(Context context, @NonNull String code, String typeName,@NonNull String type,
-                                  @Nullable final FavoriteHandlerCallback callback) {
+                                  @Nullable final FavoriteStatusCallback callback) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("code", code);
         params.put("type", type);
@@ -110,10 +111,12 @@ public class FavoriteHelper {
                             Map<String,String> map = StringManager.getFirstMap(o);
                             final String state = map.get("state");
                             if(null != callback){
-                                if("2".equals(state))
-                                    callback.onSuccess();
-                                else
+                                if(TextUtils.isEmpty(state))
                                     callback.onFailed();
+                                else{
+                                    callback.onSuccess("2".equals(state));
+                                    Tools.showToast(context,"2".equals(state)?"收藏成功":"取消收藏");
+                                }
                             }
                         }else{
                             if(null != callback)
@@ -124,12 +127,8 @@ public class FavoriteHelper {
     }
 
     public interface FavoriteStatusCallback{
-        void onSuccess(String state);
+        void onSuccess(boolean isFav);
         void onFailed();
     }
 
-    public interface FavoriteHandlerCallback{
-        void onSuccess();
-        void onFailed();
-    }
 }

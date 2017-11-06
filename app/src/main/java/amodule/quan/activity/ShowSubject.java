@@ -38,10 +38,11 @@ import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
-import amodule.article.activity.ArticleDetailActivity;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.quan.adapter.AdapterQuanShowSubject;
 import amodule.quan.db.SubjectData;
@@ -136,7 +137,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 			isSafa = bundle.getString("isSafa");
 			//判断消息是否被删
 			String status = bundle.getString("status");
-			if (status != "" && status != null && status.equals("1")) {
+			if (!TextUtils.isEmpty(status) && status.equals("1")) {
 				Tools.showToast(this, "此消息已被删除");
 			}
 			//消息是否读过
@@ -262,19 +263,17 @@ public class ShowSubject extends BaseAppCompatActivity {
 				XHClick.mapStat(ShowSubject.this.getApplicationContext(), "a_collection", "美食贴", "");
 				if (LoginManager.isLogin()) {
 					FavoriteHelper.instance().setFavoriteStatus(ShowSubject.this, subCode, subjectTitle, FavoriteHelper.TYPE_SUBJECT,
-							new FavoriteHelper.FavoriteHandlerCallback() {
+							new FavoriteHelper.FavoriteStatusCallback() {
 								@Override
-								public void onSuccess() {
+								public void onSuccess(boolean state) {
 									XHClick.mapStat(ShowSubject.this, STATISTICS_ID, "顶部导航栏点击量", "收藏点击量");
-									isFav = !isFav;
+									isFav = state;
 									favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 									favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
-									Tools.showToast(ShowSubject.this,isFav?"收藏成功":"取消收藏");
 								}
 
 								@Override
 								public void onFailed() {
-									Tools.showToast(ShowSubject.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
 								}
 							});
 				} else {
@@ -469,6 +468,18 @@ public class ShowSubject extends BaseAppCompatActivity {
 		View fillFooterView = new View(this);
 		fillFooterView.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_45));
 		listSubject.addFooterView(fillFooterView,null,false);
+		registerObserver();
+	}
+
+	private IObserver mIObserver;
+	private void registerObserver(){
+		mIObserver = new IObserver() {
+			@Override
+			public void notify(String name, Object sender, Object data) {
+				requestFavoriteState();
+			}
+		};
+		ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
 	}
 
 	/**
@@ -610,9 +621,9 @@ public class ShowSubject extends BaseAppCompatActivity {
 		FavoriteHelper.instance().getFavoriteStatus(this, subCode, FavoriteHelper.TYPE_SUBJECT,
 				new FavoriteHelper.FavoriteStatusCallback() {
 					@Override
-					public void onSuccess(String state) {
+					public void onSuccess(boolean state) {
 						//处理收藏状态
-						isFav = "2".equals(state);
+						isFav = state;
 						favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 						favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
 					}
@@ -1057,6 +1068,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		super.onDestroy();
 		handler.removeCallbacksAndMessages(null);
 		UploadSubjectControl.getInstance().setReplyCallback(null);
+		ObserverManager.getInstence().unRegisterObserver(mIObserver);
 	}
 
 	@Override

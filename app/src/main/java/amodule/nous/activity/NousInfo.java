@@ -16,6 +16,8 @@ import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.activity.ArticleDetailActivity;
@@ -44,6 +46,24 @@ public class NousInfo extends ApiShowWeb {
             Tools.showToast(this, "数据错误");
             finish();
         }
+        registerObserver();
+    }
+
+    private IObserver mIObserver;
+    private void registerObserver(){
+        mIObserver = new IObserver() {
+            @Override
+            public void notify(String name, Object sender, Object data) {
+                requestFavoriteState();
+            }
+        };
+        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ObserverManager.getInstence().unRegisterObserver(mIObserver);
+        super.onDestroy();
     }
 
     @Override
@@ -76,19 +96,17 @@ public class NousInfo extends ApiShowWeb {
                 XHClick.mapStat(NousInfo.this, "a_collection", "香哈头条", "");
                 if (LoginManager.isLogin()) {
                     FavoriteHelper.instance().setFavoriteStatus(NousInfo.this, code, titleText, FavoriteHelper.TYPE_NOUS,
-                            new FavoriteHelper.FavoriteHandlerCallback() {
+                            new FavoriteHelper.FavoriteStatusCallback() {
                                 @Override
-                                public void onSuccess() {
-                                    isFav = !isFav;
+                                public void onSuccess(boolean state) {
+                                    isFav = state;
                                     favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
                                             : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                                     favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
-                                    Tools.showToast(NousInfo.this,isFav?"收藏成功":"取消收藏");
                                 }
 
                                 @Override
                                 public void onFailed() {
-                                    Tools.showToast(NousInfo.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
                                 }
                             });
                 } else {
@@ -140,9 +158,9 @@ public class NousInfo extends ApiShowWeb {
         FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_NOUS,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess(String state) {
+                    public void onSuccess(boolean state) {
                         //设置收藏按钮图片
-                        isFav = "2".equals(state);
+                        isFav = state;
                         favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
                                 : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                         favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");

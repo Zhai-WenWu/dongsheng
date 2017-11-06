@@ -23,13 +23,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.FavoriteHelper;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.article.activity.ArticleDetailActivity;
 import amodule.dish.adapter.ListDishAdapter;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.WebviewManager;
@@ -95,8 +98,20 @@ public class ListDish extends BaseActivity {
         initMenu();
         initAdData();
         initBarView();
+        registerObserver();
         WebviewManager manager = new WebviewManager(this,loadManager,true);
         xhWebView = manager.createWebView(R.id.XHWebview);
+    }
+
+    private IObserver mIObserver;
+    private void registerObserver(){
+        mIObserver = new IObserver() {
+            @Override
+            public void notify(String name, Object sender, Object data) {
+                requestFavoriteState();
+            }
+        };
+        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     /**
@@ -167,6 +182,7 @@ public class ListDish extends BaseActivity {
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("ListDish", module_type, data_type, g1, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
+        ObserverManager.getInstence().unRegisterObserver(mIObserver);
     }
 
     //初始化
@@ -225,11 +241,15 @@ public class ListDish extends BaseActivity {
             }
         });
         img_fav = (ImageView) findViewById(R.id.rightImgBtn4);
+        img_fav.setVisibility(View.VISIBLE);
         img_fav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
         img_fav.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                handlerFavorite();
+                if(LoginManager.isLogin()){
+                    handlerFavorite();
+                }else
+                    startActivity(new Intent(ListDish.this, LoginByAccout.class));
             }
         });
     }
@@ -237,17 +257,15 @@ public class ListDish extends BaseActivity {
     private void handlerFavorite() {
         statistics(isFav?"取消收藏":"收藏","");
         FavoriteHelper.instance().setFavoriteStatus(this, g1, classifyName, FavoriteHelper.TYPE_MUNE,
-                new FavoriteHelper.FavoriteHandlerCallback() {
+                new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess() {
-                        isFav = !isFav;
+                    public void onSuccess(boolean state) {
+                        isFav = state;
                         img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        Tools.showToast(ListDish.this,isFav?"收藏成功":"取消收藏");
                     }
 
                     @Override
                     public void onFailed() {
-                        Tools.showToast(ListDish.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
                     }
                 });
     }
@@ -255,7 +273,7 @@ public class ListDish extends BaseActivity {
     @SuppressLint("NewApi")
     public void loadData() {
         if(currentPage == 0 && !type.equals("recommend")){
-            requestFavroiteState();
+            requestFavoriteState();
         }
         currentPage++;
         loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, arrayList.size() == 0);
@@ -387,12 +405,12 @@ public class ListDish extends BaseActivity {
         });
     }
 
-    private void requestFavroiteState() {
+    private void requestFavoriteState() {
         FavoriteHelper.instance().getFavoriteStatus(this, g1, FavoriteHelper.TYPE_MUNE,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess(String state) {
-                        isFav = "2".equals(state);
+                    public void onSuccess(boolean state) {
+                        isFav = state;
                         img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                         img_fav.setVisibility(View.VISIBLE);
                     }

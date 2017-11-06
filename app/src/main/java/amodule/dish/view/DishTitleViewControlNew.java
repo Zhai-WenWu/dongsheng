@@ -118,10 +118,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         this.state= states;
     }
 
-    public void setNowFav(boolean isFav){
-        this.nowFav = isFav;
-    }
-
     /**
      * 初始化当前状态
      */
@@ -142,15 +138,19 @@ public class DishTitleViewControlNew implements View.OnClickListener{
 
     }
 
-    //收藏
-    public void setFavStatus(String isFav){
-        if ("2".equals(isFav)) {
+    public void setFavStatus(boolean isFav){
+        this.nowFav = isFav;
+        if (isFav) {
             favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
             favText.setText("已收藏");
         }else{
             favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
             favText.setText("未收藏");
         }
+    }
+    //收藏
+    public void setFavStatus(String isFavStr){
+        setFavStatus("2".equals(isFavStr));
     }
     @Override
     public void onClick(View v) {
@@ -299,13 +299,14 @@ public class DishTitleViewControlNew implements View.OnClickListener{
             }, 1000);
             FavoriteHelper.instance().setFavoriteStatus(detailDish.getApplicationContext(), code, dishInfoMap.get("name"),
                     isHasVideo ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
-                    new FavoriteHelper.FavoriteHandlerCallback() {
+                    new FavoriteHelper.FavoriteStatusCallback() {
                         @Override
-                        public void onSuccess() {
+                        public void onSuccess(boolean state) {
                             loading = false;
                             loadManager.dismissProgress();
-                            nowFav = !nowFav;
-                            Tools.showToast(context,nowFav?"收藏成功":"取消收藏");
+
+                            nowFav = state;
+
                             favText.setText(nowFav ? "已收藏" : "  收藏  ");
                             favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 
@@ -350,7 +351,6 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                         public void onFailed() {
                             loading = false;
                             loadManager.dismissProgress();
-                            Tools.showToast(context,nowFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
                         }
                     });
         } else {

@@ -38,6 +38,8 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -151,6 +153,7 @@ public class ArticleDetailActivity extends BaseActivity {
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("ArticleDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
+        ObserverManager.getInstence().unRegisterObserver(mIObserver);
         super.onDestroy();
     }
 
@@ -226,10 +229,14 @@ public class ArticleDetailActivity extends BaseActivity {
                         onBackPressed();
                     }
                 });
+
         rightButtonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handlerFavorite();
+                if(LoginManager.isLogin())
+                    handlerFavorite();
+                else
+                    startActivity(new Intent(ArticleDetailActivity.this,LoginByAccout.class));
             }
         });
     }
@@ -237,17 +244,15 @@ public class ArticleDetailActivity extends BaseActivity {
     private void handlerFavorite(){
         statistics(isFav?"取消收藏":"收藏","");
         FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_ARTICLE,
-                new FavoriteHelper.FavoriteHandlerCallback() {
+                new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess() {
-                        isFav = !isFav;
+                    public void onSuccess(boolean state) {
+                        isFav = state;
                         rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        Tools.showToast(ArticleDetailActivity.this,isFav?"收藏成功":"取消收藏");
                     }
 
                     @Override
                     public void onFailed() {
-                        Tools.showToast(ArticleDetailActivity.this,isFav?"取消收藏失败，请稍后重试":"收藏失败，请稍后重试");
                     }
                 });
     }
@@ -409,8 +414,23 @@ public class ArticleDetailActivity extends BaseActivity {
         listView.addFooterView(view);
         //请求文章数据
         requestArticleData(false);
+        //请求收藏状态数据
+        requestFavoriteState();
         //初始化广告
         initAD();
+
+        registerObserver();
+    }
+
+    private IObserver mIObserver;
+    private void registerObserver(){
+        mIObserver = new IObserver() {
+            @Override
+            public void notify(String name, Object sender, Object data) {
+                requestFavoriteState();
+            }
+        };
+        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     private void initAD() {
@@ -472,9 +492,9 @@ public class ArticleDetailActivity extends BaseActivity {
         FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_ARTICLE,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess(String state) {
+                    public void onSuccess(boolean state) {
                         //处理收藏状态
-                        isFav = "2".equals(state);
+                        isFav = state;
                         rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                         rightButtonFav.setVisibility(View.VISIBLE);
                     }
@@ -488,8 +508,6 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 请求网络 */
     private void requestArticleData(final boolean onlyUser) {
-        //请求收藏状态数据
-        requestFavoriteState();
 //        loadManager.showProgressBar();
         LinkedHashMap<String,String> params = new LinkedHashMap<>();
         params.put("code",code);

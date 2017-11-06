@@ -177,9 +177,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 dishActivityViewControl.isHasVideo() ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess(String state) {
+                    public void onSuccess(boolean state) {
                         //处理收藏状态
-                        dishActivityViewControl.getDishTitleViewControl().setNowFav("2".equals(state));
+                        if(dishActivityViewControl != null && dishActivityViewControl.getDishTitleViewControl() != null){
+                            dishActivityViewControl.getDishTitleViewControl().setFavStatus(state);
+                        }
                     }
 
                     @Override
@@ -410,6 +412,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                     dishActivityViewControl.refreshAskStatus();
                     dishActivityViewControl.refreshQaWebView();
                 }
+                requestFavoriteState();
                 break;
             case ObserverManager.NOTIFY_FOLLOW://关注
                 if(dishActivityViewControl!=null) {

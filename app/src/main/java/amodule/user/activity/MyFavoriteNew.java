@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -271,31 +270,32 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         if(item == null){
             return;
         }
-        item = StringManager.getFirstMap(item.get("B"));
-        if (item.isEmpty()) return;
-        final String code = item.get("code");
-        final String type = item.get("type");
-        final String typeName = item.get("text1");
+        Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
+        if (itemParameter.isEmpty()) return;
+        final String code = itemParameter.get("code");
+        final String type = itemParameter.get("type");
         if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type)) {
             return;
         }
+        Map<String, String> itemB = StringManager.getFirstMap(item.get("B"));
+        final String typeName = itemB.get("text1");
         BottomDialog dialog = new BottomDialog(this);
         dialog.addButton("取消收藏", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code,  typeName,type,
-                        new FavoriteHelper.FavoriteHandlerCallback() {
+                FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code,  typeName, type,
+                        new FavoriteHelper.FavoriteStatusCallback() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(boolean state) {
+                                if(state){
+                                    return;
+                                }
                                 mData.remove(position);
                                 rvListview.notifyItemViewRemove(position);
-//                                Log.i("tzy", "请求成功");
-                                Tools.showToast(MyFavoriteNew.this, "取消成功");
                             }
 
                             @Override
                             public void onFailed() {
-//                                Log.i("tzy", "请求失败");
                             }
                         });
             }

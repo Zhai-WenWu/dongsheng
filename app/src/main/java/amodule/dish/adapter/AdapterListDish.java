@@ -123,10 +123,10 @@ public class AdapterListDish extends AdapterSimple {
     public void doFavorite(final Map<String, String> map) {
         FavoriteHelper.instance().setFavoriteStatus(mAct, map.get("code"), map.get("name"),
                 "2".equals(map.get("hasVideo")) ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
-                new FavoriteHelper.FavoriteHandlerCallback() {
+                new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
-                    public void onSuccess() {
-                        parseFavClick(map);
+                    public void onSuccess(boolean state) {
+                        parseFavClick(state,map);
                     }
 
                     @Override
@@ -140,16 +140,15 @@ public class AdapterListDish extends AdapterSimple {
      * 收藏事件处理
      * @param map
      */
-    private void parseFavClick(Map<String, String> map) {
+    private void parseFavClick(boolean isFav,Map<String, String> map) {
         String str = map.get("favorites");
         int favorites = Integer.parseInt(str.substring(0, str.indexOf("收藏")));
-        Tools.showToast(mAct,!(map.get("isFav") + "").equals("2")?"收藏成功":"取消收藏");
-        if ((map.get("isFav") + "").equals("2")) {
-            map.put("favorites", (favorites - 1) + "收藏");
-            map.put("isFav", "1");
-        } else {
+        if (isFav) {
             map.put("favorites", (favorites + 1) + "收藏");
             map.put("isFav", "2");
+        } else {
+            map.put("favorites", (favorites - 1) + "收藏");
+            map.put("isFav", "1");
         }
         notifyDataSetChanged();
     }
