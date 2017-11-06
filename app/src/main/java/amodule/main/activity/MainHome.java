@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +34,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
+import amodule.dish.activity.MenuDish;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -100,6 +102,17 @@ public class MainHome extends MainBaseActivity implements IObserver {
         viewpager.setOffscreenPageLimit(5);
 //        initTopView();
         addListener();
+
+        //TODO
+        Button button = new Button(this);
+        button.setText("MenuDish");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainHome.this, MenuDish.class));
+            }
+        });
+        rl.addView(button);
     }
 
     /**初始化顶部布局 */

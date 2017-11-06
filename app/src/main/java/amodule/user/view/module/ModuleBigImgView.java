@@ -74,7 +74,6 @@ public class ModuleBigImgView extends ModuleBaseView{
     @Override
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
         super.setOnLongClickListener(l);
-        Log.i("tzy",this.getClass().getSimpleName() + "::setOnLongClickListener");
         findViewById(R.id.big_container_rela).setOnLongClickListener(l);
         findViewById(R.id.big_title).setOnLongClickListener(l);
     }

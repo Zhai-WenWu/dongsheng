@@ -1,5 +1,6 @@
 package amodule.user.activity;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -116,6 +117,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
                         requestData(false);
                     }
                 });
+        loadManager.getSingleLoadMore(mRvListview).setBackgroundColor(Color.parseColor("#F2F2F2"));
         loadManager.hideProgressBar();
     }
 

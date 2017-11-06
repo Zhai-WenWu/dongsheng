@@ -737,7 +737,7 @@ public class HomeFragment extends BaseHomeFragment{
                 mPlayerController.onDestroy();
             }
             mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_container);
-            Log.i("tzy","mPlayerController = " + mPlayerController);
+//            Log.i("tzy","mPlayerController = " + mPlayerController);
             if (mPlayerController == null)
                 mPlayerController = new SimpleVideoPlayerController(mActivity);
             mPlayerController.setViewGroup(mVideoLayout);

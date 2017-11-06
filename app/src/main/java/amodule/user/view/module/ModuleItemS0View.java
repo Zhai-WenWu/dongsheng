@@ -96,7 +96,6 @@ public class ModuleItemS0View extends RelativeLayout{
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
         super.setOnLongClickListener(l);
         this.mLongClickListener = l;
-        Log.i("tzy",this.getClass().getSimpleName() + "::setOnLongClickListener");
         for(int index = 0 , length = getChildCount( ) ; index < length ; index++){
             View view = getChildAt(index);
             view.setOnLongClickListener(l);

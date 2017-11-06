@@ -100,7 +100,8 @@ public class FavoriteHelper {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("code", code);
         params.put("type", type);
-        params.put("typeName", TextUtils.isEmpty(typeName)?"":typeName);
+        if(!TextUtils.isEmpty(typeName))
+            params.put("typeName", typeName);
         ReqEncyptInternet.in().doEncypt(StringManager.API_SET_FAVORITE_STATUS, params,
                 new InternetCallback(context) {
                     @Override

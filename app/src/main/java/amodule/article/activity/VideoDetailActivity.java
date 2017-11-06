@@ -367,7 +367,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                                 @Override
                                 public void run() {
                                     int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
-                                    Log.i("tzy","position = " + position);
                                     AppCommon.scorllToIndex(listView,position);
                                 }
                             },200);

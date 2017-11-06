@@ -33,6 +33,7 @@ import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
  * 我的收藏页面改版
@@ -40,6 +41,7 @@ import aplug.basic.ReqInternet;
 public class MyFavoriteNew extends BaseActivity implements View.OnClickListener {
 
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
+    private PtrClassicFrameLayout refreshLayout;
     private RelativeLayout seekLayout;
     private LinearLayout noDataLayout;
     private RvListView rvListview;
@@ -62,6 +64,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         rightText.setText("浏览历史");
         rightText.setVisibility(View.VISIBLE);
         rightText.setTextColor(Color.parseColor("#999999"));
+        refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
         seekLayout = (RelativeLayout) findViewById(R.id.seek_layout);
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
@@ -72,12 +75,12 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.ll_back).setOnClickListener(this);
         findViewById(R.id.btn_no_data).setOnClickListener(this);
 
-        seekLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                seekLayoutHeight = seekLayout.getMeasuredHeight();
-            }
-        });
+//        seekLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                seekLayoutHeight = seekLayout.getMeasuredHeight();
+//            }
+//        });
     }
 
     private static final int HIDE_THRESHOLD = 20;//滑动隐藏的阈值
@@ -88,10 +91,10 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     private void initData() {
         myFavorite = new AdapterModuleS0(this, mData);
         myFavorite.setStatisticId("a_my_collection");
-        View view = new View(this);
-        view.setBackgroundResource(R.drawable.item_decoration);
-        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
-        rvListview.addHeaderView(view);
+//        View view = new View(this);
+//        view.setBackgroundResource(R.drawable.item_decoration);
+//        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
+//        rvListview.addHeaderView(view);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
@@ -103,40 +106,47 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 return true;
             }
         });
-        rvListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-
-                if (firstVisibleItem == 0) {//如果已经滑动到最顶端
-                    if (!mControlsVisible) {
-                        showSreachBar();
-                        mControlsVisible = true;
+//        rvListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+//
+//                if (firstVisibleItem == 0) {//如果已经滑动到最顶端
+//                    if (!mControlsVisible) {
+//                        showSreachBar();
+//                        mControlsVisible = true;
+//                    }
+//                } else {//当前Item不是第一条
+//                    if (mScrolledDistance > HIDE_THRESHOLD && mControlsVisible) {//向下滑动
+//                        hideSearchBar();
+//                        mControlsVisible = false;
+//                        mScrolledDistance = 0;
+//                    } else if (mScrolledDistance < -HIDE_THRESHOLD && !mControlsVisible) {//向上滑动
+//                        showSreachBar();
+//                        mControlsVisible = true;
+//                        mScrolledDistance = 0;
+//                    }
+//                }
+//                if ((mControlsVisible && dy > 0) || (!mControlsVisible && dy < 0)) {
+//                    mScrolledDistance += dy;
+//                }
+//            }
+//        });
+        loadManager.setLoading(refreshLayout, rvListview, myFavorite, true,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestData(true);
                     }
-                } else {//当前Item不是第一条
-                    if (mScrolledDistance > HIDE_THRESHOLD && mControlsVisible) {//向下滑动
-                        hideSearchBar();
-                        mControlsVisible = false;
-                        mScrolledDistance = 0;
-                    } else if (mScrolledDistance < -HIDE_THRESHOLD && !mControlsVisible) {//向上滑动
-                        showSreachBar();
-                        mControlsVisible = true;
-                        mScrolledDistance = 0;
-                    }
-                }
-                if ((mControlsVisible && dy > 0) || (!mControlsVisible && dy < 0)) {
-                    mScrolledDistance += dy;
-                }
-            }
-        });
-        loadManager.setLoading(rvListview, myFavorite, true,
+                },
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestData(false);
                     }
                 });
+        loadManager.getSingleLoadMore(rvListview).setBackgroundColor(Color.parseColor("#F2F2F2"));
     }
 
     private void hideSearchBar() {
@@ -176,6 +186,9 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 }
                 if (everyPage == 0) {
                     everyPage = loadCount;
+                }
+                if(isRefresh){
+                    refreshLayout.refreshComplete();
                 }
                 loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mData.isEmpty());
                 handlerNoDataLayout();
@@ -253,9 +266,6 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     }
 
     private void showBottomDialog(final int position) {
-        Log.i("tzy","showBottomDialog");
-//        Log.i("tzy","showBottomDialog");
-//        Log.i("tzy","showBottomDialog");
         if(mData == null || position < 0 || position >= mData.size())
             return;
         Map<String, String> item = mData.get(position);
@@ -263,7 +273,6 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
             return;
         }
         item = StringManager.getFirstMap(item.get("B"));
-        Log.i("tzy","item="+item.toString());
         if (item.isEmpty()) return;
         final String code = item.get("code");
         final String type = item.get("type");
@@ -275,21 +284,19 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         dialog.addButton("取消收藏", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mData.remove(position);
-                rvListview.notifyItemViewRemove(position);
                 FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code, type, typeName,
                         new FavoriteHelper.FavoriteHandlerCallback() {
                             @Override
                             public void onSuccess() {
                                 mData.remove(position);
                                 rvListview.notifyItemViewRemove(position);
-                                Log.i("tzy", "请求成功");
+//                                Log.i("tzy", "请求成功");
                                 Tools.showToast(MyFavoriteNew.this, "取消成功");
                             }
 
                             @Override
                             public void onFailed() {
-                                Log.i("tzy", "请求失败");
+//                                Log.i("tzy", "请求失败");
                             }
                         });
             }
