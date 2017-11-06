@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/seek_layout"
+        android:background="#F2F2F2"
         cube_ptr:ptr_duration_to_close="200"
         cube_ptr:ptr_duration_to_close_header="500"
         cube_ptr:ptr_pull_to_fresh="false"
