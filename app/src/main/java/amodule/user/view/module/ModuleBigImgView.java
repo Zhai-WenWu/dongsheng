@@ -62,7 +62,7 @@ public class ModuleBigImgView extends ModuleBaseView{
         findViewById(R.id.big_vip).setVisibility(map.containsKey("iconVip")&&"2".equals(map.get("iconVip"))?VISIBLE:GONE);
         //显示数据判断
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
-        if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))){
+        if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))&&!"null".equals(mapStyle.get("img"))){
             findViewById(R.id.big_container_rela).setVisibility(VISIBLE);
             setViewImage(big_img,mapStyle.get("img"));
             //type 类型判断//1:图，2视频，3gif
