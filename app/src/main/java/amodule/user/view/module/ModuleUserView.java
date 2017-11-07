@@ -51,10 +51,10 @@ public class ModuleUserView extends ModuleBaseView{
                 findViewById(R.id.cusType).setVisibility(mapUser.containsKey("iconGourmet") && "2".equals(mapUser.get("iconGourmet")) ? VISIBLE : GONE);
                 if (mapUser.containsKey("img") && !TextUtils.isEmpty(mapUser.get("img")))
                     setViewImage(auther_userImg, mapUser.get("img"));
+                else auther_userImg.setVisibility(INVISIBLE);
             }
             //url点击跳转
-            if (mapUser.containsKey("url") && !TextUtils.isEmpty(mapUser.get("url")))
-                userUrl = mapUser.get("url");
+            userUrl = mapUser.containsKey("url")&& !TextUtils.isEmpty(mapUser.get("url")) ? mapUser.get("url") : "";
         }
         //右标题
         if(map.containsKey("rightTxt")&& !TextUtils.isEmpty(map.get("rightTxt"))){

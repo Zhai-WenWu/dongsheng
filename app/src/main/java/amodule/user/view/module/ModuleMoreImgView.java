@@ -74,7 +74,7 @@ public class ModuleMoreImgView extends ModuleBaseView{
         setKeyContent(map,module_title,"text1");
 //        setKeyContent(map,tv_content,"text2");
         //url点击跳转
-        if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
+        url = map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")) ? map.get("url") : "";
         if(!map.containsKey("styleData")|| TextUtils.isEmpty(map.get("styleData"))){
             findViewById(R.id.module_middle).setVisibility(GONE);
             return;

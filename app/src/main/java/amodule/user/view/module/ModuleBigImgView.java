@@ -54,7 +54,7 @@ public class ModuleBigImgView extends ModuleBaseView{
             big_title.setText(map.get("text1"));
         }
         //url点击跳转
-        if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
+        url = map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")) ? map.get("url") : "";
         if(!map.containsKey("styleData")||TextUtils.isEmpty(map.get("styleData"))){
             findViewById(R.id.big_container_rela).setVisibility(GONE);
             return;

@@ -53,7 +53,7 @@ public class ModuleMaskImgView extends ModuleBaseView{
         }
         findViewById(R.id.mask_vip).setVisibility(map.containsKey("iconVip")&&"2".equals(map.get("iconVip"))?VISIBLE:GONE);
         //url点击跳转
-        if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
+        url = map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")) ? map.get("url") : "";
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
         if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))&&!"null".equals(mapStyle.get("img"))){
             setViewImage(mask_img,mapStyle.get("img"));
