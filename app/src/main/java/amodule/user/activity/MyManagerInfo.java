@@ -6,6 +6,7 @@ import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.Tools;
+import amodule.dish.activity.MenuDish;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import third.push.xg.XGPushServer;
@@ -43,6 +44,7 @@ import com.xiangha.R;
 public class MyManagerInfo extends BaseActivity {
     public static final String GrowingIOOrder = "//growingioopen";
     public static final String SHAREIMAGE = "//shareimage";
+    public static final String START_MENU = "//startmenu";
     public final int REQUEST_SELECT_IMAGE = 0x1;
     private EditText otherUser_code;
 
@@ -124,6 +126,11 @@ public class MyManagerInfo extends BaseActivity {
                 startActivityForResult(new Intent(this, ImageSelectorActivity.class)
                                 .putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE,ImageSelectorConstant.MODE_SINGLE)
                         ,REQUEST_SELECT_IMAGE);
+                otherUser_code.setText("");
+                return true;
+            case START_MENU:
+                startActivity(new Intent(this, MenuDish.class));
+                finish();
                 otherUser_code.setText("");
                 return true;
             default:

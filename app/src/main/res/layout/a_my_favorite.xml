@@ -7,12 +7,31 @@
     android:background="@android:color/transparent"
     style="@style/layout">
 
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:layout_below="@+id/title_rela_all">
+
+    <acore.widget.rvlistview.RvListView
+        android:id="@+id/rvListview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"/>
+
+</android.support.v4.widget.SwipeRefreshLayout>
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/refresh_list_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/seek_layout"
+        android:visibility="gone"
         android:background="#F2F2F2"
         cube_ptr:ptr_duration_to_close="200"
         cube_ptr:ptr_duration_to_close_header="500"
@@ -20,15 +39,6 @@
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
         cube_ptr:ptr_resistance="1.7">
 
-        <acore.widget.rvlistview.RvListView
-            android:id="@+id/rvListview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:cacheColorHint="@android:color/transparent"
-            android:listSelector="@android:color/transparent"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"/>
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
     <RelativeLayout

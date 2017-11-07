@@ -501,7 +501,6 @@ public class ArticleDetailActivity extends BaseActivity {
 
                     @Override
                     public void onFailed() {
-                        rightButtonFav.setVisibility(View.GONE);
                     }
                 });
     }

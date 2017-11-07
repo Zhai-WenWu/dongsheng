@@ -545,7 +545,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
                     @Override
                     public void onFailed() {
-                        rightButtonFav.setVisibility(View.GONE);
                     }
                 });
     }
