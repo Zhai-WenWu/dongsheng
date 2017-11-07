@@ -73,8 +73,8 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         detailDish.findViewById(R.id.more_layout).setOnClickListener(this);
         detailDish.findViewById(R.id.fav_layout).setVisibility(View.GONE);
         detailDish.findViewById(R.id.leftClose).setVisibility(View.GONE);
-        detailDish.findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
-        detailDish.findViewById(R.id.more_layout).setVisibility(View.INVISIBLE);
+        detailDish.findViewById(R.id.share_layout).setVisibility(View.GONE);
+        detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
         favText = (TextView) detailDish.findViewById(R.id.tv_fav);
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
         detailDish.findViewById(R.id.leftClose).setOnClickListener(this);
@@ -121,7 +121,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * 初始化当前状态
      */
     public void setViewState(){
-        detailDish.findViewById(R.id.fav_layout).setVisibility(state != null ? View.GONE : View.VISIBLE);
+        detailDish.findViewById(R.id.fav_layout).setVisibility(View.VISIBLE);//state != null ? View.GONE :
         //编辑
         if(state != null){
             if(isHasVideo && ("6".equals(dishState) || TextUtils.isEmpty(dishState))){ //视频菜谱，并且审核通过了，则不允许编辑
