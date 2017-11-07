@@ -51,6 +51,7 @@ public class ModuleMaskImgView extends ModuleBaseView{
             findViewById(R.id.mask_album_container).setVisibility(GONE);
             return;
         }
+        findViewById(R.id.mask_vip).setVisibility(map.containsKey("iconVip")&&"2".equals(map.get("iconVip"))?VISIBLE:GONE);
         //url点击跳转
         if(map.containsKey("url")&& !TextUtils.isEmpty(map.get("url")))url= map.get("url");
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
@@ -59,12 +60,10 @@ public class ModuleMaskImgView extends ModuleBaseView{
             findViewById(R.id.mask_album_container).setVisibility(VISIBLE);
             findViewById(R.id.mask_layer_view).setVisibility(VISIBLE);
             setKeyContent(map,mask_title_album,"text1");//标题
-//            if(map.containsKey("dishNum")&&TextUtils.isEmpty(map.get("text2"))){
-//                mask_num.setVisibility(View.VISIBLE);
-//                mask_num.setText(map.get("text2"));
-//            }else mask_num.setVisibility(View.GONE);
-            mask_title_album.setText("长得换手机号大数据库带回家看撒谎的");
-            mask_num.setText("30道菜");
+            if(map.containsKey("dishNum")&&TextUtils.isEmpty(map.get("text2"))){
+                mask_num.setVisibility(View.VISIBLE);
+                mask_num.setText(map.get("text2"));
+            }else mask_num.setVisibility(View.GONE);
             mask_num.setVisibility(View.VISIBLE);
         }else{
             findViewById(R.id.mask_album_container).setVisibility(GONE);
