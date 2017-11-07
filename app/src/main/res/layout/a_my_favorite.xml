@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
-    android:background="@android:color/transparent"
-    style="@style/layout">
+    style="@style/layout"
+    android:background="@android:color/transparent">
 
 <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:layout_below="@+id/title_rela_all">
 
     <acore.widget.rvlistview.RvListView
@@ -30,13 +30,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/seek_layout"
-        android:visibility="gone"
         android:background="#F2F2F2"
         cube_ptr:ptr_duration_to_close="200"
         cube_ptr:ptr_duration_to_close_header="500"
         cube_ptr:ptr_pull_to_fresh="false"
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
         cube_ptr:ptr_resistance="1.7">
+
+        <acore.widget.rvlistview.RvListView
+            android:id="@+id/rvListview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"/>
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
@@ -97,8 +106,8 @@
         android:layout_below="@+id/title_rela_all"
         android:gravity="center"
         android:orientation="vertical"
-        tools:visibility="visible"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="@dimen/dp_150"
@@ -108,9 +117,9 @@
         <TextView
             android:id="@+id/no_data_text"
             style="@style/noDataText"
-            android:text="没有收藏内容，快去收藏吧！"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_50"
+            android:text="没有收藏内容，快去收藏吧！"
             android:textSize="@dimen/sp_13"
             android:visibility="visible"/>
 

@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -20,7 +19,6 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.article.activity.ArticleDetailActivity;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.db.BrowseHistorySqlite;
@@ -46,25 +44,25 @@ public class NousInfo extends ApiShowWeb {
             Tools.showToast(this, "数据错误");
             finish();
         }
-        registerObserver();
+//        registerObserver();
     }
 
-    private IObserver mIObserver;
-    private void registerObserver(){
-        mIObserver = new IObserver() {
-            @Override
-            public void notify(String name, Object sender, Object data) {
-                requestFavoriteState();
-            }
-        };
-        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
-    }
-
-    @Override
-    protected void onDestroy() {
-        ObserverManager.getInstence().unRegisterObserver(mIObserver);
-        super.onDestroy();
-    }
+//    private IObserver mIObserver;
+//    private void registerObserver(){
+//        mIObserver = new IObserver() {
+//            @Override
+//            public void notify(String name, Object sender, Object data) {
+//                requestFavoriteState();
+//            }
+//        };
+//        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        ObserverManager.getInstence().unRegisterObserver(mIObserver);
+//        super.onDestroy();
+//    }
 
     @Override
     protected void setTitle() {
@@ -89,37 +87,37 @@ public class NousInfo extends ApiShowWeb {
                 finish();
             }
         });
-        favLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //7.29新添加统计
-                XHClick.mapStat(NousInfo.this, "a_collection", "香哈头条", "");
-                if (LoginManager.isLogin()) {
-                    FavoriteHelper.instance().setFavoriteStatus(NousInfo.this, code, titleText, FavoriteHelper.TYPE_NOUS,
-                            new FavoriteHelper.FavoriteStatusCallback() {
-                                @Override
-                                public void onSuccess(boolean state) {
-                                    isFav = state;
-                                    favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
-                                            : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                                    favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
-                                }
-
-                                @Override
-                                public void onFailed() {
-                                }
-                            });
-                } else {
-                    Intent intent = new Intent(NousInfo.this, LoginByAccout.class);
-                    startActivity(intent);
-                }
-            }
-        });
+//        favLayout.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //7.29新添加统计
+//                XHClick.mapStat(NousInfo.this, "a_collection", "香哈头条", "");
+//                if (LoginManager.isLogin()) {
+//                    FavoriteHelper.instance().setFavoriteStatus(NousInfo.this, code, titleText, FavoriteHelper.TYPE_NOUS,
+//                            new FavoriteHelper.FavoriteStatusCallback() {
+//                                @Override
+//                                public void onSuccess(boolean state) {
+//                                    isFav = state;
+//                                    favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
+//                                            : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+//                                    favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
+//                                }
+//
+//                                @Override
+//                                public void onFailed() {
+//                                }
+//                            });
+//                } else {
+//                    Intent intent = new Intent(NousInfo.this, LoginByAccout.class);
+//                    startActivity(intent);
+//                }
+//            }
+//        });
     }
 
     @Override
     public void loadData() {
-        requestFavoriteState();
+//        requestFavoriteState();
 
         String apiUrl = StringManager.api_nousInfo + "?code=" + code;
         ReqInternet.in().doGet(apiUrl, new InternetCallback(this) {
@@ -154,25 +152,24 @@ public class NousInfo extends ApiShowWeb {
         });
     }
 
-    private void requestFavoriteState() {
-        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_NOUS,
-                new FavoriteHelper.FavoriteStatusCallback() {
-                    @Override
-                    public void onSuccess(boolean state) {
-                        //设置收藏按钮图片
-                        isFav = state;
-                        favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
-                                : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
-                        favLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        favLayout.setVisibility(View.GONE);
-                    }
-                });
-    }
+//    private void requestFavoriteState() {
+//        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_NOUS,
+//                new FavoriteHelper.FavoriteStatusCallback() {
+//                    @Override
+//                    public void onSuccess(boolean state) {
+//                        //设置收藏按钮图片
+//                        isFav = state;
+//                        favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
+//                                : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+//                        favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
+//                        favLayout.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    @Override
+//                    public void onFailed() {
+//                    }
+//                });
+//    }
 
     private boolean saveHistoryOver = false;
 

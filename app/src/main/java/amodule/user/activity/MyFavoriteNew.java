@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,7 +22,6 @@ import java.util.Map;
 import acore.logic.FavoriteHelper;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.article.view.BottomDialog;
 import amodule.main.Main;
@@ -42,7 +38,6 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 public class MyFavoriteNew extends BaseActivity implements View.OnClickListener {
 
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private PtrClassicFrameLayout refreshLayout;
     private RelativeLayout seekLayout;
     private LinearLayout noDataLayout;
@@ -66,7 +61,6 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         rightText.setText("浏览历史");
         rightText.setVisibility(View.VISIBLE);
         rightText.setTextColor(Color.parseColor("#999999"));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
         seekLayout = (RelativeLayout) findViewById(R.id.seek_layout);
@@ -95,10 +89,10 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     private void initData() {
         myFavorite = new AdapterModuleS0(this, mData);
         myFavorite.setStatisticId("a_my_collection");
-        View view = new View(this);
-        view.setBackgroundResource(R.drawable.item_decoration);
-        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
-        rvListview.addHeaderView(view);
+//        View view = new View(this);
+//        view.setBackgroundResource(R.drawable.item_decoration);
+//        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
+//        rvListview.addHeaderView(view);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
@@ -110,61 +104,41 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 return true;
             }
         });
-        rvListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-
-                if (firstVisibleItem == 0) {//如果已经滑动到最顶端
-                    if (!mControlsVisible) {
-                        showSreachBar();
-                        mControlsVisible = true;
-                    }
-                } else {//当前Item不是第一条
-                    if (mScrolledDistance > HIDE_THRESHOLD && mControlsVisible) {//向下滑动
-                        hideSearchBar();
-                        mControlsVisible = false;
-                        mScrolledDistance = 0;
-                    } else if (mScrolledDistance < -HIDE_THRESHOLD && !mControlsVisible) {//向上滑动
-                        showSreachBar();
-                        mControlsVisible = true;
-                        mScrolledDistance = 0;
-                    }
-                }
-                if ((mControlsVisible && dy > 0) || (!mControlsVisible && dy < 0)) {
-                    mScrolledDistance += dy;
-                }
-            }
-        });
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
-        mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
-        // 设置下拉进度的主题颜色
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.comment_color);
-        mSwipeRefreshLayout.setProgressViewOffset(false,0,Tools.getDimen(this,R.dimen.dp_50));
-
-        // 下拉时触发SwipeRefreshLayout的下拉动画，动画完毕之后就会回调这个方法
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                new Handler().postDelayed(new Runnable() {
+//        rvListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+//
+//                if (firstVisibleItem == 0) {//如果已经滑动到最顶端
+//                    if (!mControlsVisible) {
+//                        showSreachBar();
+//                        mControlsVisible = true;
+//                    }
+//                } else {//当前Item不是第一条
+//                    if (mScrolledDistance > HIDE_THRESHOLD && mControlsVisible) {//向下滑动
+//                        hideSearchBar();
+//                        mControlsVisible = false;
+//                        mScrolledDistance = 0;
+//                    } else if (mScrolledDistance < -HIDE_THRESHOLD && !mControlsVisible) {//向上滑动
+//                        showSreachBar();
+//                        mControlsVisible = true;
+//                        mScrolledDistance = 0;
+//                    }
+//                }
+//                if ((mControlsVisible && dy > 0) || (!mControlsVisible && dy < 0)) {
+//                    mScrolledDistance += dy;
+//                }
+//            }
+//        });
+        loadManager.setLoading(refreshLayout,
+                rvListview, myFavorite, true,
+                new View.OnClickListener() {
                     @Override
-                    public void run() {
+                    public void onClick(View v) {
                         requestData(true);
                     }
-                },300);
-            }
-        });
-
-        loadManager.setLoading(//refreshLayout,
-                rvListview, myFavorite, true,
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        requestData(true);
-//                    }
-//                },
+                },
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -214,7 +188,6 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 }
                 if(isRefresh){
                     refreshLayout.refreshComplete();
-                    mSwipeRefreshLayout.setRefreshing(false);
                 }
                 loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mData.isEmpty());
                 handlerNoDataLayout();

@@ -4,13 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import acore.tools.FileManager;
-import acore.tools.Tools;
-import amodule.dish.activity.MenuDish;
-import aplug.imageselector.ImageSelectorActivity;
-import aplug.imageselector.constant.ImageSelectorConstant;
+import acore.logic.SpecialOrder;
 import third.push.xg.XGPushServer;
-import third.share.activity.ShareImageActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 import acore.logic.LoginManager;
@@ -19,9 +14,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,10 +35,7 @@ import com.xiangha.R;
  * @date 2014年11月28日
  */
 public class MyManagerInfo extends BaseActivity {
-    public static final String GrowingIOOrder = "//growingioopen";
-    public static final String SHAREIMAGE = "//shareimage";
-    public static final String START_MENU = "//startmenu";
-    public final int REQUEST_SELECT_IMAGE = 0x1;
+
     private EditText otherUser_code;
 
     private List<Map<String, String>> list;
@@ -95,7 +85,10 @@ public class MyManagerInfo extends BaseActivity {
                 if (otherUser_code.getText().toString() != null && otherUser_code.getText().toString().length() > 0) {
                     String inputContent = otherUser_code.getText().toString();
                     //检测是否是指令
-                    if(inputOrder(inputContent)) return;
+                    if(SpecialOrder.of().handlerOrder(MyManagerInfo.this,inputContent)){
+                        otherUser_code.setText("");
+                        return;
+                    }
                     userCode = inputContent;
                     loadManager.showProgressBar();
                     //退出登录
@@ -108,51 +101,6 @@ public class MyManagerInfo extends BaseActivity {
         findViewById(R.id.manager_wrapper).setVisibility(View.VISIBLE);
     }
 
-    /**
-     * 执行指令
-     * @param order
-     * @return
-     */
-    private boolean inputOrder(String order){
-        switch(order){
-            case GrowingIOOrder:
-                String isInputOrder = FileManager.loadShared(MyManagerInfo.this, FileManager.file_appData, FileManager.xmlKey_growingioopen).toString();
-                boolean isOpen = "true".equals(isInputOrder);
-                FileManager.saveShared(MyManagerInfo.this, FileManager.file_appData, FileManager.xmlKey_growingioopen,  isOpen ? "false" : "true");
-                otherUser_code.setText("");
-                Tools.showToast(MyManagerInfo.this,isOpen?"GrowingIO随即模式":"GrowingIO强制开启模式");
-                return true;
-            case SHAREIMAGE:
-                startActivityForResult(new Intent(this, ImageSelectorActivity.class)
-                                .putExtra(ImageSelectorConstant.EXTRA_SELECT_MODE,ImageSelectorConstant.MODE_SINGLE)
-                        ,REQUEST_SELECT_IMAGE);
-                otherUser_code.setText("");
-                return true;
-            case START_MENU:
-                startActivity(new Intent(this, MenuDish.class));
-                finish();
-                otherUser_code.setText("");
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case REQUEST_SELECT_IMAGE:
-                if(resultCode == RESULT_OK && data != null){
-                    ArrayList<String> imageArr = data.getStringArrayListExtra(ImageSelectorConstant.EXTRA_RESULT);
-                    Log.i("tzy","" + imageArr.toString());
-                    if(imageArr != null && imageArr.size() > 0)
-                        ShareImageActivity.openShareImageActivity(this,imageArr.get(0));
-                }
-                break;
-            default:break;
-        }
-    }
 
     //获取马甲户信息
     private void getData() {
