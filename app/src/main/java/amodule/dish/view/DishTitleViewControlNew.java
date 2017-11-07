@@ -137,6 +137,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
 
     }
 
+    public boolean isNowFav(){
+        return this.nowFav;
+    }
+
     public void setFavStatus(boolean isFav){
         this.nowFav = isFav;
         if (isFav) {

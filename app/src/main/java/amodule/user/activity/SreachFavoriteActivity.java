@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,11 +20,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.FavoriteHelper;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule.article.view.BottomDialog;
 import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -73,6 +76,13 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         mRvListview.addItemDecoration(itemDecoration);
+        mRvListview.setOnItemLongClickListener(new RvListView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                showBottomDialog(position);
+                return true;
+            }
+        });
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -131,6 +141,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
             return;
         }
         currentpage = isRefresh ? 1 : ++currentpage;
+        everyPage = isRefresh ? 0 : everyPage;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("page", String.valueOf(currentpage));
         params.put("name", searchWord);
@@ -205,6 +216,48 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
             default:
                 break;
         }
+    }
+
+    private void showBottomDialog(final int position) {
+        if(mSearchData == null || position < 0 || position >= mSearchData.size())
+            return;
+        Map<String, String> item = mSearchData.get(position);
+        if(item == null){
+            return;
+        }
+        Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
+        if (itemParameter.isEmpty()) return;
+        final String code = itemParameter.get("code");
+        final String type = itemParameter.get("type");
+        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type)) {
+            return;
+        }
+        Map<String, String> itemB = StringManager.getFirstMap(item.get("B"));
+        final String typeName = itemB.get("text1");
+        BottomDialog dialog = new BottomDialog(this);
+        dialog.addButton("取消收藏", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FavoriteHelper.instance().setFavoriteStatus(SreachFavoriteActivity.this, code,  typeName, type,
+                        new FavoriteHelper.FavoriteStatusCallback() {
+                            @Override
+                            public void onSuccess(boolean state) {
+                                if(state){
+                                    return;
+                                }
+                                mSearchData.remove(position);
+                                mRvListview.notifyItemViewRemove(position);
+                                handlerNoData();
+
+                            }
+
+                            @Override
+                            public void onFailed() {
+                            }
+                        });
+            }
+        });
+        dialog.show();
     }
 
 

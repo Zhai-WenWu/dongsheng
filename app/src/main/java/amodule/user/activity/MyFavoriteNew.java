@@ -165,6 +165,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
      */
     private void requestData(final boolean isRefresh) {
         currentpage = isRefresh ? 1 : ++currentpage;
+        everyPage = isRefresh ? 0 : everyPage;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("page", String.valueOf(currentpage));
         loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, false);
@@ -293,6 +294,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                                 }
                                 mData.remove(position);
                                 rvListview.notifyItemViewRemove(position);
+                                handlerNoDataLayout();
                             }
 
                             @Override

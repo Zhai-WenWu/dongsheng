@@ -346,8 +346,8 @@ public class  DishActivityViewControlNew {
         Map<String,String> apiDataMap = StringManager.getFirstMap(dataStr);
         needSaveDishInfo.put("isFine", apiDataMap.get("isFine"));
         needSaveDishInfo.put("isMakeImg", apiDataMap.get("isMakeImg"));
-        needSaveDishInfo.put("isFav", apiDataMap.get("isFav"));
-        dishTitleViewControl.setFavStatus(apiDataMap.get("isFav"));
+        needSaveDishInfo.put("isFav", dishTitleViewControl.isNowFav() ? "2" : "1");
+//        dishTitleViewControl.setFavStatus(apiDataMap.get("isFav"));
         Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         saveHistoryToDB();
     }
