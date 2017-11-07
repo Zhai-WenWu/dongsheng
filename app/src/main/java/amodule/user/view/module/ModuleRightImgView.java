@@ -57,6 +57,7 @@ public class ModuleRightImgView extends ModuleBaseView{
             findViewById(R.id.module_imgs_rela).setVisibility(GONE);
             return;
         }
+        findViewById(R.id.vip).setVisibility(map.containsKey("iconVip")&&"2".equals(map.get("iconVip"))?VISIBLE:GONE);
         Map<String,String> mapStyle= StringManager.getFirstMap(map.get("styleData"));
         if(mapStyle.containsKey("img")&&!TextUtils.isEmpty(mapStyle.get("img"))&&!"null".equals(mapStyle.get("img"))){
             findViewById(R.id.module_imgs_rela).setVisibility(VISIBLE);
