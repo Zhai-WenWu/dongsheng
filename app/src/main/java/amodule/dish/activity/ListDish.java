@@ -412,12 +412,11 @@ public class ListDish extends BaseActivity {
                     public void onSuccess(boolean state) {
                         isFav = state;
                         img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        img_fav.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFailed() {
-
+                        img_fav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                     }
                 });
     }

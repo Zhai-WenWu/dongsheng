@@ -496,11 +496,11 @@ public class ArticleDetailActivity extends BaseActivity {
                         //处理收藏状态
                         isFav = state;
                         rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        rightButtonFav.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFailed() {
+                        rightButtonFav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                     }
                 });
     }

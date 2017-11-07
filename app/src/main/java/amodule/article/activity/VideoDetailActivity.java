@@ -114,7 +114,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
     private boolean isOnce = true;
-    private boolean isFav = false;
+    private boolean isFav = false,loadFavState = false;
     private String title = "";
 
     private String data_type = "";//推荐列表过来的数据
@@ -281,7 +281,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         int dp85 = Tools.getDimen(this,R.dimen.dp_85);
         mTitle.setPadding(dp85,0,dp85,0);
         rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
-        rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
+        rightButtonFav = (ImageView) view.findViewById(R.id.rightImgBtn1);
         rightButtonFav.setVisibility(View.VISIBLE);
         ImageView leftImage = (ImageView) view.findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
@@ -306,6 +306,9 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     startActivity(new Intent(VideoDetailActivity.this,LoginByAccout.class));
             }
         });
+        if(loadFavState){
+            rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+        }
     }
 
     private void handlerFavorite(){
@@ -537,14 +540,15 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {
+                        loadFavState = true;
                         //处理收藏状态
                         isFav = state;
                         rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                        rightButtonFav.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFailed() {
+                        rightButtonFav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                     }
                 });
     }
@@ -618,6 +622,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         if(isPortrait){
             handlerPortrait();
         }
+
         title = mapVideo.get("title");
         xhWebView.setVisibility(View.GONE);
         mCommentBar.setVisibility(View.VISIBLE);

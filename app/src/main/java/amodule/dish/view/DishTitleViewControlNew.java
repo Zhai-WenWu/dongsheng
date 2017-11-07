@@ -38,7 +38,6 @@ import xh.basic.internet.UtilInternet;
 import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
-import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 顶部view控制

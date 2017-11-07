@@ -631,6 +631,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 
 					@Override
 					public void onFailed() {
+						favoriteImageView.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 					}
 				});
 	}

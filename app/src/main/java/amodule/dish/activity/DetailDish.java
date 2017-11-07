@@ -186,6 +186,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
                     @Override
                     public void onFailed() {
+                        if(dishActivityViewControl != null && dishActivityViewControl.getDishTitleViewControl() != null){
+                            dishActivityViewControl.getDishTitleViewControl().setFavStatus(false);
+                        }
                     }
                 });
     }

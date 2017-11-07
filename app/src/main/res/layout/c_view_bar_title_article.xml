@@ -72,7 +72,6 @@
         <ImageView
             android:id="@+id/rightImgBtn1"
             style="@style/rightBtn"
-            android:src="@drawable/z_caipu_xiangqing_topbar_ico_fav"
             android:visibility="gone"/>
 
         <ImageView
