@@ -1083,6 +1083,7 @@
         <activity
             android:name="third.mall.activity.CommodDetailActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
