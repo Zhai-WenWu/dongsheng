@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -22,6 +21,7 @@ public class ModuleItemS0View extends RelativeLayout{
     public Context mContext;
     private RelativeLayout part_0,part_1,part_2;
     private String statisticId="";
+    private OnClickListener mClickListener;
     private OnLongClickListener mLongClickListener;
     public ModuleItemS0View(Context context) {
         super(context);
@@ -82,6 +82,9 @@ public class ModuleItemS0View extends RelativeLayout{
                 ModuleBaseView  baseView= (ModuleBaseView) findViewWithTag(viewStub.getTag());
                 baseView.setStatisticId(getStatisticId());
                 baseView.initData(map);
+                if(mClickListener != null){
+                    baseView.setOnClickListener(mClickListener);
+                }
                 if(mLongClickListener != null){
                     baseView.setOnLongClickListener(mLongClickListener);
                 }
@@ -103,6 +106,16 @@ public class ModuleItemS0View extends RelativeLayout{
         for(int index = 0 , length = getChildCount( ) ; index < length ; index++){
             View view = getChildAt(index);
             view.setOnLongClickListener(l);
+        }
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        super.setOnClickListener(l);
+        this.mClickListener = l;
+        for(int index = 0 , length = getChildCount( ) ; index < length ; index++){
+            View view = getChildAt(index);
+            view.setOnClickListener(l);
         }
     }
 }

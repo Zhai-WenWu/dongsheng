@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
@@ -97,6 +98,19 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         rvListview.addItemDecoration(itemDecoration);
+        rvListview.setOnItemClickListener(new RvListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if(mData == null || position < 0 || position >= mData.size())
+                    return;
+                Map<String, String> item = mData.get(position);
+                if(item == null){
+                    return;
+                }
+                Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
+                AppCommon.openUrl(MyFavoriteNew.this,itemParameter.get("url"),true);
+            }
+        });
         rvListview.setOnItemLongClickListener(new RvListView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {

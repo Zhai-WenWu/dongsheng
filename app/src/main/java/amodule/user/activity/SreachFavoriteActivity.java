@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
@@ -76,6 +77,19 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         mRvListview.addItemDecoration(itemDecoration);
+        mRvListview.setOnItemClickListener(new RvListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if(mSearchData == null || position < 0 || position >= mSearchData.size())
+                    return;
+                Map<String, String> item = mSearchData.get(position);
+                if(item == null){
+                    return;
+                }
+                Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
+                AppCommon.openUrl(SreachFavoriteActivity.this,itemParameter.get("url"),true);
+            }
+        });
         mRvListview.setOnItemLongClickListener(new RvListView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
