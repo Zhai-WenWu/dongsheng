@@ -85,10 +85,10 @@
                 android:layout_height="@dimen/dp_31"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_7"
+                android:layout_marginRight="@dimen/dp_20"
                 android:background="@drawable/bg_favorite_search_btn"
                 android:gravity="center"
-                android:layout_marginRight="@dimen/dp_20"
-                android:layout_marginLeft="@dimen/dp_7"
                 android:text="搜索"
                 android:textColor="@color/common_top_text"
                 android:textSize="@dimen/sp_14"
@@ -126,14 +126,30 @@
         android:id="@+id/no_data_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:visibility="visible"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="未查询到相关收藏内容"/>
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_60"
+                android:src="@drawable/icon_fav_search_nodata"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_25"
+                android:textColor="#666666"
+                android:text="未查询到相关收藏内容"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
