@@ -67,12 +67,6 @@ public class ModuleItemS0View extends RelativeLayout{
 
         handlerViewShow(part_0,mapA);
         handlerViewShow(part_1,mapB);
-//        handlerViewShow(mapA,"a1");
-//        handlerViewShow(mapB,"b1");
-//        handlerViewShow(mapA,"b2");
-//        handlerViewShow(mapA,"b3");
-//        handlerViewShow(mapA,"b4");
-
     }
     private void handlerViewShow(RelativeLayout part,Map<String,String> map){
         int part_0_size=part.getChildCount();
@@ -94,29 +88,6 @@ public class ModuleItemS0View extends RelativeLayout{
             }else viewStub.setVisibility(GONE);
         }
     }
-//    private void handlerViewShow(Map<String,String> map,String tag){
-//            ViewStub viewStub= (ViewStub) findViewWithTag(tag);
-//            if(viewStub==null){
-//                Log.i("xianghaTag","viewStub:::"+tag);
-//            }
-//            if(map.get("style").equals(tag.toUpperCase()) ){
-//                if(viewStub!=null) {
-//                    viewStub.setVisibility(View.VISIBLE);
-//                    viewStub.invalidate();
-//                    Log.i("xianghaTag","viewStub::_______________________________:");
-//                }
-//                ModuleBaseView  baseView= (ModuleBaseView) findViewWithTag(tag);
-//                baseView.setStatisticId(getStatisticId());
-//                baseView.initData(map);
-//            }else {
-//                if(viewStub!=null){
-//                    viewStub.setVisibility(GONE);
-//                    Log.i("xianghaTag","viewStub::****************************************:");
-//                    return;
-//                }
-//                findViewWithTag(tag).setVisibility(View.GONE);
-//            }
-//    }
     public String getStatisticId() {
         return statisticId;
     }
