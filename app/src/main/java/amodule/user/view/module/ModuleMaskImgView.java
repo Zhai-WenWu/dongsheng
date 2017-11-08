@@ -60,7 +60,7 @@ public class ModuleMaskImgView extends ModuleBaseView{
             findViewById(R.id.mask_album_container).setVisibility(VISIBLE);
             findViewById(R.id.mask_layer_view).setVisibility(VISIBLE);
             setKeyContent(map,mask_title_album,"text1");//标题
-            if(map.containsKey("text2")&&TextUtils.isEmpty(map.get("text2"))){
+            if(map.containsKey("text2")&&!TextUtils.isEmpty(map.get("text2"))){
                 mask_num.setVisibility(View.VISIBLE);
                 mask_num.setText(map.get("text2"));
             }else mask_num.setVisibility(View.GONE);
