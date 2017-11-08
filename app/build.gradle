@@ -6,6 +6,7 @@ repositories {
     flatDir {
         dirs 'libsxh'
     }
+    google()
 }
 
 dependencies {
@@ -41,7 +42,7 @@ dependencies {
 android {
 
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.xiangha"
@@ -59,6 +60,7 @@ android {
             moduleName "gsyVideoPlayer-java"
             abiFilters 'armeabi-v7a'
         }
+
     }
 
     signingConfigs {
@@ -66,7 +68,7 @@ android {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-//            storeFile file('D:/android_workspace/xiangha.keystore')
+            storeFile file('D:/android_workspace/xiangha.keystore')
 //            storeFile file('E:/keystore/xiangha.keystore'
 
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
@@ -74,7 +76,7 @@ android {
 //            yulekwok
 //            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
-            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
+//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
 //            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
 //            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
             storePassword 'XH.com'
@@ -138,8 +140,12 @@ android {
         }
 
     }
+
+    flavorDimensions "ceshi"
     productFlavors {
         //---------------------测试------------------------
-        ceshi {};
+        ceshi {
+            dimension "ceshi"
+        };
     }
 }
