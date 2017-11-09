@@ -34,14 +34,15 @@ dependencies {
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile project(':gsyVideoPlayer-java')
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
+    compile project(':gsyVideoPlayer-java')
+    compile project(':xh_dialog')
 }
 
 android {
 
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.xiangha"
@@ -138,8 +139,11 @@ android {
         }
 
     }
+    flavorDimensions "ceshi"
     productFlavors {
         //---------------------测试------------------------
-        ceshi {};
+        ceshi {
+            dimension "ceshi"
+        };
     }
 }
