@@ -76,10 +76,6 @@
         <attr name="pstsTabTextAlpha" format="integer" />
         <attr name="pstsTabTextFontFamily" format="string" />
     </declare-styleable>
-    <!-- 首页头部title -->
-    <declare-styleable name="HomeTitle">
-        <attr name="htTitle" format="string" />
-    </declare-styleable>
 
     <declare-styleable name="TagTextView">
         <attr name="radius" format="dimension"/>

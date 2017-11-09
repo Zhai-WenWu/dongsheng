@@ -284,12 +284,6 @@
             android:theme="@style/common_TransParentTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="amodule.main.activity.MainHomePageNew"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
             android:name="amodule.main.activity.MainHome"
             android:configChanges="orientation|keyboardHidden"
             android:keepScreenOn="true"
