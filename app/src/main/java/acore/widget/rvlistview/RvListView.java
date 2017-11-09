@@ -76,8 +76,6 @@ public class RvListView extends RecyclerView {
 
     public RvListView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        //默认使用LinearLayoutManager，并且处置布局
-        setLayoutManager(new LinearLayoutManagerWrapper(context));
         mHeaderContainer = new LinearLayout(context);
         mFooterContainer = new LinearLayout(context);
         Log.d(TAG, "Constructor execute.");
@@ -92,6 +90,10 @@ public class RvListView extends RecyclerView {
 
     @Override
     public void setAdapter(Adapter adapter) {
+        if(getLayoutManager() == null){
+            //默认使用LinearLayoutManager，并且处置布局
+            setLayoutManager(new LinearLayoutManager(getContext()));
+        }
         mAdapter = new RvHeaderAndFooterViewAdapter(adapter);
         super.setAdapter(mAdapter);
     }
@@ -564,7 +566,6 @@ public class RvListView extends RecyclerView {
         Adapter getOriginalAdapter() {
             return mOriginalAdapter;
         }
-
     }
 
     /*------------------------------------------------------- Inner Interface -------------------------------------------------------*/
@@ -583,7 +584,7 @@ public class RvListView extends RecyclerView {
 
     /*------------------------------------------------------- Common Get&Set -------------------------------------------------------*/
 
-    public OnItemClickListener getmOnItemClickListener() {
+    public OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
@@ -591,7 +592,7 @@ public class RvListView extends RecyclerView {
         this.mOnItemClickListener = mOnItemClickListener;
     }
 
-    public OnItemLongClickListener getmOnItemLongClickListener() {
+    public OnItemLongClickListener getOnItemLongClickListener() {
         return mOnItemLongClickListener;
     }
 

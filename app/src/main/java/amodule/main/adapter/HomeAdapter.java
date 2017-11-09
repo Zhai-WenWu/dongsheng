@@ -3,14 +3,13 @@ package amodule.main.adapter;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import java.util.List;
 import java.util.Map;
 
-import acore.widget.rvlistview.RvBaseAdapter;
-import acore.widget.rvlistview.RvBaseViewHolder;
+import acore.widget.rvlistview.adapter.RvBaseAdapter;
+import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.item.HomeAlbumItem;
 import amodule.main.view.item.HomeAnyImgStyleItem;

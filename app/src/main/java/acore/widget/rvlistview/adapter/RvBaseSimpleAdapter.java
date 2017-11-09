@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package acore.widget.rvlistview;
+package acore.widget.rvlistview.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -28,8 +28,12 @@ import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import java.util.List;
 import java.util.Map;
+
+import acore.widget.rvlistview.Config;
+import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
 /**
  * Description :
@@ -52,7 +56,7 @@ public class RvBaseSimpleAdapter extends RvBaseAdapter {
 
     private ViewBinder mViewBinder;
 
-    public RvBaseSimpleAdapter(Context context, @Nullable List<Map<String, ? extends Object>> data,
+    public RvBaseSimpleAdapter(Context context, @Nullable List<Map<String, String>> data,
                                @LayoutRes int resource, String[] from, @IdRes int[] to) {
         super(context, data);
         this.mInflater = LayoutInflater.from(context);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package acore.widget.rvlistview;
+package acore.widget.rvlistview.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -22,8 +22,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
+import acore.widget.rvlistview.Config;
+import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
 /**
  * Description :
@@ -119,6 +123,14 @@ public abstract class RvBaseAdapter<T> extends RecyclerView.Adapter<RvBaseViewHo
             }
         }
         return null;
+    }
+
+    public void updateData(List<T> newData){
+        if (null != mData && null != newData) {
+            mData.clear();
+            mData.addAll(newData);
+            notifyDataSetChanged();
+        }
     }
 
     private String outOfBoundsMsg(int index) {

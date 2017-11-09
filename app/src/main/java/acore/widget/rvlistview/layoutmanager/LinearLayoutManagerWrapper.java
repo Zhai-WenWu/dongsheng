@@ -1,4 +1,4 @@
-package acore.widget.rvlistview;
+package acore.widget.rvlistview.layoutmanager;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
