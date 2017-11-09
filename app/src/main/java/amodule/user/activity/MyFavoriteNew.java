@@ -90,10 +90,6 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     private void initData() {
         myFavorite = new AdapterModuleS0(this, mData);
         myFavorite.setStatisticId("a_my_collection");
-//        View view = new View(this);
-//        view.setBackgroundResource(R.drawable.item_decoration);
-//        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_35)));
-//        rvListview.addHeaderView(view);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
@@ -118,33 +114,6 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 return true;
             }
         });
-//        rvListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                int firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-//
-//                if (firstVisibleItem == 0) {//如果已经滑动到最顶端
-//                    if (!mControlsVisible) {
-//                        showSreachBar();
-//                        mControlsVisible = true;
-//                    }
-//                } else {//当前Item不是第一条
-//                    if (mScrolledDistance > HIDE_THRESHOLD && mControlsVisible) {//向下滑动
-//                        hideSearchBar();
-//                        mControlsVisible = false;
-//                        mScrolledDistance = 0;
-//                    } else if (mScrolledDistance < -HIDE_THRESHOLD && !mControlsVisible) {//向上滑动
-//                        showSreachBar();
-//                        mControlsVisible = true;
-//                        mScrolledDistance = 0;
-//                    }
-//                }
-//                if ((mControlsVisible && dy > 0) || (!mControlsVisible && dy < 0)) {
-//                    mScrolledDistance += dy;
-//                }
-//            }
-//        });
         loadManager.setLoading(refreshLayout,
                 rvListview, myFavorite, true,
                 new View.OnClickListener() {
