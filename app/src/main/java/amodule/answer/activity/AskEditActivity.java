@@ -7,8 +7,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +18,8 @@ import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xh.window.FloatingWindow;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -347,6 +347,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
             cookieManager.setCookie(cookieKey, cookie[i]);
         }
+        CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
         mWebView.loadUrl(mWebUrl);
     }
@@ -440,8 +441,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     @Override
     public void onUploadOver(boolean flag, String response) {
         mIsStopUpload = true;
+        cancelUploadingDialog();
         if (!flag && !TextUtils.isEmpty(response)) {
-            cancelUploadingDialog();
             Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -453,7 +454,6 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             try {
                 int t = Integer.parseInt(type);
                 if (t > 200 && !TextUtils.isEmpty(msg)) {// >200表示失败，
-                    cancelUploadingDialog();
                     showPriceChangeDialog(msg);
                     onPriceDataReady(true, map);
                 } else {// <=200表示成功，吊起支付弹窗
@@ -462,7 +462,6 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                     if (mIsAskMore) {
                         if (flag) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
-                            cancelUploadingDialog();
                             if (mFromHome)
                                 startQADetail();
                             else
@@ -470,7 +469,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             finish();
                         }
                     } else {
-                        startPay();
+                        if ("0".equals(mAskPrice) || "0.0".equals(mAskPrice) || "0.00".equals(mAskPrice)) {
+                            mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
+                            startQADetail();
+                        } else {
+                            startPay();
+                        }
                     }
                 }
             } catch (Exception e){

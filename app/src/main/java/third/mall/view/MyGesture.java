@@ -38,7 +38,6 @@ public MyGesture(OnGestureListener listener) {
 		case MotionEvent.ACTION_MOVE:
 			float move_y=ev.getY();
 			if(Math.abs(move_y-down_y)>20){
-				System.out.println("move_y-down_y::"+(move_y-down_y));
 				return false;
 			}
 			break;

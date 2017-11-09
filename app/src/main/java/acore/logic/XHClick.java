@@ -815,7 +815,6 @@ public class XHClick {
             int year = Calendar.getInstance().get(Calendar.YEAR);
             int month = Calendar.getInstance().get(Calendar.MONTH);
             int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            System.out.println("year = " + year + "  month =" + month + "  day = " + day);
             Object yearObj = UtilFile.loadShared(context, "super_property", "year");
             Object monthObj = UtilFile.loadShared(context, "super_property", "month");
             Object lastDayObj = UtilFile.loadShared(context, "super_property", "lastDay");

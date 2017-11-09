@@ -150,12 +150,12 @@ public class FavoriteDish {
 	
 	// 收藏响应
 	private void doFavorite(final Map<String, String> map) {
-		AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
-			@Override
-			public void loaded(int flag, String url, Object returnObj) {
-
-			}
-		});
+//		AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
+//			@Override
+//			public void loaded(int flag, String url, Object returnObj) {
+//
+//			}
+//		});
 	}
 
 	public void loadLocal(boolean isForward){

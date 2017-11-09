@@ -10,6 +10,9 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +33,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
+import amodule.dish.activity.MenuDish;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -538,11 +542,19 @@ public class MainHome extends MainBaseActivity implements IObserver {
      */
     public void refreshAdData(int position){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-            if (fragments != null && fragments.size() > position) {
-                if (fragments.get(position) instanceof HomeFragment) {
-                    ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
-                }
+        if (fragments != null && fragments.size() > position) {
+            if (fragments.get(position) instanceof HomeFragment) {
+                ((HomeFragment) fragments.get(position)).isNeedRefresh(false);
             }
         }
+    }
+
+    public void setCurrentTab(int itemPosition){
+        if(viewpager == null || itemPosition < 0 || itemPosition >= viewpager.getChildCount() ){
+            return;
+        }
+        viewpager.setCurrentItem(itemPosition);
+    }
+
 }
 

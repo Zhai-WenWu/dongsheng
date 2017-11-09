@@ -32,12 +32,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
@@ -108,6 +110,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 
 	boolean isBack = false;
 	boolean isOnceStart = true;
+	boolean isFav = false;
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -134,7 +137,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 			isSafa = bundle.getString("isSafa");
 			//判断消息是否被删
 			String status = bundle.getString("status");
-			if (status != "" && status != null && status.equals("1")) {
+			if (!TextUtils.isEmpty(status) && status.equals("1")) {
 				Tools.showToast(this, "此消息已被删除");
 			}
 			//消息是否读过
@@ -259,23 +262,20 @@ public class ShowSubject extends BaseAppCompatActivity {
 				//7.29新添加统计
 				XHClick.mapStat(ShowSubject.this.getApplicationContext(), "a_collection", "美食贴", "");
 				if (LoginManager.isLogin()) {
-					AppCommon.onFavoriteClick(ShowSubject.this, "subject", subCode, new InternetCallback(ShowSubject.this.getApplicationContext()) {
-						@Override
-						public void loaded(int flag, String url, Object returnObj) {
-							if (flag >= UtilInternet.REQ_OK_STRING) {
-								XHClick.mapStat(ShowSubject.this, STATISTICS_ID, "顶部导航栏点击量", "收藏点击量");
-								Map<String, String> map = UtilString.getListMapByJson(returnObj).get(0);
-								boolean nowFav = map.get("type").equals("2");
-								favoriteImageView.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-								favoriteTextView.setText(nowFav ? "已收藏" : "  收藏  ");
-							} else {
-								String returnStr = TextUtils.isEmpty((String)returnObj) ? "" : returnObj.toString();
-								if (returnStr.contains("登录")) {
-									goLogin();
+					FavoriteHelper.instance().setFavoriteStatus(ShowSubject.this, subCode, subjectTitle, FavoriteHelper.TYPE_SUBJECT,
+							new FavoriteHelper.FavoriteStatusCallback() {
+								@Override
+								public void onSuccess(boolean state) {
+									XHClick.mapStat(ShowSubject.this, STATISTICS_ID, "顶部导航栏点击量", "收藏点击量");
+									isFav = state;
+									favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+									favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
 								}
-							}
-						}
-					});
+
+								@Override
+								public void onFailed() {
+								}
+							});
 				} else {
 					goLogin();
 				}
@@ -468,6 +468,19 @@ public class ShowSubject extends BaseAppCompatActivity {
 		View fillFooterView = new View(this);
 		fillFooterView.setMinimumHeight(Tools.getDimen(this,R.dimen.dp_45));
 		listSubject.addFooterView(fillFooterView,null,false);
+		requestFavoriteState();
+		registerObserver();
+	}
+
+	private IObserver mIObserver;
+	private void registerObserver(){
+		mIObserver = new IObserver() {
+			@Override
+			public void notify(String name, Object sender, Object data) {
+				requestFavoriteState();
+			}
+		};
+		ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
 	}
 
 	/**
@@ -492,12 +505,6 @@ public class ShowSubject extends BaseAppCompatActivity {
 							commentNum = Integer.parseInt(theSubjectListMap.get("commentNum"));
 							subjectTitle = theSubjectListMap.get("title");
 
-							//设置收藏按钮图片
-							if (theSubjectListMap.containsKey("isFav")) {
-								boolean isFav = theSubjectListMap.get("isFav").equals("2");
-								favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-								favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
-							}
 							if (theSubjectListMap.containsKey("isLike")) {
 								isLike = theSubjectListMap.get("isLike");
 							}
@@ -537,6 +544,9 @@ public class ShowSubject extends BaseAppCompatActivity {
 	 * @param isForward 是否是向上加载
 	 */
 	private void getSubjectInfo(final boolean isForward) {
+		if(isForward){
+			requestFavoriteState();
+		}
 		// 向上加载/加载上一页.
 		if (isForward) {
 			if (currentUpPage > 1) {
@@ -608,6 +618,24 @@ public class ShowSubject extends BaseAppCompatActivity {
 		});
 	}
 
+	private void requestFavoriteState() {
+		FavoriteHelper.instance().getFavoriteStatus(this, subCode, FavoriteHelper.TYPE_SUBJECT,
+				new FavoriteHelper.FavoriteStatusCallback() {
+					@Override
+					public void onSuccess(boolean state) {
+						//处理收藏状态
+						isFav = state;
+						favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+						favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
+					}
+
+					@Override
+					public void onFailed() {
+						favoriteImageView.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+					}
+				});
+	}
+
 	/**
 	 * 用于当点击消息跳转详情页时,定位到当前回复页面
 	 */
@@ -635,11 +663,11 @@ public class ShowSubject extends BaseAppCompatActivity {
 			theSubjectListMap = UtilString.getListMapByJson(map.get("theSubject")).get(0);
 			commentNum = Integer.parseInt(theSubjectListMap.get("commentNum"));//评论数
 			subjectTitle = theSubjectListMap.get("title");//美食贴名称
-			if (theSubjectListMap.containsKey("isFav")) {
-				boolean isFav = theSubjectListMap.get("isFav").equals("2");//是否收藏过
-				favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-				favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
-			}
+//			if (theSubjectListMap.containsKey("isFav")) {
+//				boolean isFav = theSubjectListMap.get("isFav").equals("2");//是否收藏过
+//				favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+//				favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
+//			}
 			if (theSubjectListMap.containsKey("type"))//贴子类
 			{
 				types = theSubjectListMap.get("type");
@@ -1042,6 +1070,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		super.onDestroy();
 		handler.removeCallbacksAndMessages(null);
 		UploadSubjectControl.getInstance().setReplyCallback(null);
+		ObserverManager.getInstence().unRegisterObserver(mIObserver);
 	}
 
 	@Override
@@ -1086,8 +1115,8 @@ public class ShowSubject extends BaseAppCompatActivity {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		if(hasFocus){
-		}
+//		if(hasFocus){
+//		}
 	}
 
 	@Override

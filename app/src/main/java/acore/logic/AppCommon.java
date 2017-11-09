@@ -18,8 +18,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -27,6 +25,8 @@ import android.widget.RelativeLayout;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.net.URLDecoder;
@@ -584,38 +584,6 @@ public class AppCommon {
     }
 
     /**
-     * @param code 菜谱code
-     * @return 收藏状态
-     */
-    public static void onFavoriteClick(final Context context, String type, final String code,
-                                       final InternetCallback callback) {
-        if (code != null) {
-            ReqInternet.in().doPost(StringManager.api_setDishInfo, "type=" + type + "&code=" + code, new InternetCallback(context) {
-                @Override
-                public void loaded(int flag, String url, Object returnObj) {
-                    if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Map<String, String> map = getListMapByJson(returnObj).get(0);
-                        boolean nowFav = map.get("type").equals("2");
-                        String dishJson = DataOperate.buyBurden(context, code);
-                        if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
-                            // 修改splite数据
-                            dishJson = dishJson.replace(nowFav ? "\"isFav\":1" : "\"isFav\":2", nowFav ? "\"isFav\":2" : "\"isFav\":1");
-                            DishOffSqlite sqlite = new DishOffSqlite(context);
-                            sqlite.updateIsFav(code, dishJson);
-                        }
-                        Tools.showToast(context, nowFav ? "收藏成功" : "取消收藏");
-                        callback.loaded(ReqInternet.REQ_OK_STRING, url, returnObj);
-                    } else {
-                        callback.loaded(0, url, returnObj);
-                        Tools.showToast(context, returnObj.toString());
-                    }
-                }
-            });
-        } else
-            callback.loaded(-1, null, "");// 暂时这么写
-    }
-
-    /**
      * @param lv        等级
      * @param imageView 等级图片
      */
@@ -983,6 +951,7 @@ public class AppCommon {
                 cookieManager.setCookie(url, cookie[i]);
             }
             cookieManager.setCookie(url, "xhWebStat=1");
+            CookieSyncManager.createInstance(context);
             CookieSyncManager.getInstance().sync();
             rl.addView(webView, 0, 0);
             webView.loadUrl(url);

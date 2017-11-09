@@ -352,7 +352,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 uploadControl.uploadAgin(imagePath);//上传
             }
         }
-        Log.i("tzy","images = " + uploadControl.bean.images.toString());
+//        Log.i("tzy","images = " + uploadControl.bean.images.toString());
         //对比旧的移除数据
 //        for (String imagePath : imagesLayout.getImageArray()) {
 //            if (!images.contains(imagePath))

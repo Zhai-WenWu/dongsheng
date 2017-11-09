@@ -194,7 +194,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                 params.put("data[" + index + "][score]",map.get("score"));
             }
         }
-        Log.i("tzy","params = " + params.toString());
+//        Log.i("tzy","params = " + params.toString());
         return params;
     }
 

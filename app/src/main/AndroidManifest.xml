@@ -778,6 +778,12 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
+            android:name="amodule.user.activity.MyFavoriteNew"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name="amodule.user.activity.MyManagerInfo"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
@@ -899,6 +905,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.user.activity.SreachFavoriteActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"
+            />
         <!-- user end -->
 
 
@@ -1083,6 +1096,7 @@
         <activity
             android:name="third.mall.activity.CommodDetailActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>

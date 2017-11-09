@@ -29,8 +29,8 @@
 //import android.util.DisplayMetrics;
 //import android.view.Gravity;
 //import android.view.View;
-//import android.webkit.WebView;
-//import android.webkit.WebViewClient;
+//import com.tencent.smtt.sdk.WebView;
+//import com.tencent.smtt.sdk.WebViewClient;
 //import android.widget.LinearLayout;
 //
 //public class JingdongAd extends AdParent{

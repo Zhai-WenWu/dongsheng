@@ -17,7 +17,7 @@
 -dontshrink
 -dontoptimize
 -keepattributes Exceptions,InnerClasses,Signature,*Annotation*,SourceFile,LineNumberTable
--dontwarn com.google.android.maps.**,android.webkit.WebView,com.umeng.**,com.tencent.weibo.sdk.**,com.facebook.**
+-dontwarn com.google.android.maps.**,com.tencent.smtt.sdk.WebView,com.umeng.**,com.tencent.weibo.sdk.**,com.facebook.**
 
 
 -keep enum  com.facebook.**
@@ -81,7 +81,7 @@
 -dontshrink
 -dontoptimize
 -dontwarn com.google.android.maps.**
--dontwarn android.webkit.WebView
+-dontwarn com.tencent.smtt.sdk.WebView
 -dontwarn com.umeng.**
 -dontwarn com.tencent.weibo.sdk.**
 -dontwarn com.facebook.**

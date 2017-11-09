@@ -1,5 +1,6 @@
 package amodule.article.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -40,10 +41,13 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
 import acore.tools.LogManager;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -57,6 +61,7 @@ import amodule.article.view.VideoAllHeaderView;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -81,7 +86,7 @@ import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private TextView mTitle;
-    private ImageView rightButton;
+    private ImageView rightButton,rightButtonFav;
     private RelativeLayout dredgeVipLayout;
     private RelativeLayout allTitleRelaPort;
     private TextView dredgeVipImmediately;
@@ -112,6 +117,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
     private boolean isOnce = true;
+    private boolean isFav = false,loadFavState = false;
+    private String title = "";
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
@@ -192,6 +199,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
+        ObserverManager.getInstence().unRegisterObserver(mIObserver);
         super.onDestroy();
     }
 
@@ -230,6 +238,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         dredgeVipLayout.setVisibility(View.GONE);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initStatusBar() {
         statusBarH = Tools.getStatusBarHeight(this);
         if (Tools.isShowTitle()) {
@@ -275,6 +284,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         int dp85 = Tools.getDimen(this,R.dimen.dp_85);
         mTitle.setPadding(dp85,0,dp85,0);
         rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
+        rightButtonFav = (ImageView) view.findViewById(R.id.rightImgBtn1);
+        rightButtonFav.setVisibility(View.VISIBLE);
         ImageView leftImage = (ImageView) view.findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
         layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
@@ -287,6 +298,34 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         onBackPressed();
+                    }
+                });
+        rightButtonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(LoginManager.isLogin())
+                    handlerFavorite();
+                else
+                    startActivity(new Intent(VideoDetailActivity.this,LoginByAccout.class));
+            }
+        });
+        if(loadFavState){
+            rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+        }
+    }
+
+    private void handlerFavorite(){
+        statistics(isFav?"取消收藏":"收藏","");
+        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_VIDEO,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        isFav = state;
+                        rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                    }
+
+                    @Override
+                    public void onFailed() {
                     }
                 });
     }
@@ -338,7 +377,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                                 @Override
                                 public void run() {
                                     int position = allDataListMap.indexOf(commentMap) + listView.getHeaderViewsCount();
-                                    Log.i("tzy","position = " + position);
                                     AppCommon.scorllToIndex(listView,position);
                                 }
                             },200);
@@ -430,8 +468,23 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         listView.addFooterView(view);
         //请求文章数据
         requestVideoData(false);
+        //请求收藏状态数据
+        requestFavoriteState();
         //初始化广告
         initAD();
+
+        registerObserver();
+    }
+
+    private IObserver mIObserver;
+    private void registerObserver(){
+        mIObserver = new IObserver() {
+            @Override
+            public void notify(String name, Object sender, Object data) {
+                requestFavoriteState();
+            }
+        };
+        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     private void initAD() {
@@ -483,6 +536,24 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         allDataListMap.clear();
         if (detailAdapter != null) detailAdapter.notifyDataSetChanged();
 
+    }
+
+    private void requestFavoriteState(){
+        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_VIDEO,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        loadFavState = true;
+                        //处理收藏状态
+                        isFav = state;
+                        rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        rightButtonFav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                    }
+                });
     }
 
     private void requestVideoData(final boolean onlyUser) {
@@ -555,6 +626,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             handlerPortrait();
         }
 
+        title = mapVideo.get("title");
         xhWebView.setVisibility(View.GONE);
         mCommentBar.setVisibility(View.VISIBLE);
         customerData = StringManager.getFirstMap(mapVideo.get("customer"));

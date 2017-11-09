@@ -62,7 +62,6 @@ public class MallClickContorl {
 		}
 		url_temp=url_temp.toLowerCase();
 		Object msg=UtilFile.loadShared(context, FileManager.MALL_URI_STAT, FileManager.MALL_URI_STAT);
-		System.out.println("");
 		ArrayList<Map<String,String>> list=UtilString.getListMapByJson(msg);
 		if(list!=null&&list.size()>0&&list.get(0).containsKey(url_temp)){
 			ArrayList<Map<String,String>> list_real=UtilString.getListMapByJson(list.get(0).get(url_temp));
@@ -144,7 +143,6 @@ public class MallClickContorl {
 		}
 		url_temp=url_temp.toLowerCase();
 		Object msg=UtilFile.loadShared(context, FileManager.MALL_URI_STAT, FileManager.MALL_URI_STAT);
-		System.out.println("");
 		ArrayList<Map<String,String>> list=UtilString.getListMapByJson(msg);
 		if(list!=null&&list.size()>0&&list.get(0).containsKey(url_temp)){
 			ArrayList<Map<String,String>> list_real=UtilString.getListMapByJson(list.get(0).get(url_temp));

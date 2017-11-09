@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="#fffffe"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/rela_1_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:background="@color/transparent"
+        android:layout_marginTop="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20">
+
+        <ImageView
+            android:id="@+id/auther_userImg"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:background="@drawable/bg_round_zannum"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/cusType"
+            android:layout_width="@dimen/dp_13"
+            android:layout_height="@dimen/dp_13"
+            android:layout_alignBottom="@+id/auther_userImg"
+            android:layout_alignRight="@+id/auther_userImg"
+            android:clickable="true"
+            android:background="@color/transparent"
+            android:src="@drawable/z_user_gourmet_ico"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_9"
+            android:layout_toRightOf="@+id/auther_userImg"
+            android:orientation="vertical"
+            android:background="@color/transparent">
+
+            <TextView
+                android:id="@+id/auther_name"
+                style="@style/singleText"
+                android:text="加载中"
+                android:maxWidth="@dimen/dp_130"
+                android:ellipsize="end"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_12" />
+
+
+            <TextView
+                android:id="@+id/right_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_2"
+                android:layout_alignParentRight="true"
+                android:text="加载中"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_12" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

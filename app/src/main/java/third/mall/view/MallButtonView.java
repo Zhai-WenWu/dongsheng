@@ -277,7 +277,7 @@ public class MallButtonView {
 							public void setState(int state) {
 								if (state >= UtilInternet.REQ_OK_STRING) {
 									postRequest(actionUrl, param,callback);
-								} else if (state == UtilInternet.REQ_CODE_ERROR) {
+//								} else if (state == UtilInternet.REQ_CODE_ERROR) {
 								}
 							}
 						});

@@ -2,6 +2,8 @@ package acore.logic.load;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.load.view.LoadingView;
 import acore.override.XHApplication;
+import acore.override.adapter.RvAdapterSimple;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
@@ -163,6 +166,25 @@ public class LoadManager {
 		setLoading(clicker);
 	}
 
+	/**
+	 * 设置页面加载、重载等按钮，并开始重载
+	 *
+	 * @param rvListView    list对象
+	 * @param adapter 数据adapter，如果list已有adapter则忽略
+	 * @param hasMore 是否加载更多页
+	 * @param clicker 加载事件
+	 */
+	public void setLoading(@NonNull RvListView rvListView, @NonNull RvBaseAdapter adapter, @NonNull boolean hasMore, @NonNull View.OnClickListener clicker) {
+		if(rvListView!=null && rvListView.getAdapter()==null){
+			rvListView.setAdapter( adapter);
+			if(hasMore){
+				Button loadMore = mLoadMore.newLoadMoreBtn(rvListView, clicker);
+				AutoLoadMore.setAutoMoreListen(rvListView, loadMore, clicker);
+			}
+		}
+		setLoading(clicker);
+	}
+
 	public void setLoading(ListView list, ListAdapter adapter, boolean hasMore, final View.OnClickListener clicker, AutoLoadMore.OnListScrollListener listScrollListener) {
 		if (list.getAdapter() == null) {
 			if (hasMore) {
@@ -287,7 +309,7 @@ public class LoadManager {
 	 * @param refreshListener
 	 * @param loadMoreListener
 	 */
-	public void setLoading(PtrClassicFrameLayout refreshLayout, ListView listView, BaseAdapter adapter,
+	public void setLoading(PtrFrameLayout refreshLayout, ListView listView, BaseAdapter adapter,
 								   boolean hasMore, final OnClickListener refreshListener, final OnClickListener loadMoreListener) {
 		refreshLayout.setPtrHandler(new PtrDefaultHandler() {
 			@Override
@@ -347,7 +369,6 @@ public class LoadManager {
 			if (hasMore) {
 				Button loadMore = mLoadMore.newLoadMoreBtn(listView, loadMoreListener);
 				AutoLoadMore.setAutoMoreListen(listView, loadMore, loadMoreListener);
-
 			}
 		}
 		setLoading(loadMoreListener);

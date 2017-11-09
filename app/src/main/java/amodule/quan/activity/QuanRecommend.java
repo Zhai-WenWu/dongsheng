@@ -230,5 +230,6 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 								});
 							}
 						}))).show();
+
 	}
 }

@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.CookieManager;
 
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xh.manager.DialogManager;
@@ -16,6 +15,7 @@ import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.MessageView;
 import com.xh.view.TitleView;
+import com.tencent.smtt.sdk.CookieManager;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -210,7 +210,6 @@ public class LoginManager {
     private static void removeAllCookie(Context context) {
         if (context == null)
             return;
-        CookieSyncManager.createInstance(context);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

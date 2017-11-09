@@ -112,12 +112,12 @@ public class XGPushServer {
 			if (XGPushConfig.getToken(context).length() >= 40) {
 				return XGPushConfig.getToken(context);
 			}
-			String token = FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_XGToken).toString();
+			String token = FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_XGToken).toString().trim();
 			if (token.length() >= 40) {
 				return token;
 			}
 		} else {
-			String token = FileManager.readFile(FileManager.getDataDir() + FileManager.file_XGToken);
+			String token = FileManager.readFile(FileManager.getDataDir() + FileManager.file_XGToken).trim();
 			if (token.length() >= 40)
 				return token;
 		}

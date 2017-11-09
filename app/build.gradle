@@ -36,7 +36,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':gsyVideoPlayer-java')
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
-    compile project(':xh_dialog')
 }
 
 android {
@@ -48,8 +47,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 210
-        versionName "5.7.0"
+        versionCode 211
+        versionName "5.7.1.3"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -67,9 +66,8 @@ android {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-//            storeFile file('D:/android_workspace/xiangha.keystore')
-            storeFile file('E:/keystore/xiangha.keystore')
-//            storeFile file('E:/keystore/xiangha.keystore'
+            storeFile file('D:/android_workspace/xiangha.keystore')
+//            storeFile file('E:/keystore/xiangha.keystore')
 
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')

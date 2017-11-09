@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_rela"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <amodule.user.view.module.ModuleUserView
+        android:id="@+id/module_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <amodule.user.view.module.ModuleMaskImgView
+        android:id="@+id/module_mask"
+        android:layout_below="@+id/module_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

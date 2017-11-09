@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import com.qq.e.comm.util.Md5Util;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
