@@ -71,15 +71,16 @@ public class FavoriteSearch extends BaseActivity implements OnClickListener{
 	private void init(){
 		ll_search = (LinearLayout)findViewById(R.id.ll_search);
 		ll_result = (LinearLayout)findViewById(R.id.ll_result);
-		ed_search_main = (EditText)findViewById(R.id.ed_search_main);
+		ed_search_main = (EditText)findViewById(R.id.ed_search_word);
 		tv_soContent = (TextView)findViewById(R.id.tv_soContent);
 
 		searNouse = new SearchFavoriteNouse(this);
 		searDish = new SearchFavoriteDish(this);
 		searSubject = new SearchFavoriteSubject(this);
 
-		findViewById(R.id.btn_search_main).setOnClickListener(this);
-		findViewById(R.id.btn_ed_clear_main).setOnClickListener(this);
+		findViewById(R.id.btn_search_global).setOnClickListener(this);
+		findViewById(R.id.btn_ed_clear_global).setOnClickListener(this);
+		findViewById(R.id.a_global_search_speeach).setVisibility(View.GONE);
 		findViewById(R.id.btn_back).setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -100,9 +101,9 @@ public class FavoriteSearch extends BaseActivity implements OnClickListener{
 			public void afterTextChanged(Editable s) {
 				itemInfalter(ed_search_main.getText().toString());
 				if (ed_search_main.getText().toString().length() > 0) {
-					findViewById(R.id.btn_ed_clear_main).setVisibility(View.VISIBLE);
+					findViewById(R.id.btn_ed_clear_global).setVisibility(View.VISIBLE);
 				} else {
-					findViewById(R.id.btn_ed_clear_main).setVisibility(View.GONE);
+					findViewById(R.id.btn_ed_clear_global).setVisibility(View.GONE);
 				}
 			}
 		});
@@ -180,10 +181,10 @@ public class FavoriteSearch extends BaseActivity implements OnClickListener{
 			int tag = Integer.parseInt(v.getTag().toString());
 			onSearch(tag);
 			break;
-		case R.id.btn_search_main:
+		case R.id.btn_search_global:
 			searchClick();
 			break;
-			case R.id.btn_ed_clear_main :
+			case R.id.btn_ed_clear_global :
 				ed_search_main.setText("");
 				break;
 		}

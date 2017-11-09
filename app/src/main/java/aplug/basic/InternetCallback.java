@@ -44,7 +44,7 @@ public abstract class InternetCallback extends InterCallback {
 		super(context);
 		this.encryptparams= encryptparams;
 	}
-	public void setEncryptparams(String encryptparams){
+	public void  setEncryptparams(String encryptparams){
 		this.encryptparams= encryptparams;
 	}
 	@Override
@@ -102,7 +102,7 @@ public abstract class InternetCallback extends InterCallback {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
 					} else {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
-                        toastFaildRes(msg);
+//                        toastFaildRes(msg);
                     }
 				} catch (Exception e) {
 					e.printStackTrace();

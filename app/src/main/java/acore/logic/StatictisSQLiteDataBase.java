@@ -26,7 +26,7 @@ public class StatictisSQLiteDataBase extends SQLiteOpenHelper{
     public static String home_type ="recom";//类型--目前只有一个
     public static String page_type = "time";//page类型数据。
 
-    private static StatictisSQLiteDataBase sqlite=null;
+    private volatile static StatictisSQLiteDataBase sqlite=null;
     private StatictisSQLiteDataBase(){
         super(XHApplication.in().getApplicationContext(), DB_NAME, null, VERSION);
     }
