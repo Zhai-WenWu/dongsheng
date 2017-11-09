@@ -340,7 +340,7 @@ public class MallCommon {
 							public void setState(int state) {
 								if(state>=UtilInternet.REQ_OK_STRING){
 									addShoppingcat(context, code,interfaceAddshop);
-								}else if(state==UtilInternet.REQ_CODE_ERROR){
+//								}else if(state==UtilInternet.REQ_CODE_ERROR){
 								}
 							}
 						});
@@ -381,7 +381,7 @@ public class MallCommon {
 							public void setState(int state) {
 								if(state>=UtilInternet.REQ_OK_STRING){
 									malldirect(payment_order_id,contexts,paystate);
-								}else if(state==UtilInternet.REQ_CODE_ERROR){
+//								}else if(state==UtilInternet.REQ_CODE_ERROR){
 								}
 							}
 						});

@@ -330,12 +330,13 @@ public class HomeFragment extends BaseHomeFragment{
                 public void onLoad(List<Map<String, String>> data) {
                     if(!LoadOver){
                         mListData.addAll(data);//顺序插入
+                        mHomeAdapter.notifyDataSetChanged();
                         //如果需要加广告，插入广告
                         if (mAdControl != null) {
                             //插入广告
                             mListData = mAdControl.getNewAdData(mListData, false);
+                            mHomeAdapter.notifyDataSetChanged();
                         }
-                        mHomeAdapter.notifyDataSetChanged();
                     }
                 }
             });
@@ -737,7 +738,7 @@ public class HomeFragment extends BaseHomeFragment{
                 mPlayerController.onDestroy();
             }
             mVideoLayout = (RelativeLayout) parentView.findViewById(R.id.video_container);
-            Log.i("tzy","mPlayerController = " + mPlayerController);
+//            Log.i("tzy","mPlayerController = " + mPlayerController);
             if (mPlayerController == null)
                 mPlayerController = new SimpleVideoPlayerController(mActivity);
             mPlayerController.setViewGroup(mVideoLayout);

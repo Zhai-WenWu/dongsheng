@@ -1,30 +1,17 @@
 package amodule.dish.tools;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import acore.logic.LoginManager;
-import acore.override.activity.base.BaseActivity;
-import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import amodule.dish.db.DishOffData;
-import amodule.dish.db.DishOffSqlite;
 import amodule.dish.db.ShowBuySqlite;
-import amodule.main.Main;
-import amodule.user.activity.MyFavorite;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import xh.windowview.XhDialog;
 
 /**
  */

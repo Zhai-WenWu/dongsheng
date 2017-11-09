@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame_middle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20">
+
+
+    <!--视频播放处理start-->
+
+    <RelativeLayout
+        android:id="@+id/video_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:visibility="gone">
+        <acore.widget.ImageViewVideo
+            android:id="@+id/video_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_nopic"
+            android:visibility="gone"/>
+        <LinearLayout
+            android:id="@+id/video_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+
+
+        </RelativeLayout>
+    <!--视频播放处理end-->
+
+    <acore.widget.ImageViewVideo
+        android:id="@+id/quan_item_model_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+
+    <ImageView
+        android:id="@+id/image_one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/i_nopic" />
+
+    <LinearLayout
+        android:id="@+id/ll_imgs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/transparent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/quan_iv_img_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_nopic"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/line_1"
+            android:layout_width="@dimen/dp_4"
+            android:layout_height="match_parent"
+            android:background="#ececec" />
+
+        <ImageView
+            android:id="@+id/quan_iv_img_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_1"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_nopic"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/line_2"
+            android:layout_width="@dimen/dp_4"
+            android:layout_height="match_parent"
+            android:background="#ececec" />
+
+        <ImageView
+            android:id="@+id/quan_iv_img_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_1"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_nopic"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -44,7 +44,7 @@ public abstract class InternetCallback extends InterCallback {
 		super(context);
 		this.encryptparams= encryptparams;
 	}
-	public void setEncryptparams(String encryptparams){
+	public void  setEncryptparams(String encryptparams){
 		this.encryptparams= encryptparams;
 	}
 	@Override
@@ -102,7 +102,7 @@ public abstract class InternetCallback extends InterCallback {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
 					} else {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
-                        toastFaildRes(msg);
+//                        toastFaildRes(msg);
                     }
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -227,7 +227,7 @@ public abstract class InternetCallback extends InterCallback {
 		String location = getLocation();
 		cookie += "geo=" + location + ";";
 		header.put("Cookie", cookie);
-        if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7"))&&!TextUtils.isEmpty(encryptparams)){
+        if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7")||url.contains("main8"))&&!TextUtils.isEmpty(encryptparams)){
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }
