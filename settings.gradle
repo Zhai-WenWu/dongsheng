@@ -1,1 +1,1 @@
-include ':app',':gsyVideoPlayer-java','xh_dialog'
+include ':app',':gsyVideoPlayer-java',':xh_dialog'
