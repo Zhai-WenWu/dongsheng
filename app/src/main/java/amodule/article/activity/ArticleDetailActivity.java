@@ -1,5 +1,6 @@
 package amodule.article.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -27,14 +28,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -74,7 +79,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private LinearLayout linearLayoutTwo;
     private LinearLayout linearLayoutThree;
     private TextView mTitle;
-    private ImageView rightButton;
+    private ImageView rightButton, rightButtonFav;
     private PtrClassicFrameLayout refreshLayout;
     private ArticleContentBottomView articleContentBottomView;
     private ArticleHeaderView headerView;
@@ -103,7 +108,8 @@ public class ArticleDetailActivity extends BaseActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
     private boolean webviewLoadOver = false;
-
+    private boolean isFav = false;
+    private String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,17 +142,18 @@ public class ArticleDetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         Glide.with(this).pauseRequests();
-        ToolsDevice.keyboardControl(false,this,mArticleCommentBar);
+        ToolsDevice.keyboardControl(false, this, mArticleCommentBar);
     }
 
     @Override
     protected void onDestroy() {
-        if(mArticleCommentBar != null) mArticleCommentBar = null;
+        if (mArticleCommentBar != null) mArticleCommentBar = null;
         //统计
         long nowTime = System.currentTimeMillis();
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("ArticleDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
+        ObserverManager.getInstence().unRegisterObserver(mIObserver);
         super.onDestroy();
     }
 
@@ -208,6 +215,8 @@ public class ArticleDetailActivity extends BaseActivity {
         int dp85 = Tools.getDimen(this, R.dimen.dp_85);
         mTitle.setPadding(dp85, 0, dp85, 0);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
+        rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
+        rightButtonFav.setVisibility(View.VISIBLE);
         ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
         layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
@@ -218,6 +227,32 @@ public class ArticleDetailActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         onBackPressed();
+                    }
+                });
+
+        rightButtonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(LoginManager.isLogin())
+                    handlerFavorite();
+                else
+                    startActivity(new Intent(ArticleDetailActivity.this,LoginByAccout.class));
+            }
+        });
+    }
+
+    private void handlerFavorite(){
+        statistics(isFav?"取消收藏":"收藏","");
+        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_ARTICLE,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        isFav = state;
+                        rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                    }
+
+                    @Override
+                    public void onFailed() {
                     }
                 });
     }
@@ -267,6 +302,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     /** 初始化ListView */
+    @SuppressLint("ClickableViewAccessibility")
     private void initListView() {
         listView = (ListView) findViewById(R.id.listview);
         listView.setOnTouchListener(new View.OnTouchListener() {
@@ -311,7 +347,7 @@ public class ArticleDetailActivity extends BaseActivity {
         layout.addView(linearLayoutTwo);
         layout.addView(linearLayoutThree);
 
-        listView.addHeaderView(layout,null,false);
+        listView.addHeaderView(layout, null, false);
     }
 
     /** 数据初始化 **/
@@ -378,8 +414,23 @@ public class ArticleDetailActivity extends BaseActivity {
         listView.addFooterView(view);
         //请求文章数据
         requestArticleData(false);
+        //请求收藏状态数据
+        requestFavoriteState();
         //初始化广告
         initAD();
+
+        registerObserver();
+    }
+
+    private IObserver mIObserver;
+    private void registerObserver(){
+        mIObserver = new IObserver() {
+            @Override
+            public void notify(String name, Object sender, Object data) {
+                requestFavoriteState();
+            }
+        };
+        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     private void initAD() {
@@ -437,17 +488,36 @@ public class ArticleDetailActivity extends BaseActivity {
         if (detailAdapter != null) detailAdapter.notifyDataSetChanged();
     }
 
+    private void requestFavoriteState(){
+        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_ARTICLE,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        //处理收藏状态
+                        isFav = state;
+                        rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        rightButtonFav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                    }
+                });
+    }
+
     /** 请求网络 */
     private void requestArticleData(final boolean onlyUser) {
 //        loadManager.showProgressBar();
-        StringBuilder params = new StringBuilder().append("code=").append(code).append("&type=HTML");
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params.toString(), new InternetCallback(this) {
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("code",code);
+        params.put("type","HTML");
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 refreshLayout.refreshComplete();
                 loadManager.hideProgressBar();
                 //没有数据直接退出
-                if(TextUtils.isEmpty((String) object) && isOnce){
+                if (TextUtils.isEmpty((String) object) && isOnce) {
                     ArticleDetailActivity.this.finish();
                     return;
                 }
@@ -468,6 +538,7 @@ public class ArticleDetailActivity extends BaseActivity {
      *
      * @param mapArticle 文章数据
      */
+    @SuppressLint("ClickableViewAccessibility")
     private void analysArticleData(boolean onlyUser, @NonNull final Map<String, String> mapArticle) {
         if (mapArticle.isEmpty()) return;
 
@@ -477,6 +548,7 @@ public class ArticleDetailActivity extends BaseActivity {
             linearLayoutOne.addView(headerView);
         headerView.setType(getType());
         headerView.setData(mapArticle);
+        title = mapArticle.get("title");
         linearLayoutOne.setVisibility(View.VISIBLE);
         detailAdapter.notifyDataSetChanged();
         if (onlyUser)
@@ -493,14 +565,14 @@ public class ArticleDetailActivity extends BaseActivity {
                 }
             }
         });
-        if (webView == null){
+        if (webView == null) {
             webView = manager.createWebView(0);
             webView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (mArticleCommentBar != null
-                            && mArticleCommentBar.getEditText() != null){
-                        if(TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString())){
+                            && mArticleCommentBar.getEditText() != null) {
+                        if (TextUtils.isEmpty(mArticleCommentBar.getEditText().getText().toString())) {
                             mArticleCommentBar.setEditTextShow(false);
                         }
                         ToolsDevice.keyboardControl(false, ArticleDetailActivity.this, mArticleCommentBar.getEditText());
@@ -551,6 +623,7 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         rightButton.setVisibility(View.VISIBLE);
+
         if (articleContentBottomView == null)
             articleContentBottomView = new ArticleContentBottomView(this);
         if (linearLayoutThree.getChildCount() == 0)
@@ -561,14 +634,14 @@ public class ArticleDetailActivity extends BaseActivity {
         articleContentBottomView.setOnReportClickCallback(isAuthor ? null : new ArticleContentBottomView.OnReportClickCallback() {
             @Override
             public void onReportClick() {
-                if(!LoginManager.isLogin()){
+                if (!LoginManager.isLogin()) {
                     startActivity(new Intent(ArticleDetailActivity.this, LoginByAccout.class));
                     return;
                 }
-                if(LoginManager.isLogin()
+                if (LoginManager.isLogin()
                         && !TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                         && !TextUtils.isEmpty(userCode)
-                        && !userCode.equals(LoginManager.userInfo.get("code"))){
+                        && !userCode.equals(LoginManager.userInfo.get("code"))) {
                     Intent intent = new Intent(ArticleDetailActivity.this, ReportActivity.class);
                     intent.putExtra("code", code);
                     intent.putExtra("type", getType());
@@ -627,8 +700,11 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 请求推荐列表 */
     private void requestRelateData() {
-        String param = "code=" + code + "&page=" + ++page + "&pagesize=10";
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleRelated, param, new InternetCallback(this) {
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("code",code);
+        params.put("page",String.valueOf(++page));
+        params.put("pagesize","10");
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleRelated, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -725,7 +801,7 @@ public class ArticleDetailActivity extends BaseActivity {
             }
         });
         //是作者显示删除按钮
-        if(isAuthor){
+        if (isAuthor) {
             dialog.addButton("删除", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

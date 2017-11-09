@@ -215,7 +215,7 @@ public class WelcomeDialog extends Dialog {
             @Override
             public void onAdPresent() {
                 mADLayout.setVisibility(View.GONE);
-                Log.i("tzy","BDCallback");
+//                Log.i("tzy","BDCallback");
                 if(mAdTime>5){
                     endCountDown();
                     mAdTime=5;
@@ -232,7 +232,7 @@ public class WelcomeDialog extends Dialog {
 
             @Override
             public void onAdDismissed() {
-                Log.i("tzy","onAdDismissed");
+//                Log.i("tzy","onAdDismissed");
                 closeDialog();
             }
 
@@ -243,7 +243,7 @@ public class WelcomeDialog extends Dialog {
 
             @Override
             public void onAdClick() {
-                Log.i("tzy","onAdClick");
+//                Log.i("tzy","onAdClick");
                 closeDialog();
                 AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "baidu", "", "click", "开屏广告位");
                 XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_baidu");

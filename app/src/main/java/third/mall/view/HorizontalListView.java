@@ -300,37 +300,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		boolean handled = super.dispatchTouchEvent(ev);
 		handled |= mGesture.onTouchEvent(ev);
-//		getParent().requestDisallowInterceptTouchEvent(true);
-//		int distance= (int) context.getResources().getDimension(R.dimen.dp_20);
-//		switch (ev.getAction()) {
-//		case MotionEvent.ACTION_DOWN:// 按下
-//			down_x = (float) ev.getX();
-//			down_y= ev.getY();
-//			break;
-//		case MotionEvent.ACTION_MOVE:// 移动
-//			System.out.println("移动");
-//			float move_x=ev.getX();
-//			float move_y=ev.getY();
-//			if(move_x>0&&down_x>0){
-//				if(move_x-down_x>0){
-//					System.out.println("ACTION_MOVE");
-//					return true;
-//				}
-//			}
-//			if(Math.abs(move_y-down_y)<distance){
-//				return true;
-//			}
-//			return false;
-//		case MotionEvent.ACTION_UP:// 抬起
-//		case MotionEvent.ACTION_CANCEL:
-//			float UP_y=ev.getY();
-//			if(Math.abs(UP_y-down_y)<distance){
-//				System.out.println("ACTION_UP");
-//				return true;
-//			}
-//			return false;
-//
-//		}
 		return handled;
 	}
 	@Override
@@ -345,7 +314,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 			float move_y= ev.getY();
 			float move_x=ev.getX();
 			if(Math.abs(move_y-down_y)>displace){
-				System.out.println("不同Y轴");
 				return false;
 			}
 //			if(Math.abs(move_x-down_x)>displace)
@@ -354,7 +322,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 			float UP_y=ev.getY();
 			float UP_x=ev.getX();
 			if(Math.abs(UP_x-down_x)>displace||Math.abs(UP_y-down_y)>displace){
-				System.out.println("消费了");
 				return true;
 			}
 			break;

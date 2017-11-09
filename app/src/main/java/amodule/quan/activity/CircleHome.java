@@ -478,12 +478,10 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
                 barShare.openShare();
                 break;
             case R.id.back:
-                System.out.println("back");
                 XHClick.mapStat(this, "a_quan_zi_index", "返回", "");
                 this.onBackPressed();
                 break;
             case R.id.title:
-                System.out.println("title");
                 refreshCurrentFragment();
                 break;
             default:

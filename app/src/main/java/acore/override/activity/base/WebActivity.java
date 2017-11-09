@@ -1,6 +1,8 @@
 package acore.override.activity.base;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -144,6 +146,8 @@ public class WebActivity extends BaseActivity{
 	}
 
 	protected static void setCookie(String theUrl){
+		if (TextUtils.isEmpty(theUrl))
+			return;
 //		String cookieKey = StringManager.apiUrl.replace(StringManager.apiTitle, "").replace("/", "");
 		if(theUrl.indexOf(MallStringManager.domain)>-1){//电商 ds.xiangha.com
 			Map<String,String> header=MallReqInternet.in().getHeader(mShowWeb);

@@ -55,7 +55,14 @@ public class XHApplication extends MobApplication {
     @Override
     public void onCreate() {
         startTime = System.currentTimeMillis();
-        super.onCreate();
+        try{
+            super.onCreate();
+        }catch (SecurityException e) {
+            //捕捉已知MobSDK定位bug
+            e.printStackTrace();
+        }catch (Exception e){
+            CrashReport.postCatchedException(e);
+        }
         LogManager.printStartTime("zhangyujian","XhApplication::super.oncreate::");
         mAppApplication = this;
 

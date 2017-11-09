@@ -18,9 +18,11 @@ public abstract class PtrDefaultHandler implements PtrHandler {
                     .getTop() < absListView.getPaddingTop());
         } else if (view instanceof RvListView) {
             LinearLayoutManager layoutManager = (LinearLayoutManager) ((RecyclerView) view).getLayoutManager();
-            Log.i("tzy", "findFirstCompletelyVisibleItemPosition :: " + layoutManager.findFirstCompletelyVisibleItemPosition());
+//            Log.i("tzy", "findFirstCompletelyVisibleItemPosition :: " + layoutManager.findFirstCompletelyVisibleItemPosition());
+//            Log.i("tzy", "HeaderViewsSize :: " + ((RvListView) view).getHeaderViewsSize());
+//            Log.i("tzy", "boolean :: " + (layoutManager.findFirstCompletelyVisibleItemPosition() > (((RvListView) view).getHeaderViewsSize() == 0 ? 1 : 0))+" - false 能刷新");
             return layoutManager.getChildCount() > 0
-                    && (layoutManager.findFirstCompletelyVisibleItemPosition() > (((RvListView) view).getHeaderViewsSize() != 0 ? 0 : 1) || layoutManager.findFirstCompletelyVisibleItemPosition() == -1);
+                    && (layoutManager.findFirstCompletelyVisibleItemPosition() > 0 || layoutManager.findFirstCompletelyVisibleItemPosition() == -1);
         } else {
             return view.getScrollY() > 0;
         }

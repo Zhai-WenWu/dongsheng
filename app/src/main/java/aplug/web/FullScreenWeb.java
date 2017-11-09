@@ -69,6 +69,8 @@ public class FullScreenWeb extends WebActivity implements IObserver {
      */
     @Override
     public void loadData() {
+        if (TextUtils.isEmpty(url))
+            return;
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

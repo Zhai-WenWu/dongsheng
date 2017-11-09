@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
@@ -23,6 +24,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PopWindowDialog;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.main.Main;
@@ -36,7 +38,6 @@ import xh.basic.internet.UtilInternet;
 import xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
-import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
  * 顶部view控制
@@ -53,6 +54,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
 
     private String code;
     private boolean isHasVideo;
+    private boolean nowFav;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
     private String nickName = "";
@@ -71,8 +73,8 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         detailDish.findViewById(R.id.more_layout).setOnClickListener(this);
         detailDish.findViewById(R.id.fav_layout).setVisibility(View.GONE);
         detailDish.findViewById(R.id.leftClose).setVisibility(View.GONE);
-        detailDish.findViewById(R.id.share_layout).setVisibility(View.INVISIBLE);
-        detailDish.findViewById(R.id.more_layout).setVisibility(View.INVISIBLE);
+        detailDish.findViewById(R.id.share_layout).setVisibility(View.GONE);
+        detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
         favText = (TextView) detailDish.findViewById(R.id.tv_fav);
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
         detailDish.findViewById(R.id.leftClose).setOnClickListener(this);
@@ -119,7 +121,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * 初始化当前状态
      */
     public void setViewState(){
-        detailDish.findViewById(R.id.fav_layout).setVisibility(state != null ? View.GONE : View.VISIBLE);
+        detailDish.findViewById(R.id.fav_layout).setVisibility(View.VISIBLE);//state != null ? View.GONE :
         //编辑
         if(state != null){
             if(isHasVideo && ("6".equals(dishState) || TextUtils.isEmpty(dishState))){ //视频菜谱，并且审核通过了，则不允许编辑
@@ -135,15 +137,23 @@ public class DishTitleViewControlNew implements View.OnClickListener{
 
     }
 
-    //收藏
-    public void setFavStatus(String isFav){
-        if ("2".equals(isFav)) {
+    public boolean isNowFav(){
+        return this.nowFav;
+    }
+
+    public void setFavStatus(boolean isFav){
+        this.nowFav = isFav;
+        if (isFav) {
             favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
             favText.setText("已收藏");
         }else{
             favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
             favText.setText("未收藏");
         }
+    }
+    //收藏
+    public void setFavStatus(String isFavStr){
+        setFavStatus("2".equals(isFavStr));
     }
     @Override
     public void onClick(View v) {
@@ -290,54 +300,60 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                     if (loading&&context!=null) loadManager.startProgress("仍在进行");
                 }
             }, 1000);
-            AppCommon.onFavoriteClick(detailDish.getApplicationContext(), "favorites", code,
-                    new InternetCallback(detailDish.getApplicationContext()) {
+            FavoriteHelper.instance().setFavoriteStatus(detailDish.getApplicationContext(), code, dishInfoMap.get("name"),
+                    isHasVideo ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                    new FavoriteHelper.FavoriteStatusCallback() {
                         @Override
-                        public void loaded(int flag, String url, Object returnObj) {
+                        public void onSuccess(boolean state) {
                             loading = false;
                             loadManager.dismissProgress();
-                            if (flag >= UtilInternet.REQ_OK_STRING) {
-                                Map<String, String> map = getListMapByJson(returnObj).get(0);
-                                boolean nowFav = map.get("type").equals("2");
-                                favText.setText(nowFav ? "已收藏" : "  收藏  ");
-                                favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 
-                                //统计
-                                XHClick.onEvent(detailDish.getApplicationContext(), "dishFav", nowFav ? "收藏" : "取消");
-                                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
-                                dishInfoMap.put("favNum", nowFav ? "2" : "1");
-                                if (nowFav) {
-                                    boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataFavDish, FileManager.xmlKey_shareShowPopNumFavDish);
-                                    if (isShow) {
-                                        boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
-                                        mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
-                                                isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null);
-                                        if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
-                                            String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
-                                            String clickUrl = StringManager.wwwUrl + "video/caipu/" + dishInfoMap.get("code");
-                                            ;
-                                            String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " + clickUrl;
+                            nowFav = state;
+
+                            favText.setText(nowFav ? "已收藏" : "  收藏  ");
+                            favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+
+                            //统计
+                            XHClick.onEvent(detailDish.getApplicationContext(), "dishFav", nowFav ? "收藏" : "取消");
+                            XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
+                            dishInfoMap.put("favNum", nowFav ? "2" : "1");
+                            if (nowFav) {
+                                boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataFavDish, FileManager.xmlKey_shareShowPopNumFavDish);
+                                if (isShow) {
+                                    boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
+                                    mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
+                                            isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null);
+                                    if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
+                                        String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
+                                        String clickUrl = StringManager.wwwUrl + "video/caipu/" + dishInfoMap.get("code");
+                                        ;
+                                        String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " + clickUrl;
 //                                            Bitmap bitmap = mVideoPlayerController.getVideoImageView().getBitmap();
 //                                            String imgUrl = ShareTools.getBarShare(DetailDish.this).saveDrawable(bitmap, FileManager.save_cache + "/share_" + currentTimeMillis() + ".png");
-                                            String type = BarShare.IMG_TYPE_WEB;
-                                            String imgUrl = dishInfoMap.get("img");
-                                            if (imgUrl == null) {
-                                                type = ShareTools.IMG_TYPE_RES;
-                                                imgUrl = "" + R.drawable.share_launcher;
-                                            }
-                                            mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
-                                        } else {
-                                            String type = BarShare.IMG_TYPE_WEB;
-                                            String title = "【香哈菜谱】" +  dishInfoMap.get("name") + "的做法";
-                                            String clickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
-                                            String content = "我又学会了一道" + dishInfoMap.get("name") + "，太棒了，强烈推荐你也用香哈学做菜！";
-                                            String imgUrl = dishInfoMap.get("img");
-                                            mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
+                                        String type = BarShare.IMG_TYPE_WEB;
+                                        String imgUrl = dishInfoMap.get("img");
+                                        if (imgUrl == null) {
+                                            type = ShareTools.IMG_TYPE_RES;
+                                            imgUrl = "" + R.drawable.share_launcher;
                                         }
-                                        XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");
+                                        mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
+                                    } else {
+                                        String type = BarShare.IMG_TYPE_WEB;
+                                        String title = "【香哈菜谱】" +  dishInfoMap.get("name") + "的做法";
+                                        String clickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code") + ".html";
+                                        String content = "我又学会了一道" + dishInfoMap.get("name") + "，太棒了，强烈推荐你也用香哈学做菜！";
+                                        String imgUrl = dishInfoMap.get("img");
+                                        mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
                                     }
+                                    XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");
                                 }
                             }
+                        }
+
+                        @Override
+                        public void onFailed() {
+                            loading = false;
+                            loadManager.dismissProgress();
                         }
                     });
         } else {

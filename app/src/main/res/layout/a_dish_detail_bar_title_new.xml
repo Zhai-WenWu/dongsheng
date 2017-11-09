@@ -101,7 +101,6 @@
                 android:paddingTop="@dimen/dp_12"
                 android:paddingBottom="@dimen/dp_9"
                 android:visibility="visible"
-                android:src="@drawable/z_caipu_xiangqing_topbar_ico_fav"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
