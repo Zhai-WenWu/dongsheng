@@ -14,6 +14,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.tencent.android.tpush.XGPushManager;
 import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.xh.manager.DialogManager;
@@ -52,6 +53,7 @@ import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 
 import static java.lang.System.currentTimeMillis;
@@ -138,6 +140,8 @@ public class MainInitDataControl {
             public void run() {
                 //讯飞语音： 请勿在“=”与 appid 之间添加任务空字符或者转义符
                 SpeechUtility.createUtility(act, SpeechConstant.APPID +"=56ce9191");
+                //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
+                QiYvHelper.getInstance().initSDK(act);
             }
         }).start();
         // 发送页面存活时间
@@ -147,7 +151,10 @@ public class MainInitDataControl {
 
         AdConfigTools.getInstance().getAdConfigInfo();
         long endTime=System.currentTimeMillis();
+
+        initX5(act);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
+
     }
 
     /**
@@ -373,5 +380,24 @@ public class MainInitDataControl {
     private void delayedExcute(@NonNull Runnable runnable){
         if(runnable == null) return;
         new Handler(Looper.getMainLooper()).postDelayed(runnable,delayedTime);
+    }
+    /**
+     * 初始化X5浏览器
+     */
+    private void initX5(Activity activity) {
+        if(activity==null){return;}
+        //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
+        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+            @Override
+            public void onViewInitFinished(boolean arg0) {
+                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                Log.d("app", " onViewInitFinished is " + arg0);
+            }
+            @Override
+            public void onCoreInitFinished() {
+            }
+        };
+        //x5内核初始化接口
+        QbSdk.initX5Environment(activity.getApplicationContext(),  cb);
     }
 }
