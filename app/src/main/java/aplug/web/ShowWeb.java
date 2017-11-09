@@ -385,7 +385,6 @@ public class  ShowWeb extends WebActivity implements IObserver {
 					webview.loadUrl("javascript:"+shareCallback+"(\""+dataMap.get("status")+"\")");
 					Log.i("tzy","javascript:"+shareCallback+"(\""+dataMap.get("status")+"\")");
 				}
-				Tools.showToast(this,"NOTIFY_SHARE");
 				break;
 		}
 	}

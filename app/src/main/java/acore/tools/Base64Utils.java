@@ -137,7 +137,6 @@ public class Base64Utils {
 	public static void main(String[] args) {
 		String str = "zhaoshiling";
 		try {
-			System.out.println(encode(str.getBytes()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

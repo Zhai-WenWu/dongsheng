@@ -1,11 +1,4 @@
-/**
- * @author Jerry
- * 2013-4-24 上午10:31:01
- * Copyright: Copyright (c) xiangha.com 2011
- */
-
 package amodule.main;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
@@ -94,10 +87,8 @@ import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 import xh.windowview.XhDialog;
-
 import static acore.tools.Tools.getApiSurTime;
 import static com.xiangha.R.id.iv_itemIsFine;
-
 
 @SuppressWarnings("deprecation")
 public class Main extends Activity implements OnClickListener, IObserver {
@@ -141,33 +132,41 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private boolean isInit=false;//是否已经进行初始化
     private WelcomeDialog welcomeDialog;//dialog,显示
     public static final String TAG="xianghaTag";
+    private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
         setContentView(R.layout.xh_main);
-
+        mLocalActivityManager = new LocalActivityManager(this, true);
+        mLocalActivityManager.dispatchCreate(savedInstanceState);
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
         initMTA();
-
         allMain = this;
-        mLocalActivityManager = new LocalActivityManager(this, true);
-        mLocalActivityManager.dispatchCreate(savedInstanceState);
+        initOther();
+        LogManager.print("i", "Main -------- onCreate");
+        //初始化浮标位置
+        initBuoyTab(savedInstanceState);
+        mainInitDataControl = new MainInitDataControl();
+        showWelcome();
+        LogManager.printStartTime("zhangyujian","main::oncreate::");
+    }
+
+    /**
+     * 处理一下非明确功能的逻辑
+     */
+    private void initOther(){
         String[] times = FileManager.getSharedPreference(XHApplication.in(), FileManager.xmlKey_appKillTime);
         if (times != null && times.length > 1 && !TextUtils.isEmpty(times[1])) {
             Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
-        LogManager.print("i", "Main -------- onCreate");
-
-        // 当软件后台重启时,根据保存的值,回到关闭前状态的text的字体显示
-
-        //初始化浮标位置
-        initBuoyTab(savedInstanceState);
-
-        mainInitDataControl = new MainInitDataControl();
-
+    }
+    /**
+     * 展示welcome
+     */
+    private void showWelcome(){
         if("developer.huawei".equals(ChannelUtil.getChannel(this))){
             //单独处理华为渠道
             String showHuaweiAD= AppCommon.getConfigByLocal("huaweiAD");//release 2表示显示发布，显示广告，1不显示广告
@@ -180,12 +179,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         }
         welcomeDialog.show();
-        LogManager.printStartTime("zhangyujian","main::oncreate::");
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
-        if (LoginManager.isLogin())
-            initQiYvUnreadCount();
-        addQiYvListener();
     }
 
     /**
@@ -200,7 +193,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         });
     }
 
-    private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
     /**
      * 设置七鱼未读消息监听
      */
@@ -472,6 +464,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
         ShortVideoInit.init(Main.this);
         //从Welcome方法
 //        QbSdk.initX5Environment(Main.this, null);
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        if (LoginManager.isLogin())
+            initQiYvUnreadCount();
+        addQiYvListener();
     }
 
     /**
@@ -479,10 +476,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
      */
     @SuppressLint("HandlerLeak")
     private void initUI() {
-
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
-
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
 
         //实例化有用到mRootLayout，必须按着顺序执行
@@ -542,9 +537,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         }
         setTabItemMargins(linear_item, 0, 0, margin);
         setTabItemMargins(linear_item, length - 1, margin, 0);
-
     }
-
     public void setTabItemMargins(ViewGroup viewGroup, int index, int leftMargin, int rightMargin) {
         RelativeLayout child = (RelativeLayout) viewGroup.getChildAt(index);
         LinearLayout.LayoutParams params_child = (LinearLayout.LayoutParams) child.getLayoutParams();
@@ -577,7 +570,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         Intent intent = new Intent(this, MainChangeSend.class);
         startActivity(intent);
     }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -613,7 +605,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         });
         openUri();
-
     }
 
     /**
@@ -639,7 +630,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         }
     }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -650,7 +640,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             e.printStackTrace();
         }
     }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -864,8 +853,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         }
     }
-
-
     /**
      * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
      */
@@ -929,7 +916,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
     /**
      * 执行一个旋转动画
-     *
      * @param view
      */
     private void setRoteAnimation(View view) {
@@ -974,7 +960,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
             isInit = true;
-//            mainInitDataControl.iniMainAfter(Main.this);
         }
         //此处可以进行分级处理:暂时无需要
         Log.i("zhangyujian", "main::onWindowFocusChanged");

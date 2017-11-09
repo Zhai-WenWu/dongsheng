@@ -92,7 +92,6 @@ public class DishCreateViewControl {
         media_dish_linear.setOrientation(LinearLayout.HORIZONTAL);
         num_residuum=listmaps.size()%numColums;
         int num_temp=num_residuum;
-        System.out.println(":num_temp:::"+num_temp+"::listmaps.size():::"+listmaps.size()+"::;numColums::"+numColums);
         int now_line=(listmaps.size()-num_temp)/numColums;
         for(int i=0;i<numColums;i++){
             if(i!=0){
@@ -117,7 +116,6 @@ public class DishCreateViewControl {
                 now_num++;
                 num_temp--;
             }
-            System.out.println(i+":::now_line:::"+now_line+"::now_num:::"+now_num);
             for(int j=0;j<now_num;j++){
 //                if(i*now_line+j>=listmaps.size()){//超出数据break;
 //                    break;

@@ -554,7 +554,7 @@ public class TouchImageView extends ImageView {
 
             case CENTER_INSIDE:
                 scaleX = scaleY = Math.min(1, Math.min(scaleX, scaleY));
-
+                break;
             case FIT_CENTER:
                 scaleX = scaleY = Math.min(scaleX, scaleY);
                 break;

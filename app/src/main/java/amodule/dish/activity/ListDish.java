@@ -149,15 +149,15 @@ public class ListDish extends BaseActivity {
                         adData.add(new HashMap<String, String>());
                     }
                 }
-                loadManager.setLoading(listView, adapter, true, new OnClickListener() {
-                    @Override
-                    public void onClick(View arg0) {
-                        loadData();
-                    }
-                });
             }
         }, statisticKey,true);
         adapter.setXHAllControl(xhAllAdControl);
+        loadManager.setLoading(listView, adapter, true, new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                loadData();
+            }
+        });
     }
 
     @Override

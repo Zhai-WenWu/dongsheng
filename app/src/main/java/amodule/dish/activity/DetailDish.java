@@ -63,6 +63,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
     private String lastPermission = "";
+    private boolean loadOver = false;
 
     public static long startTime= 0;
     private String data_type="";
@@ -161,6 +162,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         initData();
     }
     private void initData(){
+        loadOver = false;
+        hasPermission = true;
+        contiunRefresh = true;
+        lastPermission = "";
+        detailPermissionMap.clear();
+        permissionMap.clear();
         dishActivityViewControl.setCode(courseCode,chapterCode);
         dishActivityViewControl.initData(code);
         loadManager.setLoading(new View.OnClickListener() {
@@ -219,6 +226,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                     }
                     if(permissionMap.containsKey("detail"))
                         detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                }else if(loadOver && TextUtils.isEmpty(lastPermission)){
+                    contiunRefresh = false;
                 }
             }
             @Override
@@ -241,6 +250,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 if(ToolsDevice.isNetworkAvailable(context)|| !LoadImage.SAVE_LONG.equals(imgLevel)){
                     loadManager.loadOver(flag, 1, true);
                 }else loadManager.hideProgressBar();
+                loadOver = true;
             }
         });
     }
@@ -285,7 +295,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
     /**
      * 处理业务数据
-     * @param data
+     * @param data 数据
+     * @param permissionMap 权限数据
      */
     private void analyzeData(String data,Map<String,String> permissionMap) {
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
@@ -320,6 +331,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onResume() {
         Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
+        Log.i("tzy","onResume()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
         Rect outRect = new Rect();
@@ -332,7 +344,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
     @Override
     protected void onPause() {
-        Log.i("DetailDishActivity","onPause()");
+        Log.i("tzy","onPause()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
         if(dishActivityViewControl != null){

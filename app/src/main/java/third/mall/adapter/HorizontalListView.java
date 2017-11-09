@@ -301,7 +301,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 		handled |= mGesture.onTouchEvent(ev);
 		getParent().requestDisallowInterceptTouchEvent(true);
 		int distance= (int) context.getResources().getDimension(R.dimen.dp_20);
-		System.out.println("handled:::"+handled);
 		return handled;
 	}
 	@Override
@@ -317,7 +316,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 			float move_y= ev.getY();
 			float move_x=ev.getX();
 			if(Math.abs(move_y-down_y)>distance){
-				System.out.println("不同Y轴");
 				return false;
 			}
 //			if(Math.abs(move_x-down_x)>displace)
@@ -326,7 +324,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 			float UP_y=ev.getY();
 			float UP_x=ev.getX();
 			if(Math.abs(UP_x-down_x)>distance||Math.abs(UP_y-down_y)>distance){
-				System.out.println("消费了");
 				return true;
 			}else{
 				return false;
@@ -372,7 +369,6 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 			}
 			
 			requestLayout();
-			System.out.println("distanceY::"+distanceY);
 			return Math.abs(distanceY) <= 1;
 		}
 
