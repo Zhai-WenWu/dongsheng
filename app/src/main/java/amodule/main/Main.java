@@ -70,15 +70,11 @@ import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
-import amodule.main.activity.MainChangeSend;
-import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHome;
 import amodule.main.activity.MainMyself;
 import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
 import amodule.quan.tool.MyQuanDataControl;
-import amodule.user.activity.MyFavorite;
-import amodule.user.activity.MyFavoriteNew;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
@@ -90,7 +86,6 @@ import third.push.xg.XGLocalPushServer;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
-import xh.windowview.XhDialog;
 import static acore.tools.Tools.getApiSurTime;
 import static com.xiangha.R.id.iv_itemIsFine;
 
@@ -109,21 +104,17 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private XiangHaTabHost tabHost;
     private LinearLayout linear_item;
     private RelativeLayout mRootLayout;
-    private RelativeLayout changeSendLayout;
     private MainBuoy mBuoy;
     // 页面关闭层级
     private LocalActivityManager mLocalActivityManager;
 
-    private Class<?>[] classes = new Class<?>[]{MainHome.class, MainMall.class,
-            MainCircle.class, MyMessage.class, MainMyself.class};
-    private String[] tabTitle = {"首页", "商城", "社区", "消息", "我的"};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall,
-            R.drawable.tab_found, R.drawable.tab_four, R.drawable.tab_myself};
+    private String[] tabTitle = {"首页", "商城", "消息", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHome.class, MainMall.class, MyMessage.class, MainMyself.class};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
     private int doExit = 0;
     private int defaultTab = 0;
     private String url = null;
     private int everyReq = 4 * 60;
-    private boolean quanRefreshState = false;
 
     private boolean WelcomeDialogstate = false;//false表示当前无显示,true已经显示
     private boolean mainOnResumeState = false;//false 无焦点，true 获取焦点
@@ -494,16 +485,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         tabHost = (XiangHaTabHost) findViewById(R.id.xiangha_tabhost);
         tabHost.setup(mLocalActivityManager);
         linear_item = (LinearLayout) findViewById(R.id.linear_item);
-        ImageView btn_changeSend = (ImageView) findViewById(R.id.btn_changeSend);
-        changeSendLayout = (RelativeLayout) findViewById(R.id.btn_changeSend_layout);
-        changeSendLayout.setVisibility(View.GONE);
-        int btn_width = ToolsDevice.getWindowPx(this).widthPixels / 5;
-        int padding = (btn_width - Tools.getDimen(this, R.dimen.dp_55)) / 2;
-        int dp_3 = Tools.getDimen(this,R.dimen.dp_3);
-        int cha = 0;//padding / 4;
-        changeSendLayout.getLayoutParams().width = btn_width;
-        btn_changeSend.getLayoutParams().width = btn_width;
-        btn_changeSend.setPadding(padding + cha+dp_3, dp_3, padding - cha+dp_3, dp_3);
     }
 
     /**
@@ -522,10 +503,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             ImageView imgView = (ImageView) tabViews[i].findViewById(iv_itemIsFine);
             imgView.setImageResource(tabImgs[i]);
 
-//			if (i == 2) {
-//				tv.setVisibility(View.GONE);
-//				imgView.setVisibility(View.GONE);
-//			}
             if (url != null && i == 0) {
                 Intent homePage = new Intent(this, classes[i]);
                 homePage.putExtra("url", url);
@@ -569,14 +546,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         timer.schedule(tt, everyReq * 1000, everyReq * 1000);
     }
 
-    public void onChangeSend(View v) {
-        MyQuanDataControl.getNewMyQuanData(this, null);
-        XHClick.mapStat(this, "a_index530", "底部导航栏", "点击底部发布按钮");
-        XHClick.mapStat(this, MainCircle.STATISTICS_ID, "发贴", null);
-        XHClick.mapStat(this, "a_down", "+", "");
-        Intent intent = new Intent(this, MainChangeSend.class);
-        startActivity(intent);
-    }
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -599,7 +568,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         isForeground = true;
         //去我的页面
         if (MallPayActivity.pay_state) {
-            onClick(tabViews[4].findViewById(R.id.tab_linearLayout));
+            onClick(tabViews[classes.length - 1].findViewById(R.id.tab_linearLayout));
         }
         //去商城页面
 //        if (MallPayActivity.mall_state) {
@@ -619,16 +588,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
      */
     private void openUri() {
         if (mainOnResumeState && WelcomeDialogstate) {
-            //这个问题待验证
-//        Intent intent = this.getIntent();
-//        if (intent != null) {
-//            url = intent.getStringExtra("url");
-//            if (url != null) {
-//                AppCommon.openUrl(this, url, true);
-//                intent.removeExtra("url");
-//                url = null;
-//            }
-//        }
             openFromOther();
             //外部开启页面
             if (!TextUtils.isEmpty(url)) {
@@ -771,10 +730,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#ff533c"));
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(true);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
-                if (j == 2) {
-                    MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
-                    mainCircle.setQuanmCurrentPage();
-                }
             } else {
                 TextView textView = (TextView) tabViews[j].findViewById(R.id.textView1);
                 textView.setTextColor(Color.parseColor("#1b1b1f"));
@@ -782,11 +737,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(false);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
             }
-        }
-        if (index == 2) {//特殊美食圈的逻辑
-            changeSendLayout.setVisibility(View.VISIBLE);
-        } else {
-            changeSendLayout.setVisibility(View.GONE);
         }
         if (nowTab == 0 && index != 0) {//当前是首页，切换到其他页面
             if (allTab.containsKey("MainIndex")) {
@@ -803,7 +753,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         }
         //特殊逻辑
 //        changeSendLayout.setVisibility(View.VISIBLE);
-        if(index == 0 || index == 2){
+        if(index == 0){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }else{
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -867,21 +817,18 @@ public class Main extends Activity implements OnClickListener, IObserver {
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
-                if (i == 2 && allTab.containsKey("MainCircle") && i == nowTab) {
-                    MainCircle mainCircle = (MainCircle) allTab.get("MainCircle");
-                    mainCircle.refresh();
-                } else if (i == 0 && allTab.containsKey("MainIndex") && i == nowTab) {
+                if (i == 0 && allTab.containsKey("MainIndex") && i == nowTab) {
                     MainHome mainIndex = (MainHome) allTab.get("MainIndex");
                     mainIndex.refreshContentView(true);
                 } else if (i == 1 && allTab.containsKey("MainMall") && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
                     MainMall mall = (MainMall) allTab.get("MainMall");
                     mall.scrollTop();
                     mall.refresh();
-                } else if (i == 4 && allTab.containsKey("MainMyself")) {
+                } else if (i == 3 && allTab.containsKey("MainMyself")) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get("MainMyself");
 //                    mainMyself.scrollToTop();
-                } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
+                } else if (i == 2 && allTab.containsKey("MyMessage") && i == nowTab) {
 //                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
 //                    myMessage.onRefresh();
                 }
@@ -913,8 +860,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
     public View getTabView(int index) {
         if (tabViews != null
-                && tabViews.length == 5
-                && index < 5
+                && tabViews.length == 4
+                && index < 4
                 && index > -1) {
             return tabViews[index];
         }
@@ -930,22 +877,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         animation.setDuration(800);
         view.clearAnimation();
         view.startAnimation(animation);
-    }
-
-    /**
-     * 设置导航美食圈按钮显示刷新状态
-     *
-     * @param state
-     */
-    public void setQuanRefreshState(boolean state){
-        quanRefreshState=state;
-        if(state) {
-            ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found_refresh);
-            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
-        }else{
-            ((ImageView)tabViews[2].findViewById(iv_itemIsFine)).setImageResource(R.drawable.tab_found);
-            ((TextView) tabViews[2].findViewById(R.id.textView1)).setText("社区");
-        }
     }
 
     public LocalActivityManager getLocalActivityManager() {
@@ -1006,7 +937,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
             if (data != null && data instanceof Boolean && (Boolean)data) {
                 addQiYvListener();
-                if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                if (nowTab == 2 || allTab.containsKey("MyMessage")) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                     myMessage.onRefresh();
                 }

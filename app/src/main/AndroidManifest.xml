@@ -276,7 +276,7 @@
             android:theme="@style/common_TransParentThemeNew"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="amodule.main.activity.MainCircle"
+            android:name="amodule.quan.activity.MainCircle"
             android:keepScreenOn="true"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"

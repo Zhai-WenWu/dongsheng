@@ -48,8 +48,6 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.db.DataOperate;
-import amodule.dish.db.DishOffSqlite;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.main.Main;
@@ -425,7 +423,7 @@ public class AppCommon {
             String[] urls = newUrl.split("\\?");
             if (urls.length > 0) {
                 final Class<?> c = Class.forName(urls[0]);
-                if (urls[0].contains("amodule.main.activity.") || urls[0].contains("HomeNous") || urls[0].contains("third.mall.MainMall")) {
+                if (urls[0].contains("amodule.main.activity.") || urls[0].contains("third.mall.MainMall")) {
                     Main.colse_level = 2;
                     if (Main.allMain != null) {
                         Main.allMain.setCurrentTabByClass(c);
@@ -650,9 +648,9 @@ public class AppCommon {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                View tab4 = null;
+                View tab3 = null;
                 if (Main.allMain != null) {
-                    tab4 = Main.allMain.getTabView(4);
+                    tab3 = Main.allMain.getTabView(3);
                 }
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> listMapByJson = getListMapByJson(returnObj);
@@ -664,26 +662,26 @@ public class AppCommon {
                             noGoTime = map2.get("noGoTime");
                             goTime = map2.get("goTime");
 //							Map<String, String> msgMap = new HashMap<String, String>();
-                            if (tab4 != null) {
+                            if (tab3 != null) {
                                 if (FileManager.loadShared(context, "Activity_state", "goTime") == "") {
-                                    tab4.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.VISIBLE);
-                                    CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_FIVE, -1, true);
+                                    tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.VISIBLE);
+                                    CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_THREE, -1, true);
                                 } else {
                                     String oldNoGoTime = (String) FileManager.loadShared(context, "Activity_state", "noGoTime");
                                     String oldGoTime = (String) FileManager.loadShared(context, "Activity_state", "goTime");
                                     if (!noGoTime.equals(oldNoGoTime) || !goTime.equals(oldGoTime)) {
-                                        tab4.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.VISIBLE);
-                                        CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_FIVE, -1, true);
+                                        tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.VISIBLE);
+                                        CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_THREE, -1, true);
                                     } else {
-                                        tab4.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.GONE);
-                                        CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_FIVE, -1, false);
+                                        tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.GONE);
+                                        CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_THREE, -1, false);
                                     }
                                 }
                             }
                         }
                     }
-                } else if (tab4 != null) {
-                    tab4.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.GONE);
+                } else if (tab3 != null) {
+                    tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.GONE);
                 }
             }
         });

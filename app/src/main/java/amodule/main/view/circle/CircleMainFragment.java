@@ -692,9 +692,7 @@ public class CircleMainFragment extends Fragment {
      * 设置当前页面加载页面位置
      */
     public void setQuanmCurrentPage() {
-        if (firstVisibleItems >= 10) {
-            allMain.setQuanRefreshState(true);
-        } else allMain.setQuanRefreshState(false);
+
     }
 
     public PlateData getmPlateData() {

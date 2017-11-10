@@ -12,10 +12,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.XHClick;
 import acore.tools.FileManager;
-import amodule.main.Main;
-import amodule.main.activity.MainCircle;
 import xh.basic.tool.UtilString;
 
 public class CommonBottonControl {
@@ -28,9 +25,9 @@ public class CommonBottonControl {
 	 * @param context
 	 */
 	public View setCommonBottonView(String className,Activity context,int contentXml){
-//		if(jubgeCommonBottonShow(context,className))
-//			return addCommonBottonView(className,context, contentXml);
-//		else
+		if(jubgeCommonBottonShow(context,className))
+			return addCommonBottonView(className,context, contentXml);
+		else
 			return LayoutInflater.from(context).inflate(contentXml, null);
 	}
 	/**
@@ -76,25 +73,6 @@ public class CommonBottonControl {
 	 */
 	public CommonBottomView createBottomView(String className,final Activity context){
 		builder= CommonBottomView.BottomViewBuilder.getInstance();
-		String style=UtilString.getListMapByJson(list.get(0).get(className)).get(0).get("style");
-		if(list!=null&&style.equals("1")){//正常---圈子外面---设置view为社区
-			builder.setIconOnClickListener(CommonBottomView.BOTTOM_CENTER, new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Main.colse_level=2;
-					context.finish();
-					if(Main.allMain!=null)
-						Main.allMain.setCurrentTabByClass(MainCircle.class);
-					XHClick.mapStat(context, "a_down420", "美食圈", "");
-				}
-			});
-			builder.setIconDrawableAndText(CommonBottomView.BOTTOM_CENTER, R.drawable.tab_found, "社区");
-		}else if(list!=null&&style.equals("2")){//圈子内部----显示otherview--不传文字和后面背景色就ok了
-//			builder.setIconDrawableAndText(CommonBottomView.BOTTOM_CENTER, R.drawable.z_home_menu_fatie, "发贴");
-//			builder.setNoShowIndex(Integer.parseInt(CommonBottomView.BOTTOM_CENTER));
-//			String color = Tools.getColorStr(context,R.color.comment_color);
-//			builder.setIndexBackgroup(CommonBottomView.BOTTOM_CENTER, color, "#FFFFFF");
-		}
 		return mCommonBottomView=builder.create(context);
 	}
 	/**
