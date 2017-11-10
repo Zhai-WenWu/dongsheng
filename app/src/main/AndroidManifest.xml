@@ -450,6 +450,7 @@
         <activity
             android:name="amodule.article.activity.ArticleDetailActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>

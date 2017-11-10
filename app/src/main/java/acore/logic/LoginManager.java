@@ -658,17 +658,17 @@ public class LoginManager {
                 String vipFirstTime = vipContentMap.get("first_time");
                 String vipLastTime = vipContentMap.get("last_time");
                 String vipMaturityTime = vipContentMap.get("maturity_time");
-                try {
-                    //单位都是秒
-                    long firstTime = Long.parseLong(vipFirstTime);
-                    long lastTime = Long.parseLong(vipLastTime);
-                    long maturityTime = Long.parseLong(vipMaturityTime);
-                    long dialogTime = lastTime + 20 * 24 * 60 * 60;
-                    long currTime = System.currentTimeMillis() / 1000;
-                    FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (TextUtils.isEmpty(vipFirstTime) || TextUtils.isEmpty(vipLastTime) || TextUtils.isEmpty(vipMaturityTime)) {
+                    if (callback != null)
+                        callback.run();
+                    return;
                 }
+                //单位都是秒
+                long lastTime = Long.parseLong(vipLastTime);
+                long maturityTime = Long.parseLong(vipMaturityTime);
+                long dialogTime = lastTime + 20 * 24 * 60 * 60;
+                long currTime = System.currentTimeMillis() / 1000;
+                FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "");
                 if (callback != null)
                     callback.run();
             }
