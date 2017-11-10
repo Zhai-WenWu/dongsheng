@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_54"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/dp_5"
+                android:paddingTop="@dimen/dp_5">
+
+    <ImageView
+        android:id="@+id/listview_item_image"
+        android:layout_width="@dimen/dp_44"
+        android:layout_height="@dimen/dp_44"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/dp_4"
+        android:background="@drawable/no_art_small"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/listview_item_line_one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/listview_item_image"
+        android:duplicateParentState="true"
+        android:ellipsize="marquee"
+        android:maxLength="29"
+        android:paddingLeft="@dimen/dp_9"
+        android:paddingRight="@dimen/dp_50"
+        android:paddingTop="@dimen/dp_5"
+        android:singleLine="true"
+        android:textSize="@dimen/sp_16"/>
+
+    <TextView
+        android:id="@+id/listview_item_line_two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listview_item_line_one"
+        android:layout_toRightOf="@+id/listview_item_image"
+        android:ellipsize="end"
+        android:paddingLeft="@dimen/dp_9"
+        android:paddingRight="@dimen/dp_50"
+        android:paddingTop="@dimen/dp_4"
+        android:singleLine="true"
+        android:textSize="@dimen/sp_14"/>
+
+</RelativeLayout>

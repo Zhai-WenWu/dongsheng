@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -1551,6 +1552,22 @@
         <!--全面屏适配-->
         <meta-data android:name="android.max_aspect"
                    android:value="ratio_float" />
+
+        <!--Cling start-->
+        <activity
+            android:name="third.cling.ui.ClingDeviceActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/common_TransParentTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <service
+            android:name="third.cling.service.ClingUpnpService"
+            android:exported="false" />
+
+        <service
+            android:name="third.cling.service.SystemService"
+            android:exported="false" />
+        <!--Cling end-->
 
     </application>
 

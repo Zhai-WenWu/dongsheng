@@ -44,6 +44,7 @@ import amodule.search.avtivity.HomeSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.cling.ui.ClingDeviceActivity;
 
 /**
  * 新的框架首页
@@ -84,6 +85,13 @@ public class MainHome extends MainBaseActivity implements IObserver {
             }
         }
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+
+        findViewById(R.id.test_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainHome.this.startActivity(new Intent(MainHome.this, ClingDeviceActivity.class));
+            }
+        });
     }
 
     /**
