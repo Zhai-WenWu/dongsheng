@@ -72,6 +72,8 @@ public class DishHeaderViewNew extends LinearLayout {
     private int distance;
     private boolean isLoadImg=false;
 
+    private OnClickListener mClingClickListener;
+
     public DishHeaderViewNew(Context context) {
         super(context);
         this.context = context;
@@ -345,6 +347,14 @@ public class DishHeaderViewNew extends LinearLayout {
                     setVideoAdData(mapAd, adLayout);
                 }
             });
+
+            mVideoPlayerController.setClingClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mClingClickListener != null)
+                        mClingClickListener.onClick(v);
+                }
+            });
             dishvideo_img.setVisibility(View.GONE);
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
             callBack.videoImageOnClick();
@@ -352,6 +362,10 @@ public class DishHeaderViewNew extends LinearLayout {
         }
         initVideoAd();
         return isUrlVaild;
+    }
+
+    public void setClingClickListener(OnClickListener clickListener) {
+        this.mClingClickListener = clickListener;
     }
 
     private RelativeLayout dredgeVipLayout;
@@ -540,6 +554,10 @@ public class DishHeaderViewNew extends LinearLayout {
             mVideoPlayerController.onDestroy();
 //            mVideoPlayerController=null;
         }
+    }
+
+    public String getVideoUrl() {
+        return mVideoPlayerController == null ? null : mVideoPlayerController.getVideoUrl();
     }
 
 }

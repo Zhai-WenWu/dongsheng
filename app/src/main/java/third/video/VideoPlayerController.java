@@ -66,6 +66,8 @@ public class VideoPlayerController {
     public StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
 
+    private OnClickListener mClingClickListener;
+
     public VideoPlayerController(Context context) {
         this.mContext = context;
     }
@@ -143,6 +145,14 @@ public class VideoPlayerController {
         videoPlayer.setIsTouchWiget(false);
         videoPlayer.setIsTouchWigetFull(true);
 
+        videoPlayer.setClingClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mClingClickListener != null)
+                    mClingClickListener.onClick(v);
+            }
+        });
+
 
 //        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
 //            @Override
@@ -187,6 +197,10 @@ public class VideoPlayerController {
         String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
+    }
+
+    public void setClingClickListener(OnClickListener clickListener) {
+        this.mClingClickListener = clickListener;
     }
 
     private void setNetworkCallback(){
@@ -410,6 +424,10 @@ public class VideoPlayerController {
         this.mVideoUrl = url;
         videoPlayer.setUp(mVideoUrl,false,"");
         mHasVideoInfo = true;
+    }
+
+    public String getVideoUrl() {
+        return mVideoUrl;
     }
 
     private String getData(List<Map<String, String>> list, String key) {

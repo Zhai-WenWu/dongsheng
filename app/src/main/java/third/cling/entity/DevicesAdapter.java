@@ -13,9 +13,7 @@ import com.xiangha.R;
 import org.fourthline.cling.model.meta.Device;
 
 /**
- * 说明：
- *
- * 日期：17/6/28 15:50
+ * 显示设备列表的适配器
  */
 
 public class DevicesAdapter extends ArrayAdapter<ClingDevice> {
@@ -28,21 +26,41 @@ public class DevicesAdapter extends ArrayAdapter<ClingDevice> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null)
+        ViewHolder viewHoler = null;
+        if (convertView == null || (convertView.getTag() != null && !(convertView.getTag() instanceof ViewHolder))) {
             convertView = mInflater.inflate(R.layout.devices_items, null);
-
+            viewHoler = new ViewHolder(convertView);
+            convertView.setTag(viewHoler);
+        } else
+            viewHoler = (ViewHolder) convertView.getTag();
         ClingDevice item = getItem(position);
         if (item == null || item.getDevice() == null) {
             return convertView;
         }
-
-        Device device = item.getDevice();
-
-        ImageView imageView = (ImageView)convertView.findViewById(R.id.listview_item_image);
-        imageView.setBackgroundResource(R.drawable.ic_action_dock);
-
-        TextView textView = (TextView) convertView.findViewById(R.id.listview_item_line_one);
-        textView.setText(device.getDetails().getFriendlyName());
+        viewHoler.setData(item.getDevice());
         return convertView;
+    }
+
+    private class ViewHolder {
+        private View mItemView;
+        private TextView mDeviceName;
+        private ImageView mDeviceImg;
+
+        public ViewHolder(View itemView) {
+            mItemView = itemView;
+            if (mItemView == null)
+                return;
+            mDeviceImg = (ImageView) mItemView.findViewById(R.id.listview_item_image);
+            mDeviceName = (TextView) mItemView.findViewById(R.id.listview_item_line_one);
+            setDefaultData();
+        }
+
+        private void setDefaultData() {
+            mDeviceImg.setImageResource(R.drawable.ic_action_dock);
+        }
+
+        public void setData(Device device) {
+            mDeviceName.setText(device.getDetails().getFriendlyName());
+        }
     }
 }

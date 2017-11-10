@@ -1556,6 +1556,7 @@
         <!--Cling start-->
         <activity
             android:name="third.cling.ui.ClingDeviceActivity"
+            android:launchMode="singleInstance"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentTheme"

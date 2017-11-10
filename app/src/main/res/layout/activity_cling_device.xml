@@ -13,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:layout_editor_absoluteY="@dimen/dp_8"
-        tools:layout_editor_absoluteX="@dimen/dp_8">
+        tools:layout_editor_absoluteX="@dimen/dp_8"
+        tools:layout_editor_absoluteY="@dimen/dp_8">
 
         <ListView
             android:id="@+id/lv_devices"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -29,8 +29,10 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/sp_18"
         android:textColor="@android:color/primary_text_light"
-        android:paddingTop="@dimen/dp_16"
-        android:paddingBottom="@dimen/dp_16"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
         android:text="@string/notice"/>
 
     <Switch
@@ -38,12 +40,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/mute"
-        android:textColor="@color/c_black_text"/>
+        android:textColor="@color/c_black_text"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5">
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,13 +65,18 @@
             android:id="@+id/seekbar_progress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:max="100"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5">
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,7 +88,8 @@
             android:id="@+id/seekbar_volume"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:max="100"/>
     </LinearLayout>
 
 
@@ -81,7 +97,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10">
 
         <Button
             android:id="@+id/bt_play"

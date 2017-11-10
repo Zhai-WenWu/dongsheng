@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,31 +51,34 @@ import third.cling.util.Utils;
 public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, SeekBar.OnSeekBarChangeListener {
 
     private static final String TAG = ClingDeviceActivity.class.getSimpleName();
+    public static final String PLAY_URL = "play_url";
     /**
      * 连接设备状态: 播放状态
      */
-    public static final int PLAY_ACTION = 0xa1;
+    private final int action_play = 0xa1;
     /**
      * 连接设备状态: 暂停状态
      */
-    public static final int PAUSE_ACTION = 0xa2;
+    private final int action_pause = 0xa2;
     /**
      * 连接设备状态: 停止状态
      */
-    public static final int STOP_ACTION = 0xa3;
+    private final int action_stop = 0xa3;
     /**
      * 连接设备状态: 转菊花状态
      */
-    public static final int TRANSITIONING_ACTION = 0xa4;
+    private final int action_transtioning = 0xa4;
     /**
      * 获取进度
      */
-    public static final int GET_POSITION_INFO_ACTION = 0xa5;
+    private final int action_position_info = 0xa5;
     /**
      * 投放失败
      */
-    public static final int ERROR_ACTION = 0xa5;
-    public static final int SUCCESS_ACTION = 0xa6;
+    private final int action_error = 0xa5;
+    private final int action_succ = 0xa6;
+
+    private String mPlayUrl;
 
     private Context mContext;
     private Handler mHandler = new InnerHandler();
@@ -126,49 +130,22 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "onCreate");
         setContentView(R.layout.activity_cling_device);
         mContext = this;
-
+        initData();
         initView();
         initListeners();
         bindServices();
         registerReceivers();
     }
 
-    private void registerReceivers() {
-        //Register play status broadcast
-        mTransportStateBroadcastReceiver = new TransportStateBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intents.ACTION_PLAYING);
-        filter.addAction(Intents.ACTION_PAUSED_PLAYBACK);
-        filter.addAction(Intents.ACTION_STOPPED);
-        filter.addAction(Intents.ACTION_TRANSITIONING);
-        registerReceiver(mTransportStateBroadcastReceiver, filter);
+    private void initData() {
+        Intent intent = getIntent();
+        if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(PLAY_URL))) {
+            mPlayUrl = intent.getStringExtra(PLAY_URL);
+        }
     }
-
-
-    private void bindServices() {
-        // Bind UPnP service
-        Intent upnpServiceIntent = new Intent(ClingDeviceActivity.this, ClingUpnpService.class);
-        bindService(upnpServiceIntent, mUpnpServiceConnection, Context.BIND_AUTO_CREATE);
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-        // Unbind UPnP service
-        unbindService(mUpnpServiceConnection);
-        // Unbind System service
-        //        unbindService(mSystemServiceConnection);
-        // UnRegister Receiver
-        unregisterReceiver(mTransportStateBroadcastReceiver);
-
-        ClingManager.getInstance().destroy();
-        ClingDeviceList.getInstance().destroy();
-    }
-
     private void initView() {
         mDeviceList = (ListView) findViewById(R.id.lv_devices);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_refresh);
@@ -179,13 +156,6 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
 
         mDevicesAdapter = new DevicesAdapter(mContext);
         mDeviceList.setAdapter(mDevicesAdapter);
-
-        /** 这里为了模拟 seek 效果(假设视频时间为 15s)，拖住 seekbar 同步视频时间，
-         * 在实际中 使用的是片源的时间 */
-        mSeekProgress.setMax(15);
-
-        // 最大音量就是 100，不要问我为什么
-        mSeekVolume.setMax(100);
     }
 
     private void initListeners() {
@@ -241,11 +211,13 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
                     @Override
                     public void success(IResponse response) {
                         Log.e(TAG, "setMute success");
+                        Toast.makeText(mContext, "设置成功", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void fail(IResponse response) {
                         Log.e(TAG, "setMute fail");
+                        Toast.makeText(mContext, "设置失败，请稍后重试", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -253,6 +225,60 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
 
         mSeekProgress.setOnSeekBarChangeListener(this);
         mSeekVolume.setOnSeekBarChangeListener(this);
+    }
+
+    private void bindServices() {
+        // Bind UPnP service
+        Intent upnpServiceIntent = new Intent(ClingDeviceActivity.this, ClingUpnpService.class);
+        bindService(upnpServiceIntent, mUpnpServiceConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    private void registerReceivers() {
+        //Register play status broadcast
+        mTransportStateBroadcastReceiver = new TransportStateBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intents.ACTION_PLAYING);
+        filter.addAction(Intents.ACTION_PAUSED_PLAYBACK);
+        filter.addAction(Intents.ACTION_STOPPED);
+        filter.addAction(Intents.ACTION_TRANSITIONING);
+        registerReceiver(mTransportStateBroadcastReceiver, filter);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.e(TAG, "onNewIntent");
+        setIntent(intent);
+        initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG, "onPause");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy");
+        mHandler.removeCallbacksAndMessages(null);
+        // Unbind UPnP service
+        unbindService(mUpnpServiceConnection);
+        // Unbind System service
+        //        unbindService(mSystemServiceConnection);
+        // UnRegister Receiver
+        unregisterReceiver(mTransportStateBroadcastReceiver);
+
+        ClingManager.getInstance().destroy();
+        ClingDeviceList.getInstance().destroy();
     }
 
     @Override
@@ -302,6 +328,7 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
             @Override
             public void success(IResponse response) {
                 Log.e(TAG, "stop success");
+                Toast.makeText(mContext, "停止播放", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -358,13 +385,13 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
          */
 
         if (currentState == DLANPlayState.STOP) {
-            mClingPlayControl.playNew(Config.TEST_URL, new ControlCallback() {
+            mClingPlayControl.playNew(mPlayUrl, new ControlCallback() {
 
                 @Override
                 public void success(IResponse response) {
                     Log.e(TAG, "play success");
 
-                    mHandler.sendEmptyMessage(SUCCESS_ACTION);
+                    mHandler.sendEmptyMessage(action_succ);
                     //                    ClingUpnpServiceManager.getInstance().subscribeMediaRender();
                     //                    getPositionInfo();
                     // TODO: 17/7/21 play success
@@ -375,7 +402,7 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
                 @Override
                 public void fail(IResponse response) {
                     Log.e(TAG, "play fail");
-                    mHandler.sendEmptyMessage(ERROR_ACTION);
+                    mHandler.sendEmptyMessage(action_error);
                 }
             });
         } else {
@@ -383,19 +410,17 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
                 @Override
                 public void success(IResponse response) {
                     Log.e(TAG, "play success");
-                    mHandler.sendEmptyMessage(SUCCESS_ACTION);
+                    mHandler.sendEmptyMessage(action_succ);
                 }
 
                 @Override
                 public void fail(IResponse response) {
                     Log.e(TAG, "play fail");
-                    mHandler.sendEmptyMessage(ERROR_ACTION);
+                    mHandler.sendEmptyMessage(action_error);
                 }
             });
         }
     }
-
-    /******************* start progress changed listener *************************/
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -452,32 +477,32 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case PLAY_ACTION:
-                    Log.i(TAG, "Execute PLAY_ACTION");
+                case action_play:
+                    Log.i(TAG, "Execute action_play");
                     Toast.makeText(mContext, "正在投放", Toast.LENGTH_SHORT).show();
                     mClingPlayControl.setCurrentState(DLANPlayState.PLAY);
 
                     break;
-                case PAUSE_ACTION:
-                    Log.i(TAG, "Execute PAUSE_ACTION");
+                case action_pause:
+                    Log.i(TAG, "Execute action_pause");
                     mClingPlayControl.setCurrentState(DLANPlayState.PAUSE);
 
                     break;
-                case STOP_ACTION:
-                    Log.i(TAG, "Execute STOP_ACTION");
+                case action_stop:
+                    Log.i(TAG, "Execute action_stop");
                     mClingPlayControl.setCurrentState(DLANPlayState.STOP);
 
                     break;
-                case TRANSITIONING_ACTION:
-                    Log.i(TAG, "Execute TRANSITIONING_ACTION");
+                case action_transtioning:
+                    Log.i(TAG, "Execute action_transtioning");
                     Toast.makeText(mContext, "正在连接", Toast.LENGTH_SHORT).show();
                     break;
-                case ERROR_ACTION:
-                    Log.e(TAG, "Execute ERROR_ACTION");
+                case action_error:
+                    Log.e(TAG, "Execute action_error");
                     Toast.makeText(mContext, "投放失败", Toast.LENGTH_SHORT).show();
                     break;
-                case SUCCESS_ACTION:
-                    Log.e(TAG, "Execute SUCCESS_ACTION");
+                case action_succ:
+                    Log.e(TAG, "Execute action_succ");
                     Toast.makeText(mContext, "投放成功", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -494,16 +519,16 @@ public class ClingDeviceActivity extends BaseAppCompatActivity implements SwipeR
             String action = intent.getAction();
             Log.e(TAG, "Receive playback intent:" + action);
             if (Intents.ACTION_PLAYING.equals(action)) {
-                mHandler.sendEmptyMessage(PLAY_ACTION);
+                mHandler.sendEmptyMessage(action_play);
 
             } else if (Intents.ACTION_PAUSED_PLAYBACK.equals(action)) {
-                mHandler.sendEmptyMessage(PAUSE_ACTION);
+                mHandler.sendEmptyMessage(action_pause);
 
             } else if (Intents.ACTION_STOPPED.equals(action)) {
-                mHandler.sendEmptyMessage(STOP_ACTION);
+                mHandler.sendEmptyMessage(action_stop);
 
             } else if (Intents.ACTION_TRANSITIONING.equals(action)) {
-                mHandler.sendEmptyMessage(TRANSITIONING_ACTION);
+                mHandler.sendEmptyMessage(action_transtioning);
             }
         }
     }

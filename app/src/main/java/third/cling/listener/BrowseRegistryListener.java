@@ -14,9 +14,7 @@ import third.cling.service.manager.ClingManager;
 import third.cling.util.Utils;
 
 /**
- * 说明：
- *
- * 日期：17/6/29 11:05
+ * 监听发现设备
  */
 
 public class BrowseRegistryListener extends DefaultRegistryListener {

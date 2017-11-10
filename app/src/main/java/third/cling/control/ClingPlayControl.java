@@ -38,9 +38,7 @@ import third.cling.util.ClingUtils;
 import third.cling.util.Utils;
 
 /**
- * 说明：Cling 实现的控制方法
- *
- * 日期：17/6/27 17:17
+ * 投屏控制器，Cling 实现的控制方法
  */
 
 public class ClingPlayControl implements IPlayControl {
