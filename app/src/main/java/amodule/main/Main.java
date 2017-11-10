@@ -290,6 +290,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 OffDishToFavoriteControl.addCollection(Main.this);
                 //初始化电商页面统计
                 PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
+                //处理
+                if (LoginManager.isLogin())
+                    initQiYvUnreadCount();
+                addQiYvListener();
 
                 if (showQAUploading())
                     return;
@@ -473,9 +477,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //        QbSdk.initX5Environment(Main.this, null);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
-        if (LoginManager.isLogin())
-            initQiYvUnreadCount();
-        addQiYvListener();
     }
 
     /**

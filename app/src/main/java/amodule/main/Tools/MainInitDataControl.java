@@ -140,8 +140,6 @@ public class MainInitDataControl {
             public void run() {
                 //讯飞语音： 请勿在“=”与 appid 之间添加任务空字符或者转义符
                 SpeechUtility.createUtility(act, SpeechConstant.APPID +"=56ce9191");
-                //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
-                QiYvHelper.getInstance().initSDK(act);
             }
         }).start();
         // 发送页面存活时间
@@ -151,7 +149,8 @@ public class MainInitDataControl {
 
         AdConfigTools.getInstance().getAdConfigInfo();
         long endTime=System.currentTimeMillis();
-
+        //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
+        QiYvHelper.getInstance().initSDK(act);
         initX5(act);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
 
