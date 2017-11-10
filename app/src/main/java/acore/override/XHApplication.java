@@ -54,7 +54,9 @@ public class XHApplication extends MobApplication {
 
     @Override
     public void onCreate() {
+        mAppApplication = this;
         startTime = System.currentTimeMillis();
+        LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         try{
             super.onCreate();
         }catch (SecurityException e) {
@@ -63,8 +65,8 @@ public class XHApplication extends MobApplication {
         }catch (Exception e){
             CrashReport.postCatchedException(e);
         }
-        LogManager.printStartTime("zhangyujian","XhApplication::super.oncreate::");
-        mAppApplication = this;
+        LogManager.printStartTime("zhangyujian","XhApplication::222222.oncreate::");
+
 
         //初始化umeng推送
         initUmengPush();
@@ -86,7 +88,7 @@ public class XHApplication extends MobApplication {
         String channel = ChannelUtil.getChannel(this);
         MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(this, "545aeac6fd98c565c20004ad", channel);
         MobclickAgent.startWithConfigure(config);
-
+        LogManager.printStartTime("zhangyujian","XhApplication:0000:initData::");
         //bugly集成
         initBugly(getApplicationContext());
 
@@ -96,7 +98,7 @@ public class XHApplication extends MobApplication {
         ReqInternet.init(getApplicationContext());
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
-
+        LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid
         Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));
         if(map.containsKey("appid") && !TextUtils.isEmpty(map.get("appid"))){
@@ -111,6 +113,7 @@ public class XHApplication extends MobApplication {
         AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
         AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
 
+        LogManager.printStartTime("zhangyujian","XhApplication:222:initData::");
         //GrowingIO初始化
         new GrowingIOController().init(this);
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
