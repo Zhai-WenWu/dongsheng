@@ -102,7 +102,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         initTieZiView();
         setHintInfo();
         setListener();
-        showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
         edSearch.requestFocus();
         ToolsDevice.keyboardControl(true,mActivity,edSearch);
 

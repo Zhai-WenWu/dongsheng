@@ -98,18 +98,6 @@ public class MainHome extends MainBaseActivity implements IObserver {
         addListener();
     }
 
-    /**初始化顶部布局 */
-    private void initTopView() {
-        if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
-            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.all_title_rela);
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-            bar_title.setLayoutParams(layout);
-            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-        }
-    }
-
     /** 添加监听事件 */
     private void addListener() {
         View.OnClickListener onClickListener = new View.OnClickListener() {
