@@ -9,12 +9,11 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.tencent.android.tpush.XGPushManager;
-import com.tencent.smtt.sdk.CookieManager;
-import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.xh.manager.DialogManager;
@@ -47,8 +46,6 @@ import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
-import aplug.service.alarm.PushAlarm;
-import aplug.service.base.ServiceManager;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
@@ -184,14 +181,13 @@ public class MainInitDataControl {
                 //获取圈子静态数据
                 AppCommon.saveCircleStaticData(act);
 
-                ServiceManager.startProtectService(act);
+//                ServiceManager.startProtectService(act);
 
                 AppCommon.saveUrlRuleFile(act);
                 AppCommon.saveAppData();
 
                 //取消自我唤醒
                 XGPushManager.clearLocalNotifications(act);
-                PushAlarm.closeTimingWake(act);
             }
         });
 
@@ -384,19 +380,19 @@ public class MainInitDataControl {
      * 初始化X5浏览器
      */
     private void initX5(Activity activity) {
-        if(activity==null){return;}
-        //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
-        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
-            @Override
-            public void onViewInitFinished(boolean arg0) {
-                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                Log.d("app", " onViewInitFinished is " + arg0);
-            }
-            @Override
-            public void onCoreInitFinished() {
-            }
-        };
+//        if(activity==null){return;}
+//        //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
+//        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+//            @Override
+//            public void onViewInitFinished(boolean arg0) {
+//                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+//                Log.d("app", " onViewInitFinished is " + arg0);
+//            }
+//            @Override
+//            public void onCoreInitFinished() {
+//            }
+//        };
         //x5内核初始化接口
-        QbSdk.initX5Environment(activity.getApplicationContext(),  cb);
+//        QbSdk.initX5Environment(activity.getApplicationContext(),  cb);
     }
 }

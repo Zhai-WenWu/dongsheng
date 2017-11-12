@@ -52,7 +52,7 @@ public class ActivityMethodManager {
             adScrollView.refreshContext(mAct);
         }
         MobclickAgent.onResume(mAct);
-        StatService.onResume(mAct);//mta腾讯统计
+//        StatService.onResume(mAct);//mta腾讯统计
         XHClick.getStartTime(mAct);
         // 应用到后台时如果数据被清理，需要重新自动登录
         if (LoginManager.userInfo.size() == 0) {
@@ -123,7 +123,7 @@ public class ActivityMethodManager {
 
     public void onPause() {
         MobclickAgent.onPause(mAct);
-        StatService.onPause(mAct);//mta腾讯统计
+//        StatService.onPause(mAct);//mta腾讯统计
         XHClick.getStopTime(mAct);
         XHClick.sendBrowseCodes(mAct);
         if (mHomeWatcher != null)

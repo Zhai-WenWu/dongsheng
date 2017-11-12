@@ -6,11 +6,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.smtt.sdk.CookieManager;
-import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.util.Map;

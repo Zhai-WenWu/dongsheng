@@ -3,20 +3,19 @@ package aplug.web.tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
-import com.tencent.smtt.export.external.interfaces.JsResult;
-import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
-import com.tencent.smtt.sdk.CookieManager;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
@@ -135,7 +134,7 @@ public class  WebviewManager {
         settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
-        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
+//        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
     }
 
     /**
@@ -227,7 +226,7 @@ public class  WebviewManager {
                     }
                 } else {
                     if (state) {
-                        loadManager.setLoading(new OnClickListener() {
+                        loadManager.setLoading(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 AppCommon.openUrl(act, url, true);
@@ -241,7 +240,7 @@ public class  WebviewManager {
             }
 
             @Override
-            public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, com.tencent.smtt.export.external.interfaces.SslError sslError) {
+            public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
                 sslErrorHandler.proceed();
             }
 
@@ -274,10 +273,10 @@ public class  WebviewManager {
                 return true;
             }
 
-            @Override
-            public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
-                super.onShowCustomView(view, customViewCallback);
-            }
+//            @Override
+//            public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
+//                super.onShowCustomView(view, customViewCallback);
+//            }
 
             //弹出提示
             private void showTip(String message, final JsResult result) {

@@ -38,7 +38,6 @@ dependencies {
     compile project(':gsyVideoPlayer-java')
     compile project(':xh_dialog')
 }
-
 android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
@@ -48,7 +47,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 211
-        versionName "5.7.1.8"
+        versionName "5.7.1.2"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -71,6 +70,7 @@ android {
 
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
+
 //            yulekwok
 //            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac

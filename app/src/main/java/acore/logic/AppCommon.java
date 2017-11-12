@@ -18,6 +18,8 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -25,8 +27,6 @@ import android.widget.RelativeLayout;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
-import com.tencent.smtt.sdk.CookieManager;
-import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.net.URLDecoder;
@@ -109,13 +109,13 @@ public class AppCommon {
                                 hasArbitration = "2".equals(alertArr[5]);
                         }
                         try {
-                            // 所有消息数
-                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-                                @Override
-                                public void onNumberReady(int count) {
-                                    Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + count);
-                                }
-                            });
+//                            // 所有消息数
+//                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+//                                @Override
+//                                public void onNumberReady(int count) {
+//                                    Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + count);
+//                                }
+//                            });
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;
