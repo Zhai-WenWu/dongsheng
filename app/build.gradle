@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'walle'
 apply plugin: 'com.growingio.android'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     flatDir {

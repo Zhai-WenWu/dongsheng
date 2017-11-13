@@ -7,6 +7,7 @@ package amodule._common.helper;
  */
 
 public class WidgetDataHelper {
+
     /**控件类型字段*/
     public static final String KEY_TYPE = "widgetType";
     /**数据类型字段*/
@@ -19,4 +20,7 @@ public class WidgetDataHelper {
     public static final String KEY_TOP = "top";
     /**widget end方向插入数据*/
     public static final String KEY_BOTTOM = "bottom";
+
+    /**--------------------------------------------------- 内部数据key ---------------------------------------------------*/
+    public static final String KEY_STYLE = "style";
 }

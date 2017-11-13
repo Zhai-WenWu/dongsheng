@@ -6,7 +6,7 @@ package amodule._common.widgetlib;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class BannerLibrary extends AbsWidgetLibrary {
+public class BannerLibrary implements IWidgetLibrary {
 
     private static volatile BannerLibrary instance = null;
 

@@ -6,5 +6,5 @@ package amodule._common.delegate;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public interface IBIndString extends IBindData<String> {
+public interface IBindString extends IBindData<String> {
 }

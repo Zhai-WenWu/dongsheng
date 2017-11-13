@@ -6,7 +6,7 @@ package amodule._common.widgetlib;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class FunctionNavLibrary extends AbsWidgetLibrary {
+public class FunctionNavLibrary implements IWidgetLibrary {
 
     private static volatile FunctionNavLibrary instance = null;
 

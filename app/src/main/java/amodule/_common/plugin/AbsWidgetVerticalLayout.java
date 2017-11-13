@@ -27,7 +27,11 @@ public abstract class AbsWidgetVerticalLayout<T> extends LinearLayout implements
     public AbsWidgetVerticalLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
+        //初始化
+        initialize();
     }
+
+    public abstract void initialize();
 
     public abstract void addTopView(List<T> array);
 

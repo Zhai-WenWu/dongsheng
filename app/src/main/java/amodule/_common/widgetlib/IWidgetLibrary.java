@@ -6,8 +6,8 @@ package amodule._common.widgetlib;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public abstract class AbsWidgetLibrary {
-    final int NO_FIND_ID = 0;
+public interface IWidgetLibrary {
+    public static final int NO_FIND_ID = 0;
 
     public abstract int findWidgetViewID(String type);
 

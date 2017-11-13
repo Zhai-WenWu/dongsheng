@@ -27,7 +27,11 @@ public abstract class AbsWidgetHorizontalLayout<T> extends LinearLayout implemen
     public AbsWidgetHorizontalLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(HORIZONTAL);
+        //初始化
+        initialize();
     }
+
+    public abstract void initialize();
 
     public abstract void addTopView(List<T> array);
 
