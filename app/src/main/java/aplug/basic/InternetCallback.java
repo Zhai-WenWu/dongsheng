@@ -231,7 +231,17 @@ public abstract class InternetCallback extends InterCallback {
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }
-        try {
+		String accept = header.containsKey("Accept") ? header.get("Accept") : "";
+		if(accept.length() > 0){
+			if(!accept.contains("image/webp")){
+				accept += ";image/webp";
+			}
+		}else{
+			accept = "image/webp";
+		}
+		header.put("Accept",accept);
+
+		try {
 			String ua = "imei=" + ToolsDevice.getXhIMEI(context) + ";";
 			ua += "device=" + ToolsDevice.getDevice(context) + ";";
 			ua += "AndroidId=" + ToolsDevice.getAndroidId(context) + ";";

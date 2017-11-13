@@ -120,6 +120,16 @@ public abstract class MallInternetCallback extends InterCallback {
 		cookie += "xhDsFlag=mall;";
 		header.put("Cookie", cookie);
 
+		String accept = header.containsKey("Accept") ? header.get("Accept") : "";
+		if(accept.length() > 0){
+			if(!accept.contains("image/webp")){
+				accept += ";image/webp";
+			}
+		}else{
+			accept = "image/webp";
+		}
+		header.put("Accept",accept);
+
 		if (!header.containsKey("Connection"))
 			header.put("Connection", "keep-alive");
 		if (!header.containsKey("Charset"))
