@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -566,9 +567,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 });
             }
         };
-        timer.schedule(tt, 5000, 5000);
+        timer.schedule(tt, everyReq*1000, everyReq*1000);
 //        tempData();
-        tempThreadData();
+//        tempThreadData();
 //        getMainLooper().getThread().setPriority(10);
     }
 
