@@ -30,8 +30,6 @@ import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -232,10 +230,6 @@ public class HomeFragment extends BaseHomeFragment{
                 }
             }
         });
-    }
-
-    private boolean isVideoList() {
-        return homeModuleBean == null ? false : mVideoType.equals(homeModuleBean.getType());
     }
 
     /**
