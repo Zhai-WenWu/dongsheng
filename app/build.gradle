@@ -46,8 +46,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 211
-        versionName "5.7.1.2"
+        versionCode 140
+        versionName "5.6.5"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO

@@ -30,6 +30,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
+import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -87,7 +88,11 @@ public class WelcomeDialog extends Dialog {
      */
     public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
-
+        String app_welocme= (String) FileManager.loadShared(act,FileManager.app_welcome,FileManager.app_welcome);
+        if(TextUtils.isEmpty(app_welocme)||!"2".equals(app_welocme)){
+            adShowTime=1;
+            FileManager.saveShared(act,FileManager.app_welcome,FileManager.app_welcome,"2");
+        }
         Main.isShowWelcomeDialog=true;//至当前dialog状态
         long endTime=System.currentTimeMillis();
         Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime)+"::::"+adShowTime);
@@ -215,7 +220,7 @@ public class WelcomeDialog extends Dialog {
             @Override
             public void onAdPresent() {
                 mADLayout.setVisibility(View.GONE);
-//                Log.i("tzy","BDCallback");
+                Log.i("zhangyujian","BaiduCallback");
                 if(mAdTime>5){
                     endCountDown();
                     mAdTime=5;
@@ -348,6 +353,7 @@ public class WelcomeDialog extends Dialog {
         @Override
         public void run() {
             endCountDown();
+            Log.i("xianghaTag","mAdTime::"+mAdTime+"::isAdLoadOk:"+isAdLoadOk+":::"+LoginManager.isShowAd());
             if (mAdTime <= 0||(mAdTime<=2&&!isAdLoadOk&& LoginManager.isShowAd())) {
                 closeDialog();
                 return;
