@@ -19,7 +19,6 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
@@ -257,7 +256,6 @@ public class FavoriteDish {
 						listDataMyFav.add(objInfo.get(i));
 					}
 					adapter.notifyDataSetChanged();
-					MyFavorite.notifyMessage(MyFavorite.MSG_DATA_OK);
 					// 如果是重新加载的,选中第一个tab.
 					if (isForward)
 						theListView.setSelection(1);
