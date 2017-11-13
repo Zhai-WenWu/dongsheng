@@ -69,12 +69,11 @@ import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
+import amodule.main.activity.MainHomePage;
 import amodule.main.Tools.MainInitDataControl;
-import amodule.main.activity.MainHome;
 import amodule.main.activity.MainMyself;
 import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
-import amodule.quan.tool.MyQuanDataControl;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
@@ -109,7 +108,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private LocalActivityManager mLocalActivityManager;
 
     private String[] tabTitle = {"首页", "商城", "消息", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHome.class, MainMall.class, MyMessage.class, MainMyself.class};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
     private int doExit = 0;
     private int defaultTab = 0;
@@ -266,7 +265,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     mainInitDataControl.initMainOnResume(Main.this);
                     mainInitDataControl.iniMainAfter(Main.this);
                 }
-                showIndexActivity();
                 WelcomeDialogstate = true;
                 openUri();
                 new AllPopDialogHelper(Main.this).start();
@@ -740,14 +738,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
         }
         if (nowTab == 0 && index != 0) {//当前是首页，切换到其他页面
             if (allTab.containsKey("MainIndex")) {
-                MainHome mainIndex = (MainHome) allTab.get("MainIndex");
-                mainIndex.saveNowStatictis();
                 XHClick.newHomeStatictis(true, null);
             }
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
             if (allTab.containsKey("MainIndex")) {
-                MainHome mainIndex = (MainHome) allTab.get("MainIndex");
-                mainIndex.setRecommedTime(System.currentTimeMillis());
+                MainHomePage mainIndex = (MainHomePage) allTab.get("MainIndex");
                 mainIndex.onResumeFake();
             }
         }
@@ -818,7 +813,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
                 if (i == 0 && allTab.containsKey("MainIndex") && i == nowTab) {
-                    MainHome mainIndex = (MainHome) allTab.get("MainIndex");
+                    MainHomePage mainIndex = (MainHomePage) allTab.get("MainIndex");
                     mainIndex.refreshContentView(true);
                 } else if (i == 1 && allTab.containsKey("MainMall") && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
                     MainMall mall = (MainMall) allTab.get("MainMall");
@@ -883,16 +878,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         return mLocalActivityManager;
     }
 
-    /**
-     * welcome处理当前view
-     */
-    public void showIndexActivity() {
-        if (allTab.containsKey("MainIndex")) {
-            MainHome mainIndex = (MainHome) allTab.get("MainIndex");
-            mainIndex.onActivityshow();
-        }
-    }
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -901,16 +886,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         }
         //此处可以进行分级处理:暂时无需要
         Log.i("zhangyujian", "main::onWindowFocusChanged");
-    }
-
-    /**
-     * 处理首页统计
-     */
-    public void handlerHomeStatistics() {
-        if (allTab.containsKey("MainIndex")) {
-            MainHome mainIndex = (MainHome) allTab.get("MainIndex");
-            mainIndex.saveNowStatictis();
-        }
     }
 
     @Override

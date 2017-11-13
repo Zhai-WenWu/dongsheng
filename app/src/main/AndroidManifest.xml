@@ -275,14 +275,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentThemeNew"
             android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.quan.activity.MainCircle"
-            android:keepScreenOn="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/common_TransParentTheme"
-            android:windowSoftInputMode="adjustPan"/>
+
         <activity
             android:name="amodule.main.activity.MainHome"
             android:configChanges="orientation|keyboardHidden"
@@ -291,6 +284,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.main.activity.MainHomePage"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:keepScreenOn="true"
+                  android:hardwareAccelerated="true"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/common_TransParentTheme"
+                  android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.main.activity.MainMyself"
             android:configChanges="orientation|keyboardHidden"
@@ -592,6 +593,12 @@
 
 
         <!-- quan start -->
+        <activity
+            android:name="amodule.quan.activity.MainCircle"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.quan.activity.FriendQuan"
             android:configChanges="orientation|keyboardHidden"
@@ -1541,6 +1548,7 @@
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <!--Baidu AD end-->
         <!--全面屏适配-->
         <meta-data android:name="android.max_aspect"

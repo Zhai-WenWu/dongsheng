@@ -447,12 +447,6 @@ public class MainHome extends MainBaseActivity implements IObserver {
         return  null;
     }
 
-    public void onActivityshow() {
-        //检查更新
-//		SpecialWebControl.initSpecialWeb(this,"index","","");
-//        showGuidancePage();
-    }
-
     /**
      * 统计推荐列表使用时间
      */
