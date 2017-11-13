@@ -109,13 +109,13 @@ public class AppCommon {
                                 hasArbitration = "2".equals(alertArr[5]);
                         }
                         try {
-//                            // 所有消息数
-//                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-//                                @Override
-//                                public void onNumberReady(int count) {
-//                                    Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + count);
-//                                }
-//                            });
+                            // 所有消息数
+                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+                                @Override
+                                public void onNumberReady(int count) {
+                                    Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + count);
+                                }
+                            });
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;
