@@ -48,8 +48,6 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.db.DataOperate;
-import amodule.dish.db.DishOffSqlite;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.main.Main;

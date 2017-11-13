@@ -236,10 +236,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
     /**腾讯统计*/
     private void initMTA(){
-//        StatConfig.setDebugEnable(false);
-//        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
-//        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
-//        StatService.setContext(this.getApplication());
+        StatConfig.setDebugEnable(false);
+        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
+        StatService.setContext(this.getApplication());
     }
 
     /**初始化浮标位置*/
