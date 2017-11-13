@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -134,7 +135,9 @@ public class  WebviewManager {
         settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
-//        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
     }
 
     /**

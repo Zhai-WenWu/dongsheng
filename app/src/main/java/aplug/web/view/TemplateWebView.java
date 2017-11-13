@@ -109,7 +109,9 @@ public class TemplateWebView extends XHWebView{
         settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
-//        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
     }
@@ -176,7 +178,7 @@ public class TemplateWebView extends XHWebView{
 //                            url = tmpUrl;
 //                        }
 //                    }
-//                    Log.i(Main.TAG, "url:22:" + url);
+//                    Log.i(Main.TAG, "url:22:" + url);d
 //                    try {
 //                        if (url.contains("?")) {
 //                            Map<String, String> urlRule = AppCommon.geturlRule(act);
