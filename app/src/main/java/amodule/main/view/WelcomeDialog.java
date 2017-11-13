@@ -90,7 +90,7 @@ public class WelcomeDialog extends Dialog {
         super(act, R.style.welcomeDialog);
         String app_welocme= (String) FileManager.loadShared(act,FileManager.app_welcome,FileManager.app_welcome);
         if(TextUtils.isEmpty(app_welocme)||!"2".equals(app_welocme)){
-            adShowTime=1;
+            adShowTime=3;
             FileManager.saveShared(act,FileManager.app_welcome,FileManager.app_welcome,"2");
         }
         Main.isShowWelcomeDialog=true;//至当前dialog状态
