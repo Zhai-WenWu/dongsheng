@@ -167,9 +167,11 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
                         myFavorite.notifyDataSetChanged();
                     }
                 }
-                if (everyPage == 0) {
-                    everyPage = loadCount;
-                }
+//                if (everyPage == 0) {
+//                    everyPage = loadCount;
+//                }
+                //服务端数据有问题
+                everyPage=5;
                 if(isRefresh){
                     refreshLayout.refreshComplete();
                 }
