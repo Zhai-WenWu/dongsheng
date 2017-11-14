@@ -11,7 +11,29 @@ public class DetailDishNew extends BaseAppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initBudle();
+        initView();
+        initData();
     }
+
+    /**
+     * 处理页面初始数据
+     */
+    private void initBudle() {
+    }
+
+    /**
+     * 处理页面Ui
+     */
+    private void initView() {
+    }
+    /**
+     * 处理页面Ui
+     */
+    private void initData() {
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -28,9 +50,18 @@ public class DetailDishNew extends BaseAppCompatActivity{
     }
 
     public void refresh(){
+    }
+
+    /**
+     * 处理第一屏请求接口
+     */
+    public void setRequestOne(){
 
     }
-    public void setRequest(){
+    /**
+     * 处理第一屏请求接口
+     */
+    public void setRequestTwo(){
 
     }
     public void handleData(){
