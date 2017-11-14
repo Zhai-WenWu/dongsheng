@@ -82,6 +82,7 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.tools.AdConfigTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
@@ -785,6 +786,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     timer.purge();
                 }
                 colse_level = 0;
+                //请求广告位
+                AdConfigTools.getInstance().getAdConfigInfo();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 // 开启自我唤醒
                 if (act != null) new XGLocalPushServer(act).initLocalPush();

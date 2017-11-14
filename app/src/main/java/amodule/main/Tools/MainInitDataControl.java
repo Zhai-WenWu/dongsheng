@@ -143,7 +143,7 @@ public class MainInitDataControl {
         XHClick.sendLiveTime(act);
         //电商首页数据
         MallCommon.getDsInfo(act, null);
-
+        //请求广告位
         AdConfigTools.getInstance().getAdConfigInfo();
         long endTime=System.currentTimeMillis();
         //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程

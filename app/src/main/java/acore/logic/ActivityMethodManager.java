@@ -21,6 +21,7 @@ import amodule.main.activity.MainHomePageNew;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
 import aplug.basic.ReqEncyptInternet;
+import third.ad.tools.AdConfigTools;
 import third.ad.tools.WelcomeAdTools;
 import third.mall.aplug.MallCommon;
 import xh.basic.tool.UtilFile;
@@ -93,6 +94,8 @@ public class ActivityMethodManager {
                         if(!Main.isShowWelcomeDialog) {
 //                            new WelcomeDialog(mAct, adShowTime).show();
                             Log.i("zhangyujian","二次开屏");
+                            //请求广告位
+                            AdConfigTools.getInstance().getAdConfigInfo();
                             mAct.startActivity(new Intent(mAct, Welcome.class));
                         }
                         //更新开启次数
