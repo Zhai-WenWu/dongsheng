@@ -1549,6 +1549,12 @@
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <activity
+            android:name="amodule.main.activity.HomeSecondListActivity"
+            android:configChanges="keyboard|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"/>
+
         <!--Baidu AD end-->
         <!--全面屏适配-->
         <meta-data android:name="android.max_aspect"

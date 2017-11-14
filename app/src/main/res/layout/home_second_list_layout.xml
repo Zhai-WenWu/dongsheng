@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
-
-    <ViewStub
-        android:id="@+id/view_stub"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout="@layout/back_title_bar"/>
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
@@ -35,4 +30,4 @@
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
-</LinearLayout>
+</RelativeLayout>
