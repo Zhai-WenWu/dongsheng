@@ -235,7 +235,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         if (succ && map != null && !map.isEmpty()) {
             mAskPrice = map.get("price");
             if (!TextUtils.isEmpty(mAskPrice)) {
-                mPriceText.setText("0".equals(mAskPrice) ? "免费" : (mAskPrice + "元"));
+                mPriceText.setText((TextUtils.equals("0", mAskPrice) || TextUtils.equals("0.0", mAskPrice) || TextUtils.equals("0.00", mAskPrice)) ? "免费" : (mAskPrice + "元"));
                 mPriceText.setVisibility(View.VISIBLE);
             }
         }
