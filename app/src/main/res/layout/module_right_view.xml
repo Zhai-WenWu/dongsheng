@@ -20,7 +20,7 @@
             android:layout_marginBottom="@dimen/dp_4"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="@dimen/sp_17"
+            android:textSize="@dimen/dp_16"
             android:lineSpacingExtra="@dimen/dp_3"
             android:textStyle="bold"
             android:textColor="#333333"
