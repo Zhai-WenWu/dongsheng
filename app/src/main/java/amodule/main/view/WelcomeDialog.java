@@ -320,6 +320,7 @@ public class WelcomeDialog extends Dialog {
 
     }
     private void showSkipContainer(){
+        view.findViewById(R.id.line_1).setVisibility(View.VISIBLE);
         textLead.setVisibility(View.VISIBLE);
         textSkip.setVisibility(View.VISIBLE);
         mADLayout.setVisibility(View.VISIBLE);
@@ -340,6 +341,7 @@ public class WelcomeDialog extends Dialog {
                 textLead.setVisibility(View.VISIBLE);
                 textSkip.setVisibility(View.VISIBLE);
                 mADLayout.setVisibility(View.VISIBLE);
+                view.findViewById(R.id.line_1).setVisibility(View.VISIBLE);
             }
 
             @Override

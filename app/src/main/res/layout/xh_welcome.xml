@@ -73,11 +73,13 @@
         tagTextView:topLeftRadius="@dimen/dp_20"
         />
     <ImageView
+        android:id="@+id/line_1"
         android:layout_width="1px"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/dp_5"
         android:paddingBottom="@dimen/dp_5"
         android:src="#FFFFFE"
+        android:visibility="gone"
         android:layout_gravity="center"
         android:background="#B2000000"/>
     <acore.widget.TagTextView xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
