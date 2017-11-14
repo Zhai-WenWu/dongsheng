@@ -13,7 +13,9 @@ buildscript {
         classpath 'com.meituan.android.walle:plugin:1.0.3'
         classpath 'com.growingio.android:vds-gradle-plugin:0.9.103'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     }
+    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 allprojects {
