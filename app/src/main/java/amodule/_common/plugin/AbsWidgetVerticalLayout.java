@@ -33,8 +33,8 @@ public abstract class AbsWidgetVerticalLayout<T> extends LinearLayout implements
 
     public abstract void initialize();
 
-    public abstract void addTopView(List<T> array);
+    public abstract void updateTopView(List<T> array);
 
-    public abstract void addBottom(List<T> array);
+    public abstract void updateBottom(List<T> array);
 
 }

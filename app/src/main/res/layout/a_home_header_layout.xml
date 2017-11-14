@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/banner_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/widget_banner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_160"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/funcnav1_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/widget_func_nav1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/funcnav2_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/widget_func_nav2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/horizontal1_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/horizontal2_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/horizontal3_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+</LinearLayout>

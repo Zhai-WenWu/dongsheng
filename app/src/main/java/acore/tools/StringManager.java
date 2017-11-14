@@ -359,6 +359,11 @@ public class StringManager extends UtilString {
     public final static String API_GET_FAVORITE_STATUS = apiUrl + "main8/favorites/getFavoritesStatus";//获取收藏状态
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
+    public final static String API_REC_LEFT_ICON = apiUrl + "main8/recommend/getLeftIcon";////首页
+    public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";////首页
+
+
+
 
     //替换url
     public final static String replaceUrl(String url) {

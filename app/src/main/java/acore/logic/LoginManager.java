@@ -660,7 +660,7 @@ public class LoginManager {
                 String vipMaturityTime = vipContentMap.get("maturity_time");
                 try {
                     //单位都是秒
-                    long firstTime = Long.parseLong(vipFirstTime);
+//TODO                    long firstTime = Long.parseLong(vipFirstTime);
                     long lastTime = Long.parseLong(vipLastTime);
                     long maturityTime = Long.parseLong(vipMaturityTime);
                     long dialogTime = lastTime + 20 * 24 * 60 * 60;

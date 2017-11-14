@@ -1,5 +1,9 @@
 package amodule._common.widgetlib;
 
+import android.text.TextUtils;
+
+import com.xiangha.R;
+
 /**
  * PackageName : amodule._common.widgetlib
  * Created by MrTrying on 2017/11/13 13:27.
@@ -21,11 +25,23 @@ public class BannerLibrary implements IWidgetLibrary {
 
     @Override
     public final int findWidgetViewID(String type) {
-        return NO_FIND_ID;
+        if(TextUtils.isEmpty(type)) return NO_FIND_ID;
+        switch (type){
+            case "1":
+                return R.id.banner_view_1;
+            default:
+                return NO_FIND_ID;
+        }
     }
 
     @Override
     public final int findWidgetLayoutID(String type) {
-        return NO_FIND_ID;
+        if(TextUtils.isEmpty(type)) return NO_FIND_ID;
+        switch (type){
+            case "1":
+                return R.layout.widget_banner;
+            default:
+                return NO_FIND_ID;
+        }
     }
 }

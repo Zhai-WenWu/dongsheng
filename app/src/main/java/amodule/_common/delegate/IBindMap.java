@@ -9,4 +9,5 @@ import java.util.Map;
  */
 
 public interface IBindMap extends IBindData<Map<String,String>> {
+
 }

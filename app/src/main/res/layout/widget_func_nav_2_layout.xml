@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/left_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:layout_weight="1"
+        android:background="@drawable/bg_widget_func_nav_2">
+
+        <ImageView
+            android:id="@+id/icon_left_1"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginRight="@dimen/dp_15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/text_left_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_2"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_14"
+            android:paddingLeft="@dimen/dp_10"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_left"
+            tools:text="今日三餐"/>
+
+        <TextView
+            android:id="@+id/text_left_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintTop_toTopOf="@+id/guideline_left"
+            android:paddingLeft="@dimen/dp_10"
+            tools:text="早.中.晚餐食谱"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            app:layout_constraintGuide_percent="0.5"
+            tools:visibility="visible"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="@dimen/dp_10"
+        android:layout_height="0dp"
+        android:visibility="invisible"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/right_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:layout_weight="1"
+        android:background="@drawable/bg_widget_func_nav_2">
+
+        <ImageView
+            android:id="@+id/icon_right_1"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_37"
+            android:layout_marginRight="@dimen/dp_10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/text_right_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_2"
+            android:textColor="#333333"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_righr"
+            android:paddingLeft="@dimen/dp_10"
+            tools:text="关注/社区"/>
+
+        <TextView
+            android:id="@+id/text_right_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_4"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintTop_toTopOf="@+id/guideline_righr"
+            android:paddingLeft="@dimen/dp_10"
+            tools:text="晒美食，关注美食家"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline_righr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            app:layout_constraintGuide_percent="0.5"
+            tools:visibility="visible"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

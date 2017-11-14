@@ -6,22 +6,24 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+
+import com.annimon.stream.Stream;
+import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
 import amodule._common.widgetlib.AllWeightLibrary;
-import amodule._common.delegate.IBindString;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_BOTTOM;
 import static amodule._common.helper.WidgetDataHelper.KEY_DATA;
 import static amodule._common.helper.WidgetDataHelper.KEY_EXTRA;
+import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
 import static amodule._common.helper.WidgetDataHelper.KEY_TOP;
 import static amodule._common.helper.WidgetDataHelper.KEY_TYPE;
-import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
 import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
 
 /**
@@ -33,6 +35,8 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
 public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,String>> {
 
     LayoutInflater mInflater;
+
+    LinearLayout mExtraTop,mExtraBottom;
 
     public WidgetVerticalLayout(Context context) {
         super(context);
@@ -49,6 +53,12 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
     @Override
     public void initialize() {
         mInflater = LayoutInflater.from(getContext());
+        mExtraTop = new LinearLayout(getContext());
+        mExtraTop.setOrientation(VERTICAL);
+        addView(mExtraTop,0);
+        mExtraBottom = new LinearLayout(getContext());
+        mExtraBottom.setOrientation(VERTICAL);
+        addView(mExtraBottom);
     }
 
     @Override
@@ -75,52 +85,55 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
         if(widgetExtraMap.isEmpty()){
             return;
         }
-        addTopView(StringManager.getListMapByJson(widgetExtraMap.get(KEY_TOP)));
-        addBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
+        updateTopView(StringManager.getListMapByJson(widgetExtraMap.get(KEY_TOP)));
+        updateBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
     }
 
     @Override
-    public void addTopView(List<Map<String, String>> array) {
+    public void updateTopView(List<Map<String, String>> array) {
+        if(mExtraTop != null){
+            mExtraTop.removeAllViews();
+        }
         if(null == array || array.isEmpty()){
             return;
         }
-        for(int length = array.size(),index = length - 1; index < length ; index --){
-            Map<String,String> data = array.get(index);
-            String widgetType = data.get(KEY_TYPE);
-            String widgetData = data.get(KEY_DATA);
-            Map<String,String> dataMap = StringManager.getFirstMap(widgetData);
-            String style = dataMap.get(KEY_STYLE);
-            final int layoutID = AllWeightLibrary.of().findWidgetLayoutID(widgetType,style);
-            if(layoutID > NO_FIND_ID){
-                View view = mInflater.inflate(layoutID,null,true);
-                if(null != view && view instanceof IBindMap
-                        && !TextUtils.isEmpty(widgetData)){
-                    ((IBindMap)view).setData(StringManager.getFirstMap(widgetData));
-                    addView(view,0);
-                }
-            }
-        }
+
+        Stream.of(array).forEach(data -> {
+            addViewByData(data,false);
+        });
     }
 
     @Override
-    public void addBottom(List<Map<String, String>> array) {
+    public void updateBottom(List<Map<String, String>> array) {
+        if(mExtraBottom != null){
+            mExtraBottom.removeAllViews();
+        }
         if(null == array || array.isEmpty()){
             return;
         }
-        for(int length = array.size(),index = 0; index < length ; index ++){
-            Map<String,String> data = array.get(index);
-            String widgetType = data.get(KEY_TYPE);
-            String widgetData = data.get(KEY_DATA);
-            Map<String,String> dataMap = StringManager.getFirstMap(widgetData);
-            String style = dataMap.get(KEY_STYLE);
-            final int layoutID = AllWeightLibrary.of().findWidgetLayoutID(widgetType,style);
-            if(layoutID > NO_FIND_ID){
-                View view = mInflater.inflate(layoutID,null,true);
-                if(null != view && view instanceof IBindMap
-                        && !TextUtils.isEmpty(widgetData)){
-                    ((IBindMap)view).setData(StringManager.getFirstMap(widgetData));
-                    addView(view);
-                }
+
+        Stream.of(array).forEach(data -> {
+            addViewByData(data,true);
+        });
+    }
+
+    /**
+     * 根据数据添加view
+     * @param data
+     * @param isOrder 是否按顺序添加
+     */
+    private void addViewByData(Map<String,String> data,boolean isOrder){
+        String widgetType = data.get(KEY_TYPE);
+        String widgetData = data.get(KEY_DATA);
+        Map<String,String> dataMap = StringManager.getFirstMap(widgetData);
+        String style = dataMap.get(KEY_STYLE);
+        final int layoutID = AllWeightLibrary.of().findWidgetLayoutID(widgetType,style);
+        if(layoutID > NO_FIND_ID){
+            View view = mInflater.inflate(layoutID,null,true);
+            if(null != view && view instanceof IBindMap
+                    && !TextUtils.isEmpty(widgetData)){
+                ((IBindMap)view).setData(StringManager.getFirstMap(widgetData));
+                addView(view,isOrder ? -1 : 0);
             }
         }
     }

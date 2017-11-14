@@ -2,9 +2,17 @@ package amodule.home;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import java.util.LinkedHashMap;
+
+import acore.tools.FileManager;
+import acore.tools.StringManager;
+import amodule.main.activity.MainHomePage;
 import aplug.basic.InternetCallback;
-
+import aplug.basic.ReqEncyptInternet;
 
 /**
  * Description : //TODO
@@ -16,31 +24,56 @@ import aplug.basic.InternetCallback;
 
 public class HomeDataControler {
 
-    //保存缓存
-    public void saveCacheHomeData(){
+    private final String CACHE_PATH = "homeDataCache";
+    private MainHomePage mActivity;
+    private String backUrl, nextUrl;
 
+    public HomeDataControler(MainHomePage activity) {
+        this.mActivity = activity;
     }
 
     //读取缓存数据
-    public void loadCacheHomeData(InternetCallback callback){
+    public void loadCacheHomeData(InternetCallback callback) {
         final Handler handler = new Handler(Looper.getMainLooper(),
                 msg -> {
-                    //TODO
+                    callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", msg.obj);
                     return false;
                 });
         new Thread(() -> {
-
+            String hoemDataStr = FileManager.readFile(CACHE_PATH).toString().trim();
+            if (!TextUtils.isEmpty(hoemDataStr)) {
+                Message msg = handler.obtainMessage(0, hoemDataStr);
+                handler.sendMessage(msg);
+            }
         }).start();
     }
 
-    //获取服务端首页数据
-    public void loadServiceHomeData(InternetCallback callback){
+    public void saveCacheHomeData(String data) {
+        FileManager.scynSaveFile(CACHE_PATH, data, false);
+    }
 
+    //获取服务端首页数据
+    public void loadServiceHomeData(@Nullable InternetCallback callback) {
+        String url = StringManager.API_HOMEPAGE_6_0;
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        ReqEncyptInternet.in().doEncypt(url, params, callback);
+    }
+
+    public void loadServiceTopData(InternetCallback callback) {
+        String url = StringManager.API_RECOMMEND_TOP;
+        ReqEncyptInternet.in().doEncyptAEC(url, "", callback);
     }
 
     //获取服务端Feed流数据
-    public void loadServiceFeedData(InternetCallback callback){
+    public void loadServiceFeedData(boolean refresh, InternetCallback callback) {
 
     }
 
+    public void setBackUrl(String backUrl) {
+        this.backUrl = backUrl;
+    }
+
+    public void setNextUrl(String nextUrl) {
+        this.nextUrl = nextUrl;
+    }
 }

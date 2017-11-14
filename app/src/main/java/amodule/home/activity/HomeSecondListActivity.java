@@ -1,4 +1,4 @@
-package amodule.main.activity;
+package amodule.home.activity;
 
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -19,10 +19,10 @@ import java.util.Map;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule.home.HomeModuleControler;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.HomeTabHScrollView;
@@ -89,68 +89,15 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             finish();
             return;
         }
-        initModuleData();
+        mModuleBean = new HomeModuleControler().getHomeModuleByType(this,mType);
         mAdControl = getAdControl();
     }
 
-    /**
-     * 初始化模块数据
-     * 策略：第一次从内置数据中读取数据，后通过接口更新模块数据，延迟加载策略
-     */
-    private void initModuleData() {
-        final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
-        String moduleJson = FileManager.readFile(modulePath);
-        if (TextUtils.isEmpty(moduleJson)) {
-            moduleJson = FileManager.getFromAssets(this, "homeTopModle");
-            final String finalModuleJson = moduleJson;
-            FileManager.saveFileToCompletePath(modulePath, finalModuleJson.toString(), false);
-        }
-        ArrayList<Map<String, String>> listModule = StringManager.getListMapByJson(moduleJson);
-        int size = listModule.size();
-        for (int i = 0; i < size; i++) {
-            if (TextUtils.equals(listModule.get(i).get("type"), mType)) {
-                mModuleBean = new HomeModuleBean();
-                mModuleBean.setTitle(listModule.get(i).get("title"));
-                mModuleBean.setType(listModule.get(i).get("type"));
-                mModuleBean.setWebUrl(listModule.get(i).get("webUrl"));
-                mModuleBean.setIsSelf(listModule.get(i).get("isSelf"));
-                mModuleBean.setOpenMode(listModule.get(i).get("openMode"));
-                String level = listModule.get(i).get("level");
-                if (!TextUtils.isEmpty(level)) {
-                    mModuleBean.setTwoData(level);//设置二级数据内容
-                }
-                mModuleBean.setPosition(i);
-                return;
-            }
-            continue;
-        }
-        setRequestModuleData();
-    }
-
-    /**
-     * 请求模块数据
-     */
-    private void setRequestModuleData() {
-        final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
-        String url = StringManager.API_GET_LEVEL;
-        ReqEncyptInternet.in().doEncyptAEC(url, "version=" + "v1", new InternetCallback(this) {
-            @Override
-            public void loaded(int flag, String url, final Object o) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    FileManager.saveFileToCompletePath(modulePath, o.toString(), false);
-
-                }
-            }
-        });
-    }
 
     private void addListener() {
-        mRv.setOnItemClickListener(new RvListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (view instanceof HomeItem) {
-                    ((HomeItem)view).onClickEvent(view);
-                }
+        mRv.setOnItemClickListener((view, holder, position) -> {
+            if (view instanceof HomeItem) {
+                ((HomeItem)view).onClickEvent(view);
             }
         });
     }
@@ -163,7 +110,8 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         mPtrFrameLayout.disableWhenHorizontalMove(true);
         TextView titleV = (TextView) findViewById(R.id.title);
         titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
-        titleV.setText(mModuleBean.getTitle());
+        if(mModuleBean != null)
+            titleV.setText(mModuleBean.getTitle());
     }
 
     /**
@@ -189,26 +137,11 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
     private void requestDate() {
         mHomeAdapter = new HomeAdapter(this,mListData,mAdControl);
         mHomeAdapter.setHomeModuleBean(mModuleBean);
-        mHomeAdapter.setViewOnClickCallBack(new HomeAdapter.ViewClickCallBack() {
-            @Override
-            public void viewOnClick(boolean isOnClick) {
-                refresh();
-            }
-        });
+        mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
         if(!mLoadOver){
             loadManager.setLoading(mPtrFrameLayout, mRv, mHomeAdapter, true,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            entryptData(true);
-                        }
-                    },
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            entryptData(!mLoadOver);
-                        }
-                    });
+                    v -> entryptData(true),
+                    v -> entryptData(!mLoadOver));
             RecyclerView.LayoutManager layoutManager = mRv.getLayoutManager();
             if(layoutManager != null && layoutManager instanceof LinearLayoutManager){
                 final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
@@ -394,12 +327,9 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             state=isForceRefresh;//强制刷新
         if(state){
             //重新请求广告
-            mAdControl.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
-                @Override
-                public void adDataBack(int tag, int nums) {
-                    if(tag>=1&&nums>0) {
-                        handlerMainThreadUIAD();
-                    }
+            mAdControl.setAdDataCallBack((tag, nums) -> {
+                if(tag>=1&&nums>0) {
+                    handlerMainThreadUIAD();
                 }
             });
             mAdControl.refreshData();
@@ -413,12 +343,9 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
                     }
                 });
             }else if(mAdControl instanceof  AdControlNormalDish){//其他标准列表结构
-                ((AdControlNormalDish)mAdControl).setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
-                    @Override
-                    public void loadNumberCallBack(int Number) {
-                        if(Number>7){
-                            handlerMainThreadUIAD();
-                        }
+                ((AdControlNormalDish)mAdControl).setAdLoadNumberCallBack(Number -> {
+                    if(Number>7){
+                        handlerMainThreadUIAD();
                     }
                 });
             }
@@ -442,13 +369,10 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
      * 处理广告在主线程中处理
      */
     protected void handlerMainThreadUIAD(){
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                mListData = mAdControl.getNewAdData(mListData, false);
-                if(mHomeAdapter!=null)
-                    mHomeAdapter.notifyDataSetChanged();
-            }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            mListData = mAdControl.getNewAdData(mListData, false);
+            if(mHomeAdapter!=null)
+                mHomeAdapter.notifyDataSetChanged();
         });
     }
 
@@ -472,23 +396,20 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             }
             homeTabHScrollView.setHomeModuleBean(mModuleBean);
             homeTabHScrollView.setData(listMaps);
-            homeTabHScrollView.setCallback(new HomeTabHScrollView.HomeDataChangeCallBack() {
-                @Override
-                public void indexChanged(Map<String, String> map) {
-                    if(map.get("two_type").equals(mModuleBean.getTwoType())){
-                        //是否刷新操作
-                    }else{
-                        mModuleBean.setTwoType(map.get("two_type"));
-                        mModuleBean.setTwoTitle(map.get("title"));
-                        mModuleBean.setTwoTypeIndex(Integer.parseInt(map.get("position")));
-                        mHomeAdapter.setHomeModuleBean(mModuleBean);
-                        mCompelClearData=true;
-                        //请求数据
-                        mBackUrl="";
-                        mNextUrl="";
-                        entryptData(true);
+            homeTabHScrollView.setCallback(map -> {
+                if(map.get("two_type").equals(mModuleBean.getTwoType())){
+                    //是否刷新操作
+                }else{
+                    mModuleBean.setTwoType(map.get("two_type"));
+                    mModuleBean.setTwoTitle(map.get("title"));
+                    mModuleBean.setTwoTypeIndex(Integer.parseInt(map.get("position")));
+                    mHomeAdapter.setHomeModuleBean(mModuleBean);
+                    mCompelClearData=true;
+                    //请求数据
+                    mBackUrl="";
+                    mNextUrl="";
+                    entryptData(true);
 //                        refresh();
-                    }
                 }
             });
             mLinearLayoutTwo.addView(homeTabHScrollView);

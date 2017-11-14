@@ -1,26 +1,43 @@
 package amodule.home.view;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+
+import com.bumptech.glide.Glide;
+import com.xiangha.R;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import acore.tools.FileManager;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home
  * Created by MrTrying on 2017/11/13 15:17.
  * Author : mrtrying
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeActivityIconView extends RelativeLayout{
+public class HomeActivityIconView extends AppCompatImageView {
+
+    private final String CACHE_PATH = FileManager.getSDCacheDir() + "actIconCache";
+
+    String mUrl = "";
 
     public HomeActivityIconView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public HomeActivityIconView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public HomeActivityIconView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -29,29 +46,53 @@ public class HomeActivityIconView extends RelativeLayout{
     }
 
     private void initialize() {
-        initUI();
+        int padding = Tools.getDimen(getContext(), R.dimen.dp_20);
+        setPadding(padding,0,padding,0);
         initData();
-    }
-
-    //初始化UI
-    private void initUI() {
-
+        loadData();
     }
 
     //初始化数据
     private void initData() {
-
+        String cacheData = FileManager.readFile(CACHE_PATH).trim();
+        handlerData(true, cacheData);
     }
-
-
 
     //获取数据
-    private void loadData(){
-
+    private void loadData() {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_REC_LEFT_ICON,
+                new LinkedHashMap<>(),
+                new InternetCallback(getContext()) {
+                    @Override
+                    public void loaded(int flag, String url, Object obj) {
+                        if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                            handlerData(false, obj.toString());
+                        }
+                    }
+                });
     }
 
-    //保存数据
-    public void saveData(){
+    private void handlerData(boolean isCache, String dataStr) {
+        if (TextUtils.isEmpty(dataStr)) {
+            return;
+        }
+        Map<String, String> dataMap = StringManager.getFirstMap(dataStr);
+        if (dataMap.isEmpty()) {
+            return;
+        }
+        this.mUrl = dataMap.get("url");
+        Glide.with(getContext())
+                .load(dataMap.get("img"))
+                .into(this);
+        if (isCache) {
+            return;
+        }
+        //保存数据
+        FileManager.saveFileToCompletePath(CACHE_PATH, dataStr, false);
+    }
 
+    @Nullable
+    public String getUrl() {
+        return mUrl;
     }
 }

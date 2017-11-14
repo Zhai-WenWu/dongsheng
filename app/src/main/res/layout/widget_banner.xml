@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<amodule._common.widget.BannerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/banner_view_1"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_160"/>

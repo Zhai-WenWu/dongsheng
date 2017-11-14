@@ -1088,7 +1088,6 @@ public class AppCommon {
                     return;
                 }
                 url = url + "?rand=" + Math.abs(new Random().nextInt());
-                Log.i("tzy","url = " + url);
                 ReqEncyptInternet.in().doEncypt(url, "",
                         new InternetCallback(context) {
                             @Override
@@ -1106,7 +1105,6 @@ public class AppCommon {
                                             byte[] dataByte = Base64Utils.decode(dataStr);
                                             dataStr = new String(dataByte);
                                             ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);
-                                            Log.i("tzy","dataArr = " + dataArr.toString());
                                             int totalWeight=0;
                                             String text = "";
                                             for (Map<String,String> dict: dataArr)
@@ -1127,8 +1125,6 @@ public class AppCommon {
                                                     break;
                                                 }
                                             }
-
-                                            Log.i("GYL", "loaded: " + text);
 
                                             FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                         }

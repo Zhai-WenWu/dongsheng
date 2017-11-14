@@ -1550,7 +1550,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
-            android:name="amodule.main.activity.HomeSecondListActivity"
+            android:name="amodule.home.activity.HomeSecondListActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"/>
