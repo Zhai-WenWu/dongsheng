@@ -1,6 +1,7 @@
 package acore.logic;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -162,7 +163,9 @@ public class SpecialWebControl {
         settings.setDefaultTextEncodingName("utf-8");
 
         //兼容https,在部分版本上资源显示不全的问题
-        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         Map<String, String> header = ReqInternet.in().getHeader(context);
         String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
         String[] cookie = cookieStr.split(";");
