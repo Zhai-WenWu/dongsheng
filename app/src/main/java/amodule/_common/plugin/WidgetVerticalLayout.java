@@ -91,7 +91,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
 
     @Override
     public void updateTopView(List<Map<String, String>> array) {
-        if(mExtraTop != null){
+        if(mExtraTop != null && mExtraTop.getChildCount() > 0){
             mExtraTop.removeAllViews();
         }
         if(null == array || array.isEmpty()){
@@ -99,13 +99,13 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
         }
 
         Stream.of(array).forEach(data -> {
-            addViewByData(data,false);
+            addViewByData(mExtraTop,data,false);
         });
     }
 
     @Override
     public void updateBottom(List<Map<String, String>> array) {
-        if(mExtraBottom != null){
+        if(mExtraBottom != null && mExtraBottom.getChildCount() > 0){
             mExtraBottom.removeAllViews();
         }
         if(null == array || array.isEmpty()){
@@ -113,7 +113,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
         }
 
         Stream.of(array).forEach(data -> {
-            addViewByData(data,true);
+            addViewByData(mExtraBottom,data,true);
         });
     }
 
@@ -122,7 +122,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
      * @param data
      * @param isOrder 是否按顺序添加
      */
-    private void addViewByData(Map<String,String> data,boolean isOrder){
+    private void addViewByData(LinearLayout layout,Map<String,String> data,boolean isOrder){
         String widgetType = data.get(KEY_TYPE);
         String widgetData = data.get(KEY_DATA);
         Map<String,String> dataMap = StringManager.getFirstMap(widgetData);
@@ -133,7 +133,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
             if(null != view && view instanceof IBindMap
                     && !TextUtils.isEmpty(widgetData)){
                 ((IBindMap)view).setData(StringManager.getFirstMap(widgetData));
-                addView(view,isOrder ? -1 : 0);
+                layout.addView(view,isOrder ? -1 : 0);
             }
         }
     }

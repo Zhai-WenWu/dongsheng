@@ -660,12 +660,18 @@ public class LoginManager {
                 String vipMaturityTime = vipContentMap.get("maturity_time");
                 try {
                     //单位都是秒
-//TODO                    long firstTime = Long.parseLong(vipFirstTime);
-                    long lastTime = Long.parseLong(vipLastTime);
-                    long maturityTime = Long.parseLong(vipMaturityTime);
-                    long dialogTime = lastTime + 20 * 24 * 60 * 60;
-                    long currTime = System.currentTimeMillis() / 1000;
-                    FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "");
+                    if(!TextUtils.isEmpty(vipFirstTime)
+                            && !TextUtils.isEmpty(vipFirstTime)
+                            && !TextUtils.isEmpty(vipFirstTime)
+                            ){
+                        long firstTime = Long.parseLong(vipFirstTime);
+                        long lastTime = Long.parseLong(vipLastTime);
+                        long maturityTime = Long.parseLong(vipMaturityTime);
+                        long dialogTime = lastTime + 20 * 24 * 60 * 60;
+                        long currTime = System.currentTimeMillis() / 1000;
+                        String shouldShowDialogValue = (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "";
+                        FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", shouldShowDialogValue);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -814,7 +814,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
                 if (i == 0 && allTab.containsKey("MainIndex") && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get("MainIndex");
-                    mainIndex.refreshContentView(true);
+                    mainIndex.refresh();
                 } else if (i == 1 && allTab.containsKey("MainMall") && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
                     MainMall mall = (MainMall) allTab.get("MainMall");
                     mall.scrollTop();

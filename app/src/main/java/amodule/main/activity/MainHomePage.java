@@ -11,8 +11,10 @@ import acore.logic.SpecialWebControl;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import amodule.home.HomeDataControler;
+import amodule.home.HomeModuleControler;
 import amodule.home.HomeViewControler;
 import amodule.main.Main;
+import amodule.main.adapter.HomeAdapter;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -30,6 +32,8 @@ public class MainHomePage extends MainBaseActivity {
     HomeDataControler mDataControler;
     HomeViewControler mViewContrloer;
 
+    HomeAdapter mAdapter;
+
     boolean LoadOver =false;
 
     @Override
@@ -38,9 +42,16 @@ public class MainHomePage extends MainBaseActivity {
         setContentView(R.layout.a_home_page);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        //初始化
+        initialize();
+    }
 
+    private void initialize() {
         mViewContrloer = new HomeViewControler(this);
         mDataControler = new HomeDataControler(this);
+        mAdapter = new HomeAdapter(this, mDataControler.getData(), mViewContrloer.getAdControl());
+        mAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
+        mAdapter.setViewOnClickCallBack(isOnClick -> refresh());
     }
 
     @Override
@@ -55,13 +66,13 @@ public class MainHomePage extends MainBaseActivity {
                     mViewContrloer.setTopData(StringManager.getListMapByJson(o));
             }
         });
-        //TODO
-
-//        loadManager.setLoading(mViewContrloer.getRvListView(),
-//                mViewContrloer.getAdapter(),
-//                true,
-//                v -> loadServiceFeedData()
-//        );
+        //TODO 美观
+        loadManager.hideProgressBar();
+        loadManager.setLoading(mViewContrloer.getRvListView(),
+                mAdapter,
+                true,
+                v -> loadServiceFeedData()
+        );
     }
 
     public InternetCallback getHeaderCallback(boolean isCache){
@@ -81,6 +92,10 @@ public class MainHomePage extends MainBaseActivity {
         };
     }
 
+    private void EntryptData(final boolean isRefresh){
+
+    }
+
     private void loadServiceFeedData(){
         mDataControler.loadServiceFeedData(false,new InternetCallback(this) {
             @Override
@@ -90,22 +105,20 @@ public class MainHomePage extends MainBaseActivity {
         });
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
     }
 
-    private int resumeCount = 0;
 
+    private int resumeCount = 0;
     public void onResumeFake() {
         if (resumeCount != 0)
             SpecialWebControl.initSpecialWeb(this, rl, "index", "", "");
         resumeCount++;
     }
 
-    public void refreshContentView(boolean b) {
+    public void refresh() {
 
     }
 }

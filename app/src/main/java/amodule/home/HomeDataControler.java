@@ -6,11 +6,14 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import amodule.main.activity.MainHomePage;
+import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -27,9 +30,12 @@ public class HomeDataControler {
     private final String CACHE_PATH = "homeDataCache";
     private MainHomePage mActivity;
     private String backUrl, nextUrl;
+    private HomeModuleBean mHomeModuleBean;
+    private ArrayList<Map<String, String>> mData = new ArrayList<>();
 
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
+        mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
     }
 
     //读取缓存数据
@@ -67,6 +73,14 @@ public class HomeDataControler {
     //获取服务端Feed流数据
     public void loadServiceFeedData(boolean refresh, InternetCallback callback) {
 
+    }
+
+    public ArrayList<Map<String, String>> getData() {
+        return mData;
+    }
+
+    public HomeModuleBean getHomeModuleBean() {
+        return mHomeModuleBean;
     }
 
     public void setBackUrl(String backUrl) {
