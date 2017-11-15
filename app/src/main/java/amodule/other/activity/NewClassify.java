@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -81,12 +82,12 @@ public class NewClassify extends BaseActivity {
 		if (bundle != null) {
 			nameTitle = bundle.getString("name");
 			type = bundle.getString("type");
-			if (type.equals("caipu")) {
+			if ("caipu".equals(type) || TextUtils.isEmpty(type)) {
 				title = "菜谱分类";
 				coverStr = "搜菜谱  如：糖醋排骨  或  鸡蛋";
 				mEventId = "a_menu_table";
 				statistics="other_detail_sort";
-			} else if (type.equals("jiankang")) {
+			} else if ("jiankang".equals(type)) {
 				title = "美食养生";
 				coverStr = "搜养生内容";
 				mEventId = "a_health_chart";

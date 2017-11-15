@@ -3,6 +3,7 @@ package amodule._common.widget;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,16 +47,18 @@ public class BannerView extends Banner implements IBindMap {
         super(context, attrs, defStyleAttr);
         int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 32 / 75f);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
+        setVisibility(GONE);
     }
 
     @Override
     public void setData(Map<String, String> data) {
+//        Log.i("tzy","banner data = " + data.toString());
         if (null == data || data.isEmpty()){
             setVisibility(GONE);
             return;
         }
-
-        ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(data.get("list"));
+        Map<String,String> dataMap = StringManager.getFirstMap(data.get("data"));
+        ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dataMap.get("list"));
         if (arrayList.isEmpty()){
             setVisibility(GONE);
             return;
@@ -100,7 +103,7 @@ public class BannerView extends Banner implements IBindMap {
         weightArray = new int[arrayList.size()];
         for (int index = 0; index < weightArray.length; index++) {
             Map<String, String> map = arrayList.get(index);
-            String weightStr = map.get("weightSum");
+            String weightStr = map.get("weight");
             int currentWeight = TextUtils.isEmpty(weightStr) || "null".equals(weightStr) ? 0 : Integer.parseInt(weightStr);
             weightSum += currentWeight;
             weightArray[index] = weightSum;
@@ -113,6 +116,7 @@ public class BannerView extends Banner implements IBindMap {
                 break;
             }
         }
+
     }
 
     public interface OnBannerItemClickCallback {

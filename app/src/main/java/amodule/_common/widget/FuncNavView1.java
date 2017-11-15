@@ -44,14 +44,21 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap {
     }
 
     @Override
+    protected void initData() {
+        super.initData();
+        setVisibility(GONE);
+    }
+
+    @Override
     public void setData(Map<String, String> data) {
-        Log.i("tzy","data = " + data);
+//        Log.i("tzy","data = " + data);
         if (null == data || data.isEmpty()){
             setVisibility(GONE);
             return;
         }
 
-        ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(data.get("list"));
+        Map<String,String> dataMap = StringManager.getFirstMap(data.get("data"));
+        ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dataMap.get("list"));
         if (arrayList.isEmpty()){
             setVisibility(GONE);
             return;
@@ -65,10 +72,10 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap {
             setVisibility(GONE);
             return;
         }
-        final int length = Math.min(data.size(),navIds.size());
+        final int length = Math.min(navIds.size(),data.size());
         for(int index = 0 ; index < length ; index ++){
             View navView = findViewById(navIds.get(index));
-            setNavItemVisibility(navIds.get(index),setMapToView(navView,data.get(index)));
+            setMapToView(navView,data.get(index));
         }
         setVisibility(VISIBLE);
     }

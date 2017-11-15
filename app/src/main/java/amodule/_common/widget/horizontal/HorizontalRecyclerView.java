@@ -3,9 +3,7 @@ package amodule._common.widget.horizontal;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -37,27 +35,35 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap {
     private BaseSubTitleView mSubTitleView;
     private RvBaseAdapter mRecyclerAdapter;
     public HorizontalRecyclerView(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public HorizontalRecyclerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public HorizontalRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initialize();
+    }
+
+    private void initialize() {
+        setVisibility(GONE);
     }
 
     @Override
     public void setData(Map<String, String> map) {
-        if (map == null || map.isEmpty())
+        if (map == null || map.isEmpty()){
+            setVisibility(GONE);
             return;
+        }
         boolean isResetData = false;
         if (mSubTitleView != null) {
             mSubTitleView.setData(map);
             isResetData = true;
         }
-        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(map.get("list"));
+        Map<String,String> dataMap = StringManager.getFirstMap(map.get("data"));
+        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get("list"));
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.updateData(list);
             isResetData = true;
@@ -85,17 +91,16 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap {
                     break;
             }
             mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
-            mSubTitleView.setData(map);
+            Map<String,String> parameterMap = StringManager.getFirstMap(map.get("parameter"));
+            mSubTitleView.setData(parameterMap);
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             mRecyclerView.setAdapter(mRecyclerAdapter);
-            mRecyclerView.setOnItemClickListener(new RvListView.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                    String url = list.get(position).get("url");
-                    AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
-                }
+            mRecyclerView.setOnItemClickListener((view, holder, position) -> {
+                String url = list.get(position).get("url");
+                AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
             });
         }
+        setVisibility(VISIBLE);
     }
 }

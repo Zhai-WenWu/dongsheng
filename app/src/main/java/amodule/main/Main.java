@@ -914,7 +914,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 addQiYvListener();
                 if (nowTab == 2 || allTab.containsKey("MyMessage")) {
                     MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
-                    myMessage.onRefresh();
+                    if(myMessage != null){
+                        myMessage.onRefresh();
+                    }
                 }
                 QiYvHelper.getInstance().onUserLogin();
                 QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
@@ -922,7 +924,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     public void onNumberReady(int count) {
                         if (nowTab == 3 || allTab.containsKey("MyMessage")) {
                             MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
-                            myMessage.setQiYvNum(count);
+                            if(myMessage != null){
+                                myMessage.setQiYvNum(count);
+                            }
                         }
                         Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
                     }

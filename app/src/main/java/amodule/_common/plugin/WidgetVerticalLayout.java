@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.annimon.stream.Stream;
-import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
@@ -19,11 +18,11 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.widgetlib.AllWeightLibrary;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_BOTTOM;
-import static amodule._common.helper.WidgetDataHelper.KEY_DATA;
-import static amodule._common.helper.WidgetDataHelper.KEY_EXTRA;
+import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_DATA;
+import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_EXTRA;
 import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
 import static amodule._common.helper.WidgetDataHelper.KEY_TOP;
-import static amodule._common.helper.WidgetDataHelper.KEY_TYPE;
+import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_TYPE;
 import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
 
 /**
@@ -64,20 +63,22 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
     @Override
     public void setData(Map<String, String> data) {
         if(null == data || data.isEmpty()) return;
-        String widgetType = data.get(KEY_TYPE);
-        String widgetData = data.get(KEY_DATA);
+        String widgetType = data.get(KEY_WIDGET_TYPE);
+        String widgetData = data.get(KEY_WIDGET_DATA);
         Map<String,String> dataMap = StringManager.getFirstMap(widgetData);
+
         String style = dataMap.get(KEY_STYLE);
         final int viewId = AllWeightLibrary.of().findWidgetViewID(widgetType,style);
         if(viewId > NO_FIND_ID){
             View view = findViewById(viewId);
-            if(null != view && view instanceof IBindMap
+            if(null != view
+                    && view instanceof IBindMap
                     && !TextUtils.isEmpty(widgetData)){
-                ((IBindMap)view).setData(StringManager.getFirstMap(widgetData));
+                ((IBindMap)view).setData(dataMap);
             }
         }
         //加载额外数据
-        String widgetExtra = data.get(KEY_EXTRA);
+        String widgetExtra = data.get(KEY_WIDGET_EXTRA);
         if(TextUtils.isEmpty(widgetExtra)){
             return;
         }
@@ -123,8 +124,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
      * @param isOrder 是否按顺序添加
      */
     private void addViewByData(LinearLayout layout,Map<String,String> data,boolean isOrder){
-        String widgetType = data.get(KEY_TYPE);
-        String widgetData = data.get(KEY_DATA);
+        String widgetType = data.get(KEY_WIDGET_TYPE);
+        String widgetData = data.get(KEY_WIDGET_DATA);
         Map<String,String> dataMap = StringManager.getFirstMap(widgetData);
         String style = dataMap.get(KEY_STYLE);
         final int layoutID = AllWeightLibrary.of().findWidgetLayoutID(widgetType,style);
