@@ -85,6 +85,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap {
                     break;
             }
             mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
+            mSubTitleView.setData(map);
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             mRecyclerView.setAdapter(mRecyclerAdapter);
