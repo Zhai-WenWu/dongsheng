@@ -1,9 +1,7 @@
 package amodule.home;
 
-import android.util.Log;
 import android.view.View;
 
-import com.annimon.stream.Stream;
 import com.xiangha.R;
 
 import java.util.List;

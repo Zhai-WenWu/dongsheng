@@ -2,7 +2,6 @@ package amodule._common.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,6 +13,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.tools.StringManager;
+import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
 
 /**
@@ -45,7 +45,8 @@ public class CommonSubTitleView extends BaseSubTitleView {
     @Override
     protected void onDataReady(Map<String, String> map) {
         Map<String, String> titleMap = StringManager.getFirstMap(map.get("title"));
-        this.setTitle1Text(titleMap.get("text1"));
+        WidgetDataHelper.setTextToView(mTitle1,titleMap.get("text1"));
+        WidgetDataHelper.setTextToView(mTitle2,titleMap.get("text2"));
         this.setTitle1ClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +56,6 @@ public class CommonSubTitleView extends BaseSubTitleView {
                 AppCommon.openUrl((Activity) CommonSubTitleView.this.getContext(), url1, true);
             }
         });
-        this.setTitle2Text(titleMap.get("text2"));
         this.setTitle2ClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,15 +79,6 @@ public class CommonSubTitleView extends BaseSubTitleView {
         }
     }
 
-    public void setTitle1Text(@Nullable CharSequence text) {
-        if (TextUtils.isEmpty(text)) {
-            mTitle1.setVisibility(View.GONE);
-        } else {
-            mTitle1.setText(text);
-            mTitle1.setVisibility(View.VISIBLE);
-        }
-    }
-
     public void setTitle1Text(int resid) {
         if (resid > 0) {
             mTitle1.setText(resid);
@@ -99,15 +90,6 @@ public class CommonSubTitleView extends BaseSubTitleView {
 
     public void setTitle1TextColor(int color) {
         mTitle1.setTextColor(color);
-    }
-
-    public void setTitle2Text(@Nullable CharSequence text) {
-        if (TextUtils.isEmpty(text)) {
-            mTitle2.setVisibility(View.GONE);
-        } else {
-            mTitle2.setText(text);
-            mTitle2.setVisibility(View.VISIBLE);
-        }
     }
 
     public void setTitle2Text(int resid) {
