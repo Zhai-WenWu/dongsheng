@@ -6,13 +6,15 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+
+import amodule._common.widget.baseview.BaseSubTitleView;
 
 /**
  * Description : //TODO
@@ -22,7 +24,7 @@ import java.util.Date;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class CountDownSubTitleView extends SubTitleView {
+public class CountDownSubTitleView extends BaseSubTitleView {
 
     protected TextView mTitle1;
     protected TextView mTitle2;
@@ -35,20 +37,15 @@ public class CountDownSubTitleView extends SubTitleView {
     private CountDownTimer mCountDownTimer;
 
     public CountDownSubTitleView(Context context) {
-        super(context);
+        super(context, R.layout.countdown_subtitle_relativelayout);
     }
 
     public CountDownSubTitleView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs, R.layout.countdown_subtitle_relativelayout);
     }
 
     public CountDownSubTitleView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void inflateLayout(Context context) {
-        inflate(context, R.layout.countdown_subtitle_relativelayout, this);
+        super(context, attrs, defStyleAttr, R.layout.countdown_subtitle_relativelayout);
     }
 
     @Override
@@ -57,6 +54,11 @@ public class CountDownSubTitleView extends SubTitleView {
         mTitle2 = (TextView) findViewById(R.id.text2);
         mTitle3 = (TextView) findViewById(R.id.text3);
         mTitle4 = (TextView) findViewById(R.id.text4);
+    }
+
+    @Override
+    protected void onDataReady(Map<String, String> map) {
+        //TODO 开始设置数据
     }
 
     public void setTitle1Text(@Nullable CharSequence text) {
@@ -99,7 +101,7 @@ public class CountDownSubTitleView extends SubTitleView {
      * @param millisInFuture 倒计时总时间
      * @param millisInterval 倒计时间隔
      */
-    public void setCountDownTime(long millisInFuture, long millisInterval) {
+    private void setCountDownTime(long millisInFuture, long millisInterval) {
         mMillisInFuture = millisInFuture;
         mMillisInterval = millisInterval;
     }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageview1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88888888"/>
+
+    <LinearLayout
+        android:id="@+id/linearlayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/dp_34"
+        android:layout_marginRight="@dimen/dp_34"
+        android:gravity="center"
+        android:background="@color/transparent_fe"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_white_text"
+            android:textSize="@dimen/sp_18"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:background="@color/transparent_fe"
+            android:maxLines="2"
+            android:lineSpacingExtra="@dimen/dp_4"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textview2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent_fe"
+            android:textSize="@dimen/sp_15"
+            android:textColor="@color/c_white_text"
+            android:text="29道菜"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

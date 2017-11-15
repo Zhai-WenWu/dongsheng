@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_168"
+    android:layout_height="@dimen/dp_200"
+    android:background="#660000">
+
+    <ImageView
+        android:id="@+id/imageview1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/textview4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_6"
+        android:paddingBottom="@dimen/dp_6"
+        android:paddingLeft="@dimen/dp_9"
+        android:paddingRight="@dimen/dp_9"
+        android:layout_marginTop="@dimen/dp_7"
+        android:layout_marginRight="@dimen/dp_5"
+        android:layout_alignParentRight="true"
+        android:text="2.8万人学"
+        android:textColor="@color/c_white_text"
+        android:background="#33cc00"/>
+
+    <LinearLayout
+        android:id="@+id/linearlayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dp_11"
+        android:paddingRight="@dimen/dp_11"
+        android:paddingTop="@dimen/dp_40"
+        android:paddingBottom="@dimen/dp_20"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:background="#33000000">
+
+        <TextView
+            android:id="@+id/textview1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="经典烘焙系列课"
+            android:textColor="@color/c_white_text"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_18"
+            android:layout_alignParentBottom="true"/>
+
+        <TextView
+            android:id="@+id/textview2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="经典烘焙系列课"
+            android:textColor="@color/c_white_text"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textview3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_7"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="经典烘焙系列课"
+            android:textColor="@color/c_white_text"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_14"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
