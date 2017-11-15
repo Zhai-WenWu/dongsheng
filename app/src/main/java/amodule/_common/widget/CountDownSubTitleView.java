@@ -17,7 +17,7 @@ import java.util.Map;
 import amodule._common.widget.baseview.BaseSubTitleView;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule._common.widget.horizontal
  * Created by MrTrying on 2017/11/13 15:49.
  * Author : mrtrying

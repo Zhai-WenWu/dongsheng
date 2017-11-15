@@ -10,7 +10,7 @@ import java.util.Map;
 import amodule._common.plugin.WidgetVerticalLayout;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home
  * Created by MrTrying on 2017/11/13 21:47.
  * Author : mrtrying
@@ -40,6 +40,7 @@ public class HomeHeaderControler {
 
     public void setData(List<Map<String,String>> array,boolean isShowCache){
         if(null == array || array.isEmpty()) return;
+        setVisibility(true);
         final int length = Math.min(array.size(),mLayouts.length);
         for(int index = 0 ; index < length ; index ++){
             Map<String,String> map = array.get(index);
@@ -49,6 +50,12 @@ public class HomeHeaderControler {
             }
             mLayouts[index].setData(map);
             mLayouts[index].setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setVisibility(boolean isShow) {
+        for(WidgetVerticalLayout itemLayout:mLayouts){
+            itemLayout.setVisibility(isShow?View.VISIBLE:View.GONE);
         }
     }
 }

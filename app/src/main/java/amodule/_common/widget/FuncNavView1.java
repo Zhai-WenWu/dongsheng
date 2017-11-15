@@ -23,7 +23,7 @@ import amodule.home.view.HomeFuncNavView1;
 import amodule._common.delegate.IBindMap;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule._common.widget
  * Created by MrTrying on 2017/11/14 11:40.
  * Author : mrtrying

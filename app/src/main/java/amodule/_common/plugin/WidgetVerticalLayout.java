@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 
 import com.annimon.stream.Stream;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -133,7 +135,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String,Str
             View view = mInflater.inflate(layoutID,null,true);
             if(null != view && view instanceof IBindMap
                     && !TextUtils.isEmpty(widgetData)){
-                ((IBindMap)view).setData(StringManager.getFirstMap(widgetData));
+                ((IBindMap)view).setData(dataMap);
                 layout.addView(view,isOrder ? -1 : 0);
             }
         }

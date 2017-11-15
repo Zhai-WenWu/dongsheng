@@ -67,6 +67,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap {
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.updateData(list);
             isResetData = true;
+            mRecyclerView.scrollToPosition(0);
         }
         if (isResetData)
             return;
@@ -94,7 +95,9 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap {
             Map<String,String> parameterMap = StringManager.getFirstMap(map.get("parameter"));
             mSubTitleView.setData(parameterMap);
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+            mRecyclerView.setFocusable(false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mRecyclerAdapter);
             mRecyclerView.setOnItemClickListener((view, holder, position) -> {
                 String url = list.get(position).get("url");

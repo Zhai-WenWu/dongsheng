@@ -25,7 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : com.mrtrying.rvlistview.widget
  * Created by MrTrying on 2017/11/8 20:58.
  * Author : mrtrying

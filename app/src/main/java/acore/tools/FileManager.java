@@ -352,12 +352,7 @@ public class FileManager extends UtilFile{
 	 * @param append 是否可以追加
 	 */
 	public static void scynSaveFile(final String filePath,final String content,final boolean append){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				saveFileToCompletePath(filePath,content,append);
-			}
-		}).start();
+		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
 	}
 
 	/**
@@ -367,12 +362,7 @@ public class FileManager extends UtilFile{
 	 * @param append 是否可以追加
 	 */
 	public static void scynSaveFile(final String filePath, final InputStream content, final boolean append){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				saveFileToCompletePath(filePath,content,append);
-			}
-		}).start();
+		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
 	}
 
 }

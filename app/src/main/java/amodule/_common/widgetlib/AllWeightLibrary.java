@@ -45,11 +45,11 @@ public class AllWeightLibrary {
         }
         switch (type){
             case "1":
-                return BannerLibrary.of().findWidgetViewID(style);
+                return BannerLibrary.of().findWidgetLayoutID(style);
             case "2":
-                return FunctionNavLibrary.of().findWidgetViewID(style);
+                return FunctionNavLibrary.of().findWidgetLayoutID(style);
             case "3":
-                return HorizontalViewLibrary.of().findWidgetViewID(style);
+                return HorizontalViewLibrary.of().findWidgetLayoutID(style);
             default:
                 return NO_FIND_ID;
         }

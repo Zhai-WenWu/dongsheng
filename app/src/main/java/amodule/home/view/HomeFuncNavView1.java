@@ -19,7 +19,7 @@ import acore.override.helper.XHActivityManager;
 import amodule._common.helper.WidgetDataHelper;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home.view
  * Created by MrTrying on 2017/11/14 11:14.
  * Author : mrtrying

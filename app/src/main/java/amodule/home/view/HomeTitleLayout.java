@@ -12,7 +12,7 @@ import com.xiangha.R;
 import amodule.search.avtivity.HomeSearch;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home.view
  * Created by MrTrying on 2017/11/13 18:19.
  * Author : mrtrying

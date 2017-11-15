@@ -14,6 +14,7 @@
     <TextView
         android:id="@+id/title"
         tools:text="热门推荐"
+        android:text="热门推荐"
         android:layout_below="@+id/line"
         android:textSize="@dimen/sp_17"
         android:textColor="#333333"

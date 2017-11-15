@@ -31,7 +31,7 @@ import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.login.LoginByAccout;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home.view
  * Created by MrTrying on 2017/11/13 18:39.
  * Author : mrtrying

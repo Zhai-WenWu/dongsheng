@@ -16,7 +16,7 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home
  * Created by MrTrying on 2017/11/14 19:16.
  * Author : mrtrying

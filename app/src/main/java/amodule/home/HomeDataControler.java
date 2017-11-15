@@ -14,7 +14,6 @@ import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.main.activity.MainHomePage;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
@@ -24,7 +23,7 @@ import aplug.basic.ReqInternet;
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home
  * Created by MrTrying on 2017/11/13 14:51.
  * Author : mrtrying
@@ -33,7 +32,7 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
 
 public class HomeDataControler {
 
-    private final String CACHE_PATH = FileManager.getSDCacheDir() + "homeDataCache";
+    private String CACHE_PATH = "";
     private final String SP_KEY_BACKURL = "backUrl";
     private final String SP_KEY_NEXTURL = "nexturl";
     private MainHomePage mActivity;
@@ -45,16 +44,17 @@ public class HomeDataControler {
     private NotifyDataSetChangedCallback mNotifyDataSetChangedCallback;
     private EntryptDataCallback mEntryptDataCallback;
     //向上刷新数据集合大小
-    protected int upDataSize = 0;
+    private int upDataSize = 0;
     private boolean mNeedRefCurrData = false;
     //强制清楚数据
-    protected boolean compelClearData= false;
+    private boolean compelClearData= false;
     //执行数据有问题时，数据请求，只执行一次。
-    protected boolean isNextUrl=true;
+    private boolean isNextUrl=true;
 
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
+        CACHE_PATH = FileManager.getSDCacheDir() + "homeDataCache";
     }
 
     //读取缓存数据
@@ -65,7 +65,7 @@ public class HomeDataControler {
                     return false;
                 });
         new Thread(() -> {
-            String hoemDataStr = FileManager.readFile(CACHE_PATH).toString().trim();
+            String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
             if (!TextUtils.isEmpty(hoemDataStr)) {
                 Message msg = handler.obtainMessage(0, hoemDataStr);
                 handler.sendMessage(msg);
@@ -74,7 +74,8 @@ public class HomeDataControler {
     }
 
     public void saveCacheHomeData(String data) {
-        FileManager.scynSaveFile(CACHE_PATH, data, false);
+        Log.i("tzy","saveCacheHomeData");
+        FileManager.saveFileToCompletePath(CACHE_PATH, data, false);
     }
 
     //获取服务端首页数据
@@ -139,7 +140,6 @@ public class HomeDataControler {
                                         backUrl = currentBackUrl;
                                     if(!TextUtils.isEmpty(currentNextkUrl))
                                         nextUrl = currentNextkUrl;
-
                                 }
                                 ArrayList<Map<String, String>> listDatas = StringManager.getListMapByJson(dataMap.get("list"));
                                 if (listDatas != null && listDatas.size() > 0) {
@@ -160,33 +160,30 @@ public class HomeDataControler {
                                             mData = mInsertADCallback.insertAD(mData,false);
                                         }
                                     }
-                                    //提示刷新UI
-                                    if(mNotifyDataSetChangedCallback != null)
-                                        mNotifyDataSetChangedCallback.notifyDataSetChanged();
                                 }
                                 //读取历史记录
-                                String historyUrl = (String) FileManager.loadShared(mActivity, mHomeModuleBean.getType(), mHomeModuleBean.getType());
-                                if (!TextUtils.isEmpty(historyUrl)) {
-                                    Map<String, String> map = StringManager.getMapByString(historyUrl, "&", "=");
-                                    final String markValue = map.get("mark");
-                                    final String timeValue = map.get("reset_time");
-                                    final int length = mData.size();
-                                    Map<String, String> backMap = StringManager.getMapByString(backUrl, "&", "=");
-                                    String nowTime = backMap.get("reset_time");
-                                    //设置显示参数
-                                    for(int index = 0 ; index < length ; index ++){
-                                        Map<String,String> tempMap = mData.get(index);
-                                        if(index != 0
-                                                && EqualsData(tempMap.get("mark"),markValue)
-                                                && !TextUtils.isEmpty(nowTime)
-                                                && !TextUtils.isEmpty(timeValue)){
-                                            Log.i("zhangyujian", "mak:" + tempMap.get("mark") + "::;" + tempMap.get("name"));
-                                            tempMap.put("refreshTime", Tools.getTimeDifferent(Long.parseLong(nowTime), Long.parseLong(timeValue)));
-                                        }else{
-                                            tempMap.put("refreshTime", "");
-                                        }
-                                    }
-                                }
+//                                String historyUrl = (String) FileManager.loadShared(mActivity, mHomeModuleBean.getType(), mHomeModuleBean.getType());
+//                                if (!TextUtils.isEmpty(historyUrl)) {
+//                                    Map<String, String> map = StringManager.getMapByString(historyUrl, "&", "=");
+//                                    final String markValue = map.get("mark");
+//                                    final String timeValue = map.get("reset_time");
+//                                    final int length = mData.size();
+//                                    Map<String, String> backMap = StringManager.getMapByString(backUrl, "&", "=");
+//                                    String nowTime = backMap.get("reset_time");
+//                                    //设置显示参数
+//                                    for(int index = 0 ; index < length ; index ++){
+//                                        Map<String,String> tempMap = mData.get(index);
+//                                        if(index != 0
+//                                                && EqualsData(tempMap.get("mark"),markValue)
+//                                                && !TextUtils.isEmpty(nowTime)
+//                                                && !TextUtils.isEmpty(timeValue)){
+//                                            Log.i("zhangyujian", "mak:" + tempMap.get("mark") + "::;" + tempMap.get("name"));
+//                                            tempMap.put("refreshTime", Tools.getTimeDifferent(Long.parseLong(nowTime), Long.parseLong(timeValue)));
+//                                        }else{
+//                                            tempMap.put("refreshTime", "");
+//                                        }
+//                                    }
+//                                }
                                 //提示刷新UI
                                 if(mNotifyDataSetChangedCallback != null)
                                     mNotifyDataSetChangedCallback.notifyDataSetChanged();
@@ -214,7 +211,10 @@ public class HomeDataControler {
                                             mEntryptDataCallback.onEntryptData(false);
                                     }
                                 }
-
+                            }
+                        }else{
+                            if(callback != null){
+                                callback.onFailed();
                             }
                         }
                         compelClearData=false;//强制刷新只能使用一次，一次数据后被置回去
