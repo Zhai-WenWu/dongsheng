@@ -1,5 +1,9 @@
 package amodule._common.widgetlib;
 
+import android.text.TextUtils;
+
+import com.xiangha.R;
+
 /**
  * PackageName : amodule._common.widgetlib
  * Created by MrTrying on 2017/11/13 13:30.
@@ -9,10 +13,11 @@ package amodule._common.widgetlib;
 public class HorizontalViewLibrary implements IWidgetLibrary {
     private static volatile HorizontalViewLibrary instance = null;
 
-    private HorizontalViewLibrary(){}
+    private HorizontalViewLibrary() {
+    }
 
-    public static synchronized HorizontalViewLibrary of(){
-        if(null == instance){
+    public static synchronized HorizontalViewLibrary of() {
+        if (null == instance) {
             instance = new HorizontalViewLibrary();
         }
         return instance;
@@ -20,11 +25,28 @@ public class HorizontalViewLibrary implements IWidgetLibrary {
 
     @Override
     public final int findWidgetViewID(String style) {
-        return NO_FIND_ID;
+        if (TextUtils.isEmpty(style)) return NO_FIND_ID;
+        switch (style) {
+            case "1":
+            case "2":
+            case "3":
+                return R.id.horizontal_recyclerview_1;
+            default:
+                return NO_FIND_ID;
+        }
+
     }
 
     @Override
     public final int findWidgetLayoutID(String style) {
-        return NO_FIND_ID;
+        if (TextUtils.isEmpty(style)) return NO_FIND_ID;
+        switch (style) {
+            case "1":
+            case "2":
+            case "3":
+                return R.layout.widget_horizontal;
+            default:
+                return NO_FIND_ID;
+        }
     }
 }
