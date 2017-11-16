@@ -1,6 +1,7 @@
 package amodule.dish.view.manager;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -106,6 +107,7 @@ public class DetailDishViewManager {
         }
     }
     public void handlerTitleName(String name){
+        Log.i("xianghaTag","name:::"+name);
         if(dishTitleViewControl!=null){
             dishTitleViewControl.setNickName(name);
         }

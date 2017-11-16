@@ -123,7 +123,7 @@ public class DishAboutView extends ItemBaseView {
         dish_follow_tv= (TextView) findViewById(R.id.dish_follow_tv);
         setFollowState(mapUser);
         //点击关注
-        findViewById(caipu_follow_rela).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.dish_follow_rela).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!LoginManager.isLogin()) {
@@ -149,9 +149,9 @@ public class DishAboutView extends ItemBaseView {
         if(LoginManager.isLogin()
                 && LoginManager.userInfo.get("code") != null
                 && LoginManager.userInfo.get("code").equals(mapUser.get("code"))){
-            findViewById(caipu_follow_rela).setVisibility(View.GONE);
+            findViewById(R.id.dish_follow_rela).setVisibility(View.GONE);
         } else {
-            findViewById(caipu_follow_rela).setVisibility(View.VISIBLE);
+            findViewById(R.id.dish_follow_rela).setVisibility(View.VISIBLE);
         }
         cusImg.setOnClickListener(onClickListener);
         dish_user_name.setOnClickListener(onClickListener);
