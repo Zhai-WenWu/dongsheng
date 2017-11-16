@@ -2,15 +2,12 @@ package amodule.main.activity;
 
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.annimon.stream.Stream;
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -29,10 +26,7 @@ import amodule.main.adapter.HomeAdapter;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import third.ad.control.AdControlHomeDish;
 import third.ad.control.AdControlParent;
-
-import static third.ad.control.AdControlHomeDish.tag_yu;
 
 /**
  * Description :
@@ -54,8 +48,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     HomeViewControler mViewContrloer;
     //adapter
     HomeAdapter mHomeAdapter;
-
-    private Handler mHandler;
     //是否加载
     boolean LoadOver = false;
 
@@ -88,7 +80,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         //初始化数据控制
         mDataControler = new HomeDataControler(this);
         mDataControler.setInsertADCallback((listDatas, isBack) -> {
-            AdControlParent adControlParent = mViewContrloer.getAdControl();
+            AdControlParent adControlParent = mDataControler.getAdControl();
             if (adControlParent != null
                     && mDataControler.getUpDataSize() > 0
                     && !isBack)
@@ -100,16 +92,10 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             if (mHomeAdapter != null) mHomeAdapter.notifyDataSetChanged();
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
-        mDataControler.setOnNeedRefreshCallback(this::isNeedRefresh);
         //初始化adapter
-        mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mViewContrloer.getAdControl());
+        mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mDataControler.getAdControl());
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
-
-        mHandler = new Handler(msg -> {
-            //待定
-            return false;
-        });
     }
 
     @Override
@@ -154,6 +140,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                         mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
                 }
                 if(!isCache &&!LoadOver) {
+                    assert mViewContrloer != null;
                     loadManager.setLoading(mViewContrloer.getRvListView(),
                             mHomeAdapter,
                             true,
@@ -172,8 +159,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh) {
-        if (refresh) {
-            isNeedRefresh(false);
+        if (refresh && mDataControler != null) {
+            mDataControler.isNeedRefresh(false);
         }
         Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
         if (mDataControler.isNeedRefCurrData()) {
@@ -188,7 +175,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         LoadOver = true;
 
         if (refresh) {//向上翻页
-            mViewContrloer.refreshADIndex();
+            mDataControler.refreshADIndex();
             mViewContrloer.setStatisticShowNum();
         }
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
@@ -228,67 +215,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 }
             }
         });
-
-    }
-
-    /**
-     * 刷新广告数据
-     *
-     * @param isForceRefresh 是否强制刷新广告
-     */
-    private void isNeedRefresh(boolean isForceRefresh) {
-        AdControlHomeDish adControlHomeDish = mViewContrloer.getAdControl();
-        if (adControlHomeDish == null
-                || mDataControler.getData() == null
-                || mHomeAdapter == null)
-            return;//条件过滤
-        boolean state = adControlHomeDish.isNeedRefresh();
-        Log.i(tag_yu, "isNeedRefresh::::" + state + " :: 推荐 ; isForceRefresh = " + isForceRefresh);
-        if (isForceRefresh)
-            state = true;//强制刷新
-        if (state) {
-            //重新请求广告
-            adControlHomeDish.setAdDataCallBack((tag, nums) -> {
-                if (tag >= 1 && nums > 0) {
-                    handlerMainThreadUIAD();
-                }
-            });
-            adControlHomeDish.refreshData();
-            //推荐首页
-            adControlHomeDish.setAdLoadNumberCallBack(Number -> {
-                if (Number > 7) {
-                    handlerMainThreadUIAD();
-                }
-            });
-            //去掉全部的广告位置
-            ArrayList<Map<String, String>> listTemp = new ArrayList<>();
-            Stream.of(mDataControler.getData()).forEach(map -> {
-                if (map.containsKey("adstyle")
-                        && "ad".equals(map.get("adstyle"))) {
-                    listTemp.add(map);
-                }
-            });
-            Log.i(tag_yu, "删除广告");
-            if (listTemp.size() > 0) {
-                mDataControler.getData().removeAll(listTemp);
-            }
-            mHomeAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /** 处理广告在主线程中处理 */
-    protected void handlerMainThreadUIAD() {
-        mHandler.post(() -> {
-            mDataControler.setData(mViewContrloer.getAdControl().getNewAdData(mDataControler.getData(), false));
-            if (mHomeAdapter != null)
-                mHomeAdapter.notifyDataSetChanged();
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        isNeedRefresh(false);
+        if(mDataControler != null){
+            mDataControler.isNeedRefresh(false);
+        }
         onResumeFake();
         Log.i("zyj", "mainHome::onPause");
         setRecommedTime(System.currentTimeMillis());

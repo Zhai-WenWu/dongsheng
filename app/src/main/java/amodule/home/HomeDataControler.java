@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.ad.control.AdControlHomeDish;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
@@ -43,7 +46,6 @@ public class HomeDataControler {
     private InsertADCallback mInsertADCallback;
     private NotifyDataSetChangedCallback mNotifyDataSetChangedCallback;
     private EntryptDataCallback mEntryptDataCallback;
-    private OnNeedRefreshCallback mOnNeedRefreshCallback;
     //向上刷新数据集合大小
     private int upDataSize = 0;
     private boolean mNeedRefCurrData = false;
@@ -51,11 +53,14 @@ public class HomeDataControler {
     private boolean compelClearData= false;
     //执行数据有问题时，数据请求，只执行一次。
     private boolean isNextUrl=true;
+    //广告控制器
+    private AdControlHomeDish mAdControl;
 
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
         CACHE_PATH = FileManager.getSDCacheDir() + "homeDataCache";
+        mAdControl = AdControlHomeDish.getInstance().getTwoLoadAdData();
     }
 
     //读取缓存数据
@@ -136,9 +141,7 @@ public class HomeDataControler {
                                 if (compelClearData || (refresh && "2".equals(resetValue))) {
                                     mData.clear();
                                     Log.i("zyj","刷新数据：清集合");
-                                    if(mOnNeedRefreshCallback != null){
-                                        mOnNeedRefreshCallback.onNeedRefresh(true);
-                                    }
+                                    isNeedRefresh(true);
                                     //强制刷新，重置数据
                                     if(!TextUtils.isEmpty(currentBackUrl))
                                         backUrl = currentBackUrl;
@@ -221,7 +224,7 @@ public class HomeDataControler {
                                 callback.onFailed();
                             }
                         }
-                        compelClearData=false;//强制刷新只能使用一次，一次数据后被置回去
+                        compelClearData = false;//强制刷新只能使用一次，一次数据后被置回去
                         if(callback != null){
                             callback.onAfter(refresh,flag,loadCount);
                         }
@@ -229,10 +232,59 @@ public class HomeDataControler {
                 });
     }
 
-    public boolean EqualsData(Object o1,Object o2){
-        if(null == o1 && null == o2)
-            return true;
-        return null != o1 ? o1.equals(o2) : o2.equals(o1);
+    /**
+     * 刷新广告数据
+     *
+     * @param isForceRefresh 是否强制刷新广告
+     */
+    public void isNeedRefresh(boolean isForceRefresh) {
+        if (mAdControl == null
+                || mData == null)
+            return;//条件过滤
+        boolean state = mAdControl.isNeedRefresh();
+        Log.i(tag_yu, "isNeedRefresh::::" + state + " :: 推荐 ; isForceRefresh = " + isForceRefresh);
+        if (isForceRefresh)
+            state = true;//强制刷新
+        if (state) {
+            //重新请求广告
+            mAdControl.setAdDataCallBack((tag, nums) -> {
+                if (tag >= 1 && nums > 0) {
+                    handlerMainThreadUIAD();
+                }
+            });
+            mAdControl.refreshData();
+            //推荐首页
+            mAdControl.setAdLoadNumberCallBack(Number -> {
+                if (Number > 7) {
+                    handlerMainThreadUIAD();
+                }
+            });
+            //去掉全部的广告位置
+            ArrayList<Map<String, String>> listTemp = new ArrayList<>();
+            Stream.of(mData).forEach(map -> {
+                if (map.containsKey("adstyle")
+                        && "ad".equals(map.get("adstyle"))) {
+                    listTemp.add(map);
+                }
+            });
+            Log.i(tag_yu, "删除广告");
+            if (listTemp.size() > 0) {
+                mData.removeAll(listTemp);
+            }
+            if(mNotifyDataSetChangedCallback != null){
+                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+            }
+        }
+    }
+
+    /** 处理广告在主线程中处理 */
+    private void handlerMainThreadUIAD() {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            mData = mAdControl.getNewAdData(mData, false);
+            if(mNotifyDataSetChangedCallback != null){
+                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+            }
+        });
     }
 
     public void clearData() {
@@ -244,7 +296,18 @@ public class HomeDataControler {
         }
     }
 
+    //刷新广告index
+    public void refreshADIndex() {
+        if (mAdControl == null)
+            return;
+        mAdControl.refrush();
+    }
+
     /*--------------------------------------------- Get&Set ---------------------------------------------*/
+
+    public AdControlHomeDish getAdControl() {
+        return mAdControl;
+    }
 
     public ArrayList<Map<String, String>> getData() {
         return mData;
@@ -270,48 +333,20 @@ public class HomeDataControler {
         this.backUrl = backUrl;
     }
 
-    public void setNextUrl(String nextUrl) {
-        this.nextUrl = nextUrl;
-    }
-
     public int getUpDataSize() {
         return upDataSize;
-    }
-
-    public void setUpDataSize(int upDataSize) {
-        this.upDataSize = upDataSize;
-    }
-
-    public InsertADCallback getInsertADCallback() {
-        return mInsertADCallback;
     }
 
     public void setInsertADCallback(InsertADCallback insertADCallback) {
         mInsertADCallback = insertADCallback;
     }
 
-    public NotifyDataSetChangedCallback getNotifyDataSetChangedCallback() {
-        return mNotifyDataSetChangedCallback;
-    }
-
     public void setNotifyDataSetChangedCallback(NotifyDataSetChangedCallback notifyDataSetChangedCallback) {
         mNotifyDataSetChangedCallback = notifyDataSetChangedCallback;
     }
 
-    public EntryptDataCallback getEntryptDataCallback() {
-        return mEntryptDataCallback;
-    }
-
     public void setEntryptDataCallback(EntryptDataCallback entryptDataCallback) {
         this.mEntryptDataCallback = entryptDataCallback;
-    }
-
-    public OnNeedRefreshCallback getOnNeedRefreshCallback() {
-        return mOnNeedRefreshCallback;
-    }
-
-    public void setOnNeedRefreshCallback(OnNeedRefreshCallback onNeedRefreshCallback) {
-        this.mOnNeedRefreshCallback = onNeedRefreshCallback;
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/
@@ -334,10 +369,6 @@ public class HomeDataControler {
 
     public interface EntryptDataCallback{
         void onEntryptData(boolean refersh);
-    }
-
-    public interface OnNeedRefreshCallback {
-        void onNeedRefresh(boolean isNeed);
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -23,6 +24,9 @@ import amodule._common.widget.baseview.BaseSubTitleView;
 import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
 import amodule.home.adapter.HorizontalAdapter3;
+
+import static amodule._common.helper.WidgetDataHelper.KEY_PARAMETER;
+import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
 
 /**
  * Description :
@@ -56,6 +60,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
 
     @Override
     public void setData(Map<String, String> map) {
+        Log.i("tzy","map = " + map.toString());
         if (map == null || map.isEmpty()){
             setVisibility(GONE);
             return;
@@ -74,18 +79,18 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
         }
         if (isResetData)
             return;
-        String style = map.get("style");
+        String style = map.get(KEY_STYLE);
         if (getChildCount() == 0 && style != null) {
             switch (style) {
-                case "horizontal":
+                case "1":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout1, this);
                     mRecyclerAdapter = new HorizontalAdapter1(getContext(), list);
                     break;
-                case "horizontal2":
+                case "2":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout2, this);
                     mRecyclerAdapter = new HorizontalAdapter2(getContext(), list);
                     break;
-                case "horizontal3":
+                case "3":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout1, this);
                     mRecyclerAdapter = new HorizontalAdapter3(getContext(), list);
                     break;
@@ -95,7 +100,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
                     break;
             }
             mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
-            Map<String,String> parameterMap = StringManager.getFirstMap(map.get("parameter"));
+            Map<String,String> parameterMap = StringManager.getFirstMap(map.get(KEY_PARAMETER));
             mSubTitleView.setData(parameterMap);
 
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);

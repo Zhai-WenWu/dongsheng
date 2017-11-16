@@ -37,7 +37,6 @@ public class HomeHeaderControler {
         mLayouts[4] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal2_widget);
         mLayouts[5] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal3_widget);
 
-
     }
 
     public void setData(List<Map<String,String>> array,boolean isShowCache){
@@ -53,7 +52,7 @@ public class HomeHeaderControler {
                 continue;
             }
             mLayouts[index].setData(map);
-            mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_PULISH,twoLevelArray[index],threeLevelArray[index]);
+            mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE,twoLevelArray[index],threeLevelArray[index]);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
     }

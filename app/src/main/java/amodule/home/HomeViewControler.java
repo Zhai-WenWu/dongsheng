@@ -47,8 +47,6 @@ public class HomeViewControler {
     //feed头部view
     private View mHeaderView;
 
-    //广告控制器
-    private AdControlHomeDish mAdControl;
     protected boolean isScrollData = false;//是否滚动数据
     protected int scrollDataIndex = -1;//滚动数据的位置
 
@@ -59,7 +57,6 @@ public class HomeViewControler {
 
     @SuppressLint("InflateParams")
     private void initUI() {
-        mAdControl = AdControlHomeDish.getInstance().getTwoLoadAdData();
 
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
         mHeaderControler = new HomeHeaderControler(mHeaderView);
@@ -149,13 +146,6 @@ public class HomeViewControler {
         }
     }
 
-    //刷新广告index
-    public void refreshADIndex() {
-        if (mAdControl == null)
-            return;
-        mAdControl.refrush();
-    }
-
     public void refreshBouy(){
         if(mBuoy != null){
             mBuoy.refresh(true);
@@ -179,10 +169,6 @@ public class HomeViewControler {
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/
-
-    public AdControlHomeDish getAdControl() {
-        return mAdControl;
-    }
 
     public RvListView getRvListView() {
         return mRvListView;
