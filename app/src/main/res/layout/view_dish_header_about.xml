@@ -106,7 +106,7 @@
                     android:id="@+id/dish_user_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/caipu_user"
+                    android:layout_below="@+id/dish_user"
                     android:layout_marginTop="@dimen/dp_4"
                     android:text="加载中"
                     android:singleLine="true"

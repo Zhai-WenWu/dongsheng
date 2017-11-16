@@ -121,14 +121,18 @@ public class DetailDishNew extends BaseAppCompatActivity {
                 detailDishViewManager.handlerHeaderView(list,null);
                 break;
             case DetailDishDataManager.DISH_DATA_BASE:
+                detailDishViewManager.handlerDishData(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_USER:
+                detailDishViewManager.handlerUserData(list);
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE:
+                detailDishViewManager.handlerIngreView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_BANNER:
                 break;
-            case DetailDishDataManager.DISH_DATA_STEP:
-                break;
-            case DetailDishDataManager.DISH_DATA_USER:
+            case DetailDishDataManager.DISH_DATA_STEP://步骤
+                maplist.addAll(list);
                 break;
             default:
                 break;

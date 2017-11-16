@@ -35,7 +35,6 @@ import third.mall.tool.ToolView;
 import xh.basic.tool.UtilString;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
-import static com.xiangha.R.id.caipu_exp_title;
 import static com.xiangha.R.id.caipu_follow_rela;
 
 /**
@@ -45,10 +44,10 @@ public class DishAboutView extends ItemBaseView {
     private boolean showExplainState= false;
     private TextView dish_work_exp_tv;
     private Map<String,String> mapAbout;
+    private Map<String,String> mapUser;
     private ImageView dish_follow_img;
     private TextView dish_follow_tv;
     private Activity activity;
-    private ArrayList<Map<String,String>> lists ;
     public DishAboutView(Context context) {
         super(context, R.layout.view_dish_header_about);
     }
@@ -66,14 +65,28 @@ public class DishAboutView extends ItemBaseView {
         super.init();
 
     }
+
+    /**
+     * 设置菜谱基础数据
+     * @param map
+     * @param activitys
+     */
     public void setData(Map<String,String> map, Activity activitys){
         this.mapAbout = map;
         this.activity= activitys;
         setDishData();
-        setUserData(UtilString.getListMapByJson(map.get("customer")));
         setExplainData(map.get("info"));
     }
 
+    /**
+     * 设置用户数据
+     * @param map
+     * @param activitys
+     */
+    public void setUserData(Map<String,String> map, Activity activitys){
+        this.mapUser= map;
+        setUserData();
+    }
     /**
      * 设置菜谱数据
      */
@@ -94,22 +107,21 @@ public class DishAboutView extends ItemBaseView {
     /**
      * 设置用户数据
      */
-    private void setUserData(final ArrayList<Map<String,String>> list){
-        this.lists=list;
+    private void setUserData(){
         ImageView cusImg= (ImageView) findViewById(R.id.auther_userImg);
-        setViewImage(cusImg,lists.get(0).get("img"));
-        if(lists.get(0).containsKey("isGourmet")&& lists.get(0).get("isGourmet").equals("2")){
+        setViewImage(cusImg,mapUser.get("img"));
+        if(mapUser.containsKey("isGourmet")&& mapUser.get("isGourmet").equals("2")){
             findViewById(R.id.cusType).setVisibility(View.VISIBLE);
         }else findViewById(R.id.cusType).setVisibility(View.GONE);
         TextView dish_user_name= (TextView) findViewById(R.id.dish_user_name);
-        dish_user_name.setText(lists.get(0).get("nickName"));
+        dish_user_name.setText(mapUser.get("nickName"));
         TextView dish_user_time= (TextView) findViewById(R.id.dish_user_time);
-        String userIntro = handleUserIntro(lists.get(0).get("info"));
+        String userIntro = handleUserIntro(mapUser.get("info"));
         dish_user_time.setText(TextUtils.isEmpty(userIntro) ? getResources().getString(R.string.user_intro_def) : userIntro);
 
         dish_follow_img= (ImageView) findViewById(R.id.dish_follow_img);
         dish_follow_tv= (TextView) findViewById(R.id.dish_follow_tv);
-        setFollowState(lists.get(0));
+        setFollowState(mapUser);
         //点击关注
         findViewById(caipu_follow_rela).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,16 +131,16 @@ public class DishAboutView extends ItemBaseView {
                     context.startActivity(intent);
                     return;
                 }
-                if(lists.get(0).containsKey("isFav")&&lists.get(0).get("isFav").equals("1")){
+                if(mapUser.containsKey("isFav")&&mapUser.get("isFav").equals("1")){
                     XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "关注点击");
-                    AppCommon.onAttentionClick(lists.get(0).get("code"), "follow");
-                    lists.get(0).put("isFav","2");
+                    AppCommon.onAttentionClick(mapUser.get("code"), "follow");
+                    mapUser.put("isFav","2");
                     Tools.showToast(context,"已关注");
-                    setFollowState(lists.get(0));
+                    setFollowState(mapUser);
                 }else{
                     XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "已关注点击");
                     Intent intent = new Intent(activity, FriendHome.class);
-                    intent.putExtra("code",lists.get(0).get("code"));
+                    intent.putExtra("code",mapUser.get("code"));
                     activity.startActivityForResult(intent,1000);
 //                    AppCommon.openUrl(activity,"userIndex.app?code="+lists.get(0).get("code"),true);
                 }
@@ -136,7 +148,7 @@ public class DishAboutView extends ItemBaseView {
         });
         if(LoginManager.isLogin()
                 && LoginManager.userInfo.get("code") != null
-                && LoginManager.userInfo.get("code").equals(lists.get(0).get("code"))){
+                && LoginManager.userInfo.get("code").equals(mapUser.get("code"))){
             findViewById(caipu_follow_rela).setVisibility(View.GONE);
         } else {
             findViewById(caipu_follow_rela).setVisibility(View.VISIBLE);

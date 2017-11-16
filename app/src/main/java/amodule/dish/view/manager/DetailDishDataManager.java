@@ -10,6 +10,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
+import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 
 /**
@@ -24,18 +25,18 @@ public class DetailDishDataManager {
     public final static String DISH_DATA_USER = "dish_user";//用户信息
     private String dishCode;//菜谱code
     private Context mContext = XHActivityManager.getInstance().getCurrentActivity().getApplicationContext();
+    private String customerCode;//用户code
 
     public DetailDishDataManager(String code) {
         dishCode = code;
-        reqOne();
-        reqTwo();
+        reqTopInfo();
     }
     /**
      * 第一次请求接口合集
      */
     public void reqOne() {
-        reqTopInfo();
         reqDishBase();
+        reqDishUser();
         reqIngre();
         reqBanner();
     }
@@ -45,14 +46,19 @@ public class DetailDishDataManager {
     }
 
     /**
-     * 请求topInfo数据
+     * 请求topInfo数据---第一请求，有权限请求
      */
     private void reqTopInfo() {
         String params = "code=" + dishCode;
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo, params, new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
-                handleDataSuccess(flag,DISH_DATA_TOP,object);
+                if(flag>=UtilInternet.REQ_OK_STRING) {
+                    customerCode= StringManager.getFirstMap(object).get("customerCode");
+                    handleDataSuccess(flag, DISH_DATA_TOP, object);
+                    reqOne();
+                    reqTwo();
+                }
             }
         });
     }
@@ -72,8 +78,8 @@ public class DetailDishDataManager {
     /**
      * 请求用户信息
      */
-    private void reqDishUser(String userCode) {
-        String params = "code=" + dishCode;
+    private void reqDishUser() {
+        String params = "code=" + customerCode;
         ReqEncyptInternet.in().doEncypt(StringManager.API_GETUSERINFOBYCODE, params, new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
@@ -128,9 +134,6 @@ public class DetailDishDataManager {
     public void handleDataSuccess(int flag, String type,Object object){
         if (flag >= UtilInternet.REQ_OK_STRING && dishDataCallBack != null) {
             ArrayList<Map<String,String>> list=StringManager.getListMapByJson(object);
-            if(type.equals(DISH_DATA_BASE)){
-                String customerCode= list.get(0).containsKey("customerCode")&& !TextUtils.isEmpty(list.get(0).get("customerCode"))?list.get(0).get("customerCode"):"";
-            }
             if(list.size()>0)dishDataCallBack.handlerTypeData(type,list);
         }
     }
