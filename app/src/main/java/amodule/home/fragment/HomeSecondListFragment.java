@@ -62,6 +62,7 @@ public class HomeSecondListFragment extends Fragment {
     private boolean mIsPrepared = false;
     /** 是否显示 */
     private boolean mIsVisible;
+    private boolean mIsloadTwodata;
 
     private AdControlParent mAdControl;
     private BaseAppCompatActivity mActivity;
@@ -73,6 +74,8 @@ public class HomeSecondListFragment extends Fragment {
     private HomeModuleBean mModuleBean;
     private HomeSecondModule mSecondModuleBean;
     private int mPosition;
+
+    private OnTabDataReadyCallback mCallback;
     
     public HomeSecondListFragment() {
         // Required empty public constructor
@@ -407,46 +410,23 @@ public class HomeSecondListFragment extends Fragment {
      * @param type 选中的类型
      */
     protected void initContextView(String type){
-
-//        if(!mIsloadTwodata&&!TextUtils.isEmpty(mModuleBean.getTwoData())&&!TextUtils.isEmpty(type)){
-//            mLinearLayoutTwo.removeAllViews();
-//            mIsloadTwodata=true;
-//            HomeTabHScrollView homeTabHScrollView = new HomeTabHScrollView(this);
-//            //处理二级数据体
-//            ArrayList<Map<String,String>> listMaps= StringManager.getListMapByJson(mModuleBean.getTwoData());
-//            if(listMaps!=null&&listMaps.size()>0){
-//                mModuleBean.setTwoType(type);
-//            }else return;
-//            for(int i=0;i<listMaps.size();i++){
-//                listMaps.get(i).put("position",String.valueOf(i));
-//            }
-//            homeTabHScrollView.setHomeModuleBean(mModuleBean);
-//            homeTabHScrollView.setData(listMaps);
-//            homeTabHScrollView.setCallback(map -> {
-//                if(map.get("two_type").equals(mModuleBean.getTwoType())){
-//                    //是否刷新操作
-//                }else{
-//                    mModuleBean.setTwoType(map.get("two_type"));
-//                    mModuleBean.setTwoTitle(map.get("title"));
-//                    mModuleBean.setTwoTypeIndex(Integer.parseInt(map.get("position")));
-//                    mHomeAdapter.setHomeModuleBean(mModuleBean);
-//                    mCompelClearData=true;
-//                    //请求数据
-//                    mBackUrl="";
-//                    mNextUrl="";
-//                    entryptData(true);
-////                        refresh();
-//                }
-//            });
-//            mLinearLayoutTwo.addView(homeTabHScrollView);
-//            mLinearLayoutTwo.setVisibility(View.VISIBLE);
-//            homeTabHScrollView.setVisibility(View.VISIBLE);
-//        }
+        if(!mIsloadTwodata && !TextUtils.isEmpty(mModuleBean.getTwoData()) && !TextUtils.isEmpty(type) && mCallback != null){
+            mIsloadTwodata = true;
+            mCallback.onTabDataReady(type);
+        }
 
     }
     
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void setOnTabDataReadyCallback(OnTabDataReadyCallback callback) {
+        mCallback = callback;
+    }
+
+    public interface OnTabDataReadyCallback {
+        void onTabDataReady(String selectedType);
     }
 }

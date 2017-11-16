@@ -16,6 +16,7 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.home.HomeModuleControler;
@@ -31,7 +32,7 @@ import amodule.main.bean.HomeModuleBean;
 
 public class HomeSecondListActivity extends BaseAppCompatActivity {
 
-    public static final String TAG = "type";
+    public static final String TAG = "type1";
 
     private String mType;//视频、三餐
 
@@ -86,7 +87,18 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
         if(mModuleBean != null)
             titleV.setText(mModuleBean.getTitle());
-        mPagerAdapter = new HomeSecondListPagerAdapter(getSupportFragmentManager(), mSecondModules, mModuleBean);
+        mPagerAdapter = new HomeSecondListPagerAdapter(getSupportFragmentManager(), mSecondModules, mModuleBean, new HomeSecondListFragment.OnTabDataReadyCallback() {
+            @Override
+            public void onTabDataReady(String selectedType) {
+                for (int i = 0; mSecondModules != null && i < mSecondModules.size(); i ++) {
+                    HomeSecondModule module = mSecondModules.get(i);
+                    if (module != null && TextUtils.equals(module.getType(), selectedType)) {
+                        mHomeTabStrip.updateSelection(i);
+                        return;
+                    }
+                }
+            }
+        });
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(0);
         mViewPager.setOffscreenPageLimit(3);
@@ -107,19 +119,31 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
 
             }
         });
-        int tabBgResId = 0;
         switch (mType) {
             case "video":
-                tabBgResId = R.drawable.selector_hometabscroll_item_bg;
+                mHomeTabStrip.setTabInnerBackground(R.drawable.selector_hometabscroll_item_bg);
+                mHomeTabStrip.setTabTextPaddingLeftRight(R.dimen.dp_13);
+                mHomeTabStrip.setTabTextPaddingTopBottom(R.dimen.dp_5);
+                mHomeTabStrip.setTabItemIntervalSize(R.dimen.dp_3);
+                mHomeTabStrip.setTabItemMarginTopBottom(R.dimen.dp_13);
+                mHomeTabStrip.setTabStartLeftMargin(R.dimen.dp_20);
+                mHomeTabStrip.setTabEndRightMargin(R.dimen.dp_20);
                 break;
             case "day":
-
+                ArrayList<Integer> resIds = new ArrayList<Integer>();
+                resIds.add(R.drawable.selector_hometabscroll_item_bg_morning);
+                resIds.add(R.drawable.selector_hometabscroll_item_bg_afternoon);
+                resIds.add(R.drawable.selector_hometabscroll_item_bg_evening);
+                mHomeTabStrip.setTabBackground(resIds);
+                int phoneWidth = Tools.getPhoneWidth();
+                int imgWidthPx = 375;
+                int imgHeightPx = 245;
+                int width = phoneWidth / 3;
+                int height = (imgHeightPx * width) / imgWidthPx;
+                mHomeTabStrip.setTabHeight(height);
+                mHomeTabStrip.setTabWidth(width);
                 break;
         }
-        if (tabBgResId != 0)
-            mHomeTabStrip.setTabInnerBackground(tabBgResId);
-        mHomeTabStrip.setTabInnerTextPadding(getPxByDp(R.dimen.dp_13), getPxByDp(R.dimen.dp_5), getPxByDp(R.dimen.dp_13), getPxByDp(R.dimen.dp_5));
-        mHomeTabStrip.setTextColorStateListResource(R.color.selector_hometabscroll_item_textcolor);
         mHomeTabStrip.setViewPager(mViewPager);
         mHomeTabStrip.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
             @Override
