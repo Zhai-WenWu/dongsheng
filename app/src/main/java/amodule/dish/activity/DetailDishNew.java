@@ -13,6 +13,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
@@ -33,7 +34,7 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private String data_type = "";
     private String module_type = "";
     private String img = "";//预加载图片
-    public String code, dishTitle, state;//页面开启状态所必须的数据。
+    public String code, dishTitle, state,dishName;//页面开启状态所必须的数据。
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
     public static long startTime = 0;
@@ -43,7 +44,8 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private DetailDishDataManager detailDishDataManager;//数据控制器
     private AdapterDishNew adapterDishNew;
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
-
+    private boolean isHasVideo;//当前是否是视频
+    private String customerCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +99,6 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_detail_dish);
         listView = (ListView) findViewById(R.id.listview);
-
     }
 
     /**
@@ -106,7 +107,7 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private void initData() {
         adapterDishNew = new AdapterDishNew(listView,maplist);
         listView.setAdapter(adapterDishNew);
-        if (detailDishViewManager == null) detailDishViewManager = new DetailDishViewManager(this,listView);
+        if (detailDishViewManager == null) detailDishViewManager = new DetailDishViewManager(this,listView,state);
         if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code);
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override
@@ -118,13 +119,23 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private void dishTypeData(String type,ArrayList<Map<String,String>> list){
         switch (type){
             case DetailDishDataManager.DISH_DATA_TOP:
+                dishName= list.get(0).get("name");
+                isHasVideo = "2".equals(list.get(0).get("type"));
                 detailDishViewManager.handlerHeaderView(list,null);
+                detailDishViewManager.handlerHoverViewCode(code);
+                customerCode= list.get(0).get("customerCode");
+                if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
+                        state = "";
+                }
+                detailDishViewManager.handlerTitle(list.get(0),code,isHasVideo,list.get(0).get("dishState"),loadManager,state);
                 break;
             case DetailDishDataManager.DISH_DATA_BASE:
                 detailDishViewManager.handlerDishData(list);
+                detailDishViewManager.handlerExplainView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_USER:
                 detailDishViewManager.handlerUserData(list);
+                detailDishViewManager.handlerTitleName(list.get(0).get("nickName"));
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE:
                 detailDishViewManager.handlerIngreView(list);
@@ -133,6 +144,11 @@ public class DetailDishNew extends BaseAppCompatActivity {
                 break;
             case DetailDishDataManager.DISH_DATA_STEP://步骤
                 maplist.addAll(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_TIE:
+                detailDishViewManager.handlerRecommedAndAd(list,code,dishName);
+            case DetailDishDataManager.DISH_DATA_LIKE:
+                detailDishViewManager.handlerHoverViewLike(list);
                 break;
             default:
                 break;

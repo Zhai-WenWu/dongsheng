@@ -2,12 +2,15 @@ package amodule.dish.view.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import amodule.dish.activity.DetailDish;
+import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -23,6 +26,8 @@ public class DetailDishDataManager {
     public final static String DISH_DATA_BANNER = "dish_banner";//banner
     public final static String DISH_DATA_STEP = "dish_step";//步骤
     public final static String DISH_DATA_USER = "dish_user";//用户信息
+    public final static String DISH_DATA_TIE = "dish_tie";//用户信息
+    public final static String DISH_DATA_LIKE = "dish_like";//菜谱点赞处理
     private String dishCode;//菜谱code
     private Context mContext = XHActivityManager.getInstance().getCurrentActivity().getApplicationContext();
     private String customerCode;//用户code
@@ -43,6 +48,8 @@ public class DetailDishDataManager {
 
     public void reqTwo() {
         reqStep();
+        reqOtherTieData();
+        reqOtherData();
     }
 
     /**
@@ -122,6 +129,42 @@ public class DetailDishDataManager {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_STEP,object);
+            }
+        });
+    }
+
+    /**
+     * 请求帖子数据
+     */
+    private void reqOtherTieData(){
+        String params = "code=" + dishCode;
+        //获取帖子数据
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(mContext) {
+            @Override
+            public void loaded(int flag, String s, Object object) {
+                handleDataSuccess(flag,DISH_DATA_TIE,object);
+            }
+        });
+    }
+    /**
+     * 请求其他接口数据
+     */
+    private void reqOtherData(){
+        String params = "code=" + dishCode;
+        //获取点赞数据
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(mContext) {
+            @Override
+            public void loaded(int flag, String s, Object object) {
+                handleDataSuccess(flag,DISH_DATA_LIKE,object);
+            }
+        });
+
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(mContext) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING){
+//                    saveApiData(o.toString());
+                }
             }
         });
     }

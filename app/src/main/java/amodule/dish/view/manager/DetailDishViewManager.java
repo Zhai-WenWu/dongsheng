@@ -10,12 +10,17 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.load.LoadManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
+import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
+import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
+import amodule.dish.view.DishRecommedAndAdView;
+import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishTitleViewControlNew;
 
 /**
@@ -24,8 +29,10 @@ import amodule.dish.view.DishTitleViewControlNew;
  */
 public class DetailDishViewManager {
     public static int showNumLookImage = 0;//点击展示次数
-    public DishTitleViewControlNew dishTitleViewControlNew;
+    public DishTitleViewControl dishTitleViewControl;
+    public DishHoverViewControl dishHoverViewControl;
     public LinearLayout layoutHeader;
+    public LinearLayout layoutFooter;
     public Activity mAct;
     //广告所用bar高度;图片/视频高度
     private int statusBarHeight = 0, headerLayoutHeight;
@@ -34,17 +41,26 @@ public class DetailDishViewManager {
     public DishHeaderViewNew dishHeaderViewNew;
     public DishAboutView dishAboutView;
     public DishIngreDataShow dishIngreDataShow;
+    public DishRecommedAndAdView dishRecommedAndAdView;
+    public DishExplainView dishExplainView;
 
     /**
      * 对view进行基础初始化
      */
-    public DetailDishViewManager(Activity activity, ListView listView) {
+    public DetailDishViewManager(Activity activity, ListView listView,String state) {
         mAct = activity;
-        dishTitleViewControlNew = new DishTitleViewControlNew(activity);
-        dishTitleViewControlNew.initView(activity);
+        dishTitleViewControl = new DishTitleViewControl(activity);
+        dishTitleViewControl.initView(activity);
+        dishTitleViewControl.setstate(state);
+
+        dishHoverViewControl = new DishHoverViewControl(activity);
+        dishHoverViewControl.initView();
+
         if (layoutHeader == null) {
             layoutHeader = new LinearLayout(activity);
             layoutHeader.setOrientation(LinearLayout.VERTICAL);
+            layoutFooter = new LinearLayout(activity);
+            layoutFooter.setOrientation(LinearLayout.VERTICAL);
         }
         titleHeight = Tools.getDimen(mAct, R.dimen.dp_45);
         statusBarHeight = Tools.getStatusBarHeight(mAct);
@@ -66,16 +82,33 @@ public class DetailDishViewManager {
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
         layoutHeader.addView(dishIngreDataShow);
+        //foot
+        dishExplainView = new DishExplainView(mAct);
+        dishExplainView.setVisibility(View.GONE);
+        dishRecommedAndAdView= new DishRecommedAndAdView(mAct);
+        dishRecommedAndAdView.setVisibility(View.GONE);
+        layoutFooter.addView(dishExplainView);
+        layoutFooter.addView(dishRecommedAndAdView);
 
         listView.addHeaderView(layoutHeader);
+        listView.addFooterView(layoutFooter);
         listView.setVisibility(View.VISIBLE);
 
     }
     /**
      * 处理标题信息数据
      */
-    public void handlerTitle() {
-
+    public void handlerTitle(Map<String, String> dishInfoMaps,String code,boolean isHasVideo,String dishState,LoadManager loadManager,String state) {
+        if(dishTitleViewControl!=null){
+            dishTitleViewControl.setData(dishInfoMaps,code,isHasVideo,dishState,loadManager);
+            dishTitleViewControl.setstate(state);
+            dishTitleViewControl.setViewState();
+        }
+    }
+    public void handlerTitleName(String name){
+        if(dishTitleViewControl!=null){
+            dishTitleViewControl.setNickName(name);
+        }
     }
     /**
      * 处理header图片，和视频数据
@@ -120,8 +153,38 @@ public class DetailDishViewManager {
     /**
      * 处理小贴士信息
      */
-    public void handlerExplainView() {
-
+    public void handlerExplainView(ArrayList<Map<String, String>> list) {
+        if(dishExplainView!=null){
+            dishExplainView.setVisibility(View.VISIBLE);
+            dishExplainView.setData(list.get(0));
+        }
     }
 
+    /**
+     * 处理底部推荐
+     * @param list
+     */
+    public void handlerRecommedAndAd(ArrayList<Map<String, String>> list,String code,String name){
+        if(dishRecommedAndAdView!=null){
+            dishRecommedAndAdView.setVisibility(View.VISIBLE);
+            dishRecommedAndAdView.initData(code,name);
+            dishRecommedAndAdView.initUserDish(list);
+        }
+    }
+    /**
+     * 处理浮动推荐
+     */
+    public void handlerHoverViewCode(String code){
+        if(dishHoverViewControl!=null){
+            dishHoverViewControl.setCode(code);
+        }
+    }
+    /**
+     * 处理浮动推荐
+     */
+    public void handlerHoverViewLike(ArrayList<Map<String, String>> list){
+        if(dishHoverViewControl!=null){
+            dishHoverViewControl.initLikeState(list);
+        }
+    }
 }
