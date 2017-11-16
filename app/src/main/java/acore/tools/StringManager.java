@@ -19,7 +19,7 @@ public class StringManager extends UtilString {
     public static boolean httpState=false;//false为https，true为http；
     //固定URL基础配置
     public final static String defaultDomain = ".xiangha.com";
-    public static String defaultProtocol = "https://";
+    public static String defaultProtocol = "http://";
     public final static String apiTitle = "api";
     public final static String appWebTitle = "appweb";
     public final static String wwwTitle = "www";
@@ -359,6 +359,12 @@ public class StringManager extends UtilString {
     public final static String API_GET_FAVORITE_STATUS = apiUrl + "main8/favorites/getFavoritesStatus";//获取收藏状态
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
+    //菜谱详情页面
+    public final static String API_GETDISHBASICINFOBYCODE = apiUrl + "main7/Dish/getDishBasicInfoByCode";//菜谱基本信息
+    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/Dish/getDishBurdenByCode";//用料信息
+    public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/Dish/getBelowBurdenBanner";//用料下方banner
+    public final static String API_getDishMakeByCode = apiUrl + "main7/Dish/getDishMakeByCode";//做法
+    public final static String API_GETUSERINFOBYCODE = apiUrl + "main7/Dish/getUserInfoByCode";//用户信息
 
     //替换url
     public final static String replaceUrl(String url) {

@@ -2,6 +2,7 @@ package amodule.dish.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -82,8 +83,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         startTime= System.currentTimeMillis();
         // 正常调用
         if (bundle != null) {
-            code = bundle.getString("code");
             dishTitle = bundle.getString("name");
+            code = bundle.getString("code");
             courseCode = bundle.getString("courseCode","");
             chapterCode = bundle.getString("chapterCode","");
             if (dishTitle == null) dishTitle = "香哈菜谱";
@@ -116,8 +117,18 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
-    }
 
+    }
+    private void handlerNew(){
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailDish.this,DetailDishNew.class);
+                intent.putExtra("code",code);
+                DetailDish.this.startActivity(intent);
+            }
+        });
+    }
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -138,6 +149,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+//        String colors = Tools.getColorStr(this, R.color.common_top_bg);
+//        Tools.setStatusBarColor(this, Color.parseColor(colors));
+
         setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);
         dishActivityViewControl.init(state, loadManager, new DishActivityViewControlNew.DishViewCallBack() {
@@ -160,6 +174,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             dishActivityViewControl.setDishOneView(img);
         }
         initData();
+        handlerNew();
     }
     private void initData(){
         loadOver = false;

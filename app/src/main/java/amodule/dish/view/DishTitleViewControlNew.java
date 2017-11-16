@@ -100,10 +100,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * @param isHasVideo----是否是视频贴
      */
     public void setData(Map<String, String> dishInfoMaps,String code,boolean isHasVideo,String dishState,LoadManager loadManager){
-        this.dishInfoMap=dishInfoMaps;
-        this.code= code;
-        this.isHasVideo=isHasVideo;
-        this.dishState = dishState;
+            this.dishInfoMap=dishInfoMaps;
+            this.code= code;
+            this.isHasVideo=isHasVideo;
+            this.dishState = dishState;
         this.loadManager= loadManager;
     }
     public PopWindowDialog getPopWindowDialog(){

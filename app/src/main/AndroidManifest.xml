@@ -344,6 +344,14 @@
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
+            android:name="amodule.dish.activity.DetailDishNew"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:keepScreenOn="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name="amodule.main.view.HintMyselfDialog"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
