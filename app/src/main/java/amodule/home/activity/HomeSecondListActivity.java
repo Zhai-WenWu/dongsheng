@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -22,7 +23,6 @@ import amodule.home.adapter.HomeSecondListPagerAdapter;
 import amodule.home.fragment.HomeSecondListFragment;
 import amodule.home.module.HomeSecondModule;
 import amodule.main.bean.HomeModuleBean;
-import amodule.main.view.home.HomeFragment;
 
 /**
  * 首页的二级页面（视频、每日三餐）
@@ -31,7 +31,7 @@ import amodule.main.view.home.HomeFragment;
 
 public class HomeSecondListActivity extends BaseAppCompatActivity {
 
-    public static final String TAG = HomeSecondListActivity.class.getSimpleName();
+    public static final String TAG = "type";
 
     private String mType;//视频、三餐
 
@@ -47,7 +47,6 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         initActivity("", 2, 0, R.layout.back_title_bar, R.layout.home_second_list_layout);
         initData();
-        initView();
     }
 
     private void initData() {
@@ -56,7 +55,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             finish();
             return;
         }
-        mType = bundle.getString(TAG);
+        mType = bundle.getString("type1");
         if (TextUtils.isEmpty(mType)) {
             finish();
             return;
@@ -76,6 +75,8 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             this.finish();
             return;
         }
+        //初始化UI
+        initView();
     }
 
     private void initView() {

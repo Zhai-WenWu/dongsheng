@@ -121,15 +121,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     public void loadData() {
         mDataControler.loadCacheHomeData(getHeaderCallback(true));
         loadHeaderData();
-        if (!LoadOver) {
-            loadManager.setLoading(mViewContrloer.getRvListView(),
-                    mHomeAdapter,
-                    true,
-                    v -> EntryptData(!LoadOver)
-            );
-            loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
-            mViewContrloer.addOnScrollListener();
-        }
     }
 
     public void loadHeaderData() {
@@ -140,7 +131,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 if (i >= ReqEncyptInternet.REQ_OK_STRING
                         && mViewContrloer != null)
                     mViewContrloer.setTopData(StringManager.getListMapByJson(o));
-            }
+                }
         });
     }
 
@@ -161,6 +152,15 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     }
                     if (mViewContrloer != null)
                         mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                }
+                if(!isCache &&!LoadOver) {
+                    loadManager.setLoading(mViewContrloer.getRvListView(),
+                            mHomeAdapter,
+                            true,
+                            v -> EntryptData(!LoadOver)
+                    );
+                    loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
+                    mViewContrloer.addOnScrollListener();
                 }
             }
         };

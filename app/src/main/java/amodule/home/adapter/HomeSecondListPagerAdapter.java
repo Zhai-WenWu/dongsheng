@@ -3,7 +3,6 @@ package amodule.home.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -37,7 +36,7 @@ public class HomeSecondListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mModules.size();
+        return mModules == null ? 0 : mModules.size();
     }
 
 }

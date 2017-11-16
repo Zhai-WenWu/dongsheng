@@ -59,10 +59,6 @@ public class HomeViewControler {
 
     @SuppressLint("InflateParams")
     private void initUI() {
-
-        //实例化有用到mRootLayout，必须按着顺序执行
-        mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
-        mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity,MainHomePage.STATICTUS_ID_PULISH,"首页右侧侧边栏浮动图标",""));
         mAdControl = AdControlHomeDish.getInstance().getTwoLoadAdData();
 
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
@@ -71,6 +67,10 @@ public class HomeViewControler {
 
         mTitleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
         mTitleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH,"顶部topbar","");
+        mTitleLayout.postDelayed(()->{
+            mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
+            mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity,MainHomePage.STATICTUS_ID_PULISH,"首页右侧侧边栏浮动图标",""));
+        },1000);
 
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);
