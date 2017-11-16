@@ -139,12 +139,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         } else
             resetData();
         loadManager.hideProgressBar();
-        if (Main.allMain != null && Main.allMain.getBuoy() != null) {
-            Main.allMain.getBuoy().clearAnimation();
-            Main.allMain.getBuoy().hide();
-            Main.allMain.getBuoy().setClosed(true);
-            Main.allMain.getBuoy().setMove(true);
-        }
         //去我的订单
         if(MallPayActivity.pay_state){
             onListEventCommon("order");

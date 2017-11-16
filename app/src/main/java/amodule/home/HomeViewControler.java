@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.annimon.stream.Stream;
 import com.xiangha.R;
 
 import java.util.List;
@@ -16,12 +15,11 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.home.view.HomeTitleLayout;
+import amodule.main.Tools.BuoyControler;
 import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
-import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.item.HomeItem;
 import third.ad.control.AdControlHomeDish;
 
@@ -42,10 +40,12 @@ public class HomeViewControler {
 
     private MainHomePage mActivity;
 
+    private BuoyControler.Buoy mBuoy;
+
     private HomeTitleLayout mTitleLayout;
     private RvListView mRvListView;
-    private View mHeaderView;
     //feed头部view
+    private View mHeaderView;
 
     //广告控制器
     private AdControlHomeDish mAdControl;
@@ -59,6 +59,9 @@ public class HomeViewControler {
 
     @SuppressLint("InflateParams")
     private void initUI() {
+
+        //实例化有用到mRootLayout，必须按着顺序执行
+        mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
         mAdControl = AdControlHomeDish.getInstance().getTwoLoadAdData();
 
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
@@ -92,12 +95,13 @@ public class HomeViewControler {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
                     int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
                     isScrollData = true;
                     if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
                         scrollDataIndex = (lastVisibleItemPosition - 1);
                     }
+                    if(mBuoy != null && mBuoy.isMove())
+                        mBuoy.executeCloseAnim();
                 }
             });
         }
@@ -143,6 +147,14 @@ public class HomeViewControler {
         if (mAdControl == null)
             return;
         mAdControl.refrush();
+    }
+
+    public void refreshBouy(){
+        if(mBuoy != null){
+            mBuoy.refresh(true);
+        }else{
+            mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
+        }
     }
 
     public void setFeedheaderVisibility(boolean isShow) {

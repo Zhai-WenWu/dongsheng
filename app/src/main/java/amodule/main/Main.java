@@ -1,8 +1,8 @@
 package amodule.main;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.popdialog.GoodCommentDialogControl;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -69,10 +68,9 @@ import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
-import amodule.main.activity.MainHomePage;
 import amodule.main.Tools.MainInitDataControl;
+import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
-import amodule.main.view.MainBuoy;
 import amodule.main.view.WelcomeDialog;
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
@@ -85,17 +83,30 @@ import third.push.xg.XGLocalPushServer;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
+
 import static acore.tools.Tools.getApiSurTime;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
 public class Main extends Activity implements OnClickListener, IObserver {
+    public static final String TAG="xianghaTag";
+
+    private String[] tabTitle = {"首页", "商城", "消息", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
+
+    @SuppressLint("StaticFieldLeak")
     public static Main allMain;
-    public static Timer timer;
-    /** 把层级>=close_level的层级关闭 */
-    public static int colse_level = 1000;
     @SuppressLint("StaticFieldLeak")
     public static MainBaseActivity mainActivity;
+
+    public static Timer timer;
+    //
+    /**
+     * 页面关闭层级
+     * 把层级>=close_level的层级关闭
+     * */
+    public static int colse_level = 1000;
 
     public Map<String, MainBaseActivity> allTab = new HashMap<>();
 
@@ -103,13 +114,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private XiangHaTabHost tabHost;
     private LinearLayout linear_item;
     private RelativeLayout mRootLayout;
-    private MainBuoy mBuoy;
-    // 页面关闭层级
     private LocalActivityManager mLocalActivityManager;
 
-    private String[] tabTitle = {"首页", "商城", "消息", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
     private int doExit = 0;
     private int defaultTab = 0;
     private String url = null;
@@ -123,9 +129,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private boolean isForeground = true;
     private int nowTab = 0;//当前选中tab
     public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
-    private boolean isInit=false;//是否已经进行初始化
+    //是否已经进行初始化
+    private boolean isInit=false;
     private WelcomeDialog welcomeDialog;//dialog,显示
-    public static final String TAG="xianghaTag";
     private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
 
     @Override
@@ -140,17 +146,12 @@ public class Main extends Activity implements OnClickListener, IObserver {
         initMTA();
         allMain = this;
         initOther();
-        LogManager.print("i", "Main -------- onCreate");
-        //初始化浮标位置
-        initBuoyTab(savedInstanceState);
         mainInitDataControl = new MainInitDataControl();
         showWelcome();
         LogManager.printStartTime("zhangyujian","main::oncreate::");
     }
 
-    /**
-     * 处理一下非明确功能的逻辑
-     */
+    /** 处理一下非明确功能的逻辑 */
     private void initOther(){
         String[] times = FileManager.getSharedPreference(XHApplication.in(), FileManager.xmlKey_appKillTime);
         if (times != null && times.length > 1 && !TextUtils.isEmpty(times[1])) {
@@ -179,11 +180,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
      * 初始化七鱼未读消息数
      */
     private void initQiYvUnreadCount() {
-        QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-            @Override
-            public void onNumberReady(int count) {
-                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
-            }
+        QiYvHelper.getInstance().getUnreadCount(count -> {
+            int messageNum = AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0);
+            Main.setNewMsgNum(3, messageNum);
         });
     }
 
@@ -191,35 +190,28 @@ public class Main extends Activity implements OnClickListener, IObserver {
      * 设置七鱼未读消息监听
      */
     private void addQiYvListener() {
-        QiYvHelper.getInstance().addOnUrlItemClickListener(new QiYvHelper.OnUrlItemClickListener() {
-            @Override
-            public void onURLClicked(Context context, String url) {
-                if (!TextUtils.isEmpty(url)) {
-                    if (url.contains("m.ds.xiangha.com") && url.contains("product_code=")) {//商品详情链接
-                        String[] strs = url.split("\\?");
-                        if (strs != null && strs.length > 1) {
-                            String params = strs[1];
-                            if (!TextUtils.isEmpty(params)) {
-                                AppCommon.openUrl(Main.this, "xhds.product.info.app?" + params, true);
-                            }
-                        }
-                    } else {
-                        AppCommon.openUrl(Main.this, "xiangha://welcome?showWeb.app?url=" + Uri.encode(url), true);
-                    }
+        QiYvHelper.getInstance().addOnUrlItemClickListener((context, url) -> {
+            if(TextUtils.isEmpty(url)) return;
+            if (url.contains("m.ds.xiangha.com")
+                    && url.contains("product_code=")) {//商品详情链接
+                String[] strs = url.split("\\?");
+                if (strs != null
+                        && strs.length > 1
+                        && !TextUtils.isEmpty(strs[1])) {
+                    AppCommon.openUrl(Main.this, "xhds.product.info.app?" + strs[1], true);
                 }
+            } else {
+                AppCommon.openUrl(Main.this, "xiangha://welcome?showWeb.app?url=" + Uri.encode(url), true);
             }
         });
         if (mUnreadCountListener == null) {
-            mUnreadCountListener = new QiYvHelper.UnreadCountChangeListener() {
-                @Override
-                public void onUnreadCountChange(int count) {
-                    if (count >= 0) {
-                        if (nowTab == 3 || allTab.containsKey("MyMessage")) {
-                            MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
-                            myMessage.setQiYvNum(count);
-                        }
-                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+            mUnreadCountListener = count -> {
+                if (count >= 0) {
+                    if (nowTab == 3 || allTab.containsKey("MyMessage")) {
+                        MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                        myMessage.setQiYvNum(count);
                     }
+                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
                 }
             };
         }
@@ -232,27 +224,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
         StatService.setContext(this.getApplication());
-    }
-
-    /**初始化浮标位置*/
-    private void initBuoyTab(Bundle savedInstanceState){
-        if (savedInstanceState != null) {
-            String currentTapStr = savedInstanceState.getString("currentTab");
-            if(!TextUtils.isEmpty(currentTapStr) && !"null".equals(currentTapStr)){
-                defaultTab = Integer.parseInt(savedInstanceState.getString("currentTab"));
-                if (defaultTab == 0 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatIndex()) && "1".equals(mBuoy.getFloatIndex())
-                        || defaultTab == 1 && mBuoy != null && !TextUtils.isEmpty(mBuoy.getFloatSubjectList()) && "1".equals(mBuoy.getFloatSubjectList())
-                        || defaultTab == 2
-                        || defaultTab == 3) {
-                    if (mBuoy != null) {
-                        mBuoy.clearAnimation();
-                        mBuoy.hide();
-                        mBuoy.setClosed(true);
-                        mBuoy.setMove(true);
-                    }
-                }
-            }
-        }
     }
 
     /** welcomeDialog的回调封装 */
@@ -268,12 +239,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 WelcomeDialogstate = true;
                 openUri();
                 new AllPopDialogHelper(Main.this).start();
-                com.popdialog.util.PushManager.tongjiPush(Main.this, new com.popdialog.util.PushManager.OnPushEnableCallback() {
-                    @Override
-                    public void onPushEnable(boolean isEnable) {
-                        XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","");
-                    }
-                });
+                com.popdialog.util.PushManager.tongjiPush(Main.this, isEnable ->
+                        XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","")
+                );
                 isShowWelcomeDialog = false;
 
                 OffDishToFavoriteControl.addCollection(Main.this);
@@ -340,25 +308,14 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 dialogManager.createDialog(new ViewManager(dialogManager)
                         .setView(new TitleMessageView(Main.this).setText(msg))
                         .setView(new HButtonView(Main.this)
-                                .setNegativeText("否", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialogManager.cancel();
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                sqLite.deleteAll();
-                                            }
-                                        }).start();
-                                    }
+                                .setNegativeText("否", v -> {
+                                    dialogManager.cancel();
+                                    new Thread(() -> sqLite.deleteAll()).start();
                                 })
                                 .setPositiveTextColor(Color.parseColor("#007aff"))
-                                .setPositiveText("是", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialogManager.cancel();
-                                        Main.this.startActivity(finalIntent);
-                                    }
+                                .setPositiveText("是", v -> {
+                                    dialogManager.cancel();
+                                    Main.this.startActivity(finalIntent);
                                 }))).show();
             }
             return show;
@@ -371,31 +328,25 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 dialogManager.createDialog(new ViewManager(dialogManager)
                         .setView(new TitleMessageView(Main.this).setText(title))
                         .setView(new HButtonView(Main.this)
-                                .setNegativeText("取消", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialogManager.cancel();
-                                        uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
-                                        sqLite.update(uploadArticleData.getId(),uploadArticleData);
-                                    }
+                                .setNegativeText("取消", v -> {
+                                    dialogManager.cancel();
+                                    uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
+                                    sqLite.update(uploadArticleData.getId(),uploadArticleData);
                                 })
                                 .setPositiveTextColor(Color.parseColor("#007aff"))
-                                .setPositiveText("确定", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
-                                        intent.putExtra("draftId", uploadArticleData.getId());
-                                        intent.putExtra("dataType", dataType);
-                                        intent.putExtra("coverPath", uploadArticleData.getImg());
-                                        String videoPath = "";
-                                        ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
-                                        if(videoArray.size() > 0){
-                                            videoPath = videoArray.get(0).get("video");
-                                        }
-                                        intent.putExtra("finalVideoPath", videoPath);
-                                        dialogManager.cancel();
-                                        startActivity(intent);
+                                .setPositiveText("确定", v -> {
+                                    Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
+                                    intent.putExtra("draftId", uploadArticleData.getId());
+                                    intent.putExtra("dataType", dataType);
+                                    intent.putExtra("coverPath", uploadArticleData.getImg());
+                                    String videoPath = "";
+                                    ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
+                                    if(videoArray.size() > 0){
+                                        videoPath = videoArray.get(0).get("video");
                                     }
+                                    intent.putExtra("finalVideoPath", videoPath);
+                                    dialogManager.cancel();
+                                    startActivity(intent);
                                 }))).show();
                 return true;
             }
@@ -476,10 +427,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
         mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
 
-        //实例化有用到mRootLayout，必须按着顺序执行
-        if(mBuoy == null){
-            mBuoy = new MainBuoy(this);
-        }
         tabHost = (XiangHaTabHost) findViewById(R.id.xiangha_tabhost);
         tabHost.setup(mLocalActivityManager);
         linear_item = (LinearLayout) findViewById(R.id.linear_item);
@@ -533,12 +480,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppCommon.getCommonData(null);
-                    }
-                });
+                handler.post(() -> AppCommon.getCommonData(null));
             }
         };
         timer.schedule(tt, everyReq * 1000, everyReq * 1000);
@@ -572,12 +514,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //        if (MallPayActivity.mall_state) {
 //            onClick(tabViews[1].findViewById(R.id.tab_linearLayout));
 //        }
-        GoodCommentManager.setStictis(Main.this, new GoodCommentDialogControl.OnCommentTimeStatisticsCallback() {
-            @Override
-            public void onStatistics(String typeStr, String timeStr) {
-                XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr);
-            }
-        });
+        GoodCommentManager.setStictis(Main.this, (typeStr, timeStr) ->
+                XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr)
+        );
         openUri();
     }
 
@@ -669,13 +608,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             if (doExit < 1) {
                 doExit++;
                 Tools.showToast(this, "再点击一次退出应用");
-                new Handler().postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        doExit = 0;
-                    }
-                }, 1000 * 5);
+                new Handler().postDelayed(() -> doExit = 0, 1000 * 5);
             } else {
                 if (timer != null) {
                     timer.cancel();
@@ -843,14 +776,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             timer.cancel();
             timer.purge();
         }
-    }
-
-    public RelativeLayout getRootLayout() {
-        return mRootLayout;
-    }
-
-    public MainBuoy getBuoy() {
-        return mBuoy;
     }
 
     public View getTabView(int index) {

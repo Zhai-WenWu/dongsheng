@@ -650,7 +650,7 @@ public class AppCommon {
             public void loaded(int flag, String url, Object returnObj) {
                 View tab3 = null;
                 if (Main.allMain != null) {
-                    tab3 = Main.allMain.getTabView(3);
+                    tab3 = Main.allMain.getTabView(2);
                 }
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> listMapByJson = getListMapByJson(returnObj);

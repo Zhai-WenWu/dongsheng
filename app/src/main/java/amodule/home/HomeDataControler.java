@@ -43,6 +43,7 @@ public class HomeDataControler {
     private InsertADCallback mInsertADCallback;
     private NotifyDataSetChangedCallback mNotifyDataSetChangedCallback;
     private EntryptDataCallback mEntryptDataCallback;
+    private OnNeedRefreshCallback mOnNeedRefreshCallback;
     //向上刷新数据集合大小
     private int upDataSize = 0;
     private boolean mNeedRefCurrData = false;
@@ -135,6 +136,9 @@ public class HomeDataControler {
                                 if (compelClearData || (refresh && "2".equals(resetValue))) {
                                     mData.clear();
                                     Log.i("zyj","刷新数据：清集合");
+                                    if(mOnNeedRefreshCallback != null){
+                                        mOnNeedRefreshCallback.onNeedRefresh(true);
+                                    }
                                     //强制刷新，重置数据
                                     if(!TextUtils.isEmpty(currentBackUrl))
                                         backUrl = currentBackUrl;
@@ -299,7 +303,15 @@ public class HomeDataControler {
     }
 
     public void setEntryptDataCallback(EntryptDataCallback entryptDataCallback) {
-        mEntryptDataCallback = entryptDataCallback;
+        this.mEntryptDataCallback = entryptDataCallback;
+    }
+
+    public OnNeedRefreshCallback getOnNeedRefreshCallback() {
+        return mOnNeedRefreshCallback;
+    }
+
+    public void setOnNeedRefreshCallback(OnNeedRefreshCallback onNeedRefreshCallback) {
+        this.mOnNeedRefreshCallback = onNeedRefreshCallback;
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/
@@ -322,6 +334,10 @@ public class HomeDataControler {
 
     public interface EntryptDataCallback{
         void onEntryptData(boolean refersh);
+    }
+
+    public interface OnNeedRefreshCallback {
+        void onNeedRefresh(boolean isNeed);
     }
 
 }

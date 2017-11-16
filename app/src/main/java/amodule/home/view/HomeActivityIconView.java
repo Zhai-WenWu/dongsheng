@@ -46,7 +46,9 @@ public class HomeActivityIconView extends AppCompatImageView {
     }
 
     private void initialize() {
-        int padding = Tools.getDimen(getContext(), R.dimen.dp_20);
+        setScaleType(ScaleType.CENTER_INSIDE);
+        setImageResource(R.drawable.home_default_icon);
+        int padding = Tools.getDimen(getContext(), R.dimen.dp_10);
         setPadding(padding,0,padding,0);
         initData();
         loadData();
@@ -80,6 +82,8 @@ public class HomeActivityIconView extends AppCompatImageView {
         if (dataMap.isEmpty()) {
             return;
         }
+        int padding = Tools.getDimen(getContext(), R.dimen.dp_20);
+        setPadding(padding,0,padding,0);
         this.mUrl = dataMap.get("url");
         Glide.with(getContext())
                 .load(dataMap.get("img"))
