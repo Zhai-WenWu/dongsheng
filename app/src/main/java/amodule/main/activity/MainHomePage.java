@@ -128,9 +128,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     v -> EntryptData(!LoadOver)
             );
             loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
+            mViewContrloer.addOnScrollListener();
         }
-        //TODO 美观
-        loadManager.hideProgressBar();
     }
 
     public void loadHeaderData() {

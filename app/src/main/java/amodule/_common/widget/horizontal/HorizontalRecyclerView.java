@@ -97,6 +97,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
             Map<String,String> parameterMap = StringManager.getFirstMap(map.get("parameter"));
             mSubTitleView.setData(parameterMap);
+
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
             mRecyclerView.setFocusable(false);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -120,5 +121,8 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
         this.id = id;
         this.twoLevel = twoLevel;
         this.threeLevel = threeLevel;
+        if(mSubTitleView != null){
+            mSubTitleView.setStatictusData(id,twoLevel,threeLevel);
+        }
     }
 }

@@ -80,6 +80,16 @@ public class HomeViewControler {
                 ((HomeItem) view).onClickEvent(view);
             }
         });
+
+
+        //设置活动icon点击
+        mTitleLayout.setOnClickActivityIconListener((v, url) -> {
+            if (TextUtils.isEmpty(url)) return;
+            AppCommon.openUrl(mActivity, url, true);
+        });
+    }
+
+    public void addOnScrollListener(){
         RecyclerView.LayoutManager layoutManager = mRvListView.getLayoutManager();
         if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
@@ -108,12 +118,6 @@ public class HomeViewControler {
                 }
             });
         }
-
-        //设置活动icon点击
-        mTitleLayout.setOnClickActivityIconListener((v, url) -> {
-            if (TextUtils.isEmpty(url)) return;
-            AppCommon.openUrl(mActivity, url, true);
-        });
     }
 
     //

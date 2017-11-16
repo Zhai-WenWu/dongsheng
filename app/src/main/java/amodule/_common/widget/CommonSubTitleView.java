@@ -12,6 +12,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.tools.StringManager;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
@@ -63,6 +64,9 @@ public class CommonSubTitleView extends BaseSubTitleView {
                 if (TextUtils.isEmpty(url2))
                     return;
                 AppCommon.openUrl((Activity) CommonSubTitleView.this.getContext(), url2, true);
+                if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                    XHClick.mapStat(getContext(),id,twoLevel,twoLevel+titleMap.get("text2"));
+                }
             }
         });
     }
