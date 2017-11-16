@@ -80,6 +80,7 @@ public class HomeDataControler {
     }
 
     public void saveCacheHomeData(String data) {
+        if(TextUtils.isEmpty(data) || data.trim().length() < 10) return;
         Log.i("tzy","saveCacheHomeData");
         FileManager.saveFileToCompletePath(CACHE_PATH, data, false);
     }
@@ -98,7 +99,7 @@ public class HomeDataControler {
 
     //获取服务端Feed流数据
     public void loadServiceFeedData(boolean refresh, @NonNull OnLoadDataCallback callback) {
-        StringBuffer params = new StringBuffer();
+        StringBuilder params = new StringBuilder();
         if (refresh) {
             if (!TextUtils.isEmpty(backUrl)) {
                 params.append(backUrl);

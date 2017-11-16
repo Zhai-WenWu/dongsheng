@@ -61,15 +61,11 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
         //初始化
         initialize();
+        //加载数据
+        loadData();
 
-        String logPostTime = AppCommon.getConfigByLocal("logPostTime");
-        if (!TextUtils.isEmpty(logPostTime)) {
-            Map<String, String> map = StringManager.getFirstMap(logPostTime);
-            if (map.containsKey("postTime")
-                    && !TextUtils.isEmpty(map.get("postTime"))) {
-                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
-            }
-        }
+        initPostTime();
+        //注册通知
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
     }
 
@@ -98,10 +94,15 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        loadData();
+    private void initPostTime() {
+        String logPostTime = AppCommon.getConfigByLocal("logPostTime");
+        if (!TextUtils.isEmpty(logPostTime)) {
+            Map<String, String> map = StringManager.getFirstMap(logPostTime);
+            if (map.containsKey("postTime")
+                    && !TextUtils.isEmpty(map.get("postTime"))) {
+                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
+            }
+        }
     }
 
     public void loadData() {
@@ -139,7 +140,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     if (mViewContrloer != null)
                         mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
                 }
-                if(!isCache &&!LoadOver) {
+                if(!LoadOver) {
                     assert mViewContrloer != null;
                     loadManager.setLoading(mViewContrloer.getRvListView(),
                             mHomeAdapter,
@@ -162,20 +163,23 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (refresh && mDataControler != null) {
             mDataControler.isNeedRefresh(false);
         }
-        Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
-        if (mDataControler.isNeedRefCurrData()) {
-            //需要刷新当前数据
-            mDataControler.setNeedRefCurrData(false);
-            mDataControler.setBackUrl("");
-            mDataControler.clearData();
-            if (mHomeAdapter != null)
-                mHomeAdapter.notifyDataSetChanged();
+        if(mDataControler != null){
+            Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
+            if (mDataControler.isNeedRefCurrData()) {
+                //需要刷新当前数据
+                mDataControler.setNeedRefCurrData(false);
+                mDataControler.setBackUrl("");
+                mDataControler.clearData();
+                if (mHomeAdapter != null)
+                    mHomeAdapter.notifyDataSetChanged();
+            }
         }
         //已经load
         LoadOver = true;
 
         if (refresh) {//向上翻页
-            mDataControler.refreshADIndex();
+            if(mDataControler != null)
+                mDataControler.refreshADIndex();
             mViewContrloer.setStatisticShowNum();
         }
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
