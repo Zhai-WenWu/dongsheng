@@ -2,45 +2,30 @@ package amodule.home.activity;
 
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import acore.widget.rvlistview.RvListView;
+import acore.widget.PagerSlidingTabStrip;
 import amodule.home.HomeModuleControler;
-import amodule.main.adapter.HomeAdapter;
+import amodule.home.adapter.HomeSecondListPagerAdapter;
+import amodule.home.fragment.HomeSecondListFragment;
+import amodule.home.module.HomeSecondModule;
 import amodule.main.bean.HomeModuleBean;
-import amodule.main.view.HomeTabHScrollView;
-import amodule.main.view.item.HomeItem;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
-import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import third.ad.control.AdControlHomeDish;
-import third.ad.control.AdControlNormalDish;
-import third.ad.control.AdControlParent;
-import third.ad.option.AdOptionParent;
-import third.ad.tools.AdPlayIdConfig;
-
-import static third.ad.control.AdControlHomeDish.tag_yu;
+import amodule.main.view.home.HomeFragment;
 
 /**
- * 首页的二级页面（视频、每日三餐、本周佳作）
+ * 首页的二级页面（视频、每日三餐）
  * Created by sll on 2017/11/13.
  */
 
@@ -48,25 +33,14 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
 
     public static final String TAG = HomeSecondListActivity.class.getSimpleName();
 
-    private int mScrollDataIndex=-1;//滚动数据的位置
-    private ArrayList<Map<String, String>> mListData = new ArrayList<>();
-    private String mBackUrl = "";//向上拉取数据集合
-    private String mNextUrl = "";//下页拉取数据集合
-    private String mStatisticKey = null;
-    private String mType;//视频、三餐、佳作
-    private boolean mLoadOver = false;
-    private boolean mNeedRefCurrData = false;
-    private boolean mCompelClearData = false;//强制清除数据
-    protected boolean mIsloadTwodata =false;//是否加载过二级数据
+    private String mType;//视频、三餐
 
-    private AdControlParent mAdControl;
-    
-    private PtrClassicFrameLayout mPtrFrameLayout;
-    private RvListView mRv;
-    private HomeAdapter mHomeAdapter;
+    private PagerSlidingTabStrip mHomeTabStrip;
+    private ViewPager mViewPager;
+    private HomeSecondListPagerAdapter mPagerAdapter;
     private HomeModuleBean mModuleBean;
-    private LinearLayout mLayout,mLinearLayoutOne,mLinearLayoutTwo,mLinearLayoutThree;//头部view
-    
+    private ArrayList<HomeSecondModule> mSecondModules;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +48,6 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         initActivity("", 2, 0, R.layout.back_title_bar, R.layout.home_second_list_layout);
         initData();
         initView();
-        addListener();
-        requestDate();
     }
 
     private void initData() {
@@ -90,333 +62,108 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             return;
         }
         mModuleBean = new HomeModuleControler().getHomeModuleByType(this,mType);
-        mAdControl = getAdControl();
-    }
-
-
-    private void addListener() {
-        mRv.setOnItemClickListener((view, holder, position) -> {
-            if (view instanceof HomeItem) {
-                ((HomeItem)view).onClickEvent(view);
+        mSecondModules = new ArrayList<HomeSecondModule>();
+        ArrayList<Map<String, String>> levels = StringManager.getListMapByJson(mModuleBean.getTwoData());
+        for (Map<String, String> level : levels) {
+            if (level != null) {
+                HomeSecondModule secondModule = new HomeSecondModule();
+                secondModule.setTitle(level.get("title"));
+                secondModule.setType(level.get("two_type"));
+                mSecondModules.add(secondModule);
             }
-        });
+        }
+        if (mSecondModules.isEmpty()) {
+            this.finish();
+            return;
+        }
     }
 
     private void initView() {
-        mRv = (RvListView) findViewById(R.id.recycler_view);
-        initHeaderView();
-        mRv.addHeaderView(mLayout);
-        mPtrFrameLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
-        mPtrFrameLayout.disableWhenHorizontalMove(true);
+        mHomeTabStrip = (acore.widget.PagerSlidingTabStrip) findViewById(R.id.home_tab);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
         TextView titleV = (TextView) findViewById(R.id.title);
         titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
         if(mModuleBean != null)
             titleV.setText(mModuleBean.getTitle());
-    }
-
-    /**
-     * 初始化header布局
-     */
-    private void initHeaderView(){
-        mLayout= new LinearLayout(this);
-        mLayout.setOrientation(LinearLayout.VERTICAL);
-        mLinearLayoutOne= new LinearLayout(this);
-        mLinearLayoutOne.setOrientation(LinearLayout.VERTICAL);
-        mLinearLayoutTwo= new LinearLayout(this);
-        mLinearLayoutTwo.setOrientation(LinearLayout.VERTICAL);
-        mLinearLayoutThree= new LinearLayout(this);
-        mLinearLayoutThree.setOrientation(LinearLayout.VERTICAL);
-        mLinearLayoutOne.setVisibility(View.GONE);
-        mLinearLayoutTwo.setVisibility(View.GONE);
-        mLinearLayoutThree.setVisibility(View.GONE);
-        mLayout.addView(mLinearLayoutOne);
-        mLayout.addView(mLinearLayoutTwo);
-        mLayout.addView(mLinearLayoutThree);
-    }
-
-    private void requestDate() {
-        mHomeAdapter = new HomeAdapter(this,mListData,mAdControl);
-        mHomeAdapter.setHomeModuleBean(mModuleBean);
-        mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
-        if(!mLoadOver){
-            loadManager.setLoading(mPtrFrameLayout, mRv, mHomeAdapter, true,
-                    v -> entryptData(true),
-                    v -> entryptData(!mLoadOver));
-            RecyclerView.LayoutManager layoutManager = mRv.getLayoutManager();
-            if(layoutManager != null && layoutManager instanceof LinearLayoutManager){
-                final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                mRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                        super.onScrollStateChanged(recyclerView, newState);
-                    }
-
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                        if(mScrollDataIndex<(lastVisibleItemPosition-1)) {
-                            mScrollDataIndex = (lastVisibleItemPosition-1);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    protected void entryptData(final boolean refresh){
-        if(refresh){
-            isNeedRefresh(false);
-        }
-        if (mNeedRefCurrData) {//需要刷新当前数据
-            mNeedRefCurrData = false;
-            mBackUrl = "";//重置backUrl
-            mListData.clear();
-            if (mHomeAdapter != null)
-                mHomeAdapter.notifyDataSetChanged();
-        }
-        String params="";
-        mLoadOver = true;
-        if(refresh){//向上翻页
-            if(mAdControl != null)
-                mAdControl.refrush();
-            if(!TextUtils.isEmpty(mBackUrl)){
-                params=mBackUrl;
-            }else{
-                params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mModuleBean.getTwoType()))
-                    params+="&two_type="+mModuleBean.getTwoType();
-            }
-        }else{//向下翻页
-            if(!TextUtils.isEmpty(mNextUrl)){
-                params=mNextUrl;
-            }else{
-                params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mModuleBean.getTwoType()))params+="&two_type="+mModuleBean.getTwoType();
-            }
-        }
-        loadData(refresh, params);
-    }
-
-    protected void loadData(final boolean refresh, String data){
-        mLinearLayoutOne.removeAllViews();
-        String url= StringManager.API_RECOMMEND;
-
-        //更新加载按钮状态
-        loadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, refresh);
-        mLoadOver = true;
-        if (refresh) {
-            if(TextUtils.isEmpty(mBackUrl)&&mListData.size()<=0)
-                loadManager.showProgressBar();
-            else
-                loadManager.hideProgressBar();
-        }
-        ReqEncyptInternet.in().doEncyptAEC(url,data, new InternetCallback(this) {
+        mPagerAdapter = new HomeSecondListPagerAdapter(getSupportFragmentManager(), mSecondModules, mModuleBean);
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setCurrentItem(0);
+        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void loaded(int flag, String url, Object object) {
-                int loadCount = 0;
-                if(flag>=ReqInternet.REQ_OK_STRING){
-                    //Log.i("FRJ","获取  服务端   数据回来了-------------");
+            public void onPageScrolled(int i, float v, int i1) {
+            }
 
-                    Map<String,String> dataMap = StringManager.getFirstMap(object);
-                    //当前数据有问题，直接return数据
-                    if(!(!dataMap.containsKey("list")
-                            ||StringManager.getListMapByJson(dataMap.get("list")).size()<=0)){
-                        //上拉数据，下拉数据
-                        if (TextUtils.isEmpty(mBackUrl) || (!TextUtils.isEmpty(dataMap.get("mBackUrl")) && refresh))
-                            mBackUrl = dataMap.get("mBackUrl");
-                        if (TextUtils.isEmpty(mNextUrl) || !TextUtils.isEmpty(dataMap.get("nexturl")) && !refresh)
-                            mNextUrl = dataMap.get("nexturl");
-                        //当前只有向上刷新，并且服务端确认可以刷新数据
-                        if (mCompelClearData || (refresh && !TextUtils.isEmpty(dataMap.get("reset")) && "2".equals(dataMap.get("reset")))) {
-                            mListData.clear();
-                            Log.i("zyj","刷新数据：清集合");
-                            isNeedRefresh(true);
-                            //强制刷新，重置数据
-                            if(!TextUtils.isEmpty(dataMap.get("mBackUrl")))
-                                mBackUrl = dataMap.get("mBackUrl");
-                            if(!TextUtils.isEmpty(dataMap.get("nexturl")))
-                                mNextUrl = dataMap.get("nexturl");
+            @Override
+            public void onPageSelected(int i) {
+                mHomeTabStrip.select(mHomeTabStrip.getmTabsContainer().getChildAt(i));
+                mHomeTabStrip.notifyDataSetChanged();
+                refreshAdData(i);
+            }
 
-                        }
-                        //初始化二级
-                        initContextView(dataMap.get("trigger_two_type"));
-                        ArrayList<Map<String, String>> listDatas = StringManager.getListMapByJson(dataMap.get("list"));
-                        if (listDatas != null && listDatas.size() > 0) {
-                            loadCount=listDatas.size();
-                            int oldDayDishIndex = -1;
-                            if (refresh && mListData.size() > 0) {
-                                //如果需要加广告，插入广告
-                                if (mAdControl != null) {
-                                    //插入广告
-                                    Log.i(tag_yu,"listDatas::111:"+listDatas.size());
-                                    listDatas = mAdControl.getNewAdData(listDatas, true);
-                                }
-                                mListData.addAll(0, listDatas);//插入到第一个位置
-                            } else {
-                                mListData.addAll(listDatas);//顺序插入
-                                //如果需要加广告，插入广告
-                                if (mAdControl != null) {
-                                    mListData = mAdControl.getNewAdData(mListData, false);
-                                }
-                            }
-                        }
-                        mHomeAdapter.notifyDataSetChanged();
-                    }
-                }
-                loadManager.hideProgressBar();
-                loadManager.changeMoreBtn(mRv, flag, LoadManager.FOOTTIME_PAGE, refresh?mListData.size():loadCount, 0, refresh);
-                if(refresh){
-                    mPtrFrameLayout.refreshComplete();
-                }
-                mCompelClearData=false;//强制刷新只能使用一次，一次数据后被置回去
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        int tabBgResId = 0;
+        switch (mType) {
+            case "video":
+                tabBgResId = R.drawable.selector_hometabscroll_item_bg;
+                break;
+            case "day":
+
+                break;
+        }
+        if (tabBgResId != 0)
+            mHomeTabStrip.setTabInnerBackground(tabBgResId);
+        mHomeTabStrip.setTabInnerTextPadding(getPxByDp(R.dimen.dp_13), getPxByDp(R.dimen.dp_5), getPxByDp(R.dimen.dp_13), getPxByDp(R.dimen.dp_5));
+        mHomeTabStrip.setTextColorStateListResource(R.color.selector_hometabscroll_item_textcolor);
+        mHomeTabStrip.setViewPager(mViewPager);
+        mHomeTabStrip.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
+            @Override
+            public void onTabReselected(int position) {
+                refreshFragment(position);
             }
         });
     }
 
-    private void refresh() {
-        if (mPtrFrameLayout != null) {
-            mPtrFrameLayout.autoRefresh();
-        }
+    private int getPxByDp(int resDp) {
+        return getResources().getDimensionPixelSize(resDp);
     }
 
-    public AdControlParent getAdControl(){
-        String type = mModuleBean.getType(); //当前页的type
-        //Log.i("FRJ","type:" + type);
-        if(TextUtils.isEmpty(type)){
-            return null;
-        }
-        AdOptionParent adControlParent = null;
-        String[] adPlayIds = new String[0];
-        boolean isSetAd = true;
-        if("video".equals(type)){ //视频
-            mStatisticKey = "sp_list";
-            adPlayIds = AdPlayIdConfig.MAIN_HOME_VIDEO_LIST;
-        }else if("article".equals(type)){ //涨知识
-            mStatisticKey = "other_top_list";
-            adPlayIds = AdPlayIdConfig.MAIN_HOME_ZHISHI_LIST;
-        }else if("day".equals(type)){ //每日三餐
-            mStatisticKey = "sc_list";
-            adPlayIds = AdPlayIdConfig.COMMEND_THREE_MEALS;
-        }else if("dish".equals(type)){ //本周佳作
-            mStatisticKey = "jz_list";
-            adPlayIds = AdPlayIdConfig.MAIN_HOME_WEEK_GOOD_LIST;
-        }else{
-            isSetAd = false;
-        }
-        if(isSetAd && adControlParent == null){
+    private void refreshFragment(int position) {
+        HomeSecondListFragment fragment = getFragmentByPosition(position);
+        if (fragment == null)
+            return;
+        fragment.refresh();
+    }
 
-            return new AdControlNormalDish(mStatisticKey,adPlayIds);
+    private HomeSecondListFragment getFragmentByPosition(int position) {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null && fragments.size() > 0) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment instanceof HomeSecondListFragment) {
+                    HomeSecondListFragment listFragment = (HomeSecondListFragment) fragment;
+                    if (position == listFragment.getPosition())
+                        return listFragment;
+                }
+                continue;
+            }
         }
         return null;
+    }
+
+    private void refreshAdData(int position) {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null && fragments.size() > position && fragments.get(position) instanceof HomeSecondListFragment) {
+            ((HomeSecondListFragment) fragments.get(position)).isNeedRefresh(false);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    /**
-     * 刷新广告数据
-     * @param isForceRefresh 是否强制刷新广告
-     */
-    public void isNeedRefresh(boolean isForceRefresh){
-        if(mAdControl==null||mListData==null||mHomeAdapter==null)return;//条件过滤
-        boolean state=mAdControl.isNeedRefresh();
-        if(isForceRefresh)
-            state=isForceRefresh;//强制刷新
-        if(state){
-            //重新请求广告
-            mAdControl.setAdDataCallBack((tag, nums) -> {
-                if(tag>=1&&nums>0) {
-                    handlerMainThreadUIAD();
-                }
-            });
-            mAdControl.refreshData();
-            if(mAdControl instanceof AdControlHomeDish){//推荐首页
-                ((AdControlHomeDish)mAdControl).setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
-                    @Override
-                    public void loadNumberCallBack(int Number) {
-                        if(Number>7){
-                            handlerMainThreadUIAD();
-                        }
-                    }
-                });
-            }else if(mAdControl instanceof  AdControlNormalDish){//其他标准列表结构
-                ((AdControlNormalDish)mAdControl).setAdLoadNumberCallBack(Number -> {
-                    if(Number>7){
-                        handlerMainThreadUIAD();
-                    }
-                });
-            }
-
-            //去掉全部的广告位置
-            int size= mListData.size();
-            ArrayList<Map<String,String>> listTemp = new ArrayList<>();
-            for(int i=0;i<size;i++){
-                if(mListData.get(i).containsKey("adstyle")&&"ad".equals(mListData.get(i).get("adstyle"))){
-                    listTemp.add(mListData.get(i));
-                }
-            }
-            if(listTemp.size()>0){
-                mListData.removeAll(listTemp);
-            }
-            mHomeAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * 处理广告在主线程中处理
-     */
-    protected void handlerMainThreadUIAD(){
-        new Handler(Looper.getMainLooper()).post(() -> {
-            mListData = mAdControl.getNewAdData(mListData, false);
-            if(mHomeAdapter!=null)
-                mHomeAdapter.notifyDataSetChanged();
-        });
-    }
-
-    /**
-     * 初始化二级内容视图
-     * @param type 选中的类型
-     */
-    protected void initContextView(String type){
-
-        if(!mIsloadTwodata&&!TextUtils.isEmpty(mModuleBean.getTwoData())&&!TextUtils.isEmpty(type)){
-            mLinearLayoutTwo.removeAllViews();
-            mIsloadTwodata=true;
-            HomeTabHScrollView homeTabHScrollView = new HomeTabHScrollView(this);
-            //处理二级数据体
-            ArrayList<Map<String,String>> listMaps= StringManager.getListMapByJson(mModuleBean.getTwoData());
-            if(listMaps!=null&&listMaps.size()>0){
-                mModuleBean.setTwoType(type);
-            }else return;
-            for(int i=0;i<listMaps.size();i++){
-                listMaps.get(i).put("position",String.valueOf(i));
-            }
-            homeTabHScrollView.setHomeModuleBean(mModuleBean);
-            homeTabHScrollView.setData(listMaps);
-            homeTabHScrollView.setCallback(map -> {
-                if(map.get("two_type").equals(mModuleBean.getTwoType())){
-                    //是否刷新操作
-                }else{
-                    mModuleBean.setTwoType(map.get("two_type"));
-                    mModuleBean.setTwoTitle(map.get("title"));
-                    mModuleBean.setTwoTypeIndex(Integer.parseInt(map.get("position")));
-                    mHomeAdapter.setHomeModuleBean(mModuleBean);
-                    mCompelClearData=true;
-                    //请求数据
-                    mBackUrl="";
-                    mNextUrl="";
-                    entryptData(true);
-//                        refresh();
-                }
-            });
-            mLinearLayoutTwo.addView(homeTabHScrollView);
-            mLinearLayoutTwo.setVisibility(View.VISIBLE);
-            homeTabHScrollView.setVisibility(View.VISIBLE);
-        }
-
     }
     
     @Override

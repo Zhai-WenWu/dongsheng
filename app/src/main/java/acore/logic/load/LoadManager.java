@@ -356,6 +356,11 @@ public class LoadManager {
 
 	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
 						   boolean hasMore,final OnClickListener refreshListener, final OnClickListener loadMoreListener){
+		setLoading(refreshLayout, listView, adapter, hasMore, true, refreshListener, loadMoreListener);
+	}
+
+	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
+						   boolean hasMore, boolean showProgressbar, final OnClickListener refreshListener, final OnClickListener loadMoreListener){
 		refreshLayout.setPtrHandler(new PtrDefaultHandler() {
 			@Override
 			public void onRefreshBegin(PtrFrameLayout frame) {
@@ -369,7 +374,7 @@ public class LoadManager {
 				AutoLoadMore.setAutoMoreListen(listView, loadMore, loadMoreListener);
 			}
 		}
-		setLoading(loadMoreListener);
+		setLoading(loadMoreListener, showProgressbar);
 	}
 
 	/**

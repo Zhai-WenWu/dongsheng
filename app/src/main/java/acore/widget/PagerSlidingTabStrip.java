@@ -112,6 +112,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private int mLastScrollX = 0;
 
 	private int mTabBackgroundResId = R.drawable.psts_background_tab;
+	private int mTabInnerBackground;
+	private int mTop, mLeft, mRight, mBottom;
 
 	public PagerSlidingTabStrip(Context context) {
 		this(context, null);
@@ -325,6 +327,9 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 				tab_title.setTextColor(mTabTextColor);
 				tab_title.setTypeface(mTabTextTypeface, mTabTextTypefaceStyle);
 				tab_title.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTabTextSize);
+				tab_title.setPadding(mLeft, mTop, mRight, mBottom);
+				if (mTabInnerBackground != 0)
+					tab_title.setBackgroundResource(mTabInnerBackground);
 				// setAllCaps() is only available from API 14, so the upper case
 				// is made manually if we are on a
 				// pre-ICS-build
@@ -837,6 +842,17 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public void setTabBackground(int resId) {
 		this.mTabBackgroundResId = resId;
+	}
+
+	public void setTabInnerBackground(int resId) {
+		this.mTabInnerBackground = resId;
+	}
+
+	public void setTabInnerTextPadding(int left, int top, int right, int bottom) {
+		this.mLeft = left;
+		this.mTop = top;
+		this.mRight = right;
+		this.mBottom = bottom;
 	}
 
 	public void setTabPaddingLeftRight(int paddingPx) {
