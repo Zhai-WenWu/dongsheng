@@ -16,10 +16,12 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.annimon.stream.Stream;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,15 +44,16 @@ import aplug.basic.ReqInternet;
 public class BuoyControler {
     public static final String TYPE_HOME = "XHFloat";
     public static final String TYPE_DS = "DSFloat";
+    public static final String TYPE_LEFT_TOP = "XHLeftTop";
 
     public static boolean loadOver = false;
 
-    public static Map<String, String> map = new HashMap<>();
+    public static ArrayList<Map<String, String>> data = new ArrayList<>();
     //获取活动数据
-    public static void getBuoyDataFromService(boolean isRefresh,Context context,final LoadDataCallback callback) {
+    public static synchronized void getBuoyDataFromService(boolean isRefresh,Context context,final LoadDataCallback callback) {
         if(loadOver && !isRefresh){
             if(callback != null)
-                callback.onLoad(map);
+                callback.onLoad(data);
             return;
         }
         //请求数据
@@ -59,20 +62,16 @@ public class BuoyControler {
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     loadOver = true;
-                    map =StringManager.getFirstMap(returnObj);
+                    data =StringManager.getListMapByJson(returnObj);
                     if(callback != null)
-                        callback.onLoad(map);
+                        callback.onLoad(data);
                 }
             }
         });
     }
 
-    public static Map<String, String> getBuoyData(){
-        return map;
-    }
-
     public interface LoadDataCallback{
-        void onLoad(Map<String, String> map);
+        void onLoad(ArrayList<Map<String, String>> data);
     }
 
     public static class Buoy {
@@ -85,6 +84,7 @@ public class BuoyControler {
         private Animation open;// 打开动画
         private ImageView imageButton;
         private String mType;
+        private OnClickCallback mClickCallback;
 
         public Buoy(Activity act, @NonNull final String type){
             Log.i("tzy","create Buoy");
@@ -100,15 +100,19 @@ public class BuoyControler {
 
         public void refresh(boolean isRefresh){
             // 加载数据(悬浮按钮)
-            getBuoyDataFromService(isRefresh,mAct, map -> {
-                if(TextUtils.isEmpty(mType) || !map.containsKey(mType))
+            getBuoyDataFromService(isRefresh,mAct, data -> {
+                if(TextUtils.isEmpty(mType) || data.isEmpty())
                     return;
-                Map<String,String> buoyData = StringManager.getFirstMap(map.get(mType));
-                if(buoyData.isEmpty()) return;
-                bindClick(buoyData.get("url"));
-                setBuoyImage(buoyData.get("img"));
-                setFloatMenuData();
-                mainFloatHandler.sendEmptyMessageDelayed(CLOSE,3*1000);
+                for(int index = 0;index <data.size();index++){
+                    Map<String,String> buoyData = data.get(index);
+                    String typeStr = buoyData.get("text");
+                    if(!buoyData.isEmpty() && mType.equals(typeStr)){
+                        bindClick(buoyData.get("url"));
+                        setBuoyImage(buoyData.get("img"));
+                        setFloatMenuData();
+                        mainFloatHandler.sendEmptyMessageDelayed(CLOSE,3*1000);
+                    }
+                }
             });
         }
 
@@ -127,7 +131,7 @@ public class BuoyControler {
             int width = Tools.getDimen(mAct, R.dimen.dp_45);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
             DisplayMetrics dm = ToolsDevice.getWindowPx(mAct);
-            params.setMargins(params.leftMargin, dm.heightPixels / 5 * 2,params.rightMargin, params.bottomMargin);
+            params.setMargins(params.leftMargin, dm.heightPixels / 7 * 2 ,params.rightMargin, params.bottomMargin);
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             RelativeLayout rootLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);
             if(rootLayout == null){
@@ -191,6 +195,9 @@ public class BuoyControler {
                 if (isMove) {
                     AppCommon.openUrl(mAct,floatUrl, true);
                     executeCloseAnim();
+                    if(mClickCallback != null){
+                        mClickCallback.onClick();
+                    }
                 } else {
                     executeOpenAnim();
                 }
@@ -253,6 +260,14 @@ public class BuoyControler {
 
         public boolean isMove() {
             return isMove;
+        }
+
+        public void setClickCallback(OnClickCallback clickCallback) {
+            mClickCallback = clickCallback;
+        }
+
+        public interface OnClickCallback{
+            void onClick();
         }
     }
 }

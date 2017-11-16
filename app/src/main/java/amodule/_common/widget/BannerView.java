@@ -3,7 +3,6 @@ package amodule._common.widget;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -22,6 +22,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.banner.Banner;
 import acore.widget.banner.BannerAdapter;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IStatictusData;
 
 /**
  * Description :
@@ -31,7 +32,7 @@ import amodule._common.delegate.IBindMap;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class BannerView extends Banner implements IBindMap {
+public class BannerView extends Banner implements IBindMap,IStatictusData {
 
     private OnBannerItemClickCallback mOnBannerItemClickCallback;
 
@@ -87,6 +88,9 @@ public class BannerView extends Banner implements IBindMap {
                 String url = arrayList.get(position).get("url");
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
             }
+            if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+            }
         });
         setPageChangeDuration(5 * 1000);
         setRandomItem(arrayList);
@@ -117,6 +121,15 @@ public class BannerView extends Banner implements IBindMap {
             }
         }
 
+    }
+
+    String id, twoLevel, threeLevel;
+
+    @Override
+    public void setStatictusData(String id, String twoLevel, String threeLevel) {
+        this.id = id;
+        this.twoLevel = twoLevel;
+        this.threeLevel = threeLevel;
     }
 
     public interface OnBannerItemClickCallback {

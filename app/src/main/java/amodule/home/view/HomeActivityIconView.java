@@ -15,6 +15,7 @@ import java.util.Map;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.main.Tools.BuoyControler;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -62,16 +63,15 @@ public class HomeActivityIconView extends AppCompatImageView {
 
     //获取数据
     private void loadData() {
-        ReqEncyptInternet.in().doEncypt(StringManager.API_REC_LEFT_ICON,
-                new LinkedHashMap<>(),
-                new InternetCallback(getContext()) {
-                    @Override
-                    public void loaded(int flag, String url, Object obj) {
-                        if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                            handlerData(false, obj.toString());
-                        }
-                    }
-                });
+        BuoyControler.getBuoyDataFromService(false, getContext(), data -> {
+            for(int index = 0;index <data.size();index++){
+                Map<String,String> buoyData = data.get(index);
+                String typeStr = buoyData.get("text");
+                if(!buoyData.isEmpty() && BuoyControler.TYPE_LEFT_TOP.equals(typeStr)){
+                    handlerData(false,Tools.map2Json(buoyData));
+                }
+            }
+        });
     }
 
     private void handlerData(boolean isCache, String dataStr) {

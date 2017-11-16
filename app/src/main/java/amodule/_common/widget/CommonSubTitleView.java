@@ -104,4 +104,12 @@ public class CommonSubTitleView extends BaseSubTitleView {
     public void setTitle2TextColor(int color) {
         mTitle2.setTextColor(color);
     }
+
+    String id,twoLevel,threeLevel;
+    @Override
+    public void setStatictusData(String id, String twoLevel, String threeLevel) {
+        this.id = id;
+        this.twoLevel =twoLevel;
+        this.threeLevel =threeLevel;
+    }
 }

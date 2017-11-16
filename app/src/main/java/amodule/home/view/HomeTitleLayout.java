@@ -9,7 +9,11 @@ import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
+import acore.logic.XHClick;
+import amodule._common.delegate.IStatictusData;
 import amodule.search.avtivity.HomeSearch;
+
+import static amodule.main.activity.MainHomePage.STATICTUS_ID_PULISH;
 
 /**
  * Description :
@@ -19,7 +23,7 @@ import amodule.search.avtivity.HomeSearch;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeTitleLayout extends RelativeLayout implements View.OnClickListener{
+public class HomeTitleLayout extends RelativeLayout implements View.OnClickListener,IStatictusData {
 
     HomeActivityIconView mIconView;
     HomePushIconView mPulishView;
@@ -42,6 +46,7 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
     private void initialize() {
         LayoutInflater.from(getContext()).inflate(R.layout.a_home_title,this,true);
         mPulishView = (HomePushIconView) findViewById(R.id.home_publish_btn);
+        mPulishView.setStatictusID(STATICTUS_ID_PULISH);
         mIconView = (HomeActivityIconView) findViewById(R.id.home_act_btn);
 
         mPulishView.setOnClickListener(this);
@@ -55,17 +60,30 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
         if(v == null) return;
         switch (v.getId()){
             case R.id.home_act_btn:
+                //统计
+                XHClick.mapStat(getContext(),id,twoLevel,"左上角广告图标");
                 if(mOnClickActivityIconListener != null && mIconView != null){
                     mOnClickActivityIconListener.onCLick(mIconView,mIconView.getUrl());
                 }
                 break;
             case R.id.home_publish_btn:
+                //统计
+                XHClick.mapStat(getContext(),id,twoLevel,"发布按钮");
                 mPulishView.showPulishMenu();
                 break;
             case R.id.home_search_layout:
+                //统计
+                XHClick.mapStat(getContext(),id,twoLevel,"搜索框");
                 getContext().startActivity(new Intent(getContext(), HomeSearch.class));
                 break;
         }
+    }
+
+    String id,twoLevel;
+    @Override
+    public void setStatictusData(String id, String twoLevel, String threeLevel) {
+        this.id = id;
+        this.twoLevel = twoLevel;
     }
 
     public interface OnClickActivityIconListener{

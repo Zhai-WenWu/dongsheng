@@ -3,6 +3,7 @@ package amodule._common.widget.horizontal;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
@@ -12,10 +13,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IStatictusData;
 import amodule._common.widget.baseview.BaseSubTitleView;
 import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
@@ -29,7 +32,7 @@ import amodule.home.adapter.HorizontalAdapter3;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HorizontalRecyclerView extends RelativeLayout implements IBindMap {
+public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,IStatictusData {
 
     private RvListView mRecyclerView;
     private BaseSubTitleView mSubTitleView;
@@ -102,8 +105,20 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap {
             mRecyclerView.setOnItemClickListener((view, holder, position) -> {
                 String url = list.get(position).get("url");
                 AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
+                if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                    XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+                }
             });
         }
         setVisibility(VISIBLE);
+    }
+
+    String id, twoLevel, threeLevel;
+
+    @Override
+    public void setStatictusData(String id, String twoLevel, String threeLevel) {
+        this.id = id;
+        this.twoLevel = twoLevel;
+        this.threeLevel = threeLevel;
     }
 }

@@ -138,4 +138,12 @@ public class CountDownSubTitleView extends BaseSubTitleView {
             mCountDownTimer = null;
         }
     }
+
+    String id,twoLevel,threeLevel;
+    @Override
+    public void setStatictusData(String id, String twoLevel, String threeLevel) {
+        this.id = id;
+        this.twoLevel =twoLevel;
+        this.threeLevel =threeLevel;
+    }
 }

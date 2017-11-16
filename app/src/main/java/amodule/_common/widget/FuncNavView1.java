@@ -2,6 +2,7 @@ package amodule._common.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import amodule._common.delegate.IStatictusData;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.home.view.HomeFuncNavView1;
 import amodule._common.delegate.IBindMap;
@@ -30,7 +33,7 @@ import amodule._common.delegate.IBindMap;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap {
+public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictusData {
     public FuncNavView1(Context context) {
         super(context);
     }
@@ -91,7 +94,19 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap {
             Glide.with(getContext()).load(data.get("img")).into(imageView);
         imageView.setOnClickListener(v->{
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),data.get("url"),true);
+            if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                XHClick.mapStat(getContext(),id,twoLevel,data.get("text1"));
+            }
         });
         return true;
+    }
+
+    String id, twoLevel, threeLevel;
+
+    @Override
+    public void setStatictusData(String id, String twoLevel, String threeLevel) {
+        this.id = id;
+        this.twoLevel = twoLevel;
+        this.threeLevel = threeLevel;
     }
 }

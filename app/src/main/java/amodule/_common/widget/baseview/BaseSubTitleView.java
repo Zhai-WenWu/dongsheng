@@ -14,6 +14,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IStatictusData;
 
 /**
  * Description :
@@ -23,7 +24,7 @@ import amodule._common.delegate.IBindMap;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public abstract class BaseSubTitleView extends RelativeLayout implements IBindMap {
+public abstract class BaseSubTitleView extends RelativeLayout implements IBindMap,IStatictusData {
 
     protected Map<String, String> mData;
     public BaseSubTitleView(Context context, int layoutId) {

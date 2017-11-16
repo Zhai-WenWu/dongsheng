@@ -45,6 +45,8 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
 public class MainHomePage extends MainBaseActivity implements IObserver {
     public final static String KEY = "MainIndex";
     public final static String recommedType_statictus = "recom";//推荐类型-用于统计
+    public final static String STATICTUS_ID_HOMEPAGE = "a_index";
+    public final static String STATICTUS_ID_PULISH = "a_post_button580";
 
     //数据控制
     HomeDataControler mDataControler;

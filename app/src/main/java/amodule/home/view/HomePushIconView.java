@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DividerItemDecoration;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseSimpleAdapter;
@@ -40,6 +42,7 @@ import amodule.user.activity.login.LoginByAccout;
 
 public class HomePushIconView extends AppCompatImageView {
 
+    private String statictusID = "";
     PopupWindow mPopupWindow;
     public HomePushIconView(Context context) {
         this(context,null);
@@ -88,6 +91,10 @@ public class HomePushIconView extends AppCompatImageView {
         itemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_black));
         rvListView.addItemDecoration(itemDecoration);
         rvListView.setOnItemClickListener((view1, holder, position) -> {
+            //统计
+            if(!TextUtils.isEmpty(statictusID) && position < texts.length){
+                XHClick.mapStat(getContext(),statictusID,texts[position],"");
+            }
             mPopupWindow.dismiss();
             switch(position){
                 case 0:
@@ -131,5 +138,9 @@ public class HomePushIconView extends AppCompatImageView {
     /**去登录*/
     private void gotoLogin(){
         getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
+    }
+
+    public void setStatictusID(String statictusID) {
+        this.statictusID = statictusID;
     }
 }
