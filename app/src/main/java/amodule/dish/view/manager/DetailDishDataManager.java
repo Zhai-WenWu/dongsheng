@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.override.helper.XHActivityManager;
@@ -31,10 +32,26 @@ public class DetailDishDataManager {
     private String dishCode;//菜谱code
     private Context mContext = XHActivityManager.getInstance().getCurrentActivity().getApplicationContext();
     private String customerCode;//用户code
+    //权限
+    private Map<String,String> permissionMap = new HashMap<>();
+    private Map<String,String> detailPermissionMap = new HashMap<>();
+    private String lastPermission = "";
+    private boolean hasPermission = true;
+    private boolean contiunRefresh = true;
+    private boolean loadOver = false;
 
     public DetailDishDataManager(String code) {
         dishCode = code;
         reqTopInfo();
+    }
+    //重置权限数据
+    private void resetData(){
+        loadOver = false;
+        hasPermission = true;
+        contiunRefresh = true;
+        lastPermission = "";
+        detailPermissionMap.clear();
+        permissionMap.clear();
     }
     /**
      * 第一次请求接口合集
@@ -65,6 +82,30 @@ public class DetailDishDataManager {
                     handleDataSuccess(flag, DISH_DATA_TOP, object);
                     reqOne();
                     reqTwo();
+                }
+            }
+
+            @Override
+            public void getPower(int flag, String url, Object obj) {
+                //权限检测
+                if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)&& !"{}".equals(obj)){
+                    if(TextUtils.isEmpty(lastPermission)){
+                        lastPermission = (String) obj;
+                    }else{
+                        contiunRefresh = !lastPermission.equals(obj.toString());
+                        if(contiunRefresh)
+                            lastPermission = obj.toString();
+                    }
+                    permissionMap = StringManager.getFirstMap(obj);
+                    if(permissionMap.containsKey("page")){
+                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+//                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
+                        if(!hasPermission) return;
+                    }
+                    if(permissionMap.containsKey("detail"))
+                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
+                }else if(loadOver && TextUtils.isEmpty(lastPermission)){
+                    contiunRefresh = false;
                 }
             }
         });

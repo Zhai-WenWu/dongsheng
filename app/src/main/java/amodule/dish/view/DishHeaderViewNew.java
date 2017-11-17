@@ -146,14 +146,14 @@ public class DishHeaderViewNew extends LinearLayout {
     public void setData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         Map<String, String> videoMap = list.get(0);
         String title = videoMap.get("title");
-        try {
+//        try {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
             String type = videoMap.get("type");
 
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
-                    Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "视频播放失败222", Toast.LENGTH_SHORT).show();
             } else {
                 if(isLoadImg) {
                     handlerImage(img);
@@ -162,9 +162,9 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
 
             }
-        } catch (Exception e) {
-            Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
-        }
+//        } catch (Exception e) {
+//            Toast.makeText(context, "视频播放失败111", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void initVideoAd() {
@@ -332,6 +332,10 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             });
             dishvideo_img.setVisibility(View.GONE);
+            if(mVideoPlayerController==null)Log.i("wyl","mVideoPlayerController为空");
+            if(dishVidioLayout==null)Log.i("wyl","dishVidioLayout为空");
+            if(videoViewGroup==null)Log.i("wyl","videoViewGroup为空");
+            if(callBack==null)Log.i("wyl","callBack为空");
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
             callBack.videoImageOnClick();
             isUrlVaild = true;

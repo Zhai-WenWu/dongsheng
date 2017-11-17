@@ -162,19 +162,23 @@ public class DetailDishNew extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(detailDishViewManager!=null)detailDishViewManager.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if(detailDishViewManager!=null)detailDishViewManager.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
     }
 
     public void refresh() {
+        if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
 
     public void handleData() {

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
@@ -24,12 +25,14 @@ import amodule.dish.view.DishIngreDataShow;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishTitleViewControlNew;
+import third.video.VideoPlayerController;
 
 /**
  * 当前只处理View的拼装
  * 不能牵扯如何业务逻辑处理----因为当前页面业务确定，采用直接数据指向方法（不抽象不模糊）
  */
 public class DetailDishViewManager {
+    private RelativeLayout bar_title_1;
     public static int showNumLookImage = 0;//点击展示次数
     public DishTitleViewControl dishTitleViewControl;
     public DishHoverViewControl dishHoverViewControl;
@@ -51,6 +54,8 @@ public class DetailDishViewManager {
      */
     public DetailDishViewManager(Activity activity, ListView listView,String state) {
         mAct = activity;
+        titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
+        initTitle();
         dishTitleViewControl = new DishTitleViewControl(activity);
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
@@ -98,10 +103,21 @@ public class DetailDishViewManager {
     }
 
     /**
+     * 处理标题
+     */
+    private void initTitle(){
+        bar_title_1 = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_title);
+        statusBarHeight = Tools.getStatusBarHeight(mAct);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_1.getLayoutParams();
+        layoutParams.height = titleHeight + statusBarHeight;
+        View title_state_bar = mAct.findViewById(R.id.title_state_bar);
+        layoutParams = (RelativeLayout.LayoutParams) title_state_bar.getLayoutParams();
+        layoutParams.height = statusBarHeight;
+    }
+    /**
      * 处理预先加载数据
      */
     public void initBeforeData(String img){
-        Log.i("wyl","img::initBeforeData:"+img);
         if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img);
     }
     /**
@@ -123,8 +139,19 @@ public class DetailDishViewManager {
      * 处理header图片，和视频数据
      */
     public void handlerHeaderView(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
-        if (dishHeaderViewNew != null)
+        if (dishHeaderViewNew != null) {
+            dishHeaderViewNew.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
+                @Override
+                public void videoImageOnClick() {
+                    Log.i("wyl","videoImageOnClick");
+                }
+                @Override
+                public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayout, View view_oneImage) {
+                    Log.i("wyl","getVideoControl");
+                }
+            });
             dishHeaderViewNew.setData(list, permissionMap);
+        }
     }
     /**
      * 处理菜谱基本信息
@@ -196,4 +223,17 @@ public class DetailDishViewManager {
             dishHoverViewControl.initLikeState(list);
         }
     }
+    public void onResume(){
+        if(dishHeaderViewNew!=null)dishHeaderViewNew.onResume();
+    }
+    public void onPause(){
+
+    }
+    public void onDestroy() {
+        if(dishHeaderViewNew!=null)dishHeaderViewNew.onDestroy();
+    }
+
+    public void refresh() {
+    }
+
 }
