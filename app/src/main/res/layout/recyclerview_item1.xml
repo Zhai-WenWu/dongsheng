@@ -29,11 +29,11 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/dp_11"
         android:paddingRight="@dimen/dp_11"
-        android:paddingTop="@dimen/dp_40"
+        android:paddingTop="@dimen/dp_96"
         android:paddingBottom="@dimen/dp_9"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:background="#33000000">
+        android:background="@drawable/bg_home_horizontal_gradation">
 
         <TextView
             android:id="@+id/textview1"
@@ -54,8 +54,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_13"
-            android:textStyle="bold" />
+            android:textSize="@dimen/sp_13" />
 
         <TextView
             android:id="@+id/textview3"
@@ -65,7 +64,6 @@
             android:lines="1"
             android:ellipsize="end"
             android:textColor="@color/c_white_text"
-            android:textStyle="bold"
             android:textSize="@dimen/sp_10"/>
 
     </LinearLayout>

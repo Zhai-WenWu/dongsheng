@@ -5,7 +5,6 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -14,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import acore.tools.StringManager;
 import amodule._common.widget.baseview.BaseSubTitleView;
 
 /**
@@ -26,13 +26,18 @@ import amodule._common.widget.baseview.BaseSubTitleView;
 
 public class CountDownSubTitleView extends BaseSubTitleView {
 
-    protected TextView mTitle1;
-    protected TextView mTitle2;
-    protected TextView mTitle3;
-    protected TextView mTitle4;
+    private TextView mTitle1;
+    private TextView mTitle2;
+    private TextView mTitle3;
+    private TextView mTitle4;
 
     private long mMillisInFuture;
-    private long mMillisInterval;
+    private long mMillisInterval = 1000;
+
+    private boolean mDataReady;
+    private boolean mIsAttachedToWindow;
+    private boolean mIsDetachedFromWindow;
+    private boolean mTaskRunning;
 
     private CountDownTimer mCountDownTimer;
 
@@ -58,7 +63,14 @@ public class CountDownSubTitleView extends BaseSubTitleView {
 
     @Override
     protected void onDataReady(Map<String, String> map) {
-        //TODO 开始设置数据
+        Map<String, String> titleMap = StringManager.getFirstMap(map.get("title"));
+        setTitle1Text(titleMap.get("text1"));
+        String millisInFuture = titleMap.get("endTime");
+        if(TextUtils.isEmpty(millisInFuture))
+            return;
+        mMillisInFuture = Integer.parseInt(millisInFuture) * 1000;
+        mDataReady = true;
+        startCountDownTime();
     }
 
     public void setTitle1Text(@Nullable CharSequence text) {
@@ -80,20 +92,31 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     }
 
     public void startCountDownTime() {
-        if (mMillisInFuture <= 0 || mMillisInterval <= 0 || mMillisInFuture < mMillisInterval || mCountDownTimer != null)
+        if (mTaskRunning || !mDataReady || !mIsAttachedToWindow || mIsDetachedFromWindow)
             return;
+        setTimeText(mMillisInFuture);
         mCountDownTimer = new CountDownTimer(mMillisInFuture, mMillisInterval) {
             @Override
             public void onTick(long millisUntilFinished) {
-                setTimeText(millisUntilFinished);
+                if (mTaskRunning)
+                    setTimeText(millisUntilFinished);
             }
 
             @Override
             public void onFinish() {
-                mCountDownTimer = null;
+                endCountDownTime();
             }
         };
+        mTaskRunning = true;
         mCountDownTimer.start();
+    }
+
+    public void endCountDownTime() {
+        if (mCountDownTimer == null)
+            return;
+        mTaskRunning = false;
+        mCountDownTimer.cancel();
+        mCountDownTimer = null;
     }
 
     /**
@@ -109,8 +132,6 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     private void setTimeText(long millis) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String formatTime = sdf.format(new Date(millis));
-
-        Log.e("SLL", "formatTime = " + formatTime);
         if (TextUtils.isEmpty(formatTime))
             return;
         String[] times = formatTime.split(":");
@@ -127,16 +148,16 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mIsAttachedToWindow = true;
+        mIsDetachedFromWindow = false;
         startCountDownTime();
     }
-
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-            mCountDownTimer = null;
-        }
+        mIsDetachedFromWindow = true;
+        mIsAttachedToWindow = false;
+        endCountDownTime();
     }
 
     String id,twoLevel,threeLevel;
