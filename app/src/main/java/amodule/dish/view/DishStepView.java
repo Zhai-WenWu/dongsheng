@@ -73,6 +73,7 @@ public class DishStepView extends ItemBaseView {
     }
 
     public void setData(Map<String, String> map, StepViewCallBack stepViewCallBack, int position) {
+        imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
         this.position= position;
         this.callback = stepViewCallBack;
         String text ="<b><tt>"+map.get("num")+".</tt></b>";
@@ -225,24 +226,24 @@ public class DishStepView extends ItemBaseView {
 
 
 
-    @Override
-    public SubBitmapTarget getTarget(final ImageView v, final String url) {
-        return new SubBitmapTarget() {
-            @Override
-            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-                ImageView img = null;
-                if (v.getTag(TAG_ID).equals(url))
-                    img = v;
-                if (img != null && bitmap != null) {
-                    // 图片圆角和宽高适应
-                    int imgHei = bitmap.getHeight();
-                    v.setImageBitmap(bitmap);
-                    setImageWH(v,imgHei);
-                    if(callback!=null)callback.getHeight(String.valueOf(imgHei));
-                }
-            }
-        };
-    }
+//    @Override
+//    public SubBitmapTarget getTarget(final ImageView v, final String url) {
+//        return new SubBitmapTarget() {
+//            @Override
+//            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+//                ImageView img = null;
+//                if (v.getTag(TAG_ID).equals(url))
+//                    img = v;
+//                if (img != null && bitmap != null) {
+//                    // 图片圆角和宽高适应
+//                    int imgHei = bitmap.getHeight();
+//                    v.setImageBitmap(bitmap);
+//                    setImageWH(v,imgHei);
+//                    if(callback!=null)callback.getHeight(String.valueOf(imgHei));
+//                }
+//            }
+//        };
+//    }
 
 
     public interface StepViewCallBack{

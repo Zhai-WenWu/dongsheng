@@ -48,6 +48,7 @@ public class DishADBannerView extends ItemBaseView {
     }
     public void setData(final Map<String,String> map){
         map.put("img","http://s1.cdn.xiangha.com/caipu/201609/0518/052119348809.jpg/NjQwX3J3MTcwN19jXzEtM18w");
+        imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
         setViewImage(img_banner,map.get("img"));
         img_banner.setOnClickListener(new OnClickListener() {
             @Override
