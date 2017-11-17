@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="@dimen/dp_336"
+    android:layout_height="@dimen/dp_181">
 
     <ImageView
         android:id="@+id/imageview1"
@@ -11,7 +11,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#88888888"/>
+        android:background="#4c000000"/>
 
     <LinearLayout
         android:id="@+id/linearlayout1"
@@ -29,22 +29,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_18"
+            android:textSize="@dimen/sp_21"
             android:gravity="center"
             android:textStyle="bold"
-            android:background="@color/transparent_fe"
             android:maxLines="2"
-            android:lineSpacingExtra="@dimen/dp_4"
-            android:ellipsize="end"
-            android:visibility="gone"/>
+            android:lineSpacingExtra="@dimen/dp_8"
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/textview2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/transparent_fe"
             android:textSize="@dimen/sp_15"
             android:textColor="@color/c_white_text"
+            android:layout_marginTop="@dimen/dp_13"
             android:text="29道菜"/>
 
     </LinearLayout>

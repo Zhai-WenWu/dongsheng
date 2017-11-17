@@ -7,8 +7,7 @@
 
     <amodule._common.widget.CommonSubTitleView
         android:id="@+id/subtitle_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        style="@style/subtitle_style"/>
 
     <acore.widget.rvlistview.RvListView
         android:id="@+id/recycler_view"

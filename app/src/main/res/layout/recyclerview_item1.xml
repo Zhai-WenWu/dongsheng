@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dp_168"
-    android:layout_height="@dimen/dp_200"
-    android:background="#660000">
+    android:layout_width="@dimen/dp_163"
+    android:layout_height="@dimen/dp_203">
 
     <ImageView
         android:id="@+id/imageview1"
@@ -20,9 +19,9 @@
         android:layout_marginTop="@dimen/dp_7"
         android:layout_marginRight="@dimen/dp_5"
         android:layout_alignParentRight="true"
-        android:text="2.8万人学"
+        android:textSize="@dimen/sp_10"
         android:textColor="@color/c_white_text"
-        android:background="#33cc00"/>
+        android:background="@drawable/bg_rounded_corner_33cc00"/>
 
     <LinearLayout
         android:id="@+id/linearlayout1"
@@ -31,7 +30,7 @@
         android:paddingLeft="@dimen/dp_11"
         android:paddingRight="@dimen/dp_11"
         android:paddingTop="@dimen/dp_40"
-        android:paddingBottom="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_9"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:background="#33000000">
@@ -42,7 +41,6 @@
             android:layout_height="wrap_content"
             android:lines="1"
             android:ellipsize="end"
-            android:text="经典烘焙系列课"
             android:textColor="@color/c_white_text"
             android:textStyle="bold"
             android:textSize="@dimen/sp_18"
@@ -55,9 +53,8 @@
             android:layout_marginTop="@dimen/dp_10"
             android:ellipsize="end"
             android:lines="1"
-            android:text="经典烘焙系列课"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_13"
             android:textStyle="bold" />
 
         <TextView
@@ -67,10 +64,9 @@
             android:layout_marginTop="@dimen/dp_7"
             android:lines="1"
             android:ellipsize="end"
-            android:text="经典烘焙系列课"
             android:textColor="@color/c_white_text"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_10"/>
 
     </LinearLayout>
 

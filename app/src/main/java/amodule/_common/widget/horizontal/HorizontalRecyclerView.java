@@ -2,10 +2,13 @@ package amodule._common.widget.horizontal;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -16,6 +19,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
@@ -115,8 +119,29 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
                     XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
                 }
             });
+            mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                @Override
+                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                    super.getItemOffsets(outRect, view, parent, state);
+                    int position = parent.getChildAdapterPosition(view) - mRecyclerView.getHeaderViewsSize();
+                    if (position == 0) {
+                        outRect.left = getPxByDp(R.dimen.dp_20);
+                        outRect.right = getPxByDp(R.dimen.dp_5);
+                    } else if (position == list.size() - 1) {
+                        outRect.left = getPxByDp(R.dimen.dp_5);
+                        outRect.right = getPxByDp(R.dimen.dp_20);
+                    } else {
+                        outRect.left = getPxByDp(R.dimen.dp_5);
+                        outRect.right = getPxByDp(R.dimen.dp_5);
+                    }
+                }
+            });
         }
         setVisibility(VISIBLE);
+    }
+
+    private int getPxByDp(int resId) {
+        return getResources().getDimensionPixelSize(resId);
     }
 
     String id, twoLevel, threeLevel;
