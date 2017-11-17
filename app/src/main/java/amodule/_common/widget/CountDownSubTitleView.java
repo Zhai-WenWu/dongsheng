@@ -1,5 +1,6 @@
 package amodule._common.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -157,7 +158,9 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         super.onDetachedFromWindow();
         mIsDetachedFromWindow = true;
         mIsAttachedToWindow = false;
-        endCountDownTime();
+        if (((Activity)getContext()).isFinishing()) {
+            endCountDownTime();
+        }
     }
 
     String id,twoLevel,threeLevel;
