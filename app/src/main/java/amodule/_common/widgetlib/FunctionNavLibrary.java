@@ -44,7 +44,7 @@ public class FunctionNavLibrary implements IWidgetLibrary {
             case "1":
                 return R.layout.widget_func_nav1;
             case "2":
-                return R.layout.widget_func_nav1;
+                return R.layout.widget_func_nav2;
             default:
                 return NO_FIND_ID;
         }

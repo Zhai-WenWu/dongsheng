@@ -359,11 +359,11 @@ public class StringManager extends UtilString {
     public final static String API_GET_FAVORITE_STATUS = apiUrl + "main8/favorites/getFavoritesStatus";//获取收藏状态
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
-    public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
-    public final static String API_GET_ACTIVITY_BUOY = apiUrl + "main8/recommend/getActivityBuoy";//活动浮标
+//    public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
+//    public final static String API_GET_ACTIVITY_BUOY = apiUrl + "main8/recommend/getActivityBuoy";//活动浮标
     //TODO test
-//    public final static String API_HOMEPAGE_6_0 = "http://api.ixiangha.com:8806/main8/recommend/recommend";////首页
-//    public final static String API_GET_ACTIVITY_BUOY = "http://api.ixiangha.com:8806/main8/recommend/getActivityBuoy";//活动浮标
+    public final static String API_HOMEPAGE_6_0 = "http://api.ixiangha.com:8806/main8/recommend/recommend";//首页
+    public final static String API_GET_ACTIVITY_BUOY = "http://api.ixiangha.com:8806/main8/recommend/getActivityBuoy";//活动浮标
 
 
 

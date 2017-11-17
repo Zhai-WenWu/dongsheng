@@ -1,6 +1,7 @@
 package amodule.home;
 
 import android.view.View;
+import android.view.ViewStub;
 
 import com.xiangha.R;
 
@@ -26,6 +27,7 @@ public class HomeHeaderControler {
 
     public HomeHeaderControler(View header){
         this.mHeaderView = header;
+
         //banner
         mLayouts[0] = (WidgetVerticalLayout) header.findViewById(R.id.banner_widget);
         //功能导航 4按钮

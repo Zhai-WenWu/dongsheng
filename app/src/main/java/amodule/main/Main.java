@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.popdialog.util.GoodCommentManager;
+import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xh.manager.DialogManager;
@@ -113,7 +114,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private View[] tabViews;
     private XiangHaTabHost tabHost;
     private LinearLayout linear_item;
-    private RelativeLayout mRootLayout;
     private LocalActivityManager mLocalActivityManager;
 
     private int doExit = 0;
@@ -410,7 +410,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-//        QbSdk.initX5Environment(Main.this, null);
+        QbSdk.initX5Environment(Main.this, null);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
         if (LoginManager.isLogin())
@@ -425,7 +425,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private void initUI() {
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
-        mRootLayout = (RelativeLayout) findViewById(R.id.main_root_layout);
 
         tabHost = (XiangHaTabHost) findViewById(R.id.xiangha_tabhost);
         tabHost.setup(mLocalActivityManager);
@@ -458,15 +457,16 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         }
         //处理布局margin
-        int margin = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this, R.dimen.dp_5) * 2
-                - Tools.getDimen(this, R.dimen.dp_70) * 5) / 4 / 2;
-        int length = linear_item.getChildCount();
-        for (int i = 0; i < length; i++) {
-            setTabItemMargins(linear_item, i, margin, margin);
-        }
-        setTabItemMargins(linear_item, 0, 0, margin);
-        setTabItemMargins(linear_item, length - 1, margin, 0);
+//        int margin = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this, R.dimen.dp_5) * 2
+//                - Tools.getDimen(this, R.dimen.dp_70) * 5) / 4 / 2;
+//        int length = linear_item.getChildCount();
+//        for (int i = 0; i < length; i++) {
+//            setTabItemMargins(linear_item, i, margin, margin);
+//        }
+//        setTabItemMargins(linear_item, 0, 0, margin);
+//        setTabItemMargins(linear_item, length - 1, margin, 0);
     }
+
     public void setTabItemMargins(ViewGroup viewGroup, int index, int leftMargin, int rightMargin) {
         RelativeLayout child = (RelativeLayout) viewGroup.getChildAt(index);
         LinearLayout.LayoutParams params_child = (LinearLayout.LayoutParams) child.getLayoutParams();
@@ -675,8 +675,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
             if (allTab.containsKey("MainIndex")) {
-                MainHomePage mainIndex = (MainHomePage) allTab.get("MainIndex");
-                mainIndex.onResumeFake();
+//                MainHomePage mainIndex = (MainHomePage) allTab.get("MainIndex");
+//                mainIndex.onResumeFake();
             }
         }
         //特殊逻辑

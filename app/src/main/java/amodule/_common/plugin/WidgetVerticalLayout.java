@@ -53,12 +53,6 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void initialize() {
         mInflater = LayoutInflater.from(getContext());
-        mExtraTop = new LinearLayout(getContext());
-        mExtraTop.setOrientation(VERTICAL);
-        addView(mExtraTop, 0);
-        mExtraBottom = new LinearLayout(getContext());
-        mExtraBottom.setOrientation(VERTICAL);
-        addView(mExtraBottom);
     }
 
     @Override
@@ -79,26 +73,30 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
                 }
+                view.setVisibility(VISIBLE);
             }
-            //加载额外数据
-            String widgetExtra = data.get(KEY_WIDGET_EXTRA);
-            if (TextUtils.isEmpty(widgetExtra)) {
-                return;
-            }
-            Map<String, String> widgetExtraMap = StringManager.getFirstMap(widgetExtra);
-            if (widgetExtraMap.isEmpty()) {
-                return;
-            }
-            updateTopView(StringManager.getListMapByJson(widgetExtraMap.get(KEY_TOP)));
-            updateBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
+        }else{
+            int index = mExtraTop == null ? 0 : 1;
+            getChildAt(index).setVisibility(GONE);
         }
+        //加载额外数据
+        String widgetExtra = data.get(KEY_WIDGET_EXTRA);
+        if (TextUtils.isEmpty(widgetExtra)) {
+            return;
+        }
+        Map<String, String> widgetExtraMap = StringManager.getFirstMap(widgetExtra);
+        if (widgetExtraMap.isEmpty()
+                || (TextUtils.isEmpty(widgetExtraMap.get(KEY_TOP)) && TextUtils.isEmpty(widgetExtraMap.get(KEY_BOTTOM)))
+                ) {
+            return;
+        }
+        updateTopView(StringManager.getListMapByJson(widgetExtraMap.get(KEY_TOP)));
+        updateBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
     }
 
     @Override
     public void updateTopView(List<Map<String, String>> array) {
-        if (mExtraTop != null && mExtraTop.getChildCount() > 0) {
-            mExtraTop.removeAllViews();
-        }
+        initTopLayout();
         if (null == array || array.isEmpty()) {
             return;
         }
@@ -108,11 +106,20 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         });
     }
 
+    private void initTopLayout(){
+        if(mExtraTop == null){
+            mExtraTop = new LinearLayout(getContext());
+            mExtraTop.setOrientation(VERTICAL);
+            addView(mExtraTop, 0);
+        }else if(mExtraTop.getChildCount() > 0){
+            mExtraTop.removeAllViews();
+        }
+    }
+
+
     @Override
     public void updateBottom(List<Map<String, String>> array) {
-        if (mExtraBottom != null && mExtraBottom.getChildCount() > 0) {
-            mExtraBottom.removeAllViews();
-        }
+        initBootomLayout();
         if (null == array || array.isEmpty()) {
             return;
         }
@@ -120,6 +127,15 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         Stream.of(array).forEach(data -> {
             addViewByData(mExtraBottom, data, true);
         });
+    }
+    private void initBootomLayout(){
+        if(mExtraBottom == null){
+            mExtraBottom = new LinearLayout(getContext());
+            mExtraBottom.setOrientation(VERTICAL);
+            addView(mExtraBottom);
+        }else if(mExtraBottom.getChildCount() > 0){
+            mExtraBottom.removeAllViews();
+        }
     }
 
     /**

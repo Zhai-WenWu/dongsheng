@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -21,7 +22,6 @@ import amodule.main.Tools.BuoyControler;
 import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
-import third.ad.control.AdControlHomeDish;
 
 /**
  * Description :
@@ -52,22 +52,36 @@ public class HomeViewControler {
 
     public HomeViewControler(MainHomePage activity) {
         this.mActivity = activity;
+        long startTime = System.currentTimeMillis();
+        mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
+        long endtime1 = System.currentTimeMillis() - startTime;
+        Log.i("tzy","inflate time : " + (endtime1) + "ms");
+    }
+
+    public void onCreate(){
         initUI();
     }
 
     @SuppressLint("InflateParams")
     private void initUI() {
-
-        mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
+        long startTime = System.currentTimeMillis();
         mHeaderControler = new HomeHeaderControler(mHeaderView);
+
+        long endtime2 = System.currentTimeMillis() - startTime;
+        Log.i("tzy","HomeHeaderControler init time : " + (endtime2) + "ms");
         mHomeFeedHeaderControler = new HomeFeedHeaderControler(mActivity);
 
+        long endtime3 = System.currentTimeMillis() - startTime - endtime2;
+        Log.i("tzy","HomeFeedHeaderControler init time : " + (endtime3) + "ms");
         mTitleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
         mTitleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH,"顶部topbar","");
         mTitleLayout.postDelayed(()->{
             mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity,MainHomePage.STATICTUS_ID_PULISH,"首页右侧侧边栏浮动图标",""));
-        },1000);
+        },2000);
+
+        long endtime4 = System.currentTimeMillis() - startTime - endtime2 - endtime3;
+        Log.i("tzy","HomeTitleLayout init time : " + (endtime4) + "ms");
 
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);

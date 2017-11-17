@@ -51,12 +51,18 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     //是否加载
     boolean LoadOver = false;
 
+    boolean HeaderDataLoaded = false;
+
     protected long startTime = -1;//开始的时间戳
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mViewContrloer = new HomeViewControler(this);
         super.onCreate(savedInstanceState);
+        long startTime = System.currentTimeMillis();
         setContentView(R.layout.a_home_page);
+        long endtime1 = System.currentTimeMillis() - startTime;
+        Log.i("tzy","setContentView time : " + (endtime1) + "ms");
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
         //初始化
@@ -72,7 +78,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     //初始化
     private void initialize() {
         //初始化 UI 控制
-        mViewContrloer = new HomeViewControler(this);
+        mViewContrloer.onCreate();
         //初始化数据控制
         mDataControler = new HomeDataControler(this);
         mDataControler.setInsertADCallback((listDatas, isBack) -> {
@@ -107,10 +113,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     public void loadData() {
         mDataControler.loadCacheHomeData(getHeaderCallback(true));
-        loadHeaderData();
-    }
-
-    public void loadHeaderData() {
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
         mDataControler.loadServiceTopData(new InternetCallback(this) {
             @Override
@@ -118,8 +120,26 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 if (i >= ReqEncyptInternet.REQ_OK_STRING
                         && mViewContrloer != null)
                     mViewContrloer.setTopData(StringManager.getListMapByJson(o));
-                }
+            }
         });
+        if (!LoadOver) {
+            assert mViewContrloer != null;
+            loadManager.setLoading(mViewContrloer.getRvListView(),
+                    mHomeAdapter,
+                    true,
+                    v -> {
+                        if (HeaderDataLoaded)
+                            EntryptData(!LoadOver);
+                    }
+            );
+            loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
+            mViewContrloer.addOnScrollListener();
+        }
+
+    }
+
+    public void loadHeaderData() {
+
     }
 
     /**
@@ -133,22 +153,16 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         return new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
+                HeaderDataLoaded = true;
+                if(!LoadOver){
+                    EntryptData(!LoadOver);
+                }
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
                     }
                     if (mViewContrloer != null)
                         mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
-                }
-                if(!LoadOver) {
-                    assert mViewContrloer != null;
-                    loadManager.setLoading(mViewContrloer.getRvListView(),
-                            mHomeAdapter,
-                            true,
-                            v -> EntryptData(!LoadOver)
-                    );
-                    loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
-                    mViewContrloer.addOnScrollListener();
                 }
             }
         };
@@ -160,10 +174,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh) {
+        //已经load
+        LoadOver = true;
         if (refresh && mDataControler != null) {
             mDataControler.isNeedRefresh(false);
         }
-        if(mDataControler != null){
+        if (mDataControler != null) {
             Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
             if (mDataControler.isNeedRefCurrData()) {
                 //需要刷新当前数据
@@ -174,11 +190,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     mHomeAdapter.notifyDataSetChanged();
             }
         }
-        //已经load
-        LoadOver = true;
 
         if (refresh) {//向上翻页
-            if(mDataControler != null)
+            if (mDataControler != null)
                 mDataControler.refreshADIndex();
             mViewContrloer.setStatisticShowNum();
         }
@@ -224,7 +238,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     @Override
     protected void onResume() {
         super.onResume();
-        if(mDataControler != null){
+        if (mDataControler != null) {
             mDataControler.isNeedRefresh(false);
         }
         onResumeFake();

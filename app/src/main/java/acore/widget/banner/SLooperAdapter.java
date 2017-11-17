@@ -9,57 +9,58 @@ import android.view.ViewGroup;
  * Created by sivin on 2016/4/13.
  */
 class SLooperAdapter extends PagerAdapter {
-    private PagerAdapter mAdapter;
+    private PagerAdapter mPagerAdapter;
 
 
-    SLooperAdapter(PagerAdapter adapter) {
-        mAdapter = adapter;
+    SLooperAdapter(PagerAdapter pagerAdapter) {
+        mPagerAdapter = pagerAdapter;
     }
 
     @Override
     public int getCount() {
         //如果层ViewPager中有两个或两个以上的Item的时候，则映射出边界Item，否则显示与内层个数一致
-        return mAdapter.getCount() <= 1 ? mAdapter.getCount() : mAdapter.getCount() + 2;
+        return mPagerAdapter.getCount() <= 1 ? mPagerAdapter.getCount() : mPagerAdapter.getCount() + 2;
     }
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return mAdapter.isViewFromObject(view, object);
+        return mPagerAdapter.isViewFromObject(view, object);
     }
 
 
     @Override
     public void startUpdate(ViewGroup container) {
-        mAdapter.startUpdate(container);
+        mPagerAdapter.startUpdate(container);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
-        return mAdapter.instantiateItem(container, getInnerAdapterPosition(position));
+        return mPagerAdapter.instantiateItem(container, getInnerAdapterPosition(position));
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
 
-        mAdapter.destroyItem(container, getInnerAdapterPosition(position), object);
+        mPagerAdapter.destroyItem(container, getInnerAdapterPosition(position), object);
     }
 
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
-        mAdapter.setPrimaryItem(container, position, object);
+        mPagerAdapter.setPrimaryItem(container, position, object);
     }
 
     @Override
     public void finishUpdate(ViewGroup container) {
-        mAdapter.finishUpdate(container);
+        mPagerAdapter.finishUpdate(container);
     }
 
 
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
+        mPagerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -89,7 +90,7 @@ class SLooperAdapter extends PagerAdapter {
      * @return 内层ViewPager中可用的item个数
      */
     int getInnerCount() {
-        return mAdapter.getCount();
+        return mPagerAdapter.getCount();
     }
 
     /**
@@ -98,9 +99,12 @@ class SLooperAdapter extends PagerAdapter {
      * @return 无限轮播ViewPager的切换位置
      */
     int toLooperPosition(int position) {
-        if (getInnerCount() > 1) {
+        if (getInnerCount() > 1)
             return position + 1;
-        } else return position;
+//        else if(position >= getInnerCount())
+//            return  position - 1;
+        else
+            return position;
     }
 
 

@@ -43,7 +43,7 @@ public class Banner extends RelativeLayout {
 
     private Context mContext;
 
-    private SparseArray<ImageView> mItemArrays;
+    private SparseArray<View> mItemArrays;
 
     /**
      * 布局参数
@@ -84,7 +84,7 @@ public class Banner extends RelativeLayout {
     /**
      * 点在容器中的layout的属性
      */
-    private int mPointGravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+    private int mPointGravity = Gravity.RIGHT | Gravity.BOTTOM;
     private int mPointLeftRightMargin;
     private int mPointTopBottomMargin;
     private int mPointContainerLeftRightPadding;
@@ -102,12 +102,12 @@ public class Banner extends RelativeLayout {
     /**
      * 自动播放的间隔
      */
-    private int mAutoPlayInterval = 3;
+    private int mAutoPlayInterval = 6;
 
     /**
      * 页面切换的时间（从下一页开始出现，到完全出现的时间）
      */
-    private int mPageChangeDuration = 300;
+    private int mPageChangeDuration = 400;
     /**
      * 是否正在播放
      */
@@ -161,9 +161,9 @@ public class Banner extends RelativeLayout {
         //默认点指示器的左右Margin3dp
         mPointLeftRightMargin = dp2px(context, 2);
         //默认点指示器的上下margin为6dp
-        mPointTopBottomMargin = dp2px(context, 5);
+        mPointTopBottomMargin = dp2px(context, 15);
         //默认点容器的左右padding为10dp
-        mPointContainerLeftRightPadding = dp2px(context, 0);
+        mPointContainerLeftRightPadding = dp2px(context, 8);
         //默认指示器提示文字大小8sp
         mTipTextSize = sp2px(context, 8);
         //默认指示器容器的背景图片
@@ -443,8 +443,8 @@ public class Banner extends RelativeLayout {
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            ImageView view = createItemView(position);
-            mBannerAdapter.setImageViewSource(view, position);
+            View view = createItemView(position);
+            mBannerAdapter.setViewSource(view, position);
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -475,23 +475,16 @@ public class Banner extends RelativeLayout {
         }
     }
 
-    /**
-     * create itemView
-     * @param position position
-     * @return imageView
-     */
-    private ImageView createItemView(int position) {
-        ImageView iv = mItemArrays.get(position);
-        if (iv == null) {
-            iv = new ImageView(mContext);
-            iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+    private View createItemView(int position){
+        View view = mItemArrays.get(position);
+        if (view == null) {
+            view = mBannerAdapter.getView(position);
             if (position != 0 && position != mData.size() - 1) {
-                mItemArrays.put(position, iv);
+                mItemArrays.put(position, view);
             }
         }
-        return iv;
+        return view;
     }
-
 
     private OnBannerItemClickListener onVpItemClickListener;
 
@@ -612,6 +605,7 @@ public class Banner extends RelativeLayout {
      * 通知数据已经放生改变
      */
     public void notifyDataHasChanged() {
+        pauseScroll();
         initPoints();
         mViewPager.getAdapter().notifyDataSetChanged();
         mViewPager.setCurrentItem(0, false);

@@ -64,7 +64,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
 
     @Override
     public void setData(Map<String, String> map) {
-        Log.i("tzy","map = " + map.toString());
         if (map == null || map.isEmpty()){
             setVisibility(GONE);
             return;
