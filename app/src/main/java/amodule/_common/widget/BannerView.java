@@ -148,7 +148,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
     }
 
     public void initAdData(){
-        if(mAdControl == null){
+        if(mAdControl == null && ToolsDevice.isNetworkAvailable(getContext())){
             mAdIDArray.add(ARTICLE_CONTENT_BOTTOM);
             mAdControl = new XHAllAdControl(mAdIDArray,
                     (final Map<String, String> map) ->
@@ -192,6 +192,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
         for (int index = 0; index < weightArray.length; index++) {
             Map<String, String> map = arrayList.get(index);
             if(map.equals(adMap)){
+                weightArray[index] = 0;
                 continue;
             }
             String weightStr = map.get("weight");
@@ -199,6 +200,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
             weightSum += currentWeight;
             weightArray[index] = weightSum;
         }
+        //TODO
         setCurrentItem(weightArray.length-1);
         Log.i("tzy","index = " + (weightArray.length-1));
         //随机权重
@@ -206,7 +208,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
 //        for (int index = 0; index < weightArray.length; index++) {
 //            if (randomWeight < weightArray[index]) {
 //                setCurrentItem(index);
-//                Log.i("tzy","index = " + index);
 //                break;
 //            }
 //        }

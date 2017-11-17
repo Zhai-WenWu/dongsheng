@@ -89,6 +89,11 @@ public class BaseItemView extends RelativeLayout {
     }
 
     protected void setViewImage(final ImageView v, String value) {
+        if(null == v) return;
+        if(TextUtils.isEmpty(value)){
+            v.setVisibility(GONE);
+            return;
+        }
         v.setVisibility(View.VISIBLE);
 
         if (value.indexOf("http") == 0) {// 异步请求网络图片

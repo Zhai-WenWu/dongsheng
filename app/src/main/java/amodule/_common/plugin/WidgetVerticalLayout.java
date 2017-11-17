@@ -34,6 +34,9 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
 
 public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData {
 
+    public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
+    public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
+
     LayoutInflater mInflater;
 
     LinearLayout mExtraTop, mExtraBottom;
@@ -104,11 +107,13 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         Stream.of(array).forEach(data -> {
             addViewByData(mExtraTop, data, false);
         });
+        requestLayout();
     }
 
     private void initTopLayout(){
         if(mExtraTop == null){
             mExtraTop = new LinearLayout(getContext());
+            mExtraTop.setLayoutParams(new LinearLayout.LayoutParams(LLM,LLW));
             mExtraTop.setOrientation(VERTICAL);
             addView(mExtraTop, 0);
         }else if(mExtraTop.getChildCount() > 0){
@@ -127,10 +132,12 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         Stream.of(array).forEach(data -> {
             addViewByData(mExtraBottom, data, true);
         });
+        requestLayout();
     }
     private void initBootomLayout(){
         if(mExtraBottom == null){
             mExtraBottom = new LinearLayout(getContext());
+            mExtraBottom.setLayoutParams(new LinearLayout.LayoutParams(LLM,LLW));
             mExtraBottom.setOrientation(VERTICAL);
             addView(mExtraBottom);
         }else if(mExtraBottom.getChildCount() > 0){

@@ -115,9 +115,9 @@ public class SLooperViewPager extends ViewPager {
                     position =0 :开始的边界
                     position =mSLooperAdapter.getCount():结束的边界
                  */
-                    Log.w("tzy","position = " + position);
-                    Log.w("tzy","mSLooperAdapter.getCount() = " + mSLooperAdapter.getCount());
-                    Log.w("tzy","innerPosition = " + innerPosition);
+//                    Log.w("tzy","position = " + position);//0
+//                    Log.w("tzy","mSLooperAdapter.getCount() = " + mSLooperAdapter.getCount());//8
+//                    Log.w("tzy","innerPosition = " + innerPosition);//5
                 if (positionOffset == 0 && mPreviousOffset == 0 && (position == 0 || position == mSLooperAdapter.getCount())) {
                     //强制回到映射位置
                     setCurrentItem(innerPosition, false);

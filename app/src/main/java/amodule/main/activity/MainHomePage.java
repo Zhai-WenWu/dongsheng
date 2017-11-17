@@ -111,7 +111,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         }
     }
 
+    long startLoadTime;
     public void loadData() {
+        startLoadTime = System.currentTimeMillis();
         mDataControler.loadCacheHomeData(getHeaderCallback(true));
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
         mDataControler.loadServiceTopData(new InternetCallback(this) {
@@ -138,10 +140,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     }
 
-    public void loadHeaderData() {
-
-    }
-
     /**
      * 获取header数据回调
      *
@@ -153,16 +151,18 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         return new InternetCallback(this) {
             @Override
             public void loaded(int i, String s, Object o) {
+                Log.i("tzy",(isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                 HeaderDataLoaded = true;
-                if(!LoadOver){
-                    EntryptData(!LoadOver);
-                }
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
+                    if (mViewContrloer != null)
+                        mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                    Log.i("tzy" , "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
                     }
-                    if (mViewContrloer != null)
-                        mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                }
+                if(!LoadOver){
+                    EntryptData(!LoadOver);
                 }
             }
         };
@@ -279,7 +279,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (mViewContrloer != null) {
             mViewContrloer.refreshBouy();
         }
-        loadHeaderData();
+        loadData();
         EntryptData(true);
     }
 

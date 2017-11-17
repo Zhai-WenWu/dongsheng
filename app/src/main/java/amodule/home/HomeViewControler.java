@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.annimon.stream.Stream;
 import com.xiangha.R;
 
 import java.util.List;
@@ -137,15 +138,16 @@ public class HomeViewControler {
             mHeaderControler.setVisibility(false);
             return;
         }
-        int length = data.size();
-        for(int index = 0 ; index < length ; index ++){
-            Map<String,String> map = data.get(index);
-            String widgetData = map.get("widgetData");
-            Map<String, String> dataMap = StringManager.getFirstMap(widgetData);
-            dataMap = StringManager.getFirstMap(dataMap.get("parameter"));
-            String isCache = dataMap.get("isCache");
-            map.put("isCache", TextUtils.isEmpty(isCache) ? "1" : isCache);
-        }
+//        Stream.of(data).forEach(map -> map.put("cache",isShowCache ? "2" : "1"));
+//        int length = data.size();
+//        for(int index = 0 ; index < length ; index ++){
+//            Map<String,String> map = data.get(index);
+//            String widgetData = map.get("widgetData");
+//            Map<String, String> dataMap = StringManager.getFirstMap(widgetData);
+//            dataMap = StringManager.getFirstMap(dataMap.get("parameter"));
+//            String isCache = dataMap.get("isCache");
+//            map.put("isCache", TextUtils.isEmpty(isCache) ? "1" : isCache);
+//        }
         mHeaderControler.setData(data, isShowCache);
     }
 

@@ -9,15 +9,12 @@ import android.util.AttributeSet;
 import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Tools.BuoyControler;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 
 /**
  * Description :
@@ -51,8 +48,11 @@ public class HomeActivityIconView extends AppCompatImageView {
         setImageResource(R.drawable.home_default_icon);
         int padding = Tools.getDimen(getContext(), R.dimen.dp_10);
         setPadding(padding,0,padding,0);
-        initData();
-        loadData();
+        //请求数据
+        postDelayed(() -> {
+            initData();
+            loadData();
+        },200);
     }
 
     //初始化数据

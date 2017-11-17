@@ -65,23 +65,17 @@ public class HomeDataControler {
 
     //读取缓存数据
     public void loadCacheHomeData(InternetCallback callback) {
-        final Handler handler = new Handler(Looper.getMainLooper(),
-                msg -> {
-                    callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", msg.obj);
-                    return false;
-                });
+        final Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
             if (!TextUtils.isEmpty(hoemDataStr)) {
-                Message msg = handler.obtainMessage(0, hoemDataStr);
-                handler.sendMessage(msg);
+                handler.post(() -> callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr));
             }
         }).start();
     }
 
     public void saveCacheHomeData(String data) {
         if(TextUtils.isEmpty(data) || data.trim().length() < 10) return;
-        Log.i("tzy","saveCacheHomeData");
         FileManager.saveFileToCompletePath(CACHE_PATH, data, false);
     }
 

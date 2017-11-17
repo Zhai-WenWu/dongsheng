@@ -59,8 +59,8 @@ class SLooperAdapter extends PagerAdapter {
 
     @Override
     public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
         mPagerAdapter.notifyDataSetChanged();
+        super.notifyDataSetChanged();
     }
 
     @Override
@@ -78,8 +78,10 @@ class SLooperAdapter extends PagerAdapter {
         //viewPager真正的可用的个数
         int realCount = getInnerCount();
         //内层没有可用的Item则换回为零
-        if (realCount == 0)
+        if (realCount == 0){
+
             return 0;
+        }
         int realPosition = (position - 1) % realCount;
         if (realPosition < 0)
             realPosition += realCount;
@@ -101,8 +103,6 @@ class SLooperAdapter extends PagerAdapter {
     int toLooperPosition(int position) {
         if (getInnerCount() > 1)
             return position + 1;
-//        else if(position >= getInnerCount())
-//            return  position - 1;
         else
             return position;
     }

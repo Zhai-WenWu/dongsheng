@@ -436,9 +436,15 @@ public class Banner extends RelativeLayout {
      */
     private final class InnerPagerAdapter extends PagerAdapter {
 
+        List mDataInner = new ArrayList<>();
+        public InnerPagerAdapter(List data){
+            mDataInner = data;
+        }
+
         @Override
         public int getCount() {
-            return mData.size();
+//            Log.i("tzy","InnerPagerAdapter.getCount()" + mDataInner.size());
+            return mDataInner.size();
         }
 
         @Override
@@ -578,12 +584,11 @@ public class Banner extends RelativeLayout {
      * 设置数据的集合
      */
     private void setSource() {
-        List list = mBannerAdapter.getDataList();
-        if (list == null) {
+        if (mBannerAdapter.getDataList() == null) {
             Log.d(TAG, "setSource: list==null");
             return;
         }
-        this.mData = list;
+        this.mData = mBannerAdapter.getDataList();
         setAdapter();
     }
 
@@ -591,7 +596,7 @@ public class Banner extends RelativeLayout {
      * 给viewpager设置适配器
      */
     private void setAdapter() {
-        mViewPager.setAdapter(new InnerPagerAdapter());
+        mViewPager.setAdapter(new InnerPagerAdapter(mData));
         mViewPager.addOnPageChangeListener(new ChangePointListener());
     }
 

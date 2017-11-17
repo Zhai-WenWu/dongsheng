@@ -58,7 +58,7 @@ public class HomePushIconView extends AppCompatImageView {
     }
 
     private void initialize() {
-        initPopuWindow();
+
     }
 
     private int xoff = 0;
@@ -132,6 +132,9 @@ public class HomePushIconView extends AppCompatImageView {
     }
 
     public void showPulishMenu() {
+        if (mPopupWindow == null){
+            initPopuWindow();
+        }
         mPopupWindow.showAsDropDown(this, -100, 0);
     }
 
