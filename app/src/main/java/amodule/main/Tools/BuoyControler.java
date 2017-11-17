@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -16,13 +15,11 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.annimon.stream.Stream;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -57,7 +54,7 @@ public class BuoyControler {
             return;
         }
         //请求数据
-        ReqInternet.in().doGet(StringManager.API_GET_ACTIVITY_BOUY, new InternetCallback(context) {
+        ReqInternet.in().doGet(StringManager.API_GET_ACTIVITY_BUOY, new InternetCallback(context) {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
