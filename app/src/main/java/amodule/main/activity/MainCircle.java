@@ -1,4 +1,4 @@
-package amodule.quan.activity;
+package amodule.main.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

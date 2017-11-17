@@ -49,10 +49,10 @@ public class HomeHeaderControler {
         final int length = Math.min(array.size(),mLayouts.length);
         for(int index = 0 ; index < length ; index ++){
             Map<String,String> map = array.get(index);
-//            if(isShowCache && "1".equals(map.get("isCache"))){
-//                mLayouts[index].setVisibility(View.GONE);
-//                continue;
-//            }
+            if(isShowCache && "1".equals(map.get("cache"))){
+                mLayouts[index].setVisibility(View.GONE);
+                continue;
+            }
             mLayouts[index].setData(map);
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE,twoLevelArray[index],threeLevelArray[index]);
             mLayouts[index].setVisibility(View.VISIBLE);

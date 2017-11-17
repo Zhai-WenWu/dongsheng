@@ -128,8 +128,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
         setOnBannerItemClickListener(position -> {
             if (position < 0 || position >= arrayList.size()) return;
             Map<String, String> dataMapTemp = arrayList.get(position);
-            if ("2".equals(dataMapTemp.get(""))) {
-                mAdControl.onAdClick(0,"");
+            if ("2".equals(dataMapTemp.get("isAd"))) {
+                mAdControl.onAdClick(0,"0");
                 return;
             }
             if (mOnBannerItemClickCallback != null) {
@@ -201,16 +201,16 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
             weightArray[index] = weightSum;
         }
         //TODO
-        setCurrentItem(weightArray.length-1);
-        Log.i("tzy","index = " + (weightArray.length-1));
+//        setCurrentItem(weightArray.length-1);
+//        Log.i("tzy","index = " + (weightArray.length-1));
         //随机权重
-//        final int randomWeight = Tools.getRandom(0, weightSum);
-//        for (int index = 0; index < weightArray.length; index++) {
-//            if (randomWeight < weightArray[index]) {
-//                setCurrentItem(index);
-//                break;
-//            }
-//        }
+        final int randomWeight = Tools.getRandom(0, weightSum);
+        for (int index = 0; index < weightArray.length; index++) {
+            if (randomWeight < weightArray[index]) {
+                setCurrentItem(index);
+                break;
+            }
+        }
 
     }
 

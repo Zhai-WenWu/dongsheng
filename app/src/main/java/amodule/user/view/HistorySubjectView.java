@@ -20,7 +20,7 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
-import amodule.quan.activity.MainCircle;
+import amodule.main.activity.MainCircle;
 import amodule.quan.activity.ShowSubject;
 import amodule.user.db.BrowseHistorySqlite;
 import aplug.basic.ReqInternet;

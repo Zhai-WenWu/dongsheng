@@ -18,6 +18,7 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.helper.WidgetDataHelper;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.Tools.BuoyControler;
 import amodule.main.activity.MainHome;
@@ -138,16 +139,10 @@ public class HomeViewControler {
             mHeaderControler.setVisibility(false);
             return;
         }
-//        Stream.of(data).forEach(map -> map.put("cache",isShowCache ? "2" : "1"));
-//        int length = data.size();
-//        for(int index = 0 ; index < length ; index ++){
-//            Map<String,String> map = data.get(index);
-//            String widgetData = map.get("widgetData");
-//            Map<String, String> dataMap = StringManager.getFirstMap(widgetData);
-//            dataMap = StringManager.getFirstMap(dataMap.get("parameter"));
-//            String isCache = dataMap.get("isCache");
-//            map.put("isCache", TextUtils.isEmpty(isCache) ? "1" : isCache);
-//        }
+        Stream.of(data).forEach(map -> {
+            Map<String,String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
+            map.put("cache","2".equals(temp.get("isCache"))?"2":"1");
+        });
         mHeaderControler.setData(data, isShowCache);
     }
 
