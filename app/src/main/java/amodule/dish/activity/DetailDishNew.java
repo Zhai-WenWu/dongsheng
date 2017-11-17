@@ -107,7 +107,11 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private void initData() {
         adapterDishNew = new AdapterDishNew(listView,maplist);
         listView.setAdapter(adapterDishNew);
-        if (detailDishViewManager == null) detailDishViewManager = new DetailDishViewManager(this,listView,state);
+        if (detailDishViewManager == null) {
+            detailDishViewManager = new DetailDishViewManager(this, listView, state);
+            detailDishViewManager.initBeforeData(img);
+        }
+
         if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code);
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override

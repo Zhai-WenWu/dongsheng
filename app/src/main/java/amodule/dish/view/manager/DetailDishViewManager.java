@@ -1,6 +1,7 @@
 package amodule.dish.view.manager;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -94,7 +95,14 @@ public class DetailDishViewManager {
         listView.addHeaderView(layoutHeader);
         listView.addFooterView(layoutFooter);
         listView.setVisibility(View.VISIBLE);
+    }
 
+    /**
+     * 处理预先加载数据
+     */
+    public void initBeforeData(String img){
+        Log.i("wyl","img::initBeforeData:"+img);
+        if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img);
     }
     /**
      * 处理标题信息数据
@@ -107,7 +115,6 @@ public class DetailDishViewManager {
         }
     }
     public void handlerTitleName(String name){
-        Log.i("xianghaTag","name:::"+name);
         if(dishTitleViewControl!=null){
             dishTitleViewControl.setNickName(name);
         }

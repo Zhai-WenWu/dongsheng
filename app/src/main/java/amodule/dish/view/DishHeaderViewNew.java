@@ -244,20 +244,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             }
         };
-//        mThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                for(; num > 0; num--) {
-//                    handler.sendEmptyMessage(num);
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                handler.sendEmptyMessage(0);
-//            }
-//        });
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
                 .load(imgUrl)
                 .setRequestListener(new RequestListener<GlideUrl, Bitmap>() {

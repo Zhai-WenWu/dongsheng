@@ -125,6 +125,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             public void onClick(View v) {
                 Intent intent = new Intent(DetailDish.this,DetailDishNew.class);
                 intent.putExtra("code",code);
+                intent.putExtra("img",img);
                 DetailDish.this.startActivity(intent);
             }
         });
