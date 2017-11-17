@@ -2,6 +2,8 @@ package amodule.dish.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -43,7 +45,6 @@ public class DishStepView extends ItemBaseView {
 
     private ImageView loadProgress;
     private ImageView itemImg1,itemGif,itemGifHint;
-    private TextView itemNum;
     private StepViewCallBack callback;
 
     private boolean isHasVideo = false;
@@ -69,27 +70,23 @@ public class DishStepView extends ItemBaseView {
         itemImg1 = (ImageView) findViewById(R.id.itemImg1);
         itemGif = (ImageView) findViewById(R.id.a_dish_stem_item_gif);
         itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
-        itemNum = (TextView) findViewById(R.id.itemNum);
     }
 
     public void setData(Map<String, String> map, StepViewCallBack stepViewCallBack, int position) {
         this.position= position;
         this.callback = stepViewCallBack;
-        String text = map.get("info").trim();
+        String text ="<b><tt>"+map.get("num")+".</tt></b>";
+        int size_num= text.length();
+        text += map.get("info").trim();
         text = text.replace("\n","").replace("\r","");
-        itemText1.setText(text);
-        itemNum.setText(map.get("num"));
+        itemText1.setText(Html.fromHtml(text));
+
         this.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onClick();
             }
         });
-        if(position==0) findViewById(R.id.img_view).setVisibility(View.VISIBLE);
-        else findViewById(R.id.img_view).setVisibility(View.GONE);
-        if(TextUtils.isEmpty(map.get("img"))|| DetailDishViewManager.showNumLookImage>=3){
-            findViewById(R.id.img_view).setVisibility(View.GONE);
-        }
         //数据
         itemGifHint.setVisibility(View.GONE);
         itemImg1.setVisibility(View.VISIBLE);
@@ -108,6 +105,7 @@ public class DishStepView extends ItemBaseView {
                 final String gifUrl = videoMap.get("gif");
                 final String imgUrl = videoMap.get("img");
                 if(!TextUtils.isEmpty(gifUrl)){
+                    findViewById(R.id.img_view).setVisibility(View.GONE);
                     isHasVideo = true;
                     loadImg(imgUrl);
 
@@ -221,8 +219,7 @@ public class DishStepView extends ItemBaseView {
         else layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
         int dp_12= Tools.getDimen(context, R.dimen.dp_12);
         int dp_8= Tools.getDimen(context, R.dimen.dp_8);
-        int dp_23= Tools.getDimen(context, R.dimen.dp_23);
-        layoutParams.setMargins(0,dp_12,dp_23,0);
+        layoutParams.setMargins(0,dp_12,0,0);
         imgView.setLayoutParams(layoutParams);
     }
 

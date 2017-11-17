@@ -8,7 +8,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
 import amodule.health.activity.DetailIngre;
 import third.mall.tool.ToolView;
+import third.mall.widget.ListViewForScrollView;
 import xh.basic.tool.UtilString;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
@@ -33,9 +36,15 @@ import static amodule.dish.activity.DetailDish.tongjiId;
 /**
  * 主辅料
  */
-public class DishIngreDataShow extends ItemBaseView {
-    private LinearLayout linear_data;
+public class DishIngreDataShow extends ItemBaseView implements View.OnClickListener {
     private LinearLayout recommendAd_linear;
+    private ArrayList<Map<String, String>> listAll;
+    private ArrayList<Map<String, String>> lists = new ArrayList<>();
+    private ArrayList<Map<String, String>> listNoAll = new ArrayList<>();
+    private AdapterSimple adapter;
+    private String isSpread = "";//1--未展开状态，2--展开状态
+    private boolean isSupport = false;
+    private TextView ingre_all_tv;
 
     public DishIngreDataShow(Context context) {
         super(context, R.layout.view_dish_data_show);
@@ -44,62 +53,71 @@ public class DishIngreDataShow extends ItemBaseView {
     public DishIngreDataShow(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.view_dish_data_show);
     }
+
     public DishIngreDataShow(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.view_dish_data_show);
     }
+
     @Override
     public void init() {
         super.init();
-        linear_data = (LinearLayout) findViewById(R.id.linear_data);
         recommendAd_linear = (LinearLayout) findViewById(R.id.recommendAd_linear);
+        findViewById(R.id.ingre_all).setOnClickListener(this);
+        ingre_all_tv= (TextView) findViewById(R.id.ingre_all_tv);
+        isSupport = false;
     }
+
     /**
      * 设置数据
-     *
-     * @param lists
      */
-    public void setData(final ArrayList<Map<String, String>> lists) {
-        if (lists == null) return;
-        //主料
-        View view = LayoutInflater.from(context).inflate(R.layout.view_dish_header_data, null);
-        TableLayout zhuLiaoTab = (TableLayout) view.findViewById(R.id.zhu_liao_tab);
-        TextView zhu_tv = (TextView) view.findViewById(R.id.zhu_tv);
-        zhu_tv.setText("用料");
-
-        if (lists.size() > 0) {
-            zhuLiaoTab.setVisibility(View.VISIBLE);
-            for (Map<String, String> map : lists) {
-                map.put("goIngre", map.get("url").length() > 0 ? "ignore" : "hide");
+    public void setData(final ArrayList<Map<String, String>> listmap) {
+        if (listmap == null || listmap.size() <= 0) return;
+        this.listAll = listmap;
+        for (Map<String, String> map : listAll) {
+            map.put("goIngre", map.get("url").length() > 0 ? "ignore" : "hide");
+        }
+        if (listAll.size() > 4) {
+            isSupport = true;
+            for (int i = 0; i < 4; i++) {
+                listNoAll.add(listAll.get(i));
             }
-            AdapterSimple adapter = new AdapterSimple(zhuLiaoTab, lists,
+        }
+        lists.addAll( isSupport ? listNoAll : listAll);
+        isSpread = isSupport ? "1" : "2";
+        findViewById(R.id.ingre_all).setVisibility(isSupport?View.VISIBLE:View.GONE);
+        ListViewForScrollView listview_scroll = (ListViewForScrollView) findViewById(R.id.listview_scroll);
+        if (lists.size() > 0) {
+            listview_scroll.setVisibility(View.VISIBLE);
+            adapter = new AdapterSimple(listview_scroll, lists,
                     R.layout.table_cell_burden,
                     new String[]{"name", "goIngre", "content"},
                     new int[]{R.id.itemText1, R.id.itemImg1, R.id.itemText2});
-            SetDataView.view(zhuLiaoTab, 1, adapter, null,
-                    new SetDataView.ClickFunc[]{new SetDataView.ClickFunc() {
-                        @Override
-                        public void click(int index, View v) {
-                            Map<String, String> ingre = lists.get(index);
-                            if (ingre.get("url").length() > 0) {
-                                XHClick.mapStat(context, tongjiId, "菜谱区域的点击", "用料部分的点击量");
-                                XHClick.mapStat(context, tongjiId, "食材部分的点击量", "");
-                                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), ingre.get("url"), false);
-                            }
-                        }
-                    }});
-            linear_data.addView(view);
-        } else zhuLiaoTab.setVisibility(View.GONE);
-
-
+            listview_scroll.setAdapter(adapter);
+            listview_scroll.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Map<String, String> ingre = lists.get(position);
+                    if (ingre.get("url").length() > 0) {
+                        XHClick.mapStat(context, tongjiId, "菜谱区域的点击", "用料部分的点击量");
+                        XHClick.mapStat(context, tongjiId, "食材部分的点击量", "");
+                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), ingre.get("url"), false);
+                    }
+                }
+            });
+            adapter.notifyDataSetChanged();
+        } else listview_scroll.setVisibility(View.GONE);
     }
+
 
     private void handleRecommendAD(ArrayList<Map<String, String>> lists) {
         //处理广告
-        if (lists.get(0).containsKey("recommendAD") && !TextUtils.isEmpty(lists.get(0).get("recommendAD")) && !"[]".equals((lists.get(0).get("recommendAD")))) {
-            recommendAd_linear.setVisibility(View.VISIBLE);
-            final ArrayList<Map<String, String>> list_recommend = UtilString.getListMapByJson(lists.get(0).get("recommendAD"));
-            String name = list_recommend.get(0).get("name");
-            String desc = list_recommend.get(0).get("desc");
+//        if (lists.get(0).containsKey("recommendAD") && !TextUtils.isEmpty(lists.get(0).get("recommendAD")) && !"[]".equals((lists.get(0).get("recommendAD")))) {
+//            recommendAd_linear.setVisibility(View.VISIBLE);
+//            final ArrayList<Map<String, String>> list_recommend = UtilString.getListMapByJson(lists.get(0).get("recommendAD"));
+//            String name = list_recommend.get(0).get("name");
+//            String desc = list_recommend.get(0).get("desc");
+        String name = "电商不错哦";
+        String desc = "心态决定人生，细节决定成败";
             if (TextUtils.isEmpty(name)) name = "推荐";
 
             if (TextUtils.isEmpty(name) && TextUtils.isEmpty(desc)) {
@@ -124,9 +142,6 @@ public class DishIngreDataShow extends ItemBaseView {
             } else tv_recommend.setVisibility(View.GONE);
 
             int dp_28 = (int) this.getResources().getDimension(R.dimen.dp_28);
-//            LayoutParams layoutParams= new LayoutParams(LayoutParams.WRAP_CONTENT,dp_28);
-//            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-//            layoutParams.s
             quan_title_1.setPadding(distance_commend, 0, 0, 0);
             if (num_text >= desc.length()) {
                 quan_title_1.setText(desc);
@@ -139,16 +154,16 @@ public class DishIngreDataShow extends ItemBaseView {
                 quan_title_2.setVisibility(View.VISIBLE);
             }
             //点击跳转页面
-            recommendAd_linear.setOnClickListener(new View.OnClickListener() {
+            recommendAd_linear.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), list_recommend.get(0).get("link"), true);
+//                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), list_recommend.get(0).get("link"), true);
                     XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), tongjiId, "广告/运营", "用料下方广告位");
                 }
             });
-        } else {
-            recommendAd_linear.setVisibility(View.GONE);
-        }
+//        } else {
+//            recommendAd_linear.setVisibility(View.GONE);
+//        }
     }
 
     /**
@@ -166,5 +181,28 @@ public class DishIngreDataShow extends ItemBaseView {
         int tv_pad = ToolView.dip2px(context, 1.0f);
         int num = (tv_waith + tv_pad) / (tv_distance + tv_pad);
         return num;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ingre_all:
+                lists.clear();
+                setIngreState();
+                break;
+        }
+    }
+    private void setIngreState(){
+        if("1".equals(isSpread)){
+            lists.addAll(listAll);
+            isSpread="2";
+            ingre_all_tv.setText("收起");
+            adapter.notifyDataSetChanged();
+        }else if("2".equals(isSpread)){
+            lists.addAll(listNoAll);
+            isSpread="1";
+            ingre_all_tv.setText("展开全部");
+            adapter.notifyDataSetChanged();
+        }
     }
 }

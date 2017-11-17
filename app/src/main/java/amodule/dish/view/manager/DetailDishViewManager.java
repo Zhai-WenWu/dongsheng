@@ -1,12 +1,15 @@
 package amodule.dish.view.manager;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -48,6 +51,7 @@ public class DetailDishViewManager {
     public DishIngreDataShow dishIngreDataShow;
     public DishRecommedAndAdView dishRecommedAndAdView;
     public DishExplainView dishExplainView;
+    public DishADBannerView dishADBannerView;
 
     /**
      * 对view进行基础初始化
@@ -82,13 +86,21 @@ public class DetailDishViewManager {
         dishIngreDataShow= new DishIngreDataShow(mAct);
         dishIngreDataShow.setVisibility(View.GONE);
         //banner
-        DishADBannerView dishADBannerView= new DishADBannerView(mAct);
-        dishADBannerView.setData(mAct);
+        dishADBannerView= new DishADBannerView(mAct);
 
         layoutHeader.addView(dishHeaderViewNew);
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
         layoutHeader.addView(dishIngreDataShow);
+        TextView text = new TextView(activity);
+        text.setPadding(Tools.getDimen(activity, R.dimen.dp_20), Tools.getDimen(activity, R.dimen.dp_20), 0, 0);
+        text.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
+        text.setTextColor(Color.parseColor("#333333"));
+        TextPaint tp = text.getPaint();
+        tp.setFakeBoldText(true);
+        text.setText("做法");
+        layoutHeader.addView(text);
+
         //foot
         dishExplainView = new DishExplainView(mAct);
         dishExplainView.setVisibility(View.GONE);
@@ -183,8 +195,8 @@ public class DetailDishViewManager {
     /**
      * 处理广告信息
      */
-    public void handlerAdDataView() {
-
+    public void handlerBannerView(ArrayList<Map<String, String>> list) {
+            if(dishADBannerView!=null)dishADBannerView.setData(list.get(0));
     }
     /**
      * 处理小贴士信息

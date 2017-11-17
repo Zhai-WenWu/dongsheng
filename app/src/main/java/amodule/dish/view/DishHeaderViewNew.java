@@ -332,10 +332,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             });
             dishvideo_img.setVisibility(View.GONE);
-            if(mVideoPlayerController==null)Log.i("wyl","mVideoPlayerController为空");
-            if(dishVidioLayout==null)Log.i("wyl","dishVidioLayout为空");
-            if(videoViewGroup==null)Log.i("wyl","videoViewGroup为空");
-            if(callBack==null)Log.i("wyl","callBack为空");
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
             callBack.videoImageOnClick();
             isUrlVaild = true;

@@ -1,5 +1,6 @@
 package amodule.dish.activity;
 
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,21 +12,20 @@ import android.widget.ListView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
-import amodule.main.Main;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
+
+import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * 菜谱详情页原生标准
@@ -44,6 +44,8 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private DetailDishDataManager detailDishDataManager;//数据控制器
     private AdapterDishNew adapterDishNew;
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
+    private Map<String,String> mapTop = new HashMap<>();
+    private Map<String,String> mapBase = new HashMap<>();
     private boolean isHasVideo;//当前是否是视频
     private String customerCode;
 
@@ -119,21 +121,54 @@ public class DetailDishNew extends BaseAppCompatActivity {
                 dishTypeData(type,list);
             }
         });
+        adapterDishNew.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
+            @Override
+            public void onClickPosition(int position) {
+                if(!getStateMakes(maplist)){//无图时不执行
+                    return;
+                }
+//                if(!isOnClickImageShow){
+//                    isOnClickImageShow=true;
+//                    ++showNumLookImage;
+//                }
+                XHClick.mapStat(DetailDishNew.this, tongjiId, "菜谱区域的点击", "步骤图点击");
+                Intent intent = new Intent(DetailDishNew.this, MoreImageShow.class);
+                ArrayList<Map<String, String>> listdata = new ArrayList<Map<String, String>>();
+                listdata.addAll(maplist);
+                if (!TextUtils.isEmpty(mapBase.get("remark"))) {
+                    Map<String, String> map_temp = new HashMap<String, String>();
+                    if(mapTop != null){
+                        map_temp.put("img", mapTop.get("img"));
+                    }else{
+                        map_temp.put("img", "");
+                    }
+                    map_temp.put("info", "小贴士：\n" + mapBase.get("remark"));
+                    map_temp.put("num", String.valueOf(maplist.size() + 1));
+                    listdata.add(map_temp);
+                }
+                intent.putExtra("data", listdata);
+                intent.putExtra("index", position);
+                intent.putExtra("key", tongjiId);
+                DetailDishNew.this.startActivity(intent);
+            }
+        });
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list){
         switch (type){
             case DetailDishDataManager.DISH_DATA_TOP:
-                dishName= list.get(0).get("name");
-                isHasVideo = "2".equals(list.get(0).get("type"));
+                mapTop= list.get(0);
+                dishName= mapTop.get("name");
+                isHasVideo = "2".equals(mapTop.get("type"));
                 detailDishViewManager.handlerHeaderView(list,null);
                 detailDishViewManager.handlerHoverViewCode(code);
-                customerCode= list.get(0).get("customerCode");
+                customerCode= mapTop.get("customerCode");
                 if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
                         state = "";
                 }
-                detailDishViewManager.handlerTitle(list.get(0),code,isHasVideo,list.get(0).get("dishState"),loadManager,state);
+                detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);
                 break;
             case DetailDishDataManager.DISH_DATA_BASE:
+                mapBase = list.get(0);
                 detailDishViewManager.handlerDishData(list);
                 detailDishViewManager.handlerExplainView(list);
                 break;
@@ -145,6 +180,7 @@ public class DetailDishNew extends BaseAppCompatActivity {
                 detailDishViewManager.handlerIngreView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_BANNER:
+                detailDishViewManager.handlerBannerView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_STEP://步骤
                 maplist.addAll(list);
@@ -180,8 +216,13 @@ public class DetailDishNew extends BaseAppCompatActivity {
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
-
-    public void handleData() {
-
+    private boolean getStateMakes(ArrayList<Map<String, String>> listdata){
+        if(listdata!=null&&listdata.size()>0){
+            for(int i=0,size=listdata.size();i<size;i++){
+                if(!TextUtils.isEmpty(listdata.get(i).get("img")))
+                    return true;
+            }
+        }
+        return false;
     }
 }
