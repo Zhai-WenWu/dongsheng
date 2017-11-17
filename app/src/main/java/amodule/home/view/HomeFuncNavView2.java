@@ -13,7 +13,7 @@ import com.xiangha.R;
 
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule._common.helper.WidgetDataHelper;
+import amodule._common.utility.WidgetUtility;
 
 /**
  * Description :
@@ -52,13 +52,13 @@ public class HomeFuncNavView2 extends LinearLayout {
     }
 
     protected void initData() {
-        WidgetDataHelper.setTextToView(getTextView(R.id.text_left_1),"今日三餐");
-        WidgetDataHelper.setTextToView(getTextView(R.id.text_left_2),"早.中.晚餐食谱");
-        WidgetDataHelper.setResToImage(getImageView(R.id.icon_left_1),R.drawable.ic_launcher);
+        WidgetUtility.setTextToView(getTextView(R.id.text_left_1),"今日三餐");
+        WidgetUtility.setTextToView(getTextView(R.id.text_left_2),"早.中.晚餐食谱");
+        WidgetUtility.setResToImage(getImageView(R.id.icon_left_1),R.drawable.ic_launcher);
 
-        WidgetDataHelper.setTextToView(getTextView(R.id.text_right_1),"关注/社区");
-        WidgetDataHelper.setTextToView(getTextView(R.id.text_right_2),"晒美食，关注美食家");
-        WidgetDataHelper.setResToImage(getImageView(R.id.icon_right_1),R.drawable.ic_launcher);
+        WidgetUtility.setTextToView(getTextView(R.id.text_right_1),"关注/社区");
+        WidgetUtility.setTextToView(getTextView(R.id.text_right_2),"晒美食，关注美食家");
+        WidgetUtility.setResToImage(getImageView(R.id.icon_right_1),R.drawable.ic_launcher);
     }
 
     protected TextView getTextView(int id){

@@ -23,6 +23,7 @@ import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
+import amodule.home.adapter.HomeSecondRecyclerAdapter;
 import amodule.home.module.HomeSecondModule;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
@@ -68,7 +69,7 @@ public class HomeSecondListFragment extends Fragment {
     private BaseAppCompatActivity mActivity;
     private PtrClassicFrameLayout mPtrFrameLayout;
     private RvListView mRv;
-    private HomeAdapter mHomeAdapter;
+    private HomeSecondRecyclerAdapter mHomeAdapter;
     private LoadManager mLoadManager;
     
     private HomeModuleBean mModuleBean;
@@ -174,7 +175,7 @@ public class HomeSecondListFragment extends Fragment {
         }
     }
     private void requestData() {
-        mHomeAdapter = new HomeAdapter(mActivity,mListData,mAdControl);
+        mHomeAdapter = new HomeSecondRecyclerAdapter(mActivity,mListData,mAdControl);
         mHomeAdapter.setHomeModuleBean(mModuleBean);
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
         if(!mLoadOver){

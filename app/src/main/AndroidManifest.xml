@@ -1553,12 +1553,14 @@
             android:name="amodule.home.activity.HomeSecondListActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/titleTheme"/>
 
         <activity
             android:name="amodule.home.activity.HomeWeekListActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/titleTheme"/>
 
         <!--Baidu AD end-->

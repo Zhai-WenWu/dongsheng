@@ -23,6 +23,7 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import amodule.home.HomeModuleControler;
+import amodule.home.adapter.HomeSecondRecyclerAdapter;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.HomeTabHScrollView;
@@ -62,7 +63,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
     
     private PtrClassicFrameLayout mPtrFrameLayout;
     private RvListView mRv;
-    private HomeAdapter mHomeAdapter;
+    private HomeSecondRecyclerAdapter mHomeAdapter;
     private HomeModuleBean mModuleBean;
 
     @Override
@@ -111,7 +112,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
     }
 
     private void requestDate() {
-        mHomeAdapter = new HomeAdapter(this,mListData,mAdControl);
+        mHomeAdapter = new HomeSecondRecyclerAdapter(this,mListData,mAdControl);
         mHomeAdapter.setHomeModuleBean(mModuleBean);
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
         if(!mLoadOver){

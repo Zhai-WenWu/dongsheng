@@ -11,6 +11,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import amodule._common.utility.WidgetUtility;
 import amodule._common.widget.baseview.BaseRecyclerItem;
 
 /**
@@ -43,13 +44,8 @@ public class RecyclerItem3 extends BaseRecyclerItem {
 
     @Override
     protected void onDataReady(Map<String, String> data) {
-        String image = data.get("img");
-        setViewImage(mImageView1, image);
-        String t1 = data.get("text1");
-        mTextView1.setText(t1);
-        mTextView1.setVisibility(TextUtils.isEmpty(t1) ? View.GONE : View.VISIBLE);
-        String t2 = data.get("text2");
-        mTextView2.setText(t2);
-        mTextView2.setVisibility(TextUtils.isEmpty(t2) ? View.GONE : View.VISIBLE);
+        setViewImage(mImageView1, data.get("img"));
+        WidgetUtility.setTextToView(mTextView1, data.get("text1"));
+        WidgetUtility.setTextToView(mTextView2, data.get("text2"));
     }
 }

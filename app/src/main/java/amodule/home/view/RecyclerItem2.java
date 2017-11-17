@@ -14,6 +14,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import amodule._common.utility.WidgetUtility;
 import amodule._common.widget.baseview.BaseRecyclerItem;
 
 /**
@@ -48,19 +49,13 @@ public class RecyclerItem2 extends BaseRecyclerItem {
 
     @Override
     protected void onDataReady(Map<String, String> data) {
-        String image = data.get("img");
-        setViewImage(mImageView1, image);
-        String t1 = data.get("text1");
-        mTextView1.setText(t1);
-        mTextView1.setVisibility(TextUtils.isEmpty(t1) ? View.GONE : View.VISIBLE);
-        String t2 = "¥" + data.get("text2");
-        mTextView2.setText(t2);
-        mTextView2.setVisibility(TextUtils.isEmpty(t2) ? View.GONE : View.VISIBLE);
+        setViewImage(mImageView1, data.get("img"));
+        WidgetUtility.setTextToView(mTextView1, data.get("text1"));
+        WidgetUtility.setTextToView(mTextView2, "¥" + data.get("text2"));
         String t3 = "¥" + data.get("text3");
         Spannable spanStrikethrough = new SpannableString(t3);
         StrikethroughSpan stSpan = new StrikethroughSpan();  //设置删除线样式
         spanStrikethrough.setSpan(stSpan, 0, t3.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        mTextView3.setText(spanStrikethrough);
-        mTextView3.setVisibility(TextUtils.isEmpty(t3) ? View.GONE : View.VISIBLE);
+        WidgetUtility.setTextToView(mTextView3, spanStrikethrough);
     }
 }

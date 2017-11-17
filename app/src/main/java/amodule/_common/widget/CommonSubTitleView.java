@@ -14,7 +14,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import amodule._common.helper.WidgetDataHelper;
+import amodule._common.utility.WidgetUtility;
 import amodule._common.widget.baseview.BaseSubTitleView;
 
 /**
@@ -46,8 +46,8 @@ public class CommonSubTitleView extends BaseSubTitleView {
     @Override
     protected void onDataReady(Map<String, String> map) {
         Map<String, String> titleMap = StringManager.getFirstMap(map.get("title"));
-        WidgetDataHelper.setTextToView(mTitle1,titleMap.get("text1"));
-        WidgetDataHelper.setTextToView(mTitle2,titleMap.get("text2"));
+        WidgetUtility.setTextToView(mTitle1,titleMap.get("text1"));
+        WidgetUtility.setTextToView(mTitle2,titleMap.get("text2"));
         this.setTitle1ClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

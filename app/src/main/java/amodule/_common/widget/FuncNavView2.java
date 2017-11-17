@@ -16,10 +16,10 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
-import amodule._common.delegate.IStatictusData;
-import amodule._common.helper.WidgetDataHelper;
-import amodule.home.view.HomeFuncNavView2;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IStatictusData;
+import amodule._common.utility.WidgetUtility;
+import amodule.home.view.HomeFuncNavView2;
 
 /**
  * Description :
@@ -65,8 +65,8 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
 
         //设置左侧数据
         final Map<String, String> leftMap = arrayList.get(0);
-        WidgetDataHelper.setTextToView(getTextView(R.id.text_left_1), leftMap.get("text1"));
-        WidgetDataHelper.setTextToView(getTextView(R.id.text_left_2), leftMap.get("text2"));
+        WidgetUtility.setTextToView(getTextView(R.id.text_left_1), leftMap.get("text1"));
+        WidgetUtility.setTextToView(getTextView(R.id.text_left_2), leftMap.get("text2"));
         ImageView leftIcon = getImageView(R.id.icon_left_1);
         if (leftIcon != null) {
             Glide.with(getContext()).load(leftMap.get("img")).into(leftIcon);
@@ -82,8 +82,8 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
         //设置右侧数据
         if (arrayList.size() > 1) {
             final Map<String, String> rightMap = arrayList.get(1);
-            WidgetDataHelper.setTextToView(getTextView(R.id.text_right_1), rightMap.get("text1"));
-            WidgetDataHelper.setTextToView(getTextView(R.id.text_right_2), rightMap.get("text2"));
+            WidgetUtility.setTextToView(getTextView(R.id.text_right_1), rightMap.get("text1"));
+            WidgetUtility.setTextToView(getTextView(R.id.text_right_2), rightMap.get("text2"));
             ImageView rightIcon = getImageView(R.id.icon_right_1);
             if (rightIcon != null) {
                 Glide.with(getContext()).load(rightMap.get("img")).into(rightIcon);

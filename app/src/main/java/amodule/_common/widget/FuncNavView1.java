@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,10 +19,10 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
-import amodule._common.delegate.IStatictusData;
-import amodule._common.helper.WidgetDataHelper;
-import amodule.home.view.HomeFuncNavView1;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IStatictusData;
+import amodule._common.utility.WidgetUtility;
+import amodule.home.view.HomeFuncNavView1;
 
 /**
  * Description :
@@ -89,7 +88,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         TextView textView = (TextView) itemView.findViewById(R.id.text_1);
         ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
 
-        WidgetDataHelper.setTextToView(textView,data.get("text1"),false);
+        WidgetUtility.setTextToView(textView,data.get("text1"),false);
         if(null != imageView)
             Glide.with(getContext()).load(data.get("img")).into(imageView);
         imageView.setOnClickListener(v->{

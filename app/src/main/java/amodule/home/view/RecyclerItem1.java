@@ -5,12 +5,14 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.Map;
 
+import amodule._common.utility.WidgetUtility;
 import amodule._common.widget.baseview.BaseRecyclerItem;
 
 /**
@@ -19,6 +21,7 @@ import amodule._common.widget.baseview.BaseRecyclerItem;
 
 public class RecyclerItem1 extends BaseRecyclerItem {
 
+    private LinearLayout mLinearLayout;
     private ImageView mImageView1;
     private TextView mTextView1;
     private TextView mTextView2;
@@ -38,6 +41,7 @@ public class RecyclerItem1 extends BaseRecyclerItem {
 
     @Override
     protected void initView() {
+        mLinearLayout = (LinearLayout) findViewById(R.id.linearlayout1);
         mImageView1 = (ImageView) findViewById(R.id.imageview1);
         mTextView1 = (TextView) findViewById(R.id.textview1);
         mTextView2 = (TextView) findViewById(R.id.textview2);
@@ -47,19 +51,19 @@ public class RecyclerItem1 extends BaseRecyclerItem {
 
     @Override
     protected void onDataReady(Map<String, String> data) {
-        String image = data.get("img");
-        setViewImage(mImageView1, image);
+        setViewImage(mImageView1, data.get("img"));
         String t1 = data.get("text1");
-        mTextView1.setText(t1);
-        mTextView1.setVisibility(TextUtils.isEmpty(t1) ? View.GONE : View.VISIBLE);
+        WidgetUtility.setTextToView(mTextView1, t1);
         String t2 = data.get("text2");
-        mTextView2.setText(t2);
-        mTextView2.setVisibility(TextUtils.isEmpty(t2) ? View.GONE : View.VISIBLE);
+        WidgetUtility.setTextToView(mTextView2, t2);
         String t3 = data.get("text3");
-        mTextView3.setText(t3);
-        mTextView3.setVisibility(TextUtils.isEmpty(t3) ? View.GONE : View.VISIBLE);
+        WidgetUtility.setTextToView(mTextView3, t3);
         String t4 = data.get("iconText");
-        mTextView4.setText(t4);
-        mTextView4.setVisibility(TextUtils.isEmpty(t4) ? View.GONE : View.VISIBLE);
+        WidgetUtility.setTextToView(mTextView4, t4);
+        boolean empty1 = TextUtils.isEmpty(t1);
+        boolean empty2 = TextUtils.isEmpty(t2);
+        boolean empty3 = TextUtils.isEmpty(t3);
+        boolean empty4 = TextUtils.isEmpty(t4);
+        mLinearLayout.setBackgroundResource((empty1 && empty2 && empty3 && empty4) ? 0 : R.drawable.bg_home_horizontal_gradation);
     }
 }

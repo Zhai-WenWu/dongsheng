@@ -1,10 +1,5 @@
 package amodule._common.helper;
 
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 /**
  * PackageName : amodule._common
  * Created by MrTrying on 2017/11/13 10:19.
@@ -33,59 +28,4 @@ public class WidgetDataHelper {
 
     /**--------------------------------------------------- 内部数据key ---------------------------------------------------*/
     public static final String KEY_STYLE = "style";
-
-    /**
-     *
-     * @param textView
-     * @param text 文本
-     */
-    public static void setTextToView(TextView textView,String text){
-        setTextToView(textView,text,true);
-    }
-
-    /**
-     *
-     * @param textView
-     * @param text 文本
-     * @param canHide 文本为空是否GONE
-     */
-    public static void setTextToView(TextView textView,String text,boolean canHide){
-        if(null == textView){
-            return;
-        }
-        if(TextUtils.isEmpty(text)){
-            textView.setVisibility(canHide? View.GONE:View.INVISIBLE);
-        }else{
-            textView.setText(text);
-            textView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     *
-     * @param image
-     * @param resIcon 资源文件id
-     */
-    public static void setResToImage(ImageView image,int resIcon){
-        setResToImage(image,resIcon,true);
-    }
-
-    /**
-     *
-     * @param image
-     * @param resIcon 资源文件id
-     * @param canHide 文本为空是否GONE
-     */
-    public static void setResToImage(ImageView image,int resIcon,boolean canHide){
-        if(null == image){
-            return;
-        }
-        if(resIcon <= 0){
-            image.setVisibility(canHide? View.GONE:View.INVISIBLE);
-        }else{
-            image.setImageResource(resIcon);
-            image.setVisibility(View.VISIBLE);
-        }
-    }
-
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
-import amodule._common.helper.WidgetDataHelper;
+import amodule._common.utility.WidgetUtility;
 
 /**
  * Description :
@@ -74,8 +74,8 @@ public class HomeFuncNavView1 extends LinearLayout {
         TextView textView = (TextView) itemView.findViewById(R.id.text_1);
         ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
 
-        WidgetDataHelper.setTextToView(textView,text,false);
-        WidgetDataHelper.setResToImage(imageView,icon,false);
+        WidgetUtility.setTextToView(textView,text,false);
+        WidgetUtility.setResToImage(imageView,icon,false);
     }
 
     public void setNavItemVisibility(int id,boolean isShow){
